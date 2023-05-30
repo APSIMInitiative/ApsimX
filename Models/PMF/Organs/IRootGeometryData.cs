@@ -21,9 +21,6 @@ namespace Models.PMF.Organs
        /// <summary>The parent plant</summary>
         Plant plant { get; set; }
 
-        /// <summary>Gets or sets the length.</summary>
-        double Length { get; set; }
-
         /// <summary>Gets or sets the depth.</summary>
         [Units("mm")]
         double Depth { get; set; }

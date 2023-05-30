@@ -127,9 +127,8 @@ namespace UserInterface.Intellisense
 
             foreach (Document document in documents)
             {
-                SourceText source = await document.GetTextAsync();
                 CompletionService service = CompletionService.GetService(document);
-                CompletionList completionList = await service.GetCompletionsAsync(document, offset);
+                CompletionList completionList = await service.GetCompletionsAsync(document, offset).ConfigureAwait(false);
 
                 if (completionList != null)
                 {

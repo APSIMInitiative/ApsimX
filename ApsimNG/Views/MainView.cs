@@ -1183,19 +1183,4 @@
         }
     }
 
-    /// <summary>An event argument structure with a string.</summary>
-    public class TabClosingEventArgs : EventArgs
-    {
-        public bool LeftTabControl;
-        public string Name;
-        public int Index;
-        public bool AllowClose = true;
-    }
-
-    /// <summary>An event argument structure with a field for allow to close.</summary>
-    public class AllowCloseArgs : EventArgs
-    {
-        public bool AllowClose;
-    }
-
 }

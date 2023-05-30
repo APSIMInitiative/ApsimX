@@ -1,17 +1,17 @@
-﻿using Models.CLEM.Activities;
+﻿using MathNet.Numerics.Statistics;
+using Models.CLEM.Activities;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Newtonsoft.Json;
-using System.IO;
-using System.Linq.Expressions;
-using Models.CLEM.Groupings;
+using System;
 using System.Collections.Generic;
-using MathNet.Numerics.Statistics;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Models.CLEM.Timers
@@ -28,7 +28,7 @@ namespace Models.CLEM.Timers
     [Version(1, 0, 1, "")]
     public class ActivityTimerRuminantLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -78,7 +78,7 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// Determines if a property name is needed from user
         /// </summary>
-        public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals; 
+        public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals;
 
         private IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
 
@@ -111,16 +111,16 @@ namespace Models.CLEM.Timers
 
             // get list of filters
             filterGroups = FindAllChildren<RuminantGroup>();
-            if(!filterGroups.Any())
+            if (!filterGroups.Any())
             {
                 string warn = $"The timer [a={NameWithParent}] requires at least one [f=RuminantGroup] placed below to identify individuals to consider";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
 
             // get property method if required
-            if(TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+            if (TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
             {
-                if((RuminantProperty??"") != "")
+                if ((RuminantProperty ?? "") != "")
                     propertyInfo = typeof(Ruminant).GetProperty(RuminantProperty);
 
                 if ((RuminantProperty ?? "") == "" || propertyInfo is null)
@@ -198,7 +198,7 @@ namespace Models.CLEM.Timers
         }
 
         ///<inheritdoc/>
-        public string StatusMessage { get; set;}
+        public string StatusMessage { get; set; }
 
         /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
@@ -221,8 +221,8 @@ namespace Models.CLEM.Timers
             {
                 htmlWriter.Write("\r\n<div class=\"clearfix\"><div class=\"filter\">");
                 htmlWriter.Write("Perform when ");
-                if(TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
-                    htmlWriter.Write($"{ DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
+                if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+                    htmlWriter.Write($"{DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
                 else
                 {
                     string stl = "[Unknown]";

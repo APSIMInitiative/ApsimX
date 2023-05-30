@@ -7,7 +7,7 @@ https://developer.gnome.org/gtk3/stable/chap-css-properties.html
 */
 
 scrollbar, scrollbar button, scrollbar slider {
-	min-width: 8px;
+	min-width: 20px;
 	min-height: 8px;
 }
 

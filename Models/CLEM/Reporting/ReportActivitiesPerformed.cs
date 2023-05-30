@@ -1,21 +1,15 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Models.Storage;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
-using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
-using Newtonsoft.Json;
-using DocumentFormat.OpenXml.Spreadsheet;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -137,12 +131,12 @@ namespace Models.CLEM.Reporting
                         var filteredData = data.AsEnumerable()
                             .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
                             & (IncludeFolders || (row.Field<int>("Type") != 1))
-                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2)) )  );
+                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2))));
 
                         if (filteredData.Any())
                         {
                             // flag folders for display
-                            if(IncludeFolders)
+                            if (IncludeFolders)
                             {
                                 foreach (var item in filteredData)
                                 {
@@ -163,14 +157,14 @@ namespace Models.CLEM.Reporting
                                     {
                                         // look for no task controller activities
                                         //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
-                                        if(filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
+                                        if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
                                             item.SetField<String>("Status", "Controller");
 
                                         // mark and message any with nothing to do.
                                         if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
                                         {
                                             item.SetField<String>("Status", "Warning");
-                                            item.SetField<String>("Message",  $"Never occurs");
+                                            item.SetField<String>("Message", $"Never occurs");
                                         }
                                     }
                                 }
@@ -274,7 +268,7 @@ namespace Models.CLEM.Reporting
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
-                        if(item.Day != DateTime.DaysInMonth(item.Year, item.Month))
+                        if (item.Day != DateTime.DaysInMonth(item.Year, item.Month))
                             tbl.Columns.Add("00\r\n" + item.ToString("yy"));
                         else
                             tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
@@ -300,7 +294,7 @@ namespace Models.CLEM.Reporting
                                 if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
                                     monthID = dte.Month.ToString("00");
 
-                                if(!(monthID == "00" && status == "Timer"))
+                                if (!(monthID == "00" && status == "Timer"))
                                     dr[monthID + "\r\n" + dte.ToString("yy")] = $"{status}:{tooltip}";
                             }
                             dr[" "] = " ";
@@ -308,7 +302,7 @@ namespace Models.CLEM.Reporting
                         }
                     }
                 }
-                if(CreateHTML)
+                if (CreateHTML)
                     CreateHTMLVersion(tbl, directoryPath, darkTheme);
                 return tbl;
             }
@@ -442,7 +436,7 @@ namespace Models.CLEM.Reporting
                         {
                             string splitter = (RotateReport) ? "\\" : "<br />";
                             htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\r\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
-                            first = false; 
+                            first = false;
                         }
                     }
                     htmlString.WriteLine($"</tr>");
@@ -450,9 +444,9 @@ namespace Models.CLEM.Reporting
                     foreach (DataRow row in data.Rows)
                     {
                         string rowClass = "";
-                        if(row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
+                        if (row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
                             rowClass = "class=\"folder\"";
-                        if(row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
+                        if (row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
                             rowClass = "class=\"controller\"";
 
                         htmlString.WriteLine($"<tr {rowClass}>");
@@ -496,42 +490,8 @@ namespace Models.CLEM.Reporting
                                 }
                                 else
                                 {
-                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any()? "note":"")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
+                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any() ? "note" : "")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
                                 }
-
-                                //string image = "";
-                                //switch (item.ToString())
-                                //{
-                                //    case "Success":
-                                //    case "NoTask":
-                                //    case "NotNeeded":
-                                //    case "Timer":
-                                //    case "Calculation":
-                                //    case "Critical":
-                                //    case "Partial":
-                                //    case "Ignore":
-                                //        image = $"ActivitiesReport{item.ToString()}Web";
-                                //        break;
-                                //    case "Warning":
-                                //        image = $"ActivitiesReportIgnoreWeb";
-                                //        break;
-                                //    case "Ignored":
-                                //        image = "ActivitiesReportBlankWeb";
-                                //        break;
-                                //    default:
-                                //        image = "";
-                                //        break;
-                                //}
-
-                                //if (image == "")
-                                //{
-                                //    htmlString.Write($"<td>{item.ToString().Replace("\r\n", splitter)}</td>");
-                                //}
-                                //else
-                                //{
-                                //    htmlString.Write($"<td><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" tooltip=\"{"None"}\"></td>");
-                                //}
-
 
                             }
                         }
@@ -570,7 +530,7 @@ namespace Models.CLEM.Reporting
                 if (CreateHTML)
                 {
                     htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
-                    if(RotateReport)
+                    if (RotateReport)
                     {
                         htmlWriter.Write($" with months as columns and activities as rows.</div>");
                     }
@@ -670,14 +630,14 @@ namespace Models.CLEM.Reporting
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>");
+                htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
                 if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 {
                     htmlWriter.Write("<div class=\"partialdiv\"");
                     htmlWriter.Write(">");
-                     htmlWriter.Write("</div>");
+                    htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
                 return htmlWriter.ToString();
             }
         }

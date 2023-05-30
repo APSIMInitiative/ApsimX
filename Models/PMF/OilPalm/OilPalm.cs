@@ -77,7 +77,7 @@ namespace Models.PMF.OilPalm
                 }
             }
         }
-        
+
         /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
         public double LAITotal { get { return LAI; } }
 
@@ -92,7 +92,7 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets the canopy depth (mm)</summary>
         public double Depth { get { return 10000; } }
-        
+
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width{ get { return 0; } }
 
@@ -143,7 +143,7 @@ namespace Models.PMF.OilPalm
         public string plant_status = "out";
         /// <summary>The clock</summary>
         [Link]
-        Clock Clock = null;
+        IClock Clock = null;
         /// <summary>The met data</summary>
         [Link]
         IWeather MetData = null;
@@ -513,7 +513,7 @@ namespace Models.PMF.OilPalm
         [Units("g/g")]
         IFunction BunchOilConversionFactor = null;
         /// <summary>The ripe bunch water content</summary>
-        [Link(Type = LinkType.Child, ByName = true)] 
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fractional contribution of water to fresh bunch mass.")]
         [Units("g/g")]
         IFunction RipeBunchWaterContent = null;
@@ -591,7 +591,7 @@ namespace Models.PMF.OilPalm
         public double UnderstoryNFixation { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Serializable]
         public class RootType
@@ -605,7 +605,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Serializable]
         public class FrondType
@@ -621,7 +621,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Serializable]
         public class BunchType
@@ -769,7 +769,7 @@ namespace Models.PMF.OilPalm
             for (int i = 0; i < (int)InitialFrondNumber.Value() + 60; i++)
             {
                 BunchType B = new BunchType();
-                if (i>40) 
+                if (i>40)
                    B.FemaleFraction =  FemaleFlowerFraction.Value();
                 else
                     B.FemaleFraction = 0;
@@ -1074,8 +1074,8 @@ namespace Models.PMF.OilPalm
             if (Fr > 1.0)
                 Excess = DMAvailable - (TotBunchDMD + TotFrondDMD + StemDMD);
 
-            //why is this here? -JF 
-            if (Age > 10 && Fr < 1) 
+            //why is this here? -JF
+            if (Age > 10 && Fr < 1)
             { }
 
             BunchGrowth = 0; // zero the daily value before incrementally building it up again with today's growth of individual bunches
@@ -1107,7 +1107,7 @@ namespace Models.PMF.OilPalm
 
             };
 
-            StemGrowth = StemDMD * Fr;// +Excess; 
+            StemGrowth = StemDMD * Fr;// +Excess;
             StemMass += StemGrowth;
 
             CarbonStress = Fr;
@@ -1240,8 +1240,8 @@ namespace Models.PMF.OilPalm
 
             double StemNDemand = StemGrowth * StemNConcentration.Value() / 100.0 * 10.0;  // factor of 10 to convert g/m2 to kg/ha
             double RootNDemand = Math.Max(0.0, (RootMass * RootNConcentration.Value() / 100.0 - RootN)) * 10.0;  // kg/ha
-            double FrondNDemand = Math.Max(0.0, (FrondMass * FrondMaximumNConcentration.Value() / 100.0 - FrondN)) * 10.0;  // kg/ha 
-            double BunchNDemand = Math.Max(0.0, (BunchMass * BunchNConcentration.Value() / 100.0 - BunchN)) * 10.0;  // kg/ha 
+            double FrondNDemand = Math.Max(0.0, (FrondMass * FrondMaximumNConcentration.Value() / 100.0 - FrondN)) * 10.0;  // kg/ha
+            double BunchNDemand = Math.Max(0.0, (BunchMass * BunchNConcentration.Value() / 100.0 - BunchN)) * 10.0;  // kg/ha
 
             Ndemand = StemNDemand + FrondNDemand + RootNDemand + BunchNDemand;  //kg/ha
 

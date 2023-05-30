@@ -99,14 +99,21 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private new void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
-
-            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 

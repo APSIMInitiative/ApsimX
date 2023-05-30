@@ -16,8 +16,8 @@ namespace Models.CLEM
     /// Reads in pasture production and makes it available to other models.
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Specifies a pasture database file for native pasture used in the CLEM simulation")]
     [Version(1, 0, 2, "This component is no longer supported.\r\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class FilePasture : CLEMModel, IFilePasture
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -75,8 +75,8 @@ namespace Models.CLEM
         /// The index of the year number column in the Pasture database
         /// This is NOT the actually date year, this is the number of
         /// years since the start of the pasture model run that generated the
-        /// pasture data. 
-        /// eg. it starts at 1 and goes up sequentially 
+        /// pasture data.
+        /// eg. it starts at 1 and goes up sequentially
         /// for however many years the pasture model run went for.
         /// </summary>
         private int yearNumIndex;
@@ -96,9 +96,9 @@ namespace Models.CLEM
         /// crop. Cut Number = 1 is the first harvest after planting
         /// and it goes up from there until it is pulled out and
         /// replanted.
-        /// nb. you may have multiple cuts in the one month so 
+        /// nb. you may have multiple cuts in the one month so
         /// year and month does not uniquely identify the monthly
-        /// yield data for that month. 
+        /// yield data for that month.
         /// We need to add up all the cuts within that month and use
         /// this as the monthly yield data for these crops.
         /// </summary>
@@ -118,7 +118,7 @@ namespace Models.CLEM
         /// <summary>
         /// The index of the by product 1 column in the Pasture database
         /// Crops can have by products that are produced as a consequence
-        /// of growing the crop. 
+        /// of growing the crop.
         /// This is the amount of the first by product of this crop
         /// Eg. straw from growing wheat grain.
         /// nb. THIS IS NOT REALLY USED BY PASTURES
@@ -128,10 +128,10 @@ namespace Models.CLEM
         /// <summary>
         /// The index of the by product 2 (second) column in the Pasture database
         /// Crops can have by products that are produced as a consequence
-        /// of growing the crop. 
+        /// of growing the crop.
         /// This is the amount of the second by product of this crop
         /// Eg. grain husks from growing wheat grain.
-        /// nb. THIS IS NOT REALLY USED BY PASTURES. 
+        /// nb. THIS IS NOT REALLY USED BY PASTURES.
         /// </summary>
         private int bp2Index;
 
@@ -204,7 +204,7 @@ namespace Models.CLEM
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
         public string FullFileName
@@ -281,14 +281,14 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable()
@@ -393,7 +393,7 @@ namespace Models.CLEM
 
         /// <summary>
         /// Finds the closest Stocking Rate Category in the Pasture database for a given Stocking Rate.
-        /// The Pasture database does not have every stocking rate. 
+        /// The Pasture database does not have every stocking rate.
         /// Each Pasture database has its own set of stocking rate value categories
         /// Need to find the closest the stocking rate category in the Pasture database for this stocking rate.
         /// It will find the category with the next largest value to the actual stocking rate.
@@ -406,7 +406,7 @@ namespace Models.CLEM
             //https://stackoverflow.com/questions/41277957/get-closest-value-in-an-array
             //https://msdn.microsoft.com/en-us/library/2cy9f6wb(v=vs.110).aspx
             Array.Sort(distinctStkRates);
-            int index = Array.BinarySearch(distinctStkRates, stockingRate); 
+            int index = Array.BinarySearch(distinctStkRates, stockingRate);
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
         }
@@ -484,7 +484,7 @@ namespace Models.CLEM
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
             string errormessageStart = "Problem with Pasture database file." + System.Environment.NewLine
-                        + "For Region: " + region + ", Soil: " + soil 
+                        + "For Region: " + region + ", Soil: " + soil
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
             if (clock.EndDate == clock.Today)
@@ -495,7 +495,7 @@ namespace Models.CLEM
             foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
-                    throw new ApsimXException(this, errormessageStart 
+                    throw new ApsimXException(this, errormessageStart
                         + "Missing entry for Year: " + month.Year + " and Month: " + month.Month);
                 tempdate = tempdate.AddMonths(1);
             }
@@ -518,7 +518,7 @@ namespace Models.CLEM
         /// <param name="year"></param>
         /// <param name="month"></param>
         /// <returns>CropDataType containg the crop data for this month</returns>
-        public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate, 
+        public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate,
                                          int year, int month)
         {
             object[] keyVals = new Object[8];
@@ -734,9 +734,9 @@ namespace Models.CLEM
                         htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
                 }
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 
@@ -757,7 +757,7 @@ namespace Models.CLEM
         public int Soil;
 
         /// <summary>
-        /// Forage Number 
+        /// Forage Number
         /// nb. This column is to be ignored.
         /// </summary>
         public int ForageNo;
@@ -843,7 +843,7 @@ namespace Models.CLEM
         public double Runoff;
 
         /// <summary>
-        /// Combine Year and Month to create a DateTime. 
+        /// Combine Year and Month to create a DateTime.
         /// Day is set to the 1st of the month.
         /// </summary>
         public DateTime CutDate;

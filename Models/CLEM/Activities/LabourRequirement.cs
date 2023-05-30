@@ -1,9 +1,7 @@
 using Models.Core;
-using Models.CLEM.Activities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;

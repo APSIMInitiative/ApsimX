@@ -3,14 +3,7 @@ using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.CLEM;
-using Models.CLEM.Groupings;
-using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using System.IO;
 
 namespace Models.CLEM.Activities
 {

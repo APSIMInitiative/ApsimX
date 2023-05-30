@@ -218,6 +218,7 @@
 
             // This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
             // and things go a bit awry.
+            // this function is now called in disableUnusedControls if this needs to be added back later
             // this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
 
             // If the series is a box plot, then we want to disable certain unused controls
@@ -541,15 +542,16 @@
             this.seriesView.DataSource.Values = dataSources.ToArray();
             this.seriesView.DataSource.SelectedValue = series.TableName;
 
+            //Show/Hide controls that are not relevant for the current graph type
+            //Needs to run before we populate the fields, so we don't try to populate
+            //fields with no values
+            DisableUnusedControls();
+
             // Populate field name drop downs.
             warnings.AddRange(PopulateFieldNames());
 
             // Populate filter textbox.
             this.seriesView.Filter.Text = series.Filter;
-
-            this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
-
-            DisableUnusedControls();
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
@@ -565,6 +567,18 @@
             seriesView.MarkerType.IsSensitive = !isBoxPlot;
             seriesView.XCumulative.IsSensitive = !isBoxPlot;
             seriesView.XOnTop.IsSensitive = !isBoxPlot;
+
+            //show X2 and Y2 if this is a region graph, hide if not
+            if (series.Type == SeriesType.Region)
+            {
+                this.seriesView.ShowX2Y2(true);
+            } else
+            {
+                this.seriesView.ShowX2Y2(false);
+                //null the x2 and y2 field names so they don't cause errors if a model changes
+                series.X2FieldName = null;
+                series.Y2FieldName = null;
+            }
         }
 
         /// <summary>Populate the line drop down.</summary>

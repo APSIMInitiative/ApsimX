@@ -1,8 +1,8 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using System;
 using Newtonsoft.Json;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -14,13 +14,13 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
-    public class ResourceBaseWithTransactions: CLEMModel
+    public class ResourceBaseWithTransactions : CLEMModel
     {
         /// <summary>
         /// Last transaction received
         /// </summary>
         [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
+        public ResourceTransaction LastTransaction { get; set; } = new ResourceTransaction();
 
         /// <summary>
         /// Provide full name of resource StoreName.TypeName
@@ -77,8 +77,15 @@ namespace Models.CLEM.Resources
         /// <param name="e"></param>
         protected void Resource_TransactionOccurred(object sender, EventArgs e)
         {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
             OnTransactionOccurred(e);
+        }
+
+        /// <summary>
+        /// Handles reporting transactions
+        /// </summary>
+        public void PerformTransactionOccurred()
+        {
+            TransactionOccurred?.Invoke(this, null);
         }
 
     }

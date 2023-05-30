@@ -7,22 +7,6 @@ namespace UserInterface.Views
 {
     public delegate void PositionChangedDelegate(string NewText);
 
-    /// <summary>
-    /// Describes an interface for a legend view.
-    /// </summary>
-    interface ILegendView
-    {
-        bool LegendInsideGraph { get; set; }
-        IDropDownView OrientationDropDown { get; }
-        IDropDownView PositionDropDown { get; }
-
-        void SetSeriesNames(string[] seriesNames);
-        void SetDisabledSeriesNames(string[] seriesNames);
-        string[] GetDisabledSeriesNames();
-
-        event EventHandler DisabledSeriesChanged;
-        event EventHandler LegendInsideGraphChanged;
-    }
 
     /// <summary>
     /// A view which allows the user to customise a graph legend.
@@ -174,5 +158,22 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>
+    /// Describes an interface for a legend view.
+    /// </summary>
+    interface ILegendView
+    {
+        bool LegendInsideGraph { get; set; }
+        IDropDownView OrientationDropDown { get; }
+        IDropDownView PositionDropDown { get; }
+
+        void SetSeriesNames(string[] seriesNames);
+        void SetDisabledSeriesNames(string[] seriesNames);
+        string[] GetDisabledSeriesNames();
+
+        event EventHandler DisabledSeriesChanged;
+        event EventHandler LegendInsideGraphChanged;
     }
 }

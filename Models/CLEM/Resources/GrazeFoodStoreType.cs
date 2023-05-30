@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
-using System.ComponentModel.DataAnnotations;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         [Link]
         private ZoneCLEM zoneCLEM = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
+        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -176,14 +176,14 @@ namespace Models.CLEM.Resources
         public IPastureManager Manager
         {
             get
-            { 
+            {
                 return manager;
             }
             set
             {
-                if(manager!=null && manager!=value )
+                if (manager != null && manager != value)
                 {
-                    if(manager is CropActivityManageCrop)
+                    if (manager is CropActivityManageCrop)
                         Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
                     else
                         throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
@@ -193,7 +193,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Return the specified pool 
+        /// Return the specified pool
         /// </summary>
         /// <param name="index">index to use</param>
         /// <param name="getByAge">return where index is age</param>
@@ -246,9 +246,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (biomassAddedThisYear == 0)
-                    return (biomassConsumed > 0) ? 100: 0;
+                    return (biomassConsumed > 0) ? 100 : 0;
 
-                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100, 100);
             }
         }
 
@@ -290,7 +290,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (DetachRate+CarryoverDetachRate+DecayDMD+DecayNitrogen != 0);
+                return (DetachRate + CarryoverDetachRate + DecayDMD + DecayNitrogen != 0);
             }
         }
 
@@ -298,7 +298,8 @@ namespace Models.CLEM.Resources
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
-        public double Amount {
+        public double Amount
+        {
             get
             {
                 return Pools.Sum(a => a.Amount);
@@ -325,15 +326,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
-            if ((hectares && Manager is null)|(age>11))
+            if ((hectares && Manager is null) | (age > 11))
                 return 0;
 
-            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area:1);
+            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area : 1);
             double valueToUse = 0;
             switch (grazeProperty)
             {
                 case "Amount":
-                    if(age < 0)
+                    if (age < 0)
                         valueToUse = Pools.Sum(a => a.Amount);
                     else
                         valueToUse = Pool(age, true).Sum(a => a.Amount);
@@ -382,7 +383,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Constructor 
+        /// Constructor
         /// </summary>
         public GrazeFoodStoreType()
         {
@@ -423,7 +424,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("FinalInitialise")]
         private void OnFinalInitialise(object sender, EventArgs e)
         {
-            if(Manager == null)
+            if (Manager == null)
                 Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
         }
 
@@ -513,7 +514,7 @@ namespace Models.CLEM.Resources
         private void ONCLEMPastureReady(object sender, EventArgs e)
         {
             // do not return zero as there is always something there and zero affects calculations.
-            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare,0.01);
+            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare, 0.01);
         }
 
         /// <summary>
@@ -522,7 +523,7 @@ namespace Models.CLEM.Resources
         public event EventHandler EcologicalIndicatorsCalculated;
 
         /// <summary>
-        /// Ecological indicators calculated 
+        /// Ecological indicators calculated
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
@@ -538,7 +539,7 @@ namespace Models.CLEM.Resources
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
         /// <summary>
-        /// A method to initialise initial pasture  biomass across pools 
+        /// A method to initialise initial pasture  biomass across pools
         /// </summary>
         /// <param name="area">Area of pasture (ha)</param>
         /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
@@ -569,7 +570,7 @@ namespace Models.CLEM.Resources
 
             List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
-            // number of previous growth months to consider. default should be 5 
+            // number of previous growth months to consider. default should be 5
             int growMonthHistory = NumberMonthsForInitialBiomass;
 
             while (includedMonthCount < growMonthHistory)
@@ -680,7 +681,7 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
-                if(pool.Age == 0)
+                if (pool.Age == 0)
                 {
                     pool.Growth = pool.Amount;
                 }
@@ -696,24 +697,26 @@ namespace Models.CLEM.Resources
                     // do not update if this is ian initialisation pool
                     biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = pool.Amount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
+
+                //ResourceTransaction details = new ResourceTransaction
+                //{
+                //    TransactionType = TransactionType.Gain,
+                //    Amount = pool.Amount,
+                //    Activity = activity,
+                //    RelatesToResource = relatesToResource,
+                //    Category = category,
+                //    ResourceType = this
+                //};
+                //LastTransaction = details;
+                //LastGain = pool.Amount;
+                //TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                //OnTransactionOccurred(te);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="removeAmount"></param>
         /// <param name="activityName"></param>
@@ -724,7 +727,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         public new void Remove(ResourceRequest request)
@@ -795,19 +798,9 @@ namespace Models.CLEM.Resources
                 //if graze activity
                 biomassConsumed += request.Provided;
 
-                // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                // report
+
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
             {
@@ -834,19 +827,8 @@ namespace Models.CLEM.Resources
                 dryMatterDigestibility /= request.Provided;
                 nitrogen /= request.Provided;
 
-                // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                // report
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else
             {
@@ -856,33 +838,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
@@ -956,7 +918,7 @@ namespace Models.CLEM.Resources
                         htmlWriter.Write("\r\n</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -964,7 +926,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         [Link]
         private ZoneCLEM zoneCLEM = null;
 
@@ -187,7 +187,7 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-        
+
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -252,9 +252,9 @@ namespace Models.CLEM.Activities
             CheckResources(ResourceRequestList, Guid.NewGuid());
             TakeResources(ResourceRequestList, false);
 
-            //Now the Land has been allocated we have an Area 
+            //Now the Land has been allocated we have an Area
             if (ResourceRequestList.FirstOrDefault().Provided > 0)
-            {            
+            {
                 //get the units of area for this run from the Land resource parent.
                 unitsOfArea2Ha = Resources.FindResourceGroup<Land>().UnitsOfAreaToHaConversion;
 
@@ -358,8 +358,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate ecological indicators. 
-        /// By summing the monthly stocking rates so when you do yearly ecological calculation 
+        /// Function to calculate ecological indicators.
+        /// By summing the monthly stocking rates so when you do yearly ecological calculation
         /// you can get average monthly stocking rate for the whole year.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -370,7 +370,7 @@ namespace Models.CLEM.Activities
             // This event happens after growth and pasture consumption and animal death
             // But before any management, buying and selling of animals.
 
-            // add this months stocking rate to running total 
+            // add this months stocking rate to running total
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
@@ -471,7 +471,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
-            // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
+            // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators)
             // every so many months (specified by user, not every month.
             // And the month they are updated on each year is whatever the starting month was for the run.
 
@@ -479,7 +479,7 @@ namespace Models.CLEM.Activities
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clock.Today.AddDays(1), zoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
-        // Method to listen for land use transactions 
+        // Method to listen for land use transactions
         // This allows this activity to dynamically respond when use available area is selected
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
@@ -521,9 +521,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

@@ -4,15 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
-using System.Globalization;
 using System.IO;
 using Models.CLEM.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -32,7 +28,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -70,7 +66,7 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Leave at current location")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
         public string GrazeFoodStoreName { get; set; }
-      
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -208,6 +204,7 @@ namespace Models.CLEM.Activities
         {
             if (numberToDo - numberToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
             {
+                ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
                 int weaned = 0;
                 foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
                 {
@@ -241,7 +238,9 @@ namespace Models.CLEM.Activities
                                 ind.Location = grazeStore;
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                        ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+
                         weaned++;
                         if (weaned > numberToDo - numberToSkip)
                             break;
@@ -301,9 +300,9 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("</div>");
                 // ToDo: warn if natural weaning will take place
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

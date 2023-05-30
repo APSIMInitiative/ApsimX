@@ -69,9 +69,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the layer dead.</summary>
         public OrganNutrientsState[] LayerDeadProportion { get; set; }
 
-        /// <summary>Gets or sets the length.</summary>
-        public double Length { get; set; }
-
         /// <summary>Gets or sets the depth.</summary>
         [Units("mm")]
         public double Depth { get; set; }
