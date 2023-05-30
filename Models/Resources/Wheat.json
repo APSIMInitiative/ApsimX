@@ -14,7 +14,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5</a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
+          "Text": "_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe wheat model consists of:\r\n\r\n* a phenology model to simulate development through sequential developmental phases  \r\n* a structure model to simulate plant morphology \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \r\n\r\nThis work builds upon earlier APSIM Wheat models such as NWheat ([Asseng200225], [KeatingNWheat]), NWheatS ([Asseng1998163]), Cropmod-Wheat ([Wang2002GenericCropModel]), and the earlier versions developed in Plant (<a href=\\\"http://www.apsim.info/Documentation/Model,CropandSoil/CropModuleDocumentation/Wheat.aspx\">APSIM Wheat 7.5<\/a>\") and then within the Plant Modelling Framework ([brown_plant_2014]).",
           "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
@@ -246,14 +246,14 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    0.0,
-                    26.0,
-                    37.0
+                    0,
+                    26,
+                    37
                   ],
                   "Y": [
-                    0.0,
-                    26.0,
-                    0.0
+                    0,
+                    26,
+                    0
                   ],
                   "XVariableName": null,
                   "Name": "Response",
@@ -286,8 +286,8 @@
             },
             {
               "$type": "Models.Functions.PhotoperiodFunction, Models",
-              "Twilight": -6.0,
-              "DayLength": 0.0,
+              "Twilight": -6,
+              "DayLength": 0,
               "Name": "Photoperiod",
               "ResourceName": null,
               "Children": [],
@@ -299,10 +299,10 @@
               "StartStageName": "Emergence",
               "EndStageName": "FlagLeaf",
               "ResetStageName": null,
-              "FractionRemovedOnCut": 0.0,
-              "FractionRemovedOnHarvest": 0.0,
-              "FractionRemovedOnGraze": 0.0,
-              "FractionRemovedOnPrune": 0.0,
+              "FractionRemovedOnCut": 0,
+              "FractionRemovedOnHarvest": 0,
+              "FractionRemovedOnGraze": 0,
+              "FractionRemovedOnPrune": 0,
               "Name": "HaunStage",
               "ResourceName": null,
               "Children": [
@@ -379,18 +379,18 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        2.0,
-                        3.0,
-                        7.0,
-                        8.0,
-                        11.0
+                        0,
+                        2,
+                        3,
+                        7,
+                        8,
+                        11
                       ],
                       "Y": [
                         0.75,
                         0.75,
-                        1.0,
-                        1.0,
+                        1,
+                        1,
                         1.4,
                         1.4
                       ],
@@ -416,7 +416,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 120.0,
+                  "FixedValue": 120,
                   "Units": "oC.d",
                   "Name": "BasePhyllochron",
                   "ResourceName": null,
@@ -431,7 +431,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 1,
                       "Units": "oC.d",
                       "Name": "One",
                       "ResourceName": null,
@@ -461,14 +461,14 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                8.0,
-                                12.0,
-                                20.0
+                                8,
+                                12,
+                                20
                               ],
                               "Y": [
-                                1.0,
-                                0.0,
-                                0.0
+                                1,
+                                0,
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -513,7 +513,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 2.0,
+              "FixedValue": 2,
               "Units": null,
               "Name": "HeadEmergencePpSensitivity",
               "ResourceName": null,
@@ -533,7 +533,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 200.0,
+              "FixedValue": 200,
               "Units": null,
               "Name": "HeadEmergenceLongDayBase",
               "ResourceName": null,
@@ -565,7 +565,7 @@
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
               "Start": "Germination",
               "End": "Emergence",
-              "TTForTimeStep": 0.0,
+              "TTForTimeStep": 0,
               "Name": "Emerging",
               "ResourceName": null,
               "Children": [
@@ -585,7 +585,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 40.0,
+                      "FixedValue": 40,
                       "Units": null,
                       "Name": "ShootLag",
                       "ResourceName": null,
@@ -667,7 +667,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -814,16 +814,16 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                6.0,
-                                8.0,
-                                20.0,
-                                22.0
+                                6,
+                                8,
+                                20,
+                                22
                               ],
                               "Y": [
-                                1.0,
-                                1.0,
-                                0.0,
-                                0.0
+                                1,
+                                1,
+                                0,
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -875,7 +875,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 80.0,
+                  "FixedValue": 80,
                   "Units": "oCd",
                   "Name": "Target",
                   "ResourceName": null,
@@ -896,7 +896,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 120.0,
+                  "FixedValue": 120,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -926,7 +926,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 545.0,
+                  "FixedValue": 545,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -956,7 +956,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 35.0,
+                  "FixedValue": 35,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -986,7 +986,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 300.0,
+                  "FixedValue": 300,
                   "Units": null,
                   "Name": "Target",
                   "ResourceName": null,
@@ -1053,7 +1053,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1092,7 +1092,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1131,7 +1131,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1170,7 +1170,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1209,7 +1209,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1248,7 +1248,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "PreEventValue",
                   "ResourceName": null,
@@ -1365,16 +1365,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        8.0,
-                        16.0,
-                        24.0
+                        0,
+                        8,
+                        16,
+                        24
                       ],
                       "Y": [
-                        0.0,
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        0,
+                        1,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -1419,7 +1419,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 20.0,
+                          "FixedValue": 20,
                           "Units": "/oCd",
                           "Name": "DeVernalisationTemp",
                           "ResourceName": null,
@@ -1429,7 +1429,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 0,
                           "Units": "/oCd",
                           "Name": "DeVernalisationRate",
                           "ResourceName": null,
@@ -1457,8 +1457,8 @@
                   "$type": "Models.PMF.Phen.FinalLeafNumberSet, Models",
                   "MinLN": 8.3,
                   "PpLN": 3.8,
-                  "VrnLN": 5.0,
-                  "VxPLN": -2.0,
+                  "VrnLN": 5,
+                  "VxPLN": -2,
                   "Name": "FLNparams",
                   "ResourceName": null,
                   "Children": [],
@@ -1467,10 +1467,10 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.FLNParameterEnvironment, Models",
-                  "VrnTreatTemp": 6.0,
-                  "VrnTreatDuration": 60.0,
+                  "VrnTreatTemp": 6,
+                  "VrnTreatDuration": 60,
                   "TreatmentPp_L": 16,
-                  "TtEmerge": 90.0,
+                  "TtEmerge": 90,
                   "Name": "EnvData",
                   "ResourceName": null,
                   "Children": [],
@@ -1487,7 +1487,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The CAMP model was derived to integrate molecular and physiological models of cereal flowering time to better capture G x E x M interactions and to provide a framework for linking genetic data to field behaviour.  It calculates the current levels of expression of Vrn1, 2 and 3 genes from daily deltas that are all calculated relative to haun stage deltas in addition to temperature (Vrn1) and photoperiod (Vrn 2 and 3).  To reach the vernalisation stage Vrn1 must be upregulated to a value of at least 1.0.  Where Vrn2 is also being expressed the target for Vrn1 expression increases in parallel as more Vrn1 expression is needed to block Vrn2 and allow Vrn3 expression.  Once Vrn2 expression is blocked Vrn3 will be upregulated and terminal spikelet occurs when its apparent expression reaches 1.0.  CAMP also predicts expression of VrnX which represents the relative contributions of Vrn2 and Vrn3 prior to vernalisation.  The genotype specific rates of gene expression are derived from final leaf number parameters (FLNparams):  \n\nMinLN - The final leaf number (FLN) of the genotype when fully vernalised early and grown under long (>=16) photoperiod following vernalisation (FLN_LV).  These conditions maximise the expression of vernalisation and photoperiod genes and this parameter provides a measure of inherent earliness of the genotype. It may vary between 5 and 15 leaves (7 is typical).  \n\nPpLN - The difference between MinLN and the FLN of a genotype when fully vernalised early and grown under short (<=8h) photoperiod following vernalisation (FLN_SV).  These conditions maximise Vrn1 expression but minimise Vrn2 and 3 expression and PpLN provides a measure of photoperiod sensitivity of the genotype.  It may vary between 0 and 8 leaves with 1 being typical of a low sensitivity genotype and 4 being typical of a high sensitivity genotype.  \n\nVrnLN - The difference between MinLN and the FLN \u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u20ac\u0153 PpLN of the genotype when not vernalised and grown under short photoperiod (FLN_SN).  These conditions minimise Vrn and Pp gene expression to base (minimal) values and VrnLN is a measure of vernalisation sensitivity of the genotype.  It may vary between 0 and 9 leaves with 1 being typical for an insensitive variety and 5 being typical for a sensitive variety.  \n\nVxPLN - The difference between MinLN + VrnLN and the FLN of the genotype when not vernalised and grown under long photoperiod (FLN_LN).  These conditions minimise upregulation of Vrn1 and maximise upregulation of Vrn2 and 3 and this parameter provides a measure of the relative activities of Vrn2 and Vrn3 during the vernalisation phase. A positive value shows short days accelerate vernalisation and a negative value shows short days slow vernalisation.  The value of VxPLN should be greater than the negative of VrnLN and typically varies between +2 and -4.",
+                  "Text": "The CAMP model was derived to integrate molecular and physiological models of cereal flowering time to better capture G x E x M interactions and to provide a framework for linking genetic data to field behaviour.  It calculates the current levels of expression of Vrn1, 2 and 3 genes from daily deltas that are all calculated relative to haun stage deltas in addition to temperature (Vrn1) and photoperiod (Vrn 2 and 3).  To reach the vernalisation stage Vrn1 must be upregulated to a value of at least 1.0.  Where Vrn2 is also being expressed the target for Vrn1 expression increases in parallel as more Vrn1 expression is needed to block Vrn2 and allow Vrn3 expression.  Once Vrn2 expression is blocked Vrn3 will be upregulated and terminal spikelet occurs when its apparent expression reaches 1.0.  CAMP also predicts expression of VrnX which represents the relative contributions of Vrn2 and Vrn3 prior to vernalisation.  The genotype specific rates of gene expression are derived from final leaf number parameters (FLNparams):  \n\nMinLN - The final leaf number (FLN) of the genotype when fully vernalised early and grown under long (>=16) photoperiod following vernalisation (FLN_LV).  These conditions maximise the expression of vernalisation and photoperiod genes and this parameter provides a measure of inherent earliness of the genotype. It may vary between 5 and 15 leaves (7 is typical).  \n\nPpLN - The difference between MinLN and the FLN of a genotype when fully vernalised early and grown under short (<=8h) photoperiod following vernalisation (FLN_SV).  These conditions maximise Vrn1 expression but minimise Vrn2 and 3 expression and PpLN provides a measure of photoperiod sensitivity of the genotype.  It may vary between 0 and 8 leaves with 1 being typical of a low sensitivity genotype and 4 being typical of a high sensitivity genotype.  \n\nVrnLN - The difference between MinLN and the FLN â€“ PpLN of the genotype when not vernalised and grown under short photoperiod (FLN_SN).  These conditions minimise Vrn and Pp gene expression to base (minimal) values and VrnLN is a measure of vernalisation sensitivity of the genotype.  It may vary between 0 and 9 leaves with 1 being typical for an insensitive variety and 5 being typical for a sensitive variety.  \n\nVxPLN - The difference between MinLN + VrnLN and the FLN of the genotype when not vernalised and grown under long photoperiod (FLN_LN).  These conditions minimise upregulation of Vrn1 and maximise upregulation of Vrn2 and 3 and this parameter provides a measure of the relative activities of Vrn2 and Vrn3 during the vernalisation phase. A positive value shows short days accelerate vernalisation and a negative value shows short days slow vernalisation.  The value of VxPLN should be greater than the negative of VrnLN and typically varies between +2 and -4.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1552,24 +1552,24 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                1.0,
-                                2.0,
-                                3.0,
-                                4.0,
-                                5.0,
-                                6.0,
-                                7.0,
-                                8.0
+                                1,
+                                2,
+                                3,
+                                4,
+                                5,
+                                6,
+                                7,
+                                8
                               ],
                               "Y": [
-                                0.0,
-                                0.0,
-                                1.0,
-                                2.0,
-                                4.0,
-                                7.0,
-                                12.0,
-                                20.0
+                                0,
+                                0,
+                                1,
+                                2,
+                                4,
+                                7,
+                                12,
+                                20
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -1604,7 +1604,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 0,
                           "Units": null,
                           "Name": "Zero",
                           "ResourceName": null,
@@ -1643,13 +1643,13 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.5,
-                            2.0,
-                            3.0
+                            2,
+                            3
                           ],
                           "Y": [
-                            0.0,
-                            1.0,
-                            1.0
+                            0,
+                            1,
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -1688,14 +1688,14 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
+                            0,
                             0.1,
                             0.25
                           ],
                           "Y": [
-                            1.0,
-                            1.0,
-                            0.0
+                            1,
+                            1,
+                            0
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -1725,12 +1725,12 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
-                            1.0
+                            0,
+                            1
                           ],
                           "Y": [
-                            0.0,
-                            1.0
+                            0,
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -1785,12 +1785,12 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                0.0,
+                                0,
                                 0.005
                               ],
                               "Y": [
                                 0.002,
-                                0.0
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -1846,16 +1846,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0
+                        3,
+                        4,
+                        5,
+                        6
                       ],
                       "Y": [
-                        10.0,
-                        200.0,
-                        200.0,
-                        1000.0
+                        10,
+                        200,
+                        200,
+                        1000
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -1886,11 +1886,11 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.3,
-                        1.0
+                        1
                       ],
                       "Y": [
-                        0.0,
-                        1.0
+                        0,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -1994,7 +1994,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "StemSenescenceAge",
               "ResourceName": null,
@@ -2036,8 +2036,8 @@
         },
         {
           "$type": "Models.PMF.Organs.ReproductiveOrgan, Models",
-          "GrowthRespiration": 0.0,
-          "MaintenanceRespiration": 0.0,
+          "GrowthRespiration": 0,
+          "MaintenanceRespiration": 0,
           "DMDemand": null,
           "NDemand": null,
           "DMSupply": null,
@@ -2076,7 +2076,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 26.0,
+                      "FixedValue": 26,
                       "Units": "grains",
                       "Name": "GrainsPerGramOfStem",
                       "ResourceName": null,
@@ -2103,7 +2103,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": null,
               "Name": "DMConversionEfficiency",
               "ResourceName": null,
@@ -2113,7 +2113,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "RemobilisationCost",
               "ResourceName": null,
@@ -2271,7 +2271,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 1,
                                   "Units": null,
                                   "Name": "One",
                                   "ResourceName": null,
@@ -2463,10 +2463,10 @@
               "StartStageName": "Flowering",
               "EndStageName": "Maturity",
               "ResetStageName": null,
-              "FractionRemovedOnCut": 0.0,
-              "FractionRemovedOnHarvest": 0.0,
-              "FractionRemovedOnGraze": 0.0,
-              "FractionRemovedOnPrune": 0.0,
+              "FractionRemovedOnCut": 0,
+              "FractionRemovedOnHarvest": 0,
+              "FractionRemovedOnGraze": 0,
+              "FractionRemovedOnPrune": 0,
               "Name": "AccumThermalTime",
               "ResourceName": null,
               "Children": [
@@ -2485,7 +2485,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "divide(([Grain].Live.N + [Grain].Dead.N),([Grain].Live.Wt + [Grain].Dead.Wt)) * 100 * 5.71",
+              "Expression": "([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71",
               "Name": "Protein",
               "ResourceName": null,
               "Children": [],
@@ -2499,10 +2499,10 @@
               "Children": [
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 1.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionLiveToRemove": 1,
+                  "FractionDeadToRemove": 0,
+                  "FractionLiveToResidue": 0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [],
@@ -2511,10 +2511,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 1.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionLiveToRemove": 1,
+                  "FractionDeadToRemove": 0,
+                  "FractionLiveToResidue": 0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Cut",
                   "ResourceName": null,
                   "Children": [],
@@ -2523,10 +2523,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.8,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -2536,9 +2536,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.6,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.2,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Graze",
                   "ResourceName": null,
                   "Children": [],
@@ -2547,10 +2547,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Thin",
                   "ResourceName": null,
                   "Children": [],
@@ -2578,7 +2578,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Structural",
                   "ResourceName": null,
@@ -2588,7 +2588,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -2598,7 +2598,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -2617,7 +2617,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Structural",
                   "ResourceName": null,
@@ -2627,7 +2627,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -2637,7 +2637,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -2660,8 +2660,8 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
-          "GrowthRespiration": 0.0,
-          "MaintenanceRespiration": 0.0,
+          "GrowthRespiration": 0,
+          "MaintenanceRespiration": 0,
           "Name": "Root",
           "ResourceName": null,
           "Children": [
@@ -2675,7 +2675,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": null,
               "Name": "DMConversionEfficiency",
               "ResourceName": null,
@@ -2685,7 +2685,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "RemobilisationCost",
               "ResourceName": null,
@@ -2695,7 +2695,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": null,
               "Name": "KLModifier",
               "ResourceName": null,
@@ -2705,7 +2705,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": null,
               "Name": "SoilWaterEffect",
               "ResourceName": null,
@@ -2715,7 +2715,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 20.0,
+              "FixedValue": 20,
               "Units": null,
               "Name": "MaxDailyNUptake",
               "ResourceName": null,
@@ -2735,7 +2735,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1000000.0,
+              "FixedValue": 1000000,
               "Units": null,
               "Name": "MaximumRootDepth",
               "ResourceName": null,
@@ -2772,7 +2772,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Constant",
                   "ResourceName": null,
@@ -2791,10 +2791,10 @@
               "Children": [
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.2,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [],
@@ -2803,10 +2803,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.3,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Cut",
                   "ResourceName": null,
                   "Children": [],
@@ -2815,10 +2815,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -2827,10 +2827,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.15,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Graze",
                   "ResourceName": null,
                   "Children": [],
@@ -2839,10 +2839,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Thin",
                   "ResourceName": null,
                   "Children": [],
@@ -2875,7 +2875,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 105.0,
+              "FixedValue": 105,
               "Units": "m/g",
               "Name": "SpecificRootLength",
               "ResourceName": null,
@@ -2902,7 +2902,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 5.0,
+                          "FixedValue": 5,
                           "Units": "mm/d",
                           "Name": "Value",
                           "ResourceName": null,
@@ -2923,7 +2923,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 20.0,
+                          "FixedValue": 20,
                           "Units": "mm/d",
                           "Name": "Value",
                           "ResourceName": null,
@@ -2948,16 +2948,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        15.0,
-                        25.0,
-                        35.0
+                        0,
+                        15,
+                        25,
+                        35
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0,
-                        0.0
+                        0,
+                        1,
+                        1,
+                        0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -2986,14 +2986,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
+                        0,
                         0.25,
-                        1.0
+                        1
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        1,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -3025,7 +3025,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "One",
                   "ResourceName": null,
@@ -3049,7 +3049,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "MaintenanceRespirationFunction",
               "ResourceName": null,
@@ -3086,7 +3086,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0,
                                   "Units": null,
                                   "Name": "Value",
                                   "ResourceName": null,
@@ -3113,9 +3113,9 @@
                                     {
                                       "$type": "Models.Functions.XYPairs, Models",
                                       "X": [
-                                        3.0,
-                                        5.0,
-                                        6.0
+                                        3,
+                                        5,
+                                        6
                                       ],
                                       "Y": [
                                         0.5,
@@ -3177,7 +3177,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 1,
                       "Units": null,
                       "Name": "StructuralFraction",
                       "ResourceName": null,
@@ -3191,7 +3191,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -3211,7 +3211,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1,
                           "Units": null,
                           "Name": "One",
                           "ResourceName": null,
@@ -3238,7 +3238,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -3248,7 +3248,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -3258,7 +3258,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -3376,7 +3376,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -3386,7 +3386,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -3396,7 +3396,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -3434,7 +3434,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -3444,7 +3444,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -3463,12 +3463,12 @@
         {
           "$type": "Models.PMF.Organs.Leaf, Models",
           "Leaves": [],
-          "CurrentExpandingLeaf": 0.0,
-          "StartFractionExpanded": 0.0,
-          "FractionNextleafExpanded": 0.0,
-          "DeadNodesYesterday": 0.0,
-          "MaxCover": 1.0,
-          "GrowthRespiration": 0.0,
+          "CurrentExpandingLeaf": 0,
+          "StartFractionExpanded": 0,
+          "FractionNextleafExpanded": 0,
+          "DeadNodesYesterday": 0,
+          "MaxCover": 1,
+          "GrowthRespiration": 0,
           "DMSupply": null,
           "NSupply": null,
           "DMDemand": null,
@@ -3476,19 +3476,19 @@
           "potentialDMAllocation": null,
           "Albedo": 0.25,
           "Gsmax350": 0.011,
-          "R50": 150.0,
-          "LAI": 0.0,
-          "Depth": 0.0,
-          "Width": 0.0,
-          "FRGR": 0.0,
-          "PotentialEP": 0.0,
-          "WaterDemand": 0.0,
+          "R50": 150,
+          "LAI": 0,
+          "Depth": 0,
+          "Width": 0,
+          "FRGR": 0,
+          "PotentialEP": 0,
+          "WaterDemand": 0,
           "LightProfile": null,
           "KDead": 0.1,
           "MaximumMainStemLeafNumber": 30,
           "TipsAtEmergence": 0,
           "CohortsAtInitialisation": 0,
-          "FractionDied": 0.0,
+          "FractionDied": 0,
           "Name": "Leaf",
           "ResourceName": null,
           "Children": [
@@ -3514,29 +3514,29 @@
               "$type": "Models.PMF.Organs.LeafCohort, Models",
               "ApexCohort": null,
               "LiveStart": null,
-              "NReallocationFactor": 0.0,
-              "DMReallocationFactor": 0.0,
-              "NRetranslocationFactor": 0.0,
-              "DMRetranslocationFactor": 0.0,
-              "ShadeInducedSenRate": 0.0,
-              "SenescedFrac": 0.0,
-              "DeltaPotentialArea": 0.0,
-              "DeltaStressConstrainedArea": 0.0,
-              "DeltaCarbonConstrainedArea": 0.0,
-              "PotentialStructuralDMAllocation": 0.0,
-              "PotentialMetabolicDMAllocation": 0.0,
-              "MetabolicNReallocated": 0.0,
-              "MetabolicWtReallocated": 0.0,
-              "StorageNReallocated": 0.0,
-              "StorageWtReallocated": 0.0,
-              "MetabolicNRetranslocated": 0.0,
-              "StorageNRetrasnlocated": 0.0,
-              "DMRetranslocated": 0.0,
-              "MetabolicNAllocation": 0.0,
-              "StructuralDMAllocation": 0.0,
-              "MetabolicDMAllocation": 0.0,
+              "NReallocationFactor": 0,
+              "DMReallocationFactor": 0,
+              "NRetranslocationFactor": 0,
+              "DMRetranslocationFactor": 0,
+              "ShadeInducedSenRate": 0,
+              "SenescedFrac": 0,
+              "DeltaPotentialArea": 0,
+              "DeltaStressConstrainedArea": 0,
+              "DeltaCarbonConstrainedArea": 0,
+              "PotentialStructuralDMAllocation": 0,
+              "PotentialMetabolicDMAllocation": 0,
+              "MetabolicNReallocated": 0,
+              "MetabolicWtReallocated": 0,
+              "StorageNReallocated": 0,
+              "StorageWtReallocated": 0,
+              "MetabolicNRetranslocated": 0,
+              "StorageNRetrasnlocated": 0,
+              "DMRetranslocated": 0,
+              "MetabolicNAllocation": 0,
+              "StructuralDMAllocation": 0,
+              "MetabolicDMAllocation": 0,
               "Rank": 1,
-              "Area": 200.0,
+              "Area": 200,
               "Name": "InitialLeaves[1]",
               "ResourceName": null,
               "Children": [],
@@ -3547,29 +3547,29 @@
               "$type": "Models.PMF.Organs.LeafCohort, Models",
               "ApexCohort": null,
               "LiveStart": null,
-              "NReallocationFactor": 0.0,
-              "DMReallocationFactor": 0.0,
-              "NRetranslocationFactor": 0.0,
-              "DMRetranslocationFactor": 0.0,
-              "ShadeInducedSenRate": 0.0,
-              "SenescedFrac": 0.0,
-              "DeltaPotentialArea": 0.0,
-              "DeltaStressConstrainedArea": 0.0,
-              "DeltaCarbonConstrainedArea": 0.0,
-              "PotentialStructuralDMAllocation": 0.0,
-              "PotentialMetabolicDMAllocation": 0.0,
-              "MetabolicNReallocated": 0.0,
-              "MetabolicWtReallocated": 0.0,
-              "StorageNReallocated": 0.0,
-              "StorageWtReallocated": 0.0,
-              "MetabolicNRetranslocated": 0.0,
-              "StorageNRetrasnlocated": 0.0,
-              "DMRetranslocated": 0.0,
-              "MetabolicNAllocation": 0.0,
-              "StructuralDMAllocation": 0.0,
-              "MetabolicDMAllocation": 0.0,
+              "NReallocationFactor": 0,
+              "DMReallocationFactor": 0,
+              "NRetranslocationFactor": 0,
+              "DMRetranslocationFactor": 0,
+              "ShadeInducedSenRate": 0,
+              "SenescedFrac": 0,
+              "DeltaPotentialArea": 0,
+              "DeltaStressConstrainedArea": 0,
+              "DeltaCarbonConstrainedArea": 0,
+              "PotentialStructuralDMAllocation": 0,
+              "PotentialMetabolicDMAllocation": 0,
+              "MetabolicNReallocated": 0,
+              "MetabolicWtReallocated": 0,
+              "StorageNReallocated": 0,
+              "StorageWtReallocated": 0,
+              "MetabolicNRetranslocated": 0,
+              "StorageNRetrasnlocated": 0,
+              "DMRetranslocated": 0,
+              "MetabolicNAllocation": 0,
+              "StructuralDMAllocation": 0,
+              "MetabolicDMAllocation": 0,
               "Rank": 2,
-              "Area": 0.0,
+              "Area": 0,
               "Name": "InitialLeaves[2]",
               "ResourceName": null,
               "Children": [],
@@ -3578,18 +3578,18 @@
             },
             {
               "$type": "Models.PMF.Organs.Leaf+LeafCohortParameters, Models",
-              "ExpansionStressValue": 0.0,
-              "CellDivisionStressValue": 0.0,
-              "LagAccelerationValue": 0.0,
-              "SenescenceAccelerationValue": 0.0,
-              "ShadeInducedSenescenceRateValue": 0.0,
-              "SenessingLeafRelativeSizeValue": 0.0,
+              "ExpansionStressValue": 0,
+              "CellDivisionStressValue": 0,
+              "LagAccelerationValue": 0,
+              "SenescenceAccelerationValue": 0,
+              "ShadeInducedSenescenceRateValue": 0,
+              "SenessingLeafRelativeSizeValue": 0,
               "Name": "CohortParameters",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "ResourceName": null,
@@ -3599,7 +3599,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "RemobilisationCost",
                   "ResourceName": null,
@@ -3609,7 +3609,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "MaintenanceRespirationFunction",
                   "ResourceName": null,
@@ -3629,7 +3629,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "ResourceName": null,
@@ -3639,7 +3639,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "ResourceName": null,
@@ -3661,11 +3661,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.5,
-                            1.0
+                            1
                           ],
                           "Y": [
                             0.1,
-                            1.0
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3695,14 +3695,14 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
+                            0,
                             0.5,
-                            1.0
+                            1
                           ],
                           "Y": [
                             0.1,
                             0.1,
-                            1.0
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3746,9 +3746,9 @@
                             1.3
                           ],
                           "Y": [
-                            0.0,
-                            1.0,
-                            1.0
+                            0,
+                            1,
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3778,14 +3778,14 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
-                            12.0,
-                            14.0
+                            0,
+                            12,
+                            14
                           ],
                           "Y": [
-                            0.0,
-                            1.0,
-                            1.0
+                            0,
+                            1,
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3815,14 +3815,14 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
+                            0,
                             0.5,
-                            1.0
+                            1
                           ],
                           "Y": [
                             0.1,
                             0.1,
-                            1.0
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3855,7 +3855,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 2600.0,
+                      "FixedValue": 2600,
                       "Units": "mm^2",
                       "Name": "AreaLargestLeaves",
                       "ResourceName": null,
@@ -3871,16 +3871,16 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            3.0,
-                            4.0,
-                            5.0,
-                            6.0
+                            3,
+                            4,
+                            5,
+                            6
                           ],
                           "Y": [
                             0.1,
                             0.5,
-                            1.0,
-                            1.0
+                            1,
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -3947,14 +3947,14 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            3.0,
-                            4.0,
-                            5.0
+                            3,
+                            4,
+                            5
                           ],
                           "Y": [
                             0.4,
                             0.7,
-                            1.0
+                            1
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
@@ -4068,7 +4068,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 3.0,
+                      "FixedValue": 3,
                       "Units": null,
                       "Name": "Constant",
                       "ResourceName": null,
@@ -4091,7 +4091,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1000000.0,
+                  "FixedValue": 1000000,
                   "Units": null,
                   "Name": "DetachmentLagDuration",
                   "ResourceName": null,
@@ -4101,7 +4101,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1000000.0,
+                  "FixedValue": 1000000,
                   "Units": null,
                   "Name": "DetachmentDuration",
                   "ResourceName": null,
@@ -4111,7 +4111,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "RelativeBranchLeafSize",
                   "ResourceName": null,
@@ -4127,10 +4127,10 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
+                        3,
                         4.5,
-                        6.0,
-                        8.0
+                        6,
+                        8
                       ],
                       "Y": [
                         0.05,
@@ -4171,12 +4171,12 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            3.0,
-                            4.0,
-                            5.0,
-                            6.0,
-                            7.0,
-                            8.0
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
                           ],
                           "Y": [
                             0.04,
@@ -4214,11 +4214,11 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            350.0,
-                            700.0
+                            350,
+                            700
                           ],
                           "Y": [
-                            1.0,
+                            1,
                             0.93
                           ],
                           "XVariableName": null,
@@ -4253,12 +4253,12 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8
                       ],
                       "Y": [
                         0.01,
@@ -4295,7 +4295,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 1,
                       "Units": null,
                       "Name": "One",
                       "ResourceName": null,
@@ -4310,7 +4310,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1,
                           "Units": null,
                           "Name": "StressResponseCoefficient",
                           "ResourceName": null,
@@ -4326,12 +4326,12 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                0.0,
-                                1.0
+                                0,
+                                1
                               ],
                               "Y": [
-                                2.0,
-                                0.0
+                                2,
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -4368,7 +4368,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 1,
                       "Units": null,
                       "Name": "One",
                       "ResourceName": null,
@@ -4383,7 +4383,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1,
                           "Units": null,
                           "Name": "StressResponseCoefficient",
                           "ResourceName": null,
@@ -4399,12 +4399,12 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                0.0,
-                                1.0
+                                0,
+                                1
                               ],
                               "Y": [
-                                2.0,
-                                0.0
+                                2,
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -4442,20 +4442,20 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        5.0,
-                        6.0,
-                        8.0,
-                        9.0,
-                        10.0
+                        3,
+                        5,
+                        6,
+                        8,
+                        9,
+                        10
                       ],
                       "Y": [
-                        17000.0,
-                        20000.0,
-                        20000.0,
-                        18500.0,
-                        17000.0,
-                        17000.0
+                        17000,
+                        20000,
+                        20000,
+                        18500,
+                        17000,
+                        17000
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4486,11 +4486,11 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.4,
-                        1.0
+                        1
                       ],
                       "Y": [
-                        14000.0,
-                        14000.0
+                        14000,
+                        14000
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4514,7 +4514,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "InitialNConc",
                   "ResourceName": null,
@@ -4554,7 +4554,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": "0-1",
                   "Name": "SenessingLeafRelativeSize",
                   "ResourceName": null,
@@ -4564,7 +4564,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "ShadeInducedSenescenceRate",
                   "ResourceName": null,
@@ -4630,16 +4630,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        15.0,
-                        25.0,
-                        35.0
+                        0,
+                        15,
+                        25,
+                        35
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0,
-                        0.0
+                        0,
+                        1,
+                        1,
+                        0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4660,14 +4660,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        1.0,
+                        0,
+                        1,
                         1.5
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        1,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4697,14 +4697,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        1,
+                        1
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        1,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4743,14 +4743,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        10.0,
-                        40.0
+                        0,
+                        10,
+                        40
                       ],
                       "Y": [
-                        1.0,
-                        1.0,
-                        0.0
+                        1,
+                        1,
+                        0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4796,7 +4796,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "FrostFraction",
               "ResourceName": null,
@@ -4806,7 +4806,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "RemobilisationCost",
               "ResourceName": null,
@@ -4837,16 +4837,16 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        15.0,
-                        25.0,
-                        35.0
+                        0,
+                        15,
+                        25,
+                        35
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0,
-                        0.0
+                        0,
+                        1,
+                        1,
+                        0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4867,14 +4867,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        1.0,
+                        0,
+                        1,
                         1.5
                       ],
                       "Y": [
-                        0.0,
-                        1.0,
-                        1.0
+                        0,
+                        1,
+                        1
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4913,14 +4913,14 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.0,
-                        10.0,
-                        40.0
+                        0,
+                        10,
+                        40
                       ],
                       "Y": [
-                        1.0,
-                        1.0,
-                        0.0
+                        1,
+                        1,
+                        0
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
@@ -4953,8 +4953,8 @@
               "Children": [
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.3,
                   "FractionDeadToResidue": 0.3,
                   "Name": "Harvest",
@@ -4967,8 +4967,8 @@
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.8,
                   "FractionDeadToRemove": 0.8,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionLiveToResidue": 0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Cut",
                   "ResourceName": null,
                   "Children": [],
@@ -4977,8 +4977,8 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.6,
                   "FractionDeadToResidue": 0.6,
                   "Name": "Prune",
@@ -5001,8 +5001,8 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.05,
                   "FractionDeadToResidue": 0.05,
                   "Name": "Thin",
@@ -5038,17 +5038,17 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        3.0,
-                        4.0,
-                        5.0,
+                        3,
+                        4,
+                        5,
                         5.7,
-                        6.0
+                        6
                       ],
                       "Y": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
+                        1,
+                        1,
+                        1,
+                        1,
                         1.2
                       ],
                       "XVariableName": null,
@@ -5096,7 +5096,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": null,
               "Name": "DMConversionEfficiency",
               "ResourceName": null,
@@ -5116,7 +5116,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "WidthFunction",
               "ResourceName": null,
@@ -5140,7 +5140,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Structural",
                   "ResourceName": null,
@@ -5150,7 +5150,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -5160,7 +5160,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -5179,7 +5179,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Structural",
                   "ResourceName": null,
@@ -5189,7 +5189,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -5199,7 +5199,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -5229,7 +5229,7 @@
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "NReallocationFactor",
               "ResourceName": null,
@@ -5239,7 +5239,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "RemobilisationCost",
               "ResourceName": null,
@@ -5261,7 +5261,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0,
                       "Units": null,
                       "Name": "ValueDuringEarlyGrowth",
                       "ResourceName": null,
@@ -5306,13 +5306,13 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
+                    3,
+                    4,
+                    5,
                     5.5,
                     6.5,
-                    7.0,
-                    8.0
+                    7,
+                    8
                   ],
                   "Y": [
                     0.01,
@@ -5361,9 +5361,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.5,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [],
@@ -5373,9 +5373,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.8,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToRemove": 0,
+                  "FractionLiveToResidue": 0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Cut",
                   "ResourceName": null,
                   "Children": [],
@@ -5384,10 +5384,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.6,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -5397,9 +5397,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.6,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.2,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Graze",
                   "ResourceName": null,
                   "Children": [],
@@ -5408,10 +5408,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Thin",
                   "ResourceName": null,
                   "Children": [],
@@ -5431,7 +5431,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Constant",
                   "ResourceName": null,
@@ -5457,7 +5457,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0,
                       "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
@@ -5496,7 +5496,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "ResourceName": null,
@@ -5506,7 +5506,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": "0-1",
               "Name": "MaintenanceRespirationFunction",
               "ResourceName": null,
@@ -5516,7 +5516,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "ResourceName": null,
@@ -5535,7 +5535,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "DMReallocationFactor",
               "ResourceName": null,
@@ -5615,12 +5615,12 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
                   ],
                   "Y": [
                     0.07,
@@ -5683,18 +5683,18 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                5.0,
-                                6.0,
+                                5,
+                                6,
                                 6.01,
-                                8.0,
-                                9.0
+                                8,
+                                9
                               ],
                               "Y": [
-                                0.0,
+                                0,
                                 0.01,
                                 0.9,
                                 0.9,
-                                0.0
+                                0
                               ],
                               "XVariableName": null,
                               "Name": "XYPairs",
@@ -5755,7 +5755,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
+                              "FixedValue": 0,
                               "Units": null,
                               "Name": "StructuralFractionGF",
                               "ResourceName": null,
@@ -5777,7 +5777,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -5797,7 +5797,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1,
                           "Units": null,
                           "Name": "One",
                           "ResourceName": null,
@@ -5824,7 +5824,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -5834,7 +5834,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -5844,7 +5844,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -5962,7 +5962,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -5972,7 +5972,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -5982,7 +5982,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6009,7 +6009,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": "g/m^2",
                   "Name": "Structural",
                   "ResourceName": null,
@@ -6019,7 +6019,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -6029,7 +6029,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -6043,7 +6043,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
@@ -6084,24 +6084,24 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0,
-                    9.0,
-                    10.0,
-                    11.0
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11
                   ],
                   "Y": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
                     0.2,
                     0.5
                   ],
@@ -6127,7 +6127,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "RemobilisationCost",
               "ResourceName": null,
@@ -6143,12 +6143,12 @@
                 {
                   "$type": "Models.Functions.XYPairs, Models",
                   "X": [
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    7.0,
-                    8.0
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
                   ],
                   "Y": [
                     0.07,
@@ -6197,7 +6197,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "Constant",
                   "ResourceName": null,
@@ -6211,7 +6211,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "NReallocationFactor",
               "ResourceName": null,
@@ -6233,7 +6233,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0,
                       "Units": null,
                       "Name": "Fraction",
                       "ResourceName": null,
@@ -6284,7 +6284,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0,
                       "Units": null,
                       "Name": "DMRetranslocationFactor",
                       "ResourceName": null,
@@ -6329,9 +6329,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.5,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Harvest",
                   "ResourceName": null,
                   "Children": [],
@@ -6341,9 +6341,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.8,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToRemove": 0,
+                  "FractionLiveToResidue": 0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Cut",
                   "ResourceName": null,
                   "Children": [],
@@ -6352,10 +6352,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.6,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Prune",
                   "ResourceName": null,
                   "Children": [],
@@ -6365,9 +6365,9 @@
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                   "FractionLiveToRemove": 0.6,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.2,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Graze",
                   "ResourceName": null,
                   "Children": [],
@@ -6376,10 +6376,10 @@
                 },
                 {
                   "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
+                  "FractionLiveToRemove": 0,
+                  "FractionDeadToRemove": 0,
                   "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.0,
+                  "FractionDeadToResidue": 0,
                   "Name": "Thin",
                   "ResourceName": null,
                   "Children": [],
@@ -6419,7 +6419,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "ResourceName": null,
@@ -6429,7 +6429,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": "0-1",
               "Name": "MaintenanceRespirationFunction",
               "ResourceName": null,
@@ -6439,7 +6439,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
+              "FixedValue": 1,
               "Units": "0-1",
               "Name": "DMConversionEfficiency",
               "ResourceName": null,
@@ -6449,7 +6449,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "DMReallocationFactor",
               "ResourceName": null,
@@ -6611,7 +6611,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0,
                                   "Units": null,
                                   "Name": "StemFraction",
                                   "ResourceName": null,
@@ -6688,7 +6688,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -6708,7 +6708,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 1,
                           "Units": null,
                           "Name": "One",
                           "ResourceName": null,
@@ -6735,7 +6735,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -6745,7 +6745,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -6755,7 +6755,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6873,7 +6873,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -6883,7 +6883,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -6893,7 +6893,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6920,7 +6920,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": "g/m^2",
                   "Name": "Structural",
                   "ResourceName": null,
@@ -6930,7 +6930,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Metabolic",
                   "ResourceName": null,
@@ -6940,7 +6940,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -6954,7 +6954,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
+              "FixedValue": 0,
               "Units": null,
               "Name": "Photosynthesis",
               "ResourceName": null,
@@ -7206,13 +7206,13 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.0",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.MinLN = 9.0",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3.0",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 1.0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 6.0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200.0",
+                    "[Phenology].CAMP.FLNparams.MinLN = 9",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
@@ -7908,12 +7908,12 @@
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.137742329295879",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].CAMP.FLNparams.MinLN = 6.560015655192633",
-                    "[Phenology].CAMP.FLNparams.PpLN = 6.643375362263288",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 2.9756866256949213",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -1.2277790705157638",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 85.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 1",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
                   ],
                   "Name": "Mace",
                   "ResourceName": null,
@@ -8089,12 +8089,12 @@
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.217687425020179",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.587470530354073",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.376254297023191",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 7.290105860007753",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -0.21846185824295006",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 214.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 1",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 9",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
                   ],
                   "Name": "Wedgetail",
                   "ResourceName": null,
@@ -8190,12 +8190,12 @@
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.23032920462638",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].CAMP.FLNparams.MinLN = 6.2631454365467425",
-                    "[Phenology].CAMP.FLNparams.PpLN = 1.049982171683665",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 9.60754621604048",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -8.104585325560912",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 129.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.9121715103311479"
+                    "[Phenology].CAMP.FLNparams.MinLN = 8",
+                    "[Phenology].CAMP.FLNparams.PpLN = 0",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 8",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -8",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Scepter",
                   "ResourceName": null,
@@ -8666,14 +8666,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 102.321288321408",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.254667061341894",
-                    "[Phenology].CAMP.FLNparams.MinLN = 8.056022047314787",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.2627832411817734",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 3.873263839218561",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 2.760976791660161",
+                    "[Phenology].CAMP.FLNparams.MinLN = 8",
+                    "[Phenology].CAMP.FLNparams.PpLN = 3",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 3",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 3",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 135.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.3547507142544883"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 170",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Beaufort",
                   "ResourceName": null,
@@ -8706,14 +8706,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 112.665706012865",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.16928704526596",
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.479043578931192",
-                    "[Phenology].CAMP.FLNparams.PpLN = 0.7582890221351648",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 3.9851300963874587",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -2.992585131295561",
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 2",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -1",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.7375387206541502"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
                   ],
                   "Name": "Calingiri",
                   "ResourceName": null,
@@ -8766,14 +8766,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.832025052954",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.199967770650946",
-                    "[Phenology].CAMP.FLNparams.MinLN = 5.881535313978892",
-                    "[Phenology].CAMP.FLNparams.PpLN = 4.3889035029973495",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 4.584760194848535",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -1.784677701752301",
+                    "[Phenology].CAMP.FLNparams.MinLN = 6",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 3",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 225.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 230",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Crusader",
                   "ResourceName": null,
@@ -9182,12 +9182,12 @@
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.138444741551648",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].CAMP.FLNparams.MinLN = 6.697673181989524",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.9542612440820344",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 2.790618745015072",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -0.5393099276546351",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 121.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.5817495140148758"
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 3",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 130",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Magenta",
                   "ResourceName": null,
@@ -9379,7 +9379,8 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
-                    }],
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9490,12 +9491,12 @@
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.35511766231399",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].CAMP.FLNparams.MinLN = 6.469756288568329",
-                    "[Phenology].CAMP.FLNparams.PpLN = 5.538379042099853",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 4.455598669082882",
-                    "[Phenology].CAMP.FLNparams.VxPLN = -0.7147867401595818",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 98.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.473331222262602"
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
                   ],
                   "Name": "Trojan",
                   "ResourceName": null,
@@ -9522,14 +9523,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 101.152462224521",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.160519169483945",
-                    "[Phenology].CAMP.FLNparams.MinLN = 8.15831144307034",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.5803674618892387",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 6.3147438166192345",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0.23101317356419848",
+                    "[Phenology].CAMP.FLNparams.MinLN = 8",
+                    "[Phenology].CAMP.FLNparams.PpLN = 2",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 8",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -2",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 185.0",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
                   ],
                   "Name": "Whistler",
                   "ResourceName": null,
@@ -9559,7 +9560,7 @@
         },
         {
           "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
+          "FixedValue": 0,
           "Units": null,
           "Name": "MortalityRate",
           "ResourceName": null,
@@ -9569,7 +9570,7 @@
         },
         {
           "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
+          "FixedValue": 0,
           "Units": null,
           "Name": "SeedMortalityRate",
           "ResourceName": null,
