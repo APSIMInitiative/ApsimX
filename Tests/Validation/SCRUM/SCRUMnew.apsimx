@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 384,
+  "ExplorerWidth": 291,
   "Version": 160,
   "Name": "Simulations",
   "ResourceName": null,
@@ -91,8 +91,67 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
+                  "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Seed",
+                  "End": "Germination",
+                  "Name": "GerminatingPhase",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.EmergingPhase, Models",
+                  "Start": "Germination",
+                  "End": "Emergence",
+                  "TTForTimeStep": 0.0,
+                  "Name": "Emerging",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "ThermalTime",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Target",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 5.0,
+                          "Units": "oCd/mm",
+                          "Name": "ShootRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.GenericPhase, Models",
+                  "Start": "Emergence",
                   "End": "Seedling",
                   "Name": "Seedling",
                   "ResourceName": null,
@@ -108,7 +167,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1000.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -147,7 +206,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -186,7 +245,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -216,7 +275,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -255,7 +314,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -294,7 +353,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -333,7 +392,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
+                      "FixedValue": 0.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
@@ -676,12 +735,12 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 1.0,
-                                2.0,
-                                3.0,
                                 4.0,
                                 5.0,
                                 6.0,
-                                7.0
+                                7.0,
+                                8.0,
+                                9.0
                               ],
                               "Y": [
                                 1.0,
@@ -1473,15 +1532,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "",
-                  "Name": "ExpressionFunction",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "g/m2",
@@ -1498,7 +1548,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.DeltaFunction, Models",
-                      "StartStageName": "Seed",
+                      "StartStageName": "Emergence",
                       "Name": "UnStressedBiomass",
                       "ResourceName": null,
                       "Children": [
@@ -1668,7 +1718,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Seed",
+                      "Start": "Emergence",
                       "End": "MidReproductive",
                       "Name": "Expanding",
                       "ResourceName": null,
@@ -1855,7 +1905,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Seed",
+                      "Start": "Emergence",
                       "End": "MidReproductive",
                       "Name": "Expanding",
                       "ResourceName": null,
@@ -1867,7 +1917,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.97,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Ymax",
                               "ResourceName": null,
@@ -1886,7 +1936,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 540.0,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "Xo",
                               "ResourceName": null,
@@ -1896,7 +1946,7 @@
                             },
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 120.0,
+                              "FixedValue": 0.0,
                               "Units": null,
                               "Name": "b",
                               "ResourceName": null,
@@ -2196,12 +2246,12 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 1.0,
-                                2.0,
-                                3.0,
                                 4.0,
                                 5.0,
                                 6.0,
-                                7.0
+                                7.0,
+                                8.0,
+                                9.0
                               ],
                               "Y": [
                                 1.0,
@@ -2914,6 +2964,15 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Emerging.Target",
+                              "Name": "Emerging",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Phenology].Seedling.Target",
                               "Name": "Seedling",
                               "ResourceName": null,
@@ -3397,29 +3456,12 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "g/m2",
                       "Name": "Structural",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].InitialWt",
-                          "Name": "AboveGround",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].RootProportion",
-                          "Name": "RootPropn",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4599,7 +4641,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        public enum EstablishStages {Seed, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        public enum EstablishStages {Seed, Germination, Emergence, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        private ScrumManagement management {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),PlantingDepth,HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "CropName",
@@ -4611,19 +4653,23 @@
                 },
                 {
                   "Key": "EstablishStage",
-                  "Value": "Seedling"
+                  "Value": "Emergence"
+                },
+                {
+                  "Key": "PlantingDepth",
+                  "Value": "15"
                 },
                 {
                   "Key": "HarvestDate",
-                  "Value": "04/14/1999 00:00:00"
+                  "Value": "01/01/0001 00:00:00"
                 },
                 {
                   "Key": "HarvestTT",
-                  "Value": "NaN"
+                  "Value": "1000"
                 },
                 {
                   "Key": "HarvestStage",
-                  "Value": "LateReproductive"
+                  "Value": "Maturity"
                 },
                 {
                   "Key": "PotentialYield",
@@ -4649,6 +4695,7 @@
               "CropName": "Cereal",
               "EstablishDate": "1998-10-14T00:00:00",
               "EstablishStage": "Seed",
+              "PlantingDepth": 0.0,
               "HarvestDate": "1999-04-14T00:00:00",
               "HarvestTt": 0.0,
               "HarvestStage": "Maturity",
@@ -4806,6 +4853,7 @@
                 "[SCRUM].Arbitrator.DM.TotalFixationSupply",
                 "[SCRUM].Arbitrator.DM.TotalPlantDemand",
                 "[SCRUM].Phenology.AccumulatedEmergedTT",
+                "[SCRUM].Phenology.AccumulatedTT",
                 "[SCRUM].Arbitrator.DM.SinkLimitation",
                 "[SCRUM].Arbitrator.DM.NutrientLimitation",
                 "[SCRUM].Phenology.ThermalTime",
@@ -4827,7 +4875,9 @@
                 "[SCRUM].Arbitrator.N.TotalPlantSupply",
                 "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction"
+                "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
+                "[SCRUM].TotalDMAtHarvest",
+                "[SCRUM].Total.Wt/[SCRUM].TotalDMAtHarvest as PropDM"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -4853,8 +4903,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -15.883202689481616,
-              "Maximum": 1604.2024716376684,
+              "Minimum": -13.892808817569918,
+              "Maximum": 1715.7224542860558,
               "Interval": null
             },
             {
@@ -4863,8 +4913,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 657.5646466551842,
-              "Maximum": 4290.045114515882,
+              "Minimum": 53.587436160447815,
+              "Maximum": 3686.0679040211444,
               "Interval": null
             }
           ],
@@ -4890,7 +4940,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
               "YFieldName": "SCRUM.Stover.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -4930,7 +4980,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
               "YFieldName": "SCRUM.Root.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -4959,7 +5009,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
               "YFieldName": "SCRUM.Product.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -4988,7 +5038,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
               "YFieldName": "SCRUM.Total.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -5017,7 +5067,7 @@
               "Line": 1,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
               "YFieldName": "SCRUM.DryYield",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -5104,8 +5154,8 @@
               "Line": 1,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
-              "YFieldName": "SCRUM.Ymax",
+              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "YFieldName": "SCRUM.TotalDMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -5113,7 +5163,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "ParamYmax",
+              "Name": "ParamTotalDMAtHarvest",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -5162,8 +5212,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.19113378096713476,
-              "Maximum": 19.303511877705873,
+              "Minimum": -0.2033316596774659,
+              "Maximum": 20.535497627449317,
               "Interval": null
             },
             {
@@ -5326,8 +5376,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.0005099999997473788,
-              "Maximum": 0.05050999999974738,
+              "Minimum": -0.0002948799309293613,
+              "Maximum": 0.028782873049127612,
               "Interval": null
             },
             {
@@ -5461,8 +5511,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.08288759496848053,
-              "Maximum": 8.370647091841796,
+              "Minimum": -0.09112964855482954,
+              "Maximum": 9.203094504063046,
               "Interval": null
             },
             {
@@ -5481,8 +5531,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -6.431862684881562,
-              "Maximum": 1211.944879828563,
+              "Minimum": -12.000009999999747,
+              "Maximum": 1212.0000099999997,
               "Interval": null
             }
           ],
@@ -5711,8 +5761,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009709992549125924,
-              "Maximum": 0.9797092474869804,
+              "Minimum": -0.009709954224532908,
+              "Maximum": 0.9797053767030858,
               "Interval": null
             },
             {
@@ -5721,8 +5771,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 657.5646466551842,
-              "Maximum": 4290.045114515882,
+              "Minimum": -35.01606341004111,
+              "Maximum": 3536.6214044141775,
               "Interval": null
             },
             {
@@ -5731,8 +5781,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -1.7721346536513645,
-              "Maximum": 741.3123486743131,
+              "Minimum": 111.08362392944508,
+              "Maximum": 1013.8506670898072,
               "Interval": null
             }
           ],
@@ -5885,8 +5935,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.0031434365828434258,
-              "Maximum": 0.31648709489244814,
+              "Minimum": -0.0035472370299599433,
+              "Maximum": 0.3572709400512164,
               "Interval": null
             },
             {
@@ -5980,8 +6030,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.1947511784610485,
-              "Maximum": 19.668869024591004,
+              "Minimum": -0.25118544717702385,
+              "Maximum": 25.36873016490449,
               "Interval": null
             },
             {
@@ -6133,8 +6183,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -2.2213145377236017,
-              "Maximum": 224.35176831010904,
+              "Minimum": -2.210181745368771,
+              "Maximum": 223.22735628227116,
               "Interval": null
             },
             {
@@ -6450,8 +6500,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 1.9598357328186509,
-              "Maximum": 7.0594538085193115,
+              "Minimum": 3.9598357328186506,
+              "Maximum": 9.059453808519311,
               "Interval": null
             },
             {
@@ -6537,8 +6587,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.06376514658562962,
-              "Maximum": 6.439279805173854,
+              "Minimum": -0.06376282408904749,
+              "Maximum": 6.4390452330190575,
               "Interval": null
             }
           ],
@@ -6616,6 +6666,83 @@
               "Name": "LAIDead",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Cover ",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": 0.001538886759334752,
+              "Maximum": 0.44945243733245216,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": 36079.399990000005,
+              "Maximum": 36344.600009999995,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 3,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Shape",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PropDM",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Stage",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }

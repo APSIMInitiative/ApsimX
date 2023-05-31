@@ -88,17 +88,18 @@ namespace Models.PMF.Scrum
         public void Establish(ScrumManagement management)
         {
             string cropName = this.Name;
-            double depth = 0;
+            double depth = management.PlantingDepth;
             double maxCover = this.Acover;
             double population = 1.0;
             double rowWidth = 0.0;
 
             Cultivar crop = coeffCalc(management);
             scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
-            scrum.Phenology.Emerged = true;
-            if(management.EstablishStage == "Seedling")
+            if(management.EstablishStage != "Seed")
             {
-                phenology.SetToStage(2.0);
+                phenology.SetToStage(StageNumbers[management.EstablishStage]);
+                if (StageNumbers[management.EstablishStage] >= 3.0)
+                    scrum.Phenology.Emerged = true;
             }
         }
         
@@ -107,6 +108,10 @@ namespace Models.PMF.Scrum
         {
             /// <summary>Crop established as dry seed</summary>
             Seed,
+            /// <summary>Radicle emerged from seed</summary>
+            Germination,
+            /// <summary>Shoot emerged from soil</summary>
+            Emergence,
             /// <summary>Crop established by transplanting seedlings</summary>
             Seedling,
         };
@@ -130,12 +135,17 @@ namespace Models.PMF.Scrum
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { { "Seed", 0.0066 },{ "Seedling", 0.015 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.75},
+        public static Dictionary<string, int> StageNumbers = new Dictionary<string, int>() { {"Seed",1 },{"Germination",2 },{ "Emergence", 3 },{ "Seedling", 4 },
+            { "Vegetative", 5},{ "EarlyReproductive",6},{ "MidReproductive",7},{  "LateReproductive",8},{"Maturity",9},{"Ripe",10 } };
+
+        /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
+        [JsonIgnore]
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{"Germination",0.0 },{ "Emergence", 0.0066 },{ "Seedling", 0.03 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.75},
             { "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9933},{"Ripe",0.9995 } };
 
         /// <summary>Dictionary containing values for the proportion of thermal time to maturity that has accumulate at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { { "Seed", 0 },{ "Seedling", 0.16 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.61},
+        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { { "Seed", 0.0 },{"Germination",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.16 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.61},
             { "MidReproductive",0.69},{  "LateReproductive",0.8},{"Maturity",1.0},{"Ripe",1.27} };
 
         [JsonIgnore]
@@ -164,6 +174,7 @@ namespace Models.PMF.Scrum
             {"TtMaturity","[Phenology].Maturity.Target.FixedValue ="},
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
             {"InitialWt","[Stover].InitialWt.FixedValue = "},
+            {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
             {"BaseT","[Phenology].ThermalTime.Response.Y[1] = "},
             {"OptT","[Phenology].ThermalTime.Response.Y[2] = " },
             {"MaxT","[Phenology].ThermalTime.Response.Y[3] = " },
@@ -232,7 +243,8 @@ namespace Models.PMF.Scrum
             cropParams["TtRipe"] += (T_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
             double finalDM = ey * dmc * (1 / this.HarvestIndex);
-            cropParams["InitialWt"] += (finalDM * PropnMaxDM[management.EstablishStage]).ToString();  
+            cropParams["InitialWt"] += (finalDM * PropnMaxDM[management.EstablishStage]).ToString(); 
+            cropParams["InitialRootWt"] += (finalDM * PropnMaxDM["Emergence"]).ToString();
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();

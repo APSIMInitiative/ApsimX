@@ -34,6 +34,10 @@ namespace Models.PMF.Scrum
         [Display(Type = DisplayType.CropStageName)]
         public string EstablishStage { get; set; }
 
+        /// <summary>Planting depth (mm)</summary>
+        [Description("Planting depth (mm)")]
+        public double PlantingDepth { get; set; }
+
         /// <summary>Harvest Date</summary>
         [Description("Harvest Date")]
         public Nullable <DateTime> HarvestDate { get; set; }
@@ -85,12 +89,13 @@ namespace Models.PMF.Scrum
         /// <summary>
         /// Management class constructor
         /// </summary>
-        public ScrumManagement(string cropName, DateTime establishmentDate, string establishStage, string harvestStage, double expectedYield,
+        public ScrumManagement(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
              Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN)
         {
             CropName = cropName;
             EstablishDate = establishmentDate;
             EstablishStage = establishStage;
+            PlantingDepth = plantingDepth;
             HarvestStage = harvestStage;
             if (expectedYield == 0.0)
                 throw new Exception(this.Name + "must have a yield > 0 set for the scrum crop to grow");
