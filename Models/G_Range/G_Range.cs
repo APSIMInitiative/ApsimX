@@ -29,7 +29,7 @@ namespace Models
         private ISummary summary = null;
 
         [Link]
-        private Clock Clock = null;
+        private IClock Clock = null;
 
         [Link]
         private IWeather Weather = null;
@@ -82,7 +82,7 @@ namespace Models
                 // So what should be used for deadStanding? Looks like it uses 2.5, even though I suspect
                 // for shrub and tree facets, the deadStandingCarbon will be mostly woody.
                 mass.MetabolicWt = (leafCarbon[Facet.herb] + leafCarbon[Facet.shrub] + leafCarbon[Facet.tree]) * 2.5;
-                mass.StructuralWt = (fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree]) * 2.0 + 
+                mass.StructuralWt = (fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree]) * 2.0 +
                                     (deadStandingCarbon[Facet.herb] + deadStandingCarbon[Facet.shrub] + deadStandingCarbon[Facet.tree]) * 2.5;
                 mass.MetabolicN = leafNitrogen[Facet.herb] + leafNitrogen[Facet.shrub] + leafNitrogen[Facet.tree];
                 mass.StructuralN = fineBranchNitrogen[Facet.shrub] + fineBranchNitrogen[Facet.tree] +
@@ -292,7 +292,7 @@ namespace Models
 
         /// <summary>
         /// Woody part constants
-        /// Woody parts, leaf, fine root, fine branch, large wood, and coarse root    
+        /// Woody parts, leaf, fine root, fine branch, large wood, and coarse root
         /// </summary>
         public static class WoodyPart
         {
@@ -410,10 +410,10 @@ namespace Models
         /// This is the number of individuals in a 1 km^2 area
         /// </summary>
         [JsonIgnore]
-        public double[] totalPopulation { get; private set; } = new double[nLayers]; 
+        public double[] totalPopulation { get; private set; } = new double[nLayers];
 
         /// <summary>
-        /// Bare cover stored, rather than continually summing the three facets. 
+        /// Bare cover stored, rather than continually summing the three facets.
         /// </summary>
         [Units("0-1")]
         [JsonIgnore]
@@ -435,7 +435,7 @@ namespace Models
         public double precip { get { return globe.precip; } }
 
         /// <summary>
-        /// Average maximum temperature for the current month 
+        /// Average maximum temperature for the current month
         /// Exposed here for reporting purposes
         /// </summary>
         [Units("C")]
@@ -443,7 +443,7 @@ namespace Models
         public double maxTemp { get { return globe.maxTemp; } }
 
         /// <summary>
-        /// Average minimum temperature for the current month 
+        /// Average minimum temperature for the current month
         /// Exposed here for reporting purposes
         /// </summary>
         [Units("C")]
@@ -529,7 +529,7 @@ namespace Models
         /// </summary>
         [Units("g/m^2")]
         [JsonIgnore]
-        public double[] nLeached { get; private set; } = new double[nDefSoilLayers]; 
+        public double[] nLeached { get; private set; } = new double[nDefSoilLayers];
 
         private double[] asmos = new double[nDefSoilLayers];     // Used in summing water
         private double[] amov = new double[nDefSoilLayers];      // Used in summing water movement
@@ -549,7 +549,7 @@ namespace Models
         /// Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
         /// </summary>
         [JsonIgnore]
-        public double[] waterAvailable { get; private set; }  = new double[3]; 
+        public double[] waterAvailable { get; private set; }  = new double[3];
 
         /// <summary>
         /// Annual actual evapotranspiration
@@ -685,7 +685,7 @@ namespace Models
         /// Carbon to nitrogen ratio, SURFACE, SOIL
         /// </summary>
         [JsonIgnore]
-        public double[] carbonNitrogenRatio { get; private set; } = new double[2]; 
+        public double[] carbonNitrogenRatio { get; private set; } = new double[2];
 
         /// <summary>
         /// Soil organic matter carbon, surface and soil  g/m2(SOM1C in Century)
@@ -751,7 +751,7 @@ namespace Models
         public double[] abovegroundPotProduction { get; private set; } = new double[nLayers];
 
         /// <summary>
-        /// BIOMASS, Calculate total potential production, in g/m2 with all the corrections in place. 
+        /// BIOMASS, Calculate total potential production, in g/m2 with all the corrections in place.
         /// </summary>
         [Units("g/m^2")]
         [JsonIgnore]
@@ -1009,7 +1009,7 @@ namespace Models
         /// </summary>
         [Units("g/m^2")]
         [JsonIgnore]
-        public double[] litterStructuralCarbon { get; private set; } = new double[2];   
+        public double[] litterStructuralCarbon { get; private set; } = new double[2];
 
         /// <summary>
         /// Litter metabolic carbon at the surface(1)[0 in C#] and in the soil(2)[1 in C#]  (METCIS, or in Savanna, SMETCIS)
@@ -1233,7 +1233,7 @@ namespace Models
 
         // private int largeErrorCount;  // The count of cells being reset because their values were very very large
         // private int negErrorCount;    // The count of cell being reset because values were below zero
-       
+
         // Additional output variables added for convenience in the Apsim context - EJZ
         /// <summary>
         /// Herbaceous facet aboveground net primary production
@@ -1353,12 +1353,12 @@ namespace Models
             [Description("Temperate deciduous forest and woodland")]
             TemperateDecid,
             /// <summary>
-            /// BOREAL EVERGREEN FOREST / WOODLAND 
+            /// BOREAL EVERGREEN FOREST / WOODLAND
             /// </summary>
             [Description("Boreal evergreen forest and woodland")]
             BorealEGreen,
             /// <summary>
-            /// BOREAL DECIDUOUS FOREST / WOODLAND 
+            /// BOREAL DECIDUOUS FOREST / WOODLAND
             /// </summary>
             [Description("Boreal deciduous forest and woodland")]
             BorealDecid,
@@ -1398,7 +1398,7 @@ namespace Models
             [Description("Desert")]
             Desert,
             /// <summary>
-            /// POLAR DESERT / ROCK / ICE 
+            /// POLAR DESERT / ROCK / ICE
             /// </summary>
             [Description("Polar desert")]
             PolarDesert
@@ -1450,7 +1450,7 @@ namespace Models
         private double[] partBasedDeathRate = new double[nFacets];
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
         public string FullDatabaseName
@@ -1814,7 +1814,7 @@ namespace Models
 
         /// <summary>
         /// Processes that are required each year, prior to any process-based simulation steps.
-        /// 
+        ///
         /// Transcoded from Misc_Material.f95
         /// </summary>
         private void EachYear()
@@ -1856,7 +1856,7 @@ namespace Models
             }
 
 
-            // Clearing -out the shrub_carbon and tree_carbon variables, such that they represent the contribution of new carbon            
+            // Clearing -out the shrub_carbon and tree_carbon variables, such that they represent the contribution of new carbon
             // to woody parts for the year in question.
             for (int iPart = 0; iPart < nWoodyParts; iPart++)
             {
@@ -1941,11 +1941,11 @@ namespace Models
               // I prefer not to use the external files of G-Range, especially as the Weather component is already intended as
               // a provider of information on CO2 levels.
 
-            // In G-Range, a value of 0.8 is the baseline value for co2EffectOnProduction, 
+            // In G-Range, a value of 0.8 is the baseline value for co2EffectOnProduction,
             // and is what G-Range uses for dates prior to 2007. They have the value going up to around 1.0 in 2066 under the rcp85 scenario,
             // which is around 800 ppm. Boone et al. 2017 reference equation 10 of Pan et al. (1998):
             // 1 + (1.25 - 1)/(log10(2)) * (log10(CO2 / 350))
-            // But actually use something a bit different, indicating 2006 CO2 levels as a baseline, without giving details. 
+            // But actually use something a bit different, indicating 2006 CO2 levels as a baseline, without giving details.
             // I can get close to their values with the following:
             double co2 = Math.Max(Weather.CO2, 380.0);
             double co2Effect = 0.8 + (0.19 / Math.Log10(2.0)) * Math.Log10(co2 / 380.0);
@@ -1984,7 +1984,7 @@ namespace Models
         /// values aren't exceeding a very large value, or moving negative.  Errors will cause tallying of counts of errors,
         /// both spatially and per entry.That said, they won't be stored spatially for each individual entry, as that
         /// would almost double memory.
-        /// 
+        ///
         /// This routine includes a simple assignment of grazing fraction.That logic is placed here to allow for it to
         /// be made more dynamic in the future.
         /// </summary>

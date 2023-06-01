@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -83,7 +82,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags()
         {
             string html = "</table>";
-            if(WeightWarningOccurred)
+            if (WeightWarningOccurred)
                 html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
             return html;
         }
@@ -94,7 +93,7 @@ namespace Models.CLEM.Resources
             WeightWarningOccurred = false;
             ConceptionsFound = this.FindAllDescendants<SetPreviousConception>().Any();
             AttributesFound = this.FindAllDescendants<SetAttributeWithValue>().Any();
-            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
+            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound ? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 
         #endregion

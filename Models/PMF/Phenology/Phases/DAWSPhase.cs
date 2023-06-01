@@ -1,10 +1,6 @@
 using System;
 using Models.Core;
-using Models.PMF.Organs;
 using Newtonsoft.Json;
-using Models.PMF.Struct;
-using System.IO;
-using Models.Functions;
 using Models.Climate;
 
 namespace Models.PMF.Phen
@@ -25,7 +21,7 @@ namespace Models.PMF.Phen
         Weather met = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -43,6 +39,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Days after winter solstice to progress from phase</summary>
         [Description("DAWStoProgress")]
@@ -74,7 +74,7 @@ namespace Models.PMF.Phen
                         StartDAWS = 366 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
                     else
                         StartDAWS = 365 - met.WinterSolsticeDOY + clock.Today.DayOfYear -1;
-                } 
+                }
                 else
                     StartDAWS = clock.Today.DayOfYear - met.WinterSolsticeDOY;
 

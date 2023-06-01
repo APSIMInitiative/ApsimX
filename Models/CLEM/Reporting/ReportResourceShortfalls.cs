@@ -1,17 +1,7 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
-using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
 using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
@@ -28,7 +18,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a ledger of all shortfalls in resource requests")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
-    public class ReportResourceShortfalls: Models.Report
+    public class ReportResourceShortfalls : Models.Report
     {
         /// <summary>
         /// The pasture shortfall as proportion of desired intake before reported

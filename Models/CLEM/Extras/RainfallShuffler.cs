@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -17,8 +15,8 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(FileSQLitePasture))]
     [Description("Shuffle rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
@@ -27,7 +25,7 @@ namespace Models.CLEM
     public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season
@@ -142,7 +140,7 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

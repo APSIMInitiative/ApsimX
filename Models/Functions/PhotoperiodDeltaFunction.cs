@@ -23,7 +23,7 @@ namespace Models.Functions
 
         /// <summary>The clock</summary>
         [Link]
-        protected Clock Clock = null;
+        protected IClock Clock = null;
 
         /// <summary>The twilight</summary>
         [Description("Twilight")]

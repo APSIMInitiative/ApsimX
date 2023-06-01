@@ -3410,7 +3410,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Eucalyptus].Stem.Vol/[Eucalyptus].Age",
+              "Expression": "divide([Eucalyptus].Stem.Vol, [Eucalyptus].Age)",
               "Name": "MAI",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3419,7 +3419,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Eucalyptus].Stem.Volub/[Eucalyptus].Age",
+              "Expression": "divide([Eucalyptus].Stem.Volub, [Eucalyptus].Age)",
               "Name": "MAIub",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3604,7 +3604,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.BarkWt*10/[Eucalyptus].Stem.VolBark",
+                  "Expression": "divide([Eucalyptus].Stem.BarkWt*10, [Eucalyptus].Stem.VolBark)",
                   "Name": "BarkDensity",
                   "Children": [
                     {
@@ -3661,7 +3661,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Eucalyptus].Stem.WoodWt*10/[Eucalyptus].Stem.Volub",
+                  "Expression": "divide([Eucalyptus].Stem.WoodWt*10, [Eucalyptus].Stem.Volub)",
                   "Name": "WoodDensity",
                   "Children": [],
                   "IncludeInDocumentation": true,

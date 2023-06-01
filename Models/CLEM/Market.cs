@@ -3,12 +3,12 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM
 {
@@ -24,7 +24,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
     [ScopedModel]
-    public class Market: Zone, IValidatableObject, ICLEMUI
+    public class Market : Zone, IValidatableObject, ICLEMUI
     {
         [Link]
         private Summary summary = null;
@@ -60,11 +60,13 @@ namespace Models.CLEM
         /// <summary>
         /// ResourceHolder for the market
         /// </summary>
-        public ResourcesHolder Resources { get
+        public ResourcesHolder Resources
+        {
+            get
             {
-                if(resources == null)
+                if (resources == null)
                     resources = this.FindAllChildren<ResourcesHolder>().FirstOrDefault();
-                return resources; 
+                return resources;
             }
         }
 
@@ -157,7 +159,7 @@ namespace Models.CLEM
 
                 return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
 

@@ -1,17 +1,14 @@
+using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Newtonsoft.Json;
-using Models.Core;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Activities;
-using Models.Core.Attributes;
-using System.IO;
-using Models.CLEM.Groupings;
-using Models.CLEM.Interfaces;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -88,7 +85,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Display nuber of individuals
         /// </summary>
-        public bool DisplayNumber { get { return Parent is RuminantInitialCohorts; }  }
+        public bool DisplayNumber { get { return Parent is RuminantInitialCohorts; } }
 
         /// <summary>
         /// Constructor
@@ -151,7 +148,7 @@ namespace Models.CLEM.Resources
                 for (int i = 1; i <= number; i++)
                 {
                     double weight = 0;
-                    if(Weight > 0)
+                    if (Weight > 0)
                     {
                         // avoid accidental small weight if SD provided but weight is 0
                         // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
@@ -162,9 +159,9 @@ namespace Models.CLEM.Resources
                         weight = Weight + WeightSD * randStdNormal;
                     }
 
-                    Ruminant ruminant = Ruminant.Create(Sex, parent, Age, weight);          
+                    Ruminant ruminant = Ruminant.Create(Sex, parent, Age, weight);
 
-                    if(getUniqueID)
+                    if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
                     ruminant.Breed = parent.Breed;
                     ruminant.HerdName = parent.Name;
@@ -237,7 +234,7 @@ namespace Models.CLEM.Resources
                 if (!FormatForParentControl)
                 {
                     rumType = FindAncestor<RuminantType>();
-                    if(rumType is null)
+                    if (rumType is null)
                     {
                         // look for rum type in SpecifyRuminant
                         var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
@@ -343,17 +340,17 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write("Normalised weight");
                             htmlWriter.Write("</span>");
                         }
-                        if(Sire || Suckling)
+                        if (Sire || Suckling)
                         {
                             htmlWriter.Write(" and ");
                             htmlWriter.Write(Sire ? "<span class=\"setvalue\">Sires</span>" : "");
                             if (Suckling)
-                                htmlWriter.Write($"<span class=\"{(Sire ? "errorlink":"setvalue")}\">Suckling</span>");
+                                htmlWriter.Write($"<span class=\"{(Sire ? "errorlink" : "setvalue")}\">Suckling</span>");
                         }
                         htmlWriter.Write("\r\n</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -415,7 +412,7 @@ namespace Models.CLEM.Resources
                 else
                     htmlWriter.Write("\r\n</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

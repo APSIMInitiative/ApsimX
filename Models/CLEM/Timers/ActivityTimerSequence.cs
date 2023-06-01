@@ -157,7 +157,7 @@ namespace Models.CLEM.Timers
                 {
                     htmlWriter.Write(" - DISABLED!");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -171,7 +171,7 @@ namespace Models.CLEM.Timers
         public override string ModelSummaryOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
     }
 }

@@ -1,16 +1,12 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
-using Models.CLEM.Resources;
 using System.IO;
-using System.Xml.Serialization;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -56,7 +52,7 @@ namespace Models.CLEM.Groupings
         /// Get the value for the current month
         /// </summary>
         [JsonIgnore]
-        public virtual double CurrentValue { get { return Value;} }
+        public virtual double CurrentValue { get { return Value; } }
 
         /// <summary>
         /// The current feed resource request calculated for this feed group
@@ -70,8 +66,8 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public List<Ruminant> CurrentIndividualsToFeed
         {
-            get 
-            { 
+            get
+            {
                 return individualsToBeFed;
             }
             set
@@ -179,7 +175,8 @@ namespace Models.CLEM.Groupings
             double feedToOverSatisfy = 0;
             double feedNeeed = 0;
 
-            var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new {
+            var selectedIndividuals = Filter(individualsToBeFed).GroupBy(i => 1).Select(a => new
+            {
                 Count = countNeeded ? a.Count() : 0,
                 Weight = weightNeeded ? a.Sum(b => b.Weight) : 0,
                 Intake = a.Sum(b => b.Intake),
@@ -332,7 +329,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write("<div class=\"warningbanner\">Note: This is a specified daily amount fed to the entire herd. If insufficient provided, each individual's potential intake will not be met</div>");
                 }
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

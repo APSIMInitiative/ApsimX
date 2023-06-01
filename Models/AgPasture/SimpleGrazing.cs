@@ -1,17 +1,19 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.ForageDigestibility;
-using Models.Functions;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 using Models.PMF;
-using Models.PMF.Interfaces;
+using Models.Core;
 using Models.Soils;
 using Models.Surface;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.ForageDigestibility;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using APSIM.Shared.Utilities;
+
 namespace Models.AgPasture
 {
+
     /// <summary>
     /// A model for cutting pasture / plants and calculating and returning excreta to the
     /// soil based on the biomass cut. If this model is put at the top level of the simulation
@@ -23,7 +25,7 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Zone))]
     public class SimpleGrazing : Model
     {
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
         [Link] ScriptCompiler compiler = null;
@@ -71,7 +73,7 @@ namespace Models.AgPasture
         /// <summary>Invoked when urine and dung is to be returned to soil.</summary>
         /// <remarks>
         /// This event provides a mechanism for another model to perform a
-        /// urine and dung return to the soil. If no other model subscribes to this 
+        /// urine and dung return to the soil. If no other model subscribes to this
         /// event then SimpleGrazing will do the return. This mechanism
         /// allows a urine patch model to work.
         /// </remarks>
@@ -161,7 +163,7 @@ namespace Models.AgPasture
 
         /// <summary></summary>
         [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
-        public double[] FractionDefoliatedNToSoil { get; set; }   
+        public double[] FractionDefoliatedNToSoil { get; set; }
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
@@ -428,7 +430,7 @@ namespace Models.AgPasture
         {
             foreach (var zone in zones)
                 zone.DoManagement();
-            
+
             // Determine if we can graze today.
             GrazedToday = false;
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
@@ -487,8 +489,8 @@ namespace Models.AgPasture
                 {
                     foreach (var zone in zones)
                         zone.DoUrineDungTrampling(clock.Today.Month, FractionDefoliatedBiomassToSoil,
-                                                  FractionDefoliatedNToSoil, FractionExcretedNToDung, 
-                                                  CNRatioDung, DepthUrineIsAdded, TramplingOn, 
+                                                  FractionDefoliatedNToSoil, FractionExcretedNToDung,
+                                                  CNRatioDung, DepthUrineIsAdded, TramplingOn,
                                                   PastureConsumedAtMaximumRateOfLitterRemoval, MaximumPropLitterMovedToSoil);
                 }
                 else

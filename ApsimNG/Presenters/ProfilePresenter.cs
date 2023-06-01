@@ -99,8 +99,11 @@
         public void Detach()
         {
             DisconnectEvents();
-            gridPresenter.Detach();
-            propertyPresenter.Detach();
+            if (this.propertyPresenter != null)
+            {
+                gridPresenter.Detach();
+                propertyPresenter.Detach();
+            }
             view.Dispose();
         }
 

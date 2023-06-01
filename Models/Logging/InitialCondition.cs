@@ -1,7 +1,8 @@
+using System;
+
 namespace Models.Logging
 {
-    using System;
-
+    
     /// <summary>
     /// 
     /// </summary>

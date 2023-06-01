@@ -9,7 +9,7 @@
     using Models.PMF.Interfaces;
 
     /// <summary>
-    /// An instance of this class creates a genotype cross and adds it to the list of 
+    /// An instance of this class creates a genotype cross and adds it to the list of
     /// available crosses.
     /// </summary>
     [Serializable]
@@ -23,7 +23,7 @@
         private Stock stock = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
         private List<Zone> zones = null;
@@ -103,7 +103,7 @@
             {
                 if (TypeOfDraft == DraftType.Fixed)
                 {
-                    // Loop through all tag numbers. 
+                    // Loop through all tag numbers.
                     for (int t = 0; t < TagNumbers.Length; t++)
                     {
                         // Find the animal groups that have the tag number and move them to the
@@ -129,7 +129,7 @@
 
         /// <summary>
         /// Perform a draft (move animals) into the specified paddocks. Only move those animals
-        /// that have the specified tag numbers. Tags are assumed to be in priority order - the 
+        /// that have the specified tag numbers. Tags are assumed to be in priority order - the
         /// first tag is the highest priority, the second tag is the 2nd highest etc. The highest
         /// priority tag gets the best paddock (the one with the most forage), the second highest
         /// priority tag gets the second best paddock etc.

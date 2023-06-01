@@ -46,7 +46,7 @@ namespace UnitTests
             report.EventNames = new string[] { "[Clock].DoReport" };
             report.Name = reportName;
 
-            Clock clock = file.FindInScope<Clock>();
+            IClock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2019, 1, 1);
             clock.EndDate = new DateTime(2019, 1, 10);
 
@@ -96,7 +96,7 @@ Simulation,1,20.000,1,Current,10,Zone
             // Check property values at this point.
             Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
-            Clock clock = sims.FindInScope<Clock>();
+            IClock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();
             Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
             IPhysical physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
@@ -117,7 +117,7 @@ Simulation,1,20.000,1,Current,10,Zone
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
-            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled)?.Value as Clock;
+            IClock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled)?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count > 2);
