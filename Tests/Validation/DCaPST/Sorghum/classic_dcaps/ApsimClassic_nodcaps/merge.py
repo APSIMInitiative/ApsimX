@@ -41,7 +41,7 @@ def combineResults(directory):
         if simName in simNames:
             simName = simNames[simName]
         df['SimulationName'] = simName
-        df['Date'] = df['Date'].apply(lambda x: re.sub(date_rx, date_repl, x))
+        df['date'] = df['date'].apply(lambda x: re.sub(date_rx, date_repl, x))
         data.append(df)
 
     # Concatenate all data frames into a single big dataframe

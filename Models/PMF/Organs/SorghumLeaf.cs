@@ -140,6 +140,8 @@ namespace Models.PMF.Organs
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
+        private bool dcapstLowLAI = false;
+
         /// <summary>Constructor</summary>
         public SorghumLeaf()
         {

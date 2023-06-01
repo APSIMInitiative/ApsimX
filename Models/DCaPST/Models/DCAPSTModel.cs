@@ -36,12 +36,12 @@ namespace Models.DCAPST
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        private IPathwayParameters pathway;
+        private readonly IPathwayParameters pathway;
 
         /// <summary>
         /// The transpiration model
         /// </summary>
-        private Transpiration transpiration;
+        private readonly Transpiration transpiration;
 
         /// <summary>
         /// A public option to toggle if the interval values are tracked or not
@@ -200,7 +200,7 @@ namespace Models.DCAPST
         /// <summary>
         /// Calculates the ratio of A to A + B
         /// </summary>
-        private double RatioFunction(double A, double B)
+        private static double RatioFunction(double A, double B)
         {
             var total = A + B;
 
@@ -214,7 +214,7 @@ namespace Models.DCAPST
         /// <param name="limit">The water limit</param>
         /// <param name="percent">The precentage to reduce excess water by</param>
         /// <returns>Water with reduced excess</returns>
-        private double ReductionFunction(double water, double limit, double percent)
+        private static double ReductionFunction(double water, double limit, double percent)
         {
             if (water < limit) return water;
 
@@ -376,7 +376,7 @@ namespace Models.DCAPST
         /// the day is within some tolerance of the actual water available, as we want to make use of all the 
         /// accessible water.
         /// </summary>
-        private IEnumerable<double> CalculateWaterSupplyLimits(double soilWaterAvail, IEnumerable<double> demand)
+        private static IEnumerable<double> CalculateWaterSupplyLimits(double soilWaterAvail, IEnumerable<double> demand)
         {
             double initialDemand = demand.Sum();
 

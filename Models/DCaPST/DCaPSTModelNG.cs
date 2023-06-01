@@ -57,7 +57,7 @@ namespace Models.DCAPST
         /// Store the model as this is used in different functions after assignment.
         /// </summary>
         [JsonIgnore]
-        private DCAPSTModel model = null;
+        private DCAPSTModel dcapstModel = null;
 
         /// <summary>
         /// This flag is set to indicate that we have started using DCaPST. 
@@ -113,7 +113,7 @@ namespace Models.DCAPST
         public static ICropParameterGenerator ParameterGenerator { get; set; } = new CropParameterGenerator();
 
         /// <summary>
-        /// 
+        /// Creates the DCAPST Model.
         /// </summary>
         /// <param name="canopyParameters"></param>
         /// <param name="pathwayParameters"></param>
@@ -123,7 +123,7 @@ namespace Models.DCAPST
         /// <param name="minT"></param>
         /// <param name="radn"></param>
         /// <param name="rpar"></param>
-        /// <returns></returns>
+        /// <returns>The model</returns>
         public static DCAPSTModel SetUpModel(
             ICanopyParameters canopyParameters,
             IPathwayParameters pathwayParameters,
@@ -201,7 +201,7 @@ namespace Models.DCAPST
         {
             if (string.IsNullOrEmpty(CropName))
             {
-                throw new ArgumentNullException($"No crop was specified in DCaPST configuration");
+                throw new ArgumentNullException("No crop was specified in DCaPST configuration");
             }
         }
 
@@ -213,10 +213,29 @@ namespace Models.DCAPST
         [EventSubscribe("DoDCAPST")]
         private void OnDoDCaPST(object sender, EventArgs args)
         {
+            // 0. Get SLN, LAI, total avail SW, root shoot ratio
+            // 1. Perform internal calculations
+            // 2. Set biomass production in leaf
+            // 3. Set water demand and potential EP via ICanopy
+
             IPlant plant = FindInScope<IPlant>(CropName);
             double rootShootRatio = GetRootShootRatio(plant);
 
-            model = SetUpModel(
+            // fixme - are we using the right SW??
+            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
+            if (leaf is null)
+            {
+                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
+            }
+
+            CalculateDcapstTrigger(leaf);
+
+            if (!ShouldRunDcapstModel(leaf))
+            {
+                return;
+            }
+
+            dcapstModel = SetUpModel(
                 Parameters.Canopy,
                 Parameters.Pathway,
                 clock.Today.DayOfYear,
@@ -229,30 +248,14 @@ namespace Models.DCAPST
 
             // From here, we can set additional options,
             // such as verbosity, BioLimit, Reduction, etc.
-
-            // 0. Get SLN, LAI, total avail SW, root shoot ratio
-            // 1. Perform internal calculations
-            // 2. Set biomass production in leaf
-            // 3. Set water demand and potential EP via ICanopy
-
-            // fixme - are we using the right SW??
-            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
-            if (leaf is null)
-            {
-                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
-            }
-
-            CalculateDcapstTrigger(leaf);
-
-            if (!ShouldRunDcapsModel(leaf))
-            {
-                return;
-            }
+            dcapstModel.PrintIntervalValues = false;
+            dcapstModel.Biolimit = 0.0;
+            dcapstModel.Reduction = 0.0;
 
             double sln = GetSln(leaf);
             double soilWaterValue = GetSoilWater(leaf);
 
-            model.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
+            dcapstModel.DailyRun(leaf.LAI, sln, soilWaterValue, rootShootRatio);
 
             // Outputs
             foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
@@ -261,16 +264,16 @@ namespace Models.DCAPST
                 {
                     new CanopyEnergyBalanceInterceptionlayerType()
                     {
-                        AmountOnGreen = model.InterceptedRadiation,
+                        AmountOnGreen = dcapstModel.InterceptedRadiation,
                     }
                 };
 
-                canopy.PotentialEP = model.WaterDemanded;
-                canopy.WaterDemand = model.WaterDemanded;
+                canopy.PotentialEP = dcapstModel.WaterDemanded;
+                canopy.WaterDemand = dcapstModel.WaterDemanded;
             }
         }
 
-        private bool ShouldRunDcapsModel(ICanopy leaf)
+        private bool ShouldRunDcapstModel(ICanopy leaf)
         {
             if (leaf is null) return false;
 
@@ -302,7 +305,7 @@ namespace Models.DCAPST
             }
         }
 
-        private void SetMicroClimateForSpecificLeafTypes(ICanopy leaf)
+        private static void SetMicroClimateForSpecificLeafTypes(ICanopy leaf)
         {
             // Sorghum calculates InterceptedRadiation and WaterDemand internally
             // Use the MicroClimateSetting to override.
@@ -318,6 +321,8 @@ namespace Models.DCAPST
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            if (dcapstModel is null) return;
+
             IPlant plant = FindInScope<IPlant>(CropName);
             ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
 
@@ -326,7 +331,7 @@ namespace Models.DCAPST
                 throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
             }
 
-            SetBiomass(leaf, model.ActualBiomass);
+            SetBiomass(leaf, dcapstModel.ActualBiomass);
         }
 
         /// <summary>Called when crop is being sown</summary>
@@ -344,7 +349,7 @@ namespace Models.DCAPST
             cultivar.Apply(this);
         }
 
-        private double GetRootShootRatio(IPlant plant)
+        private static double GetRootShootRatio(IPlant plant)
         {
             IVariable variable = plant.FindByPath("[ratioRootShoot]");
             if (variable is null)
@@ -352,7 +357,7 @@ namespace Models.DCAPST
                 return 0;
             }
 
-            if (!(variable.Value is IFunction function))
+            if (variable.Value is not IFunction function)
             {
                 return 0;
             }
@@ -364,7 +369,7 @@ namespace Models.DCAPST
             return rootShootRatioValue;
         }
 
-        private void SetBiomass(ICanopy leaf, double actualBiomass)
+        private static void SetBiomass(ICanopy leaf, double actualBiomass)
         {
             if (leaf is SorghumLeaf sorghumLeaf)
             {
@@ -381,7 +386,7 @@ namespace Models.DCAPST
             }
         }
 
-        private double GetSln(ICanopy leaf)
+        private static double GetSln(ICanopy leaf)
         {
             if (leaf is SorghumLeaf sorghumLeaf)
             {

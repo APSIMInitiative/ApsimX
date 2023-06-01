@@ -1,4 +1,4 @@
-ApsimVersion = 7.10 rcf388f30ad3c1a6273b7cd8b41ce24df1364d2ce
+ApsimVersion = 7.10 r4220
 precision = 8
 format = csv
 Title = Sorghum_BW5_GxE_T7
