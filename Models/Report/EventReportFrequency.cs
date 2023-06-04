@@ -27,20 +27,14 @@ namespace Models
             } 
             else if (tokens.Length > 1) 
             {
-                try
+                //this lets it capture events with a space in it's name ([Bos indicus]), but not expression frequencies
+                if (line.Contains(' ') && !line.Contains('=')
+                                       && !line.Contains('<')
+                                       && !line.Contains('>')
+                                       && !line.Contains('&')
+                                       && !line.Contains('|'))
                 {
-                    new EventReportFrequency(report, events, tokens[0]);
-                }
-                catch
-                {   //if trying with only first token failed, try again with entire line
-                    try
-                    {
-                        new EventReportFrequency(report, events, line);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
+                    new EventReportFrequency(report, events, line);
                 }
             } 
             else
