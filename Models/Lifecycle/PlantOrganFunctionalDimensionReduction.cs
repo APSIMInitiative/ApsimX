@@ -2,8 +2,6 @@
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
-using Models.LifeCycle;
-using Models.PMF;
 using Models.PMF.Interfaces;
 
 namespace Models.LifeCycle
@@ -27,7 +25,7 @@ namespace Models.LifeCycle
         [Description("Select host plant that Pest/Disease may bother")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
         public IPlantDamage HostPlant { get; set; }
-        
+
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may Obstruct")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]

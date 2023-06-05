@@ -1,10 +1,11 @@
+using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Soils;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Functions;
-    using Models.Soils;
-    using System;
 
     /// <summary>
     /// Runoff from rainfall is calculated using the USDA-Soil Conservation Service procedure known as the curve number technique. 
@@ -42,9 +43,9 @@ namespace Models.WaterModel
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>The summary file model.</summary>
@@ -180,7 +181,7 @@ namespace Models.WaterModel
                 // assume water content to hydrol_effective_depth affects runoff
                 // sum of wf should = 1 - may need to be bounded? <dms 7-7-95>
                 runoffWeightingFactor[i] = scaleFactor * (1.0 - Math.Exp(-4.16 * MathUtilities.Divide(cumDepth, hydrolEffectiveDepth, 0.0)));
-                runoffWeightingFactor[i] = runoffWeightingFactor[i] - cumRunoffWeightingFactor;  
+                runoffWeightingFactor[i] = runoffWeightingFactor[i] - cumRunoffWeightingFactor;
                 cumRunoffWeightingFactor += runoffWeightingFactor[i];
             }
 
@@ -202,7 +203,7 @@ namespace Models.WaterModel
             {
                 // This tillage has lost all effect on cn. CN reduction
                 // due to tillage is off until the next tillage operation.
-                TillageCnCumWater = 0.0; 
+                TillageCnCumWater = 0.0;
                 TillageCnRed = 0.0;
 
                 summary.WriteMessage(this, "Tillage CN reduction finished", MessageType.Diagnostic);

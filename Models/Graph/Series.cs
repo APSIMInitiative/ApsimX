@@ -1,20 +1,21 @@
-﻿namespace Models
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Newtonsoft.Json;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
-	using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using Newtonsoft.Json;
 
-	/// <summary>The class represents a single series on a graph</summary>
-	[ValidParent(ParentType = typeof(Graph))]
+namespace Models
+{
+
+    /// <summary>The class represents a single series on a graph</summary>
+    [ValidParent(ParentType = typeof(Graph))]
     [ViewName("UserInterface.Views.SeriesView")]
     [PresenterName("UserInterface.Presenters.SeriesPresenter")]
     [Serializable]
@@ -128,15 +129,15 @@
         /// <param name="reader">A storage reader.</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter"></param>
-        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader reader, 
-                                                                     List<SimulationDescription> simulationDescriptions, 
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader reader,
+                                                                     List<SimulationDescription> simulationDescriptions,
                                                                      List<string> simulationFilter = null)
         {
             var seriesDefinitions = new List<SeriesDefinition>();
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
-                seriesDefinitions.Add(new SeriesDefinition(this, "Current", colModifier:0, markerModifier: 0));
+                seriesDefinitions.Add(new SeriesDefinition(this, "Current", colModifier: 0, markerModifier: 0));
             else
             {
                 int checkpointNumber = 0;
@@ -168,7 +169,7 @@
                             // There are one or more vary by fields. Create series definitions
                             // for each combination of vary by fields.
                             seriesDefinitions.AddRange(CreateDefinitionsUsingVaryBy(varyByFieldNames, checkpointName, colourModifier, markerModifier, simulationDescriptions, inScopeSimulationNames));
-                        }   
+                        }
 
                         // If we don't have any definitions then see if the vary by fields
                         // refer to string fields in the database table.
@@ -194,8 +195,8 @@
         /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
         /// <param name="seriesDefinitions">A list of series definitions.</param>
         /// <param name="simulationFilter"></param>
-        public IEnumerable<SeriesDefinition> CreateChildSeriesDefinitions(IStorageReader reader, List<SimulationDescription> simulationDescriptions, 
-                                                 IEnumerable<SeriesDefinition> seriesDefinitions, 
+        public IEnumerable<SeriesDefinition> CreateChildSeriesDefinitions(IStorageReader reader, List<SimulationDescription> simulationDescriptions,
+                                                 IEnumerable<SeriesDefinition> seriesDefinitions,
                                                  List<string> simulationFilter = null)
         {
             // We might have child models that want to add to our series definitions e.g. regression.
@@ -250,7 +251,7 @@
             var validValuesForEachVaryByField = new List<List<string>>();
             foreach (var varyByFieldName in varyByThatExistInTable)
             {
-                var data = reader.GetData(TableName, 
+                var data = reader.GetData(TableName,
                                             fieldNames: new string[] { varyByFieldName },
                                             simulationNames: inScopeSimulationNames,
                                             distinct: true);
@@ -258,11 +259,11 @@
                 validValuesForEachVaryByField.Add(values);
             }
 
-            foreach (var combination in MathUtilities.AllCombinationsOf(validValuesForEachVaryByField.ToArray(), reverse:true))
+            foreach (var combination in MathUtilities.AllCombinationsOf(validValuesForEachVaryByField.ToArray(), reverse: true))
             {
                 var descriptors = new List<SimulationDescription.Descriptor>();
                 for (int i = 0; i < combination.Count; i++)
-                    descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
+                    descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i],
                                                                          combination[i]));
                 definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, inScopeSimulationNames, Filter, descriptors));
             }
@@ -281,7 +282,7 @@
             if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
             {
                 // Extract all the simulation names from all descriptions.
-                return simulationFilter.Distinct(); 
+                return simulationFilter.Distinct();
             }
             else
                 return null;
@@ -296,7 +297,7 @@
         /// <param name="markerModifier">Checkpoint marker size modifier.</param>
         /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
         /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
-        private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, 
+        private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames,
                                                                     string checkpointName,
                                                                     double colourModifier,
                                                                     double markerModifier,

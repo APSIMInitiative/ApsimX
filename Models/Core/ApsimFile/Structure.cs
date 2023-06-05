@@ -1,12 +1,10 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Linq;
+using System.Xml;
+using Models.Core.Apsim710File;
+
+namespace Models.Core.ApsimFile
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core.Apsim710File;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml;
 
     /// <summary>
     /// A collection of methods for manipulating the structure of an .apsimx file.

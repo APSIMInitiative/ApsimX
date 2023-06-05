@@ -1,13 +1,14 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.APSoil;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.APSoil;
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// This class encapsulates the water content (initial and current) in the simulation.
@@ -101,7 +102,7 @@
                     if (psi[layer] < 0.0)
                         value[layer] = Math.Log10(-psi[layer]);
                     else
-                        value[layer] = 0; 
+                        value[layer] = 0;
                 }
                 return value;
             }
@@ -163,7 +164,7 @@
         {
             if (InitialValues == null)
                 throw new Exception("No initial soil water specified.");
-            Volumetric = (double[]) InitialValues.Clone();
+            Volumetric = (double[])InitialValues.Clone();
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
@@ -274,7 +275,7 @@
 
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         private double[] RelativeToLLMM => MathUtilities.Multiply(RelativeToLL, Thickness);
-        
+
         /// <summary>Find LL values (mm) for the RelativeTo property.</summary>
         private double[] RelativeToXF
         {
@@ -299,7 +300,7 @@
         /// <returns>A double array of volumetric soil water values (mm/mm)</returns>
         public static double[] DistributeWaterFromTop(double fractionFull, double[] thickness, double[] ll, double[] dul, double[] xf)
         {
-            
+
             double[] pawcmm = MathUtilities.Multiply(MathUtilities.Subtract(dul, ll), thickness);
             double amountWater = MathUtilities.Sum(pawcmm) * fractionFull;
             return DistributeAmountWaterFromTop(amountWater, thickness, ll, dul, xf);
@@ -444,9 +445,9 @@
             var firstCrop = (Physical as IModel).FindChild<SoilCrop>();
             double[] LowerBound;
             if (Physical != null && firstCrop != null)
-                LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, Physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL)); 
+                LowerBound = SoilUtilities.MapConcentration(firstCrop.LL, Physical.Thickness, thickness.ToArray(), MathUtilities.LastValue(firstCrop.LL));
             else
-                LowerBound = SoilUtilities.MapConcentration(Physical.LL15, Physical.Thickness, thickness.ToArray(), Physical.LL15.Last()); 
+                LowerBound = SoilUtilities.MapConcentration(Physical.LL15, Physical.Thickness, thickness.ToArray(), Physical.LL15.Last());
             if (LowerBound == null)
                 throw new Exception("Cannot find crop lower limit or LL15 in soil");
 

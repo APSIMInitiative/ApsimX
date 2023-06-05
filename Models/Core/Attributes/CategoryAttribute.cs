@@ -1,6 +1,8 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
+
 
     /// <summary>
     /// Specifies the category and subcategory that the related property belongs to,
@@ -45,5 +47,5 @@
         /// Gets or sets the Subcategory
         /// </summary>
         public string Subcategory { get { return subcategory; } }
-    } 
+    }
 }

@@ -1,7 +1,8 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using System;
-    using System.Reflection;
 
     /// <summary>
     /// Encapsulates a discovered method of a model. 
@@ -62,12 +63,12 @@
         /// <summary>
         /// Return the name of the method.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
-                return this.method.Name; 
-            } 
+                return this.method.Name;
+            }
         }
 
         /// <summary>
@@ -88,7 +89,7 @@
         /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
         /// </summary>
         public override string UnitsLabel { get { return string.Empty; } }
-        
+
         /// <summary>
         /// Gets a list of allowable units
         /// </summary>

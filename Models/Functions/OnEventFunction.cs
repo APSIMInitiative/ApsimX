@@ -1,7 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -24,7 +23,7 @@ namespace Models.Functions
 
         /// <summary>The re set event</summary>
         [Description("(optional) The event resets to pre event value")]
-        public string ReSetEvent {get; set;}
+        public string ReSetEvent { get; set; }
 
 
         /// <summary>The pre event value</summary>

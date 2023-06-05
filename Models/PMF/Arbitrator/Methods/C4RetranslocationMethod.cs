@@ -1,10 +1,8 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
-using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
-using System;
 
 namespace Models.PMF.Arbitrator
 {

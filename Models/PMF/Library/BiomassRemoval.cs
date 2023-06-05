@@ -1,13 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.Soils;
+
 namespace Models.PMF.Library
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Interfaces;
-    using Soils;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// This organ will respond to certain management actions by either removing some
@@ -50,8 +51,8 @@ namespace Models.PMF.Library
         /// <param name="Detached">The detached pool to add to.</param>
         /// <param name="writeToSummary">Write the biomass removal to summary file?</param>
         /// <returns>The remaining live fraction.</returns>
-        public double RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amount, 
-                                    Biomass Live, Biomass Dead, 
+        public double RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amount,
+                                    Biomass Live, Biomass Dead,
                                     Biomass Removed, Biomass Detached,
                                     bool writeToSummary = true)
         {
@@ -63,7 +64,7 @@ namespace Models.PMF.Library
             double liveFractionToRemove = amount.FractionLiveToRemove + amount.FractionLiveToResidue;
             double deadFractionToRemove = amount.FractionDeadToRemove + amount.FractionDeadToResidue;
 
-            if (liveFractionToRemove+ deadFractionToRemove > 0.0)
+            if (liveFractionToRemove + deadFractionToRemove > 0.0)
             {
                 Biomass removing;
                 Biomass detaching;

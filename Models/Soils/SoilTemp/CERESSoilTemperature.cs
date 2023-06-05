@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using Models.Core;
-using Models;
-using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Soils
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -62,7 +62,7 @@ namespace Models.PMF.Phen
                 fractionVrn1AtEmergence = CAMP.Vrn1;
                 firstDay = false;
             }
-            Target = Math.Max(CAMP.pVrn2,1.0);
+            Target = Math.Max(CAMP.pVrn2, 1.0);
             double RelativeVrn1Expression = Math.Min(1, (CAMP.Vrn1 - fractionVrn1AtEmergence) / (Target - fractionVrn1AtEmergence));
 
             double HS = phenology.FindChild<IFunction>("HaunStage").Value();
@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
             FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
 
             ProgressThroughPhase = RelativeVrn1Expression;
-            
+
             return CAMP.IsVernalised;
         }
 

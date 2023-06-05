@@ -1,5 +1,4 @@
-﻿using System;
-using Models.DCAPST.Interfaces;
+﻿using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST.Canopy
 {
@@ -71,7 +70,7 @@ namespace Models.DCAPST.Canopy
             Canopy = canopy;
             Pathway = pathway;
             Water = water;
-            Leaf = leaf;            
+            Leaf = leaf;
         }
 
         /// <summary>
@@ -114,8 +113,8 @@ namespace Models.DCAPST.Canopy
             }
             else
             {
-                pathway.IntercellularCO2 = Pathway.IntercellularToAirCO2Ratio * Canopy.AirCO2; 
-                
+                pathway.IntercellularCO2 = Pathway.IntercellularToAirCO2Ratio * Canopy.AirCO2;
+
                 func.Ci = pathway.IntercellularCO2;
                 func.Rm = 1 / Leaf.GmT;
 
@@ -135,7 +134,7 @@ namespace Models.DCAPST.Canopy
         public void UpdateTemperature(AssimilationPathway pathway)
         {
             var leafTemp = Water.LeafTemperature(Resistance);
-            pathway.Temperature = (leafTemp + pathway.Temperature) / 2.0;            
+            pathway.Temperature = (leafTemp + pathway.Temperature) / 2.0;
         }
     }
 }

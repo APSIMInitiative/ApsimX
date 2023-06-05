@@ -1,5 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using System;
+﻿using System;
+using APSIM.Shared.Utilities;
 
 namespace Models.Soils
 {

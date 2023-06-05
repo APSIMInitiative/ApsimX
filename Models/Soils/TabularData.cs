@@ -1,9 +1,9 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Soils
 {

@@ -1,17 +1,17 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.Soils.Nutrients;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+
 namespace Models.Soils
 {
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Soil))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Chemical : Model, ITabularData
     {
         /// <summary>An enumeration for specifying PH units.</summary>
@@ -96,7 +96,7 @@ namespace Models.Soils
             columns.Add(new TabularData.Column("Depth", depthColumns));
 
             foreach (var solute in solutes)
-                columns.Add(new TabularData.Column(solute.Name, 
+                columns.Add(new TabularData.Column(solute.Name,
                                                    new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
 
             columns.Add(new TabularData.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));

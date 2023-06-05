@@ -1,17 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
 using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Linq;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {
@@ -66,13 +66,13 @@ namespace Models.PMF.Organs
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
-        public BiomassSupplyType NSupply { get;  set; }
+        public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        public BiomassPoolType NDemand { get;  set; }
+        public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         public double MaintenanceRespiration { get; set; }
@@ -128,7 +128,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
-        
+
         /// <summary>Gets the SLA</summary>
         public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt, 0.0); } }
 
@@ -161,21 +161,21 @@ namespace Models.PMF.Organs
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
         public double Depth { get { return Height; } }
-        
+
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get { return 0; } }
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         public double FRGR { get; set; }
-         
+
         private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP
         {
             get { return _PotentialEP; }
-            set { _PotentialEP = value;}
+            set { _PotentialEP = value; }
         }
 
         /// <summary>Sets the actual water demand.</summary>
@@ -190,7 +190,7 @@ namespace Models.PMF.Organs
         #region Parameters
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction FRGRFunction = null;   
+        IFunction FRGRFunction = null;
         /// <summary>The effect of CO2 on stomatal conductance</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction StomatalConductanceCO2Modifier = null;
@@ -293,7 +293,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double value = MathUtilities.Divide(Live.NConc-MinimumNConc.Value(), MaximumNConc.Value()-MinimumNConc.Value(), 1);
+                double value = MathUtilities.Divide(Live.NConc - MinimumNConc.Value(), MaximumNConc.Value() - MinimumNConc.Value(), 1);
                 value = MathUtilities.Bound(value, 0, 1);
                 return value;
             }
@@ -316,9 +316,9 @@ namespace Models.PMF.Organs
                 if (LightProfile == null)
                     return 0;
                 double TotalRadn = 0;
-                 for (int i = 0; i < LightProfile.Length; i++)
-                     TotalRadn += LightProfile[i].AmountOnGreen;
-                 return TotalRadn;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    TotalRadn += LightProfile[i].AmountOnGreen;
+                return TotalRadn;
             }
         }
 
@@ -348,7 +348,7 @@ namespace Models.PMF.Organs
 
             NSupply.ReAllocation = senescingStorageN * NReallocationFactor.Value();
             NSupply.ReTranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
-            NSupply.Uptake = 0.0;        
+            NSupply.Uptake = 0.0;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
@@ -366,7 +366,7 @@ namespace Models.PMF.Organs
         {
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = 0.0; // nDemands.Metabolic.Value();
-            NDemand.Storage =  nDemands.Storage.Value();
+            NDemand.Storage = nDemands.Storage.Value();
         }
 
 
@@ -475,7 +475,7 @@ namespace Models.PMF.Organs
         private double StartNReallocationSupply = 0;
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
-        
+
         #endregion
 
         #region Class properties
@@ -506,7 +506,7 @@ namespace Models.PMF.Organs
             // CO2 (44/12).
             double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
-            
+
             cohort.AddNewLeafMaterial(structuralMass: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural),
                                storageMass: dryMatter.Storage * DMConversionEfficiency.Value(),
                                structuralN: 0,
@@ -570,7 +570,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-                Clear();
+            Clear();
         }
 
         /// <summary>Kill a fraction of the green leaf</summary>
@@ -618,12 +618,12 @@ namespace Models.PMF.Organs
                 cohort.SenesceWhere(l => l.Age >= lrt);
                 double lkf = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
                 if (lkf > 0)
-                   cohort.KillLeavesUniformly(lkf);
+                    cohort.KillLeavesUniformly(lkf);
 
                 // Detach any leaves older than residence time + detachment time.
                 double detachmentAge = LeafResidenceTime.Value() + LeafDetachmentTime.Value();
                 Detached = cohort.DetachWhere(l => l.Age >= detachmentAge);
-                
+
                 if (Detached.Wt > 0.0)
                     SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.PlantType, Name);
 

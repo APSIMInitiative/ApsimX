@@ -22,13 +22,13 @@ namespace Models
         public double FractionUrea { get; set; }
 
         /// <summary>The fraction of rock p.</summary>
-        public double FractionRockP { get; set;}
+        public double FractionRockP { get; set; }
 
         /// <summary>The fraction of banded p.</summary>
-        public double FractionBandedP{get;set;}
+        public double FractionBandedP { get; set; }
 
         /// <summary>The fraction of labile p.</summary>
-        public double FractionLabileP{get;set;}
+        public double FractionLabileP { get; set; }
 
         /// <summary>The fraction of ca.</summary>
         public double FractionCa { get; set; }

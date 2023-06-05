@@ -1,13 +1,14 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Factorial;
+using Newtonsoft.Json;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Factorial;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// Base class for all models
@@ -85,7 +86,7 @@
                 // enable / disable our children if serialisation has completed.
                 if (_isCreated)
                     foreach (var child in Children)
-                        child.Enabled = _enabled;  
+                        child.Enabled = _enabled;
             }
         }
 
@@ -613,7 +614,7 @@
         /// It is a mistake to call this method without first resolving links.
         /// </remarks>
         public virtual IEnumerable<ITag> Document()
-        {   
+        {
             yield return new Section(Name, GetModelDescription());
         }
 

@@ -1,11 +1,8 @@
-﻿using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.Interfaces;
+﻿using System;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
 
 namespace Models.Soils
 {
@@ -96,7 +93,7 @@ namespace Models.Soils
         [Units("cm")]
         [Bounds(Lower = -1e3, Upper = 0.0)]
         public double psidul { get; set; }
-        
+
         /// <summary>Gets or sets the thickness.</summary>
         public double[] Thickness { get; set; }
 
@@ -243,7 +240,7 @@ namespace Models.Soils
             {
                 psid[layer] = psidul;  //- (p%x(p%n) - p%x(layer))
 
-                DELk[layer, 0] = (Water.DUL[layer] - (Water.SAT[layer]+0.000000000001)) / (Math.Log10(-psid[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
+                DELk[layer, 0] = (Water.DUL[layer] - (Water.SAT[layer] + 0.000000000001)) / (Math.Log10(-psid[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
                 DELk[layer, 1] = (Water.LL15[layer] - Water.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 DELk[layer, 2] = -Water.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 DELk[layer, 3] = -Water.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));

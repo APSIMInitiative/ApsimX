@@ -1,16 +1,17 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using ExcelDataReader;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using ExcelDataReader;
-    using Models.Core;
-    using Models.Core.Run;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
@@ -18,8 +19,8 @@
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
-    [ValidParent(ParentType=typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
@@ -36,7 +37,7 @@
         /// </summary>
         [Description("EXCEL file names")]
         [Tooltip("Can contain more than one file name, separated by commas.")]
-        [Display(Type=DisplayType.FileNames)]
+        [Display(Type = DisplayType.FileNames)]
         public string[] FileNames
         {
             get

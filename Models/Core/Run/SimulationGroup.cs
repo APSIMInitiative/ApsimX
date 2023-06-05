@@ -1,16 +1,17 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using APSIM.Shared.JobRunning;
+using Models.Core.ApsimFile;
+using Models.PostSimulationTools;
+using Models.Storage;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
@@ -258,9 +259,9 @@
                         foreach (IRunnable job in jobs)
                             Add(job);
                     }
-                    
+
                     if (numJobsToRun == 0)
-                       Add(new EmptyJob());
+                        Add(new EmptyJob());
                 }
             }
             catch (Exception readException)
@@ -378,7 +379,7 @@
                 DateTime startTime = DateTime.Now;
 
                 links.Resolve(test as IModel, true);
-                
+
                 // If we run into problems, we will want to include the name of the test in the 
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the

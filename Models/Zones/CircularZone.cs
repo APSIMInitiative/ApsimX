@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.Core;
 using Models.Agroforestry;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.Zones
 {
@@ -48,7 +45,7 @@ namespace Models.Zones
         {
             get
             {
-                return (Math.PI * (Math.Pow(Radius,2) - Math.Pow(Radius-Width,2))) / 10000;
+                return (Math.PI * (Math.Pow(Radius, 2) - Math.Pow(Radius - Width, 2))) / 10000;
             }
             set
             {

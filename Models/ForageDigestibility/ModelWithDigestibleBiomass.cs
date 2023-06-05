@@ -1,10 +1,10 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Models.ForageDigestibility
 {
@@ -37,7 +37,7 @@ namespace Models.ForageDigestibility
                 foreach (var material in forageModel.Material)
                 {
                     var fullName = $"{Name}.{material.Name}";
-                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase) 
+                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
                                                                             && p.IsLive == material.IsLive);
                     if (materialParameters == null)
                         throw new Exception($"Cannot find forage parameters for {fullName}");
@@ -46,7 +46,7 @@ namespace Models.ForageDigestibility
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
                         var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
                         var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0, 0.000000001);
-                        
+
                         yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
                                                            materialParameters);
                     }

@@ -1,17 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Models.Surface;
+using StdUnits;
+
 namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
 
     /// <summary>
     /// # Stock
@@ -3851,7 +3850,7 @@ namespace Models.GrazPlan
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
-			stock.UseTag = tag;
+            stock.UseTag = tag;
             outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ", MessageType.Diagnostic);
             StockModel.Buy(stock);
         }

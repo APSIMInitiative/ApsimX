@@ -1,8 +1,8 @@
-﻿using APSIM.Shared.JobRunning;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
 
 namespace Models.Storage
 {
@@ -78,23 +78,23 @@ namespace Models.Storage
         /// <param name="currentID">ID of the "Current" checkpoint.</param>
         private void CleanTable(string tableName, string simulationIDs, string simulationNames, int currentID)
         {
-                var fieldNames = writer.Connection.GetColumnNames(tableName);
-                if (fieldNames.Contains("SimulationID") && fieldNames.Contains("CheckpointID"))
-                {
-                    string sql = $"DELETE FROM [{tableName}] " +
-                                 $"WHERE SimulationID in ({simulationIDs}) ";
-                    if (currentID != -1)
-                        sql += $"AND CheckpointID = {currentID}";
-                    writer.Connection.ExecuteNonQuery(sql);
-                }
-                else if (fieldNames.Contains("SimulationName") && fieldNames.Contains("CheckpointID"))
-                {
-                    string sql = $"DELETE FROM [{tableName}] " +
-                                 $"WHERE SimulationName in ({simulationNames}) ";
-                    if (currentID != -1)
-                        sql += $"AND CheckpointID = {currentID}";
-                    writer.Connection.ExecuteNonQuery(sql);
-                }
+            var fieldNames = writer.Connection.GetColumnNames(tableName);
+            if (fieldNames.Contains("SimulationID") && fieldNames.Contains("CheckpointID"))
+            {
+                string sql = $"DELETE FROM [{tableName}] " +
+                             $"WHERE SimulationID in ({simulationIDs}) ";
+                if (currentID != -1)
+                    sql += $"AND CheckpointID = {currentID}";
+                writer.Connection.ExecuteNonQuery(sql);
+            }
+            else if (fieldNames.Contains("SimulationName") && fieldNames.Contains("CheckpointID"))
+            {
+                string sql = $"DELETE FROM [{tableName}] " +
+                             $"WHERE SimulationName in ({simulationNames}) ";
+                if (currentID != -1)
+                    sql += $"AND CheckpointID = {currentID}";
+                writer.Connection.ExecuteNonQuery(sql);
+            }
         }
     }
 }

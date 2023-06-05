@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using System.Xml;
-using APSIM.Shared.Utilities;
 using System.Data;
 using APSIM.Shared.Documentation;
-using Newtonsoft.Json;
 using APSIM.Shared.Graphing;
-using Graph = APSIM.Shared.Documentation.Graph;
-using StandardSeries = APSIM.Shared.Graphing.Series;
+using APSIM.Shared.Utilities;
+using Models.Core;
 using Table = APSIM.Shared.Documentation.Table;
 
 namespace Models.Functions

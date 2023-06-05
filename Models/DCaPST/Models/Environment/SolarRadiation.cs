@@ -16,7 +16,7 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// Fraction of incoming radiation that is diffuse
         /// </summary>
-        private readonly double diffuseFraction = 0.1725;       
+        private readonly double diffuseFraction = 0.1725;
 
         /// <summary>
         /// The radiation measured across a day
