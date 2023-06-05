@@ -24,25 +24,23 @@ namespace Models
             if (tokens.Length == 1)
             {
                 new EventReportFrequency(report, events, tokens[0]);
-            } 
-            else if (tokens.Length > 1) 
+                return true;
+            }
+            else 
+                if (tokens.Length > 1 && line.Contains(' ') 
+                                      && !line.Contains('=')
+                                      && !line.Contains('<')
+                                      && !line.Contains('>')
+                                      && !line.Contains('&')
+                                      && !line.Contains('|'))
             {
-                //this lets it capture events with a space in it's name ([Bos indicus]), but not expression frequencies
-                if (line.Contains(' ') && !line.Contains('=')
-                                       && !line.Contains('<')
-                                       && !line.Contains('>')
-                                       && !line.Contains('&')
-                                       && !line.Contains('|'))
-                {
-                    new EventReportFrequency(report, events, line);
-                }
-            } 
+                new EventReportFrequency(report, events, line);
+                return true;
+            }
             else
             {
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>
