@@ -45,6 +45,8 @@ namespace Models.PMF.Organs
 
         private const int MM2ToM2 = 1000000; // Conversion of mm2 to m2
 
+        private double frgr;
+
         /// <summary>Growth Respiration</summary>
         /// [Units("CO_2")]
         public double GrowthRespiration { get; set; }
@@ -106,7 +108,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Gsmax350 * FRGRFunction.Value() * StomatalConductanceCO2Modifier.Value();
+                return Gsmax350 * frgr * StomatalConductanceCO2Modifier.Value();
             }
         }
 
@@ -1281,6 +1283,7 @@ namespace Models.PMF.Organs
                     FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                 }
             }
+            frgr = FRGRFunction.Value();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -1311,6 +1314,7 @@ namespace Models.PMF.Organs
             CohortParameters.CellDivisionStressValue = 0;
             CohortParameters.LagAccelerationValue = 0;
             CohortParameters.SenescenceAccelerationValue = 0;
+            frgr = 0;
             FractionDied = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
