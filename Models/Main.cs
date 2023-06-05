@@ -91,14 +91,37 @@ namespace Models
                 else
                 {
                     Runner runner;
-                    if (string.IsNullOrEmpty(options.EditFilePath))
-                        // Run simulations
+                    if (string.IsNullOrEmpty(options.EditFilePath) && string.IsNullOrEmpty(options.SaveEdittedFile))
+                    {
+
                         runner = new Runner(files,
                                             options.RunTests,
                                             options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
-                    else
+                    }
+                    else if (!string.IsNullOrEmpty(options.SaveEdittedFile) && string.IsNullOrEmpty(options.EditFilePath))
+                    {
+                        foreach (string f in files)
+                        {
+                            Simulations sim = ApplyConfigToApsimFile(f, options.SaveEdittedFile) as Simulations;
+
+                            runner = new Runner(sim,
+                                                false,
+                                                true,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+
+                            sim.Write(f);
+                        }
+
+                    }
+                    else if (!string.IsNullOrEmpty(options.EditFilePath) && string.IsNullOrEmpty(options.SaveEdittedFile))
+                    {
+
+
                         runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
@@ -106,19 +129,22 @@ namespace Models
                                             runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
-                    runner.SimulationCompleted += OnJobCompleted;
-                    if (options.Verbose)
-                        runner.SimulationCompleted += WriteCompleteMessage;
-                    if (options.ExportToCsv)
-                        runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
-                    runner.AllSimulationsCompleted += OnAllJobsCompleted;
-                    runner.Run();
 
-                    // If errors occurred, write them to the console.
-                    if (exitCode != 0)
-                        Console.WriteLine("ERRORS FOUND!!");
-                    if (options.Verbose)
-                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
+                        runner.SimulationCompleted += OnJobCompleted;
+                        if (options.Verbose)
+                            runner.SimulationCompleted += WriteCompleteMessage;
+                        if (options.ExportToCsv)
+                            runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                        runner.AllSimulationsCompleted += OnAllJobsCompleted;
+                        // Run simulations.
+                        runner.Run();
+
+                        // If errors occurred, write them to the console.
+                        if (exitCode != 0)
+                            Console.WriteLine("ERRORS FOUND!!");
+                        if (options.Verbose)
+                            Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
+                    }
                 }
             }
             catch (Exception err)
