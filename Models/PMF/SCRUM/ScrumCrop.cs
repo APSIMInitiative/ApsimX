@@ -32,6 +32,10 @@ namespace Models.PMF.Scrum
         [Description("Root depth at harvest (mm)")]
         public double MaxRD { get; set; }
 
+        /// <summary>Crop height at maturity (mm)</summary>
+        [Description("Crop height at maturity (mm)")]
+        public double MaxHeight { get; set; }
+
         /// <summary>Maximum green cover</summary>
         [Description("Maximum green cover (0-0.97)")]
         public double Acover { get; set; }
@@ -140,14 +144,10 @@ namespace Models.PMF.Scrum
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{"Germination",0.0 },{ "Emergence", 0.0066 },{ "Seedling", 0.03 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.75},
-            { "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9933},{"Ripe",0.9995 } };
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{"Germination",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
+            { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
 
-        /// <summary>Dictionary containing values for the proportion of thermal time to maturity that has accumulate at each predefined crop stage</summary>
-        [JsonIgnore]
-        public static Dictionary<string, double> PropnTt = new Dictionary<string, double>() { { "Seed", 0.0 },{"Germination",0.0 },{ "Emergence", 0.0 },{ "Seedling", 0.16 },{ "Vegetative", 0.5},{ "EarlyReproductive",0.61},
-            { "MidReproductive",0.69},{  "LateReproductive",0.8},{"Maturity",1.0},{"Ripe",1.27} };
-
+        
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -165,6 +165,9 @@ namespace Models.PMF.Scrum
             {"bCover","[Stover].Cover.Expanding.SigCoverFunction.b.FixedValue = "},
             {"XoBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.Xo.FixedValue = "},
             {"bBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.b.FixedValue = " },
+            {"MaxHeight","[Stover].Tallness.Ymax.FixedValue = "},
+            {"XoHig","[Stover].Tallness.Xo.FixedValue = " },
+            {"bHig","[Stover].Tallness.b.FixedValue = " },
             {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
             {"TtSeedling","[Phenology].Seedling.Target.FixedValue ="},
             {"TtVegetative","[Phenology].Vegetative.Target.FixedValue ="},
@@ -206,6 +209,7 @@ namespace Models.PMF.Scrum
             cropParams["StoverNConc"] += this.StoverNConc.ToString();
             cropParams["RootNConc"] += this.RootNConc.ToString();
             cropParams["MaxRootDepth"] += this.MaxRD.ToString();
+            cropParams["MaxHeight"] += this.MaxHeight.ToString();
             cropParams["RootProportion"] += this.Proot.ToString();
             cropParams["ACover"] += this.Acover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
@@ -222,17 +226,36 @@ namespace Models.PMF.Scrum
                 Tt_Harv = management.HarvestTt;     
             }
 
+            // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
+            Dictionary<string, double> PropnTt = new Dictionary<string, double>();
+            foreach (KeyValuePair<string, double> entry in PropnMaxDM)
+            {
+                if ((entry.Key == "Seed") || (entry.Key == "Germination"))
+                {
+                    PropnTt.Add(entry.Key, 0.0);
+                }
+                else
+                {
+                    double propTt = (Math.Log((1 / entry.Value) - 1) * -11.25 + 45) / 100;
+                    PropnTt.Add(entry.Key, propTt);
+                }
+            }
+
             double Tt_estab = Tt_Harv * (PropnTt[management.EstablishStage] / PropnTt[management.HarvestStage]);
             double Xo_Biomass = (Tt_Harv + Tt_estab) * .45 * (1 / PropnTt[management.HarvestStage]);
             double b_Biomass = Xo_Biomass * .25;
             double T_mat = Xo_Biomass * 2.2222;
             double Xo_cov = Xo_Biomass * 0.4;
             double b_cov = Xo_cov * 0.2;
+            double Xo_hig = Xo_Biomass * 0.7;
+            double b_hig = Xo_hig * 0.2;
 
             cropParams["XoBiomass"] += Xo_Biomass.ToString();
             cropParams["bBiomass"] += b_Biomass.ToString();
             cropParams["XoCover"] += Xo_cov.ToString();
             cropParams["bCover"] += b_cov.ToString();
+            cropParams["XoHig"] += Xo_hig.ToString();
+            cropParams["bHig"] += b_hig.ToString();
 
             cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Seed"])).ToString();
             cropParams["TtVegetative"] += (T_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
