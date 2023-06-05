@@ -126,7 +126,9 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
-
+        /*
+         * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
+         * Useful to keep for later though if we need to check all the example weather.
         [Test]
         public void SanityCheckExampleWeather()
         {
@@ -185,5 +187,6 @@ namespace UnitTests.Weather
                 Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
             }
         }
+        */
     }
 }
