@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -15,7 +15,7 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class StartPhase : Model, IPhase
     {
-        
+
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -34,7 +34,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-               return 0.0;
+                return 0.0;
             }
         }
 
@@ -86,5 +86,5 @@ namespace Models.PMF.Phen
     }
 }
 
-      
-      
+
+

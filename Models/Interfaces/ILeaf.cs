@@ -39,7 +39,7 @@
         /// Method to remove 
         /// </summary>
         void RemoveHighestLeaf();
-        
+
         /// <summary>
         /// Method to zero leaf numbembers
         /// </summary>

@@ -1,14 +1,8 @@
-﻿namespace Models.PMF
+﻿using System;
+using Models.Core;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// The class that holds the states for resource supplies from ReAllocation, Uptake, Fixation and ReTranslocation

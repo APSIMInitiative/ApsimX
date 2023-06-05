@@ -1,13 +1,13 @@
-﻿namespace Models.Soils.NutrientPatching
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+
+namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Encapsulates a nutrient patch.
@@ -174,7 +174,7 @@
                     throw new Exception("Expected 3 pools of FOM to be added in PatchManager");
                 if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Length ||
                     StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Length ||
-                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length || 
+                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length ||
                     StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Length ||
                     StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Length ||
                     StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Length)

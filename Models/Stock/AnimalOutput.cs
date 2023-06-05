@@ -1,7 +1,8 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using APSIM.Shared.Utilities;
+
+namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using System;
 
     /// <summary>
     /// The Animal outputs object

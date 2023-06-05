@@ -1,12 +1,13 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// TODO: Update summary.
@@ -111,7 +112,7 @@
                 if (curlyIndex >= 0)
                 {
                     returnCode = code.Substring(0, curlyIndex + 1);
-                    returnCode += Environment.NewLine + "        "+linkStatement;
+                    returnCode += Environment.NewLine + "        " + linkStatement;
                     returnCode += code.Substring(curlyIndex + 2);
                 }
             }
@@ -302,7 +303,7 @@
         {
             SortedSet<string> childNames = new SortedSet<string>();
 
-            foreach (XmlNode child in XmlUtilities.ChildNodesRecursively(node, typeFilter:null))
+            foreach (XmlNode child in XmlUtilities.ChildNodesRecursively(node, typeFilter: null))
             {
                 string name = XmlUtilities.Value(child, "Name");
                 if (name != string.Empty)

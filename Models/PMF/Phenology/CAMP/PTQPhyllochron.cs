@@ -1,8 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
 using Models.Functions;
-using System;
-
 
 namespace Models.PMF.Phen
 {
@@ -41,7 +39,7 @@ namespace Models.PMF.Phen
         private bool Phase1complete = false;
         private bool VernalisedInPhase1 = false;
         private bool Phase2complete = false;
-        
+
         private double HSFactor = 1.0;
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Models.PMF.Phen
         /// </summary>
         [Description("Name of event to swith Vernalisation Factor")]
         public string SetEvent { get; set; }
-        
+
         /// <summary>
         /// The value
         /// </summary>
@@ -81,7 +79,7 @@ namespace Models.PMF.Phen
                     if ((CropVernalised == true) && (VernalisedInPhase1 == false))
                     {
                     }
-                    else 
+                    else
                     {
                         HSFactor *= 1.35;
                     }
@@ -90,7 +88,7 @@ namespace Models.PMF.Phen
 
             if (lARPTQmodel != null)
             {
-                double LAR = 1/HSFactor * lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
+                double LAR = 1 / HSFactor * lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
                 if (LAR > 0)
                     return 1 / LAR;
                 else

@@ -1,17 +1,18 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
 namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// A regression model.
@@ -163,7 +164,7 @@ namespace Models
 
             return regressionLines;
         }
-        
+
         /// <summary>Return a list of extra fields that the definition should read.</summary>
         /// <param name="seriesDefinition">The calling series definition.</param>
         /// <returns>A list of fields - never null.</returns>

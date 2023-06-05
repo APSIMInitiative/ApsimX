@@ -1,6 +1,6 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.Functions;
-using System;
 
 namespace Models.ForageDigestibility
 {

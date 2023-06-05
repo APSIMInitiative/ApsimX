@@ -517,16 +517,16 @@ namespace UserInterface.Presenters
                     water.Thickness = physical.Thickness;
                     water.InitialValues = physical.DUL;
                 }
-                var euc = soil.FindChild<SoilCrop>("EucalyptusSoil");
-                var pinus = soil.FindChild<SoilCrop>("PinusSoil");
+                var euc = physical.FindChild<SoilCrop>("EucalyptusSoil");
+                var pinus = physical.FindChild<SoilCrop>("PinusSoil");
                 if (euc != null && pinus == null)
                 {
                     pinus = euc.Clone();
-                    pinus.Name = "EucalyptusSoil";
+                    pinus.Name = "PinusSoil";
                     physical.Children.Add(pinus);
                 }
-                var scrum = soil.FindChild<SoilCrop>("SCRUMSoil");
-                var firstSoilCrop = soil.FindChild<SoilCrop>();
+                var scrum = physical.FindChild<SoilCrop>("SCRUMSoil");
+                var firstSoilCrop = physical.FindChild<SoilCrop>();
                 if (scrum == null && firstSoilCrop != null)
                 {
                     scrum = firstSoilCrop.Clone();

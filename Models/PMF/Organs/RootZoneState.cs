@@ -1,18 +1,16 @@
-﻿using Models.Soils;
-using Models.Core;
-using System;
-using Models.Functions;
+﻿using System;
 using System.Linq;
-using Models.Soils.Nutrients;
-using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState: Model, IRootGeometryData
+    public class ZoneState : Model, IRootGeometryData
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -342,7 +340,7 @@ namespace Models.PMF.Organs
         public void PartitionRootMass(double TotalRAw, Biomass TotalDMAllocated)
         {
             DMAllocated = new double[Physical.Thickness.Length];
- 
+
             if (Depth > 0)
             {
                 double[] RAw = CalculateRootActivityValues();
@@ -354,9 +352,9 @@ namespace Models.PMF.Organs
                         LayerLive[layer].StorageWt += TotalDMAllocated.StorageWt * RAw[layer] / TotalRAw;
                         LayerLive[layer].MetabolicWt += TotalDMAllocated.MetabolicWt * RAw[layer] / TotalRAw;
 
-                        DMAllocated[layer] += (TotalDMAllocated.StructuralWt + 
+                        DMAllocated[layer] += (TotalDMAllocated.StructuralWt +
                                                TotalDMAllocated.StorageWt +
-                                               TotalDMAllocated.MetabolicWt)* RAw[layer] / TotalRAw;
+                                               TotalDMAllocated.MetabolicWt) * RAw[layer] / TotalRAw;
                     }
             }
         }

@@ -188,7 +188,8 @@ namespace UserInterface.Presenters
                 markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
                 // Now arrange solutes into a nice markdown table.
                 StringBuilder soluteMarkdownTable = new StringBuilder();
-                soluteMarkdownTable.AppendLine("### Solutes");
+                if (soluteTables.Count > 0)
+                    soluteMarkdownTable.AppendLine("### Solutes");
                 soluteMarkdownTable.AppendLine();
                 soluteMarkdownTable.Append("|");
 
@@ -259,7 +260,11 @@ namespace UserInterface.Presenters
                 // Print the values line-by-line for each condition.
                 soluteMarkdownTable.AppendLine();
                 // Gets the list length of one of the InitialCondition value lists.
-                int valueCount = tempValueLists[0].Count;
+                int valueCount = 0;
+                if (tempValueLists.Count > 0)
+                {
+                    valueCount = tempValueLists[0].Count;
+                }
                 // Create a markdown table row for each value in the list.
                 for (int i = 0; i < valueCount; i++)
                 {

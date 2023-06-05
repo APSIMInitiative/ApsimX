@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using Models.Storage;
+
 namespace Models
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Storage;
 
     /// <summary>
     /// Extends the IGraphable interface by allowing for the use of cached input data from another model.

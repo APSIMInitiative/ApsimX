@@ -1,11 +1,11 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Models.Interfaces;
 
 namespace Models.PMF.Arbitrator
 {
@@ -45,7 +45,7 @@ namespace Models.PMF.Arbitrator
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e) 
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
 

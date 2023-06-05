@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 
@@ -234,7 +232,7 @@ namespace Models.PMF
         }
 
 
-        
+
 
         /// <summary>Clear the arbitration type</summary>
         public void Clear()

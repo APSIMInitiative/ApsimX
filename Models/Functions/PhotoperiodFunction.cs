@@ -1,10 +1,7 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-
+using APSIM.Shared.Documentation;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
 namespace Models.Functions

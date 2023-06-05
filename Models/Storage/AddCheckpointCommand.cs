@@ -1,13 +1,14 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading;
 
     /// <summary>Encapsulates a command to empty the database as much as possible.</summary>
     class AddCheckpointCommand : IRunnable
@@ -30,7 +31,7 @@
         /// <param name="dataStoreWriter">The datastore writer that called this constructor.</param>
         /// <param name="checkpointName">The new checkpoint name to create.</param>
         /// <param name="fileNamesToStore">Names of files to store in checkpoint.</param>
-        public AddCheckpointCommand(DataStoreWriter dataStoreWriter, 
+        public AddCheckpointCommand(DataStoreWriter dataStoreWriter,
                                        string checkpointName,
                                        IEnumerable<string> fileNamesToStore)
         {
@@ -140,7 +141,7 @@
                     }
 
                     if (checkpointFiles.Rows.Count > 0)
-                        writer.WriteTable(checkpointFiles, deleteAllData:true);
+                        writer.WriteTable(checkpointFiles, deleteAllData: true);
                 }
             }
         }

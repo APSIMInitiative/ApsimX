@@ -5,19 +5,19 @@
     {
         /// <summary>Air dry (mm/mm).</summary>
         double[] AirDry { get; set; }
-        
+
         /// <summary>Bulk density (g/cc).</summary>
-        double[] BD { get; set;  }
+        double[] BD { get; set; }
 
         /// <summary>Drained upper limit (mm/mm).</summary>
-        double[] DUL { get; set;  }
+        double[] DUL { get; set; }
 
         /// <summary>Drained upper limit (mm).</summary>
         double[] DULmm { get; }
 
         /// <summary>KS (mm/day).</summary>
         double[] KS { get; set; }
-        
+
         /// <summary>Lower limit 15 bar (mm/mm).</summary>
         double[] LL15 { get; set; }
 
@@ -41,10 +41,10 @@
 
         /// <summary>Saturation (mm).</summary>
         double[] SATmm { get; }
-        
+
         /// <summary>Texture.</summary>
         string[] Texture { get; }
-        
+
         /// <summary>Soil layer thickness (mm).</summary>
         double[] Thickness { get; set; }
 

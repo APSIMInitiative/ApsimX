@@ -24,7 +24,7 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-           return _Age / 365.25;
+            return _Age / 365.25;
         }
     }
 }

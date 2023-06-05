@@ -1,10 +1,10 @@
 using System;
-using Models.Core;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using Models.PMF.Struct;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF.Organs;
+using Models.PMF.Struct;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
-  
+
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -89,7 +89,7 @@ namespace Models.PMF.Phen
             DeadNodeNoAtStart = 0;
             First = true;
         }
-          
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)

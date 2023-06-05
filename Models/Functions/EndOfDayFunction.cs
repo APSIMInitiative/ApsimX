@@ -1,5 +1,5 @@
-﻿using Models.Core;
-using System;
+﻿using System;
+using Models.Core;
 
 namespace Models.Functions
 {

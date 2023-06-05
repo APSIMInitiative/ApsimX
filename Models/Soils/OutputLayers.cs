@@ -1,11 +1,12 @@
-﻿namespace Models.Soils
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils.Nutrients;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
@@ -18,9 +19,9 @@
     public class OutputLayers : Model, ITabularData
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysicalProperties = null;
-        
+
         /// <summary>Access the soil water model.</summary>
         [Link]
         private ISoilWater waterBalanceModel = null;
@@ -276,7 +277,7 @@
                 for (int layer = 0; layer < waterBalanceModel.Thickness.Length; ++layer)
                 {
                     modelOC[layer] = (nutrientBalanceModel.Humic.C[layer] + nutrientBalanceModel.Microbial.C[layer])
-                                   / (soilPhysicalProperties.BD[layer]*waterBalanceModel.Thickness[layer]) / 100.0;
+                                   / (soilPhysicalProperties.BD[layer] * waterBalanceModel.Thickness[layer]) / 100.0;
                 }
 
                 return SoilUtilities.MapConcentration(modelOC, waterBalanceModel.Thickness, Thickness, double.NaN);

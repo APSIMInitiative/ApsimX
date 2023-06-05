@@ -1,15 +1,15 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Xml;
+
 
     /// <summary>
     /// XML to JSON converter
@@ -90,9 +90,9 @@ namespace Models.Core.ApsimFile
             "Models.PMF.Phen.LeafDeathPhase","Models.PMF.Phen.Phenology",
             "Models.EventNamesOnGraph","Models.Regression",
             "Models.Surface.SurfaceOrganicMatter",
-    		"Models.Soils.Nutrients.Nutrient,",
-    		"Models.PMF.Plant",
-    		"Models.PMF.OilPalm.OilPalm,",
+            "Models.Soils.Nutrients.Nutrient,",
+            "Models.PMF.Plant",
+            "Models.PMF.OilPalm.OilPalm,",
             "Models.Series","Models.Graph",
             "Models.Functions.DecumulateFunction","Models.Functions.EndOfDayFunction",
             "Models.Functions.AccumulateAtEvent","Models.Functions.DailyMeanVPD",
@@ -223,7 +223,7 @@ namespace Models.Core.ApsimFile
                             // with one element.
                             return CreateArray(property.Name, property.Value, newRoot);
                         }
-                        else if (GetModelFullName(property.Name) != null && 
+                        else if (GetModelFullName(property.Name) != null &&
                             property.Name != "Parameter")  // CLEM.LabourFilter has a Parameter property.
                         {
                             // a model without any child nodes.
@@ -235,7 +235,7 @@ namespace Models.Core.ApsimFile
                             if (arrayOfModels.Count > 0)
                                 newRoot[property.Name] = arrayOfModels;
                         }
-                        else 
+                        else
                             WriteProperty(property, newRoot);
                     }
                     else if (property.Value is JObject)
@@ -327,7 +327,7 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    if (!(newObject is JArray) && newObject["$type"] != null && 
+                    if (!(newObject is JArray) && newObject["$type"] != null &&
                         GetModelFullName(newObject["$type"].ToString()) != null)
                         AddNewChild(newObject, newRoot);
                     else if (newObject.Children().Count() == 1 && newObject.First.Path == "#text")
@@ -500,7 +500,7 @@ namespace Models.Core.ApsimFile
             string m = modelWords[modelWords.Length - 1];
 
             return modelTypes.FirstOrDefault(t => t.EndsWith("." + m));
-         }
+        }
 
         private static Type GetTypeFromName(string modelNameToFind)
         {
@@ -555,7 +555,7 @@ namespace Models.Core.ApsimFile
                         if (childXmlName != string.Empty || GetTypeFromName(childXmlNode.Name) != null)
                         {
                             int i = 1;
-                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString().Equals(childXmlName, StringComparison.InvariantCultureIgnoreCase) || 
+                            foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString().Equals(childXmlName, StringComparison.InvariantCultureIgnoreCase) ||
                                                                                (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString().Equals(GetSoilCropName(childXmlName), StringComparison.InvariantCultureIgnoreCase))))
                             {
                                 bool alreadyAdded = newArray.FirstOrDefault(c => c["Name"].ToString() == childXmlName) != null;

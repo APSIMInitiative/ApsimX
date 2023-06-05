@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Newtonsoft.Json;
 using Models.Core;
+using Newtonsoft.Json;
 
 /// <summary>
 /// Cultivar constants class.
 /// </summary>
 [Serializable]
 public class CultivarConstants
-    {
+{
 
 
     /// <summary>
@@ -201,9 +197,9 @@ public class CultivarConstants
     /// </value>
     [JsonIgnore]
     public int num_leaf_size
-        {
+    {
         get { return leaf_size_no.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_stress_factor_stalk.
     /// </summary>
@@ -212,9 +208,9 @@ public class CultivarConstants
     /// </value>
     [JsonIgnore]
     public int num_stress_factor_stalk
-        {
+    {
         get { return stress_factor_stalk.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_tillerf_leaf_size.
     /// </summary>
@@ -223,11 +219,11 @@ public class CultivarConstants
     /// </value>
     [JsonIgnore]
     public int num_tillerf_leaf_size
-        {
+    {
         get { return tillerf_leaf_size_no.Length; }
-        }
-
-
-
     }
- 
+
+
+
+}
+

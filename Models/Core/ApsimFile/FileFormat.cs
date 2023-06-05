@@ -1,17 +1,14 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using System.Xml;
-    using Newtonsoft.Json.Serialization;
-    using System.Collections.Generic;
-    using Models.Core.Interfaces;
-    using Newtonsoft.Json.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -46,11 +43,11 @@
             };
             string json;
             using (StringWriter s = new StringWriter())
-                using (var writer = new JsonTextWriter(s))
-                {
-                    serializer.Serialize(writer, model, model.GetType());
-                    json = s.ToString();
-                }
+            using (var writer = new JsonTextWriter(s))
+            {
+                serializer.Serialize(writer, model, model.GetType());
+                json = s.ToString();
+            }
             return json;
         }
 
@@ -58,7 +55,7 @@
         /// <param name="fileName">Name of the file.</param>
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
-        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T:IModel
+        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
         {
             try
             {

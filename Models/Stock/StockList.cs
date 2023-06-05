@@ -1,17 +1,14 @@
-﻿namespace Models.GrazPlan
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.Surface;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Models.Core;
+using Models.ForageDigestibility;
+using Models.Interfaces;
+using StdUnits;
 
+namespace Models.GrazPlan
+{
 
     /// <summary>
     /// StockList is primarily a list of AnimalGroups. Each animal group has a

@@ -1,10 +1,9 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Reflection;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
+﻿using System;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 
+namespace Models.Core
+{
 
     /// <summary>
     /// This class encapsulates a single property of a model. Has properties for getting the value
@@ -177,27 +176,27 @@
         /// <summary>
         /// Return the name of the property.
         /// </summary>
-        public override string Name 
-        { 
-            get 
+        public override string Name
+        {
+            get
             {
                 if (FieldInfo.Name.Contains("BackingField"))
                 {
                     string st = FieldInfo.Name;
                     return "[" + StringUtilities.SplitOffBracketedValue(ref st, '<', '>') + "]";
                 }
-                return FieldInfo.Name; 
-            } 
+                return FieldInfo.Name;
+            }
         }
 
         /// <summary>
         /// Returns the value of the property.
         /// </summary>
-        public override object Value 
-        { 
-            get 
-            { 
-                return FieldInfo.GetValue(Object); 
+        public override object Value
+        {
+            get
+            {
+                return FieldInfo.GetValue(Object);
             }
             set
             {

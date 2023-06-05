@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.PMF
+﻿namespace Models.PMF
 {
     /// <summary>
     /// Calculate Individual leaf size within a Culm

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.Core;
 using Models.Agroforestry;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.Zones
 {

@@ -1,16 +1,16 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using Newtonsoft.Json;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.IO;
-    using System.Threading;
 
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
@@ -23,8 +23,8 @@
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
-    [ValidParent(ParentType=typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
@@ -120,6 +120,6 @@
             {
                 textFile?.Close();
             }
-        }       
+        }
     }
 }
