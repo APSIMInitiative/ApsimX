@@ -1,12 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+
 namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Encapsulates a cohort of Nutrient models i.e. patching.
@@ -106,7 +107,7 @@ namespace Models.Soils.NutrientPatching
         public double[] UreaForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.Urea)); } }
 
         /// <summary>Total C in each soil layer</summary>
-        public double[] TotalC {  get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
+        public double[] TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
 
         /// <summary>Total N in each soil layer</summary>
         public double[] TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
@@ -151,7 +152,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>The number of patches.</summary>
-        public int NumPatches {  get { return patches.Count; } }
+        public int NumPatches { get { return patches.Count; } }
 
         /// <summary>The amount of NO3 in each patch (kg/ha).</summary>
         public double[] NO3EachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()).ToArray(); } }
@@ -163,7 +164,7 @@ namespace Models.Soils.NutrientPatching
         public double[] UreaEachPatch { get { return patches.Select(patch => patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
         /// <summary>The amount of mineral N in each patch (kg/ha).</summary>
-        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()+ patch.Nutrient.NH4.kgha.Sum()+ patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
+        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum() + patch.Nutrient.NH4.kgha.Sum() + patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3) for each patch.</summary>
         public double[] DenitrifiedNEachPatch { get { return patches.Select(patch => patch.Nutrient.DenitrifiedN.Sum()).ToArray(); } }

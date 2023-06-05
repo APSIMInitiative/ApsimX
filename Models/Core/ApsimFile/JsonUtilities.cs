@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Models.Functions;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Models.Core.ApsimFile
@@ -105,7 +103,7 @@ namespace Models.Core.ApsimFile
             string lessAssembly = allBits[0];
             string[] pathBits = lessAssembly.Split('.');
             string nameSpace = "";
-            for (int i = 0; i < pathBits.Length-1; i++)
+            for (int i = 0; i < pathBits.Length - 1; i++)
             {
                 nameSpace += pathBits[i] + '.';
             }
@@ -522,7 +520,7 @@ namespace Models.Core.ApsimFile
             JObject child = JObject.Parse(json);
             children.Add(child);
         }
-        
+
         /// <summary>
         /// Adds a model of a given type as a child of node.
         /// </summary>

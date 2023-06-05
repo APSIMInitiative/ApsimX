@@ -1,6 +1,4 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -176,7 +176,7 @@ namespace Models.Core
         {
             var match = Regex.Match(path, @"(?<rawpath>.+)\[(?<startindex>\d+):?(?<endindex>\d+)?]$");
             if (match.Success)
-            {   
+            {
                 var fullArray = model.FindByPath(match.Groups["rawpath"].Value)?.Value as IList;
                 if (fullArray != null)
                 {
@@ -316,7 +316,7 @@ namespace Models.Core
 
             /// <summary>Supported match types when finding something to override.</summary>
             public enum MatchTypeEnum
-            { 
+            {
                 /// <summary>Match on name only.</summary>
                 Name,
 

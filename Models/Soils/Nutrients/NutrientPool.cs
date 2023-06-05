@@ -1,10 +1,11 @@
-﻿namespace Models.Soils.Nutrients
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Functions;
+
+namespace Models.Soils.Nutrients
 {
-    using Models.Core;
-    using Functions;
-    using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// A nutrient pool.
@@ -14,7 +15,7 @@
     public class NutrientPool : Model, INutrientPool
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -78,7 +79,7 @@
         /// <param name="CAdded"></param>
         /// <param name="NAdded"></param>
         /// <param name="PAdded"></param>
-        public void Add (double[] CAdded, double[] NAdded, double[] PAdded)
+        public void Add(double[] CAdded, double[] NAdded, double[] PAdded)
         {
             if (CAdded.Length != NAdded.Length)
                 throw new Exception("Arrays for addition of soil organic matter and N must be of same length.");

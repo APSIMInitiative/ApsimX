@@ -1,14 +1,16 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System;
-    using Newtonsoft.Json.Linq;
-    using System.Text;
+
 
     /// <summary>
     /// Provides helper methods to read and manipulate manager scripts.
@@ -217,7 +219,7 @@
         public void SetDeclarations(List<Declaration> newDeclarations)
         {
             int lineNumberStartDeclarations;
-            
+
             var existingDeclarations = GetDeclarations();
             if (existingDeclarations.Count == 0)
             {
@@ -239,7 +241,7 @@
             else
             {
                 // Remove existing declarations
-                for (int i = existingDeclarations.Count-1; i >= 0; i--)
+                for (int i = existingDeclarations.Count - 1; i >= 0; i--)
                 {
                     int beginLineIndex = existingDeclarations[i].LineIndex;
                     if (existingDeclarations[i].AttributesOnPreviousLines)
@@ -323,7 +325,7 @@
                     }
                 }
 
-                lineIndex = FindString("." + methodName, lineIndex+1);
+                lineIndex = FindString("." + methodName, lineIndex + 1);
             }
             return methods;
         }
@@ -366,7 +368,7 @@
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);
                     lines[i] = lines[i].Insert(pos, replacePattern);
                     replacementDone = true;
-                    pos = lines[i].IndexOf(searchPattern, pos+1);
+                    pos = lines[i].IndexOf(searchPattern, pos + 1);
                 }
             }
             return replacementDone;
@@ -477,7 +479,7 @@
                 SetDeclarations(declarations);
                 return true;
             }
-            
+
             return false;
         }
 
@@ -560,7 +562,7 @@
             foreach (var parameter in Token["Parameters"].Children())
                 if (parameter["Key"].ToString() == key)
                     parameter["Value"] = newParam;
-                    //return;
+            //return;
         }
 
         /// <summary>
@@ -653,7 +655,7 @@
         /// <summary>Is declaration an event?</summary>
         public bool IsEvent { get; set; }
     }
-        
+
 
     /// <summary>Encapsulates a manager method call</summary>
     public class MethodCall

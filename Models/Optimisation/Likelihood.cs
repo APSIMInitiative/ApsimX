@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.Optimisation
+﻿namespace Models.Optimisation
 {
     /// <summary>
     /// Likelihood functions used as the crit function to estimate parameters

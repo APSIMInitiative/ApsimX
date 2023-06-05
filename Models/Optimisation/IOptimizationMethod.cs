@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Models.Optimisation
+﻿namespace Models.Optimisation
 {
     /// <summary>
     /// Encapsulates an optimization method which can be used by <see cref="CroptimizR"/>.

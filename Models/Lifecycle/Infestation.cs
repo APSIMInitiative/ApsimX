@@ -1,11 +1,11 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using static Models.LifeCycle.LifeCyclePhase;
+
+namespace Models.LifeCycle
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using System;
-    using System.Collections.Generic;
-    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// Sets and infestation event for Lifecycle model.

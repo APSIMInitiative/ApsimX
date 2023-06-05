@@ -1,18 +1,18 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 
-    using APSIM.Shared.Utilities;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.VisualBasic;
-    using Microsoft.CodeAnalysis.Emit;
-    using Microsoft.CodeAnalysis.Text;
+namespace Models.Core
+{
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
     [Serializable]
@@ -22,7 +22,7 @@
         private static object haveTrappedAssemblyResolveEventLock = new object();
         private const string tempFileNamePrefix = "APSIM";
         [NonSerialized]
-        
+
 
 
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
@@ -179,7 +179,7 @@
         {
             string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-            IEnumerable<MetadataReference> references = new MetadataReference[] 
+            IEnumerable<MetadataReference> references = new MetadataReference[]
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
@@ -212,7 +212,7 @@
                                                                    .Select(p => p.Reference));
             if (referencedAssemblies != null)
                 references = references.Concat(referencedAssemblies);
-            
+
             return references.Where(r => r != null);
         }
 

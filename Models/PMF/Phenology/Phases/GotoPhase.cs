@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
 using APSIM.Shared.Documentation;
+using Models.Core;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -48,7 +48,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Gets the fraction complete.</summary>
         [JsonIgnore]
-        public double FractionComplete { get;}
+        public double FractionComplete { get; }
 
         /// <summary>Thermal time target</summary>
         [JsonIgnore]
@@ -61,12 +61,12 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             PropOfDayToUse = 0;
-            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto)+1);
+            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
             return false;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() {}
+        public virtual void ResetPhase() { }
 
         /// <summary>
         /// Document the model.

@@ -1,14 +1,10 @@
-﻿namespace Models.PMF
+﻿using System;
+using Models.Core;
+using Models.Functions;
+using Newtonsoft.Json;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Daily state of flows into and out of each organ
@@ -33,12 +29,12 @@
         private IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>The carbon cost of moving nutrient out</summary>
-        [Link(Type = LinkType.Child, ByName =true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private NutrientFunctions MobilisationCostFunctions = null;
 
         /// <summary>The carbon cost of bringing nutrient in</summary>
-        [Link(Type = LinkType.Child, ByName =true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private NutrientFunctions AssimilationCostFunctions = null;
 
@@ -47,7 +43,7 @@
         public NutrientsStates MobilisationCost { get; private set; }
 
         /// <summary>The carbon cost of bringing nutrient in</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public NutrientsStates AssimilationCost { get; private set; }
 
         /// <summary> Maintentnce respiration by the organ</summary>
@@ -61,14 +57,14 @@
         /// <summary> respiration for mobilising nutrients</summary>
         [JsonIgnore]
         public double Mobilisation { get; private set; }
-       
+
 
         /// <summary>Calculate todays respiration losses</summary>
         public NutrientPoolsState CalculateLosses()
         {
             double storageLoss = 0;
             double metabolisloss = 0;
-            return new NutrientPoolsState(0,metabolisloss,storageLoss);
+            return new NutrientPoolsState(0, metabolisloss, storageLoss);
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

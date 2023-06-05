@@ -1,9 +1,9 @@
 ﻿using System;
-using Models.Core;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models.Functions.DemandFunctions
 {

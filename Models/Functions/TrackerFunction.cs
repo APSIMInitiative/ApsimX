@@ -1,12 +1,10 @@
-﻿namespace Models.Functions
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Models.Core;
+
+namespace Models.Functions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Reflection;
-    using Models.Core;
-    using Models.PMF.Phen;
-    using System.Globalization;
 
     /// <summary>
     /// A function that accumulates values from child functions
@@ -61,7 +59,7 @@
 
                 // Go backwards through referenceValues until we reach our accumulation target.
                 double accumulationValue = 0;
-                for (int i = referenceValues.Count-1; i >= 0; i--)
+                for (int i = referenceValues.Count - 1; i >= 0; i--)
                 {
                     accumulationValue += referenceValues[i];
                     if (accumulationValue >= accumulationTarget)
@@ -100,7 +98,7 @@
                 referenceValues.Add(referenceVariable.Value());
             }
         }
-        
+
         /// <summary>
         /// Called to begin keeping track of variable
         /// </summary>

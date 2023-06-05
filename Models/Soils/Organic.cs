@@ -1,17 +1,17 @@
-﻿namespace Models.Soils
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.APSoil;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Interfaces;
 
     /// <summary>A model for capturing soil organic parameters</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Soil))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Organic : Model, ITabularData
     {
         /// <summary>

@@ -1,19 +1,15 @@
-﻿using System.IO;
-using System.Xml;
-using Models.Core;
-using Newtonsoft.Json;
-using System;
-using System.Reflection;
+﻿using System;
 using System.Collections.Generic;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
+using System.IO;
 using System.Linq;
-using Models.Core.Interfaces;
-using Models.Storage;
-using Newtonsoft.Json.Serialization;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
+using System.Reflection;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Models.Core.Interfaces;
+using Models.Core.Run;
+using Models.Storage;
+using Newtonsoft.Json;
 
 namespace Models.Core
 {
@@ -199,7 +195,7 @@ namespace Models.Core
         {
             links = null;
         }
-        
+
         /// <summary>
         /// Gets the services objects.
         /// </summary>
@@ -243,7 +239,7 @@ namespace Models.Core
             foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
-            
+
             return fileNames;
         }
 
@@ -304,7 +300,7 @@ namespace Models.Core
                     Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
-                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren: true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation, true);

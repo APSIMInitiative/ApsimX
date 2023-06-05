@@ -1,6 +1,7 @@
+using System;
+
 namespace StdUnits
 {
-    using System;
 
     /// <summary>
     /// GrazPlan date utilities
@@ -16,7 +17,7 @@ namespace StdUnits
         /// Last day of each month   [1..12]
         /// </summary>
         public static int[] LastDay = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-        
+
         /// <summary>
         /// Short text name of the month
         /// </summary>
@@ -43,7 +44,7 @@ namespace StdUnits
         {
             return (dateVal & 0xFF);
         }
-        
+
         /// <summary>
         /// Get the month of the year from the date value
         /// </summary>
@@ -53,7 +54,7 @@ namespace StdUnits
         {
             return ((dateVal >> 8) & 0xFF);
         }
-        
+
         /// <summary>
         /// Get the year number from the date value
         /// </summary>
@@ -63,7 +64,7 @@ namespace StdUnits
         {
             return ((dateVal >> 16) & 0xFFFF);
         }
-        
+
         /// <summary>
         /// Test that this is a real date
         /// </summary>
@@ -134,7 +135,7 @@ namespace StdUnits
             dateStr = string.Empty;
 
             // Work through the formatting string
-            while (format != string.Empty)                                                     
+            while (format != string.Empty)
             {
                 picIdx = 0;                                                             // Search for a string picture              
                 while ((picIdx < NOPICTURE) && (format.IndexOf(pictures[picIdx]) != 0))
@@ -142,34 +143,45 @@ namespace StdUnits
 
                 switch (picIdx)
                 {
-                    case 0: dateStr = dateStr + Num2Str(dateInYear.Y, 4, false);        // YYYY                                     
+                    case 0:
+                        dateStr = dateStr + Num2Str(dateInYear.Y, 4, false);        // YYYY                                     
                         break;
-                    case 1: if ((dateInYear.Y >= 1900) && (dateInYear.Y <= 1999))       // yy                                      
+                    case 1:
+                        if ((dateInYear.Y >= 1900) && (dateInYear.Y <= 1999))       // yy                                      
                             dateStr = dateStr + Num2Str(dateInYear.Y % 100, 2, true);
                         else
                             dateStr = dateStr + Num2Str(dateInYear.Y, 4, true);
                         break;
-                    case 2: if (dateInYear.Y % 100 == 0)                                // YY                                       
+                    case 2:
+                        if (dateInYear.Y % 100 == 0)                                // YY                                       
                             dateStr = dateStr + "00";
                         else
                             dateStr = dateStr + Num2Str(dateInYear.Y % 100, 2, true);
                         break;
-                    case 3: if ((dateInYear.M >= 1) && (dateInYear.M <= 12))            // mmm                                      
+                    case 3:
+                        if ((dateInYear.M >= 1) && (dateInYear.M <= 12))            // mmm                                      
                             dateStr = dateStr + MonthText[dateInYear.M];
                         break;
-                    case 4: dateStr = dateStr + Num2Str(dateInYear.M, 2, true);         // MM                                       
+                    case 4:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 2, true);         // MM                                       
                         break;
-                    case 5: dateStr = dateStr + Num2Str(dateInYear.M, 2, false);        // mm                                       
+                    case 5:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 2, false);        // mm                                       
                         break;
-                    case 6: dateStr = dateStr + Num2Str(dateInYear.M, 0, false);        // M                                        
+                    case 6:
+                        dateStr = dateStr + Num2Str(dateInYear.M, 0, false);        // M                                        
                         break;
-                    case 7: dateStr = dateStr + Num2Str(dateInYear.D, 2, true);         // DD                                       
+                    case 7:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 2, true);         // DD                                       
                         break;
-                    case 8: dateStr = dateStr + Num2Str(dateInYear.D, 2, false);        // dd                                       
+                    case 8:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 2, false);        // dd                                       
                         break;
-                    case 9: dateStr = dateStr + Num2Str(dateInYear.D, 0, false);        // D                                        
+                    case 9:
+                        dateStr = dateStr + Num2Str(dateInYear.D, 0, false);        // D                                        
                         break;
-                    case NOPICTURE: dateStr = dateStr + format[0];                      // Literal text                             
+                    case NOPICTURE:
+                        dateStr = dateStr + format[0];                      // Literal text                             
                         break;
                 }
 
@@ -236,10 +248,10 @@ namespace StdUnits
             dateInYear.Y = YearOf(dateVal);
 
             // Increment the number of years if dateInYear is a historical date (Y <> 0)               
-            if (dateInYear.Y != 0)                                                       
-                dateInYear.Y += shiftYears;                                             
+            if (dateInYear.Y != 0)
+                dateInYear.Y += shiftYears;
 
-            if (dateInYear.M != 0)                                                                               
+            if (dateInYear.M != 0)
             {
                 // Shift the months
                 MonthShift(ref dateInYear, shiftMonths);
@@ -290,44 +302,44 @@ namespace StdUnits
             int result;
 
             // If the first date is after the second
-            if (date1 > date2)                                                       
+            if (date1 > date2)
                 result = -Interval(date2, date1);                                   // return a negative value                
-            else if ((date1 == 0) || (date2 == 0))                                  
+            else if ((date1 == 0) || (date2 == 0))
                 result = 0;                                                         // if any of the dates are zero, interval is always zero
             else
             {
-                if (dateInYear1.M == 0)                                              
+                if (dateInYear1.M == 0)
                 {
                     // if the month is zero make the date 1 Jan
-                    dateInYear1.D = 1;                                              
+                    dateInYear1.D = 1;
                     dateInYear1.M = 1;
                 }
-                if (dateInYear2.M == 0)                                              
+                if (dateInYear2.M == 0)
                 {
                     // if the month is zero make the date 1 Jan
-                    dateInYear2.D = 1;                                              
+                    dateInYear2.D = 1;
                     dateInYear2.M = 1;
                 }
 
                 sum = 365 - CumulDays[dateInYear1.M] - dateInYear1.D;               // Days to the end of the year of D1 
 
                 // Add one if Feb 29 falls in the period from D1 to the end of the year
-                if ((LeapYear(dateInYear1.Y)) &&                                    
-                   ((dateInYear1.M == 1) ||                                                 
+                if ((LeapYear(dateInYear1.Y)) &&
+                   ((dateInYear1.M == 1) ||
                     ((dateInYear1.M == 2) && (dateInYear1.D <= 29))))
                     sum++;
 
                 // Now move to the end of the year before that containing D2.
-                if (dateInYear1.Y == dateInYear2.Y)                                        
-                {                                                                                
+                if (dateInYear1.Y == dateInYear2.Y)
+                {
                     sum = sum - 365;                                                // Same year; subtract the number of     
                     if (LeapYear(dateInYear2.Y)) sum--;                             // days in the year                      
                 }
                 else
                     //// Otherwise work through the intervening years, adding the number of days in each
-                    for (i = dateInYear1.Y + 1; i <= dateInYear2.Y - 1; i++)                    
-                        if (LeapYear(i))                                               
-                            sum += 366;                                                                     
+                    for (i = dateInYear1.Y + 1; i <= dateInYear2.Y - 1; i++)
+                        if (LeapYear(i))
+                            sum += 366;
                         else
                             sum += 365;
 

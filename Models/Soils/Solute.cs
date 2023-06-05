@@ -1,11 +1,12 @@
-﻿using Models.Core;
-using Models.Interfaces;
-using System;
-using APSIM.Shared.Utilities;
-using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
 namespace Models.Soils
 {
 
@@ -21,7 +22,7 @@ namespace Models.Soils
     public class Solute : Model, ISolute, ITabularData
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical physical = null;
 
         /// <summary>Access the water model.</summary>
@@ -46,7 +47,7 @@ namespace Models.Soils
         public Solute() { }
 
         /// <summary>Default constructor.</summary>
-        public Solute(string soluteName, double[] value) 
+        public Solute(string soluteName, double[] value)
         {
             kgha = value;
             Name = soluteName;
@@ -141,7 +142,7 @@ namespace Models.Soils
         {
             if (D0 > 0)
             {
-                for (int i = 0; i < physical.Thickness.Length-1; i++)
+                for (int i = 0; i < physical.Thickness.Length - 1; i++)
                 {
                     // Calculate concentrations in SW solution
                     double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
@@ -158,7 +159,7 @@ namespace Models.Soils
                     double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
 
                     kgha[i] = kgha[i] - flux;
-                    kgha[i+1] = kgha[i+1] + flux;
+                    kgha[i + 1] = kgha[i + 1] + flux;
                 }
             }
         }

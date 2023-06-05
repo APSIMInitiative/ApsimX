@@ -47,7 +47,7 @@ namespace Models.DCAPST.Canopy
         /// The width of the leaf
         /// </summary>
         private double LeafWidth { get; set; }
-        
+
         /// <summary>
         /// Nitrogen at the top of the canopy
         /// </summary>
@@ -57,7 +57,7 @@ namespace Models.DCAPST.Canopy
         /// Wind speed
         /// </summary>
         private double WindSpeed { get; set; }
-        
+
         /// <summary>
         /// Wind speed extinction
         /// </summary>
@@ -110,15 +110,15 @@ namespace Models.DCAPST.Canopy
 
             var NcAv = sln * kg_to_g / molarMassNitrogen;
             LeafNTopCanopy = Canopy.SLNRatioTop * NcAv;
-            
-            NAllocation = -1 * Math.Log((NcAv - Canopy.MinimumN) / (LeafNTopCanopy - Canopy.MinimumN)) * 2;           
+
+            NAllocation = -1 * Math.Log((NcAv - Canopy.MinimumN) / (LeafNTopCanopy - Canopy.MinimumN)) * 2;
 
             Absorbed = new CanopyRadiation(Layers, LAI)
             {
                 DiffuseExtinction = Canopy.DiffuseExtCoeff,
                 LeafScattering = Canopy.LeafScatteringCoeff,
                 DiffuseReflection = Canopy.DiffuseReflectionCoeff
-            };         
+            };
         }
 
         /// <summary>
@@ -237,21 +237,21 @@ namespace Models.DCAPST.Canopy
         {
             var a = 0.5 * WindSpeedExtinction + Absorbed.DirectExtinction;
             var b = 0.01 * Math.Pow(WindSpeed / LeafWidth, 0.5);
-            var c = 1 - Math.Exp(-a * LAI);            
+            var c = 1 - Math.Exp(-a * LAI);
 
             return b * c / a;
         }
-                
+
         /// <summary>
         /// Calculates how the movement of the sun affects the absorbed radiation
         /// </summary>
         public void DoSolarAdjustment(double sunAngle)
-        {        
+        {
             // Beam Extinction Coefficient
             if (sunAngle > 0)
                 Absorbed.DirectExtinction = CalcShadowProjection(sunAngle) / Math.Sin(sunAngle);
             else
-                Absorbed.DirectExtinction = 0;            
+                Absorbed.DirectExtinction = 0;
         }
 
         /// <summary>

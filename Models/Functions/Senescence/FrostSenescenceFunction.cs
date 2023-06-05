@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Text;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
-using Models.Interfaces;
 using System.Collections.Generic;
+using System.Text;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Organs;
 
 namespace Models.Functions
 {
@@ -41,7 +41,7 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
-{
+        {
             var frostEventThreshold = frostKill.Value();
 
             if (weather.MinT > frostEventThreshold)

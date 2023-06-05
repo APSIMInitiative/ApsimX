@@ -1,11 +1,12 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
 
     /// <summary>
     /// A micro climate wrapper around a Zone instance.
@@ -233,7 +234,7 @@
         /// <summary>Gets the total canopy cover.</summary>
         [Description("Total canopy cover (0-1)")]
         [Units("0-1")]
-        public double CanopyCover {  get { return RadiationInterception / Radn; } }
+        public double CanopyCover { get { return RadiationInterception / Radn; } }
 
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
@@ -565,7 +566,7 @@
             nodes = nodes.Distinct().ToArray();  //Remove nodes that are the same hight to avoid zero depth layers
             numLayers = nodes.Length - 1;
             if (DeltaZ.Length != numLayers)
-             {
+            {
                 // Number of layers has changed; adjust array lengths
                 Array.Resize<double>(ref DeltaZ, numLayers);
                 Array.Resize<double>(ref layerKtot, numLayers);

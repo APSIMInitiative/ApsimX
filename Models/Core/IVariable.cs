@@ -1,6 +1,7 @@
+using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// This abstract base class encapsulates the interface for a variable from a Model.
@@ -33,7 +34,7 @@ namespace Models.Core
         /// Gets the data type of the property
         /// </summary>
         public abstract Type DataType { get; }
-        
+
         /// <summary>
         /// Gets a description of the property or null if not found.
         /// </summary>
@@ -47,7 +48,7 @@ namespace Models.Core
         /// <summary>
         /// Gets or sets the units of the property or null if not found.
         /// </summary>
-        public abstract string Units { get; set;  }
+        public abstract string Units { get; set; }
 
         /// <summary>
         /// Gets the units of the property as formmatted for display (in parentheses) or null if not found.
@@ -77,4 +78,4 @@ namespace Models.Core
         /// <returns>The attribute or null if not found</returns>
         public abstract Attribute GetAttribute(Type attributeType);
     }
-} 
+}

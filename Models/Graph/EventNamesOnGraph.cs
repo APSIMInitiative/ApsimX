@@ -1,15 +1,16 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
 
     /// <summary>
     /// A class for putting text annotations on a graph.
@@ -82,7 +83,7 @@
         /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
         public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
-                                                                  List<SimulationDescription> simDescriptions, 
+                                                                  List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
@@ -109,7 +110,7 @@
                     if (string.IsNullOrEmpty(simulationNameDescriptor) && simulationFilter != null && simulationFilter.Count > 0)
                         simulationNameDescriptor = simulationFilter[0];
 
-                    if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
+                    if (simulationNameDescriptor != null && simulationNameDescriptor == SimulationName)
                         data = definition.View;
                 }
 
