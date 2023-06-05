@@ -1,11 +1,10 @@
-﻿using Models.Core;
-using Models.PMF.Organs;
-using Models.PMF.Phen;
-using System;
+﻿using System;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.PMF;
-using System.Collections.Generic;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
 
 namespace Models.Functions
 {

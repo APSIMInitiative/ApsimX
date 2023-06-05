@@ -1,14 +1,13 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for reading from a database connection.
@@ -200,8 +199,8 @@
         /// <param name="orderByFieldNames">Optional column name to order by</param>
         /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
-        public DataTable GetData(string tableName, string checkpointName = "Current", 
-                                 IEnumerable<string> simulationNames = null, 
+        public DataTable GetData(string tableName, string checkpointName = "Current",
+                                 IEnumerable<string> simulationNames = null,
                                  IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,

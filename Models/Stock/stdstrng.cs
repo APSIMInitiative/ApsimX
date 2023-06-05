@@ -40,10 +40,10 @@ namespace StdUnits
             token = string.Empty;
             inSt = inSt.TrimStart(whitespace); // Start by clearing any whitespace at the beginning of inSt
             // A Null string will return a null token   
-            if (inSt.Length > 0)               
+            if (inSt.Length > 0)
             {
                 // Quoted token
-                if (inSt[0] == '"')            
+                if (inSt[0] == '"')
                 {
                     inSt = inSt.Remove(0, 1);
                     int idx = inSt.IndexOf('"');
@@ -60,7 +60,7 @@ namespace StdUnits
                     breakPos = 2;
                 else if (inSt.IndexOfAny(punctuation, 0, 1) == 0)      // Other punctuation marks are taken as tokens
                     breakPos = 1;
-                else                                                   
+                else
                 {
                     // With anything else, go looking for whitespace as a break point
                     int idxWhite = inSt.IndexOfAny(whitespace);
@@ -174,7 +174,7 @@ namespace StdUnits
             }
 
             // The number is in exponential format
-            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  
+            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)
             {
                 MatchToken(ref parseSt, "+");
                 int exponent = 0;
@@ -189,7 +189,7 @@ namespace StdUnits
                 inSt = parseSt;
             return result;
         }
-        
+
         /// <summary>
         /// Take a double value from the front of a string.
         ///  Rules are analogous to Token_Int. Exponential notation is dealt with.
@@ -218,7 +218,7 @@ namespace StdUnits
             }
 
             // If the number is in exponential format
-            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)  
+            if (token.Length > 0 && token.IndexOf('E') == token.Length - 1)
             {
                 MatchToken(ref parseSt, "+");
                 int exponent = 0;
@@ -278,7 +278,8 @@ namespace StdUnits
                         else
                             state = -1;
                         break;
-                    case 1: if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 1: Day found, looking for a        
+                    case 1:
+                        if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 1: Day found, looking for a        
                             state = 2;                                                              // delimiter or a month text              
                         else
                         {
@@ -291,12 +292,14 @@ namespace StdUnits
                                 state = 2;
                         }
                         break;
-                    case 2: if (TokenInt(ref inputStr, ref mn) && (mn >= 1) && (mn <= 12))              // State 2: Day/month delimiter found, so   
+                    case 2:
+                        if (TokenInt(ref inputStr, ref mn) && (mn >= 1) && (mn <= 12))              // State 2: Day/month delimiter found, so   
                             state = 3;                                                              // looking for a numeric month            
                         else
                             state = -1;
                         break;
-                    case 3: if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 3:  month has been found.  Clear   
+                    case 3:
+                        if (MatchToken(ref inputStr, "/") || MatchToken(ref inputStr, "-"))           // State 3:  month has been found.  Clear   
                             state = 3;                                                              // away any delimiter and then look for a 
                         else if (TokenInt(ref inputStr, ref yr) && (yr >= 1))                           // year                                  
                         {

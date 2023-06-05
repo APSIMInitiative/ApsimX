@@ -1,21 +1,22 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Interfaces;
+using Models.Sensitivity;
+using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Interfaces;
-    using Models.Sensitivity;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using Utilities;
 
     /// <summary>
     /// Encapsulates a SOBOL parameter sensitivity analysis.
@@ -177,7 +178,7 @@
 
                 // Apply each composite factor of this combination to our simulation description.
                 combination.ForEach(c => c.ApplyToSimulation(simDescription));
-                
+
                 // Add simulation description to the return list of descriptions
                 simulationDescriptions.Add(simDescription);
 
@@ -349,7 +350,7 @@
 
                     // Write variables file
                     using (var writer = new StreamWriter(sobolVariableValuesFileName))
-                        DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",", true, writer, excelFriendly: false, decimalFormatString:"F6");
+                        DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     // Write X1
                     using (var writer = new StreamWriter(sobolx1FileName))
@@ -499,7 +500,7 @@
                 script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
                                         "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
                                         ,
-                                        i+1, Parameters[i].LowerBound,
+                                        i + 1, Parameters[i].LowerBound,
                                         Parameters[i].UpperBound - Parameters[i].LowerBound);
             }
 
@@ -509,7 +510,7 @@
             script += string.Format("write.csv(X1, \"{0}\")" + Environment.NewLine +
                                     "write.csv(X2, \"{1}\")" + Environment.NewLine
                                     ,
-                                    sobolx1FileName.Replace("\\", "/"), 
+                                    sobolx1FileName.Replace("\\", "/"),
                                     sobolx2FileName.Replace("\\", "/"));
 
             //script += "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine;

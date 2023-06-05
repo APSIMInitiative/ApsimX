@@ -1,11 +1,12 @@
-﻿namespace Models.Soils.NutrientPatching
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils.Nutrients;
+
+namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral
@@ -22,12 +23,12 @@
         private NutrientPatchManager patchManager;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        public override double[] kgha 
-        { 
-            get 
-            { 
-                return patchManager.GetSoluteKgha(Name); 
-            } 
+        public override double[] kgha
+        {
+            get
+            {
+                return patchManager.GetSoluteKgha(Name);
+            }
             set
             {
                 patchManager?.SetSoluteKgha(SoluteSetterType.Other, Name, value);

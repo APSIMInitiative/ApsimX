@@ -1,14 +1,4 @@
-﻿using APSIM.Shared.Interfaces;
-using APSIM.Shared.JobRunning;
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Core.Run;
-using Models.Factorial;
-using Models.Interfaces;
-using Models.Storage;
-using Models.Utilities;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -19,9 +9,18 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Models.Sensitivity;
-using Models.Core.ApsimFile;
 using APSIM.Shared.Containers;
+using APSIM.Shared.Interfaces;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using Models.Interfaces;
+using Models.Sensitivity;
+using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
 using static Models.Core.Overrides;
 
 namespace Models.Optimisation
@@ -292,8 +291,8 @@ namespace Models.Optimisation
         private string PathToModels()
         {
             if (RDocker.UseDocker())
-            // This is the expected path to the models executable in the docker
-            // image. Nasty stuff.
+                // This is the expected path to the models executable in the docker
+                // image. Nasty stuff.
                 return "/opt/apsim/Models";
             return typeof(IModel).Assembly.Location;
         }
@@ -472,8 +471,8 @@ namespace Models.Optimisation
                 // due to the way that CroptimizR is run. This needs further thought.
                 IR client = new RDocker(
                     outputHandler: OnOutputReceived
-                    // warningHandler: w => FindInScope<ISummary>()?.WriteMessage(this, w, MessageType.Warning),
-                    // errorHandler: e => FindInScope<ISummary>()?.WriteMessage(this, e, MessageType.Error)
+                // warningHandler: w => FindInScope<ISummary>()?.WriteMessage(this, w, MessageType.Warning),
+                // errorHandler: e => FindInScope<ISummary>()?.WriteMessage(this, e, MessageType.Error)
                 );
 
                 Status = "Running Parameter Optimization";
@@ -524,7 +523,7 @@ namespace Models.Optimisation
                     {
                         output = ReadRData(file);
 
-                        storage.Writer.WriteTable(output, deleteAllData:firstFile);
+                        storage.Writer.WriteTable(output, deleteAllData: firstFile);
                         firstFile = false;
                     }
                 }
@@ -575,7 +574,7 @@ namespace Models.Optimisation
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
             Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
-            
+
             // Apply the optimal values to the cloned simulations.
             Overrides.Apply(clonedSims, optimalValues);
 

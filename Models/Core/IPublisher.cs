@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+
 namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Interface for a model which publishes events whose

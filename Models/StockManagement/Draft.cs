@@ -1,12 +1,13 @@
-﻿namespace Models.StockManagement
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.GrazPlan;
+using Models.PMF.Interfaces;
+
+namespace Models.StockManagement
 {
-    using Models.Core;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Models.GrazPlan;
-    using APSIM.Shared.Utilities;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// An instance of this class creates a genotype cross and adds it to the list of
@@ -139,7 +140,7 @@
             // Get a list of fields that we want to consider for a draft.
             var fields = new List<FieldWithForage>();
             foreach (var zone in zones.Where(zone => PaddockNames.Contains(zone.Name)))
-                 fields.Add(new FieldWithForage(zone, stock));
+                fields.Add(new FieldWithForage(zone, stock));
 
             // Sort paddocks according to how much forage they have (highest first in list).
             var sortedFields = fields.OrderByDescending(f => f.AmountForage).ToList();

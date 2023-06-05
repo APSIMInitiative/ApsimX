@@ -1,14 +1,14 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.APSoil;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.APSoil;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
@@ -231,7 +231,7 @@
         }
 
         private Water WaterNode
-        { 
+        {
             get
             {
                 if (waterNode == null)

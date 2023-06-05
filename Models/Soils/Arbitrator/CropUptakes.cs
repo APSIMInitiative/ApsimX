@@ -1,7 +1,8 @@
-﻿namespace Models.Soils.Arbitrator
+﻿using System.Collections.Generic;
+using Models.Interfaces;
+
+namespace Models.Soils.Arbitrator
 {
-    using System.Collections.Generic;
-    using Models.Interfaces;
 
     /// <summary>
     /// A simple class for containing a single set of uptakes for a given crop.

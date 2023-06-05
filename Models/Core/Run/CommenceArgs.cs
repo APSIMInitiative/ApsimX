@@ -1,6 +1,7 @@
-﻿namespace Models.Core.Run
+﻿using System.Threading;
+
+namespace Models.Core.Run
 {
-    using System.Threading;
 
     /// <summary>The arguments for a commence event.</summary>
     public class CommenceArgs

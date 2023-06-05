@@ -1,21 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-
-using System.Reflection;
-using System.Collections;
-using Models.Functions;
-using Models.Soils;
-using Newtonsoft.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Models.Soils.Arbitrator;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using System.Linq;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.Soils;
+using Models.Soils.Arbitrator;
+using Newtonsoft.Json;
 
 namespace Models.PMF.OilPalm
 {
@@ -94,7 +87,7 @@ namespace Models.PMF.OilPalm
         public double Depth { get { return 10000; } }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width{ get { return 0; } }
+        public double Width { get { return 0; } }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         [Units("0-1")]
@@ -208,9 +201,10 @@ namespace Models.PMF.OilPalm
         /// <summary>Total cover provided by plant canopies</summary>
         /// <value>The cover_tot.</value>
         [Units("0-1")]
-        public double cover_tot {
+        public double cover_tot
+        {
             get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
-                }
+        }
 
         /// <summary>Gets or sets the understory cover maximum.</summary>
         /// <value>The understory cover maximum.</value>
@@ -234,7 +228,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Palm Rooting Depth</summary>
         /// <value>The root depth.</value>
         [Units("mm")]
-        public double RootDepth {get; set;}
+        public double RootDepth { get; set; }
 
         /// <summary>The pot sw uptake</summary>
         double[] PotSWUptake;
@@ -298,7 +292,7 @@ namespace Models.PMF.OilPalm
         /// <summary>Proportion of daily growth partitioned into reproductive parts</summary>
         /// <value>The reproductive growth fraction.</value>
         [Units("0-1")]
-        public double ReproductiveGrowthFraction {get; set;}
+        public double ReproductiveGrowthFraction { get; set; }
 
         /// <summary>Amount of carbon limitation for todays potential growth (ie supply/demand)</summary>
         /// <value>The carbon stress.</value>
@@ -572,17 +566,17 @@ namespace Models.PMF.OilPalm
         /// <summary>Daily evapotranspiration for the understory</summary>
         [JsonIgnore]
         [Units("mm")]
-        public double UnderstoryEP {get;set;}
+        public double UnderstoryEP { get; set; }
 
         /// <summary>Understory plant water stress factor</summary>
         [JsonIgnore]
         [Units("0-1")]
-        public double UnderstoryFW {get;set;}
+        public double UnderstoryFW { get; set; }
 
         /// <summary>Daily understory dry matter growth</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double UnderstoryDltDM{get;set;}
+        public double UnderstoryDltDM { get; set; }
 
         /// <summary>Daily understory nitrogen fixation</summary>
         /// <value>The understory n fixation.</value>
@@ -769,8 +763,8 @@ namespace Models.PMF.OilPalm
             for (int i = 0; i < (int)InitialFrondNumber.Value() + 60; i++)
             {
                 BunchType B = new BunchType();
-                if (i>40)
-                   B.FemaleFraction =  FemaleFlowerFraction.Value();
+                if (i > 40)
+                    B.FemaleFraction = FemaleFlowerFraction.Value();
                 else
                     B.FemaleFraction = 0;
 
@@ -817,7 +811,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
+            Summary.WriteMessage(this, string.Format("A crop of " + SowingData.Cultivar + " OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -1027,7 +1021,7 @@ namespace Models.PMF.OilPalm
             double RUEcloud = RUE.Value() * (1 + 0.33 * cover_green);
             double WF = DiffuseLightFraction;
             double RUEadj = WF * WF * RUEcloud + (1 - WF * WF) * RUEclear;
-            DltDM = RUEadj * Math.Min(Fn,Fvpd) * MetData.Radn * cover_green * FW;
+            DltDM = RUEadj * Math.Min(Fn, Fvpd) * MetData.Radn * cover_green * FW;
 
             double DMAvailable = DltDM;
             double[] FrondsAge = new double[Fronds.Count];
@@ -1039,10 +1033,10 @@ namespace Models.PMF.OilPalm
             double GrowthDuration = ExpandingFronds.Value() * frondAppearanceRate;
 
             for (int i = 0; i < Fronds.Count; i++)
-                {
-                    FrondsAge[i] = SizeFunction(Fronds[i].Age, FMA, GrowthDuration);
-                    FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT, FMA, GrowthDuration);
-                }
+            {
+                FrondsAge[i] = SizeFunction(Fronds[i].Age, FMA, GrowthDuration);
+                FrondsAgeDelta[i] = SizeFunction(Fronds[i].Age + DeltaT, FMA, GrowthDuration);
+            }
 
             RootGrowth = (DltDM * RootFraction.Value());
             DMAvailable -= RootGrowth;
@@ -1051,7 +1045,7 @@ namespace Models.PMF.OilPalm
             double[] BunchDMD = new double[Bunches.Count];
             for (int i = 0; i < 6; i++)
             {
-                Bunches[i].FillDuration += DeltaT/frondAppearanceRate;
+                Bunches[i].FillDuration += DeltaT / frondAppearanceRate;
                 BunchDMD[i] = BunchSizeMax.Value() / (6 * frondAppearanceRate / DeltaT) * Fn * Population * Bunches[i].FemaleFraction * BunchOilConversionFactor.Value();
             }
             if (FrondNumber > HarvestFrondNumber.Value())  // start growing the 7th as well so that it can be ready to harvest on time
@@ -1139,7 +1133,7 @@ namespace Models.PMF.OilPalm
             //if (FrondNumber > Math.Round(HarvestFrondNumber.Value)&&Bunches[0].FillDuration>6)
             //if (FrondNumber > Math.Round(HarvestFrondNumber.Value))
             if (FrondNumber > HarvestFrondNumber.Value() && Bunches[0].FillDuration > 6)
-                {
+            {
                 HarvestBunches = Bunches[0].FemaleFraction;
                 double HarvestYield = Bunches[0].Mass * Population / (1.0 - RipeBunchWaterContent.Value());
                 HarvestFFB = HarvestYield / 100;
@@ -1198,7 +1192,7 @@ namespace Models.PMF.OilPalm
                 Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = waterBalance.Eo * cover_green*Math.Min(Fn, Fvpd);
+            PEP = waterBalance.Eo * cover_green * Math.Min(Fn, Fvpd);
 
 
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)

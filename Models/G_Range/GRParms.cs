@@ -1,14 +1,14 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Globalization;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -572,7 +572,7 @@ namespace Models
             public double[] indivPlantArea = new double[nFacets];
         }
 
-// #pragma warning disable 0649
+        // #pragma warning disable 0649
 
         [Serializable]
         private struct Globals
@@ -642,7 +642,7 @@ namespace Models
             double[] thickness = null;
             if (soilPhysical != null)
                 thickness = soilPhysical.Thickness;
-          
+
             if (SoilDataSource == SoilDataSourceEnum.APSIM || SoilDataSource == SoilDataSourceEnum.APSIMPhysical)
             {
                 nSoilLayers = thickness.Length;
@@ -702,11 +702,11 @@ namespace Models
                             sand[0] += soilPhysical.ParticleSizeSand[i] * weight;
                             silt[0] += soilPhysical.ParticleSizeSilt[i] * weight;
                             clay[0] += soilPhysical.ParticleSizeClay[i] * weight;
-                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0])); 
+                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0]));
                             //if (soilPhysical.Rocks != null)
                             //    gravel[0] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[0] += soilPhysical.BD[i] * weight;
-                            organicCarbon[0] += organic.Carbon[i] * weight; 
+                            organicCarbon[0] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += soilPhysical.DUL[i] * weight;
@@ -1006,7 +1006,8 @@ namespace Models
 
             // Standardize the three surfaces in case they sum to greater than 1.0(they are allowed to be less than 1.0, with the remainder being bare ground)
             double tempSum = globe.herbCover + globe.shrubCover + globe.decidTreeCover + globe.egreenTreeCover;
-            if (tempSum > 100.0) {
+            if (tempSum > 100.0)
+            {
                 globe.herbCover = globe.herbCover * (100.0 / tempSum);
                 globe.shrubCover = globe.shrubCover * (100.0 / tempSum);
                 globe.decidTreeCover = globe.decidTreeCover * (100.0 / tempSum);
@@ -1161,7 +1162,7 @@ namespace Models
             string allParmData;
             if (String.IsNullOrEmpty(ParameterFileName))
             {
-                allParmData =  ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt");
+                allParmData = ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt");
             }
             else
                 allParmData = File.ReadAllText(ParameterFileName);

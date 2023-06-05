@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using APSIM.Shared.Documentation;
-using Models.PMF;
 
 namespace Models.Functions.RootShape
 {
@@ -29,7 +28,7 @@ namespace Models.Functions.RootShape
                 if (zone.Depth < top)
                 {
                     prop = 0;
-                } 
+                }
                 else
                 {
                     prop = SoilUtilities.ProportionThroughLayer(physical.Thickness, layer, zone.Depth);

@@ -3,13 +3,12 @@
 // CSIRO Agriculture & Food
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using StdUnits;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using StdUnits;
 
     /// <summary>
     /// Enterprise type init
@@ -316,7 +315,7 @@ namespace Models.GrazPlan
             get { return reproduction.WeanerMaleTag; }
             set { reproduction.WeanerMaleTag = value; }
         }
-        
+
         /// <summary>
         /// Determine if this Enterprise uses this tag number to specify an animal group.
         /// </summary>
@@ -450,7 +449,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// used for fixed
         /// </summary>
-        public TagIndex[] paddock_list;   
+        public TagIndex[] paddock_list;
     }
 
     /// <summary>
@@ -555,7 +554,7 @@ namespace Models.GrazPlan
         {
             int result = -1;
             if ((grazingList[periodIdx - 1].paddock_list.Length > 0) && (grazingList[periodIdx - 1].paddock_list.Length >= idx))
-                result = grazingList[periodIdx - 1].paddock_list[idx-1].index;
+                result = grazingList[periodIdx - 1].paddock_list[idx - 1].index;
             return result;
         }
 
@@ -567,7 +566,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public int GetFixedPaddTagCount(int periodIdx, int idx)
         {
-            return grazingList[periodIdx - 1].paddock_list[idx-1].tag_no.Length;
+            return grazingList[periodIdx - 1].paddock_list[idx - 1].tag_no.Length;
         }
 
         /// <summary>
@@ -618,9 +617,9 @@ namespace Models.GrazPlan
             int result = 0;
             if (grazingList[periodIdx - 1].tag_list.Length >= idx)
             {
-                if (grazingList[periodIdx - 1].tag_list[idx-1].paddock.Length >= paddIdx)
+                if (grazingList[periodIdx - 1].tag_list[idx - 1].paddock.Length >= paddIdx)
                 {
-                    result = grazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx-1];
+                    result = grazingList[periodIdx - 1].tag_list[idx - 1].paddock[paddIdx - 1];
                 }
             }
             return result;

@@ -1,16 +1,17 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Models.Functions;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.
@@ -90,7 +91,7 @@
                 // if (model is ICustomDocumentation)
                 //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
                 // else
-                    DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
+                DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
             }
         }
 

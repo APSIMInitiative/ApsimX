@@ -1,7 +1,7 @@
-﻿using Models.Core;
-using Models.Functions;
-using System;
+﻿using System;
 using System.Linq;
+using Models.Core;
+using Models.Functions;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -59,7 +59,7 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public double DaysVernalising { get; set; }
 
- 
+
         /// <summary>Compute the vernalisation</summary>
         public void DoVernalisation()
         {

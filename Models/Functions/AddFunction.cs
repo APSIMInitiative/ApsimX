@@ -19,7 +19,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList(); 
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             double returnValue = 0.0;
 
