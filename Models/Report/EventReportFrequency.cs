@@ -26,12 +26,7 @@ namespace Models
                 return true;
             }
             else 
-                if (tokens.Length > 1 && line.Contains(' ') 
-                                      && !line.Contains('=')
-                                      && !line.Contains('<')
-                                      && !line.Contains('>')
-                                      && !line.Contains('&')
-                                      && !line.Contains('|'))
+                if (tokens.Length > 1 && line.IndexOfAny(new char[] { '=', '<', '>', '&', '|' }) == 0)
             {
                 new EventReportFrequency(report, events, line);
                 return true;
