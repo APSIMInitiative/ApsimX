@@ -1,17 +1,11 @@
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Xml;
-using System.Linq;
-using System.Text;
 using Models.Core;
-using Models;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
-using Models.Surface;
 using Models.Soils.NutrientPatching;
 using Models.Soils.Nutrients;
+using Models.Surface;
+using Newtonsoft.Json;
 
 namespace Models.Soils
 {
@@ -291,7 +285,7 @@ namespace Models.Soils
                 if (InitialFOMType != fom_types[FOMtypeID_reset])
                 {   // no valid FOM type was given, use default
                     FOMtypeID_reset = 0;
-                    mySummary.WriteMessage(this,"   The initial FOM type was not found, the default type will be used", MessageType.Warning);
+                    mySummary.WriteMessage(this, "   The initial FOM type was not found, the default type will be used", MessageType.Warning);
                 }
             }
         }
@@ -2605,7 +2599,7 @@ namespace Models.Soils
             for (int layer = 0; layer < Math.Min(nLayers, value.Length); layer++)
                 deltaN[layer] = value[layer] - no3[layer];
             SetNO3Delta(callingModelType, deltaN);
-         }
+        }
 
         /// <summary>Setter for delta NO3</summary>
         /// <remarks>

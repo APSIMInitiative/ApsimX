@@ -1,11 +1,11 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Interfaces;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
 
 namespace Models.Soils
 {
@@ -437,7 +437,7 @@ namespace Models.Soils
         {
             get
             {
-                double[] value = new double[n+1];
+                double[] value = new double[n + 1];
                 for (int i = 0; i <= n; i++)
                     value[i] = Math.Max(0.0, (th[i] - physical.LL15[i]) * physical.Thickness[i]);
                 return value;
@@ -1284,7 +1284,7 @@ namespace Models.Soils
 
 
 
-            HP.SetupThetaCurve(PSIDul,n, physical.LL15, physical.DUL, physical.SAT);
+            HP.SetupThetaCurve(PSIDul, n, physical.LL15, physical.DUL, physical.SAT);
             HP.SetupKCurve(n, physical.LL15, physical.DUL, physical.SAT, physical.KS, KDul, PSIDul);
 
             // ---------- NOW SET THE ACTUAL WATER BALANCE STATE VARIABLES ---------
@@ -2500,7 +2500,7 @@ namespace Models.Soils
                     TD_sflow[sol][node] = 0.0;
             }
 
-            for (int node = 0; node <= n+1; node++)
+            for (int node = 0; node <= n + 1; node++)
                 TD_wflow[node] = 0.0;
 
             for (int node = 0; node <= n; node++)
@@ -2768,9 +2768,9 @@ namespace Models.Soils
 
                 double old_time = t;
 
-                //   new step
-                //40       continue
-                retry:
+            //   new step
+            //40       continue
+            retry:
 
                 t += _dt;
                 if (timestepRemaining - _dt < 0.1 * _dt)
@@ -3021,7 +3021,7 @@ namespace Models.Soils
             double[] rhs = new double[n + 1];
             double[] dp = new double[n + 1];
             double[] vbp = new double[n + 1];
-             PondingData pondingData = new PondingData();
+            PondingData pondingData = new PondingData();
 
             do
             {
@@ -3360,9 +3360,9 @@ namespace Models.Soils
             double csln = csl[solnum][n];
             neq = neq - (n - j);
             int itcnt = 0;
-            //     solve for concentrations
+        //     solve for concentrations
 
-            loop:
+        loop:
             //nh      call thomas(neq,0,a(k),b(k),c(k),rhs(k),dum,d(k),g%csl(solnum,k),
             //nh     :            dum,fail)
             double[] csltemp = new double[n + 1];
@@ -4199,7 +4199,7 @@ namespace Models.Soils
             }
 
             double thsat = physical.SAT[ix];  // NOTE: this assumes that the wettest p%wc is
-                                                  //! first in the pairs of log suction vs p%wc
+                                              //! first in the pairs of log suction vs p%wc
 
             // EJZ - this was in the fortran source, but is clearly futile
             //if (thsat == 0.0)
@@ -4761,7 +4761,7 @@ namespace Models.Soils
 
             const double C = 1.0;                 // ratio of flux between drains to flux midway between drains.
                                                   // value of 1.0 usually used as a simplification.
-            //double q;           // flux into drains (mm/s)
+                                                  //double q;           // flux into drains (mm/s)
             double de;          // effective d to correct for convergence near the drain. (mm)
             double alpha;       // intermediate variable in de calculation
 

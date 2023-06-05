@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Models.DCAPST.Interfaces;
 
@@ -9,7 +8,7 @@ namespace Models.DCAPST.Canopy
     /// Models a subsection of the canopy (used for distinguishing between sunlit and shaded)
     /// </summary>
     public class AssimilationArea : IAssimilationArea
-    {   
+    {
         /// <summary>
         /// The assimilation model
         /// </summary>
@@ -36,16 +35,16 @@ namespace Models.DCAPST.Canopy
         /// The number of photons which reached the canopy over a period of time
         /// </summary>
         public double PhotonCount { get; set; }
-        
+
         /// <summary>
         /// CO2 assimilation rate over a period of time
         /// </summary>
         protected double CO2AssimilationRate { get; set; }
-        
+
         /// <summary>
         /// Water used during photosynthesis
         /// </summary>
-        protected double WaterUse { get; set; }        
+        protected double WaterUse { get; set; }
 
         /// <summary>
         /// The possible assimilation pathways
@@ -106,7 +105,7 @@ namespace Models.DCAPST.Canopy
             DoIterations(transpiration, temperature.AirTemperature, true);
 
             // If the result is not sensible, repeat the iterations without updating temperature
-            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0) 
+            if (GetCO2Rate() <= 0 || GetWaterUse() <= 0)
                 DoIterations(transpiration, temperature.AirTemperature, false);
 
             // If the result is still not sensible, use default values (0's)
@@ -140,9 +139,9 @@ namespace Models.DCAPST.Canopy
                 t.Water.LeafTemp = p.Temperature;
 
                 var func = t.UpdateA(assimilation, p);
-                assimilation.UpdatePartialPressures(p, t.Leaf, func);                
+                assimilation.UpdatePartialPressures(p, t.Leaf, func);
 
-                if (!(assimilation is AssimilationC3)) 
+                if (!(assimilation is AssimilationC3))
                     t.UpdateA(assimilation, p);
 
                 if (updateT)
@@ -163,7 +162,7 @@ namespace Models.DCAPST.Canopy
             var temp = pathways.ToArray().OrderBy(p => p.CO2Rate).First().Temperature;
 
             var ac1 = pathways.FirstOrDefault(p => p.Type == PathwayType.Ac1).GetPathValues();
-            
+
             var ac2 = pathways.FirstOrDefault(p => p.Type == PathwayType.Ac2)
                 is AssimilationPathway path ? path.GetPathValues() : new PathValues();
 
@@ -177,7 +176,7 @@ namespace Models.DCAPST.Canopy
                 Ac1 = ac1,
                 Ac2 = ac2,
                 Aj = aj
-            };            
+            };
 
             return values;
         }
@@ -222,5 +221,5 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         /// <value></value>
         public PathValues Aj { get; set; }
-    }  
+    }
 }

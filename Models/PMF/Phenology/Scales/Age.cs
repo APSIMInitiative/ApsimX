@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using Models.PMF.Struct;
 using Models.Climate;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {

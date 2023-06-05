@@ -1,11 +1,11 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+
+namespace Models.PMF
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This class holds the functions for calculating values for each Nutrient component. 
@@ -42,24 +42,24 @@
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
 
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // add a heading
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // get description of this class.
-                tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
+            // get description of this class.
+            tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // write memos.
+            foreach (IModel memo in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            // write children.
+            foreach (IModel child in this.FindAllChildren<IFunction>())
+                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
         }
     }
 
-    
+
 
 
 }

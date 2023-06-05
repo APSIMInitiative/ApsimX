@@ -255,7 +255,7 @@ namespace Models.PMF.Organs
             Biomass loss = new Biomass();
             LaiDead += Lai * fraction;
             foreach (PerennialLeafCohort leaf in leaves)
-            {            
+            {
                 loss.SetTo(leaf.Live);
                 loss.Multiply(fraction);
                 dead.Add(loss);

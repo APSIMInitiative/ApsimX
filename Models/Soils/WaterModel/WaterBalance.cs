@@ -1,15 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models.Soils.Nutrients;
-    using Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The SoilWater module is a cascading water balance model that owes much to its precursors in 
@@ -52,9 +52,9 @@ namespace Models.WaterModel
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link]
@@ -225,17 +225,17 @@ namespace Models.WaterModel
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [JsonIgnore]
-        public double[] Water 
-        { 
-            get { return waterMM; } 
-            set 
-            { 
+        public double[] Water
+        {
+            get { return waterMM; }
+            set
+            {
                 waterMM = value;
                 if (value == null)
                     waterVolumetric = null;
                 else
-                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
-            } 
+                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness);
+            }
         }
 
         /// <summary>Amount of water in the soil (mm/mm).</summary>
@@ -395,7 +395,7 @@ namespace Models.WaterModel
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
         [JsonIgnore]
-        public double LeachCl => 0.0; 
+        public double LeachCl => 0.0;
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -821,7 +821,7 @@ namespace Models.WaterModel
 
             int n = soilPhysical.Thickness.Length;
             hyprops.ResizePropfileArrays(n);
-            hyprops.SetupThetaCurve(PSIDul, n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+            hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
             PSI = new double[n];
         }
 
@@ -841,7 +841,7 @@ namespace Models.WaterModel
             runoffModel.TillageCnRed = reduction;
             runoffModel.CumWaterSinceTillage = 0.0;
 
-            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
+            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}",
                                      reduction, Data.cn_rain);
             summary.WriteMessage(this, line, MessageType.Diagnostic);
         }

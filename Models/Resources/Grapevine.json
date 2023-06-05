@@ -163,6 +163,7 @@
               "Start": "Endodormancy",
               "End": "Ecodormancy",
               "Name": "Dormancy",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.SubtractFunction, Models",
@@ -259,6 +260,7 @@
               "Start": "Ecodormancy",
               "End": "BudBurst",
               "Name": "Budding",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -318,6 +320,7 @@
               "Start": "BudBurst",
               "End": "FloweringTime",
               "Name": "Flowering",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -348,6 +351,7 @@
               "Start": "FloweringTime",
               "End": "FruitSet",
               "Name": "FruitSetting",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -387,6 +391,7 @@
               "Start": "FruitSet",
               "End": "Veraison",
               "Name": "BerryDevelopment",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -713,6 +718,7 @@
               "Start": "Veraison",
               "End": "LeafFall",
               "Name": "CanopySenescence",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
@@ -734,6 +740,7 @@
               "End": "Unused",
               "PhaseNameToGoto": "Dormancy",
               "Name": "DormancyRewind",
+              "IsEmerged": false,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",

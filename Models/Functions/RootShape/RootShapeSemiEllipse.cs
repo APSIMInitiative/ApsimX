@@ -1,10 +1,10 @@
 ﻿using System;
-using Models.Core;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Organs;
 
 namespace Models.Functions.RootShape
 {
@@ -46,7 +46,8 @@ namespace Models.Functions.RootShape
                     rootAreaUnlimited = CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Right side
                     rootAreaUnlimited += CalcRootAreaSemiEllipse(zone, RootAngle.Value(), top, bottom, 10000);   // Left Side
                     llModifer = MathUtilities.Divide(rootAreaUnlimited, rootAreaBaseUnlimited, 1);
-                } else
+                }
+                else
                 {
                     llModifer = 1;
                 }

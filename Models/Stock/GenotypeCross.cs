@@ -1,9 +1,10 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+
+namespace Models.GrazPlan
 {
-    using Models.Core;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
 
     /// <summary>
     /// An instance of this class creates a genotype cross and adds it to the list of 
@@ -44,7 +45,7 @@
         [Description("Base rate of mortality in mature animals")]
         [Units("/yr")]
         public double MatureDeathRate { get; set; } = double.NaN;
-        
+
         /// <summary>Base rate of mortality in weaners. Default is 0.0.</summary>
         [Description("Base rate of mortality in weaners")]
         [Units("/yr")]
@@ -137,7 +138,7 @@
             if (AnimalType == null)
                 DetermineAnimalType();
             return stock.Genotypes.All.Where(genotype => genotype.AnimalType == AnimalType)
-                                      .Select(genotype => genotype.Name);                                      
+                                      .Select(genotype => genotype.Name);
         }
 
         /// <summary>the animal type from the breed names.</summary>

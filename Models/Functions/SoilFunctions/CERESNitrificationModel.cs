@@ -1,7 +1,6 @@
 ﻿using System;
 using Models.Core;
 using Models.Soils;
-using Models.Soils.Nutrients;
 
 namespace Models.Functions
 {
@@ -53,7 +52,7 @@ namespace Models.Functions
             double RateModifier = CERESTF.Value(arrayIndex);
             RateModifier = Math.Min(RateModifier, CERESWF.Value(arrayIndex));
             RateModifier = Math.Min(RateModifier, CERESpHF.Value(arrayIndex));
-                       
+
             return PotentialRate * RateModifier;
         }
     }

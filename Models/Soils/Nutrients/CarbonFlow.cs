@@ -1,14 +1,14 @@
-﻿namespace Models.Soils.Nutrients
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+
+namespace Models.Soils.Nutrients
 {
-    using Core;
-    using Models.Functions;
-    using System;
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Models.PMF;
 
     /// <summary>
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
@@ -36,7 +36,7 @@
         [Link(ByName = true)]
         ISolute NH4 = null;
 
-        [Link(ByName = true, IsOptional =true)]
+        [Link(ByName = true, IsOptional = true)]
         ISolute LabileP = null;
 
         /// <summary>
@@ -148,9 +148,9 @@
                     pSupplyFactor = 1; // remove P constraint until P model fully operational
                     SupplyFactor = Math.Min(SupplyFactor, pSupplyFactor);
                 }
-                
-                if (SupplyFactor<1)
-                { 
+
+                if (SupplyFactor < 1)
+                {
                     for (int j = 0; j < numDestinations; j++)
                     {
                         carbonFlowToDestination[j] *= SupplyFactor;

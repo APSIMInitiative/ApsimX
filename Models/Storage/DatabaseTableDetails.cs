@@ -1,10 +1,11 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     class DatabaseTableDetails
     {
@@ -54,7 +55,7 @@
             List<string> colTypes = new List<string>();
 
             foreach (DataColumn column in table.Columns)
-            { 
+            {
                 columnNamesInDb.Add(column.ColumnName);
                 bool allowLongStrings = table.TableName.StartsWith("_");
                 colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
@@ -74,7 +75,7 @@
         private void AlterTable(DataTable table)
         {
             bool haveBegunTransaction = false;
-                
+
             foreach (DataColumn column in table.Columns)
             {
                 if (!columnNamesInDb.Contains(column.ColumnName))

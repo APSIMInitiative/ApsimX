@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.PMF;
-using Models.PMF.Organs;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -25,7 +24,7 @@ namespace Models.Functions.DemandFunctions
         private Organ parentSimpleOrgan = null;
 
         private string parentOrganType = "";
- 
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Utilities
 {
@@ -16,7 +14,7 @@ namespace Models.Utilities
         private IModel parentModel;
         private string variableName;
         private int numberOfDays;
-        
+
 
         /// <summary>
         /// Constructor
@@ -44,7 +42,7 @@ namespace Models.Utilities
 
             try
             {
-                double value = (double) parentModel.FindByPath(variableName)?.Value;
+                double value = (double)parentModel.FindByPath(variableName)?.Value;
                 Values.Add(value);
             }
             catch (Exception err)
@@ -58,6 +56,6 @@ namespace Models.Utilities
         /// </summary>
         public double Sum { get { return MathUtilities.Sum(Values); } }
 
-        
+
     }
 }

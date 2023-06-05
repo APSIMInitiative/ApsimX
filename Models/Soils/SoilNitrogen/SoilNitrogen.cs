@@ -1,15 +1,10 @@
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Xml;
-using System.Linq;
-using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Surface;
-using Models.Interfaces;
+using Models.Core;
 using Models.Soils.NutrientPatching;
 using Models.Soils.Nutrients;
+using Models.Surface;
 
 namespace Models.Soils
 {
@@ -241,10 +236,10 @@ namespace Models.Soils
                 ph = new double[nLayers];
                 for (int layer = 0; layer < nLayers; ++layer)
                     ph[layer] = DefaultInitialpH;
-                mySummary.WriteMessage(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
+                mySummary.WriteMessage(this, "Soil pH was not supplied to SoilNitrogen, the default value ("
                     + DefaultInitialpH.ToString("0.00") + ") will be used for all layers", MessageType.Warning);
             }
-            
+
             // Check whether C:N values have been supplied. If not use average C:N ratio in all pools
             if (fomPoolsCNratio == null || fomPoolsCNratio.Length < 3)
             {

@@ -1,11 +1,11 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// An event handling class
@@ -51,7 +51,7 @@
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
             allModels.AddRange(relativeTo.FindAllDescendants());
-            List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName??"") && a.EventInfo.Name.Contains(eventName??"")).ToList();
+            List<Publisher> publishers = Publisher.FindAll(allModels).Where(a => a.Model.GetType().FullName.Contains(publisherName ?? "") && a.EventInfo.Name.Contains(eventName ?? "")).ToList();
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
 
@@ -330,7 +330,7 @@
             public EventInfo EventInfo { get; private set; }
 
             /// <summary>Return the event name.</summary>
-            public string Name {  get { return EventInfo.Name; } }
+            public string Name { get { return EventInfo.Name; } }
 
             internal void ConnectSubscriber(Subscriber subscriber)
             {
@@ -353,11 +353,11 @@
                 {
                     //GetField will not find the EventHandler on a DerivedClass as the delegate is private
                     Type searchType = Model.GetType().BaseType;
-                    while(eventAsField == null)
+                    while (eventAsField == null)
                     {
                         eventAsField = searchType?.GetField(Name, BindingFlags.Instance | BindingFlags.NonPublic);
                         searchType = searchType.BaseType;
-                        if(searchType == null)
+                        if (searchType == null)
                         {
                             //not sure it's even possible to get to here, but it will make it easier to find itf it does
                             throw new Exception("Could not find " + Name + " in " + Model.GetType().Name + " using GetField");

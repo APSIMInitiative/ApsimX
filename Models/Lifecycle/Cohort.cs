@@ -1,7 +1,8 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using static Models.LifeCycle.LifeCyclePhase;
+
+namespace Models.LifeCycle
 {
-    using System;
-    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// A class that holds the status of a group of individules (cohort) of the same developmental stage
@@ -18,7 +19,7 @@
 
         /// <summary>The maturity of the cohort (0-1)</summary>
         public double PhysiologicalAge { get; set; }
-                
+
         /// <summary>Number of Mortalities from this cohort today.</summary>
         public double Mortalities { get; set; }
 

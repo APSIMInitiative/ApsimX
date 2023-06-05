@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
@@ -7,7 +6,7 @@ namespace Models.Functions
 {
     /// <summary>Temperature function for soil processes except denitrification. Originally taken from CERES.
     /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
-    
+
     [Serializable]
 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -43,7 +42,7 @@ namespace Models.Functions
             double ST = soiltemperature.Value[arrayIndex];
 
             if (ST > MineralisationSTBase)
-                TF = Math.Pow(ST - MineralisationSTBase,2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
+                TF = Math.Pow(ST - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
             if (TF > 1) TF = 1;
 
             return TF;

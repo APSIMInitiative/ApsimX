@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Models.Core;
 using Newtonsoft.Json;
 
@@ -11,7 +8,7 @@ namespace Models.Soils
     /// Data structure that holds parameters and variables specific to each pore component in the soil horizion
     /// </summary>
     [Serializable]
-    public class Pore: Model
+    public class Pore : Model
     {
         #region Class descriptors
         private double FloatingPointTolerance = 0.0000000001;
@@ -21,9 +18,9 @@ namespace Models.Soils
         /// <summary>The size compartment that this pore represents</summary>
         [JsonIgnore]
         public double Compartment { get; set; }/// <summary>The thickness of the layer that the pore is within</summary>
-        /// <summary>
-        /// Allows Sorption processes to be switched off from the UI
-        /// </summary>
+                                               /// <summary>
+                                               /// Allows Sorption processes to be switched off from the UI
+                                               /// </summary>
         [Description("Include Sorption in Ks in.  Normally yes, this is for testing")]
         public bool IncludeSorption { get; set; }
         #endregion
@@ -40,7 +37,7 @@ namespace Models.Soils
         /// <summary>The mean horizontal area of the pores in this pore compartment</summary>
         [JsonIgnore]
         [Units("um2")]
-        public double Area { get { return Math.PI * Math.Pow(Radius,2); } }
+        public double Area { get { return Math.PI * Math.Pow(Radius, 2); } }
         /// <summary>The mean horizontal radius of pores in this pore compartment</summary>
         [JsonIgnore]
         [Units("um")]
@@ -102,7 +99,7 @@ namespace Models.Soils
         /// <summary>The air filled volume of the pore</summary>
         [JsonIgnore]
         [Units("ml/ml")]
-        public double AirFilledVolume { get { return Volume - WaterFilledVolume; }  }
+        public double AirFilledVolume { get { return Volume - WaterFilledVolume; } }
 
         private double _WaterDepth = 0;
         /// <summary>The depth of water in the pore</summary>
@@ -115,8 +112,8 @@ namespace Models.Soils
             set
             {
                 if (value < -0.000000000001) throw new Exception("Trying to set a negative pore water depth");
-                _WaterDepth = Math.Max(value,0);//discard floating point errors
-                if (_WaterDepth - VolumeDepth>FloatingPointTolerance)
+                _WaterDepth = Math.Max(value, 0);//discard floating point errors
+                if (_WaterDepth - VolumeDepth > FloatingPointTolerance)
                     throw new Exception("Trying to put more water into pore " + Compartment + "in layer " + Layer + " than will fit");
                 if (Double.IsNaN(_WaterDepth))
                     throw new Exception("Something has just set Water depth to Nan for Pore " + Compartment + " in layer " + Layer + ".  Don't Worry, things like this happen sometimes.");
@@ -139,21 +136,21 @@ namespace Models.Soils
         /// Empirical parameter for estimating hydraulic conductivity of pore compartments
         /// </summary>
         [Description("Pore flow Shape coefficient")]
-        public double XFlow { get; set; } 
+        public double XFlow { get; set; }
         /// <summary>
         /// The volumetirc flow rate of a single pore
         /// </summary>
         [JsonIgnore]
         [Units("mm3/s")]
-        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius,XFlow); } }
+        public double PoreFlowRate { get { return CFlow * Math.Pow(Radius, XFlow); } }
         /// <summary>The hydraulic conductivity of water through this pore compartment</summary>
         [JsonIgnore]
         [Units("mm/h")]
-        public double PoiseuilleFlow { get { return (PoreFlowRate * Number)/ 1e6*3600; } }
+        public double PoiseuilleFlow { get { return (PoreFlowRate * Number) / 1e6 * 3600; } }
         /// <summary>The potential diffusion out of this pore</summary>
         [JsonIgnore]
         [Units("mm/h")]
-        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1- TensionFactor); } }
+        public double Diffusivity { get { return PoiseuilleFlow * RelativeWaterContent * (1 - TensionFactor); } }
         /// <summary>The potential diffusion into this pore</summary>
         [JsonIgnore]
         [Units("mm")]
@@ -167,7 +164,7 @@ namespace Models.Soils
         {
             get
             {
-                return Math.Sqrt(((7.4/Radius*1000) * PoiseuilleFlow * Math.Max(0,Volume - WaterFilledVolume))/0.5);
+                return Math.Sqrt(((7.4 / Radius * 1000) * PoiseuilleFlow * Math.Max(0, Volume - WaterFilledVolume)) / 0.5);
             }
         }
         /// <summary>
@@ -248,11 +245,13 @@ namespace Models.Soils
         [Units("mm/h")]
         public double PotentialWaterExtraction
         {
-            get {
+            get
+            {
                 double MeanDiffusionDistance = Math.Sqrt(1 / RootLengthDensity) * 0.5; //assumes root length density represents the number of roots transecting a layer
                 double UptakeProp = (PoiseuilleFlow / MeanDiffusionDistance) * ExtractionMultiplier;
                 double PotentialRootUptake = WaterDepth * UptakeProp;
-                return Math.Min(PotentialRootUptake, WaterDepth); }
+                return Math.Min(PotentialRootUptake, WaterDepth);
+            }
         }
         #endregion
     }

@@ -1,19 +1,18 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Logging;
+using Models.Storage;
+
+namespace Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Soils;
-    using Models;
-    using Storage;
-    using Logging;
-    using System.Linq;
-    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -22,7 +21,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         [NonSerialized]
@@ -213,7 +212,7 @@
             {
                 foreach (string simulationName in storage.Reader.SimulationNames)
                 {
-                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme, true, true, true, true);
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme: darkTheme, true, true, true, true);
                     report.WriteLine();
                     report.WriteLine();
                     report.WriteLine("############################################################################");
@@ -340,7 +339,7 @@
             // Get the initial conditions table.
             if (showInitialConditions)
             {
-                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName:"_InitialConditions");
+                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName: "_InitialConditions");
                 if (initialConditionsTable != null)
                 {
                     // Convert the '_InitialConditions' table in the DataStore to a series of

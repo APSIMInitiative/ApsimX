@@ -1,7 +1,7 @@
+using System;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
-using System;
 using Newtonsoft.Json;
 
 namespace Models.PMF

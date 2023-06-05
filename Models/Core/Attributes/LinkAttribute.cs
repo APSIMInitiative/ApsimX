@@ -1,7 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// Enumeration of all possible types of links.

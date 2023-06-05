@@ -1,15 +1,15 @@
-﻿namespace Models.Climate
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+
+namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -17,7 +17,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
@@ -264,7 +264,8 @@
         [JsonIgnore]
         public int WinterSolsticeDOY
         {
-            get {
+            get
+            {
                 if (Latitude <= 0)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
@@ -279,7 +280,7 @@
                     else
                         return 355;
                 }
-                }
+            }
         }
 
         private bool First = true;
@@ -543,7 +544,7 @@
         /// <returns>Sun set time</returns>
         public double CalculateSunSet()
         {
-            return 12 + CalculateDayLength(-6)/2;
+            return 12 + CalculateDayLength(-6) / 2;
         }
 
         /// <summary>
@@ -680,7 +681,7 @@
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
-                    if (DateTime.IsLeapYear(clock.Today.Year-1))
+                    if (DateTime.IsLeapYear(clock.Today.Year - 1))
                         DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;
                     else
                         DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear;

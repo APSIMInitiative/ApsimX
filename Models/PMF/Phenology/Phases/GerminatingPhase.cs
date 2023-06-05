@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Newtonsoft.Json;
-using System.IO;
-using Models.Soils;
-using Models.Functions;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -61,6 +59,10 @@ namespace Models.PMF.Phen
         /// <summary>The phenological stage at the end of this phase.</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = false;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]

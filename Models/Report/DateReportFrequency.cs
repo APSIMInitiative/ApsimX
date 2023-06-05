@@ -1,8 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Models
 {

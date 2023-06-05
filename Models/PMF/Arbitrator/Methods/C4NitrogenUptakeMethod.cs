@@ -1,14 +1,14 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
-using Models.Interfaces;
 
 namespace Models.PMF.Arbitrator
 {
@@ -235,7 +235,7 @@ namespace Models.PMF.Arbitrator
 
             var organNames = Arbitrator.OrganNames;
             grainIndex = organNames.IndexOf("Grain");
-            rootIndex = organNames.IndexOf("Root"); 
+            rootIndex = organNames.IndexOf("Root");
             leafIndex = organNames.IndexOf("Leaf");
             stemIndex = organNames.IndexOf("Stem");
         }

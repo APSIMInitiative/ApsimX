@@ -1,6 +1,8 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
+
 
     /// <summary>
     /// Specifies the lower and upper bounds for the related field or property.

@@ -1,9 +1,7 @@
-﻿using APSIM.Shared.Documentation;
-using Models.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Utilities;
-using System.Data;
+using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -33,7 +31,7 @@ namespace Models.Functions
         public LinearInterpolationFunction() { }
 
         /// <summary>Constructor</summary>
-        public LinearInterpolationFunction(double[] x, double[] y) 
+        public LinearInterpolationFunction(double[] x, double[] y)
         {
             XYPairs = new XYPairs() { X = x, Y = y };
         }
@@ -122,9 +120,9 @@ namespace Models.Functions
 
             // fixme - the graph and table should be next to each other.
             yield return new Paragraph($"*{Name}* is calculated using linear interpolation");
-            
+
             foreach (var tag in XYPairs.Document())
-            yield return tag;
+                yield return tag;
         }
     }
 }
