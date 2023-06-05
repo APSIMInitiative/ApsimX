@@ -5597,7 +5597,7 @@
                               "VC": true,
                               "DTMin": 0.0,
                               "DTMax": 1440.0,
-                              "MaxWaterIncrement": 10.0,
+                              "MaxWaterIncrement": 5.0,
                               "SpaceWeightingFactor": 0.0,
                               "SoluteSpaceWeightingFactor": 0.0,
                               "Dis": 15.0,
