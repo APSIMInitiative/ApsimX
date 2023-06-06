@@ -39,6 +39,7 @@ namespace Models
               .WithParsed(Run)
               .WithNotParsed(HandleParseError);
             return exitCode;
+
         }
 
         /// <summary>
@@ -90,43 +91,14 @@ namespace Models
                 }
                 else
                 {
-                    Runner runner;
-                    if (string.IsNullOrEmpty(options.EditFilePath) && string.IsNullOrEmpty(options.SaveEdittedFile))
+                    Runner runner = null;
+                    if (string.IsNullOrEmpty(options.EditFilePath) &&
+                        string.IsNullOrEmpty(options.EditUseConfig) &&
+                        string.IsNullOrEmpty(options.RunUseConfig))
                     {
-
                         runner = new Runner(files,
                                             options.RunTests,
                                             options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
-                    }
-                    else if (!string.IsNullOrEmpty(options.SaveEdittedFile) && string.IsNullOrEmpty(options.EditFilePath))
-                    {
-                        foreach (string f in files)
-                        {
-                            Simulations sim = ApplyConfigToApsimFile(f, options.SaveEdittedFile) as Simulations;
-
-                            runner = new Runner(sim,
-                                                false,
-                                                true,
-                                                options.RunTests,
-                                                runType: options.RunType,
-                                                numberOfProcessors: options.NumProcessors,
-                                                simulationNamePatternMatch: options.SimulationNameRegex);
-
-                            sim.Write(f);
-                        }
-
-                    }
-                    else if (!string.IsNullOrEmpty(options.EditFilePath) && string.IsNullOrEmpty(options.SaveEdittedFile))
-                    {
-
-
-                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
-                                            true,
-                                            true,
-                                            options.RunTests,
-                                            runType: options.RunType,
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
 
@@ -138,13 +110,79 @@ namespace Models
                         runner.AllSimulationsCompleted += OnAllJobsCompleted;
                         // Run simulations.
                         runner.Run();
-
-                        // If errors occurred, write them to the console.
-                        if (exitCode != 0)
-                            Console.WriteLine("ERRORS FOUND!!");
-                        if (options.Verbose)
-                            Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                     }
+                    else if (!string.IsNullOrEmpty(options.EditUseConfig) &&
+                              string.IsNullOrEmpty(options.RunUseConfig) &&
+                              string.IsNullOrEmpty(options.EditFilePath))
+                    {
+                        foreach (string f in files)
+                        {
+                            string configPath = null;
+                            string savePath = null;
+
+                            // Get the white-space separated paths of the config and save file.
+                            if (options.EditUseConfig.Contains(","))
+                            {
+                                string[] configAndSavePaths = options.EditUseConfig.Split(",");
+                                if (configAndSavePaths.Length > 2)
+                                    throw new ArgumentException("Incorrect arguments given for --edit-use-config");
+                                configPath = configAndSavePaths[0];
+                                savePath = configAndSavePaths[1];
+                            }
+                            else configPath = options.EditUseConfig;
+
+                            Simulations sim = ApplyConfigToApsimFile(f, configPath) as Simulations;
+
+                            runner = new Runner(sim,
+                                                false,
+                                                true,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            if (!string.IsNullOrEmpty(savePath))
+                                sim.Write(savePath);
+                            else
+                                sim.Write(f);
+                        }
+
+                    }
+                    else if (!string.IsNullOrEmpty(options.EditFilePath) ||
+                             !string.IsNullOrEmpty(options.RunUseConfig) &&
+                              string.IsNullOrEmpty(options.EditUseConfig))
+                    {
+                        // Check which option is not null
+                        string selectedOption = null;
+                        if (!string.IsNullOrEmpty(options.EditFilePath))
+                        {
+                            selectedOption = options.EditFilePath;
+                        }
+                        else selectedOption = options.RunUseConfig;
+
+                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, selectedOption)),
+                                            true,
+                                            true,
+                                            options.RunTests,
+                                            runType: options.RunType,
+                                            numberOfProcessors: options.NumProcessors,
+                                            simulationNamePatternMatch: options.SimulationNameRegex);
+
+
+                        runner.SimulationCompleted += OnJobCompleted;
+                        if (options.Verbose)
+                            runner.SimulationCompleted += WriteCompleteMessage;
+                        if (options.ExportToCsv)
+                            runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                        runner.AllSimulationsCompleted += OnAllJobsCompleted;
+                        // Run simulations.
+                        runner.Run();
+                    }
+
+                    // If errors occurred, write them to the console.
+                    if (exitCode != 0)
+                        Console.WriteLine("ERRORS FOUND!!");
+                    if (options.Verbose)
+                        Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
                 }
             }
             catch (Exception err)
