@@ -135,6 +135,8 @@ namespace Models.PMF
     [Serializable]
     public class RemovalFractions
     {
+        private static RemovalFractions phenologyToEnd = new RemovalFractions() { SetPhenologyToEnd = true };
+
         /// <summary>
         /// The list of BiomassRemovalTypes for each organ
         ///</summary>
@@ -150,9 +152,17 @@ namespace Models.PMF
         public double SetPhenologyStage { get; set; }
 
         /// <summary>
+        /// The Phenological stage to the last stage.
+        ///</summary>
+        public bool SetPhenologyToEnd { get; set; }
+
+        /// <summary>
         /// The nunber of Main-stem nodes to remove
         /// </summary>
         public int NodesToRemove { get; set; }
+
+        /// <summary>Set phenology to the last stage.</summary>
+        public static RemovalFractions PhenologyToEnd => phenologyToEnd;
 
         /// <summary>
         /// Method to set the FractionToRemove for specified Organ
