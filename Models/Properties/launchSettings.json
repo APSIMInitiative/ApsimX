@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "Models": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx"
+    },
+    "--edit test": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --edit C:\\TestSims\\issue8038\\config.txt"
+    },
+    "--run-use-config test": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --run-use-config C:\\TestSims\\issue8038\\config.txt"
+    },
+    "--edit-use-config test": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --edit-use-config C:\\TestSims\\issue8038\\config.txt"
+    },
+    "2 file --edit-use-config": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --edit-use-config C:\\TestSims\\issue8038\\config.txt,C:\\TestSims\\issue8038\\testWheat2.apsimx"
+    }
+  }
+}
