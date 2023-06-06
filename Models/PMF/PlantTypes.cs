@@ -158,48 +158,62 @@
         ///</summary>
         public void SetFractionToRemove(string organName, double fraction, string biomassType = "live")
         {
-            if (removalValues.ContainsKey(organName))
+            if ((fraction > 1.0) || (fraction < 0.0))
             {
-                if (biomassType.ToLower() == "live")
-                    removalValues[organName].FractionLiveToRemove = fraction;
-                else if (biomassType.ToLower() == "dead")
-                    removalValues[organName].FractionDeadToRemove = fraction;
-                else
-                    throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
+                throw new Exception("Fraction removed from " +organName+" must be between zero and one");
             }
             else
             {
-                if (biomassType.ToLower() == "live")
-                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToRemove = fraction });
-                else if (biomassType.ToLower() == "dead")
-                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToRemove = fraction });
+                if (removalValues.ContainsKey(organName))
+                {
+                    if (biomassType.ToLower() == "live")
+                        removalValues[organName].FractionLiveToRemove = fraction;
+                    else if (biomassType.ToLower() == "dead")
+                        removalValues[organName].FractionDeadToRemove = fraction;
+                    else
+                        throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
+                }
                 else
-                    throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
+                {
+                    if (biomassType.ToLower() == "live")
+                        removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToRemove = fraction });
+                    else if (biomassType.ToLower() == "dead")
+                        removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToRemove = fraction });
+                    else
+                        throw new Exception("Type of biomass to remove should be either \"live\" or \"dead\"");
+                }
             }
         }
-        
+
         /// <summary>
         /// Method to set the FractionToResidue for specified Organ
         ///</summary>
         public void SetFractionToResidue(string organName, double fraction, string biomassType = "live")
         {
-            if (removalValues.ContainsKey(organName))
+            if ((fraction > 1.0) || (fraction < 0.0))
             {
-                if (biomassType.ToLower() == "live")
-                    removalValues[organName].FractionLiveToResidue = fraction;
-                else if (biomassType.ToLower() == "dead")
-                    removalValues[organName].FractionDeadToResidue = fraction;
-                else
-                    throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+                throw new Exception("Residue Fraction removed from " +organName+" must be between zero and one");
             }
             else
-            {
-                if (biomassType.ToLower() == "live")
-                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToResidue = fraction });
-                else if (biomassType.ToLower() == "dead")
-                    removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToResidue = fraction });
+            { 
+                if (removalValues.ContainsKey(organName))
+                {
+                    if (biomassType.ToLower() == "live")
+                        removalValues[organName].FractionLiveToResidue = fraction;
+                    else if (biomassType.ToLower() == "dead")
+                        removalValues[organName].FractionDeadToResidue = fraction;
+                    else
+                        throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+                }
                 else
-                    throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+                {
+                    if (biomassType.ToLower() == "live")
+                        removalValues.Add(organName, new OrganBiomassRemovalType() { FractionLiveToResidue = fraction });
+                    else if (biomassType.ToLower() == "dead")
+                        removalValues.Add(organName, new OrganBiomassRemovalType() { FractionDeadToResidue = fraction });
+                    else
+                        throw new Exception("Type of biomass to send to residue should be either \"live\" or \"dead\"");
+                }
             }
         }
 
