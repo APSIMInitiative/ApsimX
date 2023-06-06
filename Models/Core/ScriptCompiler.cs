@@ -159,6 +159,8 @@ namespace Models.Core
                     var match = regEx.Match(code);
                     if (!match.Success)
                         throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
+                    if (match.Groups.Count == 0 || match.Groups[1] == null)
+                        throw new Exception($"Invalid class name match found in script:{Environment.NewLine}{code}");
                     var className = match.Groups[1].Value;
 
                     // Create an instance of the class and give it to the model.
