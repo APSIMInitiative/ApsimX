@@ -1,9 +1,11 @@
 ﻿using Models.Climate;
 using Models.Core;
+using Models.Interfaces;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using static Models.PMF.Scrum.ScrumCrop;
 
 namespace Models.PMF.Scrum
 {
@@ -86,27 +88,18 @@ namespace Models.PMF.Scrum
         [Link]
         private GetTempSum ttSum = null;
 
-        /// <summary>
-        /// Method that sets scurm running
-        /// </summary>
-        public void Establish(ScrumManagement management)
-        {
-            string cropName = this.Name;
-            double depth = management.PlantingDepth;
-            double maxCover = this.Acover;
-            double population = 1.0;
-            double rowWidth = 0.0;
+        [Link]
+        private Clock clock = null;
 
-            Cultivar crop = coeffCalc(management);
-            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
-            if(management.EstablishStage != "Seed")
-            {
-                phenology.SetToStage(StageNumbers[management.EstablishStage]);
-                if (StageNumbers[management.EstablishStage] >= 3.0)
-                    scrum.Phenology.Emerged = true;
-            }
-        }
-        
+        /// <summary> The date this instance of the crop will be harvested</summary>
+        private DateTime HarvestDate { get; set; }
+
+        /// <summary> Field loss assigned at sowing so can be used in harvest event </summary>
+        private double FieldLoss { get; set; }
+
+        /// <summary> ResiduesRemoved assigned at sowing so can be used in harvest event </summary>
+        private double ResidueRemoval { get; set; }
+
         /// <summary>Stages that Scrum crops may be established at</summary>
         public enum EstablishStages
         {
@@ -178,11 +171,33 @@ namespace Models.PMF.Scrum
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
             {"InitialStoverWt","[Stover].InitialWt.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
-            {"BaseT","[Phenology].ThermalTime.Response.Y[1] = "},
-            {"OptT","[Phenology].ThermalTime.Response.Y[2] = " },
-            {"MaxT","[Phenology].ThermalTime.Response.Y[3] = " },
+            {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
+            {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
+            {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
+            {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
             {"WaterStressSens","[Stover].Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "}
         };
+
+        /// <summary>
+        /// Method that sets scurm running
+        /// </summary>
+        public void Establish(ScrumManagement management)
+        {
+            string cropName = this.Name;
+            double depth = management.PlantingDepth;
+            double maxCover = this.Acover;
+            double population = 1.0;
+            double rowWidth = 0.0;
+
+            Cultivar crop = coeffCalc(management);
+            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
+            if (management.EstablishStage != "Seed")
+            {
+                phenology.SetToStage(StageNumbers[management.EstablishStage]);
+                if (StageNumbers[management.EstablishStage] >= 3.0)
+                    scrum.Phenology.Emerged = true;
+            }
+        }
 
         /// <summary>
         /// Data structure that holds SCRUM parameter names and the cultivar overwrite they map to
@@ -214,16 +229,24 @@ namespace Models.PMF.Scrum
             cropParams["ACover"] += this.Acover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
             
-
             // Derive Crop Parameters
-            double Tt_Harv = 0.0;
-            if (Double.IsNaN(management.HarvestTt) || (management.HarvestTt == 0))
+            double ttEstToHarv = 0.0;
+            if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
             {
-                Tt_Harv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT);
+                ttEstToHarv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT,this.OptT,this.MaxT);
             }
             else
             {
-                Tt_Harv = management.HarvestTt;     
+                ttEstToHarv = management.TtEstabToHarv;     
+            }
+
+            if (management.HarvestDate == DateTime.MinValue)    
+            {
+                this.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate,ttEstToHarv, this.BaseT, this.OptT, this.MaxT);
+            }
+            else
+            {
+                this.HarvestDate = (DateTime)management.HarvestDate;
             }
 
             // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
@@ -241,10 +264,10 @@ namespace Models.PMF.Scrum
                 }
             }
 
-            double Tt_estab = Tt_Harv * (PropnTt[management.EstablishStage] / PropnTt[management.HarvestStage]);
-            double Xo_Biomass = (Tt_Harv + Tt_estab) * .45 * (1 / PropnTt[management.HarvestStage]);
+            double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
+            double Tt_mat = ttEstToHarv * 1 / PropnTt_EstToHarv;
+            double Xo_Biomass = Tt_mat * .45;
             double b_Biomass = Xo_Biomass * .25;
-            double T_mat = Xo_Biomass * 2.2222;
             double Xo_cov = Xo_Biomass * 0.4;
             double b_cov = Xo_cov * 0.2;
             double Xo_hig = Xo_Biomass * 0.7;
@@ -257,13 +280,13 @@ namespace Models.PMF.Scrum
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
-            cropParams["TtVegetative"] += (T_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
-            cropParams["TtEarlyReproductive"] += (T_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
-            cropParams["TtMidReproductive"] += (T_mat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
-            cropParams["TtLateReproductive"] += (T_mat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
-            cropParams["TtMaturity"] += (T_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
-            cropParams["TtRipe"] += (T_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
+            cropParams["TtSeedling"] += (Tt_mat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
+            cropParams["TtVegetative"] += (Tt_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
+            cropParams["TtEarlyReproductive"] += (Tt_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
+            cropParams["TtMidReproductive"] += (Tt_mat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
+            cropParams["TtLateReproductive"] += (Tt_mat * (PropnTt["LateReproductive"] - PropnTt["MidReproductive"])).ToString();
+            cropParams["TtMaturity"] += (Tt_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
+            cropParams["TtRipe"] += (Tt_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
             double fDM = ey * dmc * (1 / this.HarvestIndex) * (1/(1- this.Proot));
             double iDM = fDM * PropnMaxDM[management.EstablishStage];
@@ -273,11 +296,32 @@ namespace Models.PMF.Scrum
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
             cropParams["MaxT"] += this.MaxT.ToString();
+            cropParams["MaxTt"] += (this.OptT - this.BaseT).ToString();
             string[] commands = new string[cropParams.Count];
             cropParams.Values.CopyTo(commands, 0);
 
+            this.FieldLoss = management.FieldLoss/100;
+            this.ResidueRemoval = management.ResidueRemoval/100;
+
             Cultivar CropValues = new Cultivar(commands);
             return CropValues;
+        }
+        
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            if (clock.Today == HarvestDate)
+            {
+                RemovalFractions Remove = new RemovalFractions();
+                Remove.SetFractionToResidue("Product", FieldLoss);
+                Remove.SetFractionToRemove("Product", 1 - FieldLoss);
+                Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval);
+                Remove.SetFractionToRemove("Stover", ResidueRemoval);
+                Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval, "dead");
+                Remove.SetFractionToRemove("Stover", ResidueRemoval, "dead");
+                scrum.RemoveBiomass("Harvest", Remove);
+                scrum.EndCrop();
+            }
         }
     }
 }

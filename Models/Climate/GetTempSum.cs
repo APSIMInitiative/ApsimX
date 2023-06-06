@@ -1,8 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.Interfaces;
+using Models.PMF;
 using Models.PMF.Scrum;
 using Newtonsoft.Json;
+using SixLabors.Fonts;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,7 +17,7 @@ namespace Models.Climate
     /// Reads in temperature data over a specified period and returns thermal time sum.
     ///</summary>
     [Serializable]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType=typeof(Plant))]
     public class GetTempSum : Model, IReferenceExternalFiles
     {
         /// <summary>
@@ -90,10 +93,12 @@ namespace Models.Climate
         /// <summary>
         /// Calculates the accumulated thermal time between two dates
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="BaseT"></param>
-        public double GetTtSum(DateTime start, DateTime end,double BaseT)
+        /// <param name="start">Start Date</param>
+        /// <param name="end">End Date</param>
+        /// <param name="BaseT">Base temperature</param>
+        /// <param name="OptT">Optimal temperature</param>
+        /// <param name="MaxT">Maximum temperature</param>
+        public double GetTtSum(DateTime start, DateTime end,double BaseT,double OptT,double MaxT)
         {
             this.maximumTemperatureIndex = 0;
             this.minimumTemperatureIndex = 0;
@@ -103,11 +108,15 @@ namespace Models.Climate
                 reader = null;
             }
 
+            double[] xs = new double[] { BaseT, OptT, MaxT };
+            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            XYPairs TtResponse = new XYPairs() {X=xs,Y=ys};
+
             double TtSum = 0;
             for (DateTime d = start; d <= end; d = d.AddDays(1))
             {
                 DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
-                TtSum += Math.Max(0,((TodaysMetData.MaxT+TodaysMetData.MinT)-BaseT)/2);
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MinT)/2);
             }
 
             if (this.reader != null)
@@ -120,10 +129,12 @@ namespace Models.Climate
         /// <summary>
         /// Calculates the accumulated thermal time between two dates
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="HarvTt"></param>
-        /// <param name="BaseT"></param>
-        public DateTime GetHarvestDate(DateTime start, double HarvTt, double BaseT)
+        /// <param name="start">Start Date</param>
+        /// <param name="HarvTt">Thermal time from establishment to Harvest</param>
+        /// <param name="BaseT">Base Temperature</param>
+        /// <param name="OptT">Optimum temperature</param>
+        /// <param name="MaxT">Maximum Temperautre</param>
+        public DateTime GetHarvestDate(DateTime start, double HarvTt, double BaseT, double OptT, double MaxT)
         {
             this.maximumTemperatureIndex = 0;
             this.minimumTemperatureIndex = 0;
@@ -133,12 +144,16 @@ namespace Models.Climate
                 reader = null;
             }
 
+            double[] xs = new double[] { BaseT, OptT, MaxT };
+            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            XYPairs TtResponse = new XYPairs { X = xs, Y = ys };
+
             double TtSum = 0;
             DateTime d = start;
             while (TtSum < HarvTt)
             {
                 DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
-                TtSum += Math.Max(0, ((TodaysMetData.MaxT + TodaysMetData.MinT) - BaseT) / 2);
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MinT) / 2);
                 d = d.AddDays(1);
             }
 

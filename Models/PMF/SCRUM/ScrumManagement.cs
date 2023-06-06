@@ -43,8 +43,8 @@ namespace Models.PMF.Scrum
         public Nullable <DateTime> HarvestDate { get; set; }
 
         /// <summary>Harvest Tt (oCd establishment to harvest)</summary>
-        [Description("Harvest Tt (oCd to Harvest")]
-        public double HarvestTt { get; set; }
+        [Description("TT from Establish to Harvest (oCd")]
+        public double TtEstabToHarv { get; set; }
 
         /// <summary>Planting Stage</summary>
         [Description("Harvest Stage")]
@@ -90,7 +90,7 @@ namespace Models.PMF.Scrum
         /// Management class constructor
         /// </summary>
         public ScrumManagement(string cropName, DateTime establishmentDate, string establishStage, double plantingDepth, string harvestStage, double expectedYield,
-             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN)
+             Nullable<DateTime> harvestDate = null, double harvestTt = Double.NaN, double fieldLoss = 0, double residueRemoval = 0)
         {
             CropName = cropName;
             EstablishDate = establishmentDate;
@@ -105,8 +105,10 @@ namespace Models.PMF.Scrum
             else
             {
                 HarvestDate = harvestDate;
-                HarvestTt = harvestTt;
+                TtEstabToHarv = harvestTt;
             }
+            FieldLoss = fieldLoss;
+            ResidueRemoval = residueRemoval;    
         }
 
         [EventSubscribe("DoManagement")]
@@ -120,7 +122,7 @@ namespace Models.PMF.Scrum
                     currentCrop.Establish(this);
                     if (HarvestDate == null)
                     {
-                        HarvestDate = ttSum.GetHarvestDate(EstablishDate, HarvestTt, currentCrop.BaseT);
+                        HarvestDate = ttSum.GetHarvestDate(EstablishDate, TtEstabToHarv, currentCrop.BaseT, currentCrop.OptT, currentCrop.MaxT);
                     }
                 }
 
