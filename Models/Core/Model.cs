@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Documentation;
@@ -629,6 +630,40 @@ namespace Models.Core
         {
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
             yield return new Paragraph(CodeDocumentation.GetRemarks(GetType()));
+        }
+
+        /// <summary>
+        /// Get a description of the model from the summary and remarks
+        /// xml documentation comments in the source code.
+        /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are not inside a section.
+        /// </remarks>
+        protected IEnumerable<ITag> GetModelEventsInvoked<T>(string functionName)
+        {
+            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder<T>(functionName);
+
+            List<string[]> eventNamesClean = new List<string[]>();
+            //remove CLEM events from this list
+            foreach (string[] name in eventNames)
+                if (!name[0].Contains("CLEM"))
+                    eventNamesClean.Add(name);
+
+            yield return new Section("Events", new Paragraph($"Function OnDoCommence of Model {Name} contains the following Events. When multiple of these events are invoked at the same time, they are processed in the shown order.\n"));
+
+            DataTable data = new DataTable();
+            data.Columns.Add("Event Handle", typeof(string));
+            data.Columns.Add("Summary", typeof(string));
+
+            for (int i = 1; i < eventNamesClean.Count; i++)
+            {
+                string[] parts = eventNamesClean[i];
+
+                DataRow row = data.NewRow();
+                data.Rows.Add(row);
+                row["Event Handle"] = parts[0];
+                row["Summary"] = parts[1];
+            }
         }
 
         /// <summary>

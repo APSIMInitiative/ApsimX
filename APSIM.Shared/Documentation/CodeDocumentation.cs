@@ -1,6 +1,11 @@
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -95,21 +100,51 @@ namespace APSIM.Shared.Documentation
         }
 
         /// <summary>
-        /// Get the remarks tag of a type (if it exists).
+        /// Get the Events of function of the given type.
+        /// Model source file must be included as embedded resource in project.
+        /// A string is return with a Event Handle Name and Summary Comment seperated by a tab character
+        /// and each Event sperated by a newline character.
         /// </summary>
-        /// <param name="function">Function to look at for invoke calls</param>
-        public static string GetEventsInvokedInOrder<T>(string function)
+        /// <param name="functionName">Function name with Arguements as a string</param>
+        public static List<string[]> GetEventsInvokedInOrder<T>(string functionName)
         {
-            MemberInfo member = typeof(T);
-            MethodInfo method = typeof(T).GetMethod(function);
-            var fullName = method.ReflectedType + "." + method.Name;
-            string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
-            XmlDocument document = LoadDocument(typeof(T).Assembly);
+            //load the source file as a string form the binary resources
+            Assembly assembly = typeof(T).Assembly;
+            string fullName = typeof(T).FullName;
+            string raw = ReflectionUtilities.GetResourceAsString(assembly, $"{fullName}.cs");
 
-            string xpath = $"/doc/members/member[@name='M:{fullName}({args})']";
-            XmlNode summaryNode = document.SelectSingleNode(xpath);
+            string functionString = GetFunctionStringFromRawFile(raw, functionName);
 
-            return summaryNode.ToString();
+            //with the function text, now find all event invokes
+            List<string[]> eventsNamesInOrder = new List<string[]>();
+            int charPos = 0;
+            while (charPos < functionString.Length && charPos > -1)
+            {
+                //find where an event is invoked
+                charPos = functionString.IndexOf(".Invoke(", charPos + 1);
+                if (charPos > -1)
+                {
+                    //get the name of the Handler attach to it
+                    int handleStart = functionString.LastIndexOf(" ", charPos);
+                    string handleString = functionString.Substring(handleStart + 1, charPos - handleStart - 1);
+                    //remove ? if handler was optional
+                    if (handleString.Contains('?'))
+                        handleString = handleString.Substring(0, handleString.IndexOf('?'));
+
+                    string summary = "";
+                    MemberInfo[] member = typeof(T).GetMember(handleString);
+                    if (member.Length > 0)
+                        summary += GetSummary(member[0]);
+
+                    //store as string array of two parts
+                    string[] parts = new string[2];
+                    parts[0] = $"{handleString}";
+                    parts[1] = $"{summary}\n";
+
+                    eventsNamesInOrder.Add(parts);
+                }
+            }
+            return eventsNamesInOrder;
         }
 
         private static string GetDocumentationElement(XmlDocument document, string path, string element, char typeLetter)
@@ -144,6 +179,31 @@ namespace APSIM.Shared.Documentation
                 return doc;
             }
             throw new FileNotFoundException($"XML Documentation could not be located for assembly {assembly.FullName}");
+        }
+
+        private static string GetFunctionStringFromRawFile(string fileContents, string functionName)
+        {
+            //find the name of the function we are searching for and
+            //move to the next curly brace
+            int functionPos = fileContents.IndexOf(functionName);
+            int braceStart = fileContents.IndexOf("{", functionPos);
+            string functionString = fileContents.Substring(braceStart + 1);
+
+            //Move through the file until we find where that curly brace is closed
+            int braceCount = 1;
+            int charPos = 0;
+            while (braceCount > 0 && charPos < functionString.Length)
+            {
+                if (functionString[charPos] == '{')
+                    braceCount += 1;
+                else if (functionString[charPos] == '}')
+                    braceCount -= 1;
+
+                charPos += 1;
+            }
+            //remove the last closing curly brace
+            functionString = functionString.Substring(0, charPos - 1);
+            return functionString;
         }
     }
 }
