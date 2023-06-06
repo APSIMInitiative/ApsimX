@@ -4837,11 +4837,28 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName"></param>
         private static void UpgradeToVersion162(JObject root, string fileName)
         {
-            // Remove tallness from manager scripts.
+            // Move SetEmergenceDate and SetGerminationDat in manager scripts.
             foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
             {
                 JsonUtilities.ReplaceManagerCode(manager, ".SetEmergenceDate", ".Phenology.SetEmergenceDate");
                 JsonUtilities.ReplaceManagerCode(manager, ".SetGerminationDate", ".Phenology.SetGerminationDate");
+            }
+
+            // Move SetEmergenceDate and SetGerminationDate in operations.
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        var specificationString = specification.ToString();
+                        specificationString = specificationString.Replace(".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                        specificationString = specificationString.Replace(".SetGerminationDate", ".Phenology.SetGerminationDate");
+                        operation[i]["Action"] = specificationString;
+                    }
+                }
             }
         }
 
