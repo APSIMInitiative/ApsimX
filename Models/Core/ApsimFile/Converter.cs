@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 161; } }
+        public static int LatestVersion { get { return 162; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4827,6 +4827,21 @@ namespace Models.Core.ApsimFile
 
                 foreach (JValue command in cultivar["Command"].Children())
                     command.Value = command.Value.ToString().Replace("[Leaf].Tallness", "[Leaf].HeightFunction");
+            }
+        }
+
+        /// <summary>
+        /// Move SetEmergenceDate and SetGerminationDate to Phenology.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion162(JObject root, string fileName)
+        {
+            // Remove tallness from manager scripts.
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, ".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                JsonUtilities.ReplaceManagerCode(manager, ".SetGerminationDate", ".Phenology.SetGerminationDate");
             }
         }
 
