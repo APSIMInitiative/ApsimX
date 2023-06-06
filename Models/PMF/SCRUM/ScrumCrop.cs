@@ -176,7 +176,7 @@ namespace Models.PMF.Scrum
             {"TtLateReproductive","[Phenology].LateReproductive.Target.FixedValue ="},
             {"TtMaturity","[Phenology].Maturity.Target.FixedValue ="},
             {"TtRipe","[Phenology].Ripe.Target.FixedValue ="},
-            {"InitialWt","[Stover].InitialWt.FixedValue = "},
+            {"InitialStoverWt","[Stover].InitialWt.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
             {"BaseT","[Phenology].ThermalTime.Response.Y[1] = "},
             {"OptT","[Phenology].ThermalTime.Response.Y[2] = " },
@@ -257,7 +257,7 @@ namespace Models.PMF.Scrum
             cropParams["XoHig"] += Xo_hig.ToString();
             cropParams["bHig"] += b_hig.ToString();
 
-            cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Seed"])).ToString();
+            cropParams["TtSeedling"] += (T_mat * (PropnTt["Seedling"] - PropnTt["Emergence"])).ToString();
             cropParams["TtVegetative"] += (T_mat * (PropnTt["Vegetative"] - PropnTt["Seedling"])).ToString();
             cropParams["TtEarlyReproductive"] += (T_mat * (PropnTt["EarlyReproductive"] - PropnTt["Vegetative"])).ToString();
             cropParams["TtMidReproductive"] += (T_mat * (PropnTt["MidReproductive"] - PropnTt["EarlyReproductive"])).ToString();
@@ -265,9 +265,10 @@ namespace Models.PMF.Scrum
             cropParams["TtMaturity"] += (T_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (T_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
-            double finalDM = ey * dmc * (1 / this.HarvestIndex);
-            cropParams["InitialWt"] += (finalDM * PropnMaxDM[management.EstablishStage]).ToString(); 
-            cropParams["InitialRootWt"] += (finalDM * PropnMaxDM["Emergence"]).ToString();
+            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1/(1- this.Proot));
+            double iDM = fDM * PropnMaxDM[management.EstablishStage];
+            cropParams["InitialStoverWt"] += (iDM * (1-this.Proot)).ToString(); 
+            cropParams["InitialRootWt"] += (Math.Max(0.01,iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
