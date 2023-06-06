@@ -181,6 +181,13 @@ namespace APSIM.Documentation
             return new DocumentationRow(rowName, cell.ToEnumerable());
         }
 
+        private static IDocumentationRow ClockRow()
+        {
+            string apsimxFile = Path.Combine(examples, "Tutorials", "clock.apsimx");
+            string outFile = "clock.pdf";
+            return CustomModelRow("Tutorial", outFile);
+        }
+
         private static IDocumentationRow ClemDocsRow()
         {
             string clem = Path.Combine(examples, "CLEM");
@@ -302,6 +309,15 @@ namespace APSIM.Documentation
         {
             List<IDocumentationCell> cells = new List<IDocumentationCell>();
             cells.Add(new DocumentationCell(new DocsFromFile(subName, inputs, output, options)));
+            if (extraCells != null)
+                cells.AddRange(extraCells);
+            return new DocumentationRow(name, cells);
+        }
+
+        private static IDocumentationRow CustomModelRow(string name, string output, IEnumerable<IDocumentationCell> extraCells = null)
+        {
+            List<IDocumentationCell> cells = new List<IDocumentationCell>();
+            cells.Add(new DocumentationCell(new DocsFromModel<Clock>(output, options)));
             if (extraCells != null)
                 cells.AddRange(extraCells);
             return new DocumentationRow(name, cells);

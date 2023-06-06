@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace APSIM.Shared.Documentation
 {
@@ -90,6 +92,24 @@ namespace APSIM.Shared.Documentation
             }
             else
                 throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+        }
+
+        /// <summary>
+        /// Get the remarks tag of a type (if it exists).
+        /// </summary>
+        /// <param name="function">Function to look at for invoke calls</param>
+        public static string GetEventsInvokedInOrder<T>(string function)
+        {
+            MemberInfo member = typeof(T);
+            MethodInfo method = typeof(T).GetMethod(function);
+            var fullName = method.ReflectedType + "." + method.Name;
+            string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+            XmlDocument document = LoadDocument(typeof(T).Assembly);
+
+            string xpath = $"/doc/members/member[@name='M:{fullName}({args})']";
+            XmlNode summaryNode = document.SelectSingleNode(xpath);
+
+            return summaryNode.ToString();
         }
 
         private static string GetDocumentationElement(XmlDocument document, string path, string element, char typeLetter)

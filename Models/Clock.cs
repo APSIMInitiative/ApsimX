@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Models.Core;
 using Models.Core.Run;
 using Models.Interfaces;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
 namespace Models
 {
@@ -483,6 +485,15 @@ namespace Models
                 EndOfSimulation.Invoke(this, args);
 
             Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, GetModelDescription());
+            yield return new Section("Events", new Paragraph(CodeDocumentation.GetEventsInvokedInOrder<Clock>("OnDoCommence")));
         }
     }
 }
