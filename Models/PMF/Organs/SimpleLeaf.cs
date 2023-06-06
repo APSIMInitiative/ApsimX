@@ -76,7 +76,7 @@ namespace Models.PMF.Organs
         /// The height function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction tallness = null;
+        private IFunction heightFunction = null;
 
         /// <summary>
         /// The lai dead function.
@@ -790,7 +790,7 @@ namespace Models.PMF.Organs
                 if (area != null)
                     LAI = area.Value();
 
-                Height = tallness.Value();
+                Height = heightFunction.Value();
                 if (baseHeight == null)
                     BaseHeight = 0;
                 else
@@ -1167,7 +1167,7 @@ namespace Models.PMF.Organs
                 canopyTags.AddRange(cover.Document());
             }
             canopyTags.AddRange(extinctionCoefficient.Document());
-            canopyTags.AddRange(tallness.Document());
+            canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             var stomatalConductanceTags = new List<ITag>();
