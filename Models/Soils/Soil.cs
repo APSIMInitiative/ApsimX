@@ -1,11 +1,11 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Text;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Text;
 
     /// <summary>
     /// The soil class encapsulates a soil characterisation and 0 or more soil samples.

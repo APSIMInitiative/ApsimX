@@ -1,11 +1,9 @@
-﻿using APSIM.Shared.Utilities;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Storage
@@ -49,7 +47,7 @@ namespace Models.Storage
         /// <param name="simulationIDs">A dictionary of simulation IDs</param>
         public void GetValues(List<string> returnColumnNames, ref object[] returnValues, Dictionary<string, int> simulationIDs)
         {
-         //   Flatten();
+            //   Flatten();
             int id;
             if (SimulationName != null && simulationIDs.TryGetValue(SimulationName, out id))
                 returnValues[0] = simulationIDs[SimulationName];
@@ -58,7 +56,7 @@ namespace Models.Storage
             {
                 int returnIndex = returnColumnNames.IndexOf(ColumnNames.ElementAt(i));
                 if (returnIndex != -1)
-                    returnValues[returnIndex] = Values.ElementAt(i); 
+                    returnValues[returnIndex] = Values.ElementAt(i);
             }
         }
 

@@ -1,11 +1,11 @@
-﻿namespace Models.Surface
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
+namespace Models.Surface
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Encapsulates a list of residue types for SurfaceOrganicMatter model

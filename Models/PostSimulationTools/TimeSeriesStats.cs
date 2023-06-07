@@ -1,20 +1,20 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using Models.Core.Run;
-    using System.Threading;
 
     /// <summary>
     /// A post processing model that produces time series stats.
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
@@ -106,9 +106,9 @@
                 if (!Convert.IsDBNull(view[row][observedColumnName]) &&
                     !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    observedData.Add(Convert.ToDouble(view[row][observedColumnName], 
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName],
                                                       System.Globalization.CultureInfo.InvariantCulture));
-                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName], 
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName],
                                                        System.Globalization.CultureInfo.InvariantCulture));
                 }
             }

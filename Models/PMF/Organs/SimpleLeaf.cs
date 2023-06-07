@@ -1,16 +1,17 @@
-﻿namespace Models.PMF.Organs
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using System.Collections.Generic;
-    using Models.PMF.Phen;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
@@ -33,7 +34,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, IOrganDamage
+    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage
     {
         /// <summary>
         /// The met data
@@ -75,7 +76,7 @@
         /// The height function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction tallness = null;
+        private IFunction heightFunction = null;
 
         /// <summary>
         /// The lai dead function.
@@ -789,7 +790,7 @@
                 if (area != null)
                     LAI = area.Value();
 
-                Height = tallness.Value();
+                Height = heightFunction.Value();
                 if (baseHeight == null)
                     BaseHeight = 0;
                 else
@@ -981,7 +982,7 @@
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
-        
+
         /// <summary>
         /// Calculates the water demand.
         /// </summary>
@@ -1166,7 +1167,7 @@
                 canopyTags.AddRange(cover.Document());
             }
             canopyTags.AddRange(extinctionCoefficient.Document());
-            canopyTags.AddRange(tallness.Document());
+            canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             var stomatalConductanceTags = new List<ITag>();
@@ -1200,7 +1201,7 @@
             else
             {
                 senescenceTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                senescenceTags.AddRange(detachmentRate.Document()); 
+                senescenceTags.AddRange(detachmentRate.Document());
             }
             yield return new Section("Senescence and Detachment", senescenceTags);
 

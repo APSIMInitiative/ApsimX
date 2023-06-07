@@ -24,7 +24,7 @@ namespace Models.DCAPST.Canopy
         /// </summary>
         /// <remarks>Different values for PAR/NIR</remarks>
         public double DiffuseReflection { get; set; }
-        
+
         /// <summary>
         /// Diffuse and scattered diffuse extinction coefficient
         /// </summary>
@@ -39,12 +39,12 @@ namespace Models.DCAPST.Canopy
         /// Direct reflection coefficient for radiation
         /// </summary>
         public double DirectReflection => 1 - Math.Exp(-2 * HorizontalReflection * DirectExtinction / (1 + DirectExtinction));
-        
+
         /// <summary>
         /// Direct and scattered direct coefficient for radiation
         /// </summary>
         public double DirectScatteredDirect => DirectExtinction * Math.Pow(1 - LeafScattering, 0.5);
-        
+
         /// <summary>
         /// Horizontal reflection coefficient for radiation
         /// </summary>
@@ -116,7 +116,7 @@ namespace Models.DCAPST.Canopy
         /// <param name="diffuse">The diffuse solar radiation</param>
         private double CalcSunlitDiffuse(double diffuse)
         {
-            var DSD_DE = DiffuseScatteredDiffuse + DirectExtinction;            
+            var DSD_DE = DiffuseScatteredDiffuse + DirectExtinction;
             var radiation = (1 - DiffuseReflection) * diffuse * CalcExp(DSD_DE) * (DiffuseScatteredDiffuse / DSD_DE);
 
             return radiation;
@@ -130,7 +130,7 @@ namespace Models.DCAPST.Canopy
         {
             var DSD_DE = DirectScatteredDirect + DirectExtinction;
             if (DSD_DE == 0) return 0;
-            
+
             var dir = (1.0 - DirectReflection) * CalcExp(DSD_DE) * (DirectScatteredDirect / DSD_DE); // Integral of direct     
             var dif = (1.0 - LeafScattering) * CalcExp(2 * DirectExtinction) / 2.0;    // Integral of diffuse
 

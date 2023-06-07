@@ -1,8 +1,6 @@
-
 namespace Models.PMF.Phen
 {
-    using System.IO;
-    
+
     /// <summary>Interface for a function</summary>
     public interface IVrnExpression
     {

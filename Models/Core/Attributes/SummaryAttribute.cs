@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// When applied to a field, the infrastructure will locate an object in scope of the 

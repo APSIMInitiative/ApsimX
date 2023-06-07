@@ -1,10 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -58,10 +56,7 @@ namespace Models.Functions
 
                 // Replace the "using Models;" namespace place holder with the namesspaces above.
                 template = template.Replace("using Models;", namespaces);
-
-                var scriptName = Guid.NewGuid().ToString().Replace("-", "");
-                template = template.Replace("class Script", $"class Script{scriptName}");
-
+                                
                 // Replace the link place holder in the template with links created above.
                 template = template.Replace("        [Link] IClock Clock = null;", links.ToString());
 

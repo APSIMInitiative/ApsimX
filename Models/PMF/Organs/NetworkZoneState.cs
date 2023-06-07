@@ -1,13 +1,9 @@
-﻿using Models.Soils;
-using Models.Core;
-using System;
-using Models.Functions;
+﻿using System;
 using System.Linq;
-using Models.Soils.Nutrients;
-using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
-using System.Collections.Generic;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.PMF.Organs
 {
@@ -174,7 +170,7 @@ namespace Models.PMF.Organs
             CalculateRAw();
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-               LLModifier[layer] = 1;
+                LLModifier[layer] = 1;
             }
         }
 
@@ -235,7 +231,7 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
                     LayerLive[i] = new OrganNutrientsState();
-                    LayerDead[i]  = new OrganNutrientsState();
+                    LayerDead[i] = new OrganNutrientsState();
                     LayerLiveProportion[i] = new OrganNutrientsState();
                     LayerDeadProportion[i] = new OrganNutrientsState();
                 }

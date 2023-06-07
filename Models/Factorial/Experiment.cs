@@ -1,14 +1,14 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Extensions.Collections;
+using Models.Core;
+using Models.Core.Run;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Extensions.Collections;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Encapsulates a factorial experiment.
@@ -125,7 +125,7 @@
         /// </summary>
         private List<List<CompositeFactor>> CalculateAllCombinations()
         {
-           Factors Factors = this.FindChild<Factors>();
+            Factors Factors = this.FindChild<Factors>();
 
             // Create a list of list of factorValues so that we can do permutations of them.
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
@@ -147,7 +147,7 @@
                     if (factor.Enabled)
                         allValues.AddRange(factor.GetPermutations());
                 }
-                
+
                 // Remove disabled simulations.
                 if (DisabledSimNames != null)
                     allValues.RemoveAll(comb => DisabledSimNames.Contains(GetName(comb)));
@@ -169,7 +169,7 @@
             string permutationName = null;
             foreach (var factor in factors)
             {
-                if (!(factor.Parent is Factors) && !(factor.Parent is Permutation) )
+                if (!(factor.Parent is Factors) && !(factor.Parent is Permutation))
                     newName += factor.Parent.Name;
                 if (factor.Parent.Parent is Permutation)
                     permutationName = factor.Parent.Parent.Name;

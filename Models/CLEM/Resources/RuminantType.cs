@@ -547,6 +547,36 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
+        /// Relative body condition to score rate
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Rel. Body Cond. to Score rate")]
+        [Required, GreaterThanValue(0)]
+        public double RelBCToScoreRate { get; set; } = 0.15;
+        /// <summary>
+        /// Body condition score range
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Body Condition Score range (min, mid, max)")]
+        [Required, ArrayItemCount(3)]
+        public double[] BCScoreRange { get; set; } = { 0, 3, 5 };
+        /// <summary>
+        /// Body condition score to determine additional mortality
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Body Condition Score for additional mortality")]
+        [Required]
+        [System.ComponentModel.DefaultValue(0)]
+        public double BodyConditionScoreForMortality { get; set; } = 0;
+        /// <summary>
+        /// Low body condition score to mortality rate
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Mortality rate for low Body Condition Score")]
+        [Required]
+        [System.ComponentModel.DefaultValue(0.5)]
+        public double BodyConditionScoreMortalityRate { get; set; } = 0.5;
+        /// <summary>
         /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
@@ -672,7 +702,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Advanced", "Survival")]
         [Description("Proportion of max body weight needed for survival")]
-        [Required, Proportion]
+        [Required]
         public double ProportionOfMaxWeightToSurvive { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient A

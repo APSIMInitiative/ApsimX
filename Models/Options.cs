@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using CommandLine;
 using CommandLine.Text;
+
 namespace Models
 {
     /// <summary>
@@ -121,7 +121,7 @@ namespace Models
                 yield return new Example("Run all files under a directory, recursively",
                                          new Options()
                                          {
-                                             Files = new[] { "dir/*.apsimx"},
+                                             Files = new[] { "dir/*.apsimx" },
                                              Recursive = true,
                                          });
                 yield return new Example("Edit a file before running it",

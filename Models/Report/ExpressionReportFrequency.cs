@@ -1,7 +1,6 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.Functions;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Models
 {

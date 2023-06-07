@@ -1,6 +1,7 @@
-﻿namespace Models.Interfaces
+﻿using Models.Soils;
+
+namespace Models.Interfaces
 {
-    using Soils;
 
     /// <summary>
     /// This interface defines the communications between a soil arbitrator and
@@ -37,7 +38,7 @@
 
         /// <summary>Gets the amount of water runoff (mm)</summary>
         double Runoff { get; }
-        
+
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
 
@@ -88,7 +89,7 @@
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         double PotentialInfiltration { get; set; }
-        
+
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         double PrecipitationInterception { get; set; }
 

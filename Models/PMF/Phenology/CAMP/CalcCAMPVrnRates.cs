@@ -1,15 +1,13 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace Models.PMF.Phen
 {
-/// <summary>
+    /// <summary>
     /// Takes FLN and base phyllochron inputs and calculates Vrn expression rate coefficients for CAMP
     /// </summary>
     [Serializable]
@@ -21,7 +19,7 @@ namespace Models.PMF.Phen
     {
 
         /// <summary>The parent CAMP model</summary>
-        [Link(Type = LinkType.Ancestor,  ByName = true)]
+        [Link(Type = LinkType.Ancestor, ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]

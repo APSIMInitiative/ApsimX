@@ -1,13 +1,14 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+using static Models.LifeCycle.LifeCyclePhase;
+
+namespace Models.LifeCycle
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
     /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
@@ -78,12 +79,12 @@
             {
                 LifeCyclePhases.Add(stage);
             }
-            
-            int i= 0;
+
+            int i = 0;
             //Set phase for graduates for each stage
             foreach (LifeCyclePhase stage in LifeCyclePhases)
             {
-                if (i < LifeCyclePhases.Count -1)
+                if (i < LifeCyclePhases.Count - 1)
                     stage.LifeCyclePhaseForGraduates = LifeCyclePhases[i + 1];
                 else
                     stage.LifeCyclePhaseForGraduates = null; //Last life cycle has no destination phase for graduates.  Everyone dies!!!

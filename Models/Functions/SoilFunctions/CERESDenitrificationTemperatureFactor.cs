@@ -1,8 +1,6 @@
 ﻿using System;
-
-using System.Collections.Generic;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions

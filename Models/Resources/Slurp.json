@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -1081,7 +1081,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 400.0,
               "Units": "mm",
-              "Name": "Tallness",
+              "Name": "HeightFunction",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -1504,7 +1504,7 @@
           "Command": [
             "[Root].MaximumRootDepth.FixedValue = 2600",
             "[Leaf].ExtinctionCoefficient.FixedValue = 0.65",
-            "[Leaf].Tallness.FixedValue = 5000",
+            "[Leaf].HeightFunction.FixedValue = 5000",
             "[Root].KLModifier.XYPairs.X = 0, 400, 500, 1000, 1500, 2000",
             "[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1"
           ],

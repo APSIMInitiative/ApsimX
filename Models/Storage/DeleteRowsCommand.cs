@@ -1,10 +1,11 @@
-﻿namespace Models.Storage
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Linq;
-    using APSIM.Shared.JobRunning;
 
     /// <summary>Encapsulates a command to delete rows from a table for a given checkpoint / simulation.</summary>
     class DeleteRowsCommand : IRunnable

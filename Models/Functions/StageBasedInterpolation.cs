@@ -1,10 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Phen;
-using Newtonsoft.Json;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions
 {
@@ -95,6 +92,6 @@ namespace Models.Functions
             }
             return Codes[StageCodes.Length - 1];
         }
-        
+
     }
 }

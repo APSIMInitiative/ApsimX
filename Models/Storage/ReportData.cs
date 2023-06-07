@@ -1,14 +1,14 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using Newtonsoft.Json;
 
     /// <summary>Encapsulates a table that needs writing to the database.</summary>
     [Serializable]
@@ -106,15 +106,15 @@
                         // Found an array specification e.g. col(1)
                         var heading = match.Groups[1].ToString();
                         var startIndex = Convert.ToInt32(match.Groups[2].ToString()) - 1;
-                        heading = string.Format("{0}({1})", heading, startIndex+i+1);
+                        heading = string.Format("{0}({1})", heading, startIndex + i + 1);
                         object arrayElement = array[i];
                         FlattenValueIntoRow(heading, units, arrayElement, row);
                     }
                     else
                     {
                         // Found no array specification - output whole array.
-                            var heading = string.Format("{0}({1})", name, i+1);
-                            object arrayElement = array[i];
+                        var heading = string.Format("{0}({1})", name, i + 1);
+                        object arrayElement = array[i];
                         FlattenValueIntoRow(heading, units, arrayElement, row);  // recursion
                     }
                 }

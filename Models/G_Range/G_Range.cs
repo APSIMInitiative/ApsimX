@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.Soils;
+using Models.Soils.Arbitrator;
+using Newtonsoft.Json;
 
 namespace Models
 {
-    using Newtonsoft.Json;
-    using System.Reflection;
-    using Models.Core;
-    using Models.Soils.Arbitrator;
-    using Models.Interfaces;
-    using APSIM.Shared.Utilities;
-    using Models.PMF;
-    using Models.Soils;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range
@@ -63,7 +63,7 @@ namespace Models
         public string PlantType { get => "NativePasture"; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
-        public bool IsC4 { get { return Math.Abs(Latitude) < 30.0 ; } } // Treat low latitudes as C4
+        public bool IsC4 { get { return Math.Abs(Latitude) < 30.0; } } // Treat low latitudes as C4
 
         /// <summary> Is the plant alive?</summary>
         public bool IsAlive { get { return totalAgroundLiveBiomass > 0.0; } }
@@ -549,7 +549,7 @@ namespace Models
         /// Water available to plants, available for growth =(1) [0 in C#], survival(2) [1 in C#], and in the two top layers(3) [2 in C#]
         /// </summary>
         [JsonIgnore]
-        public double[] waterAvailable { get; private set; }  = new double[3];
+        public double[] waterAvailable { get; private set; } = new double[3];
 
         /// <summary>
         /// Annual actual evapotranspiration
@@ -667,7 +667,7 @@ namespace Models
         /// Tree nitrogen in its components.   These must all be merged or otherwise crosswalked at some point.
         /// </summary>
         [JsonIgnore]
-        public double[] treeNitrogen { get; private set; }  = new double[nWoodyParts];
+        public double[] treeNitrogen { get; private set; } = new double[nWoodyParts];
 
         /// <summary>
         /// Shrub carbon in its components.   These must all be merged or otherwise crosswalked at some point.
@@ -741,7 +741,7 @@ namespace Models
         /// </summary>
         [Units("g/m^2")]
         [JsonIgnore]
-        public double[] belowgroundPotProduction { get; private set; }  = new double[nLayers];
+        public double[] belowgroundPotProduction { get; private set; } = new double[nLayers];
 
         /// <summary>
         /// BIOMASS, Aboveground potential production in g/m2
@@ -755,7 +755,7 @@ namespace Models
         /// </summary>
         [Units("g/m^2")]
         [JsonIgnore]
-        public double[] totalPotProduction { get; private set; }  = new double[nLayers];
+        public double[] totalPotProduction { get; private set; } = new double[nLayers];
 
         /// <summary>
         /// Calculated effect of CO2 increasing from 350 to 700 ppm on grassland production, per facet
@@ -1267,12 +1267,13 @@ namespace Models
         private bool doingSpinUp;    // Flags that we are doing a spinup
 #endif
 
-#endregion
+        #endregion
 
         /// <summary>
         /// An enumeration of possible data source mechanisms for initialising soil properties
         /// </summary>
-        public enum SoilDataSourceEnum {
+        public enum SoilDataSourceEnum
+        {
             /// <summary>
             /// Take as much as possible from APSIM
             /// </summary>
@@ -1696,7 +1697,8 @@ namespace Models
             // Using method used in productivity.Does not use plant populations in layers, but uses the facets instead.Not at precise but less prone to vast swings.
             double totalCover = facetCover[Facet.herb] + facetCover[Facet.shrub] + facetCover[Facet.tree];
             double fracCover;
-            if (totalCover > 0.000001) {
+            if (totalCover > 0.000001)
+            {
                 // HERBS
                 fracCover = facetCover[Facet.herb] / totalCover;
                 biomassLivePerLayer[Layer.herb] = (leafCarbon[Facet.herb] + seedCarbon[Facet.herb]) * 2.5 * fracCover;
@@ -1912,34 +1914,34 @@ namespace Models
                 fireSeverity = 0.0;
             } // Facet loop
               // Mostly eaving out CO2 effects for now...
-              /*
-                ! Opening the CO2 effects file each month, just for simplicity
-                open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
-                if (ioerr == 0) then
-                  in_year = -9999
-                  read(SHORT_USE_FILE, *) unit_cnt! GRange never knows the number of landscape units, so required at the top of file or some other pathway
-                  read(SHORT_USE_FILE, *)! Skip the header information
-                  do while (in_year.ne.year)
-                                  read(SHORT_USE_FILE, *) in_year, (Parms(unit_id) % effect_of_co2_on_production(H_FACET), &
-                                    Parms(unit_id) % effect_of_co2_on_production(S_FACET), Parms(unit_id) % effect_of_co2_on_production(T_FACET), &
-                                    unit_id = 1, unit_cnt)
-                  end do
-                              do icell = 1,range_cells! Process all of the cells classed as rangeland only
-                 iunit = Rng(icell) % range_type
-                    Rng(icell) % co2_effect_on_production(H_FACET) = Parms(iunit) % effect_of_co2_on_production(H_FACET)
-                    Rng(icell) % co2_effect_on_production(S_FACET) = Parms(iunit) % effect_of_co2_on_production(S_FACET)
-                    Rng(icell) % co2_effect_on_production(T_FACET) = Parms(iunit) % effect_of_co2_on_production(T_FACET)
-                  end do
-                              close(SHORT_USE_FILE)
-                else
-                              write(*, *) 'There is a problem updating the CO2 effect on production values'
-                  stop
-                end if
+            /*
+              ! Opening the CO2 effects file each month, just for simplicity
+              open(SHORT_USE_FILE, FILE = parm_path(1:len_trim(parm_path))//Sim_Parm%co2effect_file_name, ACTION='READ', IOSTAT=ioerr)
+              if (ioerr == 0) then
+                in_year = -9999
+                read(SHORT_USE_FILE, *) unit_cnt! GRange never knows the number of landscape units, so required at the top of file or some other pathway
+                read(SHORT_USE_FILE, *)! Skip the header information
+                do while (in_year.ne.year)
+                                read(SHORT_USE_FILE, *) in_year, (Parms(unit_id) % effect_of_co2_on_production(H_FACET), &
+                                  Parms(unit_id) % effect_of_co2_on_production(S_FACET), Parms(unit_id) % effect_of_co2_on_production(T_FACET), &
+                                  unit_id = 1, unit_cnt)
+                end do
+                            do icell = 1,range_cells! Process all of the cells classed as rangeland only
+               iunit = Rng(icell) % range_type
+                  Rng(icell) % co2_effect_on_production(H_FACET) = Parms(iunit) % effect_of_co2_on_production(H_FACET)
+                  Rng(icell) % co2_effect_on_production(S_FACET) = Parms(iunit) % effect_of_co2_on_production(S_FACET)
+                  Rng(icell) % co2_effect_on_production(T_FACET) = Parms(iunit) % effect_of_co2_on_production(T_FACET)
+                end do
+                            close(SHORT_USE_FILE)
+              else
+                            write(*, *) 'There is a problem updating the CO2 effect on production values'
+                stop
+              end if
 
-                if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
-                */
-              // I prefer not to use the external files of G-Range, especially as the Weather component is already intended as
-              // a provider of information on CO2 levels.
+              if (check_nan_flag.eqv. .TRUE.) call check_for_nan(icell, 'EACH_YR')
+              */
+            // I prefer not to use the external files of G-Range, especially as the Weather component is already intended as
+            // a provider of information on CO2 levels.
 
             // In G-Range, a value of 0.8 is the baseline value for co2EffectOnProduction,
             // and is what G-Range uses for dates prior to 2007. They have the value going up to around 1.0 in 2066 under the rcp85 scenario,
@@ -2064,7 +2066,7 @@ namespace Models
             }
             else if (var < min)
             {
-                if (!varName.Contains("carbonSourceSink") &&!varName.Contains("holdingTank"))
+                if (!varName.Contains("carbonSourceSink") && !varName.Contains("holdingTank"))
                     summary.WriteMessage(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value", MessageType.Warning);
                 return min;
             }

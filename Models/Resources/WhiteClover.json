@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -1692,7 +1692,7 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "Tallness",
+              "Name": "HeightFunction",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -9384,7 +9384,7 @@
                 "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
-                "[Leaf].Tallness.XYPairs.Y = 20,75,110,140,150",
+                "[Leaf].HeightFunction.XYPairs.Y = 20,75,110,140,150",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.667",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.2",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
@@ -9415,7 +9415,7 @@
                 "[Phenology].ThermalTime.Response.X = 0,21,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = -1,0,5,12.5,15.5,24.5,32.5,35",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
-                "[Leaf].Tallness.XYPairs.Y = 20,50,75,97.5,104",
+                "[Leaf].HeightFunction.XYPairs.Y = 20,50,75,97.5,104",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.85",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.05",
@@ -9445,7 +9445,7 @@
                 "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
-                "[Leaf].Tallness.XYPairs.Y = 20,65,100,130,135",
+                "[Leaf].HeightFunction.XYPairs.Y = 20,65,100,130,135",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.7",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",

@@ -1,11 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
-using Models.Functions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace Models.PMF.Phen
 {

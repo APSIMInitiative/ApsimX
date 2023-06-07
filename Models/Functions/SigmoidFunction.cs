@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using Newtonsoft.Json;
 using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -21,7 +18,7 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction Ymax = null;
         /// <summary>The x value</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional =true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction XValue = null;
         /// <summary>The Xo</summary>
         [Link(Type = LinkType.Child, ByName = true)]

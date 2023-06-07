@@ -1,12 +1,13 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Threading;
 
     /// <summary>Encapsulates a command to empty the database as much as possible.</summary>
     class EmptyCommand : IRunnable
