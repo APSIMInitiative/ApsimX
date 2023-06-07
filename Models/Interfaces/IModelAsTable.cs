@@ -1,7 +1,8 @@
-﻿namespace Models.Interfaces
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace Models.Interfaces
 {
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>This interface describes the way a grid presenter talks to a model via a data table.</summary>
     public interface IModelAsTable

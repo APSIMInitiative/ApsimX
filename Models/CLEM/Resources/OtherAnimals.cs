@@ -1,5 +1,4 @@
-﻿using Models.CLEM.Interfaces;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
 
@@ -15,7 +14,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all other animals types (not ruminants) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimals.htm")]
-    public class OtherAnimals: ResourceBaseWithTransactions
+    public class OtherAnimals : ResourceBaseWithTransactions
     {
 
     }

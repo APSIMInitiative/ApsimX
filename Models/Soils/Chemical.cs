@@ -1,18 +1,17 @@
-﻿namespace Models.Soils
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
 
+namespace Models.Soils
+{
     /// <summary>This class captures chemical soil data</summary>
     [Serializable]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType=typeof(Soil))]
+    [ValidParent(ParentType = typeof(Soil))]
     public class Chemical : Model, ITabularData
     {
         /// <summary>An enumeration for specifying PH units.</summary>
@@ -63,6 +62,11 @@
         [Summary]
         public double[] ESP { get; set; }
 
+        /// <summary>CEC.</summary>
+        [Summary]
+        [Units("cmol+/kg")]
+        public double[] CEC { get; set; }
+
         /// <summary>EC metadata</summary>
         public string[] ECMetadata { get; set; }
 
@@ -92,12 +96,13 @@
             columns.Add(new TabularData.Column("Depth", depthColumns));
 
             foreach (var solute in solutes)
-                columns.Add(new TabularData.Column(solute.Name, 
+                columns.Add(new TabularData.Column(solute.Name,
                                                    new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
 
             columns.Add(new TabularData.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
             columns.Add(new TabularData.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
             columns.Add(new TabularData.Column("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
+            columns.Add(new TabularData.Column("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
 
             return new TabularData(Name, columns);
         }
@@ -141,6 +146,7 @@
             EC = MathUtilities.FillMissingValues(EC, Thickness.Length, 0);
             ESP = MathUtilities.FillMissingValues(ESP, Thickness.Length, 0);
             PH = MathUtilities.FillMissingValues(PH, Thickness.Length, 7.0);
+            CEC = MathUtilities.FillMissingValues(CEC, Thickness.Length, 0);
         }
 
 
@@ -153,6 +159,7 @@
                 PH = SoilUtilities.MapConcentration(PH, Thickness, targetThickness, 7.0);
                 EC = SoilUtilities.MapConcentration(EC, Thickness, targetThickness, MathUtilities.LastValue(EC));
                 ESP = SoilUtilities.MapConcentration(ESP, Thickness, targetThickness, MathUtilities.LastValue(ESP));
+                CEC = SoilUtilities.MapConcentration(CEC, Thickness, targetThickness, MathUtilities.LastValue(CEC));
                 Thickness = targetThickness;
             }
         }

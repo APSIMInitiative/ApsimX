@@ -1,9 +1,9 @@
+using System.Collections.Generic;
+using Models.Core;
+using Models.Management;
+
 namespace Models.Interfaces
 {
-    using System;
-    using Management;
-    using System.Collections.Generic;
-    using Core;
 
     /// <summary>
     /// An interface for a bubble chart.

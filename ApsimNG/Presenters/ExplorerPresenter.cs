@@ -1,20 +1,20 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Utility;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Extensions;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Utility;
-    using Views;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -86,6 +86,11 @@
         /// <summary>Gets the presenter for the main window</summary>
         /// To be revised if we want to replicate the Windows.Forms version
         public MainPresenter MainPresenter { get; private set; }
+
+        /// <summary>
+        /// Used for holding the column and row filter strings from a reports' datastore view.
+        /// </summary>
+        private List<string> tempColumnAndRowFilters = new();
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -831,6 +836,17 @@
         public ViewBase GetView()
         {
             return this.view as ExplorerView;
+        }
+        
+        public void KeepFilter(string columnFilters, string rowFilters)
+        {
+            tempColumnAndRowFilters.Add(columnFilters);
+            tempColumnAndRowFilters.Add(rowFilters);
+        }
+
+        public List<string> GetFilters()
+        {
+            return tempColumnAndRowFilters;
         }
 
         #region Events from view

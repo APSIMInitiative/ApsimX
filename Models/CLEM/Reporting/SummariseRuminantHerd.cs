@@ -1,15 +1,14 @@
-using Models.Core;
+using Models.CLEM.Activities;
+using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.CLEM.Activities;
-using Models.Core.Attributes;
-using Models.CLEM.Groupings;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM
 {
@@ -25,7 +24,7 @@ namespace Models.CLEM
     [Description("This component will generate summarised details for a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
-    public class SummariseRuminantHerd: CLEMModel
+    public class SummariseRuminantHerd : CLEMModel
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -111,7 +110,7 @@ namespace Models.CLEM
             string name = this.Name;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "["+current.Name+"]":current.Name;
+                string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "[" + current.Name + "]" : current.Name;
                 name = quoteName + "." + name;
                 current = current.Parent as IModel;
             }
@@ -141,7 +140,7 @@ namespace Models.CLEM
                 {
                     case SummarizeRuminantHerdStyle.BySexClass:
                     case SummarizeRuminantHerdStyle.ByClass:
-                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation)?a.Location:"", a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeYears:
                         groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.AgeInYears.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
@@ -188,7 +187,7 @@ namespace Models.CLEM
                     ReportItemGenerated(ReportDetails);
                 }
 
-                if(IncludeTotalColumn)
+                if (IncludeTotalColumn)
                 {
                     var herdGroups = herd.GroupBy(a => a.HerdName);
                     var herdResult = herdGroups.Select(group => new
@@ -282,7 +281,7 @@ namespace Models.CLEM
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
-                if(AddGroupByLocation)
+                if (AddGroupByLocation)
                     htmlWriter.Write("based on location and ");
 
                 switch (GroupStyle)

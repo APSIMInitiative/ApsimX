@@ -1029,6 +1029,42 @@ namespace APSIM.Shared.Utilities
                         result.m_name = name;
                         result.m_values = null;
                     }
+                    else if (args.Length == 2)
+                    {
+                        if (args[0].m_values != null && args[1].m_values != null)
+                        {
+                            result.m_name = "Invalid parameters in: " + name + ". Cannot pass two arrays.";
+                            result.m_type = ExpressionType.Error;
+                        }
+                        else if (args[0].m_values != null || args[1].m_values != null)
+                        {
+                            double[] array;
+                            double value;
+                            if (args[0].m_values != null)
+                            {
+                                array = args[0].m_values;
+                                value = args[1].m_value;
+                            }
+                            else
+                            {
+                                array = args[1].m_values;
+                                value = args[0].m_value;
+                            }
+                            for (int i = 0; i < array.Length; i++)
+                            {
+                                array[i] = Math.Min(array[i], value);
+                            }
+                            result.m_value = 0;
+                            result.m_name = name;
+                            result.m_values = array;
+                        }
+                        else
+                        {
+                            result.m_value = Math.Min(args[0].m_value, args[1].m_value);
+                            result.m_name = name;
+                            result.m_values = null;
+                        }
+                    }
                     else
                     {
                         result.m_name = "Invalid number of parameters in: " + name + ".";
@@ -1043,6 +1079,42 @@ namespace APSIM.Shared.Utilities
                         result.m_value = MathUtilities.Max(Values);
                         result.m_name = name;
                         result.m_values = null;
+                    }
+                    else if (args.Length == 2)
+                    {
+                        if (args[0].m_values != null && args[1].m_values != null)
+                        {
+                            result.m_name = "Invalid parameters in: " + name + ". Cannot pass two arrays.";
+                            result.m_type = ExpressionType.Error;
+                        }
+                        else if (args[0].m_values != null || args[1].m_values != null)
+                        {
+                            double[] array;
+                            double value;
+                            if (args[0].m_values != null)
+                            {
+                                array = args[0].m_values;
+                                value = args[1].m_value;
+                            }
+                            else
+                            {
+                                array = args[1].m_values;
+                                value = args[0].m_value;
+                            }
+                            for(int i = 0; i < array.Length; i++)
+                            {
+                                array[i] = Math.Max(array[i], value);
+                            }
+                            result.m_value = 0;
+                            result.m_name = name;
+                            result.m_values = array;
+                        }
+                        else
+                        {
+                            result.m_value = Math.Max(args[0].m_value, args[1].m_value);
+                            result.m_name = name;
+                            result.m_values = null;
+                        }
                     }
                     else
                     {

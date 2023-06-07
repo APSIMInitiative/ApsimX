@@ -1,14 +1,13 @@
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.Core;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Groupings;
-using Models.Core.Attributes;
-using Models.CLEM.Reporting;
-using Models.CLEM.Interfaces;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -37,7 +36,7 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [Description("Units (nominal)")]
-        public string Units { get {return "NA"; }  }
+        public string Units { get { return "NA"; } }
 
         /// <summary>
         /// Breed
@@ -70,7 +69,7 @@ namespace Models.CLEM.Resources
             parentHerd = this.Parent as RuminantHerd;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if(this.FindAllChildren<AnimalPricing>().Count() > 0)
+            if (this.FindAllChildren<AnimalPricing>().Count() > 0)
             {
                 PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
                 // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
@@ -97,7 +96,7 @@ namespace Models.CLEM.Resources
         /// Determine if a price schedule has been provided for this breed
         /// </summary>
         /// <returns>boolean</returns>
-        public bool PricingAvailable() {  return (PriceList != null); }
+        public bool PricingAvailable() { return (PriceList != null); }
 
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
@@ -110,8 +109,8 @@ namespace Models.CLEM.Resources
         /// <param name="name">name of attribute</param>
         public void AddMandatoryAttribute(string name)
         {
-            if(!mandatoryAttributes.Contains(name))
-               mandatoryAttributes.Add(name);
+            if (!mandatoryAttributes.Contains(name))
+                mandatoryAttributes.Add(name);
         }
 
         /// <summary>
@@ -132,7 +131,7 @@ namespace Models.CLEM.Resources
         {
             foreach (var attribute in mandatoryAttributes)
             {
-                if(!ind.Attributes.Exists(attribute))
+                if (!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Error);
@@ -149,13 +148,13 @@ namespace Models.CLEM.Resources
             if (PricingAvailable())
             {
                 AnimalPriceGroup animalPrice = (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase) ? ind.CurrentPriceGroups.Buy : ind.CurrentPriceGroups.Sell;
-                if(animalPrice == null || !animalPrice.Filter(ind))
+                if (animalPrice == null || !animalPrice.Filter(ind))
                 {
                     // search through RuminantPriceGroups for first match with desired purchase or sale flag
                     foreach (AnimalPriceGroup priceGroup in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                         if (priceGroup.Filter(ind))
                         {
-                            if(purchaseStyle == PurchaseOrSalePricingStyleType.Purchase)
+                            if (purchaseStyle == PurchaseOrSalePricingStyleType.Purchase)
                             {
                                 ind.CurrentPriceGroups = (priceGroup, ind.CurrentPriceGroups.Sell);
                                 return priceGroup;
@@ -169,7 +168,7 @@ namespace Models.CLEM.Resources
 
                     // no price match found.
                     string warningString = warningMessage;
-                    if(warningString == "")
+                    if (warningString == "")
                         warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
@@ -248,8 +247,8 @@ namespace Models.CLEM.Resources
                             }
                             else
                                 warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
-                        }                        
-                            
+                        }
+
                         if (!warningsNotFound.Contains(criteria))
                         {
                             warningsNotFound.Add(criteria);

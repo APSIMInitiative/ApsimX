@@ -1,8 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
-using System;
-
 
 namespace Models.PMF
 {
@@ -42,7 +41,7 @@ namespace Models.PMF
             ////First time round allocate with priority factors applied so higher priority sinks get more allocation
             for (int i = 0; i < Organs.Length; i++)
             {
-                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); 
+                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]);
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
                 double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + StorageRequirement) > 0.0)

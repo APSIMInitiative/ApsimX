@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -3994,7 +3994,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Pinus].Stem.Vol/[Pinus].Age",
+              "Expression": "divide([Pinus].Stem.Vol,[Pinus].Age)",
               "Name": "MAI",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4003,7 +4003,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[Pinus].Stem.Volub/[Pinus].Age",
+              "Expression": "divide([Pinus].Stem.Volub,[Pinus].Age)",
               "Name": "MAIub",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4188,7 +4188,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Pinus].Stem.BarkWt*10/[Pinus].Stem.VolBark",
+                  "Expression": "divide(([Pinus].Stem.BarkWt*10),[Pinus].Stem.VolBark)",
                   "Name": "WoodDensity",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4235,7 +4235,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "[Pinus].Stem.WoodWt*10/[Pinus].Stem.Volub",
+                  "Expression": "divide(([Pinus].Stem.WoodWt*10),[Pinus].Stem.Volub)",
                   "Name": "WoodDensity",
                   "Children": [],
                   "IncludeInDocumentation": true,

@@ -1,13 +1,8 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Resources;
-using Newtonsoft.Json;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
 using System.IO;
 
 namespace Models.CLEM.Groupings
@@ -93,7 +88,7 @@ namespace Models.CLEM.Groupings
                 htmlWriter.Write(" that matches the following conditions:");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

@@ -1,18 +1,15 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using APSIM.Shared.Utilities;
 
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml;
-    using static Models.Factorial.Factor;
 
     /// <summary>
     /// Contains all converters that convert from one XML version to another.
@@ -1084,7 +1081,7 @@ namespace Models.Core.ApsimFile
 
                     var childType = FindChildTypeFromName(childName, baseSimulations[0]);
 
-                    
+
                     foreach (XmlNode child in XmlUtilities.ChildNodes(factorNode, childType))
                         pairs.Add(new PathValuesPair() { path = specification, value = XmlUtilities.Value(child, "Name") });
                 }

@@ -1,5 +1,5 @@
-﻿using Models.Core;
-using System;
+﻿using System;
+using Models.Core;
 
 namespace Models.Soils
 {
@@ -119,7 +119,7 @@ namespace Models.Soils
                     + (-2 * tCube + 3 * tSqr) * Y1[layer, i] + (tCube - tSqr) * M1[layer, i];
             return Math.Min(theta, soilPhysical.SAT[layer]); //When Sat and DUL are very close, spline can produce number greater that sat
         }
-                
+
         /// <summary>
         /// Called when soil models that require hydraulic properties information initiate their properties
         /// </summary>
@@ -132,10 +132,10 @@ namespace Models.Soils
             M1 = new double[nLayers, 6];
             Y0 = new double[nLayers, 6];
             Y1 = new double[nLayers, 6];
-            
+
             SetupThetaCurve();
         }
-        
+
         /// <summary>
         /// Sets up the theta curve
         /// </summary>
@@ -144,9 +144,9 @@ namespace Models.Soils
             for (int layer = 0; layer < soilPhysical.SAT.Length; layer++)
             {
                 if (Weirdo.PsiBub[layer] > 0)
-                    throw new Exception(this + "PsiBub is positive in layer " + layer + ".  It must be a negative number" );
+                    throw new Exception(this + "PsiBub is positive in layer " + layer + ".  It must be a negative number");
 
-                DELk[layer, 0] = (soilPhysical.SAT[layer] - (soilPhysical.SAT[layer]+1e-20)) / (Math.Log10(-Weirdo.PsiBub[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
+                DELk[layer, 0] = (soilPhysical.SAT[layer] - (soilPhysical.SAT[layer] + 1e-20)) / (Math.Log10(-Weirdo.PsiBub[layer])); //Tiny amount added to Sat so in situations where DUL = SAT this function returns a non zero value
                 DELk[layer, 1] = (soilPhysical.DUL[layer] - soilPhysical.SAT[layer]) / (Math.Log10(-psidul) - Math.Log10(-Weirdo.PsiBub[layer]));
                 DELk[layer, 2] = (soilPhysical.LL15[layer] - soilPhysical.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psidul));
                 DELk[layer, 3] = -soilPhysical.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));

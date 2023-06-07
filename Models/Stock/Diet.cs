@@ -1,6 +1,7 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+
+namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                

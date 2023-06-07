@@ -1,18 +1,12 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
-using Newtonsoft.Json;
 using Models.CLEM.Resources;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using Models.CLEM.Interfaces;
-using System.Xml.Serialization;
 using Models.CLEM.Timers;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -48,7 +42,7 @@ namespace Models.CLEM.Groupings
     {
         #region descriptive summary
 
-            /// <inheritdoc/>
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             return "";

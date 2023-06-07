@@ -1,15 +1,16 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
 
     /// <summary>
     /// A class for putting text annotations on a graph.
@@ -108,7 +109,7 @@
                     if (simulationFilter != null && simulationFilter.Count > 0)
                         simulationNameDescriptor = simulationFilter[0];
 
-                    if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
+                    if (simulationNameDescriptor != null && simulationNameDescriptor == SimulationName)
                         data = definition.View;
                 }
 

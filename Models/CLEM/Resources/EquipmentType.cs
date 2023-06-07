@@ -1,9 +1,9 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
             if (amountAdded > 0)
             {
                 amount += amountAdded;
-                
+
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }

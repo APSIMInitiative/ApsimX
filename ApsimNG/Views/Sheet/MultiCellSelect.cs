@@ -41,6 +41,20 @@ namespace UserInterface.Views
             {
                 selectedColumnIndexRight = colIndex;
                 selectedRowIndexBottom = rowIndex;
+
+                //flip indexs around if cells were selected in a backwards order
+                if (selectedColumnIndexRight < selectedColumnIndex)
+                {
+                    int temp = selectedColumnIndex;
+                    selectedColumnIndex = selectedColumnIndexRight;
+                    selectedColumnIndexRight = temp;
+                }
+                if (selectedRowIndexBottom < selectedRowIndex)
+                {
+                    int temp = selectedRowIndex;
+                    selectedRowIndex = selectedRowIndexBottom;
+                    selectedRowIndexBottom = temp;
+                }
                 sheet.Refresh();
             }
             else

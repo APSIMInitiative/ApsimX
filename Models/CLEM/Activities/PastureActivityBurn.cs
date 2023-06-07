@@ -1,12 +1,9 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;

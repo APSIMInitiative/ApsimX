@@ -1,9 +1,9 @@
-﻿namespace Models.Soils.Arbitrator
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+
+namespace Models.Soils.Arbitrator
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// Encapsulates the state of water and N in multiple zones.

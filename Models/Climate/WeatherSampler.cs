@@ -1,15 +1,13 @@
-﻿namespace Models.Climate
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Allow random resampling of whole years of weather data from a met file.
@@ -17,8 +15,8 @@
     /// <remarks>
     /// Parameters / inputs
     ///     * read in a met file
-    ///     * parameter setting the 'start' of the year as dd-mmm-yyyy (e.g. "01-jun-3000") where the 
-    ///     dd-mmm part sets the start of all sampling years and the full dd-mmm-yyyy sets the start 
+    ///     * parameter setting the 'start' of the year as dd-mmm-yyyy (e.g. "01-jun-3000") where the
+    ///     dd-mmm part sets the start of all sampling years and the full dd-mmm-yyyy sets the start
     ///     date of the simulation (end date is the start plus the number of years listed below)
     ///     * read in either:
     ///         - a list of years in order to sample (e.g. "1997,2014,2000"); or
@@ -27,11 +25,11 @@
     ///     * ? an add-on to the existing met file?
     ///     * needs to be able to be used as a factor in an experiment
     /// What it does
-    ///     * sets the (fake) start date of the simulation (here 01-jun-3000) along with the weather data 
+    ///     * sets the (fake) start date of the simulation (here 01-jun-3000) along with the weather data
     ///     to be used with the "sampling_date" (here the first one would be 01-jun-1997 for example) being outputable
-    ///     * leap years - ignores 29-feb in the sampling data and pads an extra final day in the year if needed 
+    ///     * leap years - ignores 29-feb in the sampling data and pads an extra final day in the year if needed
     ///     (want the same weather regardless of the simulation year - hope that makes sense!)
-    ///     * in the example above, by the time the simulation gets to 31-may-3001, sampling_date is 31-may-1998. 
+    ///     * in the example above, by the time the simulation gets to 31-may-3001, sampling_date is 31-may-1998.
     ///     Then on simulation date 01-jun-3001 the sampling_date is 01-jun-2014. Equivalent behaviour for
     ///     randomly generated weather years.
     /// </remarks>
@@ -51,7 +49,7 @@
         private int currentYearIndex;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>Type of randomiser enum for drop down.</summary>
         public enum RandomiserTypeEnum
@@ -117,7 +115,7 @@
 
         /// <summary>The end date of the weather file.</summary>
         public DateTime EndDate { get; set; }
-        
+
         /// <summary>The maximum temperature (oc).</summary>
         [Units("°C")]
         [JsonIgnore]
@@ -266,7 +264,7 @@
                 // Make sure user has entered number of years.
                 if (NumYears <= 0)
                     throw new Exception("The number of years to sample from the weather file hasn't been speciifed.");
-                
+
                 // Determine the year range to sample from.
                 var firstYearToSampleFrom = firstDateInFile.Year;
                 var lastYearToSampleFrom = lastDateInFile.Year - 1;
@@ -320,7 +318,7 @@
             MinT = Convert.ToDouble(data.Rows[currentRowIndex]["MinT"]);
             Radn = Convert.ToDouble(data.Rows[currentRowIndex]["Radn"]);
             Rain = Convert.ToDouble(data.Rows[currentRowIndex]["Rain"]);
-            if (data.Columns.Contains("VP")) 
+            if (data.Columns.Contains("VP"))
                 VP = Convert.ToDouble(data.Rows[currentRowIndex]["VP"]);
             if (data.Columns.Contains("Wind"))
                 Wind = Convert.ToDouble(data.Rows[currentRowIndex]["Wind"]);

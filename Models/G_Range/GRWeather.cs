@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Data;
+using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Climate;
-    using Models.Core;
-    using Models.Interfaces;
-    using System.Data;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -100,123 +100,123 @@ namespace Models
             }
         }
 
-/*
-        /// <summary>
-        /// Fetches "average" weather data from the soilgrids website
-        /// I was seeing how it would go to use this mechanism for performing spinups, 
-        /// but there's really no good reason to continue to use it.
-        /// </summary>
-        [Serializable]
-        private class WeatherFaker
-        {
-            /// <summary>
-            /// Stores total number of observations
-            /// </summary>
-            public uint nDays { get; private set; }
-
-            /// <summary>
-            /// Returns total precipitation in cm
-            /// </summary>
-            public double precip { get; private set; }
-
-            /// <summary>
-            /// Returns average maximum temperature for the period
-            /// </summary>
-            public double maxTemp { get; private set; }
-
-            /// <summary>
-            /// Returns average minimum temperature for the period
-            /// </summary>
-            public double minTemp { get; private set; }
-
-            private double[] rainfall = new double[12];
-            private double[][] maxT = new double[2][];
-            private double[][] minT = new double[2][];
-            private bool haveValues = false;
-
-            public WeatherFaker(double latitude, double longitude)
-            {
-                maxT[0] = new double[12];
-                maxT[1] = new double[12];
-                minT[0] = new double[12];
-                minT[1] = new double[12];
-                string url = "https://rest.soilgrids.org/query?attributes=PREMRG,TMDMOD,TMNMOD&lon=" +
-                     longitude.ToString() + "&lat=" + latitude.ToString();
-                try
+        /*
+                /// <summary>
+                /// Fetches "average" weather data from the soilgrids website
+                /// I was seeing how it would go to use this mechanism for performing spinups, 
+                /// but there's really no good reason to continue to use it.
+                /// </summary>
+                [Serializable]
+                private class WeatherFaker
                 {
-                    MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
-                    stream.Position = 0;
-                    JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
-                    while (reader.Read())
+                    /// <summary>
+                    /// Stores total number of observations
+                    /// </summary>
+                    public uint nDays { get; private set; }
+
+                    /// <summary>
+                    /// Returns total precipitation in cm
+                    /// </summary>
+                    public double precip { get; private set; }
+
+                    /// <summary>
+                    /// Returns average maximum temperature for the period
+                    /// </summary>
+                    public double maxTemp { get; private set; }
+
+                    /// <summary>
+                    /// Returns average minimum temperature for the period
+                    /// </summary>
+                    public double minTemp { get; private set; }
+
+                    private double[] rainfall = new double[12];
+                    private double[][] maxT = new double[2][];
+                    private double[][] minT = new double[2][];
+                    private bool haveValues = false;
+
+                    public WeatherFaker(double latitude, double longitude)
                     {
-                        if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("properties") && reader.Depth == 1)
+                        maxT[0] = new double[12];
+                        maxT[1] = new double[12];
+                        minT[0] = new double[12];
+                        minT[1] = new double[12];
+                        string url = "https://rest.soilgrids.org/query?attributes=PREMRG,TMDMOD,TMNMOD&lon=" +
+                             longitude.ToString() + "&lat=" + latitude.ToString();
+                        try
                         {
-                            reader.Read(); // Read the "start object" token
+                            MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
+                            stream.Position = 0;
+                            JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
                             while (reader.Read())
                             {
-                                if (reader.TokenType == JsonToken.PropertyName)
+                                if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("properties") && reader.Depth == 1)
                                 {
-                                    double[] dest = null;
-                                    string propName = reader.Value.ToString();
-                                    if (propName == "TMDMOD_2001")
-                                        dest = maxT[0];
-                                    else if (propName == "TMDMOD_2011")
-                                        dest = maxT[1];
-                                    else if (propName == "TMNMOD_2001")
-                                        dest = minT[0];
-                                    else if (propName == "TMNMOD_2011")
-                                        dest = minT[1];
-                                    else if (propName == "PREMRG")
-                                        dest = rainfall;
-                                    if (dest != null)
+                                    reader.Read(); // Read the "start object" token
+                                    while (reader.Read())
                                     {
-                                        reader.Read();
-                                        while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                                        if (reader.TokenType == JsonToken.PropertyName)
                                         {
-                                            if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                            double[] dest = null;
+                                            string propName = reader.Value.ToString();
+                                            if (propName == "TMDMOD_2001")
+                                                dest = maxT[0];
+                                            else if (propName == "TMDMOD_2011")
+                                                dest = maxT[1];
+                                            else if (propName == "TMNMOD_2001")
+                                                dest = minT[0];
+                                            else if (propName == "TMNMOD_2011")
+                                                dest = minT[1];
+                                            else if (propName == "PREMRG")
+                                                dest = rainfall;
+                                            if (dest != null)
                                             {
-                                                reader.Read(); // Read start of object token
-                                                for (int i = 0; i < 12; i++)
+                                                reader.Read();
+                                                while (reader.Read() && reader.TokenType != JsonToken.EndObject)
                                                 {
-                                                    reader.Read(); // Read a month name
-                                                    dest[i] = (double)reader.ReadAsDouble();
+                                                    if (reader.TokenType == JsonToken.PropertyName && reader.Value.Equals("M"))
+                                                    {
+                                                        reader.Read(); // Read start of object token
+                                                        for (int i = 0; i < 12; i++)
+                                                        {
+                                                            reader.Read(); // Read a month name
+                                                            dest[i] = (double)reader.ReadAsDouble();
+                                                        }
+                                                    }
                                                 }
                                             }
+                                            else
+                                                reader.Skip();
                                         }
                                     }
-                                    else
-                                        reader.Skip();
                                 }
                             }
+                            haveValues = true;
+                        }
+                        catch (Exception) { }
+                    }
+
+                    public void FakeMonth(int month)
+                    {
+                        uint[] daysInMonth = new uint[] { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; // Don't worry about leap years
+                        nDays = daysInMonth[month - 1];
+                        if (haveValues)
+                        {
+                            precip = rainfall[month - 1] / 10.0;
+                            Random rand = new Random();
+                            int idx = rand.NextDouble() < 0.5 ? 0 : 1;
+                            maxTemp = maxT[idx][month - 1];
+                            idx = rand.NextDouble() < 0.5 ? 0 : 1;
+                            minTemp = minT[idx][month - 1];
+                        }
+                        else // No data. Use non-seasonal blandness, for now.
+                        {
+                            precip = 50;
+                            maxTemp = 25;
+                            minTemp = 5;
                         }
                     }
-                    haveValues = true;
                 }
-                catch (Exception) { }
-            }
-
-            public void FakeMonth(int month)
-            {
-                uint[] daysInMonth = new uint[] { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }; // Don't worry about leap years
-                nDays = daysInMonth[month - 1];
-                if (haveValues)
-                {
-                    precip = rainfall[month - 1] / 10.0;
-                    Random rand = new Random();
-                    int idx = rand.NextDouble() < 0.5 ? 0 : 1;
-                    maxTemp = maxT[idx][month - 1];
-                    idx = rand.NextDouble() < 0.5 ? 0 : 1;
-                    minTemp = minT[idx][month - 1];
-                }
-                else // No data. Use non-seasonal blandness, for now.
-                {
-                    precip = 50;
-                    maxTemp = 25;
-                    minTemp = 5;
-                }
-            }
-        }
-*/
+        */
 
         [Serializable]
         private class FakeWeatherReader : Accumulator
@@ -299,15 +299,15 @@ namespace Models
             {
                 // TODO: While we're doing the spinup, we should also calculate values for average precipitation and temperature,
                 // rather than relying on the GRange database.
-/*
-                if (weatherFaker == null)
-                    weatherFaker = new WeatherFaker(Latitude, Longitude);
-                weatherFaker.FakeMonth(month);
-                globe.precip = weatherFaker.precip;
-                globe.maxTemp = weatherFaker.maxTemp;
-                globe.minTemp = weatherFaker.minTemp;
-                monthDays = weatherFaker.nDays;
-*/
+                /*
+                                if (weatherFaker == null)
+                                    weatherFaker = new WeatherFaker(Latitude, Longitude);
+                                weatherFaker.FakeMonth(month);
+                                globe.precip = weatherFaker.precip;
+                                globe.maxTemp = weatherFaker.maxTemp;
+                                globe.minTemp = weatherFaker.minTemp;
+                                monthDays = weatherFaker.nDays;
+                */
 
                 if (fakeReader == null)
                 {
@@ -319,7 +319,7 @@ namespace Models
                 globe.maxTemp = fakeReader.maxTemp;
                 globe.minTemp = fakeReader.minTemp;
                 monthDays = fakeReader.nDays;
-                fakeReader.Reset(); 
+                fakeReader.Reset();
 
             }
             else

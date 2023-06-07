@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private double[,] amountToDo;
         private double[,] valueToDo;
         private double[,] packetsToDo;
@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
                 {
                     var resource = allResources[item[fileResource.ResourceNameColumnName].ToString()];
                     if(resource.Item1 != null)
-                    { 
+                    {
                         // amount provided x any multiplier
                         double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture) * resource.Item2;
 
@@ -430,7 +430,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

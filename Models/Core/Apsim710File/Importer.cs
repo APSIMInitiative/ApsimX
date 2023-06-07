@@ -1,18 +1,17 @@
-﻿namespace Models.Core.Apsim710File
-{
-    using APSIM.Shared.OldAPSIM;
-    using APSIM.Shared.Utilities;
-    using Microsoft.CSharp;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Xml;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+using APSIM.Shared.OldAPSIM;
+using APSIM.Shared.Utilities;
+using Microsoft.CSharp;
+using Models.Core.ApsimFile;
 
+namespace Models.Core.Apsim710File
+{
     /// <summary>
     /// Manager script parameter
     /// </summary>
@@ -163,7 +162,7 @@
         }
 
         /// <summary>
-        /// Interrogate the .apsim file XML and attempt to construct a 
+        /// Interrogate the .apsim file XML and attempt to construct a
         /// useful APSIMX Simulation object(s). Uses a temporary file
         /// location.
         /// </summary>
@@ -175,7 +174,7 @@
         }
 
         /// <summary>
-        /// Interrogate the .apsim file XML and attempt to construct a 
+        /// Interrogate the .apsim file XML and attempt to construct a
         /// useful APSIMX Simulation object(s). Uses a temporary file
         /// location.
         /// </summary>
@@ -198,7 +197,7 @@
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString()); 
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -330,6 +329,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name.ToLower() == "water")
                 {
@@ -369,6 +369,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name == "SoilCrop")
                 {
@@ -602,7 +603,7 @@
         }
 
         /// <summary>
-        /// Import a graph object 
+        /// Import a graph object
         /// </summary>
         /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent">Destination parent node that the new child is added to</param>
@@ -784,7 +785,7 @@
                         param.ListValues = XmlUtilities.Attribute(init, "listvalues");
                         param.Description = XmlUtilities.Attribute(init, "description");
                         param.TypeName = typeName;
-                        // Convert any boolean values 
+                        // Convert any boolean values
                         if (String.Compare(param.TypeName, "yesno") == 0)
                         {
                             if (param.Value.Contains("o"))
@@ -892,7 +893,7 @@
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock Clock;\n");
+            code.Append("\t\t[Link] IClock Clock;\n");
 
             List<string> startofdayScripts = new List<string>();
             List<string> endofdayScripts = new List<string>();
@@ -909,7 +910,7 @@
 
             code.Append(this.WriteManagerParams(scriptParams));
 
-            // Convert the <script> section 
+            // Convert the <script> section
             XmlUtilities.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
@@ -997,12 +998,12 @@
 
             XmlNode codeNode = newNode.AppendChild(newNode.OwnerDocument.CreateElement("Code"));
             codeNode.AppendChild(newNode.OwnerDocument.CreateCDataSection(code.ToString()));
-            
+
             // some Manager components have Memo children. For ApsimX the import
             // will just put them as the next sibling of the Manager rather
             // than as a child of the Manager.
             destParent = this.ImportManagerMemos(compNode, destParent);
-            
+
             return newNode;
         }
 
@@ -1145,7 +1146,7 @@
             newNode = this.AddCompNode(destParent, "Operations", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
-            
+
             List<XmlNode> nodes = new List<XmlNode>();
             XmlUtilities.FindAllRecursively(compNode, "operation", ref nodes);
             foreach (XmlNode oper in nodes)
@@ -1169,14 +1170,14 @@
                 else
                     childText = "0001-01-01";
                 dateNode.InnerText = childText;
-                
+
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
                 childText = " ";
                 childNode = XmlUtilities.Find(oper, "action");
                 if (childNode != null)
                 {
-                    childText = childNode.InnerText;    
+                    childText = childNode.InnerText;
 
                     // parse the operation and determine if this can be converted to an apsimx function call
                     // ** This code makes a BIG assumption that the fertiliser component has that name. Also the irrigation component!
@@ -1243,7 +1244,7 @@
                     i++;
 
                 // find =
-                while ((i < line.Length) && (line[i] != '='))   
+                while ((i < line.Length) && (line[i] != '='))
                     i++;
                 i++;
                 while ((i < line.Length) && (line[i] == ' '))
@@ -1394,7 +1395,7 @@
                         values[i] = defValue;
                 }
             }
-                
+
             return values;
         }
 

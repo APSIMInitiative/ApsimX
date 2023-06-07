@@ -1,10 +1,6 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -16,7 +12,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("")]
     [Version(1, 0, 1, "")]
-    public class LabourSpecifications: CLEMModel
+    public class LabourSpecifications : CLEMModel
     {
 
     }

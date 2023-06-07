@@ -1,5 +1,4 @@
-﻿using System;
-using Models.DCAPST.Interfaces;
+﻿using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
 {
@@ -28,7 +27,7 @@ namespace Models.DCAPST
     /// 
     /// </summary>
     public class AssimilationPathway
-    {    
+    {
         /// <summary>
         /// The canopy parameters
         /// </summary>
@@ -37,7 +36,7 @@ namespace Models.DCAPST
         /// <summary>
         /// The pathway parameters
         /// </summary>
-        IPathwayParameters Pathway;        
+        IPathwayParameters Pathway;
 
         /// <summary>
         /// The current pathway type
@@ -73,7 +72,7 @@ namespace Models.DCAPST
         /// Mesophyll CO2 partial pressure (microbar)
         /// </summary>
         public double MesophyllCO2 { get; set; }
-        
+
         /// <summary>
         /// Chloroplastic CO2 partial pressure at the site of Rubisco carboxylation (microbar)
         /// </summary>
@@ -92,7 +91,7 @@ namespace Models.DCAPST
         /// <summary>
         /// PEP regeneration
         /// </summary>
-        public double Vpr { get; private set; }        
+        public double Vpr { get; private set; }
 
         /// <summary>
         /// 
@@ -102,7 +101,7 @@ namespace Models.DCAPST
         public AssimilationPathway(ICanopyParameters canopy, IPathwayParameters pathway)
         {
             Canopy = canopy;
-            Pathway = pathway;            
+            Pathway = pathway;
         }
 
         /// <summary>

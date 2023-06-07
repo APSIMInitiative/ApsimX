@@ -1,15 +1,15 @@
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
     ///<summary>
     /// CLEM Resource Type base model
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel, IResourceWithTransactionType
     {
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
 
         /// <summary>
@@ -31,10 +31,10 @@ namespace Models.CLEM.Resources
         /// Has a market store been found
         /// </summary>
         [JsonIgnore]
-        public bool MarketStoreExists 
-        { 
-            get 
-            { 
+        public bool MarketStoreExists
+        {
+            get
+            {
                 if(!EquivalentMarketStoreDetermined)
                     FindEquivalentMarketStore();
 
@@ -51,7 +51,7 @@ namespace Models.CLEM.Resources
         /// Determine whether transmutation has been defined for this foodtype
         /// </summary>
         [JsonIgnore]
-        public bool TransmutationDefined 
+        public bool TransmutationDefined
         {
             get
             {
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
                     if (Summary != null)
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
-                return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
+                return new ResourcePricing() { PricePerPacket = 0, PacketSize = 1, UseWholePackets = true };
             }
             return price;
         }
@@ -126,7 +126,7 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if(converterName.StartsWith("$"))
+            if (converterName.StartsWith("$"))
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    if(FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
+                    if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
                     {
                         string market = "";
                         if ((Parent.Parent as ResourcesHolder).MarketPresent)
@@ -242,10 +242,10 @@ namespace Models.CLEM.Resources
             }
 
             // if not already checked
-            if(!EquivalentMarketStoreDetermined)
+            if (!EquivalentMarketStoreDetermined)
             {
                 // haven't already found a market store
-                if(EquivalentMarketStore is null)
+                if (EquivalentMarketStore is null)
                 {
                     ResourcesHolder holder = FindAncestor<ResourcesHolder>();
                     // is there a market
@@ -303,7 +303,7 @@ namespace Models.CLEM.Resources
                     LastGain = amount;
 
                 LastTransaction = parent.LastTransaction;
-                TransactionOccurred?.Invoke(this, null); 
+                TransactionOccurred?.Invoke(this, null);
             }
         }
 

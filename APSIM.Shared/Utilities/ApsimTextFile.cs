@@ -921,6 +921,10 @@ namespace APSIM.Shared.Utilities
                             value = coltext1.Substring(posEquals + 1).Trim();
                             if (name != "Title")
                                 unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
+
+                            //Replace , notation with . in case they are inputting data from another region
+                            value = value.Replace(",", ".");
+
                             _Constants.Add(new ApsimConstant(name, value, unit, comment));
                         }
                         resultDt.Rows[rowCount].Delete();
@@ -946,6 +950,10 @@ namespace APSIM.Shared.Utilities
                             comment = StringUtilities.SplitOffAfterDelimiter(ref coltext3, "!");
                             comment.Trim();
                         }
+
+                        //Replace , notation with . in case they are inputting data from another region
+                        value = value.Replace(",", ".");
+
                         _Constants.Add(new ApsimConstant(name, value, unit, comment));
                         resultDt.Rows[rowCount].Delete();
                     }

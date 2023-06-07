@@ -367,7 +367,7 @@ namespace Models.Core
         private static void CheckNotMultipleSoilWaterModels(IModel parentZone)
         {
             foreach (var soil in parentZone.FindAllChildren<Soils.Soil>())
-                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Count() > 1)
+                if (soil.FindAllChildren<Models.Interfaces.ISoilWater>().Where(c => (c as IModel).Enabled).Count() > 1)
                     throw new Exception($"More than one water balance found in zone {parentZone.Name}");
 
             // Check to make sure there is only one ISoilWater in each zone.

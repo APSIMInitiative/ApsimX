@@ -1,12 +1,8 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -70,7 +66,7 @@ namespace Models.CLEM.Resources
                 else
                     htmlWriter.Write("<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

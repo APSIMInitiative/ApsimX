@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using Models.Functions;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using Models.Functions;
 
     /// <summary>
     /// TODO: Update summary.
@@ -136,7 +137,7 @@
             List<Symbol> variablesToFill = fn.Variables;
             for (int i = 0; i < variablesToFill.Count; i++)
             {
-                Symbol sym = (Symbol) variablesToFill[i];
+                Symbol sym = (Symbol)variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
                 object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim(), LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError)?.Value;

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF.Organs;
 
 namespace Models.Functions.RootShape
 {
