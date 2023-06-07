@@ -444,16 +444,11 @@
         /// <param name="Source"></param>
         public TPasturePopulation(TPasturePopulation Source) : base()
         {
-            //TTypedValue aValue;
             this.FCohorts = new TPastureCohort[0];
 
             this.Initialise("", 1.0, new TPlantElement[0]);
 
-            //aValue = new TDDMLValue("<type/>", "");
-            /////////////////// Source.WriteToValue(ref aValue); replace with new function
-            ///////////// this.ReadParamsFromValue(aValue, Source.Params); ///////////// replace with new function
             this.SetSoilParams(Source.FSoilLayers, Source.FBulkDensity, Source.FSandContent, Source.FCampbellParam);
-            /////////////////// this.ReadStateFromValue(aValue);    ////////////// replace with new function
         }
 
         // delegates used for setting the functions when certain nutrients are present.
@@ -3161,53 +3156,6 @@
             }
         }
                 
-/*        public void ReadParamsFromValue(TTypedValue aValue, TPastureParamSet paramSet)
-        {
-            string sParamFile;
-            string sSpeciesName;
-            string sNutrients;
-            TPlantElement[] ElemSet;
-            List<TPlantElement> ElemList = new List<TPlantElement>();
-            double fFertility_;
-            double fMaxRtDepth;
-
-            sParamFile = ReadString(aValue, "param_file", "");
-            sSpeciesName = ReadString(aValue, "species", "");
-            sNutrients = ReadString(aValue, "nutrients", "").ToUpper();
-            fFertility_ = ReadReal(aValue, "fertility", 1.0);
-            fMaxRtDepth = ReadReal(aValue, "max_rtdep", -1.0);
-
-            if (sNutrients.IndexOf("N") > -1)
-            {
-                ElemList.Add(TPlantElement.N);
-            }
-
-            if (sNutrients.IndexOf("P") > -1)
-            {
-                ElemList.Add(TPlantElement.P);
-            }
-
-            if (sNutrients.IndexOf("S") > -1)
-            {
-                ElemList.Add(TPlantElement.S);
-            }
-
-            ElemSet = ElemList.ToArray();
-            this.Initialise("", 1.0, ElemSet);
-            this.SetParameters(sSpeciesName, paramSet, sParamFile);
-            this.ClearState();
-            this.SetFertility(fFertility_); // do this *after* call to clearState()
-
-            this.RecomputeRoots = fMaxRtDepth < 0.0;
-            if (!this.RecomputeRoots)
-            {
-                this.SetMaxRootDepth(fMaxRtDepth);
-            }
-
-            this.ReadLayers(aValue, "kl", ref this.fWater_KL);
-            this.ReadLayers(aValue, "ll", ref this.fPlant_LL);
-        }
-*/
         /// <summary></summary>
         public TPlantElement[] FElements = new TPlantElement[0];
 
@@ -3687,46 +3635,7 @@
             this.FCohorts[destCohort].AddRoots(this.FCohorts[srcCohort]);
             this.FCohorts[srcCohort].ClearRoots();
         }
-        /*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="unit"></param>
-        /// <param name="layers"></param>
-        /// <param name="count"></param>
-        public void WriteLayers(ref TTypedValue aValue, string field, string unit, double[] layers, int count)
-        {
-            TTypedValue aMember;
 
-            aMember = GetField(aValue, field, "<type unit=\"" + unit + "\" kind=\"double\" array=\"T\"/>");
-            aMember.setElementCount((uint)count);
-            for (uint Ldx = 1; Ldx <= count; Ldx++)
-            {
-                aMember[Ldx].setValue(layers[Ldx]);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="layers"></param>
-        public void ReadLayers(TTypedValue aValue, string field, ref double[] layers)
-        {
-            TTypedValue aMember = aValue.member(field);
-            if (aMember != null)
-            {
-                layers = new double[GrazType.MaxSoilLayers + 1];
-                for (uint Ldx = 1; Ldx <= aMember.count(); Ldx++)
-                {
-                    layers[Ldx] = aMember.item(Ldx).asDouble();
-                }
-            }
-        }
-        */
         /// <summary>
         /// Read the state (at init time)
         /// </summary>
@@ -3741,6 +3650,8 @@
         /// <param name="green"></param>
         /// <param name="dry"></param>
         /// <param name="seed"></param>
+        /// <param name="seeddormtime"></param>
+        /// <param name="germidx"></param>
         public void ReadStateFromValues(double laggedT, double phen, double flowerlen, double flowertime, double sencidx,
                                         double dormidx, double dormt, double[] extintc,
                                         GreenInit[] green, DryInit[] dry, SeedInit seed, double seeddormtime, double germidx)
@@ -3843,6 +3754,7 @@
                     {
                         iCohort = this.MakeNewCohort(GrazType.stESTAB);
                     }
+                    this.FCohorts[iCohort].ReadFromValue(green[idx], null, true);
                 }
             }
 
@@ -3863,6 +3775,7 @@
                     {
                         iCohort = this.MakeNewCohort(GrazType.stDEAD);
                     }
+                    this.FCohorts[iCohort].ReadFromValue(null, dry[idx], false);
                 }
             }
 
@@ -3923,383 +3836,7 @@
 
             this.MassUnit = sPrevUnit;
         }
-       
-        
-       /* public void ReadStateFromValue(TTypedValue aValue)
-        {
-            string sPrevUnit;
-            TTypedValue subValue;
-            TTypedValue seedValue;
-            double fPhenology;
-            double fFlowerLen;
-            double fFlowerTime;
-            double fSencIndex;
-            int iDormIndex;
-            double fDormT;
-            string sStatus;
-            int iCohort;
-            int idx, jdx;
-            uint iLayer;
 
-            sPrevUnit = this.MassUnit;
-            this.MassUnit = "g/m^2";
-
-            this.LaggedMeanT = ReadReal(aValue, "lagged_day_t", -999.9);
-
-            fPhenology = ReadReal(aValue, "phenology", 0.0);                                    // Phenology --------------------------- 
-            fFlowerLen = ReadReal(aValue, "flower_len", this.Params.DevelopK[7]);
-            fFlowerTime = ReadReal(aValue, "flower_time", -1.0);
-            fSencIndex = ReadReal(aValue, "senc_index", 0.0);
-            iDormIndex = ReadInteger(aValue, "dorm_index", 0);
-            fDormT = ReadReal(aValue, "dorm_t", this.LaggedMeanT);
-
-            if (fPhenology != 0.0)
-            {
-                this.PhenoCode = fPhenology;
-            }
-
-            if (this.Params.bHasSeeds && (this.Phenology == PastureUtil.TDevelopType.Reproductive || this.Phenology == PastureUtil.TDevelopType.SprayTopped))
-            {
-                this.FloweringLength = Math.Max(0.0, Math.Min(fFlowerLen, this.Params.DevelopK[7]));      // Length of flowering period           
-
-                // Days since the start of flowering
-                if (this.DegDays <= this.Params.DevelopK[6])
-                {
-                    this.FloweringTime = 0.0;
-                }
-                else if (fFlowerTime >= 0.0)
-                {
-                    this.FloweringTime = Math.Min(fFlowerTime, this.FloweringLength);
-                }
-                else
-                {
-                    // Assume 10dd per day accrues to get a default value for the flowering time 
-                    fFlowerTime = (this.DegDays - this.Params.DevelopK[6]) / 10.0;
-                    this.FloweringTime = Math.Min(fFlowerTime, this.FloweringLength);
-                }
-            }
-
-            if (this.Phenology == PastureUtil.TDevelopType.Reproductive || this.Phenology == PastureUtil.TDevelopType.SprayTopped)
-            {
-                this.fSencDays = fSencIndex;
-            }
-            else if (this.Phenology == PastureUtil.TDevelopType.Dormant)
-            {
-                this.DormIndex = iDormIndex;
-                if (this.DormIndex > 0)
-                {
-                    this.DormMeanTemp = fDormT;
-                }
-            }
-
-            subValue = aValue.member("extinct_coeff");                                          // Extinction coefficients ------------- 
-            if (subValue != null)
-            {
-                if ((subValue.count() >= 1) && this.Params.bHasSeeds)
-                {
-                    this.SetExtinctionCoeff(GrazType.stSEEDL, subValue.item(1).asDouble());
-                }
-
-                if (subValue.count() >= 2)
-                {
-                    this.SetExtinctionCoeff(GrazType.stESTAB, subValue.item(2).asDouble());
-                }
-
-                if (subValue.count() >= 3)
-                {
-                    this.SetExtinctionCoeff(GrazType.stSENC, subValue.item(3).asDouble());
-                }
-            }
-
-            subValue = aValue.member("green");                                                  // Green herbage cohorts --------------- 
-            if (subValue != null)
-            {
-                for (idx = 1; idx <= subValue.count(); idx++)
-                {
-                    sStatus = ReadString(subValue.item((uint)idx), "status", PastureUtil.StatusName[GrazType.stESTAB]);
-                    if (sStatus == PastureUtil.StatusName[GrazType.stSEEDL])
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stSEEDL);
-                    }
-                    else if (sStatus == PastureUtil.StatusName[GrazType.stSENC])
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stSENC);
-                    }
-                    else
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stESTAB);
-                    }
-
-                    this.FCohorts[iCohort].ReadFromValue(subValue.item((uint)idx), true);
-                }
-            }
-
-            subValue = aValue.member("dry");                                                    // Dry herbage cohorts ----------------- 
-            if (subValue != null)
-            {
-                for (idx = 1; idx <= subValue.count(); idx++)
-                {
-                    sStatus = ReadString(subValue.item((uint)idx), "status", PastureUtil.StatusName[GrazType.stDEAD]);
-                    if (sStatus == PastureUtil.StatusName[GrazType.stLITT1])
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stLITT1);
-                    }
-                    else if (sStatus == PastureUtil.StatusName[GrazType.stLITT2])
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stLITT2);
-                    }
-                    else
-                    {
-                        iCohort = this.MakeNewCohort(GrazType.stDEAD);
-                    }
-
-                    this.FCohorts[iCohort].ReadFromValue(subValue.item((uint)idx), false);
-                }
-            }
-
-            // Enforce a single cohort of dead and of litter    
-            for (idx = this.CohortCount() - 1; idx >= 0; idx--)
-            {
-                if (this.BelongsIn(idx, sgDRY))
-                {
-                    for (jdx = this.CohortCount() - 1; jdx >= idx + 1; jdx--)
-                    {
-                        if (this.FCohorts[jdx].Status == this.FCohorts[idx].Status)
-                        {
-                            this.MergeCohorts(idx, jdx);
-                        }
-                    }
-                }
-            }
-
-            if (this.Params.bHasSeeds)                                                               // Seeds ------------------------------- 
-            {
-                this.SetSeedMass(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, 0.0);
-                subValue = aValue.member("seeds");
-                if (subValue != null)
-                {
-                    seedValue = subValue.member("soft_unripe");
-                    if (seedValue != null)
-                    {
-                        for (iLayer = 1; iLayer <= seedValue.count(); iLayer++)
-                        {
-                            this.SetSeedMass(GrazType.SOFT, GrazType.UNRIPE, (int)iLayer, PastureUtil.ReadMass(seedValue.item(iLayer)));
-                        }
-                    }
-
-                    seedValue = subValue.member("soft_ripe");
-                    if (seedValue != null)
-                    {
-                        for (iLayer = 1; iLayer <= seedValue.count(); iLayer++)
-                        {
-                            this.SetSeedMass(GrazType.SOFT, GrazType.RIPE, (int)iLayer, PastureUtil.ReadMass(seedValue.item(iLayer)));
-                        }
-                    }
-
-                    seedValue = subValue.member("hard_unripe");
-                    if (seedValue != null)
-                    {
-                        for (iLayer = 1; iLayer <= seedValue.count(); iLayer++)
-                        {
-                            this.SetSeedMass(GrazType.HARD, GrazType.UNRIPE, (int)iLayer, PastureUtil.ReadMass(seedValue.item(iLayer)));
-                        }
-                    }
-
-                    seedValue = subValue.member("hard_ripe");
-                    if (seedValue != null)
-                    {
-                        for (iLayer = 1; iLayer <= seedValue.count(); iLayer++)
-                        {
-                            this.SetSeedMass(GrazType.HARD, GrazType.RIPE, (int)iLayer, PastureUtil.ReadMass(seedValue.item(iLayer)));
-                        }
-                    }
-                }
-
-                this.Days_EDormant = ReadInteger(aValue, "seed_dorm_time", 0);
-                this.GermnIndex = ReadReal(aValue, "germ_index", 0.0);
-            }
-
-            this.MassUnit = sPrevUnit;
-        }
-       */
-/*        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="writeLayers"></param>
-        public void WriteToValue(ref TTypedValue aValue, bool writeLayers = false)
-        {
-            string sNutrients;
-            TTypedValue subValue;
-            uint iLayer;
-            int iNonZero;
-            int iCohort;
-            uint Idx;
-
-            this.ComputeTotals();
-
-            sNutrients = "";                                                                    // Parameters -------------------------- 
-            var values = Enum.GetValues(typeof(TPlantElement)).Cast<TPlantElement>().ToArray();
-            foreach (var Elem in values)
-            {
-                if (this.FElements.Contains(Elem))
-                {
-                    sNutrients += PastureUtil.ElemAbbr[(int)Elem];
-                }
-            }
-
-            WriteString(ref aValue, "param_file", this.FParamFile, "");
-            WriteString(ref aValue, "species", this.Params.sName, "");
-            WriteString(ref aValue, "nutrients", sNutrients, "");
-            if (this.FElements.Length == 0)
-            {
-                WriteReal(ref aValue, "fertility", "-", this.FFertScalar, -1.0);
-            }
-
-            if (writeLayers)
-            {
-                this.WriteLayers(ref aValue, "layers", "mm", this.FSoilLayers, this.FSoilLayerCount);
-            }
-
-            if (!this.RecomputeRoots)
-            {
-                WriteReal(ref aValue, "max_rtdep", "mm", this.MaxRootingDepth, -1.0);
-            }
-            else
-            {
-                WriteReal(ref aValue, "max_rtdep", "mm", -1.0, -1.0);
-            }
-
-            if (this.fWater_KL[1] > 0.0)
-            {
-                this.WriteLayers(ref aValue, "kl", "/d", this.fWater_KL, this.FSoilLayerCount);
-                this.WriteLayers(ref aValue, "ll", "mm/mm", this.fPlant_LL, this.FSoilLayerCount);
-            }
-
-            WriteReal(ref aValue, "lagged_day_t", "oC", this.LaggedMeanT, -999.9);                   // State variables --------------------- 
-
-            WriteReal(ref aValue, "phenology", "-", this.PhenoCode, -1.0);                          // Phenology --------------------------- 
-            if (this.Params.bHasSeeds && (this.Phenology == PastureUtil.TDevelopType.Reproductive || this.Phenology == PastureUtil.TDevelopType.SprayTopped))
-            {
-                WriteReal(ref aValue, "flower_len", "d", this.FloweringLength, -1.0);
-                if (this.DegDays > this.Params.DevelopK[6])
-                {
-                    WriteReal(ref aValue, "flower_time", "d", this.FloweringTime, -1.0);
-                }
-            }
-
-            if (this.Phenology == PastureUtil.TDevelopType.Reproductive || this.Phenology == PastureUtil.TDevelopType.SprayTopped)
-            {
-                WriteReal(ref aValue, "senc_index", "d", this.fSencDays, 0.0);
-            }
-            else if (this.Phenology == PastureUtil.TDevelopType.Dormant)
-            {
-                WriteInteger(ref aValue, "dorm_index", this.DormIndex, 0);
-                if (this.DormIndex > 0)
-                {
-                    WriteReal(ref aValue, "dorm_t", "oC", this.DormMeanTemp, -999.9);
-                }
-            }
-
-            subValue = GetField(aValue, "extinct_coeff",                                        // Extinction coefficients ------------- 
-                                  "<type unit=\"-\" kind=\"double\" array=\"T\"/>");
-            subValue.setElementCount(3);
-            subValue.item(1).setValue(this.FExtinctionK[GrazType.stSEEDL]);
-            subValue.item(2).setValue(this.FExtinctionK[GrazType.stESTAB]);
-            subValue.item(3).setValue(this.FExtinctionK[GrazType.stSENC]);
-
-            this.ClearEmptyCohorts(GrazType.sgGREEN);                                                // Green herbage cohorts --------------- 
-
-            iNonZero = 0;
-            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-            {
-                if (this.BelongsIn(iCohort, sgGREEN)
-                   && ((this.FCohorts[iCohort].Herbage[TOTAL, TOTAL].DM > 0.0)
-                         || (this.FCohorts[iCohort].Roots[TOTAL, TOTAL].DM > 0.0)))
-                {
-                    iNonZero++;
-                }
-            }
-
-            if (iNonZero > 0)
-            {
-                subValue = GetField(aValue, "green", "<type array=\"T\">"
-                                                     + "<element>"
-                                                     + "<field name=\"status\" kind=\"string\"/>"
-                                                     + "</element>"
-                                                     + "</type>");
-                subValue.setElementCount(0);
-                Idx = 0;
-                for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-                {
-                    if (this.BelongsIn(iCohort, GrazType.sgGREEN))
-                    {
-                        Idx++;
-                        subValue.setElementCount(Idx);
-                        this.FCohorts[iCohort].WriteToValue(subValue.item(Idx));
-                    }
-                }
-            }
-
-            iNonZero = 0;                                                                       // Dry herbage cohorts ----------------- 
-            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-            {
-                if (this.BelongsIn(iCohort, GrazType.sgDRY)
-                 && ((this.FCohorts[iCohort].Herbage[TOTAL, TOTAL].DM > 0.0)
-                       || (this.FCohorts[iCohort].Roots[TOTAL, TOTAL].DM > 0.0)))
-                {
-                    iNonZero++;
-                }
-            }
-
-            if (iNonZero > 0)
-            {
-                subValue = GetField(aValue, "dry", "<type array=\"T\">"
-                                                   + "<element>"
-                                                   + "<field name=\"status\" kind=\"string\"/>"
-                                                   + "</element>"
-                                                   + "</type>");
-                subValue.setElementCount(0);
-                Idx = 0;
-                for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
-                {
-                    if (this.BelongsIn(iCohort, GrazType.sgDRY)
-                     && ((this.FCohorts[iCohort].Herbage[TOTAL, TOTAL].DM > 0.0)
-                           || (this.FCohorts[iCohort].Roots[TOTAL, TOTAL].DM > 0.0)))
-                    {
-                        Idx++;
-                        subValue.setElementCount(Idx);
-                        this.FCohorts[iCohort].WriteToValue(subValue.item(Idx));
-                    }
-                }
-            }
-
-            if (this.Params.bHasSeeds)                                                               // Seeds ------------------------------- 
-            {
-                subValue = GetField(aValue, "seeds", "<type>"
-                                                     + "<field name=\"soft_unripe\" unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                                                     + "<field name=\"soft_ripe\"   unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                                                     + "<field name=\"hard_unripe\" unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                                                     + "<field name=\"hard_ripe\"   unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                                                     + "</type>");
-                for (Idx = 1; Idx <= 4; Idx++)
-                {
-                    subValue.item(Idx).setElementCount((uint)this.FSeedLayers);
-                }
-
-                for (iLayer = 1; iLayer <= this.FSeedLayers; iLayer++)
-                {
-                    subValue.item(1).item(iLayer).setValue(PastureUtil.GM2_KGHA * this.SeedMassGM2(GrazType.SOFT, GrazType.UNRIPE, (int)iLayer));
-                    subValue.item(2).item(iLayer).setValue(PastureUtil.GM2_KGHA * this.SeedMassGM2(GrazType.SOFT, GrazType.RIPE, (int)iLayer));
-                    subValue.item(3).item(iLayer).setValue(PastureUtil.GM2_KGHA * this.SeedMassGM2(GrazType.HARD, GrazType.UNRIPE, (int)iLayer));
-                    subValue.item(4).item(iLayer).setValue(PastureUtil.GM2_KGHA * this.SeedMassGM2(GrazType.HARD, GrazType.RIPE, (int)iLayer));
-                }
-
-                WriteInteger(ref aValue, "seed_dorm_time", this.Days_EDormant, 0);
-                WriteReal(ref aValue, "germ_index", "d", this.GermnIndex, 0.0);
-            }
-        }
-*/
         /// <summary>
         /// *N.B.the order of search for a parameter set containing sSpeciesName is:  
         /// 1.the TPastureParamSet given by mainParamSet                              
