@@ -45,6 +45,8 @@ namespace Models.PMF.Organs
 
         private const int MM2ToM2 = 1000000; // Conversion of mm2 to m2
 
+        private double frgr;
+
         /// <summary>Growth Respiration</summary>
         /// [Units("CO_2")]
         public double GrowthRespiration { get; set; }
@@ -106,7 +108,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
+                return Gsmax350 * frgr * StomatalConductanceCO2Modifier.Value();
             }
         }
 
@@ -183,11 +185,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get; set; }
-
-        /// <summary>Gets  FRGR.</summary>
-        [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
-        [Units("0-1")]
-        public double FRGR { get; set; }
 
         private double _PotentialEP;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
@@ -1286,7 +1283,7 @@ namespace Models.PMF.Organs
                     FractionNextleafExpanded = (L.FractionExpanded - StartFractionExpanded) / (1 - StartFractionExpanded);
                 }
             }
-            FRGR = FRGRFunction.Value();
+            frgr = FRGRFunction.Value();
         }
 
         /// <summary>Clears this instance.</summary>
@@ -1317,7 +1314,7 @@ namespace Models.PMF.Organs
             CohortParameters.CellDivisionStressValue = 0;
             CohortParameters.LagAccelerationValue = 0;
             CohortParameters.SenescenceAccelerationValue = 0;
-            FRGR = 0;
+            frgr = 0;
             FractionDied = 0;
         }
         /// <summary>Initialises the cohorts.</summary>

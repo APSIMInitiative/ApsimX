@@ -180,6 +180,12 @@ namespace Models.PMF.Phen
             return endPhaseIndex;
         }
 
+        /// <summary>Called to set the phenology to the last stage.</summary>
+        public void SetToEndStage()
+        {
+            SetToStage((double)(phases.Count));
+        }
+
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
@@ -449,15 +455,6 @@ namespace Models.PMF.Phen
                 if (plant != null && plant.IsAlive && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
             }
-        }
-
-        /// <summary>Called when crop is being harvested.</summary>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            //Jump phenology to the end
-            if (this.Parent.Name != "SimpleFruitTree") //Unless you are a perennial fruit tree.  There must be a better way of doing this
-                SetToStage((double)(phases.Count));
         }
 
         /// <summary>Called when crop is being prunned.</summary>

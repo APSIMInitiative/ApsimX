@@ -249,9 +249,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Harvest the crop</summary>
-        public void Harvest() { Harvest(null); }
-
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
@@ -435,6 +432,12 @@ namespace Models.PMF
         }
 
         /// <summary>Harvest the crop.</summary>
+        public void Harvest()
+        {
+            Harvest(RemovalFractions.PhenologyToEnd);
+        }
+
+        /// <summary>Harvest the crop.</summary>
         public void Harvest(RemovalFractions removalData)
         {
             RemoveBiomass("Harvest", removalData);
@@ -472,9 +475,13 @@ namespace Models.PMF
             }
 
             // Reset the phenology if SetPhenologyStage specified.
-            if (removalData != null && removalData.SetPhenologyStage != 0 && Phenology is Phenology phenology)
-                phenology.SetToStage(removalData.SetPhenologyStage);
-
+            if (removalData != null && Phenology is Phenology phenology)
+            {
+                if (removalData.SetPhenologyStage != 0)
+                    phenology.SetToStage(removalData.SetPhenologyStage);
+                else if (removalData.SetPhenologyToEnd)
+                    phenology.SetToEndStage();
+            }
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0 && structure != null)
                 structure.DoThin(removalData.SetThinningProportion);
