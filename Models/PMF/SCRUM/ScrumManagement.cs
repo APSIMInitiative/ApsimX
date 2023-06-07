@@ -6,6 +6,7 @@ using Models.Interfaces;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
+using static Models.PMF.Scrum.ScrumCrop;
 
 namespace Models.PMF.Scrum
 {
@@ -21,6 +22,7 @@ namespace Models.PMF.Scrum
     public class ScrumManagement : Model
     {
         /// <summary>Establishemnt Date</summary>
+        [Separator("Choose one of your specified scrum crops to plant")]
         [Description("Crop to plant")]
         [Display(Type = DisplayType.SCRUMcropName)]
         public string CropName { get; set; }
@@ -39,6 +41,7 @@ namespace Models.PMF.Scrum
         public double PlantingDepth { get; set; }
 
         /// <summary>Harvest Date</summary>
+        [Separator("Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified")]
         [Description("Harvest Date")]
         public Nullable <DateTime> HarvestDate { get; set; }
 
@@ -52,11 +55,13 @@ namespace Models.PMF.Scrum
         public string HarvestStage { get; set; }
 
         /// <summary>Expected Yield (g FW/m2)</summary>
+        [Separator("Specify an appropriate potential yeild for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
         [Description("Expected Yield (t/Ha)")]
         public double ExpectedYield { get; set; }
 
         /// <summary>Field loss (i.e the proportion of expected yield that is left in the field 
         /// because of diseaese, poor quality or lack of market)</summary>
+        [Separator("Specify percentaces of field loss and residue removal at harvest")]
         [Description("Field loss (0-1)")]
         public double FieldLoss { get; set; }
 
@@ -76,9 +81,6 @@ namespace Models.PMF.Scrum
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         public Plant scrum = null;
-
-        [Link]
-        private GetTempSum ttSum = null;
 
         /// <summary>
         /// Parameterless constructor
@@ -120,23 +122,6 @@ namespace Models.PMF.Scrum
                 {
                     ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);
                     currentCrop.Establish(this);
-                    if (HarvestDate == null)
-                    {
-                        HarvestDate = ttSum.GetHarvestDate(EstablishDate, TtEstabToHarv, currentCrop.BaseT, currentCrop.OptT, currentCrop.MaxT);
-                    }
-                }
-
-                if (clock.Today == HarvestDate)
-                {
-                    Remove = new RemovalFractions();
-                    Remove.SetFractionToResidue("Product", FieldLoss);
-                    Remove.SetFractionToRemove("Product", 1 - FieldLoss);
-                    Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval);
-                    Remove.SetFractionToRemove("Stover", ResidueRemoval);
-                    Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval,"dead");
-                    Remove.SetFractionToRemove("Stover", ResidueRemoval,"dead");
-                    scrum.RemoveBiomass("Harvest",Remove);
-                    scrum.EndCrop();
                 }
             }
         }

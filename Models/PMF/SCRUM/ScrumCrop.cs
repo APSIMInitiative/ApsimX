@@ -1,11 +1,9 @@
 ﻿using Models.Climate;
 using Models.Core;
-using Models.Interfaces;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using static Models.PMF.Scrum.ScrumCrop;
 
 namespace Models.PMF.Scrum
 {
@@ -194,8 +192,6 @@ namespace Models.PMF.Scrum
             if (management.EstablishStage != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage]);
-                if (StageNumbers[management.EstablishStage] >= 3.0)
-                    scrum.Phenology.Emerged = true;
             }
         }
 
@@ -228,26 +224,8 @@ namespace Models.PMF.Scrum
             cropParams["RootProportion"] += this.Proot.ToString();
             cropParams["ACover"] += this.Acover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
-            
-            // Derive Crop Parameters
-            double ttEstToHarv = 0.0;
-            if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
-            {
-                ttEstToHarv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT,this.OptT,this.MaxT);
-            }
-            else
-            {
-                ttEstToHarv = management.TtEstabToHarv;     
-            }
 
-            if (management.HarvestDate == DateTime.MinValue)    
-            {
-                this.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate,ttEstToHarv, this.BaseT, this.OptT, this.MaxT);
-            }
-            else
-            {
-                this.HarvestDate = (DateTime)management.HarvestDate;
-            }
+           
 
             // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
             Dictionary<string, double> PropnTt = new Dictionary<string, double>();
@@ -264,8 +242,33 @@ namespace Models.PMF.Scrum
                 }
             }
 
+            double emergeTt = 0.0;
+            if (StageNumbers[management.EstablishStage] < 3.0)
+                emergeTt = management.PlantingDepth * 5.0; //This is Phenology.Emerging.Target.ShootRate value 
+            
+            // Derive Crop Parameters
+            double ttEmergeToHarv = 0.0;
+            if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
+            {
+                ttEmergeToHarv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
+                ttEmergeToHarv -= emergeTt; //Subtract out emergence tt
+            }
+            else
+            {
+                ttEmergeToHarv = management.TtEstabToHarv - emergeTt;
+            }
+
+            if (management.HarvestDate == DateTime.MinValue)
+            {
+                this.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
+            }
+            else
+            {
+                this.HarvestDate = (DateTime)management.HarvestDate;
+            }
+
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
-            double Tt_mat = ttEstToHarv * 1 / PropnTt_EstToHarv;
+            double Tt_mat = ttEmergeToHarv * 1 / PropnTt_EstToHarv;
             double Xo_Biomass = Tt_mat * .45;
             double b_Biomass = Xo_Biomass * .25;
             double Xo_cov = Xo_Biomass * 0.4;
@@ -289,7 +292,7 @@ namespace Models.PMF.Scrum
             cropParams["TtRipe"] += (Tt_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
             double fDM = ey * dmc * (1 / this.HarvestIndex) * (1/(1- this.Proot));
-            double iDM = fDM * PropnMaxDM[management.EstablishStage];
+            double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
             cropParams["InitialStoverWt"] += (iDM * (1-this.Proot)).ToString(); 
             cropParams["InitialRootWt"] += (Math.Max(0.01,iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
 

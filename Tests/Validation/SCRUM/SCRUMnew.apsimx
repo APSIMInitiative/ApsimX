@@ -4157,7 +4157,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "1998-10-14T00:00:00",
-          "End": "1999-07-01T00:00:00",
+          "End": "1999-03-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -4733,7 +4733,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n\n        \n        public enum EstablishStages {Seed, Germination, Emergence, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n        private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),PlantingDepth,HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n\n        \n        public enum EstablishStages {Seed, Germination, Emergence, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        [Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n        private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),PlantingDepth,HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "CropName",
@@ -4745,7 +4745,7 @@
                 },
                 {
                   "Key": "EstablishStage",
-                  "Value": "Seedling"
+                  "Value": "Seed"
                 },
                 {
                   "Key": "PlantingDepth",
@@ -4786,7 +4786,77 @@
               "$type": "Models.PMF.Plant, Models",
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+                  "HarvestIndex": 0.45,
+                  "MoisturePc": 14.0,
+                  "Proot": 0.1,
+                  "MaxRD": 1005.0,
+                  "MaxHeight": 700.0,
+                  "Acover": 0.97,
+                  "ExtinctCoeff": 0.55,
+                  "RootNConc": 0.01,
+                  "StoverNConc": 0.01,
+                  "ProductNConc": 0.015,
+                  "BaseT": 0.0,
+                  "OptT": 30.0,
+                  "MaxT": 40.0,
+                  "Legume": false,
+                  "WaterStress": false,
+                  "Name": "Cereal",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+                  "HarvestIndex": 0.5,
+                  "MoisturePc": 12.0,
+                  "Proot": 0.1,
+                  "MaxRD": 600.0,
+                  "MaxHeight": 500.0,
+                  "Acover": 0.97,
+                  "ExtinctCoeff": 0.85,
+                  "RootNConc": 0.01,
+                  "StoverNConc": 0.03,
+                  "ProductNConc": 0.025,
+                  "BaseT": 0.0,
+                  "OptT": 30.0,
+                  "MaxT": 40.0,
+                  "Legume": true,
+                  "WaterStress": false,
+                  "Name": "Legume",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+                  "HarvestIndex": 0.0,
+                  "MoisturePc": 0.0,
+                  "Proot": 0.0,
+                  "MaxRD": 0.0,
+                  "MaxHeight": 0.0,
+                  "Acover": 0.0,
+                  "ExtinctCoeff": 0.0,
+                  "RootNConc": 0.0,
+                  "StoverNConc": 0.0,
+                  "ProductNConc": 0.0,
+                  "BaseT": 0.0,
+                  "OptT": 0.0,
+                  "MaxT": 0.0,
+                  "Legume": false,
+                  "WaterStress": false,
+                  "Name": "Bolix",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5013,8 +5083,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -17.067652435262236,
-              "Maximum": 1723.831895961511,
+              "Minimum": -10.120510035881743,
+              "Maximum": 1022.1705136240813,
               "Interval": null
             }
           ],
@@ -5312,8 +5382,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.20254258938323394,
-              "Maximum": 20.45580152773189,
+              "Minimum": -0.2023193291926951,
+              "Maximum": 20.433252248487467,
               "Interval": null
             },
             {
@@ -5322,8 +5392,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             }
           ],
@@ -5476,8 +5546,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.0004987663376113454,
-              "Maximum": 0.04937540012400801,
+              "Minimum": -0.0005099999997473789,
+              "Maximum": 0.05050999999974739,
               "Interval": null
             },
             {
@@ -5486,8 +5556,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             }
           ],
@@ -5611,8 +5681,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.07758809567375502,
-              "Maximum": 7.835397663074518,
+              "Minimum": -0.07733336315377075,
+              "Maximum": 7.809669678556107,
               "Interval": null
             },
             {
@@ -5621,8 +5691,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             },
             {
@@ -5631,8 +5701,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -8.153962838890779,
-              "Maximum": 823.5492467279939,
+              "Minimum": -10.050009999999748,
+              "Maximum": 1015.0500099999997,
               "Interval": null
             }
           ],
@@ -5861,8 +5931,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009709978635832893,
-              "Maximum": 0.9797078422443843,
+              "Minimum": -0.009709978080865609,
+              "Maximum": 0.9797077861926886,
               "Interval": null
             },
             {
@@ -5871,8 +5941,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -17.067652435262236,
-              "Maximum": 1723.831895961511,
+              "Minimum": -10.120510035881743,
+              "Maximum": 1022.1705136240813,
               "Interval": null
             },
             {
@@ -5881,8 +5951,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -8.153962838890779,
-              "Maximum": 823.5492467279939,
+              "Minimum": -10.050009999999748,
+              "Maximum": 1015.0500099999997,
               "Interval": null
             }
           ],
@@ -6639,8 +6709,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             },
             {
@@ -6649,8 +6719,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -17.067652435262236,
-              "Maximum": 1723.831895961511,
+              "Minimum": -14.970510031113372,
+              "Maximum": 1512.020513142476,
               "Interval": null
             }
           ],
@@ -6803,8 +6873,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             },
             {
@@ -6813,8 +6883,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.06376430339624238,
-              "Maximum": 6.4391946430457425,
+              "Minimum": -0.06376426976428765,
+              "Maximum": 6.439191246218314,
               "Interval": null
             }
           ],
@@ -6909,8 +6979,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.010008827382176434,
-              "Maximum": 1.009891565625082,
+              "Minimum": -0.009944010337119112,
+              "Maximum": 1.0033450440742924,
               "Interval": null
             },
             {
@@ -6919,8 +6989,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36079.399990000005,
-              "Maximum": 36344.600009999995,
+              "Minimum": 36080.61999000001,
+              "Maximum": 36221.38000999999,
               "Interval": null
             }
           ],
@@ -6995,7 +7065,7 @@
               "$type": "Models.Factorial.CompositeFactor, Models",
               "Specifications": [
                 "[Sow Cereal on a fixed date].Script.EstablishStage = Seed",
-                "[Sow Cereal on a fixed date].Script.HarvestTT = 1000"
+                "[Sow Cereal on a fixed date].Script.HarvestTT = 1050"
               ],
               "Paths": null,
               "Values": null,
@@ -7022,8 +7092,8 @@
             {
               "$type": "Models.Factorial.CompositeFactor, Models",
               "Specifications": [
-                "[Sow Cereal on a fixed date].Script.EstablishStage = Seed",
-                "[Sow Cereal on a fixed date].Script.HarvestTT = 450",
+                "[Sow Cereal on a fixed date].Script.EstablishStage = Seedling",
+                "[Sow Cereal on a fixed date].Script.HarvestTT = 332",
                 "[Sow Cereal on a fixed date].Script.HarvestStage = Vegetative"
               ],
               "Paths": null,
@@ -7634,8 +7704,20 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n\n        \n        public enum EstablishStages {Seed, Germination, Emergence, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n       // private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),PlantingDepth,HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n\n        \n        public enum EstablishStages {Seed, Germination, Emergence, Seedling}\n        public enum HarvestStages{Vegetative,EarlyReproductive,MidReproductive,LateReproductive,Maturity,Ripe}; \n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        //[Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        public EstablishStages EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        public HarvestStages HarvestStage {get; set;}\n\n        \n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify percentaces of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n       // private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage.ToString(),PlantingDepth,HarvestStage.ToString(),PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
+                    {
+                      "Key": "EstablishStage",
+                      "Value": "Seed"
+                    },
+                    {
+                      "Key": "HarvestTT",
+                      "Value": "1000"
+                    },
+                    {
+                      "Key": "HarvestStage",
+                      "Value": "Maturity"
+                    },
                     {
                       "Key": "CropName",
                       "Value": "Cereal"
@@ -7645,24 +7727,12 @@
                       "Value": "10/14/1998 00:00:00"
                     },
                     {
-                      "Key": "EstablishStage",
-                      "Value": "Seed"
-                    },
-                    {
                       "Key": "PlantingDepth",
-                      "Value": "15"
+                      "Value": "10"
                     },
                     {
                       "Key": "HarvestDate",
                       "Value": "01/01/0001 00:00:00"
-                    },
-                    {
-                      "Key": "HarvestTT",
-                      "Value": "1000"
-                    },
-                    {
-                      "Key": "HarvestStage",
-                      "Value": "Maturity"
                     },
                     {
                       "Key": "PotentialYield",
@@ -7908,8 +7978,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.010009220139865098,
-              "Maximum": 1.009931234151637,
+              "Minimum": -0.009940196439151085,
+              "Maximum": 1.0029598403795217,
               "Interval": null
             },
             {
@@ -7918,8 +7988,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -14.656301059095052,
-              "Maximum": 1480.2854069686255,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -7984,8 +8054,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -14.656301059095052,
-              "Maximum": 1480.2854069686255,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -8040,8 +8110,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -7.000009924074374,
-              "Maximum": 707.000002331537,
+              "Minimum": -6.999891475332304,
+              "Maximum": 706.988039008588,
               "Interval": null
             },
             {
@@ -8050,8 +8120,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -14.656301059095052,
-              "Maximum": 1480.2854069686255,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -8106,8 +8176,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009709982017585673,
-              "Maximum": 0.9797081838014151,
+              "Minimum": -0.009709981892325732,
+              "Maximum": 0.9797081711501611,
               "Interval": null
             },
             {
@@ -8116,8 +8186,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -14.656301059095052,
-              "Maximum": 1480.2854069686255,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -8154,7 +8224,18 @@
               "Filter": null,
               "Name": "Stage",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.EventNamesOnGraph, Models",
+                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                  "SimulationName": "SCRUMTestBase",
+                  "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -8182,8 +8263,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -14.656301059095052,
-              "Maximum": 1480.2854069686255,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -8277,8 +8358,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -10.038801075784352,
-              "Maximum": 1013.9179086542448,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
               "Interval": null
             }
           ],
@@ -8372,6 +8453,72 @@
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Phenology.Stage",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Stage",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "Cover ",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": -10.04601004315351,
+              "Maximum": 1014.6460143585298,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": 36079.399990000005,
+              "Maximum": 36344.600009999995,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Tt",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
