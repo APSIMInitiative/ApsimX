@@ -496,33 +496,7 @@ namespace Models
         public override IEnumerable<ITag> Document()
         {
             yield return new Section(Name, GetModelDescription());
-
-            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder<Clock>("private void OnDoCommence(object _, CommenceArgs e)");
-
-            List<string[]> eventNamesClean = new List<string[]>();
-            //remove CLEM events from this list
-            foreach (string[] name in eventNames)
-                if (!name[0].Contains("CLEM"))
-                    eventNamesClean.Add(name);
-
-            yield return new Section("Events", new Paragraph($"Function OnDoCommence of Model {Name} contains the following Events. When multiple of these events are invoked at the same time, they are processed in the shown order.\n"));
-
-            DataTable data = new DataTable();
-            data.Columns.Add("Event Handle", typeof(string));
-            data.Columns.Add("Summary", typeof(string));
-
-            for(int i = 1; i < eventNamesClean.Count; i++)
-            {
-                string[] parts = eventNamesClean[i];
-
-                DataRow row = data.NewRow();
-                data.Rows.Add(row);
-                row["Event Handle"] = parts[0];
-                row["Summary"] = parts[1];
-            }
-
-            yield return new Table(data);
-
+            yield return new Section(Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
         }
     }
 }

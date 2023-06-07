@@ -633,37 +633,40 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get a description of the model from the summary and remarks
-        /// xml documentation comments in the source code.
+        /// Gets a list of Event Handles that are Invoked in the prodivded function
         /// </summary>
         /// <remarks>
-        /// Note that the returned tags are not inside a section.
+        /// Model source file must be included as embedded resource in project xml
         /// </remarks>
-        protected IEnumerable<ITag> GetModelEventsInvoked<T>(string functionName)
+        protected IEnumerable<ITag> GetModelEventsInvoked(Type type, string functionName, string filter = "", bool filterOut = false)
         {
-            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder<T>(functionName);
+            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder(type, functionName);
 
-            List<string[]> eventNamesClean = new List<string[]>();
-            //remove CLEM events from this list
-            foreach (string[] name in eventNames)
-                if (!name[0].Contains("CLEM"))
-                    eventNamesClean.Add(name);
-
-            yield return new Section("Events", new Paragraph($"Function OnDoCommence of Model {Name} contains the following Events. When multiple of these events are invoked at the same time, they are processed in the shown order.\n"));
+            List<string[]> eventNamesFiltered = new List<string[]>();
+            if (filter.Length > 0)
+            {
+                foreach (string[] name in eventNames)
+                    if (name[0].Contains(filter) == !filterOut)
+                    { 
+                        eventNamesFiltered.Add(name); 
+                    }           
+            }
+            yield return new Paragraph($"Function OnDoCommence of Model {Name} contains the following Events. When multiple of these events are invoked at the same time, they are processed in the shown order.\n");
 
             DataTable data = new DataTable();
             data.Columns.Add("Event Handle", typeof(string));
             data.Columns.Add("Summary", typeof(string));
 
-            for (int i = 1; i < eventNamesClean.Count; i++)
+            for (int i = 1; i < eventNamesFiltered.Count; i++)
             {
-                string[] parts = eventNamesClean[i];
+                string[] parts = eventNamesFiltered[i];
 
                 DataRow row = data.NewRow();
                 data.Rows.Add(row);
                 row["Event Handle"] = parts[0];
                 row["Summary"] = parts[1];
             }
+            yield return new Table(data);
         }
 
         /// <summary>
