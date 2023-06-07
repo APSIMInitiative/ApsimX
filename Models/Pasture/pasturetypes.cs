@@ -129,18 +129,21 @@ namespace Models.GrazPlan
         }
     }
 
+    /// <summary>
+    /// Specifies initial state of above-ground herbage pools
+    /// </summary>
     [Serializable]
     public class Herbage
     {
-        /// <summary>kg/kg</summary>
+        /// <summary>Class boundaries for the dry matter digestibility (DMD) classes to which the other fields refer. kg/kg</summary>
         public double[] dmd;
         /// <summary>kg/ha</summary>
         public double[] weight;
-        /// <summary>kg/kg</summary>
+        /// <summary>Nitrogen concentration of each DMD class. Only meaningful if nutrients includes N. kg/kg</summary>
         public double[] n_conc;
-        /// <summary>kg/kg</summary>
+        /// <summary>Phosphorus concentration of each DMD class. Only meaningful if nutrients includes P. kg/kg</summary>
         public double[] p_conc;
-        /// <summary>kg/kg</summary>
+        /// <summary>Sulphur concentration of each DMD class. Only meaningful if nutrients includes S. kg/kg</summary>
         public double[] s_conc;
         /// <summary>cm^2/g</summary>
         public double[] spec_area;
@@ -162,32 +165,91 @@ namespace Models.GrazPlan
         }
     }
 
+    /// <summary>
+    /// Specifies the state of a cohort of green (living) herbage
+    /// </summary>
     [Serializable]
     public class GreenInit
     {
+        /// <summary>
+        /// Feasible values are “seedling”, “established” or “senescing”.
+        /// </summary>
         public string status;
+        /// <summary>
+        /// Specifies initial state of above-ground herbage pools
+        /// </summary>
         public Herbage[] herbage;
+        /// <summary>
+        /// Mass of roots. The first index denotes a root age class (0=effective roots, 1=old roots); 
+        /// if only one sub-array is given, it is taken to be total root mass. 
+        /// The second index denotes a soil layer (defined by the layers property). 
+        /// If only a single value is given in a sub-array, mass will be distributed over all soil layers to the current rooting depth, using a near-exponential distribution.
+        /// </summary>
         public double[][] root_wt;  // kg/ha, indexed [0][0]
+        /// <summary>
+        /// Current rooting depth of the cohort
+        /// </summary>
         public double rt_dep;       // mm
+        /// <summary>
+        /// Establishment index. 0,1.0-KZ1. Only meaningful if status = “seedling”.
+        /// </summary>
         public double estab_index = 1.0;
+        /// <summary>
+        /// Stress index. 0-1. Only meaningful if status = “seedling”.
+        /// </summary>
         public double stress_index = 0.0;
+        /// <summary>
+        /// Maximum amount of stem tissue to be relocated to seed. 
+        /// Only meaningful if 
+        /// (a) the species is modelled as having seeds, 
+        /// (b) status = “established” or “senescing” and 
+        /// (c) the phenological stage is reproductive or senescent. 
+        /// Default depends on the above conditions.
+        /// </summary>
         public double stem_reloc = -999.0;   // kg/ha
+        /// <summary>
+        /// Number of frosts experienced by this herbage cohort during its lifetime
+        /// </summary>
         public int frosts;
     }
 
+    /// <summary>
+    /// Specifies the state of a cohort of dry herbage (standing dead or litter):
+    /// </summary>
     [Serializable]
     public class DryInit
     {
+        /// <summary>
+        /// Feasible values are “dead” or “litter”.
+        /// </summary>
         public string status;
+        /// <summary>
+        /// Definition is the same as GreenInit.herbage
+        /// </summary>
         public Herbage[] herbage;
     }
 
+    /// <summary>
+    /// Mass of seeds in each soil layer
+    /// </summary>
     [Serializable]
     public class SeedInit
     {
+        /// <summary>
+        /// Mass of soft, unripe seeds. If only a single element is given, all seeds are placed in the first soil layer
+        /// </summary>
         public double[] soft_unripe;    // kg/ha
+        /// <summary>
+        /// Mass of soft, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
+        /// </summary>
         public double[] soft_ripe;      // kg/ha
+        /// <summary>
+        /// Mass of hard, unripe seeds. If only a single element is given, all seeds are placed in the first soil layer
+        /// </summary>
         public double[] hard_unripe;    // kg/ha
+        /// <summary>
+        /// Mass of hard, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
+        /// </summary>
         public double[] hard_ripe;      // kg/ha
     }
 
