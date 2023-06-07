@@ -1,7 +1,8 @@
-﻿namespace Models.PMF.Interfaces
+﻿using System;
+using Models.Core;
+
+namespace Models.PMF.Interfaces
 {
-    using Models.Core;
-    using System;
 
     /// <summary> Inerface for arbitrators </summary>
     public interface IArbitrator
@@ -116,7 +117,7 @@
         /// <value>The metabolic.</value>
         [Description("Initial Metabolic biomass priority")]
         public double QMetabolicPriority { get; set; }
-        
+
         /// <summary>Gets the total amount of biomass.</summary>
         public double Total
         { get { return Structural + Metabolic + Storage; } }
@@ -124,7 +125,7 @@
         internal void Clear()
         {
             Structural = 0;
-            Storage = 0; 
+            Storage = 0;
             Metabolic = 0;
             QStructuralPriority = 1;
             QStoragePriority = 1;

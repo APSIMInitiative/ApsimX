@@ -1,13 +1,12 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
-using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -32,7 +31,7 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         protected IZone zone = null;
 
-        
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -72,7 +71,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e) 
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> OrgansToDemandWater = new List<IHasWaterDemand>();
             foreach (Model hwd in plant.FindAllInScope<IHasWaterDemand>())
@@ -86,7 +85,7 @@ namespace Models.PMF
 
             biomassArbitrator = plant.FindChild<BiomassArbitrator>();
         }
-        
+
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>
@@ -110,7 +109,7 @@ namespace Models.PMF
                             waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
                         }
                     }
-                        
+
 
                 // Calculate total water demand.
                 double waterDemand = 0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -153,7 +152,7 @@ namespace Models.PMF
             }
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
-            
+
             foreach (IHasWaterDemand d in waterDemandingOrgans)
             {
                 WDemand += d.CalculateWaterDemand() * zone.Area;
@@ -260,10 +259,10 @@ namespace Models.PMF
 
                 IWaterNitrogenUptake u = plant.FindDescendant<IWaterNitrogenUptake>();
                 {
-                   // Note: This does the actual nitrogen extraction from the soil.
-                   // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first 
-                   // This seems wrong at first uptakes and allocations from each organ have been accounted for, this is just
-                   // setting the delta in the soil
+                    // Note: This does the actual nitrogen extraction from the soil.
+                    // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first 
+                    // This seems wrong at first uptakes and allocations from each organ have been accounted for, this is just
+                    // setting the delta in the soil
                     u.DoNitrogenUptake(zones);
                 }
             }
@@ -276,15 +275,15 @@ namespace Models.PMF
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
 
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // write description of this class.
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            // write children.
+            foreach (IModel child in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
         }
     }
 }

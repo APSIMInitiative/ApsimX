@@ -1,43 +1,40 @@
-﻿namespace Models.GrazPlan
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.Surface;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Models.Core;
+using Models.ForageDigestibility;
+using Models.Interfaces;
+using StdUnits;
 
+namespace Models.GrazPlan
+{
 
     /// <summary>
-    /// StockList is primarily a list of AnimalGroups. Each animal group has a     
-    /// "current paddock" (function getInPadd() ) and a "group tag" (function getTag()      
-    /// associated with it. The correspondences between these and the animal         
-    /// groups must be maintained.                                                   
-    /// -                                                                               
-    /// In addition, the class maintains two other lists:                            
-    /// FPaddockInfo  holds paddock-specific information.  Animal groups are        
-    ///                 related to the members of FPaddockInfo by the FPaddockNos     
-    ///                 array.                                                        
-    /// FSwardInfo    holds the herbage availabilities and amounts removed from     
-    ///                 each sward (i.e. all components which respond to the          
-    ///                 call for "sward2stock").  The animal groups never refer to    
-    ///                 this information directly; instead, the TStockList.Dynamics   
-    ///                 method (1) aggregates the availability in each sward into     
-    ///                 a paddock-level total, and (2) once the grazing logic has     
-    ///                 been executed it also allocates the amounts removed between   
-    ///                 the various swards.  Swards are allocated to paddocks on      
-    ///                 the basis of their FQDN's.                                    
-    /// -                                                                              
-    ///  N.B. The use of a fixed-length array for priorities and paddock numbers      
-    ///       limits the number of animal groups that can be stored in this           
-    ///       implementation.                                                         
-    ///  N.B. The At property is 1-offset.  In many of the management methods, an     
-    ///       index of 0 denotes "do to all groups".                                  
+    /// StockList is primarily a list of AnimalGroups. Each animal group has a
+    /// "current paddock" (function getInPadd() ) and a "group tag" (function getTag()
+    /// associated with it. The correspondences between these and the animal
+    /// groups must be maintained.
+    /// -
+    /// In addition, the class maintains two other lists:
+    /// FPaddockInfo  holds paddock-specific information.  Animal groups are
+    ///                 related to the members of FPaddockInfo by the FPaddockNos
+    ///                 array.
+    /// FSwardInfo    holds the herbage availabilities and amounts removed from
+    ///                 each sward (i.e. all components which respond to the
+    ///                 call for "sward2stock").  The animal groups never refer to
+    ///                 this information directly; instead, the TStockList.Dynamics
+    ///                 method (1) aggregates the availability in each sward into
+    ///                 a paddock-level total, and (2) once the grazing logic has
+    ///                 been executed it also allocates the amounts removed between
+    ///                 the various swards.  Swards are allocated to paddocks on
+    ///                 the basis of their FQDN's.
+    /// -
+    ///  N.B. The use of a fixed-length array for priorities and paddock numbers
+    ///       limits the number of animal groups that can be stored in this
+    ///       implementation.
+    ///  N.B. The At property is 1-offset.  In many of the management methods, an
+    ///       index of 0 denotes "do to all groups".
     /// </summary>
     [Serializable]
     public class StockList
@@ -48,7 +45,7 @@
         private const double MONTH2DAY = 365.25 / 12;
 
         /// <summary>
-        /// Converts animal mass into "dse"s for trampling purposes                     
+        /// Converts animal mass into "dse"s for trampling purposes
         /// </summary>
         private const double WEIGHT2DSE = 0.02;
 
@@ -56,13 +53,13 @@
         private readonly Stock parentStockModel = null;
 
         /// <summary>The clock model.</summary>
-        private readonly Clock clock;
+        private readonly IClock clock;
 
         /// <summary>The weather model.</summary>
         private readonly IWeather weather;
 
         /// <summary>
-        /// stock[0] is kept for use as temporary storage         
+        /// stock[0] is kept for use as temporary storage
         /// </summary>
         private AnimalGroup[] stock = new AnimalGroup[0];
 
@@ -73,7 +70,7 @@
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
         /// <param name="paddocksInSimulation">The paddocks in the simulation.</param>
-        public StockList(Stock stockModel, Clock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
+        public StockList(Stock stockModel, IClock clockModel, IWeather weatherModel, List<Zone> paddocksInSimulation)
         {
             parentStockModel = stockModel;
             ForagesAll = new ForageProviders();
@@ -81,7 +78,7 @@
             clock = clockModel;
             weather = weatherModel;
 
-            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage           
+            Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage
             Paddocks = new List<PaddockInfo>();
 
             Paddocks.Add(new PaddockInfo());
@@ -96,7 +93,7 @@
                 var forages = stockModel.FindInScope<Forages>();
                 if (forages == null)
                     throw new Exception("No forages component found in simulation.");
-                
+
                 foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == zone))
                     ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + forage.Name, 0, 0, forage);
             }
@@ -121,15 +118,15 @@
         public ForageProviders ForagesAll { get; }
 
         /// <summary>
-        /// Combine sufficiently-similar groups of animals and delete empty ones         
+        /// Combine sufficiently-similar groups of animals and delete empty ones
         /// </summary>
         private void Merge()
         {
             int idx, jdx;
             AnimalGroup animalGroup;
 
-            // Remove empty groups                   
-            for (idx = 1; idx <= this.Count(); idx++)                                                     
+            // Remove empty groups
+            for (idx = 1; idx <= this.Count(); idx++)
             {
                 if ((stock[idx] != null) && (stock[idx].NoAnimals == 0))
                 {
@@ -138,7 +135,7 @@
             }
 
             // Merge similar groups
-            for (idx = 1; idx <= this.Count() - 1; idx++)                                                                     
+            for (idx = 1; idx <= this.Count() - 1; idx++)
             {
                 for (jdx = idx + 1; jdx <= this.Count(); jdx++)
                 {
@@ -154,8 +151,8 @@
                 }
             }
 
-            // Pack the lists and priority array.      
-            for (idx = this.Count(); idx >= 1; idx--)                                              
+            // Pack the lists and priority array.
+            for (idx = this.Count(); idx >= 1; idx--)
             {
                 if (stock[idx] == null)
                     this.Delete(idx);
@@ -163,8 +160,8 @@
         }
 
         /// <summary>
-        /// Records state information prior to the grazing and nutrition calculations      
-        /// so that it can be restored if there is an RDP insufficiency.                 
+        /// Records state information prior to the grazing and nutrition calculations
+        /// so that it can be restored if there is an RDP insufficiency.
         /// </summary>
         /// <param name="posIdx">Index in stock list</param>
         private void StoreInitialState(int posIdx)
@@ -175,10 +172,10 @@
         }
 
         /// <summary>
-        /// Restores state information about animal groups if there is an RDP            
-        /// insufficiency. Also alters the intake limit.                                 
-        /// * Assumes that stock[*].fRDPFactor[] has ben populated - see the            
-        ///   computeNutritiion() method.                                                
+        /// Restores state information about animal groups if there is an RDP
+        /// insufficiency. Also alters the intake limit.
+        /// * Assumes that stock[*].fRDPFactor[] has ben populated - see the
+        ///   computeNutritiion() method.
         /// </summary>
         /// <param name="posIdx">Index in stock list</param>
         private void RevertInitialState(int posIdx)
@@ -194,10 +191,10 @@
         }
 
         /// <summary>
-        /// 1. Sets the livestock inputs (other than forage and supplement amounts) for    
-        ///    animal groups occupying the paddock denoted by aPaddock.                  
-        /// 2. Sets up the amounts of herbage available to each animal group from each   
-        ///    forage (for animal groups and forages in the paddock denoted by aPaddock).  
+        /// 1. Sets the livestock inputs (other than forage and supplement amounts) for
+        ///    animal groups occupying the paddock denoted by aPaddock.
+        /// 2. Sets up the amounts of herbage available to each animal group from each
+        ///    forage (for animal groups and forages in the paddock denoted by aPaddock).
         /// </summary>
         /// <param name="posIdx">Index in stock list</param>
         private void SetInitialStockInputs(int posIdx)
@@ -211,7 +208,7 @@
 
             group.PaddSteep = paddock.Steepness;
             group.WaterLogging = paddock.Waterlog;
-            group.RationFed.Assign(paddock.SuppInPadd);                              // fTotalAmount will be overridden       
+            group.RationFed.Assign(paddock.SuppInPadd);                              // fTotalAmount will be overridden
 
             // ensure young are fed
             if (group.Young != null)
@@ -252,11 +249,11 @@
                 GrazType.addGrazingInputs(jdx + 1, this.stock[posIdx].StepForageInputs[jdx], ref this.stock[posIdx].PaddockInputs);
 
             group.Herbage.CopyFrom(this.stock[posIdx].PaddockInputs);
-            group.RationFed.Assign(paddock.SuppInPadd);                               // fTotalAmount will be overridden       
+            group.RationFed.Assign(paddock.SuppInPadd);                               // fTotalAmount will be overridden
 
             if (paddock.SummedPotIntake > 0.0)
-                propn = group.PotIntake / paddock.SummedPotIntake;                  // This is the proportion of the total   
-            else                                                                        // supplement that one animal gets     
+                propn = group.PotIntake / paddock.SummedPotIntake;                  // This is the proportion of the total
+            else                                                                        // supplement that one animal gets
                 propn = 0.0;
 
             group.RationFed.TotalAmount = propn * StdMath.DIM(paddock.SuppInPadd.TotalAmount, paddock.SuppRemovalKG);
@@ -274,8 +271,8 @@
         }
 
         /// <summary>
-        /// Limits the length of a grazing sub-step so that no more than MAX_CONSUMPTION 
-        /// of the herbage is consumed.                                                  
+        /// Limits the length of a grazing sub-step so that no more than MAX_CONSUMPTION
+        /// of the herbage is consumed.
         /// </summary>
         /// <param name="paddock">The paddock</param>
         /// <returns>The step length</returns>
@@ -292,8 +289,8 @@
             double removalTime;
             int classIdx;
 
-            posn = 1;                                                                  // Find the first animal group occupying 
-            while ((posn <= this.Count()) && (stock[posn].PaddOccupied != paddock))    // this paddock                         
+            posn = 1;                                                                  // Find the first animal group occupying
+            while ((posn <= this.Count()) && (stock[posn].PaddOccupied != paddock))    // this paddock
                 posn++;
 
             if ((posn > this.Count()) || (paddock.Area <= 0.0))
@@ -441,10 +438,10 @@
             if (stock[posIdx].Young != null)
                 stock[posIdx].Young.CompleteGrowth(this.stock[posIdx].RDPFactor[1]);
         }
- 
+
         /// <summary>
-        /// Add a group of animals to the list                                           
-        /// Returns the group index of the group that was added. 0->n                    
+        /// Add a group of animals to the list
+        /// Returns the group index of the group that was added. 0->n
         /// </summary>
         /// <param name="animalGroup">Animal group</param>
         /// <param name="paddInfo">The paddock information</param>
@@ -467,7 +464,7 @@
         }
 
         /// <summary>
-        /// Returns the group index of the group that was added. 0->n                    
+        /// Returns the group index of the group that was added. 0->n
         /// </summary>
         /// <param name="animalInits">The animal data</param>
         /// <returns>The index of the new animal group</returns>
@@ -557,7 +554,7 @@
         }
 
         /// <summary>
-        ///  * N.B. posn is 1-offset; stock list is effectively also a 1-offset array        
+        ///  * N.B. posn is 1-offset; stock list is effectively also a 1-offset array
         /// </summary>
         /// <param name="posn">In all methods, posn is 1-offset</param>
         public void Delete(int posn)
@@ -572,12 +569,12 @@
 
                 for (idx = posn + 1; idx <= count; idx++)
                     this.stock[idx - 1] = this.stock[idx];
-                Array.Resize(ref this.stock, count);                                               // Leave stock[0] as temporary storage  
+                Array.Resize(ref this.stock, count);                                               // Leave stock[0] as temporary storage
             }
         }
 
         /// <summary>
-        /// Only groups 1 to Length()-1 are counted                                    
+        /// Only groups 1 to Length()-1 are counted
         /// </summary>
         /// <returns>The number of items in the stock list</returns>
         public int Count()
@@ -618,7 +615,7 @@
         }
 
         /// <summary>
-        /// Advance the list by one time step.  All the input properties should be set first                                                                        
+        /// Advance the list by one time step.  All the input properties should be set first
         /// </summary>
         public void Dynamics()
         {
@@ -645,29 +642,29 @@
 
             // Aging, birth, deaths etc. Animal groups may appear in the NewGroups list as a result of processes such as lamb deaths
             n = this.Count();
-            for (idx = 1; idx <= n; idx++)                                                  
-            {                                                                               
-                newGroups = null;                                                            
+            for (idx = 1; idx <= n; idx++)
+            {
+                newGroups = null;
                 stock[idx].Age(1, ref newGroups);
 
-                // Ensure the new young have climate data                             
-                this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag);       // The new groups are added back onto    
-                newGroups = null;                                                           // the main list                       
+                // Ensure the new young have climate data
+                this.Add(newGroups, stock[idx].PaddOccupied, stock[idx].Tag);       // The new groups are added back onto
+                newGroups = null;                                                           // the main list
             }
 
-            this.Merge();                                                                        // Merge any similar animal groups       
+            this.Merge();                                                                        // Merge any similar animal groups
 
-            // Now run the grazing and nutrition models. This process is quite involved...                         
-            for (idx = 1; idx <= this.Count(); idx++)                                       
+            // Now run the grazing and nutrition models. This process is quite involved...
+            for (idx = 1; idx <= this.Count(); idx++)
             {
-                this.StoreInitialState(idx);                                                     
+                this.StoreInitialState(idx);
                 this.ComputeIntakeLimit(stock[idx]);
                 stock[idx].ResetGrazing();
             }
 
-            // Compute the total potential intake (used to distribute supplement between groups of animals)         
-            for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)              
-            {                                                                               
+            // Compute the total potential intake (used to distribute supplement between groups of animals)
+            for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
+            {
                 thePaddock = this.Paddocks[paddIdx];
                 totPotIntake = 0.0;
 
@@ -681,17 +678,17 @@
                 thePaddock.SummedPotIntake = totPotIntake;
             }
 
-            // We loop over paddocks and then over animal groups within a paddock so that we can take account of herbage 
-            for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)                       
-            {                                                                               
+            // We loop over paddocks and then over animal groups within a paddock so that we can take account of herbage
+            for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
+            {
                 thePaddock = this.Paddocks[paddIdx];
-                                                   
-                // removal & its effect on intake      
-                iterator = 1;                                                                  // This loop handles RDP insufficiency   
+
+                // removal & its effect on intake
+                iterator = 1;                                                                  // This loop handles RDP insufficiency
                 done = false;
                 while (!done)
                 {
-                    timeValue = 0.0;                                                            // Variable-length substeps for grazing  
+                    timeValue = 0.0;                                                            // Variable-length substeps for grazing
 
                     while (timeValue < 1.0 - EPS)
                     {
@@ -701,9 +698,9 @@
 
                         delta = Math.Min(this.ComputeStepLength(thePaddock), 1.0 - timeValue);
 
-                        // Compute rate of grazing for this substep                             
-                        for (idx = 1; idx <= this.Count(); idx++)                           
-                            if (stock[idx].PaddOccupied == thePaddock)                             
+                        // Compute rate of grazing for this substep
+                        for (idx = 1; idx <= this.Count(); idx++)
+                            if (stock[idx].PaddOccupied == thePaddock)
                                 this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
 
                         this.ComputeRemoval(thePaddock, delta);
@@ -711,26 +708,26 @@
                         timeValue = timeValue + delta;
                     } // _ grazing sub-steps loop _
 
-                    // Nutrition submodel here...            
+                    // Nutrition submodel here...
                     RDP = 1.0;
-                    for (idx = 1; idx <= this.Count(); idx++)                               
+                    for (idx = 1; idx <= this.Count(); idx++)
                         if (stock[idx].PaddOccupied == thePaddock)
                             this.ComputeNutrition(idx, ref RDP);
 
                     // Maximum of 2 iterations in the RDP loop
-                    if (iterator == 2)                                                                                         
-                        done = true;                                                       
+                    if (iterator == 2)
+                        done = true;
                     else
                     {
-                        done = (RDP == 1.0);                                              // Is there an animal group in this paddock with an RDP insufficiency?  
-                        if (!done)                                                         
+                        done = (RDP == 1.0);                                              // Is there an animal group in this paddock with an RDP insufficiency?
+                        if (!done)
                         {
                             thePaddock.ZeroRemoval();
 
                             // If so, we have to revert the state of the animal group ready for the second iteration.
-                            for (idx = 1; idx <= this.Count(); idx++)                       
+                            for (idx = 1; idx <= this.Count(); idx++)
                                 if (stock[idx].PaddOccupied == thePaddock)
-                                    this.RevertInitialState(idx);                                                   
+                                    this.RevertInitialState(idx);
                         }
                     }
 
@@ -811,24 +808,24 @@
             if (srcExcretion.Defaecations > 0.0)
             {
                 destExcretion.DefaecationVolume = this.WeightedMean(
-                                                                    destExcretion.DefaecationVolume, 
+                                                                    destExcretion.DefaecationVolume,
                                                                     srcExcretion.DefaecationVolume,
-                                                                    destExcretion.Defaecations, 
+                                                                    destExcretion.Defaecations,
                                                                     srcExcretion.Defaecations);
-                destExcretion.DefaecationArea = this.WeightedMean( 
-                                                                    destExcretion.DefaecationArea, 
+                destExcretion.DefaecationArea = this.WeightedMean(
+                                                                    destExcretion.DefaecationArea,
                                                                     srcExcretion.DefaecationArea,
-                                                                    destExcretion.Defaecations, 
+                                                                    destExcretion.Defaecations,
                                                                     srcExcretion.Defaecations);
                 destExcretion.DefaecationEccentricity = this.WeightedMean(
-                                                                            destExcretion.DefaecationEccentricity, 
+                                                                            destExcretion.DefaecationEccentricity,
                                                                             srcExcretion.DefaecationEccentricity,
-                                                                            destExcretion.Defaecations, 
+                                                                            destExcretion.Defaecations,
                                                                             srcExcretion.Defaecations);
                 destExcretion.FaecalNO3Propn = this.WeightedMean(
-                                                                    destExcretion.FaecalNO3Propn, 
+                                                                    destExcretion.FaecalNO3Propn,
                                                                     srcExcretion.FaecalNO3Propn,
-                                                                    destExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n], 
+                                                                    destExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n],
                                                                     srcExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]);
                 destExcretion.Defaecations = destExcretion.Defaecations + srcExcretion.Defaecations;
 
@@ -839,19 +836,19 @@
             if (srcExcretion.Urinations > 0.0)
             {
                 destExcretion.UrinationVolume = this.WeightedMean(
-                                                                    destExcretion.UrinationVolume, 
+                                                                    destExcretion.UrinationVolume,
                                                                     srcExcretion.UrinationVolume,
-                                                                    destExcretion.Urinations, 
+                                                                    destExcretion.Urinations,
                                                                     srcExcretion.Urinations);
                 destExcretion.UrinationArea = this.WeightedMean(
-                                                                    destExcretion.UrinationArea, 
+                                                                    destExcretion.UrinationArea,
                                                                     srcExcretion.UrinationArea,
-                                                                    destExcretion.Urinations, 
+                                                                    destExcretion.Urinations,
                                                                     srcExcretion.Urinations);
                 destExcretion.dUrinationEccentricity = this.WeightedMean(
-                                                                            destExcretion.dUrinationEccentricity, 
+                                                                            destExcretion.dUrinationEccentricity,
                                                                             srcExcretion.dUrinationEccentricity,
-                                                                            destExcretion.Urinations, 
+                                                                            destExcretion.Urinations,
                                                                             srcExcretion.Urinations);
                 destExcretion.Urinations = destExcretion.Urinations + srcExcretion.Urinations;
 
@@ -860,18 +857,18 @@
         }
 
         /// <summary>
-        /// Parameters:                                                               
-        /// OrgFaeces    kg/ha  Excretion of organic matter in faeces                 
-        /// InorgFaeces  kg/ha  Excretion of inorganic nutrients in faeces            
-        /// Urine        kg/ha  Excretion of nutrients in urine                       
-        /// -                                                                          
-        /// Note:  TAnimalGroup.OrgFaeces returns the OM faecal excretion in kg, and  
-        ///        is the total of mothers and young where appropriate; similarly for   
-        ///        TAnimalGroup.InorgFaeces and TAnimalGroup.Urine.                   
-        ///        TAnimalGroup.FaecalAA and TAnimalGroup.UrineAAN return weighted    
-        ///        averages over mothers and young where appropriate. As a result we  
-        ///        don't need to concern ourselves with unweaned young in this        
-        ///        particular calculation except when computing PatchFract.           
+        /// Parameters:
+        /// OrgFaeces    kg/ha  Excretion of organic matter in faeces
+        /// InorgFaeces  kg/ha  Excretion of inorganic nutrients in faeces
+        /// Urine        kg/ha  Excretion of nutrients in urine
+        /// -
+        /// Note:  TAnimalGroup.OrgFaeces returns the OM faecal excretion in kg, and
+        ///        is the total of mothers and young where appropriate; similarly for
+        ///        TAnimalGroup.InorgFaeces and TAnimalGroup.Urine.
+        ///        TAnimalGroup.FaecalAA and TAnimalGroup.UrineAAN return weighted
+        ///        averages over mothers and young where appropriate. As a result we
+        ///        don't need to concern ourselves with unweaned young in this
+        ///        particular calculation except when computing PatchFract.
         /// </summary>
         /// <param name="thePadd">Paddock</param>
         /// <param name="excretion">The excretion info</param>
@@ -909,8 +906,8 @@
         }
 
         /// <summary>
-        /// Return the reproductive status of the group as a string.  These strings   
-        /// are compatible with the ParseRepro routine.                               
+        /// Return the reproductive status of the group as a string.  These strings
+        /// are compatible with the ParseRepro routine.
         /// </summary>
         /// <param name="idx">Index of the group</param>
         /// <param name="useYoung">For the young</param>
@@ -943,8 +940,8 @@
         }
 
         /// <summary>
-        /// GrowthCurve calculates MaxNormalWt (see below) for an animal with the   
-        /// default birth weight.                                                   
+        /// GrowthCurve calculates MaxNormalWt (see below) for an animal with the
+        /// default birth weight.
         /// </summary>
         /// <param name="srw">Standard reference weight</param>
         /// <param name="bw">Birth weight</param>
@@ -1173,8 +1170,8 @@
                         for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                         {
                             pregRate = this.GetOffspringRates(
-                                                        mainGenotype, 
-                                                        latitude, 
+                                                        mainGenotype,
+                                                        latitude,
                                                         mateDOY,
                                                         ageInfoList[cohortIdx].AgeAtMating,
                                                         ageInfoList[cohortIdx].SizeAtMating,
@@ -1187,7 +1184,7 @@
                                 ageInfoList[cohortIdx].Numbers[0, 0] -= shiftNumber[preg];
                             }
                         }
-                    } // if (iDaysPreg > 0) and (fFoetuses > 0.0)  
+                    } // if (iDaysPreg > 0) and (fFoetuses > 0.0)
 
                     // Numbers with each number of suckling young
                     // Different logic for sheep and cattle:
@@ -1265,18 +1262,18 @@
                                 }
                                 while (Math.Abs(trialOffspring - cohortsInfo.Offspring) >= 1.0E-5); // until (Abs(fTrialOffspring-CohortsInfo.fOffspring) < 1.0E-5);
                             }
-                        } // fitting lactation rate to a condition 
+                        } // fitting lactation rate to a condition
 
                         // Compute final offspring rates and numbers
                         for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                         {
                             lactRate = this.GetOffspringRates(
-                                                            mainGenotype, 
-                                                            latitude, 
+                                                            mainGenotype,
+                                                            latitude,
                                                             mateDOY,
                                                             ageInfoList[cohortIdx].AgeAtMating,
                                                             ageInfoList[cohortIdx].SizeAtMating,
-                                                            condition, 
+                                                            condition,
                                                             chillIndex);
                             for (preg = 0; preg <= 3; preg++)
                             {
@@ -1290,7 +1287,7 @@
                             }
                         }
                     } // _ lactating animals _
-                } // _ female animals 
+                } // _ female animals
 
                 // Construct the animal groups from the numbers and cohort-specific information
                 animalInits.Genotype = cohortsInfo.Genotype;
@@ -1355,7 +1352,7 @@
                         }
                     }
                 }
-            } // if CohortsInfo.iNumber > 0 
+            } // if CohortsInfo.iNumber > 0
         }
 
         /// <summary>
@@ -1391,27 +1388,27 @@
                         liveWeight = liveWeight + animalInfo.GFW;
                 }
 
-                // Construct a new group of animals.     
+                // Construct a new group of animals.
                 newGroup = new AnimalGroup(
                                             agenotype,
-                                            animalInfo.Repro,                         // Repro should be Empty, Castrated or 
-                                            animalInfo.Number,                        // Male; pregnancy is handled with the 
-                                            animalInfo.AgeDays,                       // Preg  field.                        
+                                            animalInfo.Repro,                         // Repro should be Empty, Castrated or
+                                            animalInfo.Number,                        // Male; pregnancy is handled with the
+                                            animalInfo.AgeDays,                       // Preg  field.
                                             liveWeight,
                                             animalInfo.GFW,
                                             parentStockModel.randFactory,
                                             clock, weather, this);
 
                 // Adjust the condition score if it has been given
-                if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))        
-                {                                                                                                
+                if ((animalInfo.CondScore > 0.0) && (animalInfo.LiveWt > 0.0))
+                {
                     bodyCondition = StockUtilities.CondScore2Condition(animalInfo.CondScore);
                     newGroup.WeightRangeForCond(
-                                                animalInfo.Repro, 
+                                                animalInfo.Repro,
                                                 animalInfo.AgeDays,
-                                                bodyCondition, 
+                                                bodyCondition,
                                                 newGroup.Genotype,
-                                                ref lowBaseWeight, 
+                                                ref lowBaseWeight,
                                                 ref highBaseWeight);
 
                     if ((newGroup.BaseWeight >= lowBaseWeight) && (newGroup.BaseWeight <= highBaseWeight))
@@ -1428,25 +1425,25 @@
                 }
 
                 // ensure lactating sheep have young. Cattle can be purchased lactating with no calf
-                if ((animalInfo.Lact > 0) && (newGroup.Animal == GrazType.AnimalType.Sheep)) 
+                if ((animalInfo.Lact > 0) && (newGroup.Animal == GrazType.AnimalType.Sheep))
                     animalInfo.NYoung = Math.Max(1, animalInfo.NYoung);
 
                 // females will be empty to this point
                 if (newGroup.ReproState == GrazType.ReproType.Empty)
                 {
-                    // Use TAnimalGroup's property interface to set up pregnancy and lactation.  
-                    if (animalInfo.MatedTo != string.Empty)                                      
-                        newGroup.MatedTo = parentStockModel.Genotypes.Get(animalInfo.MatedTo);            
+                    // Use TAnimalGroup's property interface to set up pregnancy and lactation.
+                    if (animalInfo.MatedTo != string.Empty)
+                        newGroup.MatedTo = parentStockModel.Genotypes.Get(animalInfo.MatedTo);
                     newGroup.Pregnancy = animalInfo.Preg;
                     newGroup.Lactation = animalInfo.Lact;
 
-                    // NYoung denotes the number of *suckling* young in lactating cows, which isn't quite the same as the YoungNo property                    
+                    // NYoung denotes the number of *suckling* young in lactating cows, which isn't quite the same as the YoungNo property
                     if ((newGroup.Animal == GrazType.AnimalType.Cattle)
-                       && (animalInfo.Lact > 0) && (animalInfo.NYoung == 0))            
-                    {                                                                   
-                        weanList = null;                                                
-                        newGroup.Wean(true, true, ref weanList, ref weanList);          
-                        weanList = null; 
+                       && (animalInfo.Lact > 0) && (animalInfo.NYoung == 0))
+                    {
+                        weanList = null;
+                        newGroup.Wean(true, true, ref weanList, ref weanList);
+                        weanList = null;
                     }
                     else if (animalInfo.NYoung > 0)
                     {
@@ -1467,29 +1464,29 @@
                             newGroup.NoOffspring = animalInfo.NYoung;
                     }
 
-                    // Lamb/calf weights and lamb fleece weights are optional.               
-                    if (newGroup.Young != null)                                              
-                    {                                                                   
+                    // Lamb/calf weights and lamb fleece weights are optional.
+                    if (newGroup.Young != null)
+                    {
                         if (this.IsGiven(animalInfo.YoungWt))
                             newGroup.Young.LiveWeight = animalInfo.YoungWt;
                         if (this.IsGiven(animalInfo.YoungGFW))
                             newGroup.Young.FleeceCutWeight = animalInfo.YoungGFW;
                     }
-                } // if (ReproState = Empty) 
+                } // if (ReproState = Empty)
 
-                paddNo = 0;                                                                          // Newly bought animals have tag # zero and go in the first named paddock.  
-                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks[paddNo].Name == string.Empty))   
+                paddNo = 0;                                                                          // Newly bought animals have tag # zero and go in the first named paddock.
+                while ((paddNo < this.Paddocks.Count()) && (this.Paddocks[paddNo].Name == string.Empty))
                     paddNo++;
                 if (paddNo >= this.Paddocks.Count())
                     paddNo = 0;
                 result = this.Add(newGroup, this.Paddocks[paddNo], 0);
-            } // if AnimalInfo.Number > 0 
+            } // if AnimalInfo.Number > 0
             return result;
         }
 
         /// <summary>
-        /// See the notes to the Castrate method; but weaning is even further         
-        /// complicated because males and/or females may be weaned.                   
+        /// See the notes to the Castrate method; but weaning is even further
+        /// complicated because males and/or females may be weaned.
         /// </summary>
         /// <param name="groupIdx">The animal group index</param>
         /// <param name="number">The number of animals</param>
@@ -1499,12 +1496,12 @@
         {
             number = Math.Max(number, 0);
 
-            // Only iterate through groups present at the start of the routine            
+            // Only iterate through groups present at the start of the routine
             int n = Count();
-            for (int idx = 1; idx <= n; idx++)                                                  
+            for (int idx = 1; idx <= n; idx++)
             {
-                // Group Idx, or all groups if 0         
-                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))       
+                // Group Idx, or all groups if 0
+                if (((groupIdx == 0) || (groupIdx == idx)) && (stock[idx] != null))
                     number = number - Wean(stock[idx], number, weanFemales, weanMales);
             }
         }
@@ -1521,7 +1518,7 @@
         {
             if (group.Young != null)
             {
-                // Establish the number of lambs/calves to wean from this group of mothers  
+                // Establish the number of lambs/calves to wean from this group of mothers
                 int numToWean = 0;
                 if (weanMales && weanFemales)
                     numToWean = Math.Min(number, group.Young.NoAnimals);
@@ -1534,7 +1531,7 @@
                 {
                     if (numToWean == number)
                     {
-                        // If there are more lambs/calves present than are to be weaned, split the excess off                       
+                        // If there are more lambs/calves present than are to be weaned, split the excess off
                         int mothersToWean;
                         if (weanMales && weanFemales)
                             mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / group.NoOffspring), CultureInfo.InvariantCulture);
@@ -1544,7 +1541,7 @@
                             this.Split(group, mothersToWean);
                     }
 
-                    // Carry out the weaning process. N.B. the weaners appear in the same      
+                    // Carry out the weaning process. N.B. the weaners appear in the same
                     // paddock as their mothers and with the same tag
                     List<AnimalGroup> newGroups = null;
                     group.Wean(weanFemales, weanMales, ref newGroups, ref newGroups);
@@ -1557,8 +1554,8 @@
         }
 
         /// <summary>
-        /// Ends lactation in cows that have already had their calves weaned.  
-        /// The event has no effect on other animals.                                                   
+        /// Ends lactation in cows that have already had their calves weaned.
+        /// The event has no effect on other animals.
         /// </summary>
         /// <param name="groups">Groups</param>
         /// <param name="number">Number of animals</param>
@@ -1566,8 +1563,8 @@
         {
             number = Math.Max(number, 0);
 
-            // Only iterate through groups present at the start of the routine   
-            foreach (var group in groups)                                                        
+            // Only iterate through groups present at the start of the routine
+            foreach (var group in groups)
             {
                 if (group.Lactation > 0)
                 {
@@ -1584,10 +1581,10 @@
         }
 
         /// <summary>
-        /// Break an animal group up in various ways; by number, by age, by weight    
-        /// or by sex of lambs/calves.  The new group(s) have the same priority and   
-        /// paddock as the original.  SplitWeight assumes a distribution of weights   
-        /// around the group average.                                                 
+        /// Break an animal group up in various ways; by number, by age, by weight
+        /// or by sex of lambs/calves.  The new group(s) have the same priority and
+        /// paddock as the original.  SplitWeight assumes a distribution of weights
+        /// around the group average.
         /// </summary>
         /// <param name="groupIdx">The animal group index</param>
         /// <param name="numToKeep">Number to keep</param>
@@ -1597,10 +1594,10 @@
         }
 
         /// <summary>
-        /// Break an animal group up in various ways; by number, by age, by weight    
-        /// or by sex of lambs/calves.  The new group(s) have the same priority and   
-        /// paddock as the original.  SplitWeight assumes a distribution of weights   
-        /// around the group average.                                                 
+        /// Break an animal group up in various ways; by number, by age, by weight
+        /// or by sex of lambs/calves.  The new group(s) have the same priority and
+        /// paddock as the original.  SplitWeight assumes a distribution of weights
+        /// around the group average.
         /// </summary>
         /// <param name="group">The animal group to split.</param>
         /// <param name="numToKeep">Number of animals to keep.</param>
@@ -1650,12 +1647,12 @@
         /// <returns>The new groups that were created.</returns>
         public IEnumerable<AnimalGroup> SplitByWeight(double splitWt, IEnumerable<AnimalGroup> groups)
         {
-            const double varRatio = 0.10;      // Coefficient of variation of LW (0-1)       
+            const double varRatio = 0.10;      // Coefficient of variation of LW (0-1)
             const int NOSTEPS = 20;
 
             var newGroups = new List<AnimalGroup>();
             foreach (var srcGroup in groups)
-            { 
+            {
                 int numAnimals = srcGroup.NoAnimals;
                 double liveWt = srcGroup.LiveWeight;
 
@@ -1673,20 +1670,20 @@
 
                 if (numToRemove > 0)
                 {
-                    DifferenceRecord diffs = new DifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };            
+                    DifferenceRecord diffs = new DifferenceRecord() { StdRefWt = srcGroup.NODIFF.StdRefWt, BaseWeight = srcGroup.NODIFF.BaseWeight, FleeceWt = srcGroup.NODIFF.FleeceWt };
                     if (numToRemove < numAnimals)
                     {
-                        // This computation gives us the mean live weight of animals which are    
-                        // lighter than the weight threshold. We are integrating over a truncated 
-                        // normal distribution, using the differences between successive      
-                        // evaluations of the CumNormal function                            
-                        double rightSD = -5.0;                                             
-                        double stepWidth = (splitSD - rightSD) / NOSTEPS;                  
-                        double removeLW = 0.0;                                             
-                        double prevCum = 0.0;                                              
-                        for (int idx = 1; idx <= NOSTEPS; idx++)                        
-                        {                                                           
-                            rightSD = rightSD + stepWidth;                          
+                        // This computation gives us the mean live weight of animals which are
+                        // lighter than the weight threshold. We are integrating over a truncated
+                        // normal distribution, using the differences between successive
+                        // evaluations of the CumNormal function
+                        double rightSD = -5.0;
+                        double stepWidth = (splitSD - rightSD) / NOSTEPS;
+                        double removeLW = 0.0;
+                        double prevCum = 0.0;
+                        for (int idx = 1; idx <= NOSTEPS; idx++)
+                        {
+                            rightSD = rightSD + stepWidth;
                             double currCum = StdMath.CumNormal(rightSD);
                             removeLW = removeLW + ((currCum - prevCum) * liveWt * (1.0 + varRatio * (rightSD - 0.5 * stepWidth)));
                             prevCum = currCum;
@@ -1732,7 +1729,7 @@
         }
 
         /// <summary>
-        /// Sorting is done using the one-offset stock array                            
+        /// Sorting is done using the one-offset stock array
         /// </summary>
         public void Sort()
         {
@@ -1742,19 +1739,19 @@
         /// <summary>A stock tag comparer.</summary>
         private class TagComparer : IComparer<AnimalGroup>
         {
-            public int Compare(AnimalGroup x, AnimalGroup y) 
+            public int Compare(AnimalGroup x, AnimalGroup y)
             {
                 if (x == null)
                     return 0;
                 else if (y == null)
                     return 1;
-                else 
-                    return x.Tag.CompareTo(y.Tag); 
-            } 
+                else
+                    return x.Tag.CompareTo(y.Tag);
+            }
         }
 
         /// <summary>
-        /// Converts a ReproductiveType to a ReproType. 
+        /// Converts a ReproductiveType to a ReproType.
         /// </summary>
         /// <param name="reproType">The keyword to match</param>
         /// <param name="repro">The reproduction record</param>
@@ -1777,7 +1774,7 @@
         }
 
         /// <summary>
-        /// Tests for a non-MISSING, non-zero value                                      
+        /// Tests for a non-MISSING, non-zero value
         /// </summary>
         /// <param name="x">The test value</param>
         /// <returns>True if this is not a missing value</returns>
@@ -1803,7 +1800,7 @@
         }
 
         /// <summary>
-        /// Utility routines for manipulating the DM_Pool type.  AddDMPool adds the   
+        /// Utility routines for manipulating the DM_Pool type.  AddDMPool adds the
         /// contents of two pools together
         /// </summary>
         /// <param name="pool1">DM pool 1</param>
@@ -1825,7 +1822,7 @@
         }
 
         /// <summary>
-        /// MultiplyDMPool scales the contents of a pool                                                                 
+        /// MultiplyDMPool scales the contents of a pool
         /// </summary>
         /// <param name="srcPool">The dm pool to scale</param>
         /// <param name="scale">The scale</param>
@@ -1859,7 +1856,7 @@
         private double[] GetOffspringRates(Genotype parameters, double latitude, int mateDOY, int ageDays, double matingSize, double condition, double chillIndex = 0.0)
         {
             const double NO_CYCLES = 2.5;
-            const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set    
+            const double STD_LATITUDE = -35.0;             // Latitude (in degrees) for which the DayLengthConst[] parameters are set
             double[] result;
             double[] conceptions = new double[4];
             double emptyPropn;
@@ -1913,8 +1910,8 @@
         }
 
         /// <summary>
-        /// Add( TAnimalList, TPaddockInfo, integer, integer )                           
-        /// Private variant. Adds all members of a TAnimalList back into the stock list  
+        /// Add( TAnimalList, TPaddockInfo, integer, integer )
+        /// Private variant. Adds all members of a TAnimalList back into the stock list
         /// </summary>
         /// <param name="animalList">The source animal list</param>
         /// <param name="paddInfo">The paddock info</param>
@@ -1927,7 +1924,7 @@
                 for (idx = 0; idx <= animalList.Count - 1; idx++)
                 {
                     this.Add(animalList[idx], paddInfo, tagNo);
-                    animalList[idx] = null;                           // Detach the animal group from the TAnimalList                              
+                    animalList[idx] = null;                           // Detach the animal group from the TAnimalList
                 }
         }
 
@@ -1954,10 +1951,10 @@
             };
             if (!this.ParseRepro(stockInfo.Sex, ref purchaseInfo.Repro))
                 throw new Exception("Event BUY does not support sex='" + stockInfo.Sex + "'");
-            if (purchaseInfo.Preg > 0) 
+            if (purchaseInfo.Preg > 0)
                 purchaseInfo.NYoung = Math.Max(1, purchaseInfo.NYoung);
-            if ((purchaseInfo.Lact == 0) || (purchaseInfo.YoungWt == 0.0))                              // Can't use MISSING as default owing    
-                purchaseInfo.YoungWt = StdMath.DMISSING;                                                // to double-to-single conversion      
+            if ((purchaseInfo.Lact == 0) || (purchaseInfo.YoungWt == 0.0))                              // Can't use MISSING as default owing
+                purchaseInfo.YoungWt = StdMath.DMISSING;                                                // to double-to-single conversion
 
             if (purchaseInfo.Number > 0)
             {

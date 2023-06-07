@@ -1,16 +1,15 @@
-﻿namespace Models.Climate
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+
+namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -18,7 +17,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
@@ -26,7 +25,13 @@
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
+
+        /// <summary>
+        /// A link to the the summary
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -149,7 +154,7 @@
         public string FileName { get; set; }
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// </summary>
         [JsonIgnore]
         public string FullFileName
@@ -259,7 +264,8 @@
         [JsonIgnore]
         public int WinterSolsticeDOY
         {
-            get {
+            get
+            {
                 if (Latitude <= 0)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
@@ -274,7 +280,7 @@
                     else
                         return 355;
                 }
-                }
+            }
         }
 
         private bool First = true;
@@ -433,19 +439,19 @@
         public DailyMetDataFromFile TomorrowsMetData { get; set; }
 
         /// <summary>First date of summer.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfSummer { get; set; } = "1-dec";
 
         /// <summary>First date of autumn / fall.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfAutumn { get; set; } = "1-mar";
 
         /// <summary>First date of winter.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfWinter { get; set; } = "1-jun";
 
         /// <summary>First date of spring.</summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public string FirstDateOfSpring { get; set; } = "1-sep";
 
         /// <summary>
@@ -538,7 +544,7 @@
         /// <returns>Sun set time</returns>
         public double CalculateSunSet()
         {
-            return 12 + CalculateDayLength(-6)/2;
+            return 12 + CalculateDayLength(-6) / 2;
         }
 
         /// <summary>
@@ -602,7 +608,7 @@
         {
             if (this.reader != null)
                 this.reader.Close();
-            this.reader = null;            
+            this.reader = null;
         }
 
         /// <summary>
@@ -647,7 +653,7 @@
             { // Move everything forward a day
                 YesterdaysMetData = TodaysMetData;
                 TodaysMetData = TomorrowsMetData;
-                
+
                 if (clock.Today == clock.EndDate && clock.EndDate == reader.LastDate)
                     TomorrowsMetData = TodaysMetData;
                 else
@@ -666,7 +672,7 @@
             this.DayLength = TodaysMetData.DayLength;
             if (co2Index != -1)
                 CO2 = TodaysMetData.CO2;
-            
+
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
 
@@ -675,14 +681,14 @@
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
-                    if (DateTime.IsLeapYear(clock.Today.Year-1))
-                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;  
+                    if (DateTime.IsLeapYear(clock.Today.Year - 1))
+                        DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;
                     else
-                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear; 
+                        DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear;
                 }
                 else
                     DaysSinceWinterSolstice = clock.Today.DayOfYear - WinterSolsticeDOY;
-                    
+
                 First = false;
             }
 
@@ -691,6 +697,9 @@
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+
+            //do sanity check on weather
+            SensibilityCheck(clock as Clock, this);
         }
 
         /// <summary>Method to read one days met data in from file</summary>
@@ -862,7 +871,6 @@
                         throw new Exception(message);
                     }
 
-                    // Get the column indexes of the various variables
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");
                     this.radiationIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Radn");
@@ -902,7 +910,7 @@
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true) 
+                    if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
                 }
 
@@ -950,7 +958,7 @@
                 this.reader.AddConstant("tav", tav.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
                 this.reader.SetConstant("tav", tav.ToString(CultureInfo.InvariantCulture));
- 
+
             if (this.reader.Constant("amp") == null)
                 this.reader.AddConstant("amp", amp.ToString(CultureInfo.InvariantCulture), string.Empty, string.Empty); // add a new constant
             else
@@ -1040,6 +1048,41 @@
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
-        }        
+        }
+
+        /// <summary>
+        /// Does a santiy check on this weather data to check that temperatures,
+        /// VP, radition and rain are potentially valid numbers.
+        /// Also checks that every day has weather.
+        /// </summary>
+        private void SensibilityCheck(Clock clock, Weather weatherToday)
+        {
+            //things to check:
+            //Mint > MaxtT
+            //VP(if present) <= 0
+            //Radn < 0 or Radn > 40
+            //Rain < 0
+            if (weatherToday.MinT > weatherToday.MaxT)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")", MessageType.Warning);
+            }
+            if (weatherToday.VP <= 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has Vapor Pressure (" + weatherToday.VP + ") which is below 0", MessageType.Warning);
+            }
+            if (weatherToday.Radn < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative solar raditation (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            if (weatherToday.Radn > 40)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has solar raditation (" + weatherToday.Radn + ") which is above 40", MessageType.Warning);
+            }
+            if (weatherToday.Rain < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            return;
+        }
     }
 }

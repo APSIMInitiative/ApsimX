@@ -1,11 +1,11 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
 
     /// <summary>
     /// A class representing a treatment of an experiment (e.g. fertiliser).
@@ -122,8 +122,8 @@
                 double to = StringUtilities.ParseDouble(rangeBits[2]);
                 double step = StringUtilities.ParseDouble(rangeBits[4]);
 
-                if ( (from < to && step < 0) ||
-                    (from > to && step > 0) )
+                if ((from < to && step < 0) ||
+                    (from > to && step > 0))
                     throw new InvalidOperationException($"Unbounded factor specification: {specification}");
 
                 for (double value = from; value <= to; value += step)

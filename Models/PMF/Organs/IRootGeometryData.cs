@@ -1,12 +1,5 @@
-﻿using Models.Soils;
-using Models.Core;
-using System;
-using Models.Functions;
-using System.Linq;
-using Models.Soils.Nutrients;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
+﻿using Models.Core;
+using Models.Soils;
 
 namespace Models.PMF.Organs
 {
@@ -18,7 +11,7 @@ namespace Models.PMF.Organs
         /// <summary>The soil in this zone</summary>
         Soil Soil { get; set; }
 
-       /// <summary>The parent plant</summary>
+        /// <summary>The parent plant</summary>
         Plant plant { get; set; }
 
         /// <summary>Gets or sets the depth.</summary>

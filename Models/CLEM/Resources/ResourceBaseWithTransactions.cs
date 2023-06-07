@@ -1,8 +1,8 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using System;
 using Newtonsoft.Json;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
-    public class ResourceBaseWithTransactions: CLEMModel
+    public class ResourceBaseWithTransactions : CLEMModel
     {
         /// <summary>
         /// Last transaction received

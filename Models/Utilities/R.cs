@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Win32;
-using System.IO;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.Net;
 using System.Diagnostics;
-using System.Threading;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using APSIM.Shared.Utilities;
+using Microsoft.Win32;
 
 namespace Models.Utilities
 {
@@ -133,8 +133,8 @@ namespace Models.Utilities
                 // If the file doesn't exist, we check the list of resources.
                 string script = string.Empty;
                 using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptName))
-                    using (StreamReader reader = new StreamReader(s))
-                        script = reader.ReadToEnd();
+                using (StreamReader reader = new StreamReader(s))
+                    script = reader.ReadToEnd();
                 scriptName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".r");
                 File.WriteAllText(scriptName, script);
             }
@@ -208,7 +208,7 @@ namespace Models.Utilities
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
-            
+
             File.WriteAllText(tempFile, result);
 
             DataTable table = null;
@@ -246,8 +246,8 @@ namespace Models.Utilities
         {
             string script;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.GetPackage.R"))
-                using (StreamReader reader = new StreamReader(s))
-                    script = reader.ReadToEnd();
+            using (StreamReader reader = new StreamReader(s))
+                script = reader.ReadToEnd();
             string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-getPackage.r");
             string rFileName = Path.ChangeExtension(tempFileName, ".R");
             File.WriteAllText(rFileName, script);
@@ -403,7 +403,7 @@ namespace Models.Utilities
                 // Ignore Microsoft R client.
                 // When there's multiple versions of R installed, use latest.
                 string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
-                string installDirectory = null; 
+                string installDirectory = null;
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {
                     if (latestVersionKey != null)
@@ -451,7 +451,7 @@ namespace Models.Utilities
             {
                 return null;
             }
-            
+
         }
 
         /// <summary>
@@ -491,7 +491,7 @@ namespace Models.Utilities
             throw new Exception(message);
         }
 
-       /// <summary>
+        /// <summary>
         /// Gets the path to an executable (uses the Unix which utility). 
         /// Throws if the package does not exist. Obviously this will not
         /// work on Windows.

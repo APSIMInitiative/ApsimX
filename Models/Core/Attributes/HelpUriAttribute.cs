@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies a Uri for the help link in ModelDetailsWrapperView

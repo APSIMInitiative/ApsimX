@@ -6,9 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -61,7 +58,7 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(100)]
         [Description("Maximum value")]
         [Required]
-        [GreaterThanEqual("Value", ErrorMessage ="Maximum value must be greater than or equal to value")]
+        [GreaterThanEqual("Value", ErrorMessage = "Maximum value must be greater than or equal to value")]
         public float MaximumValue { get; set; }
 
         /// <summary>
@@ -110,7 +107,7 @@ namespace Models.CLEM.Resources
                     double u2 = RandomNumberGenerator.Generator.NextDouble();
                     randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                     Math.Sin(2.0 * Math.PI * u2);
-                    if(UseStandardDeviationSign) 
+                    if (UseStandardDeviationSign)
                     {
                         randStdNormal = Math.Abs(randStdNormal);
                     }
@@ -123,7 +120,7 @@ namespace Models.CLEM.Resources
                 {
                     InheritanceStyle = InheritanceStyle,
                     StoredValue = valuef
-                }; 
+                };
             }
             return lastInstance;
         }
@@ -171,7 +168,7 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
 
                         if (StandardDeviation == 0)
-                            htmlWriter.Write($" is provided {(isgroupattribute?"to all cohorts":"")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
+                            htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
                         else
                             htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
 
@@ -179,7 +176,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 else
-                { 
+                {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"Provide an attribute with the label ");
                     if (AttributeName == null || AttributeName == "")

@@ -1,8 +1,9 @@
-﻿namespace Models.AgPasture
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+
+namespace Models.AgPasture
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
 
     /// <summary>AgPasture class for holding a biomass weight, N content and digestibility.</summary>
     [Serializable]

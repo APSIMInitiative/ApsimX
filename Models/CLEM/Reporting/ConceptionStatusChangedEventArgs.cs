@@ -1,11 +1,6 @@
 ﻿using Models.CLEM.Resources;
-using Models.Core;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Reporting
 {
@@ -13,7 +8,7 @@ namespace Models.CLEM.Reporting
     /// Class for reporting conception status change details
     /// </summary>
     [Serializable]
-    public class ConceptionStatusChangedEventArgs: EventArgs
+    public class ConceptionStatusChangedEventArgs : EventArgs
     {
         /// <summary>
         /// Current status to report

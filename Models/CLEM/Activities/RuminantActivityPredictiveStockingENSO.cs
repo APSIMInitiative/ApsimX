@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
 using Models.CLEM.Groupings;
@@ -31,7 +30,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         private Relationship pastureToStockingChangeElNino { get; set; }
         private Relationship pastureToStockingChangeLaNina { get; set; }
 
@@ -470,7 +469,7 @@ namespace Models.CLEM.Activities
             }
 
             if (MathUtilities.IsPositive(destockDone + restockDone))
-            { 
+            {
                     SetStatusSuccessOrPartial(MathUtilities.FloatsAreEqual(destockToDo + restockToDo, destockDone + restockDone) == false);
 
                 // TODO wire up add report status as per Predictive stocking

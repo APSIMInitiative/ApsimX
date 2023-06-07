@@ -1,11 +1,11 @@
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+
 namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Diagnostics.CodeAnalysis;
 
     ///<summary>
     /// Reads in controlled environment weather data and makes it available to models.
@@ -13,14 +13,14 @@ namespace Models.Climate
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class ControlledEnvironment : Model, IWeather
     {
         /// <summary>
         /// A link to the clock model.
         /// </summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         /// <summary>
         /// Gets the start date of the weather file
         /// </summary>
@@ -29,7 +29,7 @@ namespace Models.Climate
         /// <summary>
         /// Gets the end date of the weather file
         /// </summary>
-        public DateTime EndDate { get { return clock.EndDate;}}
+        public DateTime EndDate { get { return clock.EndDate; } }
 
         /// <summary>
         /// This event will be invoked immediately before models get their weather data.
@@ -92,7 +92,7 @@ namespace Models.Climate
         [Description("Solar Radiation")]
         [Units("MJ/m2/d")]
         public double Radn { get; set; }
-		
+
         /// <summary>
         /// Gets or sets the Pan Evaporation (mm) (Class A pan)
         /// </summary>
@@ -140,7 +140,7 @@ namespace Models.Climate
         /// </summary>
         [Description("Latitude")]
         [Units("°")]
-        public double Latitude{ get; set; }
+        public double Latitude { get; set; }
 
         /// <summary>Gets the longitude</summary>
         [Description("Longitude")]
@@ -150,12 +150,12 @@ namespace Models.Climate
         /// <summary>
         /// Gets the average temperature
         /// </summary>
-        public double Tav { get { return (this.MinT + this.MaxT)/2; }}
+        public double Tav { get { return (this.MinT + this.MaxT) / 2; } }
 
         /// <summary>
         /// Gets the temperature amplitude.
         /// </summary>
-        public double Amp { get {return 0;}}
+        public double Amp { get { return 0; } }
 
         /// <summary>
         /// Gets the temperature amplitude.
@@ -167,7 +167,7 @@ namespace Models.Climate
         /// </summary>
         [Description("Day Length")]
         [Units("h")]
-        public double DayLength {get; set;}
+        public double DayLength { get; set; }
 
         /// <summary>
         /// Calculate daylength using a given twilight angle

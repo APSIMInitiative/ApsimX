@@ -1,5 +1,4 @@
 ﻿using Models.Core;
-using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;

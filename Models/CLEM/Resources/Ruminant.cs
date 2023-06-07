@@ -1,10 +1,8 @@
-using System;
-using System.Globalization;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
-using Newtonsoft.Json;
-using Models.Core;
+using System;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -35,7 +33,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.Combined:
                     return "All";
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
+                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
@@ -102,7 +100,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Individual is suckling, still with mother and not weaned
         /// </summary>
-        public bool IsSucklingWithMother { get { return weaned < 0 && mother != null;  } }
+        public bool IsSucklingWithMother { get { return weaned < 0 && mother != null; } }
 
         /// <summary>
         /// Sex of individual
@@ -143,7 +141,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return age/12.0;
+                return age / 12.0;
             }
         }
 
@@ -156,7 +154,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return  Convert.ToInt32(Math.Floor(age / 12.0));
+                return Convert.ToInt32(Math.Floor(age / 12.0));
             }
         }
 
@@ -307,7 +305,7 @@ namespace Models.CLEM.Resources
                 double mid = NormalisedAnimalWeight;
                 double max = BreedParams.MaximumSizeOfIndividual;
 
-                if(weight < mid)
+                if (weight < mid)
                     result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
                 else if (weight > mid)
                     result = Math.Round((weight - mid) / ((max - mid) / 2.5));
@@ -595,7 +593,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return NormalisedAnimalWeight/StandardReferenceWeight;
+                return NormalisedAnimalWeight / StandardReferenceWeight;
             }
         }
 
@@ -629,7 +627,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Wean(bool report, string reason)
         {
-            weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
+            weaned = Convert.ToInt32(Math.Round(Age, 3), CultureInfo.InvariantCulture);
             if (weaned > Math.Ceiling(BreedParams.GestationLength))
                 weaned = Convert.ToInt32(Math.Ceiling(BreedParams.GestationLength));
 
@@ -668,11 +666,11 @@ namespace Models.CLEM.Resources
         /// Number of months since weaned
         /// </summary>
         [FilterByProperty]
-        public int MonthsSinceWeaned 
-        { 
+        public int MonthsSinceWeaned
+        {
             get
             {
-                if(weaned > 0)
+                if (weaned > 0)
                     return Convert.ToInt32(Math.Round(Age - weaned, 4));
                 else
                     return 0;

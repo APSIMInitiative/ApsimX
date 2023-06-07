@@ -18,8 +18,8 @@ namespace Models.CLEM
     /// SQLite database reader for access to Pasture database for other models.
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
@@ -32,7 +32,7 @@ namespace Models.CLEM
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private List<ValidationResult> validationResults;
         private RainfallShuffler shuffler = null;
@@ -241,7 +241,7 @@ namespace Models.CLEM
                     ErrorMessage = "File name for the SQLite database is missing";
                     return false;
                 }
-                    
+
                 if (System.IO.File.Exists(this.FullFileName))
                 {
                     // check SQL file
@@ -266,8 +266,8 @@ namespace Models.CLEM
             else
             {
                 //it's already open
-                return true;  
-            } 
+                return true;
+            }
         }
 
         /// <summary>
@@ -386,7 +386,7 @@ namespace Models.CLEM
         #region Properties and Methods for populating the User Interface with data
 
         /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this. 
+        /// Gets or sets the full file name (with path). The user interface uses this.
         /// Must be a property so that the Prsenter can use a  Commands.ChangeProperty() on it.
         /// ChangeProperty does not work on fields.
         /// </summary>
@@ -417,7 +417,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable(int startYear, int endYear)
@@ -532,7 +532,7 @@ namespace Models.CLEM
         /// <summary>
         /// Finds the closest Value of categorised lookup values form the database
         /// This applies to Stocking rates, Grass Basal Area (or use GBA) and Land Condition
-        /// The Pasture database does not have every stocking rate, grass basal area or land condition. 
+        /// The Pasture database does not have every stocking rate, grass basal area or land condition.
         /// It will find the category with the next largest value to the actual value supplied.
         /// So if the value is 0 the category with the next largest value will normally be the first entry
         /// </summary>
@@ -706,9 +706,9 @@ namespace Models.CLEM
                     + ")";
                 }
             }
-            
+
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
-            
+
             if(results.Rows.Count == 0 && (startMonth != endMonth))
             {
                 switch (MissingDataAction)
@@ -951,9 +951,9 @@ namespace Models.CLEM
                 }
                 if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
                     htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

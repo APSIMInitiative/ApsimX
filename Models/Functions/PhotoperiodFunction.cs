@@ -1,10 +1,7 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-
+using APSIM.Shared.Documentation;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
 namespace Models.Functions
@@ -30,7 +27,7 @@ namespace Models.Functions
 
         /// <summary>The clock.</summary>
         [Link]
-        protected Clock Clock = null;
+        protected IClock Clock = null;
 
         /// <summary>The twilight angle.</summary>
         [Description("Twilight angle")]

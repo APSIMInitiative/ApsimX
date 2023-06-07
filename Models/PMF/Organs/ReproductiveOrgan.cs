@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using Models.PMF.Phen;
-using Models.PMF.Interfaces;
-using Newtonsoft.Json;
-using Models.PMF.Library;
 using Models.Interfaces;
-using System.Collections.Generic;
-using APSIM.Shared.Documentation;
-using System.Linq;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Organs
 {
@@ -82,7 +82,7 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         [Description("Water content used to calculate a fresh weight.")]
         IFunction WaterContent = null;
-           
+
         /// <summary>The number function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/m2")]
@@ -92,17 +92,17 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         IFunction NFillingRate = null;
-        
+
         /// <summary>The maximum n conc</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
-        
+
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
-        
+
         /// <summary>Carbon concentration</summary>
         [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
@@ -142,7 +142,7 @@ namespace Models.PMF.Organs
         public string RipeStage { get; set; }
         /// <summary>The _ ready for harvest</summary>
         protected bool _ReadyForHarvest = false;
-        
+
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
 
@@ -151,7 +151,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The dead biomass</summary>
         public Biomass Dead { get; set; }
-        
+
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
 
@@ -262,12 +262,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name, MessageType.Diagnostic);
+            Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name, MessageType.Diagnostic);
 
-                Live.Clear();
-                Dead.Clear();
-                Number = 0;
-                _ReadyForHarvest = false;
+            Live.Clear();
+            Dead.Clear();
+            Number = 0;
+            _ReadyForHarvest = false;
         }
 
         /// <summary>Called when crop is ending</summary>

@@ -1,9 +1,10 @@
-﻿namespace Models.Soils.Arbitrator
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils.Arbitrator
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Models.Interfaces;
 
     /// <summary>
     /// Contains an estimate of uptakes (either water or nitrogen)
@@ -13,13 +14,13 @@
         /// <summary>
         /// An enumeration describing whether the estimate is for water or nitrogen.
         /// </summary>
-        public enum CalcType 
+        public enum CalcType
         {
             /// <summary>Indicates this estimate is for water.</summary>
             Water,
 
             /// <summary>Indicates this estimate is for nitrogen.</summary>
-            Nitrogen 
+            Nitrogen
         };
 
         /// <summary>Initializes a new instance of the <see cref="Estimate"/> class.</summary>

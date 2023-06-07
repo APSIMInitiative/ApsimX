@@ -26,9 +26,4 @@
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
-    <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-    <SelfContained>false</SelfContained>
-  </PropertyGroup>
-
 </Project>

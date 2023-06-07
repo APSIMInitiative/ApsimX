@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
+﻿using Models.CLEM.Reporting;
 using Models.Core;
-using Models.CLEM.Reporting;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Resources
 {
@@ -23,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all graze food store types (pastures) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStore.htm")]
-    public class GrazeFoodStore: ResourceBaseWithTransactions
+    public class GrazeFoodStore : ResourceBaseWithTransactions
     {
         /// <summary>
         /// Current state of this resource.

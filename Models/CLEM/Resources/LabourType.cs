@@ -1,12 +1,12 @@
+using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
-using Models.Core.Attributes;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -56,8 +56,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-        public double Age { get { return Math.Floor(AgeInMonths/12); } }
-       
+        public double Age { get { return Math.Floor(AgeInMonths / 12); } }
+
         /// <summary>
         /// Age in months.
         /// </summary>
@@ -92,17 +92,17 @@ namespace Models.CLEM.Resources
             get
             {
                 // if null then report warning that no AE relationship has been provided.
-                if(adultEquivalent == null)
+                if (adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r=" + this.Parent.Name + "]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
                         parent.Summary.WriteMessage(this, warning, MessageType.Warning);
                     }
                 }
-                return adultEquivalent??1;
+                return adultEquivalent ?? 1;
             }
         }
 
@@ -115,7 +115,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (adultEquivalent ?? 1)*Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
+                return (adultEquivalent ?? 1) * Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
             }
         }
 
@@ -255,8 +255,8 @@ namespace Models.CLEM.Resources
         public void SetAvailableDays(int month)
         {
             AvailableDays = 0;
-            if(LabourAvailability != null)
-                AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1)*AvailabilityLimiter);
+            if (LabourAvailability != null)
+                AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1) * AvailabilityLimiter);
         }
 
         /// <summary>
@@ -377,7 +377,7 @@ namespace Models.CLEM.Resources
                     else
                     {
                         if (this.Individuals > 1)
-                            htmlWriter.Write($"<span class=\"setvalue\">{ this.Individuals}</span> x ");
+                            htmlWriter.Write($"<span class=\"setvalue\">{this.Individuals}</span> x ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
                         if (Hired)
@@ -388,7 +388,7 @@ namespace Models.CLEM.Resources
                     if (this.Individuals > 1)
                         htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

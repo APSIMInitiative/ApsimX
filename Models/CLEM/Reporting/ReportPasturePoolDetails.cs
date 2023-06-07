@@ -1,19 +1,10 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
-using System.Globalization;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -29,7 +20,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
-    public class ReportPasturePoolDetails: Models.Report
+    public class ReportPasturePoolDetails : Models.Report
     {
         /// <summary>
         /// Per ha
@@ -143,7 +134,7 @@ namespace Models.CLEM.Reporting
             // for each grazefoodstore
 
             ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
-            if(resHolder is null)
+            if (resHolder is null)
                 return;
 
             List<string> pastureEntries = new List<string>();
@@ -166,7 +157,7 @@ namespace Models.CLEM.Reporting
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
-                   variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
+                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
 
                 // by pool measures
                 foreach (string poolVariable in poolEntries)
@@ -179,7 +170,7 @@ namespace Models.CLEM.Reporting
             }
 
             // sort
-            variableNames = variableNames.OrderBy(a => a).ToList(); 
+            variableNames = variableNames.OrderBy(a => a).ToList();
             variableNames.Insert(0, "[Clock].Today as Date");
             VariableNames = variableNames.ToArray();
 

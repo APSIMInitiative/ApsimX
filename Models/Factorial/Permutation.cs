@@ -1,10 +1,11 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// This class permutates all child models by each other.

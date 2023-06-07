@@ -1,11 +1,11 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
-using Models.CLEM.Interfaces;
+using Models.Core.Run;
 using Models.Storage;
 using System;
 using System.Data;
 using System.Linq;
-using Models.Core.Run;
 
 namespace Models.CLEM.Reporting
 {
@@ -35,7 +35,7 @@ namespace Models.CLEM.Reporting
         public string SelectedTab { get; set; }
 
         /// <inheritdoc/>
-        public void Run() => SaveView(dataStore); 
+        public void Run() => SaveView(dataStore);
 
         /// <summary>
         /// Runs the query

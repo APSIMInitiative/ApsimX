@@ -1,9 +1,9 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -137,7 +137,7 @@ namespace Models.CLEM.Resources
                 html += "</div>";
             }
             return html;
-        } 
+        }
         #endregion
 
     }

@@ -1,16 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
-using System;
-using APSIM.Shared.Documentation;
-using System.Linq;
-using System.Collections.Generic;
-using System.Data;
 using Newtonsoft.Json;
-using System.Globalization;
+
 namespace Models.PMF
 {
     /// <summary>
@@ -248,9 +249,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Harvest the crop</summary>
-        public void Harvest() { Harvest(null); }
-
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
@@ -288,7 +286,7 @@ namespace Models.PMF
             Clear();
             IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
-                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
+                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",", duplicates));
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -434,6 +432,12 @@ namespace Models.PMF
         }
 
         /// <summary>Harvest the crop.</summary>
+        public void Harvest()
+        {
+            Harvest(RemovalFractions.PhenologyToEnd);
+        }
+
+        /// <summary>Harvest the crop.</summary>
         public void Harvest(RemovalFractions removalData)
         {
             RemoveBiomass("Harvest", removalData);
@@ -471,9 +475,13 @@ namespace Models.PMF
             }
 
             // Reset the phenology if SetPhenologyStage specified.
-            if (removalData != null && removalData.SetPhenologyStage != 0 && Phenology is Phenology phenology)
-                phenology.SetToStage(removalData.SetPhenologyStage);
-
+            if (removalData != null && Phenology is Phenology phenology)
+            {
+                if (removalData.SetPhenologyStage != 0)
+                    phenology.SetToStage(removalData.SetPhenologyStage);
+                else if (removalData.SetPhenologyToEnd)
+                    phenology.SetToEndStage();
+            }
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0 && structure != null)
                 structure.DoThin(removalData.SetThinningProportion);
@@ -617,9 +625,9 @@ namespace Models.PMF
         public void SetEmergenceDate(string emergencedate)
         {
             foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
-                {
-                    ep.EmergenceDate=emergencedate;
-                }
+            {
+                ep.EmergenceDate = emergencedate;
+            }
             SetGerminationDate(SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
         }
 

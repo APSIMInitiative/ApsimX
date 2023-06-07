@@ -1,10 +1,12 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
@@ -80,7 +82,7 @@
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                return  MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
+                return MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
             }
         }
 
@@ -118,7 +120,43 @@
         /// <summary>Tabular data. Called by GUI.</summary>
         public TabularData GetTabularData()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            //Do validation on the soilCrop to make that sure has the same amount of layers as the physical node
+            //If not, we remove layers to make it match, or add new layers with 0 values
+            //Then throw an exception back to the GUI to warn the user what has been changed.
+            //This is used to allow users to copy soil from another simulation without it crashing.
+            //It cannot detect if the layer count was the same, but the structure was different, as depth values
+            //are not stored here.
+            bool throwException = false;
+            if (Depth.Length != LL.Length)
+            {
+                throwException = true;
+
+                List<double> listLL = LL.ToList();
+                List<double> listKL = KL.ToList();
+                List<double> listXF = XF.ToList();
+
+                if (Depth.Length < LL.Length)
+                {
+                    listLL = listLL.GetRange(0, Depth.Length);
+                    listKL = listKL.GetRange(0, Depth.Length);
+                    listXF = listXF.GetRange(0, Depth.Length);
+                }
+                else //Depth.Length > LL.Length
+                {
+                    for (int i = LL.Length; i < Depth.Length; i++)
+                    {
+                        listLL.Add(0.0);
+                        listKL.Add(0.0);
+                        listXF.Add(0.0);
+                    }
+                }
+
+                LL = listLL.ToArray();
+                KL = listKL.ToArray();
+                XF = listXF.ToArray();
+            }
+
+            TabularData tb = new TabularData(Name, new TabularData.Column[]
             {
                 new TabularData.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
                 new TabularData.Column("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
@@ -126,6 +164,17 @@
                 new TabularData.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
                 new TabularData.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
             });
+
+            if (throwException)
+            {
+                Exception e = new Exception("Soil Layers do not match on " + Name + ".\n" + Name + " has been modified to match Physical node.");
+                e.Data.Add("tableData", tb);
+                throw e;
+            }
+            else
+            {
+                return tb;
+            }
         }
     }
 }

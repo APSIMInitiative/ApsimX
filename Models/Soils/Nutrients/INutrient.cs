@@ -1,6 +1,5 @@
 ﻿namespace Models.Soils.Nutrients
 {
-    using Models.Soils;
 
     /// <summary>
     /// This interface defines the communications between a soil arbitrator and
@@ -46,16 +45,16 @@
 
         /// <summary>Total C in each soil layer</summary>
         double[] TotalC { get; }
-        
+
         /// <summary>Total C lost to the atmosphere</summary>
         double[] Catm { get; }
-        
+
         /// <summary>Total N lost to the atmosphere</summary>
         double[] Natm { get; }
-        
+
         /// <summary>Total N2O lost to the atmosphere</summary>
         double[] N2Oatm { get; }
-        
+
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         double[] MineralisedN { get; }
 
@@ -64,16 +63,16 @@
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         double[] DenitrifiedN { get; }
-        
+
         /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
         double[] NitrifiedN { get; }
-        
+
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
         double[] HydrolysedN { get; }
-        
+
         /// <summary>Total Mineral N in each soil layer</summary>
         double[] MineralN { get; }
-        
+
         /// <summary>Total N in each soil layer</summary>
         double[] TotalN { get; }
 

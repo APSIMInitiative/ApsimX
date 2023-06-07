@@ -1,7 +1,8 @@
+using System;
+using System.Globalization;
+
 namespace StdUnits
 {
-    using System;
-    using System.Globalization;
 
     /// <summary>
     /// Math utilities
@@ -11,13 +12,13 @@ namespace StdUnits
         /// <summary>
         /// Missing float value
         /// </summary>
-        public const float MISSING  = -3.33333E33f;
+        public const float MISSING = -3.33333E33f;
 
         /// <summary>
         /// missing double value
         /// </summary>
         public const double DMISSING = -3.33333E33;
-        
+
         /// <summary>
         /// Square root of 2 * pi
         /// </summary>
@@ -48,8 +49,8 @@ namespace StdUnits
         {
             if (X >= Y)
                 return X - Y;
-            else 
-                return 0.0; 
+            else
+                return 0.0;
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace StdUnits
             else
                 return (X - Z1) / (Z2 - Z1);
         }
-        
+
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
@@ -286,7 +287,7 @@ namespace StdUnits
             else
                 return 1.0 / (1.0 + Math.Exp(-scaledX));
         }
-        
+
         /// <summary>
         /// Constants class
         /// </summary>
@@ -345,7 +346,7 @@ namespace StdUnits
             this.FRandNo = this.Random();
             this.FNextRandom = 0;
         }
-        
+
         /// <summary>
         /// Generate a random number 0 - 1
         /// </summary>
@@ -357,12 +358,12 @@ namespace StdUnits
             ulong temp;
             ulong f;
 
-            temp = (ulong)this.FSeed * (ulong)(0x08088405) + 1;       
+            temp = (ulong)this.FSeed * (ulong)(0x08088405) + 1;
             this.FSeed = (uint)(temp & 0xFFFFFFFF);  // mask all but first 32bits
             f = this.FSeed;
             return f * two2neg32;
         }
-        
+
         /// <summary>
         /// Container class for a random number generator. This means that it becomes
         /// thread safe and won't be trampled my another thread generating random
@@ -379,7 +380,7 @@ namespace StdUnits
                 this.SysRandom = new System.Random();
             this.Initialise(seedVal);
         }
-        
+
         /// <summary>
         /// Uses the SeedVal if it is > 0 otherwise it uses the system seed generated
         /// </summary>
@@ -389,7 +390,7 @@ namespace StdUnits
             this.FNextRandom = -1;
 
             // if want repeatable start point
-            if (seedVal != 0)   
+            if (seedVal != 0)
                 this.FSeed = Convert.ToUInt32(seedVal, CultureInfo.InvariantCulture);
             else
             {
@@ -397,7 +398,7 @@ namespace StdUnits
             }
             this.MyRandomize();
         }
-        
+
         /// <summary>
         /// Calculate a random number to insert into the buffer
         /// </summary>
@@ -405,7 +406,7 @@ namespace StdUnits
         public double RandomValue()
         {
             // Initialises automatically on first use   }
-            if (this.FNextRandom < 0)                                                   
+            if (this.FNextRandom < 0)
             {
                 this.MyRandomize();
             }
@@ -416,7 +417,7 @@ namespace StdUnits
 
             return result;
         }
-        
+
         /// <summary>
         /// Get an integer random number
         /// </summary>
@@ -439,7 +440,7 @@ namespace StdUnits
             }
             return result;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -450,7 +451,7 @@ namespace StdUnits
         {
             return Math.Max(0, Math.Min(N, this.RndRound(N * P)));
         }
-        
+
         /// <summary>
         /// Gets the random number
         /// </summary>
@@ -458,7 +459,7 @@ namespace StdUnits
         {
             get { return this.FRandNo; }
         }
-        
+
         /// <summary>
         /// Gets the seed value
         /// </summary>

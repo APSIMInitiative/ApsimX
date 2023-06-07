@@ -1,10 +1,10 @@
-﻿using Models.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
 
 namespace Models.ForageDigestibility
 {
@@ -105,7 +105,7 @@ namespace Models.ForageDigestibility
         /// <returns></returns>
         private DataRow GetForageParametersAsRow(DataTable data, string modelName, string organName)
         {
-            var fullName = $"{ modelName}.{ organName}";
+            var fullName = $"{modelName}.{organName}";
 
             var row = data.NewRow();
             row[0] = fullName;

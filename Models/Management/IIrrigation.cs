@@ -1,6 +1,7 @@
-﻿namespace Models
+﻿using System;
+
+namespace Models
 {
-    using System;
 
     /// <summary>Interface for an irrigation class.</summary>
     public interface IIrrigation

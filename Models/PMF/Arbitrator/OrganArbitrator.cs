@@ -1,11 +1,11 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -134,7 +134,7 @@ namespace Models.PMF
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
-        
+
         /// <summary>Called when crop is sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -152,9 +152,9 @@ namespace Models.PMF
             N = new BiomassArbitrationType("N", Organs);
         }
 
-        
+
         /// First get all demands and supplies, send potential DM allocations and do N reallocation so N uptake demand can be calculated
-        
+
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         /// <param name="sender">The sender.</param>
@@ -178,7 +178,7 @@ namespace Models.PMF
                 nArbitration.DoPotentialPartitioning(Organs.ToArray(), N);
             }
         }
-        
+
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>

@@ -1,5 +1,4 @@
 ﻿using Models.CLEM.Resources;
-using System;
 
 namespace Models.CLEM.Interfaces
 {
@@ -36,7 +35,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Get the amount of the last gain in this resource 
         /// </summary>
-        double LastGain { get; set;  }
+        double LastGain { get; set; }
 
         /// <summary>
         /// Get the current price of this resource.

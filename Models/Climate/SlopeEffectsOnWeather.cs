@@ -1,14 +1,15 @@
+using Models.Core;
+using System;
+
 namespace Models.Climate
 {
-    using Models.Core;
-    using System;
 
     /// <summary>
     /// This model can be used to adjust some of the weather variables when simulating a slopping surface (defined by slope and aspect angles)
     /// </summary>
     /// <remarks>
     /// - This include routines to modify the incoming solar radiation as well as minimum and maximum air temperatures;
-    /// - Adjusts for rainfall, vp, and windspeed, can be also done, but these are simply relative changes supplied by the user, not calculated. 
+    /// - Adjusts for rainfall, vp, and windspeed, can be also done, but these are simply relative changes supplied by the user, not calculated.
     /// - Calculations happens on PreparingNewWeatherData event and take also into account the latitude of the site (read from the weather model).
     /// + References:
     ///     Allen, R.G.; Pereira, L.S.; Raes, D.; and Smith, M., 1998. Crop evapotranspiration: guidelines for computing crop water requirements. Irrigation and Drainage Paper No. 56, FAO, Rome, Italy. 300 p.
@@ -27,7 +28,7 @@ namespace Models.Climate
     {
         /// <summary>Link to APSIM's clock model.</summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>Link to APSIM's weather file.</summary>
         [Link]
@@ -395,7 +396,7 @@ namespace Models.Climate
             // Sky clearness index - following typical approach (Boland et al., 2008; Dervishi and Mahdavi, 2012)
             ClearnessIndex = Math.Min(1.0, Math.Max(0.0, weather.Radn / ExtraterrestrialRadn));
 
-            // Diffuse radiation fraction - same approach as Boland et al. (2008), equivalent to Allen et al. (2006) 
+            // Diffuse radiation fraction - same approach as Boland et al. (2008), equivalent to Allen et al. (2006)
             DiffuseRadnFraction = 1.0 / (1.0 + Math.Exp(A_diffuseRadn + (B_diffuseRadn * ClearnessIndex)));
 
             if (zone.Slope > epsilon)

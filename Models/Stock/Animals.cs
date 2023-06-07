@@ -1,9 +1,10 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+
+namespace Models.GrazPlan
 {
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Information required to initialise a single animal group
@@ -154,7 +155,7 @@
 
         /// <summary>Is the animal type sheep?</summary>
         [Units("-")]
-        public bool IsSheepSelected {  get { return AnimalType == "Sheep"; } }
+        public bool IsSheepSelected { get { return AnimalType == "Sheep"; } }
 
         /// <summary>Is the animal type sheep?</summary>
         [Units("-")]

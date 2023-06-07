@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF;
 using Newtonsoft.Json;
 
 namespace Models.Functions

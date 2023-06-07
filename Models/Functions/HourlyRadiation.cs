@@ -25,7 +25,7 @@ namespace Models.Functions
         /// Link to the clock object
         /// </summary>
         [Link]
-        protected Clock clock = null;
+        protected IClock clock = null;
 
         /// <summary>The type of variable for sub-daily values</summary>
         [JsonIgnore]
