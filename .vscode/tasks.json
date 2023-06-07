@@ -40,7 +40,12 @@
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "options": {
+                "env": {
+                    "PATH": "${env:PATH}:/home/jzhu/dotnet/"
+                }
+            }
         }
     ]
 }
