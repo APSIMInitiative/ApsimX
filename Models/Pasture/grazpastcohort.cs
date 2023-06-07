@@ -641,15 +641,17 @@
 
             return result;
         }
-        /*
+
         /// <summary>
-        /// 
+        /// Initialise the cohort from the init values
         /// </summary>
-        /// <param name="aValue"></param>
+        /// <param name="green"></param>
+        /// <param name="dry"></param>
         /// <param name="isGreen"></param>
-        public void ReadFromValue(TTypedValue aValue, bool isGreen)
+        public void ReadFromValue(GreenInit green, DryInit dry, bool isGreen)
         {
-            int[] partMap = { 0, ptLEAF, ptSTEM };
+            int[] partMap = { 0, ptLEAF, ptSTEM };                              // [1..2] 
+            int[] RootMap = { 0, GrazType.EFFR, GrazType.OLDR };                // [1..2] 
 
             int DMDCount;
             double upperDMD;
@@ -658,14 +660,14 @@
             double mass;
             double[] nutrConc = new double[4];                 // [TPlantElement]
             double specArea;
-            double[] propns = new double[HerbClassNo + 1];     
+            double[] propns = new double[HerbClassNo + 1];
             DM_Pool newPool;
             double effPropn;
-            TTypedValue subValue;
             int part, DMD;
             int layer, age;
             uint idx;
-            uint jdx, kdx;
+            int jdx, kdx;
+            Herbage[] subValue;
 
             for (int i = 0; i <= ptSTEM; i++)
             {
@@ -675,44 +677,56 @@
                 }
             }
 
-            subValue = aValue.member("herbage");
+            if (isGreen)
+                subValue = green.herbage;
+            else
+                subValue = dry.herbage;
+
             if (subValue != null)
             {
                 var values = Enum.GetValues(typeof(TPlantElement)).Cast<TPlantElement>().ToArray();
 
-                for (idx = 1; idx <= Math.Min(2, subValue.count()); idx++)
+                for (idx = 0; idx <= Math.Min(1, subValue.Length-1); idx++)
                 {
-                    part = partMap[idx];
-                    DMDCount = (int)subValue[idx].member("dmd").count();
+                    part = partMap[idx + 1];
+                    DMDCount = (int)subValue[idx].dmd.Length;
 
-                    if (DMDCount > 1)                                                                           
+                    if (DMDCount > 1)
                     {
                         // DMD distribution given...
-                        for (jdx = 1; jdx <= DMDCount - 1; jdx++)
+                        for (jdx = 0; jdx < DMDCount - 1; jdx++)
                         {
-                            upperDMD = subValue[idx].member("dmd")[jdx].asDouble();                // DMD distribution in descending order  
-                            lowerDMD = subValue[idx].member("dmd")[jdx + 1].asDouble();
-                            mass = PastureUtil.ReadMass(subValue[idx].member("weight")[jdx]);
+                            upperDMD = subValue[idx].dmd[jdx];                // DMD distribution in descending order  
+                            lowerDMD = subValue[idx].dmd[jdx + 1];
+                            mass = PastureUtil.ReadMass(subValue[idx].weight[jdx], "kg/ha");
 
                             foreach (var Elem in values)
                             {
-                                if (this.Owner.FElements.Contains(Elem) && subValue[idx].hasField(PastureUtil.ElemConc[(int)Elem]) && (subValue[idx].member(PastureUtil.ElemConc[(int)Elem]).count() >= jdx))
+                                nutrConc[(int)Elem] = 0.0;
+                                if (Elem == TPlantElement.N)
                                 {
-                                    nutrConc[(int)Elem] = subValue[idx].member(PastureUtil.ElemConc[(int)Elem])[jdx].asDouble();
+                                    if ((subValue[idx].n_conc != null) && (subValue[idx].n_conc.Length >= jdx))
+                                        nutrConc[(int)Elem] = subValue[idx].n_conc[jdx];
                                 }
-                                else
+                                if (Elem == TPlantElement.S)
                                 {
-                                    nutrConc[(int)Elem] = 0.0;
+                                    if ((subValue[idx].s_conc != null) && (subValue[idx].s_conc.Length >= jdx))
+                                        nutrConc[(int)Elem] = subValue[idx].s_conc[jdx];
+                                }
+                                if (Elem == TPlantElement.P)
+                                {
+                                    if ((subValue[idx].p_conc != null) && (subValue[idx].p_conc.Length >= jdx))
+                                        nutrConc[(int)Elem] = subValue[idx].p_conc[jdx];
                                 }
                             }
 
                             specArea = 0.0;                                                        // The zero value will be replaced with a default (that depends on environment) during simulation 
-                            if (subValue[idx].hasField("spec_area"))                                           
-                            {                                                                            
-                                kdx = Math.Min(jdx, subValue[idx].member("spec_area").count());
+                            if (subValue[idx].spec_area != null)
+                            {
+                                kdx = Math.Min(jdx, subValue[idx].spec_area.Length);
                                 if (kdx > 0)
                                 {
-                                    specArea = subValue[idx].member("spec_area")[kdx].asDouble() / PastureUtil.M2_CM2;
+                                    specArea = subValue[idx].spec_area[kdx] / PastureUtil.M2_CM2;
                                 }
                             }
 
@@ -749,26 +763,34 @@
                         } // loop over entries for this part 
                     } // iDMDCount > 1 
                     else if (DMDCount == 1)
-                    {                                                                    
+                    {
                         // Average DMD & nutrients given         
-                        meanDMD = subValue[idx].member("dmd")[1].asDouble();
-                        mass = PastureUtil.ReadMass(subValue[idx].member("weight")[1]);
+                        meanDMD = subValue[idx].dmd[0];
+                        mass = PastureUtil.ReadMass(subValue[idx].weight[0], "kg/ha");
                         foreach (var Elem in values)
                         {
-                            if (this.Owner.FElements.Contains(Elem) && subValue[idx].hasField(PastureUtil.ElemConc[(int)Elem]) && subValue[idx].member(PastureUtil.ElemConc[(int)Elem]).count() > 0)
+                            nutrConc[(int)Elem] = 0.0;
+                            if (Elem == TPlantElement.N)
                             {
-                                nutrConc[(int)Elem] = subValue[idx].member(PastureUtil.ElemConc[(int)Elem])[1].asDouble();
+                                if ((subValue[idx].n_conc != null) && (subValue[idx].n_conc.Length >= 0))
+                                    nutrConc[(int)Elem] = subValue[idx].n_conc[0];
                             }
-                            else
+                            if (Elem == TPlantElement.S)
                             {
-                                nutrConc[(int)Elem] = 0.0;
+                                if ((subValue[idx].s_conc != null) && (subValue[idx].s_conc.Length >= 0))
+                                    nutrConc[(int)Elem] = subValue[idx].s_conc[0];
+                            }
+                            if (Elem == TPlantElement.P)
+                            {
+                                if ((subValue[idx].p_conc != null) && (subValue[idx].p_conc.Length >= 0))
+                                    nutrConc[(int)Elem] = subValue[idx].p_conc[0];
                             }
                         }
 
                         specArea = 0.0;
-                        if (subValue[idx].hasField("spec_area") && (subValue[idx].member("spec_area").count() > 0))
+                        if ((subValue[idx].spec_area != null) && (subValue[idx].spec_area.Length > 0))
                         {
-                            specArea = subValue[idx].member("spec_area")[1].asDouble() / PastureUtil.M2_CM2;
+                            specArea = subValue[idx].spec_area[0] / PastureUtil.M2_CM2;
                         }
 
                         if (mass > 0.0)
@@ -804,50 +826,53 @@
 
                 if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
                 {
-                    this.RootDepth = PastureUtil.ReadReal(aValue, "rt_dep", this.Owner.MaxRootingDepth); // Roots ------------------------------- 
+                    this.RootDepth = green.rt_dep;
+                    if (green.rt_dep == 0)
+                        this.RootDepth = this.Owner.MaxRootingDepth; // Roots ------------------------------- 
 
-                    subValue = aValue.member("root_wt");                                            // "root_wt[i][j]" is age i and layer j  
-                    if ((subValue != null) && (subValue.count() >= 2))                              // Effective & old roots given separately
+                    double[][] root_wts;
+                    root_wts = green.root_wt;                                            // "root_wt[i][j]" is age i and layer j  
+                    if ((root_wts != null) && (root_wts.Length >= 2))                    // Effective & old roots given separately
                     {
-                        for (idx = 1; idx <= 2; idx++)
+                        for (idx = 0; idx <= 1; idx++)
                         {
-                            age = PastureUtil.RootMap[idx];
+                            age = RootMap[idx+1];
 
-                            if (subValue[idx].count() > 1)
+                            if (root_wts[idx].Length > 1)
                             {
-                                for (layer = 1; layer <= subValue[idx].count(); layer++)
+                                for (layer = 0; layer < root_wts[idx].Length; layer++)
                                 {
-                                    this.Roots[age, layer] = this.Owner.MakeNewPool(ptROOT, PastureUtil.ReadMass(subValue[idx][(uint)layer]));
+                                    this.Roots[age, layer] = this.Owner.MakeNewPool(ptROOT, PastureUtil.ReadMass(root_wts[idx][layer], "kg/ha"));
                                 }
                             }
-                            else if (subValue[idx].count() == 1)
+                            else if (root_wts[idx].Length == 1)
                             {
-                                this.SetDefaultRoots(age, PastureUtil.ReadMass(subValue[idx][1]), this.RootDepth);
+                                this.SetDefaultRoots(age, PastureUtil.ReadMass(root_wts[idx][0], "kg/ha"), this.RootDepth);
                             }
                         }
                     }
-                    else if ((subValue != null) && (subValue.count() == 1))                                   
+                    else if ((root_wts != null) && (root_wts.Length == 1))
                     {
                         // Total over root age classes
                         effPropn = this.DefaultPropnEffRoots();
 
-                        if (subValue[1].count() > 1)                                                // Layers, default age distribution     
+                        if (root_wts[0].Length > 1)                                                // Layers, default age distribution     
                         {
-                            for (layer = 1; layer <= subValue[1].count(); layer++)
+                            for (layer = 0; layer < root_wts[1].Length; layer++)
                             {
-                                mass = PastureUtil.ReadMass(subValue[(uint)layer][1]);
+                                mass = PastureUtil.ReadMass(root_wts[layer][0], "kg/ha");
                                 this.Roots[EFFR, layer] = this.Owner.MakeNewPool(ptROOT, mass * effPropn);
                                 this.Roots[OLDR, layer] = this.Owner.MakeNewPool(ptROOT, mass * (1.0 - effPropn));
                             }
                         }
-                        else if (subValue[1].count() == 1)                                                    
+                        else if (root_wts[0].Length == 1)
                         {
                             // Grand total root mass only
-                            this.SetDefaultRoots(TOTAL, PastureUtil.ReadMass(subValue[1][1]), this.RootDepth);
+                            this.SetDefaultRoots(TOTAL, PastureUtil.ReadMass(root_wts[0][0], "kg/ha"), this.RootDepth);
                         }
                     }
                     else
-                    {                                                                               
+                    {
                         // No value given - compute a default root mass & distribution    
                         this.ComputeAllocation();
                         this.SetDefaultRoots(TOTAL, this.fR2S_Target * this.Herbage[TOTAL, TOTAL].DM, this.RootDepth);
@@ -855,15 +880,16 @@
 
                     this.ComputeTotals();                                                                       // Compute marginal totals for roots     
 
-                    this.FrostFactor = this.Params.DeathK[6] * PastureUtil.ReadInteger(aValue, "frosts", 0);    // Other state variables --------------- 
+                    this.FrostFactor = this.Params.DeathK[6] * green.frosts;    // Other state variables --------------- 
 
                     if (!((this.Owner.Phenology == PastureUtil.TDevelopType.Reproductive) && (this.Owner.DegDays >= this.Params.DevelopK[6])))
                     {
                         this.StemReserve = 0.0;
                     }
-                    else if (aValue.hasField("stem_reloc"))
+                    else if (green.stem_reloc != -999.0)
                     {
-                        this.StemReserve = PastureUtil.ReadMass(aValue.member("stem_reloc"));
+                        // if stem_reloc has been set
+                        this.StemReserve = PastureUtil.ReadMass(green.stem_reloc, "kg/ha");
                     }
                     else
                     {
@@ -872,13 +898,13 @@
 
                     if (this.Status == stSEEDL)
                     {
-                        this.SeedlStress = PastureUtil.ReadReal(aValue, "stress_index", 0.0);
-                        this.EstabIndex = PastureUtil.ReadReal(aValue, "estab_index", 1.0);
+                        this.SeedlStress = green.stress_index;  // def = 0
+                        this.EstabIndex = green.estab_index;    // def = 1.0
                     }
                 }
             }
         }
-        */
+        
         /// <summary>
         /// 
         /// </summary>

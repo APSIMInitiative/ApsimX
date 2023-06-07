@@ -144,6 +144,22 @@ namespace Models.GrazPlan
         public double[] s_conc;
         /// <summary>cm^2/g</summary>
         public double[] spec_area;
+
+        public Herbage(int count, TPlantElement[] elements) 
+        {
+            dmd = new double[count];
+            weight = new double[count];
+            spec_area = new double[count];
+            for (int i = 0; i < count; i++)
+            {
+                if (elements[i] == TPlantElement.N)
+                    n_conc = new double[count];
+                if (elements[i] == TPlantElement.P)
+                    p_conc = new double[count];
+                if (elements[i] == TPlantElement.S)
+                    s_conc = new double[count];
+            }
+        }
     }
 
     [Serializable]
@@ -151,11 +167,11 @@ namespace Models.GrazPlan
     {
         public string status;
         public Herbage[] herbage;
-        public double[,] root_wt;   // kg/ha
+        public double[][] root_wt;  // kg/ha, indexed [0][0]
         public double rt_dep;       // mm
-        public double estab_index;
-        public double stress_index;
-        public double stem_reloc;   // kg/ha
+        public double estab_index = 1.0;
+        public double stress_index = 0.0;
+        public double stem_reloc = -999.0;   // kg/ha
         public int frosts;
     }
 

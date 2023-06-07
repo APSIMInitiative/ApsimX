@@ -61,12 +61,6 @@
         public static char[] ElemAbbr = { ' ', 'N', 'P', 'S' };                           // [N..S]   [1..3]
 
         /// <summary></summary>
-        public static string[] ElemConc = { "", "n_conc", "p_conc", "s_conc" };          // [N..S] 
-
-        /// <summary></summary>
-        public static int[] RootMap = { 0, GrazType.EFFR, GrazType.OLDR };                // [1..2] 
-
-        /// <summary></summary>
         public static TPlantElement[] Nutr2Elem = { TPlantElement.N, TPlantElement.N, TPlantElement.P, TPlantElement.S };
 
         /// <summary>Diffusivities in water, in m²/d   Nitrate  Ammonium Phosphate Sulphate</summary>
