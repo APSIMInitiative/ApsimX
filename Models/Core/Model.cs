@@ -651,7 +651,7 @@ namespace Models.Core
                         eventNamesFiltered.Add(name); 
                     }           
             }
-            yield return new Paragraph($"Function OnDoCommence of Model {Name} contains the following Events. When multiple of these events are invoked at the same time, they are processed in the shown order.\n");
+            yield return new Paragraph($"Function {functionName} of Model {Name} contains the following Events in the given order.\n");
 
             DataTable data = new DataTable();
             data.Columns.Add("Event Handle", typeof(string));
