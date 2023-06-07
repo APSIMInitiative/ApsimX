@@ -12,6 +12,13 @@ using Models.Soils.Nutrients;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using APSIM.Shared.APSoil;
+using DocumentFormat.OpenXml.Drawing;
+using SkiaSharp;
+using static Models.G_Range;
+using DocumentFormat.OpenXml.EMMA;
+using Models.PMF;
+using APSIM.Shared.Documentation.Extensions;
 
 namespace Models.GrazPlan
 
@@ -303,6 +310,25 @@ namespace Models.GrazPlan
         /// Apparent extinction coefficients of seedlings, established plants and senescing plants.
         /// </summary>
         public double[] ExtinctCoeff { get; set; }
+
+        /*
+        These rules apply when providing values for GreenInit[].herbage or DryInit[].herbage:
+	    The herbage field must have zero, one or two elements. 
+        If there is one element, it denotes the total (shoot) pool; if there are two elements, they denote leaf and stem.
+	
+        If the dmd sub-field has more than one element, then the weight sub-field must have one fewer elements. 
+        weight[1] denotes the mass of tissue with DMD in the range from dmd[1] to dmd[2], and so on.
+	
+        If a single value (i.e. an array of length 1) is provided for the dmd sub-field, 
+        it denotes the average DMD of all shoot/leaf/stem (depending on context). 
+        In this case, the corresponding weight sub-field must have a single element, 
+        which denotes the total weight of shoot/leaf/stem.
+	
+        The lengths of the n_conc, p_conc and/or s_conc sub-fields must be either the same as the weight sub-field, one or zero. 
+        If the length is same as the weight field, each value gives the nutrient concentration of the corresponding DMD class. 
+        If the length is one, the value denotes the average nutrient concentration. 
+        If the array is empty, a species-specific set of default nutrient concentrations is used.
+        */
 
         /// <summary>
         /// Each element specifies the state of a cohort of green (living) herbage
@@ -2179,7 +2205,9 @@ namespace Models.GrazPlan
             Value2LayerArray(soilPhysical.ParticleSizeSand, ref F_SandPropn);   // Sand content profile //// TODO: check this
 
             PastureModel.ReadParamsFromValues(this.Nutrients, this.Species, this.Fertility, this.MaxRtDep, this.KL, this.LL); // initialise the model with initial values
-
+            /*
+             * This may not be needed here
+             * 
             // Light interception profiles of plant populations
             LightProfile lightProfile = GetLightProfile();
             storeLightPropn(lightProfile);
@@ -2207,7 +2235,7 @@ namespace Models.GrazPlan
 
             if (FSurfaceResidueDest != "")
             { } // TODO: set biomassremoved to this component also
-
+            */
             
             double[] fCampbell = new double[GrazType.MaxSoilLayers + 1];
             for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
@@ -2227,14 +2255,6 @@ namespace Models.GrazPlan
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
             }
-
-            /* 
-            // TODO: connect these
-            if (FSoilResidueDest != "")
-                addEvent(FSoilResidueDest + ".add_fom", evtADD_FOM, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeADD_FOM, "", "", 0);
-            if ((FSurfaceResidueDest != "") && FBiomassRemovedFound)
-                addEvent(FSurfaceResidueDest + ".BiomassRemoved", evtBIOMASS_OUT, TypeSpec.KIND_PUBLISHEDEVENT, PastureProps.typeBIOMASSREMOVED, "", "", 0);
-             */
         }
 
         private void Initialise(Zone zone)
@@ -2334,6 +2354,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Initial step = 100
+        /// Acquires the green mass, green area index and cover of other plants and computes totals for the field.
         /// </summary>
         private void InitStep()
         {
@@ -2350,23 +2371,34 @@ namespace Models.GrazPlan
             passDrivers(evtINITSTEP);
         }
 
+        /// <summary>
+        /// Get values from sibling components (TODO: More than Pasture?)
+        /// </summary>
         private void GetSiblingPasture()
         {
-            // TODO: get values from sibling components
-            // From each sibling:
-            //  - cover_tot (add to FFieldCoverSum)
-            //  - green_dm  (add to FFieldGreenDM)
-            //  - GAI (add to FFieldGAI)
-            //  - DAI (add to FFieldDAI)
+            // get values from sibling components
+            foreach (Pasture pasture in zone.FindAllDescendants<Pasture>())
+            {
+                if (pasture != this)
+                {
+                    FFieldCoverSum += pasture.CoverTotal;
+                    FFieldGreenDM += pasture.GreenDM;
+                    FFieldGAI += pasture.GAI;
+                    FFieldDAI += pasture.DAI;
+                }
+            }
         }
 
+        /// <summary>
+        /// Store the weather driving values
+        /// </summary>
         private void GetWtrDrivers()
         {
-            FInputs.CO2_PPM = locWtr.CO2;            // atmospheric CO2 ppm
+            FInputs.CO2_PPM = locWtr.CO2;           // atmospheric CO2 ppm
             FInputs.MaxTemp = locWtr.MaxT;
             FInputs.Precipitation = locWtr.Rain;
             FInputs.MinTemp = locWtr.MinT;
-            FInputs.Radiation = locWtr.Radn;    // Will need "radn" when "light_profile" is read later  
+            FInputs.Radiation = locWtr.Radn;        // Will need "radn" when "light_profile" is read later  
             FInputs.Windspeed = locWtr.Wind;
             FInputs.VP_Deficit = locWtr.VPD;
             // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
@@ -2406,6 +2438,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Do the growth = 6000
+        /// Computes rates of development, growth and digestibility change of the species. Updates phenology state variables
         /// </summary>
         private void DoPastureGrowth()
         {
@@ -2463,9 +2496,10 @@ namespace Models.GrazPlan
 
             PastureModel.ComputeRates();    // main growth update function
         }
-    
+
         /// <summary>
         /// Publish biomass values = 9900
+        /// Obtains and computes removal of herbage by livestock. Obtains and adds residue inputs from other plant models. Updates remaining state variables
         /// </summary>
         private void EndStep()
         {
@@ -2514,13 +2548,17 @@ namespace Models.GrazPlan
         /// <returns></returns>
         private LightProfile GetLightProfile()
         {
-            // iterate through each plant population in this paddock and get the canopy structure
-            
-            // calculate the light profile
-
             LightProfile lightProfile = new LightProfile();
-            
-            lightProfile = null;
+
+            // iterate through each plant population in this paddock and get the canopy structure
+            int count = zone.FindAllDescendants<ICanopy>().Count();
+            lightProfile.interception = new Population[count];
+            int i = 0;
+            foreach (ICanopy canopy in zone.FindAllDescendants<ICanopy>())
+            {
+                // calculate the light profile
+                passCanopy(ref lightProfile, canopy);
+            }
 
             return lightProfile;
         }
@@ -2622,26 +2660,6 @@ namespace Models.GrazPlan
                 else
                     throw new Exception("FWeather is null in Pasture.completeInputs().");
             }
-        }
-
-
-        /// <summary>
-        /// Configure connections to other models
-        /// </summary>
-        private void LocateDestinations()
-        {
-            // Locate the single destination for "add_fom", sibling closest or descendant or in the same system
-            // set FSurfaceResidueDest
-
-            // Locate the single destination for "BiomassRemoved"
-            // This is a two-step process;  (i) locate nearby "surfaceom_c" - set FSurfaceResidueDest    & then
-            //                              (ii) locate "BiomassRemoved", because Pasture modules
-            //                                  also subscribe to "BiomassRemoved" - set FBiomassRemovedFound
-
-            // Sibling modules with "cover_tot" - add the source
-            // Sibling modules with "green_dm" - add the source
-            // Sibling modules with "dai" - add the source
-            // Sibling modules with "gai" - add the source
         }
 
         private void resetDrivers()
@@ -3176,6 +3194,75 @@ namespace Models.GrazPlan
                 return null;
             }
         }
+
+        /// <summary>
+        /// Adds a given amount of seed of the species. 
+        /// The new seed is assumed to be immediately germinable. 
+        /// In species that are modelled as not having seed pools, the sown material is added as established plants
+        /// </summary>
+        /// <param name="rate">Amount of seed sown. kg/ha</param>
+        public void Sow(double rate)
+        {
+            PastureModel.Sow(rate / GM2_KGHA);      // Convert kg/ha to g/m^2
+        }
+
+        /// <summary>
+        /// This event causes the pasture to mimic the effects of spraying with glyphosate
+        /// </summary>
+        public void SprayTop()
+        {
+            PastureModel.SprayTop();
+        }
+
+        /// <summary>
+        /// Kills the nominated proportion of the sward and incorporates the newly-dead material, 
+        /// along with the nominated proportion of dead, litter and seeds, into the soil.
+        /// </summary>
+        /// <param name="depth">Depth of cultivation. mm</param>
+        /// <param name="propnIncorp">Proportion of surface herbage incorporated into the soil</param>
+        public void Cultivate(double depth, double propnIncorp)
+        {
+            PastureModel.Cultivate(propnIncorp, depth);
+        }
+
+        /// <summary>
+        /// Removes all herbage down to a nominated threshold and makes it available for storage as hay.
+        /// </summary>
+        /// <param name="cutHeight">Height of cutting. mm</param>
+        /// <param name="gathered">Proportion of cut forage gathered in (the remainder becomes litter).</param>
+        /// <param name="storeName">Name of the store (supplement component) that will contain the cut forage. Will move it directly to the storage if a name is supplied.</param>
+        /// <param name="dmdLoss">Loss of DMD during cutting, drying and storage</param>
+        /// <param name="dmdContent">Dry matter content when stored. kg/kg</param>
+        public void Cut(double cutHeight, double gathered, string storeName, double dmdLoss, double dmdContent)
+        {
+            throw new Exception("Cut not implemented yet"); // TODO:
+        }
+
+        /// <summary>
+        /// Kills the nominated proportions of herbage (including roots) and seeds. 
+        /// When killed, green herbage becomes standing dead and roots become residues
+        /// </summary>
+        /// <param name="propnHerbage">Proportion of herbage to be killed</param>
+        /// <param name="propnSeed">Proportion of seeds to be killed</param>
+        public void Kill(double propnHerbage, double propnSeed)
+        {
+            PastureModel.Kill(propnHerbage, propnSeed);
+        }
+
+        /// <summary>
+        /// Simulates the effect of a fire; equivalent to a kill event followed by removal of a proportion of the herbage. 
+        /// Surviving, killed and already-dead herbage are removed in equal proportions
+        /// </summary>
+        /// <param name="killPlants">Proportion of herbage killed by the fire.</param>
+        /// <param name="killSeed">Proportion of seeds killed by the fire.</param>
+        /// <param name="propnUnburnt">Proportion of herbage (green & dead) that remains after the fire has passed. </param>
+        public void Burn(double killPlants, double killSeed, double propnUnburnt)
+        {
+            throw new Exception("Burn not implemented yet");    // TODO:
+        }
+
+        // Other events
+        // remove_herbage, add_residue, crop_chopped
         #endregion
     }
 }
