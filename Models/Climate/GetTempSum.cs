@@ -153,7 +153,7 @@ namespace Models.Climate
             while (TtSum < HarvTt)
             {
                 DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
-                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MinT) / 2);
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
                 d = d.AddDays(1);
             }
 
