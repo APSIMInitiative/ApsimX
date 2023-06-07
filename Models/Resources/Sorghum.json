@@ -3524,7 +3524,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Soil].SoilWater.ESW",
+                  "VariableName": "[ISoilWater].ESW",
                   "Name": "extractable",
                   "ResourceName": null,
                   "Children": [],
