@@ -54,7 +54,7 @@ namespace Models.Functions
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
 
-        private APSIM.Shared.Documentation.Graph CreateGraph(uint indent = 0)
+        private APSIM.Shared.Documentation.Graph CreateGraph()
         {
             // fixme - this is basically identical to what we've got in the linear interp code.
             var series = new APSIM.Shared.Graphing.Series[1];
