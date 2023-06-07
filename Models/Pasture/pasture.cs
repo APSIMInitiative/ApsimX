@@ -10,13 +10,8 @@ using static Models.GrazPlan.PastureUtil;
 using Models.Surface;
 using Models.Soils.Nutrients;
 using Models.Soils.Arbitrator;
-using static Models.G_Range;
 using APSIM.Shared.Utilities;
-using Models.AgPasture;
 using System.Linq;
-using APSIM.Shared.APSoil;
-using Docker.DotNet.Models;
-using Models.CLEM.Resources;
 
 namespace Models.GrazPlan
 
