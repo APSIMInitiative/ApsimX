@@ -8,6 +8,7 @@ using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.ConfigFile;
 using Models.Core.Run;
 
 namespace Models
@@ -88,6 +89,17 @@ namespace Models
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
                     string outFile = Path.Combine(Path.GetDirectoryName(dbFiles[0]), "merged.db");
                     DBMerger.MergeFiles(dbFiles, outFile);
+                }
+                // ===================================
+                // TODO: --apply switch functionality.
+                // ===================================
+                else if (!string.IsNullOrWhiteSpace(options.Apply))
+                {
+                    List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply).ToList();
+                    foreach (string file in files)
+                    {
+                        ConfigFile.RunConfigCommands(file, commands);
+                    }
                 }
                 else
                 {

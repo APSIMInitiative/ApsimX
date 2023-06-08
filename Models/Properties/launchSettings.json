@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Models": {
-      "commandName": "Project",
-      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx"
+      "commandName": "Project"
     },
     "--edit test": {
       "commandName": "Project",
@@ -19,6 +18,10 @@
     "2 file --edit-use-config": {
       "commandName": "Project",
       "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --edit-use-config C:\\TestSims\\issue8038\\config.txt,C:\\TestSims\\issue8038\\testWheat2.apsimx"
+    },
+    "--apply w/o .apsimx": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\config.txt"
     }
   }
 }
