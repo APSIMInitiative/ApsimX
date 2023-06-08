@@ -375,6 +375,27 @@ namespace Models.PMF.Phen
             RefreshPhases();
         }
 
+        /// <summary>
+        /// Force emergence on the date called if emergence has not occurred already
+        /// </summary>
+        /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
+        public void SetEmergenceDate(string emergenceDate)
+        {
+            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
+                ep.EmergenceDate = emergenceDate;
+            SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occurred already
+        /// </summary>
+        /// <param name="germinationDate">Germination date (dd-mmm).</param>
+        public void SetGerminationDate(string germinationDate)
+        {
+            foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
+                gp.GerminationDate = germinationDate;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)

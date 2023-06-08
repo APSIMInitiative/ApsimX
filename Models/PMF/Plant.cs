@@ -621,31 +621,6 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Force emergence on the date called if emergence has not occured already
-        /// </summary>
-        public void SetEmergenceDate(string emergencedate)
-        {
-            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
-            {
-                ep.EmergenceDate = emergencedate;
-            }
-            SetGerminationDate(SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
-        }
-
-        /// <summary>
-        /// Force germination on the date called if germination has not occured already
-        /// </summary>
-        public void SetGerminationDate(string germinationdate)
-        {
-            {
-                foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
-                {
-                    gp.GerminationDate = germinationdate;
-                }
-            }
-        }
-
-        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>
