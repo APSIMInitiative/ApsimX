@@ -228,7 +228,7 @@ namespace Models.PMF.Scrum
                 ttEmergeToHarv = management.TtEstabToHarv - emergeTt;
             }
 
-            if (management.HarvestDate == DateTime.MinValue)
+            if ((management.HarvestDate == DateTime.MinValue)||(management.HarvestDate == null))
             {
                 this.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
             }

@@ -720,7 +720,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.008,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NConcAtMaturity",
                   "ResourceName": null,
@@ -868,7 +868,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 800.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "ExpectedYield",
                   "ResourceName": null,
@@ -888,7 +888,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.87,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DryMatterContent",
                   "ResourceName": null,
@@ -981,7 +981,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.46,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "HarvestIndex",
                   "ResourceName": null,
@@ -2174,7 +2174,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.85,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "ExtinctionCoefficient",
                   "ResourceName": null,
@@ -2272,7 +2272,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NConcAtMaturity",
                   "ResourceName": null,
@@ -2982,7 +2982,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.009,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -4140,7 +4140,7 @@
     {
       "$type": "Models.Core.Simulation, Models",
       "Descriptors": null,
-      "Name": "SCRUMTestMultipleSowings",
+      "Name": "SCRUMTestBase",
       "ResourceName": null,
       "Children": [
         {
@@ -4732,6 +4732,57 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Manager, Models",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        [Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        [Display(Type = DisplayType.ScrumEstablishStages)]\n        public string EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        [Display(Type = DisplayType.ScrumHarvestStages)]\n        public string HarvestStage {get; set;}\n\n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n        private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "CropName",
+                  "Value": "Cereal"
+                },
+                {
+                  "Key": "EstablishDate",
+                  "Value": "10/14/1998 00:00:00"
+                },
+                {
+                  "Key": "EstablishStage",
+                  "Value": "Seed"
+                },
+                {
+                  "Key": "PlantingDepth",
+                  "Value": "15"
+                },
+                {
+                  "Key": "HarvestDate",
+                  "Value": "01/01/0001 00:00:00"
+                },
+                {
+                  "Key": "HarvestTT",
+                  "Value": "1000"
+                },
+                {
+                  "Key": "HarvestStage",
+                  "Value": "Maturity"
+                },
+                {
+                  "Key": "PotentialYield",
+                  "Value": "8"
+                },
+                {
+                  "Key": "FieldLoss",
+                  "Value": "0"
+                },
+                {
+                  "Key": "ResidueRemoval",
+                  "Value": "0"
+                }
+              ],
+              "Name": "Sow Cereal on a fixed date",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.PMF.Plant, Models",
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
@@ -4781,26 +4832,31 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
+                  "HarvestIndex": 0.0,
+                  "MoisturePc": 0.0,
+                  "Proot": 0.0,
+                  "MaxRD": 0.0,
+                  "MaxHeight": 0.0,
+                  "Acover": 0.0,
+                  "ExtinctCoeff": 0.0,
+                  "RootNConc": 0.0,
+                  "StoverNConc": 0.0,
+                  "ProductNConc": 0.0,
+                  "BaseT": 0.0,
+                  "OptT": 0.0,
+                  "MaxT": 0.0,
+                  "Legume": false,
+                  "WaterStress": false,
+                  "Name": "Bolix",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Scrum.ScrumManagement, Models",
-              "CropName": "Cereal",
-              "EstablishDate": "1998-10-14T00:00:00",
-              "EstablishStage": "Seed",
-              "PlantingDepth": 15.0,
-              "HarvestDate": "1999-04-14T00:00:00",
-              "TtEstabToHarv": 0.0,
-              "HarvestStage": "Maturity",
-              "ExpectedYield": 5.3,
-              "FieldLoss": 0.0,
-              "ResidueRemoval": 0.0,
-              "Name": "Sow Cereal",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -4872,10 +4928,6 @@
               "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Phen;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Organs;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant SCRUM;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link] private Soils.Soil Soil;\r\n        [Link(Type = LinkType.Path, Path = \"[SCRUM].Root\")]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[SCRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Fertilise (tick for yes)\")]\r\n        public bool Fertilise { get; set; }\r\n        [Description(\"SeasonStart (dd-MMM)\")]\r\n        public string Season_Start { get; set; }\r\n        [Description(\"SeasonEnd (dd-MMM)\")]\r\n        public string Season_End { get; set; }\r\n        [Description(\"Season Allocation (kg/ha)\")]\r\n        public double Season_Allocation { get; set; }\r\n        [Description(\"Mineral N to maintain soil above (kg/ha)\")]\r\n        public double TriggerN { get; set; }\r\n        [Description(\"Amount of N to apply (kg/ha)\")]\r\n        public double NApplicationAmount { get; set; }\r\n        [Description(\"Minimum days for Fertiliser spreader to return\")]\r\n        public double Return_days { get; set; }\r\n        [Description(\"Depth to calculate mineral N (mm)\")]\r\n        public double Top_Depth { get; set; }\r\n       \r\n        //Class members\r\n        [JsonIgnore] private bool FertiliserIsAvailable { get; set; }\r\n        [JsonIgnore] public bool SeasonIsOpen { get; set; }\r\n        [JsonIgnore] private bool CropIsActive { get; set; }\r\n        [JsonIgnore] private bool FertSpreaderIsAvailable { get; set; }\r\n        [JsonIgnore] private bool SoilNIsLow { get; set; }\r\n        [JsonIgnore] public double Top_SoilN { get; set; }\r\n        [JsonIgnore] public double Accumulated_depth { get; set; }\r\n        [JsonIgnore] public double Days_since_fertiliser { get; set; }\r\n        [JsonIgnore] public double Season_Application { get; set; }\r\n        \r\n        //Variables for date logic testing\r\n        [JsonIgnore] public string StartString { get; set; }\r\n        [JsonIgnore] public string EndString { get; set; }\r\n        [JsonIgnore] public DateTime StartDate { get; set; }\r\n        [JsonIgnore] public DateTime EndDate { get; set; }\r\n        [JsonIgnore] public int TodayYear { get; set; }\r\n        [JsonIgnore] public int TodayMonth { get; set; }\r\n        [JsonIgnore] public int StartMonth { get; set; }\r\n        [JsonIgnore] public int EndMonth { get; set; }\r\n        [JsonIgnore] public int TodayDay { get; set; }\r\n        [JsonIgnore] public int StartDay { get; set; }\r\n        [JsonIgnore] public int EndDay { get; set; }\r\n              \r\n        //Determine daily requirement for fertiliser\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        { \r\n            //Can we irrigate?\r\n            FertiliserIsAvailable = false; \r\n            if (Fertilise)\r\n                FertiliserIsAvailable = true; \r\n    \r\n            //Are we Allowed to Irrigate?\r\n            TodayYear = Clock.Today.Year;\r\n            StartString = Season_Start + \"-\" + TodayYear.ToString();\r\n            EndString = Season_End + \"-\" + TodayYear.ToString();\r\n            StartDate = DateTime.Parse(StartString);\r\n            EndDate = DateTime.Parse(EndString);\r\n            TodayMonth = Clock.Today.Month;\r\n            TodayDay = Clock.Today.Day;\r\n            StartDay = StartDate.Day;\r\n            StartMonth = StartDate.Month;\r\n            EndDay = EndDate.Day;\r\n            EndMonth = EndDate.Month;\r\n          \r\n            SeasonIsOpen = false;\r\n            //if we are in the spring and after the start date then yes\r\n            if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))\r\n                SeasonIsOpen = true;\r\n            //if we are in the autumn and before the end date then yes\r\n            if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))\r\n                SeasonIsOpen = true;\r\n          \r\n            //Is there a crop in the ground that needs irrigation?\r\n            //CropIsActive = false;\r\n            //if ((phenology.Stage >= 3.0) && (phenology.Stage < 6.0))\r\n            CropIsActive = true;\r\n          \r\n            //Is the irrigator available?\r\n            FertSpreaderIsAvailable = false;\r\n            Days_since_fertiliser += 1;\r\n            if (Days_since_fertiliser >= Return_days)\r\n                FertSpreaderIsAvailable = true;\r\n          \r\n            //Is the soil N low enough to require fertiliser?\r\n            SoilNIsLow = false;\r\n            double CurrentRootDepth = 0;\r\n            double RootDepth = root.Depth;\r\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n            Accumulated_depth = 0;\r\n            Top_SoilN = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_SoilN += NO3.kgha[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            if (Top_SoilN <= TriggerN)\r\n                SoilNIsLow = true;\r\n                \r\n            //Lets bloody well irrigate then!!!!\r\n            if ((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation\r\n            {\r\n                Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);\r\n                Days_since_fertiliser = 0;\r\n                Season_Application += NApplicationAmount;\r\n                summary.WriteMessage(this, \"Automatic Fertiliser\", MessageType.Diagnostic);\r\n            \r\n            }\r\n        }\r\n    }\r\n}\r\n             \r\n             \r\n",
               "Parameters": [
                 {
-                  "Key": "Fertilise",
-                  "Value": "True"
-                },
-                {
                   "Key": "Season_Start",
                   "Value": "1-Aug"
                 },
@@ -4902,6 +4954,10 @@
                 {
                   "Key": "Top_Depth",
                   "Value": "300"
+                },
+                {
+                  "Key": "Fertilise",
+                  "Value": "True"
                 }
               ],
               "Name": "AutomaticFertiliser",
@@ -4972,8 +5028,7 @@
                 "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                "[SCRUM].TotalDMAtHarvest",
-                "[SCRUM].Total.Wt/[SCRUM].TotalDMAtHarvest as PropDM"
+                "[SCRUM].TotalDMAtHarvest"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -6979,7 +7034,7 @@
     {
       "$type": "Models.Core.Simulation, Models",
       "Descriptors": null,
-      "Name": "SCRUMTestBase",
+      "Name": "SCRUMTestMultipleSowings",
       "ResourceName": null,
       "Children": [
         {
@@ -6996,7 +7051,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "1998-10-14T00:00:00",
-          "End": "1999-03-01T00:00:00",
+          "End": "2000-01-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -7571,57 +7626,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\nusing Models.PMF.Scrum;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\n        /// <summary>The plant</summary>\n        [Link(Type = LinkType.Scoped, ByName = true)]\n        public Plant scrum = null;\r\n        \n        [Separator(\"Choose one of your specified scrum crops to plant\")]\n        \n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Crop to plant\")]\n        [Display(Type = DisplayType.SCRUMcropName)]\n        public string CropName { get; set; }\n\n        /// <summary>Establishemnt Date</summary>\n        [Description(\"Establishment Date\")]\n        public DateTime EstablishDate { get; set; }\n       \n        /// <summary>Stages that Scrum crops may be established at</summary>\n        [Description(\"Establishment Stage\")]\n        [Display(Type = DisplayType.ScrumEstablishStages)]\n        public string EstablishStage {get; set;}\n        \n        /// <summary>Planting depth (mm)</summary>\n        [Description(\"Planting depth (mm)\")]\n        public double PlantingDepth { get; set; }\n\n        [Separator(\"Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified\")]\n        \n        /// <summary>Harvest Date</summary>\n        [Description(\"Harvest Date\")]\n        public DateTime HarvestDate { get; set; }\n\n        /// <summary>Harvest Tt (if blank or zero must specify harvest date)</summary>\n        [Description(\"Harvest Tt (oCd)\")]\n        public double HarvestTT { get; set; }\n        \n        /// <summary>Stage that Scrum crop is harvested at</summary>\n        [Description(\"Harvest Stage\")]\n        [Display(Type = DisplayType.ScrumHarvestStages)]\n        public string HarvestStage {get; set;}\n\n        [Separator(\"Specify an appropriate potential yeild for the location, sowing date and assumed genotype \\nScrum will reduce yield below potential if water or N stress are predicted\")]\n        \n        /// <summary>Expected Yield (g FW/m2)</summary>\n        [Description(\"Potential Yield (t/Ha)\")]\n        public double PotentialYield {get; set;}\n        \n        [Separator(\"Specify proportions of field loss and residue removal at harvest\")]\n        \n        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field \n        /// because of diseaese, poor quality or lack of market)</summary>\n        [Description(\"Field loss (%)\")]\n        public double FieldLoss { get; set; }\n\n        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field \n        /// by bailing or some other means)</summary>\n        [Description(\"Residue removal (%)\")]\n        public double ResidueRemoval { get; set; }\n        \n        private RemovalFractions Remove { get; set; }\n        \n        private ScrumManagement management {get; set;}\n        \n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == EstablishDate)\n            {\r\n                management = new ScrumManagement(CropName,EstablishDate,EstablishStage,PlantingDepth,HarvestStage,PotentialYield,\n                HarvestDate, HarvestTT, FieldLoss, ResidueRemoval);\n                ScrumCrop currentCrop = zone.FindDescendant<ScrumCrop>(CropName);\n                currentCrop.Establish(management);  \r\n            }\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "CropName",
-                  "Value": "Cereal"
-                },
-                {
-                  "Key": "EstablishDate",
-                  "Value": "10/14/1998 00:00:00"
-                },
-                {
-                  "Key": "EstablishStage",
-                  "Value": "Seed"
-                },
-                {
-                  "Key": "PlantingDepth",
-                  "Value": "15"
-                },
-                {
-                  "Key": "HarvestDate",
-                  "Value": "01/01/0001 00:00:00"
-                },
-                {
-                  "Key": "HarvestTT",
-                  "Value": "1000"
-                },
-                {
-                  "Key": "HarvestStage",
-                  "Value": "Maturity"
-                },
-                {
-                  "Key": "PotentialYield",
-                  "Value": "8"
-                },
-                {
-                  "Key": "FieldLoss",
-                  "Value": "0"
-                },
-                {
-                  "Key": "ResidueRemoval",
-                  "Value": "0"
-                }
-              ],
-              "Name": "Sow Cereal on a fixed date",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.PMF.Plant, Models",
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
@@ -7671,29 +7675,6 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Scrum.ScrumCrop, Models",
-                  "HarvestIndex": 0.0,
-                  "MoisturePc": 0.0,
-                  "Proot": 0.0,
-                  "MaxRD": 0.0,
-                  "MaxHeight": 0.0,
-                  "Acover": 0.0,
-                  "ExtinctCoeff": 0.0,
-                  "RootNConc": 0.0,
-                  "StoverNConc": 0.0,
-                  "ProductNConc": 0.0,
-                  "BaseT": 0.0,
-                  "OptT": 0.0,
-                  "MaxT": 0.0,
-                  "Legume": false,
-                  "WaterStress": false,
-                  "Name": "Bolix",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -7704,17 +7685,35 @@
               "CropName": "Cereal",
               "EstablishDate": "1998-10-14T00:00:00",
               "EstablishStage": "Seed",
-              "PlantingDepth": 0.0,
+              "PlantingDepth": 15.0,
               "HarvestDate": "1999-04-14T00:00:00",
               "TtEstabToHarv": 0.0,
               "HarvestStage": "Maturity",
               "ExpectedYield": 5.3,
               "FieldLoss": 0.0,
               "ResidueRemoval": 0.0,
-              "Name": "ScrumManagement",
+              "Name": "Sow Cereal Oct 98 harvest Apr 99",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Scrum.ScrumManagement, Models",
+              "CropName": "Legume",
+              "EstablishDate": "1999-06-01T00:00:00",
+              "EstablishStage": "Seed",
+              "PlantingDepth": 15.0,
+              "HarvestDate": null,
+              "TtEstabToHarv": 600.0,
+              "HarvestStage": "LateReproductive",
+              "ExpectedYield": 3.1,
+              "FieldLoss": 10.0,
+              "ResidueRemoval": 60.0,
+              "Name": "Sow Legume Jun 99 harvest after 600 oCd",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -7785,6 +7784,10 @@
               "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Phen;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Organs;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant SCRUM;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link] private Soils.Soil Soil;\r\n        [Link(Type = LinkType.Path, Path = \"[SCRUM].Root\")]\r\n        private Root root;\r\n        [Link(Type = LinkType.Path, Path = \"[SCRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Fertilise (tick for yes)\")]\r\n        public bool Fertilise { get; set; }\r\n        [Description(\"SeasonStart (dd-MMM)\")]\r\n        public string Season_Start { get; set; }\r\n        [Description(\"SeasonEnd (dd-MMM)\")]\r\n        public string Season_End { get; set; }\r\n        [Description(\"Season Allocation (kg/ha)\")]\r\n        public double Season_Allocation { get; set; }\r\n        [Description(\"Mineral N to maintain soil above (kg/ha)\")]\r\n        public double TriggerN { get; set; }\r\n        [Description(\"Amount of N to apply (kg/ha)\")]\r\n        public double NApplicationAmount { get; set; }\r\n        [Description(\"Minimum days for Fertiliser spreader to return\")]\r\n        public double Return_days { get; set; }\r\n        [Description(\"Depth to calculate mineral N (mm)\")]\r\n        public double Top_Depth { get; set; }\r\n       \r\n        //Class members\r\n        [JsonIgnore] private bool FertiliserIsAvailable { get; set; }\r\n        [JsonIgnore] public bool SeasonIsOpen { get; set; }\r\n        [JsonIgnore] private bool CropIsActive { get; set; }\r\n        [JsonIgnore] private bool FertSpreaderIsAvailable { get; set; }\r\n        [JsonIgnore] private bool SoilNIsLow { get; set; }\r\n        [JsonIgnore] public double Top_SoilN { get; set; }\r\n        [JsonIgnore] public double Accumulated_depth { get; set; }\r\n        [JsonIgnore] public double Days_since_fertiliser { get; set; }\r\n        [JsonIgnore] public double Season_Application { get; set; }\r\n        \r\n        //Variables for date logic testing\r\n        [JsonIgnore] public string StartString { get; set; }\r\n        [JsonIgnore] public string EndString { get; set; }\r\n        [JsonIgnore] public DateTime StartDate { get; set; }\r\n        [JsonIgnore] public DateTime EndDate { get; set; }\r\n        [JsonIgnore] public int TodayYear { get; set; }\r\n        [JsonIgnore] public int TodayMonth { get; set; }\r\n        [JsonIgnore] public int StartMonth { get; set; }\r\n        [JsonIgnore] public int EndMonth { get; set; }\r\n        [JsonIgnore] public int TodayDay { get; set; }\r\n        [JsonIgnore] public int StartDay { get; set; }\r\n        [JsonIgnore] public int EndDay { get; set; }\r\n              \r\n        //Determine daily requirement for fertiliser\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        { \r\n            //Can we irrigate?\r\n            FertiliserIsAvailable = false; \r\n            if (Fertilise)\r\n                FertiliserIsAvailable = true; \r\n    \r\n            //Are we Allowed to Irrigate?\r\n            TodayYear = Clock.Today.Year;\r\n            StartString = Season_Start + \"-\" + TodayYear.ToString();\r\n            EndString = Season_End + \"-\" + TodayYear.ToString();\r\n            StartDate = DateTime.Parse(StartString);\r\n            EndDate = DateTime.Parse(EndString);\r\n            TodayMonth = Clock.Today.Month;\r\n            TodayDay = Clock.Today.Day;\r\n            StartDay = StartDate.Day;\r\n            StartMonth = StartDate.Month;\r\n            EndDay = EndDate.Day;\r\n            EndMonth = EndDate.Month;\r\n          \r\n            SeasonIsOpen = false;\r\n            //if we are in the spring and after the start date then yes\r\n            if ((Clock.Today.Month > 6) && (Clock.Today >= StartDate))\r\n                SeasonIsOpen = true;\r\n            //if we are in the autumn and before the end date then yes\r\n            if ((Clock.Today.Month <= 6) && (Clock.Today <= EndDate))\r\n                SeasonIsOpen = true;\r\n          \r\n            //Is there a crop in the ground that needs irrigation?\r\n            //CropIsActive = false;\r\n            //if ((phenology.Stage >= 3.0) && (phenology.Stage < 6.0))\r\n            CropIsActive = true;\r\n          \r\n            //Is the irrigator available?\r\n            FertSpreaderIsAvailable = false;\r\n            Days_since_fertiliser += 1;\r\n            if (Days_since_fertiliser >= Return_days)\r\n                FertSpreaderIsAvailable = true;\r\n          \r\n            //Is the soil N low enough to require fertiliser?\r\n            SoilNIsLow = false;\r\n            double CurrentRootDepth = 0;\r\n            double RootDepth = root.Depth;\r\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n            Accumulated_depth = 0;\r\n            Top_SoilN = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_SoilN += NO3.kgha[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            if (Top_SoilN <= TriggerN)\r\n                SoilNIsLow = true;\r\n                \r\n            //Lets bloody well irrigate then!!!!\r\n            if ((FertiliserIsAvailable) && (SeasonIsOpen) && (CropIsActive) && (FertSpreaderIsAvailable) && (SoilNIsLow)) //The conditions are rife for irrigation\r\n            {\r\n                Fertiliser.Apply(NApplicationAmount, Fertiliser.Types.UreaN, 10);\r\n                Days_since_fertiliser = 0;\r\n                Season_Application += NApplicationAmount;\r\n                summary.WriteMessage(this, \"Automatic Fertiliser\", MessageType.Diagnostic);\r\n            \r\n            }\r\n        }\r\n    }\r\n}\r\n             \r\n             \r\n",
               "Parameters": [
                 {
+                  "Key": "Fertilise",
+                  "Value": "True"
+                },
+                {
                   "Key": "Season_Start",
                   "Value": "1-Aug"
                 },
@@ -7811,10 +7814,6 @@
                 {
                   "Key": "Top_Depth",
                   "Value": "300"
-                },
-                {
-                  "Key": "Fertilise",
-                  "Value": "True"
                 }
               ],
               "Name": "AutomaticFertiliser",
@@ -7885,8 +7884,7 @@
                 "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                 "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                "[SCRUM].TotalDMAtHarvest",
-                "[SCRUM].Total.Wt/[SCRUM].TotalDMAtHarvest as PropDM"
+                "[SCRUM].TotalDMAtHarvest"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -7912,8 +7910,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -16.987664320987403,
-              "Maximum": 1715.753096419753,
+              "Minimum": -11.254330987654068,
+              "Maximum": 1136.6864297530863,
               "Interval": null
             },
             {
@@ -7922,8 +7920,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -10.120510035881743,
-              "Maximum": 1022.1705136240813,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -7949,7 +7947,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Stover.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -7989,7 +7987,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Root.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8018,7 +8016,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Product.Live.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8047,7 +8045,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Total.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8076,7 +8074,7 @@
               "Line": 1,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.DryYield",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8105,7 +8103,7 @@
               "Line": 2,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.TotalBiomassAtStartReproductive",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8134,7 +8132,7 @@
               "Line": 3,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.TotalBiomassAtStartSenescence",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8163,7 +8161,7 @@
               "Line": 1,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.TotalDMAtHarvest",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8221,8 +8219,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.2023193291926951,
-              "Maximum": 20.433252248487467,
+              "Minimum": -0.14879636682435474,
+              "Maximum": 15.02743304928509,
               "Interval": null
             },
             {
@@ -8231,8 +8229,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -8395,8 +8393,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -8520,8 +8518,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.07733336315377075,
-              "Maximum": 7.809669678556107,
+              "Minimum": -0.09213600211930896,
+              "Maximum": 9.304736214075467,
               "Interval": null
             },
             {
@@ -8530,8 +8528,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             },
             {
@@ -8770,8 +8768,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009709978080865609,
-              "Maximum": 0.9797077861926886,
+              "Minimum": -0.009709979259151883,
+              "Maximum": 0.9797079051996022,
               "Interval": null
             },
             {
@@ -8780,8 +8778,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -10.120510035881743,
-              "Maximum": 1022.1705136240813,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             },
             {
@@ -8817,7 +8815,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Root.Depth",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8857,7 +8855,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Stover.CoverTotal",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8886,7 +8884,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Stover.CoverDead",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8915,7 +8913,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Stover.CoverGreen",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8944,7 +8942,7 @@
               "Line": 0,
               "LineThickness": 0,
               "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedTT",
+              "XFieldName": "Clock.Today",
               "YFieldName": "SCRUM.Stover.Height",
               "X2FieldName": null,
               "Y2FieldName": null,
@@ -8973,8 +8971,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.008379987434886984,
-              "Maximum": 0.8453787309488475,
+              "Minimum": -10.00199004108963,
+              "Maximum": 1010.1999941500779,
               "Interval": null
             },
             {
@@ -8983,8 +8981,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -9068,8 +9066,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.6303714274620339,
-              "Maximum": 63.66651417368996,
+              "Minimum": -0.2822590449828267,
+              "Maximum": 28.507163543290577,
               "Interval": null
             },
             {
@@ -9078,8 +9076,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -9221,8 +9219,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -2.1633791806255402,
-              "Maximum": 218.50029724320484,
+              "Minimum": -2.305308241843262,
+              "Maximum": 232.83513242619472,
               "Interval": null
             },
             {
@@ -9231,8 +9229,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -9432,8 +9430,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.01000999999974738,
-              "Maximum": 1.0100099999997476,
+              "Minimum": -216.0852068786675,
+              "Maximum": 21824.60489474544,
               "Interval": null
             },
             {
@@ -9442,8 +9440,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -9538,8 +9536,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 0.9195608048717965,
-              "Maximum": 9.12335870797382,
+              "Minimum": 0.9099900000002527,
+              "Maximum": 10.090009999999747,
               "Interval": null
             },
             {
@@ -9548,8 +9546,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             },
             {
@@ -9558,8 +9556,8 @@
               "Position": 2,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -10.120510035881743,
-              "Maximum": 1022.1705136240813,
+              "Minimum": -28.171010016331422,
+              "Maximum": 2845.2710116494986,
               "Interval": null
             }
           ],
@@ -9712,8 +9710,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             },
             {
@@ -9722,8 +9720,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.06376426976428765,
-              "Maximum": 6.439191246218314,
+              "Minimum": -0.06376416290355261,
+              "Maximum": 6.4391804532840755,
               "Interval": null
             }
           ],
@@ -9818,8 +9816,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": -0.009944010337119112,
-              "Maximum": 1.0033450440742924,
+              "Minimum": -28.171010016331422,
+              "Maximum": 2845.2710116494986,
               "Interval": null
             },
             {
@@ -9828,8 +9826,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": 36080.61999000001,
-              "Maximum": 36221.38000999999,
+              "Minimum": 36077.559989999994,
+              "Maximum": 36530.440010000006,
               "Interval": null
             }
           ],
@@ -9856,7 +9854,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "PropDM",
+              "YFieldName": "SCRUM.Phenology.AccumulatedTT",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -10786,8 +10784,7 @@
                     "[SCRUM].Product.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                     "[SCRUM].Stover.DMDemands.Structural.DMDemandFunction.PartitionFraction",
                     "[SCRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction",
-                    "[SCRUM].TotalDMAtHarvest",
-                    "[SCRUM].Total.Wt/[SCRUM].TotalDMAtHarvest as PropDM"
+                    "[SCRUM].TotalDMAtHarvest"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -10800,72 +10797,6 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": -0.009940196439151085,
-              "Maximum": 1.0029598403795217,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "Minimum": -10.04601004315351,
-              "Maximum": 1014.6460143585298,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "DMScaller",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -990142,
-              "FactorToVaryColours": "SimulationName",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "SCRUM.Phenology.AccumulatedEmergedTT",
-              "YFieldName": "PropDM",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Stage",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }

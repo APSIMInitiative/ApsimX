@@ -116,7 +116,7 @@ namespace Models.Climate
             for (DateTime d = start; d <= end; d = d.AddDays(1))
             {
                 DailyMetDataFromFile TodaysMetData = GetMetData(d); // Read another line ahead to get tomorrows data
-                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MinT)/2);
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT)/2);
             }
 
             if (this.reader != null)
