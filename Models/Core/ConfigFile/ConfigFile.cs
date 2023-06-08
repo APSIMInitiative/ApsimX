@@ -31,7 +31,7 @@ namespace Models.Core.ConfigFile
         /// </summary>
         /// <param name="configFileCommands">A list of override or instruction commands.</param>
         /// <param name="apsimxFilePath">A file path to an .apsimx file.</param>
-        public static void RunConfigCommands(string apsimxFilePath, IEnumerable<string> configFileCommands)
+        public static IModel RunConfigCommands(string apsimxFilePath, IEnumerable<string> configFileCommands)
         {
             try
             {
@@ -58,66 +58,63 @@ namespace Models.Core.ConfigFile
                         string savePath = "";
                         string loadPath = "";
 
-                        for (int i = 0; i < splitCommands.Length; i++)
+                        // Determine instruction type.
+                        string keywordString = splitCommands[0].ToLower();
+                        if (keywordString.Contains("add")) { keyword = Keyword.Add; }
+                        else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
+                        else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
+                        else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
+                        else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
+                        else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
+
+                        if (splitCommands.Length > 1)
                         {
-                            // Determine instruction type.
-                            string keywordString = splitCommands[i].ToLower();
-                            if (keywordString.Contains("add")) { keyword = Keyword.Add; }
-                            else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
-                            else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
-                            else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
-                            else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
-                            else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
+                            // Determine if its a nodeToModify/SavePath/LoadPath
+                            if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
+                                nodeToModify = splitCommands[1];
+                            else if (keyword == Keyword.Load)
+                                loadPath = splitCommands[1];
+                            else
+                                savePath = splitCommands[1];
+                        }
 
-                            if (splitCommands.Length > 1)
+                        // Determine 3rd split string usage.
+                        if (splitCommands.Length > 2)
+                        {
+                            switch (keywordString)
                             {
-                                // Determine if its a nodeToModify/SavePath/LoadPath
-                                if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
-                                    nodeToModify = splitCommands[1];
-                                else if (keyword == Keyword.Load)
-                                    loadPath = splitCommands[1];
-                                else
-                                    savePath = splitCommands[1];
-                            }
-
-                            // Determine 3rd split string usage.
-                            if (splitCommands.Length > 2)
-                            {
-                                switch (keywordString)
-                                {
-                                    case "add":
-                                        // Checks for a node in a 
-                                        // Check for semi-colon...
-                                        if (splitCommands[2].Contains(";"))
+                                case "add":
+                                    // Checks for a node in a 
+                                    // Check for semi-colon...
+                                    if (splitCommands[2].Contains(";"))
+                                    {
+                                        string[] filePathAndNodeName = splitCommands[2].Split(';');
+                                        if (filePathAndNodeName.Length == 2)
                                         {
-                                            string[] filePathAndNodeName = splitCommands[2].Split(';');
-                                            if (filePathAndNodeName.Length == 2)
-                                            {
-                                                fileContainingNode = filePathAndNodeName[0];
-                                                nodeForAction = filePathAndNodeName[1];
-                                            }
-                                            else throw new Exception("Add command missing either file or node name.");
+                                            fileContainingNode = filePathAndNodeName[0];
+                                            nodeForAction = filePathAndNodeName[1];
                                         }
-                                        else
-                                        {
+                                        else throw new Exception("Add command missing either file or node name.");
+                                    }
+                                    else
+                                    {
 
-                                        }
-                                        break;
-                                    case "copy":
-                                        break;
-                                    case "delete":
-                                        break;
-
-                                }
+                                    }
+                                    break;
+                                case "copy":
+                                    break;
+                                case "delete":
+                                    break;
                             }
-
                         }
                         // Instruction to be used with Structure.cs.
                         Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, nodeForAction, savePath, loadPath);
                         // Run the instruction.
-                        RunInstructionOnApsimxFile(sim, instruction);// TODO: needs to be tested.
+                        sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction);// TODO: needs to be tested.
+
                     }
                 }
+                return sim;
             }
             catch (Exception e)
             {

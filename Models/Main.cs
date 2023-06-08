@@ -98,8 +98,18 @@ namespace Models
                     List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply).ToList();
                     foreach (string file in files)
                     {
-                        ConfigFile.RunConfigCommands(file, commands);
+                        Simulations sim = (Simulations)ConfigFile.RunConfigCommands(file, commands);
+                        Runner runner = new Runner(sim,
+                                            false,
+                                            true,
+                                            options.RunTests,
+                                            runType: options.RunType,
+                                            numberOfProcessors: options.NumProcessors,
+                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                        sim.Write(file);
                     }
+
+
                 }
                 else
                 {
