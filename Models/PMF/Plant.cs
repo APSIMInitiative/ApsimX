@@ -351,8 +351,7 @@ namespace Models.PMF
         /// <param name="seeds">The number of seeds sown (/m2).</param>
         /// <param name="tillering">tillering method (-1, 0, 1).</param>
         /// <param name="ftn">Fertile Tiller Number.</param>
-        /// <param name="cultivarOverwrites">Cultivar overwrites passed in with sowing function</param>
-        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, double seeds = 0, int tillering = 0, double ftn = 0.0, Cultivar cultivarOverwrites = null)
+        public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 0, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             SowingDate = clock.Today;
 
@@ -415,19 +414,12 @@ namespace Models.PMF
                 this.Population = SowingData.Population = seeds;
 
             // Find cultivar and apply cultivar overrides.
-            if (cultivarOverwrites != null)
-                cultivarDefinition = cultivarOverwrites;
-            else
-            {
-                cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
-            }
-            
+            cultivarDefinition = FindAllDescendants<Cultivar>().FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
                 throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
-            
+
             cultivarDefinition.Apply(this);
-            
-            
+
             // Invoke an AboutToSow event.
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
