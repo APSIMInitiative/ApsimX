@@ -31,6 +31,8 @@ namespace Models.PMF.Interfaces
         /// Gets and sets the Emerged state of the crop.
         /// </summary>
         bool Emerged { get; set; }
+
+        /// <summary>
         /// Force emergence on the date called if emergence has not occurred already
         /// </summary>
         /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
