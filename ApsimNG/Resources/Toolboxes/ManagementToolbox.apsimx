@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 483,
   "Version": 160,
   "Name": "Management toolbox",
   "ResourceName": null,
@@ -457,6 +457,64 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\nusing System;\nusing Models.Functions;\nusing Models.Core;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\nusing System.Diagnostics;\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] Fertiliser fertiliser;\n        [Link] Zone zone;\n        \n        [Separator(\"A model to apply fertiliser days after a variable reaches a threshold\")]\n        [Separator(\"Trigger to fertilse on\")]\n                 \n        [Description(\"Name of APSIM variable\")] \n        public string VariableName { get; set; } \n                \n        [Description(\"Threshold value to trigger fertilise\")]       \n        public double TriggerValue { get; set; }\n        \n        [Description(\"Number of days to wait after trigger\")] \n        public int NumDaysToWait { get; set; }  \n               \n        [Separator(\"Amount and type to fertilise\")]\n                 \n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \n        public double Amount { get; set; }  \n               \n        [Description(\"Type of fertiliser to apply? \")] \n        public Fertiliser.Types FertiliserType { get; set; }   \n          \n        private DateTime FertiliseDate;  \n               \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t}               \n               \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n        \tvar obj = zone.Get(VariableName);\n            double value;\n            if (obj is double)\n            \tvalue = (double) obj;\n            else if (obj is IFunction f)\n            \tvalue = f.Value();\n            else\n            \tthrow new Exception($\"Unknown type of variable: {VariableName}\");\n            \t \n            if (MathUtilities.FloatsAreEqual(value, TriggerValue, 0.1))\n                FertiliseDate = clock.Today.AddDays(NumDaysToWait);\n\n            if (clock.Today == FertiliseDate)\n               fertiliser.Apply(Amount: Amount, Type: FertiliserType);\n        }\n    }\n}",
+          "Parameters": [
+            {
+              "Key": "VariableName",
+              "Value": "[Wheat].Phenology.Zadok.Stage"
+            },
+            {
+              "Key": "TriggerValue",
+              "Value": "11"
+            },
+            {
+              "Key": "NumDaysToWait",
+              "Value": "10"
+            },
+            {
+              "Key": "Amount",
+              "Value": "30"
+            },
+            {
+              "Key": "FertiliserType",
+              "Value": "Urea"
+            }
+          ],
+          "Name": "Fertilise when variable reaches threshold",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\nusing System;\nusing Models.Functions;\nusing Models.Core;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\nusing System.Diagnostics;\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] Fertiliser fertiliser;\n        [Link] Zone zone;\n        [Link] IEvent events = null;\n        \n        [Separator(\"A model to apply fertiliser days after a variable reaches a threshold\")]\n        [Separator(\"Trigger to fertilse on\")]\n                 \n        [Description(\"Name of APSIM event\")] \n        public string EventName { get; set; } \n        \n        [Description(\"Number of days to wait after trigger\")] \n        public int NumDaysToWait { get; set; }  \n               \n        [Separator(\"Amount and type to fertilise\")]\n                 \n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \n        public double Amount { get; set; }  \n               \n        [Description(\"Type of fertiliser to apply? \")] \n        public Fertiliser.Types FertiliserType { get; set; }   \n          \n        private DateTime FertiliseDate;  \n               \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\tevents.Subscribe(EventName, OnEvent);\n\t\t}\n\t\t\n\t\tprivate void OnEvent(object sender, EventArgs e)\n\t\t{\n\t\t\tFertiliseDate = clock.Today.AddDays(NumDaysToWait);\n\t\t}               \n               \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            if (clock.Today == FertiliseDate)\n               fertiliser.Apply(Amount: Amount, Type: FertiliserType);\n        }\n    }\n}",
+          "Parameters": [
+            {
+              "Key": "NumDaysToWait",
+              "Value": "10"
+            },
+            {
+              "Key": "Amount",
+              "Value": "30"
+            },
+            {
+              "Key": "FertiliserType",
+              "Value": "Urea"
+            },
+            {
+              "Key": "EventName",
+              "Value": "[Wheat].Phenology.PlantEmerged"
+            }
+          ],
+          "Name": "Fertilise on event",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -660,9 +718,13 @@
             {
               "Key": "PercPAWIrrigDeficitShallow",
               "Value": "0"
+            },
+            {
+              "Key": "allowIrrigation",
+              "Value": "True"
             }
           ],
-          "Name": "Centre Pivot",
+          "Name": "CentrePivot",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,

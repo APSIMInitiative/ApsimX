@@ -1,10 +1,10 @@
-﻿namespace Models.Soils.SoilTemp
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils.SoilTemp
 {
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
 
     // Note: typing three consecutive comment characters (e.g.///) above a sub or function will generate xml documentation.
 
@@ -24,7 +24,7 @@
         private IWeather weather = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
         private MicroClimate microClimate = null;
@@ -41,9 +41,9 @@
         // version of SoilTemp. All arrays here are forceably 0-based, so to deal with the fact that this module
         // contains both 0- and 1-based arrays all arrays have been increased in size by 1. All indexing will not
         // change from FORTRAN code, those arrays that are 1-based will simply not use their first (0th) element.
-        // 
-        // This is actually rather convenient. In these arrays, the element 0 (AIRnode) refers to the air, 
-        // the element 1 (SURFACEnode) refers to the soil surface, and elements 2 (TOPSOILnode) .. numNodes + 1 
+        //
+        // This is actually rather convenient. In these arrays, the element 0 (AIRnode) refers to the air,
+        // the element 1 (SURFACEnode) refers to the soil surface, and elements 2 (TOPSOILnode) .. numNodes + 1
         // refer to nodes within the soil.
         //
         // ------------------------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@
         private bool doInit1Stuff = false;      // NEW
                                                 // Two representations are distinguished for the profile.
                                                 // a) Soil layers, each with a top and bottom boundary and a depth. Index range of 1..NumLayer
-                                                // b) Temperature nodes, each node being at the centre of each layer and additionally a node below 
+                                                // b) Temperature nodes, each node being at the centre of each layer and additionally a node below
                                                 // the bottom layer and a node above the top layer (in the atmosphere). Index range of 0..NumLayer + 1,
                                                 // giving 0 for atmosphere,
 
@@ -108,72 +108,72 @@
         private double instrumentHeight = 0.0;// (m) height of instruments above soil surface
         private double airPressure = 0.0;     // (hPa) Daily air pressure
         private double windSpeed = 0.0;       // (km) daily wind run
-        private double potSoilEvap = 0.0;     // (mm) pot sevap after modification for green cover residue wt 
-        private double potEvapotrans = 0.0;   // (mm) pot evapotranspitation 
+        private double potSoilEvap = 0.0;     // (mm) pot sevap after modification for green cover residue wt
+        private double potEvapotrans = 0.0;   // (mm) pot evapotranspitation
         private double actualSoilEvap = 0.0;  // actual soil evaporation (mm)
         private double netRadiation = 0.0;    // Net radiation per internal timestep (MJ)
         private double canopyHeight = 0.0;    // (m) height of canopy above ground
         private double soilRoughnessHeight = 0.0;    // (mm) height of soil roughness
         private double[] clay;                // Proportion of clay in each layer of profile (0-1)
         #endregion
-        
+
         //[Input()]
         private const int timestep = 1440;     // timestep in minutes
-        
+
         // this was not an input in old apsim. // [Input]                                //FIXME - optional input
         private double maxTempTime = 0.0;      // Time of maximum temperature in hours
-        
+
         // <Input()> _
         // Private cover_tot As Double = 0.0    ' (0-1) total surface cover
         // <Input()> _
         private double instrumHeight = 0.0;    // (m) height of instruments above ground
 
         private double altitude = 0.0;         // (m) altitude at site
-        
+
         private double nu = 0.6;                  // forward/backward differencing coefficient (0-1).
                                                   // A weighting factor which may range from 0 to 1. If nu=0, the flux is determined by the temperature difference
-                                                  // at the beginning of the time step. The numerical procedure which results from this choice is called a forward 
-                                                  // difference of explicit method. If nu=0.5, the average of the old and new temperatures is used to compute heat flux. 
+                                                  // at the beginning of the time step. The numerical procedure which results from this choice is called a forward
+                                                  // difference of explicit method. If nu=0.5, the average of the old and new temperatures is used to compute heat flux.
                                                   // This is called a time-centered or Crank-Nicholson scheme.
                                                   // The equation for computing T(j+1) is implicit for this choice of nu (and any other except nu=0) since T(j+1) depends
                                                   // on the values of the new temperatures at the nodes i+1 and i-1. Most heat flow models use either nu=0 or nu=0.5.
                                                   // The best value for nu is determined by consideration of numerical stability and accuracy.
                                                   // The explicit scheme with nu=0 predicts more heat transfer between nodes than would actually occur, and can therefore
-                                                  // become unstable if time steps are too large. Stable numerical solutions are only obtained when (Simonson, 1975) 
+                                                  // become unstable if time steps are too large. Stable numerical solutions are only obtained when (Simonson, 1975)
                                                   // deltaT < CH*(deltaZ)^2 / 2*lambda.
                                                   // When nu < 0.5, stable solutions to the heat flow problem will always be obtained, but if nu is too small, the solutions
                                                   // may oscillate. The reason for this is that the simulated heat transfer between nodes overshoots. On the next time step
-                                                  // the excess heat must be transferrec back, so the predicted temperature at that node oscillates. On the other hand, if nu 
-                                                  // is too large, the temperature difference will be too small and not enough heat will be transferred. Simulated temperatures 
+                                                  // the excess heat must be transferrec back, so the predicted temperature at that node oscillates. On the other hand, if nu
+                                                  // is too large, the temperature difference will be too small and not enough heat will be transferred. Simulated temperatures
                                                   // will never oscillate under these conditions, but the simulation will understimate heat flux. The best accuracy is obtained
                                                   // with nu around 0.4, while best stability is at nu=1. A typical compromise is nu=0.6.
 
-        
+
         private double volSpecHeatClay = 2.39e6;  // [Joules*m-3*K-1]
-        
+
         private double volSpecHeatOM = 5e6;       // [Joules*m-3*K-1]
-        
+
         private double volSpecHeatWater = 4.18e6; // [Joules*m-3*K-1]
-        
+
         private double maxTTimeDefault = 14;
-        
-        private double[] aveSoilTemp;  // FIXME - optional. Allow setting from set in manager or get from input //init to average soil temperature 
-        
+
+        private double[] aveSoilTemp;  // FIXME - optional. Allow setting from set in manager or get from input //init to average soil temperature
+
         private string boundarLayerConductanceSource = "calc";
-        
+
         private const double boundaryLayerConductance = 20;
-        
+
         private const double BoundaryLayerConductanceIterations = 1;    // maximum number of iterations to calculate atmosphere boundary layer conductance
-        
+
         private string netRadiationSource = "calc";
-        
+
         // from met
         private double defaultWindSpeed = 3;      // default wind speed (m/s)
-        
+
         private const double defaultAltitude = 18;    // default altitude (m)
-        
+
         private const double defaultInstrumentHeight = 1.2;  // default instrument height (m)
-        
+
         private const double bareSoilHeight = 57;        // roughness element height of bare soil (mm)
 
         #region outputs
@@ -207,7 +207,7 @@
         /// <summary>
         /// Mandatory for ISoilTemperature interface. For now, just return average daily values
         /// </summary>
-        public double[]Value
+        public double[] Value
         {
             get
             {
@@ -241,9 +241,9 @@
                 return aveSoilTemp[SURFACEnode];
             }
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("oC")]
         public double[] MinSoilTemp
@@ -257,7 +257,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("oC")]
         public double minSoilSurfaceTemp
@@ -267,9 +267,9 @@
                 return minSoilTemp[SURFACEnode];
             }
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("oC")]
         public double[] MaxSoilTemp
@@ -283,7 +283,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("oC")]
         public double MaxSoilSurfaceTemp
@@ -295,7 +295,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("J/sec/m/K")]
         public double BoundaryLayerConductance
@@ -307,7 +307,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("J/sec/m/K")]
         public double[] ThermalConductivity
@@ -321,7 +321,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("J/m3/K/s")]
         public double[] HeatCapacity
@@ -335,7 +335,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("J/m3/K/s")]
         public double[] HeatStore
@@ -349,7 +349,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Units("oC")]
         public double[] Thr_profile
@@ -553,15 +553,15 @@
             thermalConductance = new double[numNodes + 1 + 1];
             if (oldThermalConductance != null)
                 Array.Copy(oldThermalConductance, thermalConductance, Math.Min(numNodes + 1 + 1, oldThermalConductance.Length)); // K; conductance between nodes - index is same as upper node
-        } 
-        
+        }
+
         /// <summary>
         /// Set global variables with module parameter values and check validity
         /// </summary>
         /// <remarks></remarks>
         private void readParam()
         {
-            // 
+            //
             // clay//
             // if clay has more or less elements than the number of layers, throw exception
             BoundCheck(physical.ParticleSizeClay.Length, numLayers, numLayers, "clay layers");
@@ -654,13 +654,13 @@
                 // first coefficient C1 - For many mineral soils, the quartz fractioncan be taken as nil, and the equation can
                 // be approximated by this equation - 4.27 Campbell.
                 thermCondPar1[element] = 0.65 - 0.78 * bulkDensity[layer] + 0.6 * Math.Pow(bulkDensity[layer], 2);      // A approximation to e
-                                                                                                  // The coefficient C2 (B in Campbell 4.25) can be evaluated from data and for mineral soils is approximated by -
+                                                                                                                        // The coefficient C2 (B in Campbell 4.25) can be evaluated from data and for mineral soils is approximated by -
                 thermCondPar2[element] = 1.06 * bulkDensity[layer];                              // * SW[i]; //B for mineral soil - assume (is there missing text here??)
-                                                                                 // The coefficient C3 (C in Caqmpbell 4.28) determines the water content where thermal conductivity begins to
-                                                                                 // increase rapidly and is highly correlated with clay content. The following correlation appears to fit data well.
+                                                                                                 // The coefficient C3 (C in Caqmpbell 4.28) determines the water content where thermal conductivity begins to
+                                                                                                 // increase rapidly and is highly correlated with clay content. The following correlation appears to fit data well.
                 thermCondPar3[element] = 1.0D + MathUtilities.Divide(2.6, Math.Sqrt(clay[layer]), 0);             // C is the water content where co (is there missing text here??)
-                                                                                 // Coefficient C4 (D in Campbell 4.22) is the thermal conductivity when volumetric water content=0. 
-                                                                                 // For mineral soils with a particle density of 2.65 Mg/m3 the equation becomes the following.
+                                                                                                                  // Coefficient C4 (D in Campbell 4.22) is the thermal conductivity when volumetric water content=0.
+                                                                                                                  // For mineral soils with a particle density of 2.65 Mg/m3 the equation becomes the following.
                 thermCondPar4[element] = 0.03 + 0.1 * Math.Pow(bulkDensity[layer], 2);           // D assume mineral soil particle d (is there missing text here??)
             }
         }
@@ -693,7 +693,7 @@
             //if ((weather.Wind > 0.0))
             //    gWindSpeed = weather.Wind * KM2M / (DAY2HR * HR2SEC);
             //else
-                windSpeed = defaultWindSpeed;
+            windSpeed = defaultWindSpeed;
             BoundCheck(windSpeed, 0.0, 1000.0, "wind");
 
             canopyHeight = Math.Max(microClimate.CanopyHeight, soilRoughnessHeight) * MM2M;
@@ -701,7 +701,7 @@
 
 
             // Vals HACK. Should be recalculating wind profile.
-            instrumentHeight = Math.Max(instrumentHeight, canopyHeight + 0.5); 
+            instrumentHeight = Math.Max(instrumentHeight, canopyHeight + 0.5);
 
         }
 
@@ -761,7 +761,7 @@
                     case "calc":
                         {
                             // When calculating the boundary layer conductance it is important to iterate the entire
-                            // heat flow calculation at least once, since surface temperature depends on heat flux to 
+                            // heat flow calculation at least once, since surface temperature depends on heat flux to
                             // the atmosphere, but heat flux to the atmosphere is determined, in part, by the surface
                             // temperature.
                             thermalConductivity[AIRnode] = boundaryLayerConductanceF(ref tempNew);
@@ -809,7 +809,7 @@
                 volSpecHeatSoil[layer] = volSpecHeatClay * solidity
                                        + volSpecHeatWater * soilWater[layer];
             }
-            // mapLayer2Node(volSpecHeatSoil, gVolSpecHeatSoil)    
+            // mapLayer2Node(volSpecHeatSoil, gVolSpecHeatSoil)
             volSpecHeatSoil.CopyTo(this.volSpecHeatSoil, 1);     // map volumetric heat capicity (Cv) from layers to nodes (node 2 in centre of layer 1)
             this.volSpecHeatSoil[1] = volSpecHeatSoil[1];        // assume surface node Cv is same as top layer Cv
         }
@@ -842,7 +842,7 @@
 
             // now get weighted average for soil elements between the nodes. i.e. map layers to nodes
             mapLayer2Node(thermCondLayers, ref thermalConductivity);
-        } 
+        }
 
         private void mapLayer2Node(double[] layerArray, ref double[] nodeArray)
         {
@@ -873,7 +873,7 @@
             double[] b = new double[numNodes + 1];        // B; heat storage at node (W/K)
             double[] c = new double[numNodes + 1];        // C; thermal conductance at node (W/m/K)
             double[] d = new double[numNodes + 1];        // D; heat flux at node (w/m) and then temperature
-                                                     // nu = F; Nz = M; 1-nu = G; T_zb = T; newTemps = TN; 
+                                                          // nu = F; Nz = M; 1-nu = G; T_zb = T; newTemps = TN;
 
             thermalConductance[AIRnode] = thermalConductivity[AIRnode];
             // The first node gZ_zb(1) is at the soil surface (Z = 0)
@@ -881,8 +881,8 @@
             {
                 double VolSoilAtNode = 0.5 * (depth[node + 1] - depth[node - 1]);   // Volume of soil around node (m^3), assuming area is 1 m^2
                 heatStorage[node] = MathUtilities.Divide(volSpecHeatSoil[node] * VolSoilAtNode, gDt, 0);       // Joules/s/K or W/K
-                                                                                         // rate of heat
-                                                                                         // convert to thermal conductance
+                                                                                                               // rate of heat
+                                                                                                               // convert to thermal conductance
                 double elementLength = depth[node + 1] - depth[node];             // (m)
                 thermalConductance[node] = MathUtilities.Divide(thermalConductivity[node], elementLength, 0);  // (W/m/K)
             }
@@ -893,10 +893,10 @@
             double g = 1 - nu;
             for (int node = SURFACEnode; node <= numNodes; node++)
             {
-                c[node] = (-nu) * thermalConductance[node];   // 
+                c[node] = (-nu) * thermalConductance[node];   //
                 a[node + 1] = c[node];             // Eqn 4.13
                 b[node] = nu * (thermalConductance[node] + thermalConductance[node - 1]) + heatStorage[node];    // Eqn 4.12
-                                                                                                                          // Eqn 4.14
+                                                                                                                 // Eqn 4.14
                 d[node] = g * thermalConductance[node - 1] * soilTemp[node - 1]
                         + (heatStorage[node] - g * (thermalConductance[node] + thermalConductance[node - 1])) * soilTemp[node]
                         + g * thermalConductance[node] * soilTemp[node + 1];
@@ -974,7 +974,7 @@
             double[] d = new double[numNodes + 1];        // D;
             double[] heat = new double[numNodes + 1];     // CP; heat storage between nodes - index is same as upper node
             double[] Therm_zb = new double[numNodes + 1]; // K; conductance between nodes - index is same as upper node
-                                                     // nu = F; Nz = M; 1-nu = G; T_zb = T; newTemps = TN; 
+                                                          // nu = F; Nz = M; 1-nu = G; T_zb = T; newTemps = TN;
 
             Therm_zb[0] = thermalConductivity[0];
             for (int node = 1; node <= numNodes; node++)
@@ -1027,7 +1027,7 @@
 
             for (int node = numNodes - 1; node >= 1; node += -1)
                 newTemps[node] = d[node] - c[node] * newTemps[node + 1];
-        } 
+        }
 
         /// <summary>
         ///  Interpolate air temperature
@@ -1038,7 +1038,7 @@
         /// Notes:
         ///  Between midinight and MinT_time just a linear interpolation between
         ///  yesterday's midnight temperature and today's MinTg. For the rest of
-        ///  the day use a sin function. 
+        ///  the day use a sin function.
         /// Note: This can result in the Midnight temperature being lower than the following minimum.
         /// </remarks>
         private double InterpTemp(double timeHours)
@@ -1159,8 +1159,8 @@
             const double CAPP = 1010.0;               // (J/kg/K) Specific heat of air at constant pressure
             const double EMISSIVITYsurface = 0.98;
             double SpecificHeatAir = CAPP * RhoA(airTemp, airPressure); // CH; volumetric specific heat of air (J/m3/K) (1200 at 200C at sea level)
-                                                                       // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
-                                                                       // gTNew_zb = TN; gAirT = TA; 
+                                                                        // canopy_height, instrum_ht (Z) = 1.2m, AirPressure = 1010
+                                                                        // gTNew_zb = TN; gAirT = TA;
 
             // Zero plane displacement and roughness parameters depend on the height, density and shape of
             // surface roughness elements. For typical crop surfaces, the following empirical correlations have
@@ -1172,9 +1172,9 @@
             double SurfaceTemperature = TNew_zb[SURFACEnode];    // surface temperature (oC)
 
             // To calculate the radiative conductance term of the boundary layer conductance, we need to account for canopy and residue cover
-            // Calculate a diffuce penetration constant (KL Bristow, 1988. Aust. J. Soil Res, 26, 269-80. The Role of Mulch and its Architecture 
+            // Calculate a diffuce penetration constant (KL Bristow, 1988. Aust. J. Soil Res, 26, 269-80. The Role of Mulch and its Architecture
             // in modifying soil temperature). Here we estimate this using the Soilwat algorithm for calculating EOS from EO and the cover effects,
-            // assuming the cover effects on EO are similar to Bristow's diffuse penetration constant - 0.26 for horizontal mulch treatment and 0.44 
+            // assuming the cover effects on EO are similar to Bristow's diffuse penetration constant - 0.26 for horizontal mulch treatment and 0.44
             // for vertical mulch treatment.
             double PenetrationConstant = Math.Max(0.1, potSoilEvap) / Math.Max(0.1, potEvapotrans);
 
@@ -1198,17 +1198,17 @@
                 // Boundary layer conductance would therefore be expected to vary depending on the wind speed and level
                 // of turbulence above the crop. The level of turbulence, in turn, is determined by the roughness of the surface,
                 // the distance from the surface and the thermal stratification of the boundary layer.
-                // Eqn 12.11 Campbell 
+                // Eqn 12.11 Campbell
                 FrictionVelocity = MathUtilities.Divide(windSpeed * VONK,
-                                                        Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacMomentum, 
-														                              RoughnessFacMomentum, 
-																					  0)) + StabilityCorMomentum, 
-														0);
+                                                        Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacMomentum,
+                                                                                      RoughnessFacMomentum,
+                                                                                      0)) + StabilityCorMomentum,
+                                                        0);
                 // Eqn 12.10 Campbell
                 BoundaryLayerCond = MathUtilities.Divide(SpecificHeatAir * VONK * FrictionVelocity,
-                                                         Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacHeat, 
-														                               RoughnessFacHeat, 0)) + StabilityCorHeat,
-							                             0);
+                                                         Math.Log(MathUtilities.Divide(instrumentHeight - d + RoughnessFacHeat,
+                                                                                       RoughnessFacHeat, 0)) + StabilityCorHeat,
+                                                         0);
 
                 BoundaryLayerCond += radiativeConductance; // * (1.0 - sunAngleAdjust())
 
@@ -1219,8 +1219,8 @@
                                                       , 0);
 
                 // The stability correction parameters correct the boundary layer conductance for the effects
-                // of buoyancy in the atmosphere. When the air near the surface is hotter than the air above, 
-                // the atmosphere becomes unstable, and mixing at a given wind speed is greater than would occur 
+                // of buoyancy in the atmosphere. When the air near the surface is hotter than the air above,
+                // the atmosphere becomes unstable, and mixing at a given wind speed is greater than would occur
                 // in a neutral atmosphere. If the air near the surface is colder than the air above, the atmosphere
                 // is unstable and mixing is supressed.
 
@@ -1305,7 +1305,7 @@
                                              // temperature calculations
 
             // check for nth/sth hemisphere
-            if ((weather.Latitude> 0.0))
+            if ((weather.Latitude > 0.0))
                 alx = ANG * (offsetDayOfYear(clock.Today.Year, clock.Today.DayOfYear, System.Convert.ToInt32(-HOTTEST_DAY_NTH)));
             else
                 alx = ANG * (offsetDayOfYear(clock.Today.Year, clock.Today.DayOfYear, System.Convert.ToInt32(-HOTTEST_DAY_STH)));
@@ -1353,7 +1353,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="depthLag">(INPUT) lag factor for depth (radians)</param>
         /// <param name="alx">(INPUT) time in radians of a g_year from hottest instance</param>
@@ -1555,7 +1555,7 @@
             cloudFr = bound(cloudFr, 0.0, 1.0);
 
             for (int timestepNumber = 1; timestepNumber <= ITERATIONSperDAY; timestepNumber++)
-                solarRadn[timestepNumber] = Math.Max(weather.Radn, 0.1) * 
+                solarRadn[timestepNumber] = Math.Max(weather.Radn, 0.1) *
                                             MathUtilities.Divide(m1[timestepNumber], m1Tot, 0);
 
             // cva is vapour concentration of the air (g/m^3)
@@ -1579,14 +1579,14 @@
             double emissivityAtmos = (1 - 0.84 * cloudFr) * 0.58 * Math.Pow(cva, (1.0 / 7.0)) + 0.84 * cloudFr;
             // To calculate the longwave radiation out, we need to account for canopy and residue cover
             // Calculate a penetration constant. Here we estimate this using the Soilwat algorithm for calculating EOS from EO and the cover effects.
-            double PenetrationConstant = MathUtilities.Divide(Math.Max(0.1, potSoilEvap), 
+            double PenetrationConstant = MathUtilities.Divide(Math.Max(0.1, potSoilEvap),
                                                               Math.Max(0.1, potEvapotrans), 0);
 
             // Eqn 12.1 modified by cover.
             double lwRinSoil = longWaveRadn(emissivityAtmos, airTemp) * PenetrationConstant * w2MJ;
 
             double lwRoutSoil = longWaveRadn(EMISSIVITYsurface, soilTemp[SURFACEnode]) * PenetrationConstant * w2MJ; // _
-                                                                                                                  // + longWaveRadn(emissivityAtmos, (gT_zb(SURFACEnode) + gAirT) * 0.5) * (1.0 - PenetrationConstant) * w2MJ
+                                                                                                                     // + longWaveRadn(emissivityAtmos, (gT_zb(SURFACEnode) + gAirT) * 0.5) * (1.0 - PenetrationConstant) * w2MJ
 
             // Ignore (mulch/canopy) temperature and heat balance
             double lwRnetSoil = lwRinSoil - lwRoutSoil;
@@ -1739,7 +1739,7 @@
         {
             if (array.Length >= 1)
             {
-                for (int index = 0; index < array.Length;  index++)
+                for (int index = 0; index < array.Length; index++)
                     BoundCheck(array[index], LowerBound, UpperBound, ArrayName);
             }
             else
@@ -1767,7 +1767,7 @@
         /// <param name="upper">(INPUT) upper limit of variable</param>
         /// <returns>Constrained value</returns>
         /// <remarks>
-        /// Returns "lower", if "var" is less than "lower".  Returns "upper" if "var" is greater than "upper".  Otherwise returns "var".  
+        /// Returns "lower", if "var" is less than "lower".  Returns "upper" if "var" is greater than "upper".  Otherwise returns "var".
         /// A warning error is flagged if "lower" is greater than "upper".
         /// If the lower bound is > the upper bound, the variable remains unconstrained.
         /// </remarks>
@@ -1790,7 +1790,7 @@
             }
         }
         /// <summary>
-        /// returns sum_of of products of arrays var1 and var2, up to level limit. 
+        /// returns sum_of of products of arrays var1 and var2, up to level limit.
         /// each level of one array is multiplied by the corresponding level of the other.
         /// </summary>
         /// <param name="var1">(INPUT) first array for multiply</param>

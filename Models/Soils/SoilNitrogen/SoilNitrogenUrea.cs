@@ -1,8 +1,9 @@
-﻿namespace Models.Soils
+﻿using System;
+using Models.Core;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
 
     /// <summary>This class encapsulates a SoilNitrogen model solute.</summary>
     [Serializable]
@@ -26,7 +27,7 @@
                 SetKgHa(SoluteSetterType.Plant, value);
             }
         }
-                
+
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
         /// <param name="value">New values.</param>

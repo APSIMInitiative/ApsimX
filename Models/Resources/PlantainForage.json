@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -934,7 +934,7 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "Tallness",
+              "Name": "HeightFunction",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -6219,8 +6219,8 @@
               "Command": [
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35",
                 "[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0",
-                "[Leaf].Tallness.XYPairs.X = 10, 100, 500",
-                "[Leaf].Tallness.XYPairs.Y = 100, 300, 400"
+                "[Leaf].HeightFunction.XYPairs.X = 10, 100, 500",
+                "[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400"
               ],
               "Name": "Lancelot",
               "Children": [

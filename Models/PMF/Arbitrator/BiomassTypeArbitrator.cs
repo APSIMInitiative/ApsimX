@@ -1,9 +1,9 @@
-﻿using Models.Core;
-using Models.PMF.Arbitrator;
-using Models.PMF.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.Core;
+using Models.PMF.Arbitrator;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF
 {
@@ -30,12 +30,12 @@ namespace Models.PMF
         protected IPartitionMethod AllocateUptakesMethod = null;
 
         /// <summary>Functions called at DoPotentialPartitioning.</summary>
-        public void DoPotentialPartitioning(IArbitration[] Organs, BiomassArbitrationType DM) 
+        public void DoPotentialPartitioning(IArbitration[] Organs, BiomassArbitrationType DM)
         {
             potentialPartitioningMethods.ForEach(pm => pm.Calculate(Organs, DM, ArbitrationMethod));
         }
         /// <summary>Functions called at DoActualPartitioning.</summary>
-        public void DoActualPartitioning(IArbitration[] Organs, BiomassArbitrationType DM) 
+        public void DoActualPartitioning(IArbitration[] Organs, BiomassArbitrationType DM)
         {
             actualPartitioningMethods.ForEach(pm => pm.Calculate(Organs, DM, ArbitrationMethod));
         }
@@ -56,7 +56,7 @@ namespace Models.PMF
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        virtual protected void OnSimulationCommencing(object sender, EventArgs e) 
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             potentialPartitioningMethods = FindChild<Folder>("PotentialPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();
             actualPartitioningMethods = FindChild<Folder>("ActualPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();

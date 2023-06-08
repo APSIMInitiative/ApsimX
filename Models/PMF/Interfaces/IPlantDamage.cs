@@ -1,6 +1,7 @@
-﻿namespace Models.PMF.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Models.PMF.Interfaces
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// Interface used by models (e.g. STOCK, pests and diseases) to damage a plant.
@@ -17,7 +18,7 @@
         List<IOrganDamage> Organs { get; }
 
         /// <summary>Total amount of above ground biomass.</summary>
-        IBiomass AboveGround { get;  }
+        IBiomass AboveGround { get; }
 
         /// <summary>Total amount of harvestable above ground biomass.</summary>
         IBiomass AboveGroundHarvestable { get; }

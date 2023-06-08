@@ -1,6 +1,4 @@
 ﻿using Models.CLEM.Resources;
-using Models.Core;
-using System;
 
 namespace Models.CLEM.Interfaces
 {

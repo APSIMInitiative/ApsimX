@@ -1,11 +1,11 @@
-﻿
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using Newtonsoft.Json;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
     /// When water content in any layer is below SAT but above DUL, a fraction of the water drains to the next 
@@ -23,9 +23,9 @@ namespace Models.WaterModel
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>Amount of water (mm) backed up.</summary>
@@ -68,7 +68,7 @@ namespace Models.WaterModel
                         w_excess = 0.0;
 
                     // Calculate water draining by gravity (mm) (between SAT and DUL)
-                    double w_drain;               
+                    double w_drain;
                     if (w_tot > DUL[i])
                         w_drain = (w_tot - DUL[i]) * soil.SWCON[i];
                     else

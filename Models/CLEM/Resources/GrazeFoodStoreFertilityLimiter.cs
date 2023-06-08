@@ -19,10 +19,10 @@ namespace Models.CLEM.Resources
     [Description("Allows for the reduction of new pasture nitrogen content (N%) based on annual yield or growth month")]
     [Version(1, 0, 1, "Provides NABSA 'Fertility - N decline yield' functionality")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreFertilityLimiter.htm")]
-    public class GrazeFoodStoreFertilityLimiter: CLEMModel
+    public class GrazeFoodStoreFertilityLimiter : CLEMModel
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private double annualNUsed = 0;
         private GrazeFoodStoreType parentPasture;
@@ -77,7 +77,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="newGrowthKgHa">The amount of new growth in this month (kg per ha)</param>
         /// <returns>The proportion of new grass nitrogen content to assign</returns>
-        public double GetProportionNitrogenLimited(double newGrowthKgHa) 
+        public double GetProportionNitrogenLimited(double newGrowthKgHa)
         {
             // calculate proportion of new growth above the cutoff to adjust N reduction accordingly
             double nRequired = newGrowthKgHa * parentPasture.GreenNitrogen / 100;
@@ -91,10 +91,10 @@ namespace Models.CLEM.Resources
             else
             {
                 // calculate proportion N based on N required and already used for year
-                double shortfall = Math.Min(nRequired, Math.Max(0, nRequired - (AnnualNitrogenSupply- annualNUsed)));
+                double shortfall = Math.Min(nRequired, Math.Max(0, nRequired - (AnnualNitrogenSupply - annualNUsed)));
                 reduction = ((shortfall * (1 - NitrogenReduction)) + (nRequired - shortfall)) / nRequired;
             }
-            annualNUsed += (nRequired*reduction);
+            annualNUsed += (nRequired * reduction);
             return reduction;
         }
 
@@ -104,7 +104,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            if(clock.Today.Month == (int)AnnualYieldStartMonth)
+            if (clock.Today.Month == (int)AnnualYieldStartMonth)
                 annualNUsed = 0;
         }
 
@@ -179,9 +179,9 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("or <b>(B)</b> Add a ActivityMonthRangeTimer below to reduce nitrogen content in specified months");
                     htmlWriter.Write("\r\n</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

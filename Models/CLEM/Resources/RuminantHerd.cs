@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
+using Docker.DotNet.Models;
+using Models.CLEM.Groupings;
+using Models.CLEM.Reporting;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.CLEM.Reporting;
-using System.Globalization;
-using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Groupings;
-using System.Diagnostics;
-using Docker.DotNet.Models;
+using System.Globalization;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -27,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all rumiant types (herds or breeds) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
-    public class RuminantHerd: ResourceBaseWithTransactions
+    public class RuminantHerd : ResourceBaseWithTransactions
     {
         private int id = 1;
 
@@ -302,7 +297,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(null);
 
             // report female breeding stats if needed
-            if(ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
+            if (ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -372,10 +367,10 @@ namespace Models.CLEM.Resources
         /// <returns>The group details</returns>
         public RuminantReportGroupDetails GetRuminantReportGroup(string ruminantTypeName, string groupName)
         {
-            if(groupedHerdForReporting.Any())
+            if (groupedHerdForReporting.Any())
             {
                 var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
-                if(rumGroup != null)
+                if (rumGroup != null)
                 {
                     if (groupName == "") // blank requests the totals across all groups if present.
                     {
@@ -436,7 +431,7 @@ namespace Models.CLEM.Resources
                         }
                     }
                     break;
-            default:
+                default:
                     break;
             }
             return catNames;
@@ -453,22 +448,22 @@ namespace Models.CLEM.Resources
         {
             bool multi = individuals.Select(a => a.BreedParams.Name).Distinct().Count() > 1;
             var groupedInd = from ind in individuals
-                                    group ind by ind.BreedParams.Name into breedGroup
-                                    select new RuminantReportTypeDetails()
-                                    {
-                                        RuminantTypeName = breedGroup.Key,
-                                        RuminantTypeNameToDisplay = (multi?breedGroup.Key:""),
-                                        RuminantTypeGroup = from gind in breedGroup
-                                                 group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
-                                                 select new RuminantReportGroupDetails()
-                                                 {
-                                                     GroupName = catind.Key,
-                                                     Count = catind.Count(),
-                                                     TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
-                                                     TotalWeight = catind.Sum(a => a.Weight),
-                                                     TotalPrice = catind.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
-                                                 }
-                                    };
+                             group ind by ind.BreedParams.Name into breedGroup
+                             select new RuminantReportTypeDetails()
+                             {
+                                 RuminantTypeName = breedGroup.Key,
+                                 RuminantTypeNameToDisplay = (multi ? breedGroup.Key : ""),
+                                 RuminantTypeGroup = from gind in breedGroup
+                                                     group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
+                                                     select new RuminantReportGroupDetails()
+                                                     {
+                                                         GroupName = catind.Key,
+                                                         Count = catind.Count(),
+                                                         TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
+                                                         TotalWeight = catind.Sum(a => a.Weight),
+                                                         TotalPrice = catind.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
+                                                     }
+                             };
             return groupedInd;
         }
 
@@ -606,7 +601,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Average adult equivalents
         /// </summary>
-        public double AverageAdultEquivalent { get { return (TotalAdultEquivalent??0.0) / Convert.ToDouble(Count??1); } }
+        public double AverageAdultEquivalent { get { return (TotalAdultEquivalent ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
 
         /// <summary>
         /// Average weight

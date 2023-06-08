@@ -1,8 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Linq;
 using Models.Core;
 using Models.PMF.Interfaces;
-using System;
-using System.Linq;
 
 namespace Models.PMF.Arbitrator
 {

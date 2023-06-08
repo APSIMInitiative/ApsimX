@@ -1,16 +1,16 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Newtonsoft.Json;
+
 namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// This organ simulates the root structure associate with symbiotic N-fixing bacteria.  It provides the core functions of determining 
@@ -396,7 +396,7 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) ;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
             }
@@ -610,11 +610,11 @@ namespace Models.PMF.Organs
 
             // document DM supplies
             yield return new Section("Dry Matter Supply", DocumentDMSupply());
-            
+
 
             // Document N supplies.
             yield return new Section("Nitrogen Supply", DocumentNSupply());
-            
+
 
             // Document N fixation.
             IModel fixationRate = FindChild("FixationRate");

@@ -1,12 +1,13 @@
-﻿namespace Models.PMF.Struct
+﻿using System;
+using Models.PMF.Interfaces;
+
+namespace Models.PMF.Struct
 {
-    using System;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// Calculate cohort population using stem population.
     /// </summary>
-    [Serializable]    
+    [Serializable]
     public class ApexStandard : ApexBase, IApex
     {
         /// <summary>

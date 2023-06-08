@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -39,7 +39,7 @@ namespace Models.PMF.Phen
         /// <summary>The fraction complete yesterday</summary>
         private double FractionCompleteYesterday = 0;
 
-        
+
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -50,6 +50,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
@@ -70,7 +74,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            
+
             if (First)
             {
                 NodeNoAtStart = LeafTipNumber.Value();
@@ -99,7 +103,7 @@ namespace Models.PMF.Phen
         /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
-            
+
             // Write description of this class.
             yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved. The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target");
 

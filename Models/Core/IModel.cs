@@ -1,9 +1,9 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+
 namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all

@@ -1,8 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 using Models.PMF;

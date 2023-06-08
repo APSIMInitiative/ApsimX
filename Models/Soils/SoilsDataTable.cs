@@ -1,20 +1,19 @@
-﻿namespace Models.Soils
-{
-    using APSIM.Shared.Utilities;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.WaterModel;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.WaterModel;
 
-	/// <summary>
-	/// A generic class for turning a DataTable of soil information into
-	/// a list of sois.
-	/// </summary>
-	public class SoilsDataTable
+namespace Models.Soils
+{
+
+    /// <summary>
+    /// A generic class for turning a DataTable of soil information into
+    /// a list of sois.
+    /// </summary>
+    public class SoilsDataTable
     {
         /// <summary>Convert a table of soils data into a list of soils.</summary>
         public static List<Soil> ToSoils(DataTable table)
@@ -109,7 +108,7 @@
                 organic.FInert = GetDoubleValues(table, "FINERT (0-1)", row, numLayers);
                 organic.Carbon = GetDoubleValues(table, "OC", row, numLayers);
                 organic.CarbonMetadata = GetCodeValues(table, "OCCode", row, numLayers);
-                 
+
                 var chemical = new Chemical();
                 soil.Children.Add(chemical);
                 chemical.Thickness = physical.Thickness;

@@ -1,9 +1,9 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Models.CLEM.Resources
@@ -203,7 +203,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -211,7 +211,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

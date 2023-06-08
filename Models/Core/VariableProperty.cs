@@ -1,13 +1,15 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Models.Soils;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Models.Soils;
-    using System.Globalization;
-    using APSIM.Shared.Utilities;
-    using System.Collections;
 
     /// <summary>
     /// Encapsulates a discovered property of a model. Provides properties for
@@ -413,7 +415,7 @@
                         throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
                     }
                 }
-                
+
 
                 return obj;
             }
@@ -447,14 +449,26 @@
                             array[i - 1] = newValue; // this will modify obj as well
                         }
                     }
-                    this.property.SetValue(this.Object, obj, null);
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, obj, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
                 }
                 else if (value is string)
                 {
                     this.SetFromString(value as string);
                 }
                 else
-                    this.property.SetValue(this.Object, value, null);
+                {
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, value, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
+                }
             }
         }
 

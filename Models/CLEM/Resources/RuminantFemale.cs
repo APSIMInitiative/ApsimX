@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -50,15 +48,15 @@ namespace Models.CLEM.Resources
         /// Returns 0 for pre-first birth females
         /// </summary>
         [FilterByProperty]
-        public double MonthsSinceLastBirth 
-        { 
-            get 
+        public double MonthsSinceLastBirth
+        {
+            get
             {
                 if (AgeAtLastBirth > 0)
                     return Age - AgeAtLastBirth;
                 else
                     return 0;
-            } 
+            }
         }
 
         /// <summary>
@@ -112,7 +110,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Age - Math.Max(this.BreedParams.MinimumAge1stMating,this.AgeEnteredSimulation);
+                return Age - Math.Max(this.BreedParams.MinimumAge1stMating, this.AgeEnteredSimulation);
             }
         }
 
@@ -238,7 +236,7 @@ namespace Models.CLEM.Resources
         public void OneOffspringDies()
         {
             CarryingCount--;
-            if(CarryingCount <= 0)
+            if (CarryingCount <= 0)
                 AgeAtLastBirth = this.Age;
         }
 
@@ -266,7 +264,7 @@ namespace Models.CLEM.Resources
             CarryingCount = number;
             AgeAtLastConception = this.Age + ageOffset;
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
+            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(AgeAtLastConception) : this.Weight;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -285,7 +283,7 @@ namespace Models.CLEM.Resources
                 //and
                 //(c) Less than Milking days since last birth
                 return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
-            }            
+            }
         }
 
         /// <summary>
@@ -295,11 +293,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(IsLactating)
+                if (IsLactating)
                 {
                     double dl = (((this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays) ? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
                     // add half a timestep
-                    return dl+15;
+                    return dl + 15;
                 }
                 else
                     return 0;
@@ -372,7 +370,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(RuminantType setParams, double setAge, double setWeight) 
+        public RuminantFemale(RuminantType setParams, double setAge, double setWeight)
             : base(setParams, setAge, setWeight)
         {
             SucklingOffspringList = new List<Ruminant>();
@@ -398,7 +396,7 @@ namespace Models.CLEM.Resources
     /// Style of mating
     /// </summary>
     public enum MatingStyle
-    { 
+    {
         /// <summary>
         /// Natural mating
         /// </summary>

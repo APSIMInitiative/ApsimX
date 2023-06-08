@@ -1,11 +1,11 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -147,7 +147,7 @@ namespace Models.CLEM.Resources
             if (cohortexists == null)
             {
                 // tried to remove individuals that do not exist
-                throw new Exception("Tried to remove individuals from "+this.Name+" that do not exist");
+                throw new Exception("Tried to remove individuals from " + this.Name + " that do not exist");
             }
             else
             {

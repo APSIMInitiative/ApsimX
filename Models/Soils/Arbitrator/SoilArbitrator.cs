@@ -1,11 +1,12 @@
-﻿namespace Models.Soils.Arbitrator
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils.Arbitrator
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Interfaces;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The APSIM farming systems model has a long history of use for simulating mixed or intercropped systems.  Doing this requires methods for simulating the competition of above and below ground resources.  Above ground competition for light has been calculated within APSIM assuming a mixed turbid medium using the Beer-Lambert analogue as described by [Keating1993Intercropping].  The MicroClimate [Snow2004Micromet] model now used within APSIM builds upon this by also calculating the impact of mutual shading on canopy conductance and partitions aerodynamic conductance to individual species in applying the Penman-Monteith model for calculating potential crop water use.  The arbitration of below ground resources of water and nitrogen is calculated by this model.
@@ -100,18 +101,18 @@
             SoilState modifiedSoilState = new SoilState(InitialSoilState);
 
             Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
-            
+
             ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate1, 0.5);
             Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
 
             ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate2, 0.5);
             Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
-           
+
             ModifySoilState(InitialSoilState, modifiedSoilState, UptakeEstimate3, 1.0);
             Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, modifiedSoilState, uptakeModels);
 
             List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
-            List <CropUptakes> ActualUptakes = new List<CropUptakes>();
+            List<CropUptakes> ActualUptakes = new List<CropUptakes>();
             foreach (CropUptakes U in UptakeEstimate1.Values)
             {
                 CropUptakes CU = new CropUptakes();

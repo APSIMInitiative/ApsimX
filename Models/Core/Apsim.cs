@@ -1,15 +1,13 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Factorial;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using APSIM.Shared.Utilities;
-    using Functions;
-    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -174,7 +172,7 @@
 
             // Remove models that cannot be added to parent.
             allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.ModelType));
-            
+
             //allowableModels.Sort(new ReflectionUtilities.TypeComparer());
             return allowableModels;
         }
@@ -183,21 +181,21 @@
         public class ModelDescription : IComparable<ModelDescription>
         {
             /// <summary>Name of resource.</summary>
-            public string ResourceString {get; set; }
+            public string ResourceString { get; set; }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t) 
-            { 
+            public ModelDescription(Type t)
+            {
                 ModelType = t;
                 ModelName = ModelType.Name;
             }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t, string name, string resourceName) 
-            { 
+            public ModelDescription(Type t, string name, string resourceName)
+            {
                 ModelType = t;
                 ModelName = name;
-                ResourceString = resourceName; 
+                ResourceString = resourceName;
             }
 
             /// <summary>Type of model.</summary>

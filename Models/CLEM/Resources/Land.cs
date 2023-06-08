@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.CLEM.Interfaces;
-using Models.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -19,7 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all land types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
-    public class Land: ResourceBaseWithTransactions
+    public class Land : ResourceBaseWithTransactions
     {
         private bool changeOccurred = false;
 
@@ -48,7 +47,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public string TestMethod(string txt, int intarg, double doublearg)
         {
-            return "string:" + txt + "_int:"+intarg.ToString()+"_double:"+doublearg.ToString();
+            return "string:" + txt + "_int:" + intarg.ToString() + "_double:" + doublearg.ToString();
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public LandActivityAllocation ReportedLandAllocation { get; set; }
-        
+
         /// <summary>
         /// Report allocatios at start of timestep
         /// </summary>
@@ -132,7 +131,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

@@ -1,6 +1,7 @@
-﻿namespace Models
+﻿using System.Collections.Generic;
+
+namespace Models
 {
-    using System.Collections.Generic;
 
     /// <summary>A painter for setting the visual element of a simulation description to values of two visual elements.</summary>
     public class MultiDescriptorPainter : ISeriesDefinitionPainter
@@ -28,7 +29,7 @@
         }
 
         /// <summary>Constructor</summary>
-        public MultiDescriptorPainter(string descriptorName1, string descriptorName2, 
+        public MultiDescriptorPainter(string descriptorName1, string descriptorName2,
                                       int maximumIndex1, int maximumIndex2,
                                       SetFunction setter1, SetFunction setter2)
         {
@@ -93,7 +94,7 @@
             if (descriptorName3 != null)
             {
                 var descriptor3 = seriesDefinition.Descriptors.Find(d => d.Name == descriptorName3);
-                if(descriptor3 != null)
+                if (descriptor3 != null)
                 {
                     var descriptorValue3 = descriptor3.Value;
 

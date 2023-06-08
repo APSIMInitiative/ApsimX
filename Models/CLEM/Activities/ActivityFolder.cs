@@ -1,13 +1,7 @@
-﻿using Models.Core;
-using Models.CLEM.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Models.Core;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {

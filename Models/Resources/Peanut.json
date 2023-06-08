@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -1484,7 +1484,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "1000000/[Peanut].SowingData.Population/[Peanut].SowingData.RowSpacing",
+                  "Expression": "divide(divide(1000000,[Peanut].SowingData.Population),[Peanut].SowingData.RowSpacing)",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1498,7 +1498,7 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "Tallness",
+              "Name": "HeightFunction",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",

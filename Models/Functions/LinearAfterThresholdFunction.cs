@@ -1,10 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -24,7 +22,7 @@ namespace Models.Functions
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
-        
+
         /// <summary>
         /// The trigger value on the X axis
         /// </summary>

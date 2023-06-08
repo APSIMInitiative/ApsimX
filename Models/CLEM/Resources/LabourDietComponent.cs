@@ -1,9 +1,5 @@
-﻿using Models.CLEM.Resources;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -49,7 +45,7 @@ namespace Models.CLEM.Resources
         public double GetTotal(string metric)
         {
             double result = 0;
-            if(FoodStore is null)
+            if (FoodStore is null)
                 // check if initial value provided
                 otherMetricAmounts.TryGetValue(metric, out result);
             else
