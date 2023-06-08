@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -143,6 +143,7 @@
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Seed",
                   "End": "Germination",
+                  "IsEmerged": false,
                   "Name": "GerminatingPhase",
                   "ResourceName": null,
                   "Children": [],
@@ -153,6 +154,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
+                  "IsEmerged": true,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -202,6 +204,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
                   "End": "Seedling",
+                  "IsEmerged": true,
                   "Name": "Seedling",
                   "ResourceName": null,
                   "Children": [
@@ -241,6 +244,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Seedling",
                   "End": "Vegetative",
+                  "IsEmerged": true,
                   "Name": "Vegetative",
                   "ResourceName": null,
                   "Children": [
@@ -280,6 +284,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Vegetative",
                   "End": "EarlyReproductive",
+                  "IsEmerged": true,
                   "Name": "EarlyReproductive",
                   "ResourceName": null,
                   "Children": [
@@ -319,6 +324,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "EarlyReproductive",
                   "End": "MidReproductive",
+                  "IsEmerged": true,
                   "Name": "MidReproductive",
                   "ResourceName": null,
                   "Children": [
@@ -358,6 +364,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "MidReproductive",
                   "End": "LateReproductive",
+                  "IsEmerged": true,
                   "Name": "LateReproductive",
                   "ResourceName": null,
                   "Children": [
@@ -397,6 +404,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "LateReproductive",
                   "End": "Maturity",
+                  "IsEmerged": true,
                   "Name": "Maturity",
                   "ResourceName": null,
                   "Children": [
@@ -436,6 +444,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Maturity",
                   "End": "Ripe",
+                  "IsEmerged": true,
                   "Name": "Ripe",
                   "ResourceName": null,
                   "Children": [
@@ -475,6 +484,7 @@
                   "$type": "Models.PMF.Phen.EndPhase, Models",
                   "Start": "Ripe",
                   "End": "Unused",
+                  "IsEmerged": true,
                   "Name": "ReadyForHarvesting",
                   "ResourceName": null,
                   "Children": [
@@ -2194,7 +2204,7 @@
                 },
                 {
                   "$type": "Models.Functions.SigmoidFunction, Models",
-                  "Name": "Tallness",
+                  "Name": "HeightFunction",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -4234,6 +4244,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -7128,6 +7139,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -10042,6 +10054,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,

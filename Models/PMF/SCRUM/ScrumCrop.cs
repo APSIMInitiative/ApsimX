@@ -126,9 +126,9 @@ namespace Models.PMF.Scrum
             {"bCover","[Stover].Cover.Expanding.SigCoverFunction.b.FixedValue = "},
             {"XoBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.Xo.FixedValue = "},
             {"bBiomass","[Stover].Photosynthesis.UnStressedBiomass.Integral.b.FixedValue = " },
-            {"MaxHeight","[Stover].Tallness.Ymax.FixedValue = "},
-            {"XoHig","[Stover].Tallness.Xo.FixedValue = " },
-            {"bHig","[Stover].Tallness.b.FixedValue = " },
+            {"MaxHeight","[Stover].HeightFunction.Ymax.FixedValue = "},
+            {"XoHig","[Stover].HeightFunction.Xo.FixedValue = " },
+            {"bHig","[Stover].HeightFunction.b.FixedValue = " },
             {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
             {"TtSeedling","[Phenology].Seedling.Target.FixedValue ="},
             {"TtVegetative","[Phenology].Vegetative.Target.FixedValue ="},
@@ -158,7 +158,8 @@ namespace Models.PMF.Scrum
             double rowWidth = 0.0;
 
             Cultivar crop = coeffCalc(management);
-            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
+            scrum.Children.Add(crop);
+            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover);//, cultivarOverwrites: crop);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
@@ -276,7 +277,7 @@ namespace Models.PMF.Scrum
             this.FieldLoss = management.FieldLoss/100;
             this.ResidueRemoval = management.ResidueRemoval/100;
 
-            Cultivar CropValues = new Cultivar(commands);
+            Cultivar CropValues = new Cultivar(this.Name, commands);
             return CropValues;
         }
         

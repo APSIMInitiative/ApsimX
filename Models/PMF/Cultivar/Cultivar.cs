@@ -31,8 +31,10 @@ namespace Models.PMF
         /// Constructor to initialise culivar instance with specified commands
         /// </summary>
         /// <param name="commnads">list of parameter overwrite commands</param>
-        public Cultivar (string[] commnads)
+        /// <param name="name">The name of the cultivar</param>
+        public Cultivar (string name, string[] commnads)
         {
+            this.Name = name;
             Command = commnads;
         }
         
