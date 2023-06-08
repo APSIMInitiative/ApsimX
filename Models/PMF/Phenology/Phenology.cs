@@ -246,7 +246,15 @@ namespace Models.PMF.Phen
                     {
                         IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
                         AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
-                        AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        {
+                            Emerged = true;
+                            PlantEmerged?.Invoke(this, new EventArgs());
+                        }
+                        else
+                        {
+                            AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        }
                     }
                     
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
