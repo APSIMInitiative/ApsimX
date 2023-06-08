@@ -232,7 +232,7 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if ((IndexFromPhaseName(phase.Name)>=oldPhaseIndex)&&(IndexFromPhaseName(phase.Name) < currentPhaseIndex))
+                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex)
                         phasesToFastForward.Add(phase);
                 }
                 foreach (IPhase phase in phasesToFastForward)
