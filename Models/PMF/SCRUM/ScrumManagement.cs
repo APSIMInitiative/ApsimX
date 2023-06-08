@@ -33,9 +33,9 @@ namespace Models.PMF.Scrum
 
         /// <summary>Establishment Stage</summary>
         [Description("Establishment Stage")]
-        [Display(Type = DisplayType.CropStageName)]
+        [Display(Type = DisplayType.ScrumEstablishStages)]
         public string EstablishStage { get; set; }
-
+        
         /// <summary>Planting depth (mm)</summary>
         [Description("Planting depth (mm)")]
         public double PlantingDepth { get; set; }
@@ -51,9 +51,9 @@ namespace Models.PMF.Scrum
 
         /// <summary>Planting Stage</summary>
         [Description("Harvest Stage")]
-        [Display(Type = DisplayType.CropStageName)]
+        [Display(Type = DisplayType.ScrumHarvestStages)]
         public string HarvestStage { get; set; }
-
+        
         /// <summary>Expected Yield (g FW/m2)</summary>
         [Separator("Specify an appropriate potential yeild for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
         [Description("Expected Yield (t/Ha)")]
@@ -85,8 +85,7 @@ namespace Models.PMF.Scrum
         /// <summary>
         /// Parameterless constructor
         /// </summary>
-        public ScrumManagement()
-        { }
+        public ScrumManagement(){ }
 
         /// <summary>
         /// Management class constructor

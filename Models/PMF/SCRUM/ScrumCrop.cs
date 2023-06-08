@@ -98,36 +98,6 @@ namespace Models.PMF.Scrum
         /// <summary> ResiduesRemoved assigned at sowing so can be used in harvest event </summary>
         private double ResidueRemoval { get; set; }
 
-        /// <summary>Stages that Scrum crops may be established at</summary>
-        public enum EstablishStages
-        {
-            /// <summary>Crop established as dry seed</summary>
-            Seed,
-            /// <summary>Radicle emerged from seed</summary>
-            Germination,
-            /// <summary>Shoot emerged from soil</summary>
-            Emergence,
-            /// <summary>Crop established by transplanting seedlings</summary>
-            Seedling,
-        };
-
-        /// <summary>Stages that Scrum crops may be established at</summary>
-        public enum HarvestStages
-        {
-            /// <summary>Crop harvested prior to reproductive growth e.g lettice</summary>
-            Vegetative,
-            /// <summary>Crop harvested in an early reproductive state e.g brocolii</summary>
-            EarlyReproductive,
-            /// <summary>Crop harvested in mid reproductive state e.g green peas</summary>
-            MidReproductive,
-            /// <summary>Crop harvested in late reproductive state e.g canola</summary>
-            LateReproductive,
-            /// <summary>Crop harvested at maturity e.g wheat if dried in storage</summary>
-            Maturity,
-            /// <summary>Crop harvested after maturity e.g wheat dried standing</summary>
-            Ripe,
-        };
-
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
         public static Dictionary<string, int> StageNumbers = new Dictionary<string, int>() { {"Seed",1 },{"Germination",2 },{ "Emergence", 3 },{ "Seedling", 4 },
@@ -189,9 +159,9 @@ namespace Models.PMF.Scrum
 
             Cultivar crop = coeffCalc(management);
             scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover, cultivarOverwrites: crop);
-            if (management.EstablishStage != "Seed")
+            if (management.EstablishStage.ToString() != "Seed")
             {
-                phenology.SetToStage(StageNumbers[management.EstablishStage]);
+                phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
             }
         }
 

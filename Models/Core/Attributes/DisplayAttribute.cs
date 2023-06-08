@@ -93,7 +93,17 @@ namespace Models.Core
         /// This is a list of SCRUMcrop model parameterisations that 
         /// may be established in a simulation.
         /// </summary>
-        SCRUMcropName
+        SCRUMcropName,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model establishment stages.
+        /// </summary>
+        ScrumEstablishStages,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model harvest stages.
+        /// </summary>
+        ScrumHarvestStages
     }
 
     /// <summary>

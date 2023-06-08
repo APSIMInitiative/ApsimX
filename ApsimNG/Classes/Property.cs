@@ -351,6 +351,14 @@ namespace UserInterface.Classes
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
                     break;
+                case DisplayType.ScrumEstablishStages:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[4] { "Seed", "Germination", "Emergence", "Seedling" };
+                    break;
+                case DisplayType.ScrumHarvestStages: 
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
+                    break;
 
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
