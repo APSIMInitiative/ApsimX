@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using APSIM.Shared.JobRunning;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using Models.Core.ApsimFile;
 using Models.PostSimulationTools;
 using Models.Storage;
@@ -68,6 +70,14 @@ namespace Models.Core.Run
             this.runPostSimulationTools = runPostSimulationTools;
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
+
+            if (simulationNamesToRun == null) //check if model has a playlist node
+            {
+                Playlist playlist = relativeTo.FindChild<Playlist>();
+                if (playlist != null)
+                    if (playlist.Enabled)
+                        this.simulationNamesToRun = playlist.GetListOfSimulations();
+            }
 
             if (simulationNamePatternMatch != null)
                 patternMatch = new Regex(simulationNamePatternMatch);
