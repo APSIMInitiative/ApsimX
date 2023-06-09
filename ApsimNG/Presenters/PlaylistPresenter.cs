@@ -47,16 +47,11 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
             playlistView = view as PlaylistView;
+            playlistView.editorView.Text = playlistModel.Text;
             playlistView.editorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
-            playlistView.editorView.Text = "Simulation";//debugging
 
-            //if (factor.Specifications != null)
-            //    this.playlistView.Lines = factor.Specifications.ToArray();
-
-            
             //playlistView.ContextItemsNeeded += this.OnContextItemsNeeded;
             
-
             intellisense = new IntellisensePresenter(playlistView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
         }

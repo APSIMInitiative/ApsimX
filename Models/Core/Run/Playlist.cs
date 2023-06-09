@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Models.Core;
 
 namespace Models
@@ -15,10 +16,20 @@ namespace Models
     {
         //// <summary>Link to simulations</summary>
         //[Link]
-        //private Simulations simulations = null;
+       // private Simulations simulations = null;
 
         /// <summary>Gets or sets the memo text.</summary>
         [Description("Text of the playlist")]
         public string Text { get; set; }
+
+        /// <summary>
+        /// Returns the name of all simulations that match the text
+        /// </summary>
+        public List<string> GetListOfSimulations()
+        {
+            List<string> names = new List<string>();
+            names.Add(Text);
+            return names;
+        }
     }
 }
