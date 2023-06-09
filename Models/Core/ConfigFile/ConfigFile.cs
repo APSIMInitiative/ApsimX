@@ -71,7 +71,10 @@ namespace Models.Core.ConfigFile
                         {
                             // Determine if its a nodeToModify/SavePath/LoadPath
                             if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
-                                nodeToModify = splitCommands[1];
+                            {
+                                string modifiedNodeName = splitCommands[1].Substring(1).Trim(']');
+                                nodeToModify = modifiedNodeName;
+                            }
                             else if (keyword == Keyword.Load)
                                 loadPath = splitCommands[1];
                             else
@@ -98,7 +101,8 @@ namespace Models.Core.ConfigFile
                                     }
                                     else
                                     {
-
+                                        string reformattedNode = "{\"$type\": \"Models." + splitCommands[2] + ", Models\"}";
+                                        nodeForAction = reformattedNode;
                                     }
                                     break;
                                 case "copy":
@@ -108,7 +112,7 @@ namespace Models.Core.ConfigFile
                             }
                         }
                         // Instruction to be used with Structure.cs.
-                        Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, nodeForAction, savePath, loadPath);
+                        Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
                         // Run the instruction.
                         sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction);// TODO: needs to be tested.
 
@@ -139,15 +143,24 @@ namespace Models.Core.ConfigFile
         /// </summary>
         private static IModel RunInstructionOnApsimxFile(IModel simulation, Instruction instruction)
         {
-            //Check for add keyword in instruction.
-            if (instruction.keyword == Keyword.Add)
+            try
             {
-                //Create a node perhaps using Resource and Activator classes? similar to AddModelPresenter.
-                IModel child = Resource.Instance.GetModel(instruction.NodeForAction); // TODO: needs testing to see if it can create a model.
-                // Use structure.Add() to add the node to the specific
-                Structure.Add(instruction.NodeToModify, simulation); // TODO: also needs testing.
+                //Check for add keyword in instruction.
+                if (instruction.keyword == Keyword.Add)
+                {
+                    //Create a node perhaps using Resource and Activator classes? similar to AddModelPresenter.
+                    //IModel child = Resource.Instance.GetModel(instruction.NodeForAction); // TODO: needs testing to see if it can create a model.
+                    // Use structure.Add() to add the node to the specific
+                    IModel simulationNode = simulation.FindAllChildren().First(m => m.Name == "Simulation");
+                    IModel parentNode = simulationNode.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
+                    Structure.Add(instruction.NodeForAction, parentNode); // TODO: also needs testing.
+                }
+                return simulation;
             }
-            return null;
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
 
