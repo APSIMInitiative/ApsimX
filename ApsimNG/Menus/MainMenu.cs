@@ -9,7 +9,6 @@
     using APSIM.Shared.Utilities;
     using global::UserInterface.Commands;
     using global::UserInterface.Hotkeys;
-    using Models;
     using Models.Core;
     using Models.Core.Run;
     using Utility;
@@ -200,12 +199,7 @@
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
 
-                Playlist playlist = model.FindChild<Playlist>();
-                IEnumerable<string> names = null;
-                if (playlist != null)
-                    names = playlist.GetListOfSimulations();
-
-                Runner runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false, simulationNamesToRun: names);
+                Runner runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                 command = new RunCommand(model.Name, runner, explorer);
                 command.Do();
             }
