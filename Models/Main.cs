@@ -40,7 +40,6 @@ namespace Models
               .WithParsed(Run)
               .WithNotParsed(HandleParseError);
             return exitCode;
-
         }
 
         /// <summary>

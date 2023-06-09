@@ -39,7 +39,7 @@ namespace Models.Core.ConfigFile
 
                 foreach (string command in configFileCommands)
                 {
-                    string[] splitCommands = command.Split(' ', '=', ';');
+                    string[] splitCommands = command.Split(' ', '=');
                     // If first index item is a string containing "[]" the command is an override...
                     if (splitCommands[0].Contains('['))
                     {
@@ -72,8 +72,14 @@ namespace Models.Core.ConfigFile
                             // Determine if its a nodeToModify/SavePath/LoadPath
                             if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
                             {
-                                string modifiedNodeName = splitCommands[1].Substring(1).Trim(']');
-                                nodeToModify = modifiedNodeName;
+                                // Check for required format
+                                if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
+                                {
+                                    string modifiedNodeName = splitCommands[1].Substring(1).Trim(']');
+                                    nodeToModify = modifiedNodeName;
+                                }
+                                else throw new Exception("Format of parent model type does not match required format: [ModelName]");
+
                             }
                             else if (keyword == Keyword.Load)
                                 loadPath = splitCommands[1];
@@ -88,14 +94,15 @@ namespace Models.Core.ConfigFile
                             {
                                 case "add":
                                     // Checks for a node in a 
-                                    // Check for semi-colon...
-                                    if (splitCommands[2].Contains(";"))
+                                    // Check for back-slash...
+                                    if (splitCommands[2].Contains("\\"))
                                     {
                                         string[] filePathAndNodeName = splitCommands[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
                                         {
                                             fileContainingNode = filePathAndNodeName[0];
-                                            nodeForAction = filePathAndNodeName[1];
+                                            string reformattedNode = filePathAndNodeName[1].Substring(1).Trim(']');
+                                            nodeForAction = reformattedNode;
                                         }
                                         else throw new Exception("Add command missing either file or node name.");
                                     }
@@ -114,7 +121,14 @@ namespace Models.Core.ConfigFile
                         // Instruction to be used with Structure.cs.
                         Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
                         // Run the instruction.
-                        sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction);// TODO: needs to be tested.
+                        if (string.IsNullOrEmpty(instruction.FileContainingNode))
+                        {
+                            sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction);
+                        }
+                        else
+                        {
+                            sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction, instruction.FileContainingNode);
+                        }
 
                     }
                 }
@@ -148,12 +162,37 @@ namespace Models.Core.ConfigFile
                 //Check for add keyword in instruction.
                 if (instruction.keyword == Keyword.Add)
                 {
-                    //Create a node perhaps using Resource and Activator classes? similar to AddModelPresenter.
-                    //IModel child = Resource.Instance.GetModel(instruction.NodeForAction); // TODO: needs testing to see if it can create a model.
-                    // Use structure.Add() to add the node to the specific
+
                     IModel simulationNode = simulation.FindAllChildren().First(m => m.Name == "Simulation");
                     IModel parentNode = simulationNode.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
-                    Structure.Add(instruction.NodeForAction, parentNode); // TODO: also needs testing.
+                    Structure.Add(instruction.NodeForAction, parentNode);
+                }
+                return simulation;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Runs config file instruction on .apsimx file then returns the modified file.
+        /// </summary>
+        private static IModel RunInstructionOnApsimxFile(IModel simulation, Instruction instruction, string pathOfSimWithNode)
+        {
+            try
+            {
+                //Check for add keyword in instruction.
+                if (instruction.keyword == Keyword.Add)
+                {
+                    // Process for adding an existing node from another file.
+                    {
+                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNode, e => throw e, false).NewModel as Simulations;
+                        IModel nodeToCopy = simToCopyFrom.FindInScope(instruction.NodeForAction); // TODO: needs testing.
+                        IModel simToCopyTo = simulation.FindAllChildren().First(m => m.Name == "Simulation");
+                        IModel parentNode = simToCopyTo.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
+                        Structure.Add(nodeToCopy, parentNode);
+                    }
                 }
                 return simulation;
             }

@@ -292,7 +292,6 @@ ExperimentY2
             Assert.AreEqual(startTimeAfterEdit, expectedTimeAfterEdit);
         }
 
-        // TODO: Needs finishing.
         [Test]
         public void TestEditUseConfigSwitchWithSaveFile()
         {
@@ -326,6 +325,66 @@ ExperimentY2
             Simulations originalSim = FileFormat.ReadFromString<Simulations>(originalFileText, e => throw e, false).NewModel as Simulations;
             // Need to assert that old file was not changed.
             Assert.AreNotEqual(originalSim, sim2);
+        }
+
+        [Test]
+        public void TestApplySwitchAddWithModelName()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string newFileString = "add [Zone] Report";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.IsNotNull(newReportNode);
+        }
+
+        [Test]
+        public void TestApplySwitchAddFromAnotherApsimxFile()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+            Simulations file2 = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string newApsimFile = file2.FileName;
+            string newFileString = $"add [Zone] {newApsimFile};[Report]";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            bool apsimFileExists = File.Exists(newApsimFile);
+            Assert.True(File.Exists(newTempConfigFile));
+            Assert.True(File.Exists(newApsimFile));
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.IsNotNull(newReportNode);
         }
     }
 }
