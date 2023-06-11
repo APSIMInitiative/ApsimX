@@ -265,10 +265,10 @@ namespace Models.PMF
         public event EventHandler Cutting;
         /// <summary>Occurs when a plant is about to be grazed.</summary>
         public event EventHandler Grazing;
-        /// <summary>Occurs when a plant is about to flower</summary>
-        public event EventHandler Flowering;
-        /// <summary>Occurs when a plant is about to start pod development</summary>
-        public event EventHandler StartPodDevelopment;
+        ///// <summary>Occurs when a plant is about to flower</summary>
+        //public event EventHandler Flowering;
+        ///// <summary>Occurs when a plant is about to start pod development</summary>
+        //public event EventHandler StartPodDevelopment;
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -295,20 +295,20 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Leaf != null && AboveGround != null)
-            {
-                string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Leaf != null)
-                {
-                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
-                    message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
-                }
-                summary.WriteMessage(this, message, MessageType.Diagnostic);
-                if (Phenology.CurrentPhase.Start == "Flowering")
-                    Flowering?.Invoke(this, null);
-                if (Phenology.CurrentPhase.Start == "StartPodDevelopment")
-                    StartPodDevelopment?.Invoke(this, null);
-            }
+            //if (sender == this && Leaf != null && AboveGround != null)
+            //{
+            //    string message = Phenology.CurrentPhase.Start + "\r\n";
+            //    if (Leaf != null)
+            //    {
+            //        message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
+            //        message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
+            //    }
+            //    summary.WriteMessage(this, message, MessageType.Diagnostic);
+            //    if (Phenology.CurrentPhase.Start == "Flowering")
+            //        Flowering?.Invoke(this, null);
+            //    if (Phenology.CurrentPhase.Start == "StartPodDevelopment")
+            //        StartPodDevelopment?.Invoke(this, null);
+            //}
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

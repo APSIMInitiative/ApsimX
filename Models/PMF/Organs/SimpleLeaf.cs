@@ -48,6 +48,9 @@ namespace Models.PMF.Organs
         [Link]
         private Plant plant = null;
 
+        /// <summary>Link to summary instance.</summary>
+        private ISummary summary = null;
+
         /// <summary>
         /// The surface organic matter model.
         /// </summary>
@@ -767,6 +770,8 @@ namespace Models.PMF.Organs
         {
             if (phaseChange.StageName == LeafInitialisationStage)
                 leafInitialised = true;
+            summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>
