@@ -48,13 +48,20 @@ namespace Models.Functions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (Phenology.Beyond(StartStageName))
+            if (StartStageName != null)
             {
-                return Integral.Value(arrayIndex) - YesterdaysValue;
+                if (Phenology.Beyond(StartStageName))
+                {
+                    return Integral.Value(arrayIndex) - YesterdaysValue;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             else
             {
-                return 0;
+                return Integral.Value(arrayIndex) - YesterdaysValue;
             }
         }
 
