@@ -353,7 +353,7 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.ScrumEstablishStages:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = new string[4] { "Seed", "Germination", "Emergence", "Seedling" };
+                    DropDownOptions = new string[3] { "Seed", "Emergence", "Seedling" };
                     break;
                 case DisplayType.ScrumHarvestStages: 
                     DisplayMethod = PropertyType.DropDown;

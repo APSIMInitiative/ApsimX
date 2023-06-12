@@ -100,12 +100,12 @@ namespace Models.PMF.Scrum
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, int> StageNumbers = new Dictionary<string, int>() { {"Seed",1 },{"Germination",2 },{ "Emergence", 3 },{ "Seedling", 4 },
-            { "Vegetative", 5},{ "EarlyReproductive",6},{ "MidReproductive",7},{  "LateReproductive",8},{"Maturity",9},{"Ripe",10 } };
+        public static Dictionary<string, int> StageNumbers = new Dictionary<string, int>() { {"Seed",1 },{ "Emergence", 2 },{ "Seedling", 3 },
+            { "Vegetative", 4},{ "EarlyReproductive",5},{ "MidReproductive",6},{  "LateReproductive",7},{"Maturity",8},{"Ripe",9 } };
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
-        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{"Germination",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
+        public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
             { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
 
         
@@ -202,7 +202,7 @@ namespace Models.PMF.Scrum
             Dictionary<string, double> PropnTt = new Dictionary<string, double>();
             foreach (KeyValuePair<string, double> entry in PropnMaxDM)
             {
-                if ((entry.Key == "Seed") || (entry.Key == "Germination"))
+                if (entry.Key == "Seed") 
                 {
                     PropnTt.Add(entry.Key, 0.0);
                 }
@@ -214,7 +214,7 @@ namespace Models.PMF.Scrum
             }
 
             double emergeTt = 0.0;
-            if (StageNumbers[management.EstablishStage] < 3.0)
+            if (management.EstablishStage == "Seed")
                 emergeTt = management.PlantingDepth * 5.0; //This is Phenology.Emerging.Target.ShootRate value 
             
             // Derive Crop Parameters
