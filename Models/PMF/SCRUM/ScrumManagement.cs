@@ -41,7 +41,7 @@ namespace Models.PMF.Scrum
         public double PlantingDepth { get; set; }
 
         /// <summary>Harvest Date</summary>
-        [Separator("Scrum needs to have a valid harvest date or Harvest Tt (from establishment) specified")]
+        [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
         [Description("Harvest Date")]
         public Nullable <DateTime> HarvestDate { get; set; }
 
