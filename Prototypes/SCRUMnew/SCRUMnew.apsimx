@@ -1283,7 +1283,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "divide(1,[Product].DryMatterContent*[Product].Wt,0)/100",
+                  "Expression": "(divide(1,[Product].DryMatterContent,0)*[Product].Wt)/100",
                   "Name": "Yield",
                   "ResourceName": null,
                   "Children": [
@@ -16944,7 +16944,7 @@
                     "[Soil].SoilWater.pond",
                     "[Soil].Water.MM",
                     "[Soil].NO3.kgha",
-                    "[SCRUM].Product.Yield * 100 as Yield",
+                    "[SCRUM].Product.Yield *100 as Yield",
                     "[SCRUM].Stover.Live.Wt",
                     "[SCRUM].Root.Live.Wt",
                     "[SCRUM].Product.Live.Wt",
@@ -17120,7 +17120,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Product.Yield",
+              "YFieldName": "Yield",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
