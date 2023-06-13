@@ -16,18 +16,15 @@ using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 using Models.Core.Run;
 
-public interface ISyncSim {
-    Action<string> OnPause {get; set;}
-    Action<string> OnResume {get; set;}
-}
+/// <summary>
+/// Encapsulate an apsim simulation & runner
+/// Runs apsim in another thread
+/// </summary>
 
 namespace APSIM.ZMQServer
 {
     public class ApsimEncapsulator
     {
-        /// <summary>
-        /// Run apsim in another thread
-        /// </summary>
         private Simulations sims;
 
         private Runner runner;
@@ -66,20 +63,21 @@ namespace APSIM.ZMQServer
             Console.WriteLine("n=" + s2.Count().ToString());
             foreach (var s3 in s2)
             {
-              object s4 = s3.Value;
-              var t4 = s4.GetType();
+                object s4 = s3.Value;
+                var t4 = s4.GetType();
 
-              if ( t4.GetMethod("OnPause") != null) {
-                  //t4.GetMethod("OnPause") = OnPause = x => Console.WriteLine(x);
-               }
+                if (t4.GetMethod("OnPause") != null)
+                {
+                    //t4.GetMethod("OnPause") = OnPause = x => Console.WriteLine(x);
+                }
             }
 
         }
-public bool HasMethod(object objectToCheck, string methodName)
-{
-    var type = objectToCheck.GetType();
-    return type.GetMethod(methodName) != null;
-} 
+        public bool HasMethod(object objectToCheck, string methodName)
+        {
+            var type = objectToCheck.GetType();
+            return type.GetMethod(methodName) != null;
+        }
         public event Action<string> onPaused;
         public event Action<string> onRunFinished;
         public event Action<string> onRunStart;
@@ -146,6 +144,9 @@ public bool HasMethod(object objectToCheck, string methodName)
             return (bytes);
         }
 
+        /// <summary>
+        // Run the loaded simulation with specified changes. Return immediately
+        /// </summary>
         public void Run(string[] changes)
         {
             runState = runStateT.running;
@@ -196,6 +197,7 @@ public bool HasMethod(object objectToCheck, string methodName)
                 workerThread?.Join(250);
                 if (workerThread == null)
                     break;
+                // this is wrong, need to syhchronise between threads, not poll them
                 var s2 = sims.FindAllByPath("[Semaphore].Script.semaphore");
                 foreach (var x in s2)
                 {
