@@ -53,9 +53,14 @@ namespace Models.PMF.Scrum
         public double StoverNConc { get; set; }
 
         /// <summary>Product Nitrogen Concentration at maturity</summary>
-        [Description("Product Nitrogen concentration at maturity(g/g)")]
+        [Description("Product Nitrogen concentration at maturity (g/g)")]
         public double ProductNConc { get; set; }
-        
+
+        /// <summary>Product Nitrogen Concentration at maturity</summary>
+        [Description("Plant Nitrogen concentration at Seedling (g/g)")]
+        public double SeedlingNConc { get; set; }
+
+
         /// <summary>Base temperature for crop</summary>
         [Description("Base temperature for crop (oC)")]
         public double BaseT { get; set; }
@@ -116,9 +121,10 @@ namespace Models.PMF.Scrum
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
             {"RootProportion","[Root].RootProportion.FixedValue = "},
-            {"ProductNConc","[Product].NConcAtMaturity.FixedValue = "},
-            {"StoverNConc","[Stover].NConcAtMaturity.FixedValue = "},
+            {"ProductNConc","[Product].MaxNConcAtMaturity.FixedValue = "},
+            {"StoverNConc","[Stover].MaxNConcAtMaturity.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
+            {"SeedlingNConc","[SCRUM].MaxNConcAtSeedling.FixedValue = " },
             {"FixationRate","[Nodule].FixationRate.FixedValue = "},
             {"ExtinctCoeff","[Stover].ExtinctionCoefficient.FixedValue = "},
             {"ACover","[Stover].Cover.Expanding.SigCoverFunction.Ymax.FixedValue = "},
@@ -159,7 +165,7 @@ namespace Models.PMF.Scrum
 
             Cultivar crop = coeffCalc(management);
             scrum.Children.Add(crop);
-            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover);//, cultivarOverwrites: crop);
+            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
@@ -190,6 +196,7 @@ namespace Models.PMF.Scrum
             cropParams["ProductNConc"] += this.ProductNConc.ToString();
             cropParams["StoverNConc"] += this.StoverNConc.ToString();
             cropParams["RootNConc"] += this.RootNConc.ToString();
+            cropParams["SeedlingNConc"] += this.SeedlingNConc.ToString();
             cropParams["MaxRootDepth"] += this.MaxRD.ToString();
             cropParams["MaxHeight"] += this.MaxHeight.ToString();
             cropParams["RootProportion"] += this.Proot.ToString();
