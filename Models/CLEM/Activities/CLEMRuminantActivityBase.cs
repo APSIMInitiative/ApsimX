@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
                 PredictedHerdName = "Multiple";
             }
 
-            if (herd.Count() > 0)
+            if (herd.Any())
             {
                 PredictedHerdBreed = herd.FirstOrDefault().Breed;
                 PredictedHerdName = herd.FirstOrDefault().HerdName;
