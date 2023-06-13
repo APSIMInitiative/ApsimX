@@ -1,6 +1,7 @@
-﻿namespace Models.Core
+﻿using System;
+
+namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view
@@ -31,5 +32,5 @@
         {
             return this.name;
         }
-    } 
+    }
 }

@@ -1,8 +1,7 @@
-﻿
+﻿using System;
 
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// An enumeration for display types.

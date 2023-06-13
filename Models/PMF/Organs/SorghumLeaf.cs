@@ -1,17 +1,17 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
-using Models.PMF.Struct;
-using Newtonsoft.Json;
 using Models.PMF.Phen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
+using Models.PMF.Struct;
 using Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Organs
 {
@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
     {
         /// <summary>The plant</summary>
         [Link]
-        private Plant plant = null; 
+        private Plant plant = null;
 
         [Link]
         private ISummary summary = null;
@@ -41,7 +41,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Phenology</summary>
         [Link]
-        public Phenology phenology = null; 
+        public Phenology phenology = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -158,16 +158,16 @@ namespace Models.PMF.Organs
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.</summary>
         [JsonIgnore]
         [Description("Fertile Tiller Number")]
-        public double FertileTillerNumber 
-        { 
-            get  => culms.FertileTillerNumber; 
-            set 
+        public double FertileTillerNumber
+        {
+            get => culms.FertileTillerNumber;
+            set
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
                 //this is here to enable access by external processes immediately following sowing
                 //setting it after sowing will produce unexpected results
-                culms.FertileTillerNumber = value; 
-            } 
+                culms.FertileTillerNumber = value;
+            }
         }
 
         /// <summary>Determined by the tillering method chosen.</summary>
@@ -315,7 +315,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cover total.</summary>
         [JsonIgnore]
         [Units("0-1")]
-        public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead); 
+        public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead);
 
         /// <summary>Gets or sets the height.</summary>
         [Units("mm")]
@@ -457,7 +457,7 @@ namespace Models.PMF.Organs
         public double NFixationCost => 0; //called from arbitrator
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
-        public BiomassPoolType DMPotentialAllocation => potentialDMAllocation; 
+        public BiomassPoolType DMPotentialAllocation => potentialDMAllocation;
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
@@ -596,7 +596,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            if(UseMicroClimate) return WaterDemand;
+            if (UseMicroClimate) return WaterDemand;
 
             if (waterDemandFunction != null)
                 return waterDemandFunction.Value();
@@ -609,7 +609,7 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
             {
-                if(leafInitialised)
+                if (leafInitialised)
                 {
                     //areaActual in old model
                     // culms.AreaActual() will update this.DltLAI
@@ -721,7 +721,7 @@ namespace Models.PMF.Organs
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             double nProvided = 0.0;
-            
+
             if (phenology.Between("Germination", "Flowering"))
             {
                 var targetForDilution = requiredN / 3.0;
@@ -786,7 +786,7 @@ namespace Models.PMF.Organs
             double nProvided = Math.Min(newLeafN, requiredN);
 
             DltLAI = (newLeafN - nProvided) / NewLeafSLN;
-            return nProvided; 
+            return nProvided;
 
             // should we update the StructuralDemand?
             //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
@@ -911,7 +911,7 @@ namespace Models.PMF.Organs
             var leafWt = StartLive.Wt + potentialDMAllocation.Total;
             var leafWtAvail = leafWt - minPlantWt.Value() * SowingDensity;
 
-            double availableDM = Math.Max(0.0,  leafWtAvail);
+            double availableDM = Math.Max(0.0, leafWtAvail);
 
             // Don't retranslocate more DM than we have available.
             availableDM = Math.Min(availableDM, StartLive.Wt);
@@ -1000,7 +1000,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
-                
+
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
                 LAI = InitialLAI * SowingDensity.ConvertSqM2SqMM();
@@ -1020,15 +1020,15 @@ namespace Models.PMF.Organs
             if (sowingData.Plant != plant) throw new Exception("Not the sowing event for this plant??");
 
             if (sowingData.SkipRow < 0 || sowingData.SkipRow > 2)
-            throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
+                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
 
             //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
             var outerSkips = sowingData.SkipRow > 0 ? 2 : 0;
             var nonSkipCover = Math.Min(sowingData.RowSpacing, CanopyWidth) * 2.0;
-            
+
             //outerSkipCovered is > 0 only if canopy width is wider than rowSpacing
             var outerSkipCovered = Math.Max(0, (CanopyWidth - sowingData.RowSpacing) / 2) * outerSkips;
-            
+
             var totalWidth = sowingData.RowSpacing * 2 + sowingData.RowSpacing * sowingData.SkipRow;
             var totalCover = nonSkipCover + outerSkipCovered;
 
@@ -1123,14 +1123,14 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             UpdateArea(); //must be calculated before potential N partitioning
-            
+
             var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = CalcLAI();
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
-            var dilutionN = dltTT.Value() * ( NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
+            var dilutionN = dltTT.Value() * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
 
             NSupply.ReTranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 

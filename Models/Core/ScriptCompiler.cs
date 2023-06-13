@@ -1,18 +1,18 @@
-﻿namespace Models.Core
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 
-    using APSIM.Shared.Utilities;
-    using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.VisualBasic;
-    using Microsoft.CodeAnalysis.Emit;
-    using Microsoft.CodeAnalysis.Text;
+namespace Models.Core
+{
 
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
     [Serializable]
@@ -20,9 +20,12 @@
     {
         private static bool haveTrappedAssemblyResolveEvent = false;
         private static object haveTrappedAssemblyResolveEventLock = new object();
+
+        private static object compilingScriptLock = new object();
+
         private const string tempFileNamePrefix = "APSIM";
         [NonSerialized]
-        
+
 
 
         private List<PreviousCompilation> previousCompilations = new List<PreviousCompilation>();
@@ -63,110 +66,116 @@
         {
             string errors = null;
 
-            if (code != null)
+            PreviousCompilation compilation = null;
+            bool newlyCompiled;
+
+            lock (compilingScriptLock)
             {
-                // See if we have compiled the code already. If so then no need to compile again.
-                PreviousCompilation compilation = previousCompilations?.Find(c => c.Code == code);
 
-                bool newlyCompiled;
-                if (compilation == null || compilation.Code != code)
+                if (code != null)
                 {
-                    newlyCompiled = true;
-                    bool withDebug = System.Diagnostics.Debugger.IsAttached;
+                    // See if we have compiled the code already. If so then no need to compile again.
+                    compilation = previousCompilations?.Find(c => c.Code == code);
 
-                    IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
-
-                    // We haven't compiled the code so do it now.
-                    string sourceName;
-                    Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
-
-                    List<EmbeddedText> embeddedTexts = null;
-                    if (withDebug)
+                    if (compilation == null || compilation.Code != code)
                     {
-                        System.Text.Encoding encoding = System.Text.Encoding.UTF8;
+                        newlyCompiled = true;
+                        bool withDebug = System.Diagnostics.Debugger.IsAttached;
 
-                        byte[] buffer = encoding.GetBytes(code);
-                        SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
-                        embeddedTexts = new List<EmbeddedText>
-                        {
-                            EmbeddedText.FromSource(sourceName, sourceText),
-                        };
-                    }
+                        IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
-                    MemoryStream ms = new MemoryStream();
-                    MemoryStream pdbStream = new MemoryStream();
-                    using (MemoryStream xmlDocumentationStream = new MemoryStream())
-                    {
-                        EmitResult emitResult = compiled.Emit(
-                            peStream: ms,
-                            pdbStream: withDebug ? pdbStream : null,
-                            xmlDocumentationStream: xmlDocumentationStream,
-                            embeddedTexts: embeddedTexts
-                            );
-                        if (!emitResult.Success)
-                        {
-                            // Errors were found. Add then to the return error string.
-                            errors = null;
-                            foreach (Diagnostic diag in emitResult.Diagnostics)
-                                if (diag.Severity == DiagnosticSeverity.Error)
-                                    errors += $"{diag.ToString()}{Environment.NewLine}";
+                        // We haven't compiled the code so do it now.
+                        string sourceName;
+                        Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
 
-                            // Because we have errors, remove the previous compilation if there is one.
-                            if (compilation != null)
-                                previousCompilations.Remove(compilation);
-                            compilation = null;
-                        }
-                        else
+                        List<EmbeddedText> embeddedTexts = null;
+                        if (withDebug)
                         {
-                            // No errors.
-                            // If we don't have a previous compilation, create one.
-                            if (compilation == null)
+                            System.Text.Encoding encoding = System.Text.Encoding.UTF8;
+
+                            byte[] buffer = encoding.GetBytes(code);
+                            SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+                            embeddedTexts = new List<EmbeddedText>
                             {
-                                compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
-                                if (previousCompilations == null)
-                                    previousCompilations = new List<PreviousCompilation>();
-                                previousCompilations.Add(compilation);
+                                EmbeddedText.FromSource(sourceName, sourceText),
+                            };
+                        }
+
+                        MemoryStream ms = new MemoryStream();
+                        MemoryStream pdbStream = new MemoryStream();
+                        using (MemoryStream xmlDocumentationStream = new MemoryStream())
+                        {
+                            EmitResult emitResult = compiled.Emit(
+                                peStream: ms,
+                                pdbStream: withDebug ? pdbStream : null,
+                                xmlDocumentationStream: xmlDocumentationStream,
+                                embeddedTexts: embeddedTexts
+                                );
+                            if (!emitResult.Success)
+                            {
+                                // Errors were found. Add then to the return error string.
+                                errors = null;
+                                foreach (Diagnostic diag in emitResult.Diagnostics)
+                                    if (diag.Severity == DiagnosticSeverity.Error)
+                                        errors += $"{diag.ToString()}{Environment.NewLine}";
+
+                                // Because we have errors, remove the previous compilation if there is one.
+                                if (compilation != null)
+                                    previousCompilations.Remove(compilation);
+                                compilation = null;
                             }
+                            else
+                            {
+                                // No errors.
+                                // If we don't have a previous compilation, create one.
+                                if (compilation == null)
+                                {
+                                    compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
+                                    if (previousCompilations == null)
+                                        previousCompilations = new List<PreviousCompilation>();
+                                    previousCompilations.Add(compilation);
+                                }
 
-                            // Write the assembly to disk
-                            ms.Seek(0, SeekOrigin.Begin);
-                            string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
-                            using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
-                                ms.WriteTo(file);
+                                // Write the assembly to disk
+                                ms.Seek(0, SeekOrigin.Begin);
+                                string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
+                                using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+                                    ms.WriteTo(file);
 
-                            // Write XML Documentation file.
-                            string documentationFile = Path.ChangeExtension(fileName, ".xml");
-                            xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
-                            using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
-                                xmlDocumentationStream.WriteTo(documentationWriter);
+                                // Write XML Documentation file.
+                                string documentationFile = Path.ChangeExtension(fileName, ".xml");
+                                xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
+                                using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
+                                    xmlDocumentationStream.WriteTo(documentationWriter);
 
-                            // Set the compilation properties.
-                            ms.Seek(0, SeekOrigin.Begin);
-                            pdbStream.Seek(0, SeekOrigin.Begin);
-                            compilation.Code = code;
-                            compilation.Reference = compiled.ToMetadataReference();
-                            compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
+                                // Set the compilation properties.
+                                ms.Seek(0, SeekOrigin.Begin);
+                                pdbStream.Seek(0, SeekOrigin.Begin);
+                                compilation.Code = code;
+                                compilation.Reference = compiled.ToMetadataReference();
+                                compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
+                            }
                         }
                     }
-                }
-                else
-                    newlyCompiled = false;
+                    else
+                        newlyCompiled = false;
 
-                if (compilation != null)
-                {
-                    // We have a compiled assembly so get the class name.
-                    var regEx = new Regex(@"class\s+(\w+)\s");
-                    var match = regEx.Match(code);
-                    if (!match.Success)
-                        throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
-                    var className = match.Groups[1].Value;
+                    if (compilation != null)
+                    {
+                        // We have a compiled assembly so get the class name.
+                        var regEx = new Regex(@"class\s+(\w+)\s");
+                        var match = regEx.Match(code);
+                        if (!match.Success)
+                            throw new Exception($"Cannot find a class declaration in script:{Environment.NewLine}{code}");
+                        var className = match.Groups[1].Value;
 
-                    // Create an instance of the class and give it to the model.
-                    var instanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == className);
-                    return new Results(compilation.CompiledAssembly, instanceType.FullName, newlyCompiled);
+                        // Create an instance of the class and give it to the model.
+                        var instanceType = compilation.CompiledAssembly.GetTypes().ToList().Find(t => t.Name == className);
+                        return new Results(compilation.CompiledAssembly, instanceType.FullName, newlyCompiled);
+                    }
+                    else
+                        return new Results(errors);
                 }
-                else
-                    return new Results(errors);
             }
 
             return null;
@@ -179,7 +188,7 @@
         {
             string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-            IEnumerable<MetadataReference> references = new MetadataReference[] 
+            IEnumerable<MetadataReference> references = new MetadataReference[]
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
@@ -212,7 +221,7 @@
                                                                    .Select(p => p.Reference));
             if (referencedAssemblies != null)
                 references = references.Concat(referencedAssemblies);
-            
+
             return references.Where(r => r != null);
         }
 

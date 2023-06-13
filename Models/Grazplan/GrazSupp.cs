@@ -1,15 +1,15 @@
 ﻿// -----------------------------------------------------------------------
 // The GrazPlan Supplement objects
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Class containing some common routine for dealing with parameter sets

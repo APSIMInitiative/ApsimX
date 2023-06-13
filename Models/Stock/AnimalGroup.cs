@@ -1,12 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using StdUnits;
+
 namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Interfaces;
-    using Models.Core;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
 
     /// <summary>
     /// AnimalGroup class
@@ -2279,7 +2280,7 @@ namespace Models.GrazPlan
                 return new Genotype(null, Genotype, matedToGenotypeParameters, 0.5, 0.5);
             }
             else
-                return new Genotype( Genotype);
+                return new Genotype(Genotype);
         }
 
         /// <summary>
@@ -3947,7 +3948,7 @@ namespace Models.GrazPlan
 
             TissueInsulation = Genotype.ChillC[3] * Math.Min(1.0, 0.4 + 0.02 * AgeDays) *    // Reduce tissue insulation for animals under 1 month old
                                             (Genotype.ChillC[4] + (1.0 - Genotype.ChillC[4]) * BodyCondition);    // Tissue insulation calculated as a fn
-                                                                                                            // of species and body condition
+                                                                                                                  // of species and body condition
             Factor1 = BodyRadius / (BodyRadius + CoatDepth);                                // These factors are used in equation J.8
             Factor2 = BodyRadius * Math.Log(1.0 / Factor1);
             WetFactor = this.Genotype.ChillC[5] + (1.0 - this.Genotype.ChillC[5]) *

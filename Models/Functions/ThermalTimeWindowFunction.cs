@@ -1,9 +1,5 @@
-﻿using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -49,10 +45,10 @@ namespace Models.Functions
         {
             if (windowLength(arrayIndex) == 0) return 0;
             if (windowLength(arrayIndex) < 0) throw new Exception("ThermalTimeWindowFunction::WindowEnd must be greater than WindowStart");
-            
+
             if (dltThermalTime.Value(arrayIndex) == 0) return 0;
             if (thermalTime.Value(arrayIndex) == 0) return 0;
-            
+
             //check if it falls within the window
             if (thermalTime.Value(arrayIndex) < ttWindowStart.Value(arrayIndex)) return 0.0;
             if (thermalTime.Value(arrayIndex) - dltThermalTime.Value(arrayIndex) > ttWindowEnd.Value(arrayIndex)) return 0.0;

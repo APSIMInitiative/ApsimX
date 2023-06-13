@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using System.Globalization;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {

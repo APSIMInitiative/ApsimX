@@ -1,6 +1,7 @@
+using System;
+
 namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// This is nearly the same information as "GrazType.ReproType" (below), but is intended for
@@ -74,12 +75,12 @@ namespace Models.GrazPlan
         /// </summary>
         public const double Ungrazeable = 0.0;  // g/m^2 - setting this to zero because the forages have already removed the ungrazable portion.
 
-    /// <summary>
-    /// Maximum soil layers
-    /// </summary>
-    public const int MaxSoilLayers = 50;
+        /// <summary>
+        /// Maximum soil layers
+        /// </summary>
+        public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
-        
+
         /// <summary>
         /// Plant part leaf
         /// </summary>
@@ -115,10 +116,10 @@ namespace Models.GrazPlan
         public const int EFFR = 1;
         public const int OLDR = 2;
 
-        public const int stSEEDL = 1;   
-        public const int stESTAB = 2;   
-        public const int stSENC = 3;  
-        public const int stDEAD = 4;  
+        public const int stSEEDL = 1;
+        public const int stESTAB = 2;
+        public const int stSENC = 3;
+        public const int stDEAD = 4;
         public const int stLITT1 = 5;
         public const int stLITT2 = 6;
 
@@ -395,7 +396,7 @@ namespace Models.GrazPlan
             /// Available herbage
             /// </summary>
             public IntakeRecord[] Herbage = new IntakeRecord[DigClassNo + 1];       // [1..DigClassNo];        
-            
+
             /// <summary>
             /// Total live + senescing pasture (kg/ha)
             /// </summary>
@@ -590,7 +591,7 @@ namespace Models.GrazPlan
                 Array.Copy(src.Seed, this.Seed, src.Seed.Length);
             }
         }
-        
+
         /// <summary>
         /// Carbon content of dry matter
         /// </summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
 
@@ -16,19 +15,19 @@ namespace Models.Functions
     {
         [Link]
         Soils.IPhysical soilPhysical = null;
-        
+
         [Link(ByName = true)]
         INutrientPool Humic = null;
-        
+
         [Link(ByName = true)]
         INutrientPool Inert = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMCarbohydrate = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMCellulose = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMLignin = null;
 
@@ -64,10 +63,10 @@ namespace Models.Functions
             else
                 ActiveC = Humic.C[arrayIndex] + 0.0 + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
 
-            double ActiveCppm = ActiveC/(soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
+            double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
-             
+
             return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
         }
 

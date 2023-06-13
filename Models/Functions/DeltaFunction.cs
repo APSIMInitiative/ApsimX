@@ -1,10 +1,9 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
+using Models.PMF;
 
 namespace Models.Functions
 {
@@ -12,6 +11,8 @@ namespace Models.Functions
     /// This function returns the daily delta for its child function
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
     public class DeltaFunction : Model, IFunction
     {
@@ -40,22 +41,28 @@ namespace Models.Functions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (StartStageName != null) //For functions that don't start giving values on the first day of simulation and don't have zero as their first value we need to set a start stage so the first values is picked up on the correct day
-            {
-                if (Phenology.Beyond(StartStageName))
-                {
-                    YesterdaysValue = Integral.Value();
-                }
-            }
-            else
-                YesterdaysValue = Integral.Value();
+             YesterdaysValue = Integral.Value();
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            return Integral.Value(arrayIndex) - YesterdaysValue;
+            if (StartStageName != null)
+            {
+                if (Phenology.Beyond(StartStageName))
+                {
+                    return Integral.Value(arrayIndex) - YesterdaysValue;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                return Integral.Value(arrayIndex) - YesterdaysValue;
+            }
         }
 
         /// <summary>Called when [EndCrop].</summary>

@@ -1,13 +1,14 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using static Models.Core.Overrides;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.

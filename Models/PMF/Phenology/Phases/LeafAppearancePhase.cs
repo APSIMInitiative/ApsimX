@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Newtonsoft.Json;
-using APSIM.Shared.Utilities;
-using Models.Functions;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -124,6 +124,6 @@ namespace Models.PMF.Phen
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); } 
+        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
     }
 }

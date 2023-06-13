@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 
 /// <summary>
 /// Temporary class for math utilities.
@@ -226,5 +222,5 @@ public static class mu
 
 
 }
- 
+
 

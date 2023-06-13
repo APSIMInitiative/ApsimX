@@ -1,8 +1,8 @@
 ﻿using System;
-using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Soils;
+using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.Functions
 {
@@ -19,7 +19,7 @@ namespace Models.Functions
         [Link]
         IPhysical physical = null;
 
-   
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -31,9 +31,9 @@ namespace Models.Functions
             if (soilwater.SW[arrayIndex] < physical.LL15[arrayIndex])
                 WF = 0;
             else if (soilwater.SW[arrayIndex] < physical.DUL[arrayIndex])
-                WF = Math.Min(1, 4 * MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.LL15[arrayIndex], physical.DUL[arrayIndex] - physical.LL15[arrayIndex],0.0));
+                WF = Math.Min(1, 4 * MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.LL15[arrayIndex], physical.DUL[arrayIndex] - physical.LL15[arrayIndex], 0.0));
             else
-                WF = 1 - MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex],0.0);
+                WF = 1 - MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);
 
             return WF;
         }

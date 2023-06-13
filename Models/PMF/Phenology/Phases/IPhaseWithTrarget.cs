@@ -1,6 +1,7 @@
 using System.IO;
 namespace Models.PMF.Phen
-{   
+{
+
     /// <summary>Interface for a function</summary>
     public interface IPhaseWithTarget : IPhase
     {

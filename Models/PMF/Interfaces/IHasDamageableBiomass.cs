@@ -1,6 +1,7 @@
-﻿namespace Models.PMF.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Models.PMF.Interfaces
 {
-    using System.Collections.Generic;
 
     /// <summary>Interface used by models (e.g. STOCK, pests and diseases) to damage a biomass (e.g. plant or surface residues).</summary>
     public interface IHasDamageableBiomass

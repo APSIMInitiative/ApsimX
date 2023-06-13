@@ -611,6 +611,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Body condition score
+        /// </summary>
+        [FilterByProperty]
+        public double BodyConditionScore
+        {
+            get
+            {
+                double bcscore = BreedParams.BCScoreRange[1] + (RelativeCondition - 1) / BreedParams.RelBCToScoreRate;
+                return Math.Max(BreedParams.BCScoreRange[0], Math.Min(bcscore, BreedParams.BCScoreRange[2]));
+            }
+        }
+
+        /// <summary>
         /// Method called on offspring when mother is lost (e.g. dies or sold)
         /// </summary>
         public void MotherLost()

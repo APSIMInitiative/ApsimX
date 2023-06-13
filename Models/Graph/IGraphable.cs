@@ -1,14 +1,12 @@
-﻿namespace Models
+﻿using System.Collections.Generic;
+using System.Drawing;
+using APSIM.Shared.Graphing;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using Models.Storage;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using APSIM.Shared.Graphing;
-    using Models.Core.Run;
 
     /// <summary>
     /// An interface for a model that can graph itself.
@@ -19,8 +17,8 @@
         /// <param name="storage">Storage service</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
-        IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage, 
-                                                           List<SimulationDescription> simulationDescriptions, 
+        IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
+                                                           List<SimulationDescription> simulationDescriptions,
                                                            List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
@@ -33,7 +31,7 @@
     }
 
     /// <summary>An enumeration for the different types of graph series</summary>
-    public enum SeriesType 
+    public enum SeriesType
     {
         /// <summary>A bar series</summary>
         Bar,

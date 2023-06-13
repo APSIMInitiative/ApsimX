@@ -1,11 +1,12 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
@@ -81,7 +82,7 @@
                 var soilPhysical = FindAncestor<IPhysical>();
                 if (soilPhysical == null)
                     return null;
-                return  MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
+                return MathUtilities.Multiply(PAWC, soilPhysical.Thickness);
             }
         }
 
@@ -166,10 +167,10 @@
 
             if (throwException)
             {
-                Exception e = new Exception("Soil Layers do not match on "+ Name + ".\n"+ Name +" has been modified to match Physical node.");
+                Exception e = new Exception("Soil Layers do not match on " + Name + ".\n" + Name + " has been modified to match Physical node.");
                 e.Data.Add("tableData", tb);
                 throw e;
-            } 
+            }
             else
             {
                 return tb;

@@ -1,10 +1,8 @@
 ﻿using System;
-using Models.Core;
-using Models.PMF.Organs;
-using Models.Functions;
-using Models.PMF.Phen;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Functions;
 
 namespace Models.PMF.Organs
 {
@@ -16,7 +14,7 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(SimpleLeaf))]
     public class BasialBuds : Model
-    {  
+    {
         /// <summary>The reset stage name</summary>
         [Description("(optional) Stage name to reset accumulation")]
         public string ResetStageName { get; set; }
@@ -31,7 +29,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Nodenumber Function
         /// </summary>
-        [Link(Type=LinkType.Child,ByName = true)] private IFunction Deltanodenumber = null;
+        [Link(Type = LinkType.Child, ByName = true)] private IFunction Deltanodenumber = null;
         /// <summary>
         /// Leaf Area Index Function
         /// </summary>
@@ -64,8 +62,8 @@ namespace Models.PMF.Organs
         {
             DaysAfterCutting += 1;
             LAI += Deltalai.Value();
-            NodeNumber += Deltanodenumber.Value(); 
-            if (DaysAfterCutting==3)
+            NodeNumber += Deltanodenumber.Value();
+            if (DaysAfterCutting == 3)
             {
                 LAI = 0;
                 NodeNumber = 0;

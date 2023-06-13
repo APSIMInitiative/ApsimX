@@ -36,7 +36,7 @@ namespace Models.Functions
             try
             {
                 //Ymax* (1 + (te - t) / (te - tm)) * (t / te) ^ (te / (te - tm))
-                if(XValue.Value(arrayIndex) <= te)
+                if (XValue.Value(arrayIndex) <= te)
                 {
                     return Ymax.Value(arrayIndex) * (1 +
                     (te - XValue.Value(arrayIndex)) /
@@ -44,7 +44,7 @@ namespace Models.Functions
                     Math.Pow(XValue.Value(arrayIndex) / te,
                     te / (te - tm));
                 }
-                else 
+                else
                 {
                     return Ymax.Value(arrayIndex);
                 }

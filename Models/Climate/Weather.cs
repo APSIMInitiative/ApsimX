@@ -1,15 +1,15 @@
-﻿namespace Models.Climate
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+
+namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.IO;
 
     ///<summary>
     /// Reads in weather data and makes it available to other models.
@@ -17,7 +17,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.TabbedMetDataView")]
     [PresenterName("UserInterface.Presenters.MetDataPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     public class Weather : Model, IWeather, IReferenceExternalFiles
     {
@@ -26,6 +26,12 @@
         /// </summary>
         [Link]
         private IClock clock = null;
+
+        /// <summary>
+        /// A link to the the summary
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -258,7 +264,8 @@
         [JsonIgnore]
         public int WinterSolsticeDOY
         {
-            get {
+            get
+            {
                 if (Latitude <= 0)
                 {
                     if (DateTime.IsLeapYear(clock.Today.Year))
@@ -273,7 +280,7 @@
                     else
                         return 355;
                 }
-                }
+            }
         }
 
         private bool First = true;
@@ -537,7 +544,7 @@
         /// <returns>Sun set time</returns>
         public double CalculateSunSet()
         {
-            return 12 + CalculateDayLength(-6)/2;
+            return 12 + CalculateDayLength(-6) / 2;
         }
 
         /// <summary>
@@ -674,7 +681,7 @@
                 //StartDAWS = met.DaysSinceWinterSolstice;
                 if (clock.Today.DayOfYear < WinterSolsticeDOY)
                 {
-                    if (DateTime.IsLeapYear(clock.Today.Year-1))
+                    if (DateTime.IsLeapYear(clock.Today.Year - 1))
                         DaysSinceWinterSolstice = 366 - WinterSolsticeDOY + clock.Today.DayOfYear;
                     else
                         DaysSinceWinterSolstice = 365 - WinterSolsticeDOY + clock.Today.DayOfYear;
@@ -690,6 +697,9 @@
             else DaysSinceWinterSolstice += 1;
 
             Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+
+            //do sanity check on weather
+            SensibilityCheck(clock as Clock, this);
         }
 
         /// <summary>Method to read one days met data in from file</summary>
@@ -1038,6 +1048,41 @@
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
+        }
+
+        /// <summary>
+        /// Does a santiy check on this weather data to check that temperatures,
+        /// VP, radition and rain are potentially valid numbers.
+        /// Also checks that every day has weather.
+        /// </summary>
+        private void SensibilityCheck(Clock clock, Weather weatherToday)
+        {
+            //things to check:
+            //Mint > MaxtT
+            //VP(if present) <= 0
+            //Radn < 0 or Radn > 40
+            //Rain < 0
+            if (weatherToday.MinT > weatherToday.MaxT)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")", MessageType.Warning);
+            }
+            if (weatherToday.VP <= 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has Vapor Pressure (" + weatherToday.VP + ") which is below 0", MessageType.Warning);
+            }
+            if (weatherToday.Radn < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative solar raditation (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            if (weatherToday.Radn > 40)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has solar raditation (" + weatherToday.Radn + ") which is above 40", MessageType.Warning);
+            }
+            if (weatherToday.Rain < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            return;
         }
     }
 }

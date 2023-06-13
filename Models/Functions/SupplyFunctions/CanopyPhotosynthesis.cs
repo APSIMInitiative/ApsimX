@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
+using APSIM.Shared.Documentation;
+using Models.Climate;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.PMF;
-using Models.Climate;
-using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {

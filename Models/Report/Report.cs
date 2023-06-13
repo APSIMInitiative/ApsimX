@@ -1,17 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.Core;
+using Models.Storage;
+using Newtonsoft.Json;
+
 namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.CLEM;
-    using Models.Core;
-    using Models.Functions;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -81,7 +81,7 @@ namespace Models
         public DateTime DayAfterLastOutput { get; set; }
 
         /// <summary>Group by variable name.</summary>
-        public string GroupByVariableName{ get; set; }
+        public string GroupByVariableName { get; set; }
 
         /// <summary>
         /// Connect event handlers.
@@ -309,7 +309,7 @@ namespace Models
             // columns. Find the first aggregated column so that we can, later, use its from and to
             // variables to create an agregated column that doesn't have them.
             string from = null;
-            string to =  null;
+            string to = null;
             if (!string.IsNullOrEmpty(GroupByVariableName))
                 FindFromTo(out from, out to);
 

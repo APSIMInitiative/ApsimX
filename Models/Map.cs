@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Text;
-using Models.Core;
-using Newtonsoft.Json;
-using System.Xml;
 using System.Collections.Generic;
-using APSIM.Shared.Utilities;
-using Models.Climate;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using Models.Climate;
+using Models.Core;
 using Models.Mapping;
 
 namespace Models

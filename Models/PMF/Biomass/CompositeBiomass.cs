@@ -1,11 +1,9 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
-using System.Collections;
-using Models.Core;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using Models.PMF.Interfaces;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF
 {

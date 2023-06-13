@@ -1,17 +1,18 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+
+namespace Models.Core.ApsimFile
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml;
 
     class Writer : XmlTextWriter
     {
-        public Writer(TextWriter w) 
+        public Writer(TextWriter w)
             : base(w)
         {
             version = Converter.LatestVersion;
         }
-       
+
 
         Stack<string> elements = new Stack<string>();
 
@@ -24,7 +25,7 @@
 
         public override void WriteStartElement(string prefix, string localName, string ns)
         {
-           
+
             switch (currentState)
             {
                 case States.InModelNode:
@@ -41,7 +42,7 @@
                     break;
             }
 
-//                base.WriteStartElement(prefix, localName, ns);
+            //                base.WriteStartElement(prefix, localName, ns);
         }
 
         public override void WriteEndElement()
@@ -100,7 +101,7 @@
             //        break;
             //}
         }
-    
+
 
 
         public override void WriteNmToken(string name)
@@ -131,16 +132,16 @@
                         base.WriteString(version.ToString());
                         base.WriteEndAttribute();
 
-                       // base.WriteAttributeString("Version", version.ToString());
+                        // base.WriteAttributeString("Version", version.ToString());
                         version = -1;
                     }
 
                     // Write name element.
                     if (foundName != null)
                     {
-                      //  base.WriteStartElement("Name");
-                      //  base.WriteString(foundName);
-                      //  base.WriteEndElement();
+                        //  base.WriteStartElement("Name");
+                        //  base.WriteString(foundName);
+                        //  base.WriteEndElement();
                         foundName = null;
 
                     }

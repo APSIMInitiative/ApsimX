@@ -1,16 +1,12 @@
-﻿namespace Models.PMF
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+using Newtonsoft.Json;
 
-   
+namespace Models.PMF
+{
+
     /// <summary>
     /// The daily state of flows throughout the plant
     /// </summary>
