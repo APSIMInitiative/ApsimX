@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 273,
-  "Version": 160,
+  "ExplorerWidth": 410,
+  "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -259,6 +259,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "ModelInitialisation",
                   "End": "Dormant",
+                  "IsEmerged": true,
                   "Name": "ZeroPhase",
                   "ResourceName": null,
                   "Children": [
@@ -298,6 +299,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "Dormant",
                   "End": "BudBreak",
+                  "IsEmerged": true,
                   "DAWStoProgress": 30,
                   "Name": "SpringDormancy",
                   "ResourceName": null,
@@ -309,6 +311,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "BudBreak",
                   "End": "StartFruitGrowth",
+                  "IsEmerged": true,
                   "DAWStoProgress": 100,
                   "Name": "CanopyExpansion",
                   "ResourceName": null,
@@ -320,6 +323,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "StartFruitGrowth",
                   "End": "FruitRipe",
+                  "IsEmerged": true,
                   "DAWStoProgress": 300,
                   "Name": "FruitGrowth",
                   "ResourceName": null,
@@ -331,6 +335,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "FruitRipe",
                   "End": "BareTree",
+                  "IsEmerged": true,
                   "DAWStoProgress": 340,
                   "Name": "LeafFall",
                   "ResourceName": null,
@@ -342,6 +347,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "BareTree",
                   "End": "SpringDormant",
+                  "IsEmerged": true,
                   "DAWStoProgress": 365,
                   "Name": "WinterDormancy",
                   "ResourceName": null,
@@ -352,6 +358,7 @@
                 {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "BareTree",
+                  "IsEmerged": true,
                   "PhaseNameToGoto": "SpringDormancy",
                   "Name": "GotoPhase",
                   "ResourceName": null,
@@ -1514,7 +1521,7 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Trunk].Tallness",
-                  "Name": "Tallness",
+                  "Name": "HeightFunction",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5020,6 +5027,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -6080,6 +6088,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -6653,7 +6662,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -12426,6 +12435,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -18920,6 +18930,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -21994,6 +22005,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -22964,6 +22976,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -23801,7 +23814,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "Ext_coef",
@@ -23949,6 +23962,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -25769,6 +25783,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -27496,6 +27511,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -28268,6 +28284,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -28841,7 +28858,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "Ext_coef",
@@ -30470,6 +30487,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -31313,6 +31331,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -31886,7 +31905,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                      "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "Ext_coef",
