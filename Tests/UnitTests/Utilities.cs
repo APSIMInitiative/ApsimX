@@ -220,7 +220,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return FileFormat.ReadFromString<T>(json, errorHandler, false);
+            return (T)FileFormat.ReadFromString<T>(json, errorHandler, false).NewModel;
         }
 
         /// <summary>

@@ -1,12 +1,9 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -23,7 +20,7 @@ namespace Models.Functions
         [Description("Number of Days")]
         public int NumberOfDays { get; set; }
 
-        
+
         /// <summary>The accumulated value</summary>
         private List<double> AccumulatedValues = new List<double>();
 
@@ -50,7 +47,7 @@ namespace Models.Functions
         {
             for (int i = 0; i < NumberOfDays; i++)
                 AccumulatedValues.Add(0);
-         }
+        }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
         /// <param name="sender">Plant.cs</param>

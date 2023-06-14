@@ -1,19 +1,12 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Activities;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
-using System.Globalization;
-using Models.CLEM.Activities;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -29,7 +22,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates the grazing limiters for each RuminantActivityGrazeHerd component present or created at runtime")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/GrazingEfficiency.htm")]
-    public class ReportGrazingEfficiency: Models.Report
+    public class ReportGrazingEfficiency : Models.Report
     {
         /// <summary>
         /// Includes the potential intake modifier from pasture quality
@@ -81,15 +74,15 @@ namespace Models.CLEM.Reporting
             variableNames.Add("[Clock].Today as Date");
             foreach (var grz in grzes)
             {
-                if(IncludePastureQualityLimiter)
+                if (IncludePastureQualityLimiter)
                     variableNames.Add($"[{grz.Name}].PotentialIntakePastureQualityLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PastureQualityLimiter")}");
-                if(IncludePastureBiomassLimiter)
-                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds,"PastureBiomassLimiter")}");
-                if(IncludeGrazingTimeLimiter)
+                if (IncludePastureBiomassLimiter)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PastureBiomassLimiter")}");
+                if (IncludeGrazingTimeLimiter)
                     variableNames.Add($"[{grz.Name}].PotentialIntakeGrazingTimeLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "GrazingTimeLimiter")}");
-                if(IncludeCompetitionLimiter)
+                if (IncludeCompetitionLimiter)
                     variableNames.Add($"[{grz.Name}].GrazingCompetitionLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CompetitionLimiter")}");
-                if(IncludeCombinedLimit)
+                if (IncludeCombinedLimit)
                     variableNames.Add($"[{grz.Name}].PotentialIntakeLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CombinedLimiter")}");
             }
 

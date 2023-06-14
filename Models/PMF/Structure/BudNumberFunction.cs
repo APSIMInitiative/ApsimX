@@ -1,9 +1,9 @@
 ﻿using System;
-using Models.Core;
-using Models.PMF.Phen;
-using Models.Functions;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Functions;
+using Models.PMF.Phen;
 
 namespace Models.PMF.Struct
 {

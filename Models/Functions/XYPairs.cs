@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using System.Xml;
-using APSIM.Shared.Utilities;
 using System.Data;
 using APSIM.Shared.Documentation;
-using Newtonsoft.Json;
 using APSIM.Shared.Graphing;
-using Graph = APSIM.Shared.Documentation.Graph;
-using StandardSeries = APSIM.Shared.Graphing.Series;
+using APSIM.Shared.Utilities;
+using Models.Core;
 using Table = APSIM.Shared.Documentation.Table;
 
 namespace Models.Functions
@@ -66,8 +61,30 @@ namespace Models.Functions
             for (int i = 0; i < Math.Max(X.Length, Y.Length); i++)
             {
                 DataRow row = table.NewRow();
-                row[0] = i <= X.Length - 1 ? X[i].ToString("F1") : "";
-                row[1] = i <= Y.Length - 1 ? Y[i].ToString("F1") : "";
+
+                const double tolerance = 1e-9;
+                const int minDecimalPlaces = 1; //minimum 1 decimal place
+                const int maxDecimalPlaces = 6; //max 5 decimal places
+                string xDigits = "F" + minDecimalPlaces.ToString();
+                string yDigits = "F" + minDecimalPlaces.ToString();
+                double xDeci = Math.Round(X[i], minDecimalPlaces);
+                double yDeci = Math.Round(Y[i], minDecimalPlaces);
+                for (int j = minDecimalPlaces + 1; j <= maxDecimalPlaces; j++)
+                {
+                    if (Math.Abs(Math.Round(X[i], j) - xDeci) > tolerance)
+                    {
+                        xDigits = "F" + j.ToString();
+                        xDeci = Math.Round(X[i], j);
+                    }
+                    if (Math.Abs(Math.Round(Y[i], j) - yDeci) > tolerance)
+                    {
+                        yDigits = "F" + j.ToString();
+                        yDeci = Math.Round(Y[i], j);
+                    }
+                }
+
+                row[0] = i <= X.Length - 1 ? X[i].ToString(xDigits) : "";
+                row[1] = i <= Y.Length - 1 ? Y[i].ToString(yDigits) : "";
                 table.Rows.Add(row);
             }
             yield return new Table(table);

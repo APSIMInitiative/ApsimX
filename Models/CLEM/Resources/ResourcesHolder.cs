@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace Models.CLEM.Resources
@@ -21,14 +21,14 @@ namespace Models.CLEM.Resources
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
-    public class ResourcesHolder: CLEMModel, IValidatableObject, IReportPricingChange
+    public class ResourcesHolder : CLEMModel, IValidatableObject, IReportPricingChange
     {
         [JsonIgnore]
         private IEnumerable<IModel> ResourceGroupList;
 
         private void InitialiseResourceGroupList()
         {
-            if(ResourceGroupList == null)
+            if (ResourceGroupList == null)
                 ResourceGroupList = this.FindAllChildren<IModel>().Where(a => a.Enabled);
         }
 
@@ -74,7 +74,7 @@ namespace Models.CLEM.Resources
         {
             if (type is null) throw new ArgumentNullException(nameof(type));
 
-            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { } );
+            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { });
             MethodInfo generic = method.MakeGenericMethod(type);
             return generic.Invoke(this, null) as ResourceBaseWithTransactions;
         }
@@ -95,7 +95,7 @@ namespace Models.CLEM.Resources
             if (resourceName is null)
                 missingResourceTypeAction = OnMissingResourceActionTypes.Ignore;
 
-            string[] nameParts = new string[] { "", resourceName??"" };
+            string[] nameParts = new string[] { "", resourceName ?? "" };
             if (nameParts.Last().Contains('.'))
             {
                 nameParts = nameParts.Last().Split('.');
@@ -153,7 +153,7 @@ namespace Models.CLEM.Resources
                     default:
                         break;
                 }
-                    return default(T);
+                return default(T);
             }
             else
             {
@@ -166,7 +166,7 @@ namespace Models.CLEM.Resources
 
             if (resType as IModel is null)
             {
-                errorMsg = $"Unable to locate resource type [r={((nameParts.Last()=="")?"Unknown":nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource type [r={((nameParts.Last() == "") ? "Unknown" : nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -190,19 +190,19 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action if resource group missing</param>
         /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
         /// <returns>A resource type component</returns>
-        public T FindResourceType<R,T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
+        public T FindResourceType<R, T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
             if (request.Resource is T)
                 return (T)Convert.ChangeType(request.Resource, typeof(T));
 
-            return FindResourceType<R,T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
+            return FindResourceType<R, T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
         }
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
         /// </summary>
         /// <returns></returns>
-        public bool ResourceItemsExist<T>() 
+        public bool ResourceItemsExist<T>()
         {
             var resourceGroup = this.FindAllChildren<T>().FirstOrDefault() as IModel;
             if (resourceGroup != null)
@@ -280,7 +280,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if(!(this.Parent is Market))
+            if (!(this.Parent is Market))
             {
                 IModel parentSim = FindAncestor<Simulation>();
                 FoundMarket = parentSim.FindAllChildren<Market>().FirstOrDefault();

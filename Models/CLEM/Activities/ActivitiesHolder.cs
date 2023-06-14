@@ -1,5 +1,4 @@
 ﻿using Models.Core;
-using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -205,7 +204,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
+            return $"\r\n<div class=\"activity\"style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">";
         }
 
         /// <inheritdoc/>

@@ -1,8 +1,8 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -189,7 +189,7 @@ namespace Models.CLEM.Resources
         public void Set(double newAmount)
         {
             this.amount = Math.Max(0, newAmount);
-        } 
+        }
         #endregion
 
     }

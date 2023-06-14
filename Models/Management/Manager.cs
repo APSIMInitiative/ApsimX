@@ -1,15 +1,15 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Reflection;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The manager model
@@ -90,7 +90,7 @@
         /// way to store both the caret position and scrolling information.
         /// </summary>
         [JsonIgnore]
-        public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
+        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
@@ -98,6 +98,14 @@
         /// </summary>
         [JsonIgnore]
         public int ActiveTabIndex { get; set; }
+
+        /// <summary>
+        /// Stores the success of the last compile
+        /// Used to check if the binary is up to date before running simulations
+        /// Prevents an old binary brom being used if the last compile had errors
+        /// </summary>
+        [JsonIgnore]
+        private bool SuccessfullyCompiledLast { get; set; } = false;
 
         /// <summary>
         /// Called when the model has been newly created in memory whether from 
@@ -125,6 +133,10 @@
         {
             if (Children.Count != 0)
             {
+                //throw an expection to stop simulations from running with an old binary
+                if (SuccessfullyCompiledLast == false)
+                    throw new Exception("Errors found in manager model " + Name);
+
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
             }
@@ -142,6 +154,7 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
+                    SuccessfullyCompiledLast = true;
                     if (Children.Count != 0)
                         Children.Clear();
                     var newModel = results.Instance as IModel;
@@ -152,7 +165,10 @@
                     }
                 }
                 else
+                {
+                    SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
+                }
                 SetParametersInScriptModel();
             }
         }
@@ -174,7 +190,7 @@
                             if (property != null)
                             {
                                 object value;
-                                if ( (typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")) )
+                                if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = this.FindInScope(parameter.Value);

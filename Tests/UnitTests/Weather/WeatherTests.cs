@@ -126,5 +126,67 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
+        /*
+         * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
+         * Useful to keep for later though if we need to check all the example weather.
+        [Test]
+        public void SanityCheckExampleWeather()
+        {
+            List<string> weatherFiles = new List<string>();
+            weatherFiles.Add("75_34825.met");
+            weatherFiles.Add("-225_36025.met");
+            weatherFiles.Add("1000_39425.met");
+            weatherFiles.Add("-1025_34875.met");
+            weatherFiles.Add("-1375_37985.met");
+            weatherFiles.Add("-2500_39425.met");
+            weatherFiles.Add("4025_36675.met");
+            weatherFiles.Add("Curvelo.met");
+            weatherFiles.Add("Dalby.met");
+            weatherFiles.Add("Gatton.met");
+            weatherFiles.Add("Goond.met");
+            weatherFiles.Add("Ingham.met");
+            weatherFiles.Add("Kingaroy.met");
+            weatherFiles.Add("lincoln.met");
+            weatherFiles.Add("Makoka.met");
+            weatherFiles.Add("Popondetta.met");
+            weatherFiles.Add("Site1003_SEA.met");
+            weatherFiles.Add("VCS_Ruakura.met");
+            weatherFiles.Add("WaggaWagga.met");
+
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            
+
+            foreach (string wFile in weatherFiles)
+            {
+                string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", wFile));
+
+                Simulation baseSim = new Simulation()
+                {
+                    Name = "Base",
+                    Children = new List<IModel>()
+                {
+                    new Models.Climate.Weather()
+                    {
+                        Name = "Weather",
+                        FullFileName = weatherFilePath,
+                        ExcelWorkSheetName = "Sheet1"
+                    },
+                    new Clock()
+                    {
+                        Name = "Clock",
+                    },
+                    new MockSummary()
+                }
+                };
+
+                (baseSim.Children[1] as Clock).StartDate = (baseSim.Children[0] as Models.Climate.Weather).StartDate;
+                (baseSim.Children[1] as Clock).EndDate = (baseSim.Children[0] as Models.Climate.Weather).EndDate;
+
+                baseSim.Prepare();
+                baseSim.Run();
+                Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
+            }
+        }
+        */
     }
 }

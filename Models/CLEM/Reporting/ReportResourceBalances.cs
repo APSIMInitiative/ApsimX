@@ -1,15 +1,14 @@
-using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Utilities;
-using System.Data;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
-using Models.Storage;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -27,7 +26,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Includes value as reportable columns")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
-    public class ReportResourceBalances: Models.Report, ICLEMUI
+    public class ReportResourceBalances : Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -110,9 +109,9 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any() )
-                return; 
-            
+            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any())
+                return;
+
             timers = FindAllChildren<IActivityTimer>();
 
             List<string> variableNames = new List<string>();
@@ -146,7 +145,7 @@ namespace Models.CLEM.Reporting
                                     for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
                                         if (ReportAmount)
-                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
+                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name);
 
                                         //TODO: what economic metric is needed for labour
                                         //TODO: add ability to report labour value if required
@@ -183,7 +182,7 @@ namespace Models.CLEM.Reporting
                                                 if (ReportValue)
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalPrice as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
                                             }
-                                            if(ReportHerdTotals & ((item as RuminantType).Parent as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined)
+                                            if (ReportHerdTotals & ((item as RuminantType).Parent as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined)
                                             {
                                                 if (ReportAmount)
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").Count as {item.Name.Replace(" ", "_")}.All.Count");
@@ -198,9 +197,9 @@ namespace Models.CLEM.Reporting
                                         else
                                         {
                                             if (ReportAmount)
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.{amountStr} as {item.Name.Replace(" ", "_")}_Amount");
                                             if (ReportValue & item.GetType() != typeof(FinanceType))
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.Value as { item.Name.Replace(" ", "_") }_DollarValue");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.Value as {item.Name.Replace(" ", "_")}_DollarValue");
                                         }
                                     }
                                 }

@@ -97,8 +97,8 @@
             table1.Attach(new Label("Data Source:") { Xalign = 0 }, 0, 0, 1, 1);
             table1.Attach(new Label("X:") { Xalign = 0 }, 0, 1, 1, 1);
             table1.Attach(new Label("Y:") { Xalign = 0 }, 0, 2, 1, 1);
-            label4 = new Label("Y2:") { Xalign = 0 };
-            label5 = new Label("X2:") { Xalign = 0 };
+            label4 = new Label("X2:") { Xalign = 0 };
+            label5 = new Label("Y2:") { Xalign = 0 };
             table1.Attach(label4, 0, 3, 1, 1);
             table1.Attach(label5, 0, 4, 1, 1);
             table1.Attach(new Label("Type:") { Xalign = 0 }, 0, 5, 1, 1);
@@ -111,8 +111,8 @@
             table1.Attach(dataSourceDropDown.MainWidget, 1, 0, 1, 1/*, 10, 2*/);
             table1.Attach(xDropDown.MainWidget, 1, 1, 1, 1/*10, 2*/);
             table1.Attach(yDropDown.MainWidget, 1, 2, 1, 1/*10, 2*/);
-            table1.Attach(y2DropDown.MainWidget, 1, 3, 1, 1/*10, 2*/);
-            table1.Attach(x2DropDown.MainWidget, 1, 4, 1, 1/*10, 2*/);
+            table1.Attach(x2DropDown.MainWidget, 1, 3, 1, 1/*10, 2*/);
+            table1.Attach(y2DropDown.MainWidget, 1, 4, 1, 1/*10, 2*/);
             table1.Attach(seriesDropDown.MainWidget, 1, 5, 1, 1/*10, 2*/);
             table1.Attach(lineTypeDropDown.MainWidget, 1, 6, 1, 1/*10, 2*/);
             table1.Attach(markerTypeDropDown.MainWidget, 1, 7, 1, 1/*10, 2*/);

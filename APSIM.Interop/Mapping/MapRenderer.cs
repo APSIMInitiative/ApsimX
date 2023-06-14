@@ -103,11 +103,13 @@ namespace APSIM.Interop.Mapping
                 osmLayer.DataChanged += changedHandler;
                 osmLayer.RefreshData(viewport.Extent, viewport.Resolution, ChangeType.Discrete);
             }
-            // Allow ourselves up to 10 seconds to get a map.
+            // Allow ourselves up to 30 seconds to get a map.
             int nSleeps = 0;
-            while (result == null && nSleeps++ < 1000)
+            while (result == null && nSleeps++ < 3000)
                 System.Threading.Thread.Sleep(10);
 
+            if (result == null)
+                throw new Exception("Cannot get map after 30 seconds from Open Street Map");
             osmLayer.DataChanged -= changedHandler;
             return result;
         }

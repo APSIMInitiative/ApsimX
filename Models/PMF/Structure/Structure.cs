@@ -1,13 +1,11 @@
 ﻿using System;
-using Models.Core;
-using Models.Functions;
-using Models.PMF.Phen;
-using Newtonsoft.Json;
-using Models.Interfaces;
-using Models.PMF.Interfaces;
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
-using System.Linq;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -249,7 +247,7 @@ namespace Models.PMF.Struct
                         // 0, because then GrowthDuration will be 0. However it can be close to 0 if final leaf #
                         // happens to have a very small fractional part (e.g. 14.00001).
                         // If your crop is never progressing to flag leaf, this might be why (try reducing epsilon).
-                        NextLeafProportion = Math.Max(1e-10,1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
+                        NextLeafProportion = Math.Max(1e-10, 1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
                     }
                     else
                     {
@@ -314,7 +312,7 @@ namespace Models.PMF.Struct
                         ProportionBranchMortality = PropnMortality;
 
                     }
-                    
+
                 }
             }
         }
@@ -459,7 +457,7 @@ namespace Models.PMF.Struct
             }
         }
 
-       
+
         /// <summary>Document this model.</summary>
         public override IEnumerable<ITag> Document()
         {
@@ -494,7 +492,7 @@ namespace Models.PMF.Struct
             branchingTags.Add(new Paragraph("*NewlyDeadBranches* is calcualted as:"));
             branchingTags.Add(new Paragraph("*NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*"));
             branchingTags.Add(new Paragraph("where *BranchMortality* is given by:"));
-            branchingTags.AddRange(branchMortality.Document()); 
+            branchingTags.AddRange(branchMortality.Document());
             yield return new Section("Branching and Branch Mortality", branchingTags);
 
             var heightTags = new List<ITag>();
@@ -503,7 +501,7 @@ namespace Models.PMF.Struct
             yield return new Section("Height", heightTags);
         }
     }
-}   
+}
 
-    
+
 

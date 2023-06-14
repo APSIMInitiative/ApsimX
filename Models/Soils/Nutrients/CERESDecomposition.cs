@@ -1,6 +1,6 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.Soils.Nutrients;
-using System;
 
 namespace Models.Functions
 {
@@ -12,13 +12,13 @@ namespace Models.Functions
     [ValidParent(ParentType = typeof(Nutrient))]
     public class CERESDecomposition : Model, IFunction
     {
-       [Link(ByName = true, Type = LinkType.Child)]
+        [Link(ByName = true, Type = LinkType.Child)]
         private IFunction TF = null;
-        
+
         [Link(ByName = true)]
         private IFunction WF = null;
 
-        [Link(IsOptional=true, ByName = true, Type = LinkType.Child)]
+        [Link(IsOptional = true, ByName = true, Type = LinkType.Child)]
         private IFunction CNRF = null;
 
         /// <summary>The potential rate of decomposition</summary>

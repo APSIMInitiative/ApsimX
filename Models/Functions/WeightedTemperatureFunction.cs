@@ -1,11 +1,9 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Linq;
 
 namespace Models.Functions
 {
@@ -30,7 +28,7 @@ namespace Models.Functions
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
-        
+
         #endregion
 
         /// <summary>Gets the value.</summary>

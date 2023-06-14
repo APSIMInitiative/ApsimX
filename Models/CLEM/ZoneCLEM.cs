@@ -3,14 +3,14 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Factorial;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
-using Models.Factorial;
+using System.Linq;
 using System.Text;
 
 namespace Models.CLEM
@@ -27,14 +27,14 @@ namespace Models.CLEM
     [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\r\nChanges will be required to your setup")]
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
-    [Version(1,0,1,"")]
+    [Version(1, 0, 1, "")]
     [ScopedModel]
-    public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
+    public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
         private readonly Summary summary = null;
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            // if auto create summary 
+            // if auto create summary
             if (AutoCreateDescriptiveSummary && !FindAllAncestors<Experiment>().Any())
             {
                 if (!File.Exists(wholeSimulationSummaryFile))
@@ -286,10 +286,10 @@ namespace Models.CLEM
             IModel simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
-            // get all validations 
+            // get all validations
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
 
-            // get all other errors 
+            // get all other errors
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
 
         }
@@ -327,7 +327,7 @@ namespace Models.CLEM
         public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary)
         {
             string starter = "[=";
-            if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
+            if (typeof(IResourceType).IsAssignableFrom(model.GetType()))
                 starter = "[r=";
             if (model.GetType() == typeof(ZoneCLEM))
                 starter = "[z=";
@@ -350,12 +350,12 @@ namespace Models.CLEM
 
             if (model is CLEMModel)
                 (model as CLEMModel).CLEMParentName = parentZone.Name;
-            modelPath += starter+model.Name+"]";
+            modelPath += starter + model.Name + "]";
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
-            if(model.Name.EndsWith(" "))
+            if (model.Name.EndsWith(" "))
                 validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
 
             if (validationResults.Count > 0)
@@ -488,10 +488,10 @@ namespace Models.CLEM
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
                     htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
-                
+
                 CurrentAncestorList = null;
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

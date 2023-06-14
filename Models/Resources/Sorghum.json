@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 159,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -419,7 +419,7 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "ResourceName": null,
@@ -444,7 +444,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
@@ -3524,7 +3524,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Soil].SoilWater.ESW",
+                  "VariableName": "[ISoilWater].ESW",
                   "Name": "extractable",
                   "ResourceName": null,
                   "Children": [],

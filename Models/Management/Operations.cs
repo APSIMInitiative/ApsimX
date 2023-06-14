@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using Models.Core;
-using System.IO;
-using System.Reflection;
-using Newtonsoft.Json;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models
 {
@@ -61,7 +57,7 @@ namespace Models
     public class Operations : Model
     {
         /// <summary>The clock</summary>
-        [Link] Clock Clock = null;
+        [Link] IClock Clock = null;
 
         /// <summary>Gets or sets the schedule.</summary>
         /// <value>The schedule.</value>

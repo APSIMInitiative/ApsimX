@@ -1,6 +1,4 @@
-﻿using Models.PMF.Interfaces;
-
-namespace Models.LifeCycle
+﻿namespace Models.LifeCycle
 {
     /// <summary>
     /// Interface for Infest methods for LifeCycle

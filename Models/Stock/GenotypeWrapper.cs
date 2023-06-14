@@ -1,12 +1,13 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using System.Collections.Generic;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using static Models.Core.Overrides;
+
+namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Xml;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// Wraps a single genotype and lazy loads from a resource file if it needs to.
@@ -57,7 +58,7 @@
         {
             nameOfStockResource = resourceName;
             var words = nameOfStockResource.Split(".".ToCharArray());
-            Name = words[words.Length-2];  // second last word - last word is "json"
+            Name = words[words.Length - 2];  // second last word - last word is "json"
             AnimalType = words[4];
         }
 
@@ -91,7 +92,7 @@
             try
             {
                 simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
-                                                                         e => throw e, false);
+                                                                         e => throw e, false).NewModel as Simulations;
             }
             catch (Exception err)
             {
@@ -230,7 +231,7 @@
                                 if (i == 0)
                                     commands.Add(new Override($"FDairyIntakePeak", values[i], Override.MatchTypeEnum.NameAndType));
                                 else
-                                    commands.Add(new Override($"{animalParamName}[{i + 1}]", values[i], Override.MatchTypeEnum.NameAndType)); 
+                                    commands.Add(new Override($"{animalParamName}[{i + 1}]", values[i], Override.MatchTypeEnum.NameAndType));
                             }
                             else
                                 commands.Add(new Override($"{animalParamName}[{i + 2}]", values[i], Override.MatchTypeEnum.NameAndType));  // 1 based array indexing before equals sign.

@@ -39,7 +39,7 @@ namespace APSIM.Server
         public ApsimServer(GlobalServerOptions options)
         {
             this.options = options;
-            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false);
+            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false).NewModel as Simulations;
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();

@@ -1,21 +1,20 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Soils;
-using Models.Soils.Nutrients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
 
 namespace Models
 {
     /// <summary>This model is responsible for applying fertiliser.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser :  Model
+    public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
         [Link] private IPhysical soilPhysical = null;
-        
+
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
@@ -39,7 +38,7 @@ namespace Models
         public double NitrogenApplied { get; private set; } = 0;
 
         /// <summary>Types of fertiliser.</summary>
-        public enum Types 
+        public enum Types
         {
             /// <summary>The calcite ca</summary>
             CalciteCA,
@@ -57,6 +56,8 @@ namespace Models
             DAP,
             /// <summary>The map</summary>
             MAP,
+            /// <summary>The UAN n</summary>
+            UAN_N,
             /// <summary>The urea n</summary>
             UreaN,
             /// <summary>The urea n o3</summary>
@@ -70,7 +71,7 @@ namespace Models
             /// <summary>The banded p</summary>
             BandedP,
             /// <summary>The broadcast p</summary>
-            BroadcastP 
+            BroadcastP
         };
 
         /// <summary>Apply fertiliser.</summary>

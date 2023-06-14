@@ -1,7 +1,6 @@
 ﻿using System;
 using Models.Core;
 using Models.Functions;
-using Models.LifeCycle;
 using Models.PMF;
 using Models.PMF.Interfaces;
 
@@ -30,7 +29,7 @@ namespace Models.LifeCycle
         [Description("Select host plant that Pest/Disease may bother")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
         public IPlantDamage HostPlant { get; set; }
-        
+
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may consume")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]
@@ -41,7 +40,7 @@ namespace Models.LifeCycle
         {
             OrganBiomassRemovalType consumption = new OrganBiomassRemovalType();
             double organWtConsumed = 0;
-            if ((ParentPhase.Cohorts != null)&&(HostPlant.IsAlive))
+            if ((ParentPhase.Cohorts != null) && (HostPlant.IsAlive))
             {
                 foreach (Cohort c in ParentPhase.Cohorts)
                 {
@@ -51,7 +50,7 @@ namespace Models.LifeCycle
                 }
                 HostPlant.RemoveBiomass(HostOrgan.Name, "Graze", consumption);
             }
-           
+
         }
     }
 }

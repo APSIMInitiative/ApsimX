@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using APSIM.Shared.Documentation;
 
 namespace Models.Functions.RootShape
 {
@@ -31,7 +31,7 @@ namespace Models.Functions.RootShape
                 if (zone.Depth < top)
                 {
                     prop = 0;
-                } 
+                }
                 else
                 {
                     rootArea = CalcRootAreaSemiCircleSorghum(zone, top, bottom, zone.RightDist);    // Right side

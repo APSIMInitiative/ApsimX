@@ -1,8 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Models
 {
@@ -48,7 +46,7 @@ namespace Models
         /// <param name="e">Event arguments</param>
         private void OnDoReport(object sender, EventArgs e)
         {
-            Clock clock = sender as Clock;
+            IClock clock = sender as Clock;
             if (DateUtilities.DatesAreEqual(dateString, clock.Today))
                 report.DoOutput();
         }

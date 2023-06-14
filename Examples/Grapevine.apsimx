@@ -7,7 +7,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "\n## Cautions for running the model \n- Vineyard conditions differ from one to the other due to differences in local climatic conditions, soil, rootstock, varieity, irrigtation, fertilization and canopy management practice. The current grapevine model rather provide a modelling framework to simulate phenology, canopy development, radiation interception, dry matter production and allocation, non-structural carbohydrate dynamics, yield components, soil water and nitrogen uptake in vineyard, than a universal model that can be applied anywhere without adjustments. \n- The current grapevine model was developed based on a rich phenology and yield dataset of Sauvignon blanc in New Zealand in five regions, mainly in the Marlborough region. The dataset were collected in irrigated and fertilized vineyards where water and nutrient stress were minimized. This was reflected in the simulation through irrigation and fertilization management script as well. For conditions with water and nutrient stress, further calibration based on local dataset would be needed. \n- Parameters for potential bunch number, berry number and berry mass determination were derived based on the long-term Sauvignon blanc trial in Marlborough. The general framework would hold for other varieties as well, but actual parameters needed to be refitted based on robust dataset for other varieties. \n- The current model can allocate vine roots to the alley and allocate the root of the alley crop to the vine row. However, the water and nitrogen competition between the vine and alley crop is based on the value of KL of each species, not based on the amount of root and root density presented in the soil zone. One option is change the KL as a function of root density or directly use root density in the source code. A good dataset of root distribution in different layor would be required. Further calibration of soil water, nitrogen and organic matter dynamics are needed.\n- Currently alley crop was represented by a generic plant model ‘Slurp’. The ‘Slurp’ model can take up water and nitrogen, but does not predict crop growth or yields. We forced its leaf area index to follow a reasonable growth pattern under the vineyard management in Marlborough New Zealand with periodic mowing events. Four different types were provided for the Slurp model: static crop, static tree, pasture, lurcern. see details in the Slurp node by right click and expanding the model structure. \n- The row crop light interception method assume the canopy shape is like a cube. So it is more suitable to use for verticle shoot prunned canopy. \n- Water stress was turned on for leaf expansion and photosynthesis, but nitrogen stress was turned off in the current model. However, nitrogen uptake and availability will still affect the organ development as the arbitrator is conducting biomass and nitrogen allocation automatically in the background.\n",
+      "Text": "\n## Cautions for running the model \n- Vineyard conditions differ from one to the other due to differences in local climatic conditions, soil, rootstock, varieity, irrigtation, fertilization and canopy management practice. The current grapevine model rather provide a modelling framework to simulate phenology, canopy development, radiation interception, dry matter production and allocation, non-structural carbohydrate dynamics, yield components, soil water and nitrogen uptake in vineyard, than a universal model that can be applied anywhere without adjustments. \n- The current grapevine model was developed based on a rich phenology and yield dataset of Sauvignon blanc in New Zealand in five regions, mainly in the Marlborough region. The dataset were collected in irrigated and fertilized vineyards where water and nutrient stress were minimized. This was reflected in the simulation through irrigation and fertilization management script as well. For conditions with water and nutrient stress, further calibration based on local dataset would be needed. \n- Parameters for potential bunch number, berry number and berry mass determination were derived based on the long-term Sauvignon blanc trial in Marlborough. The general framework would hold for other varieties as well, but actual parameters needed to be refitted based on robust dataset for other varieties. \n- The current model can allocate vine roots to the alley and allocate the root of the alley crop to the vine row. However, the water and nitrogen competition between the vine and alley crop is based on the value of KL of each species, not based on the amount of root and root density presented in the soil zone. One option is change the KL as a function of root density or directly use root density in the source code. A good dataset of root distribution in different layor would be required. Further calibration of soil water, nitrogen and organic matter dynamics are needed.\n- Currently alley crop was represented by a generic plant model â€˜Slurpâ€™. The â€˜Slurpâ€™ model can take up water and nitrogen, but does not predict crop growth or yields. We forced its leaf area index to follow a reasonable growth pattern under the vineyard management in Marlborough New Zealand with periodic mowing events. Four different types were provided for the Slurp model: static crop, static tree, pasture, lurcern. see details in the Slurp node by right click and expanding the model structure. \n- The row crop light interception method assume the canopy shape is like a cube. So it is more suitable to use for verticle shoot prunned canopy. \n- Water stress was turned on for leaf expansion and photosynthesis, but nitrogen stress was turned off in the current model. However, nitrogen uptake and availability will still affect the organ development as the arbitrator is conducting biomass and nitrogen allocation automatically in the background.\n",
       "Name": "Cautions for new users",
       "ResourceName": null,
       "Children": [],
@@ -145,8 +145,8 @@
             "([Row].Grapevine.Leaf.Removed.Wt+[Row].Grapevine.Shoot.Removed.Wt+[Row].Grapevine.Cane.Removed.Wt+[Row].Grapevine.Trunk.Removed.Wt+[Row].Grapevine.Berry.Removed.Wt+[Row].Grapevine.StructuralRoot.Removed.Wt+[Row].Grapevine.Root.Removed.Wt) as Row.Grapevine.Removed.Wt",
             "([Row].Grapevine.Leaf.Detached.Wt+[Row].Grapevine.Shoot.Detached.Wt+[Row].Grapevine.Cane.Detached.Wt+[Row].Grapevine.Trunk.Detached.Wt+[Row].Grapevine.Berry.Detached.Wt+[Row].Grapevine.StructuralRoot.Detached.Wt+[Row].Grapevine.Root.Detached.Wt) as Row.Grapevine.Detached.Wt",
             "[Row].SurfaceOrganicMatter.C as Row.SurfaceOM.C",
-            "sum([Row].Soil.SoilNitrogen.FOM.C) as Row.SoilFOM.C",
-            "sum([Row].Soil.SoilNitrogen.Microbial.C)+sum([Row].Soil.SoilNitrogen.Humic.C) as Row.SoilOM.C",
+            "sum([Row].Soil.Nutrient.FOM.C) as Row.SoilFOM.C",
+            "sum([Row].Soil.Nutrient.Microbial.C)+sum([Row].Soil.Nutrient.Humic.C) as Row.SoilOM.C",
             "",
             "// Water balance (basic)",
             "[Weather].Rain as Rainfall",
@@ -168,22 +168,22 @@
             "",
             "// Nitrogen balance (basic)",
             "[Row].SurfaceOrganicMatter.N as Row.SurfaceOM.N",
-            "sum([Row].Soil.SoilNitrogen.FOMN) as Row.SoilFOM.N",
-            "sum([Row].Soil.SoilNitrogen.Microbial.N)+sum([Row].Soil.SoilNitrogen.Humic.C) as Row.SoilOM.N",
+            "sum([Row].Soil.Nutrient.FOM.N) as Row.SoilFOM.N",
+            "sum([Row].Soil.Nutrient.Microbial.N)+sum([Row].Soil.Nutrient.Humic.C) as Row.SoilOM.N",
             "[Row].Fertiliser.NitrogenApplied as Row.FertiliserN",
             "sum([Row].Soil.SoilWater.LeachUrea)+sum([Row].Soil.SoilWater.LeachNO3) as Row.LeachedN",
-            "sum([Row].Soil.SoilNitrogen.Denitrification) as Row.DenitrifiedN",
+            "sum([Row].Soil.Nutrient.DenitrifiedN) as Row.DenitrifiedN",
             "[Row].Grapevine.Root.NTakenUp*10.0 as Row.UptakeN",
-            "sum([Row].Soil.SoilNitrogen.mineral_n) as Row.Mineral_N",
+            "sum([Row].Soil.Nutrient.MineralN) as Row.Mineral_N",
             "",
             "",
-            "sum([Alley].Soil.SoilNitrogen.mineral_n) as Alley.Mineral_N",
+            "sum([Alley].Soil.Nutrient.MineralN) as Alley.Mineral_N",
             "[Alley].SurfaceOrganicMatter.N as Alley.SurfaceOM.N",
-            "sum([Alley].Soil.SoilNitrogen.FOMN) as Alley.SoilFOM.N",
-            "sum([Alley].Soil.SoilNitrogen.Microbial.N)+sum([Alley].Soil.SoilNitrogen.Humic.C) as Alley.SoilOM.N",
+            "sum([Alley].Soil.Nutrient.FOM.N) as Alley.SoilFOM.N",
+            "sum([Alley].Soil.Nutrient.Microbial.N)+sum([Alley].Soil.Nutrient.Humic.C) as Alley.SoilOM.N",
             "[Alley].Fertiliser.NitrogenApplied as Alley.FertiliserN",
             "sum([Alley].Soil.SoilWater.LeachUrea)+sum([Alley].Soil.SoilWater.LeachNO3) as Alley.LeachedN",
-            "sum([Alley].Soil.SoilNitrogen.Denitrification) as Alley.DenitrifiedN",
+            "sum([Alley].Soil.Nutrient.DenitrifiedN) as Alley.DenitrifiedN",
             "[Alley].Slurp.Root.NTakenUp*10.0 as Alley.UptakeN",
             "sum([Alley].Slurp.Arbitrator.N.Fixation)*10.0 as Alley.FixedN"
           ],
@@ -1794,7 +1794,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "ResetDate",
@@ -1924,7 +1924,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Double Guyôt-trained vines, pruned each year to retain 24 nodes were monitored. Vines were trained using vertical shoot positioning (VSP), with an exposed leaf area height of 1.2 m, and trimmed to maintain a compact canopy. Vines were planted 1.8 m apart within the row, and 2.4 m apart between rows. Average flowering date was determined by monitoring all the inflorescences on one cane on a vine in each plot on a regular basis throughout flowering. Likewise, regular berry samples (at least weekly) were taken from before the date of véraison until harvest at a soluble solids concentration value of 21.5 oBrix. ",
+              "Text": "Double GuyÃ´t-trained vines, pruned each year to retain 24 nodes were monitored. Vines were trained using vertical shoot positioning (VSP), with an exposed leaf area height of 1.2 m, and trimmed to maintain a compact canopy. Vines were planted 1.8 m apart within the row, and 2.4 m apart between rows. Average flowering date was determined by monitoring all the inflorescences on one cane on a vine in each plot on a regular basis throughout flowering. Likewise, regular berry samples (at least weekly) were taken from before the date of vÃ©raison until harvest at a soluble solids concentration value of 21.5 oBrix. ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -2373,48 +2373,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "ResourceName": null,
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -2447,7 +2414,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -2480,7 +2447,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -2651,7 +2618,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\n        \tDebugger.Break();\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\n        \tDebugger.Break();\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "ResetDate",
@@ -3051,7 +3018,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private SoilNitrogen nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nitrogen;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n               \r\n                 if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nitrogen.Reset();\r\n                }\r\n\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "ResetDate",
@@ -3478,48 +3445,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "ResourceName": null,
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -3552,7 +3486,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -3585,7 +3519,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     100.0,
                     200.0,

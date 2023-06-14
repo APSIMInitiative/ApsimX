@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 
 namespace Models.Functions
@@ -62,4 +60,4 @@ namespace Models.Functions
         }
     }
 }
-   
+

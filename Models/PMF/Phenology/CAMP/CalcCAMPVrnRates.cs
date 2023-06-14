@@ -1,15 +1,13 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace Models.PMF.Phen
 {
-/// <summary>
+    /// <summary>
     /// Takes FLN and base phyllochron inputs and calculates Vrn expression rate coefficients for CAMP
     /// </summary>
     [Serializable]
@@ -21,12 +19,12 @@ namespace Models.PMF.Phen
     {
 
         /// <summary>The parent CAMP model</summary>
-        [Link(Type = LinkType.Ancestor,  ByName = true)]
+        [Link(Type = LinkType.Ancestor, ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
-        
+
         [Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
         IFunction phylloPpSens = null;
 
@@ -36,7 +34,7 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.LeafStageFactor.XYPairs")]
         XYPairs pLS = null;
 
-         /// <summary>
+        /// <summary>
         /// Calculates how much Tt has accumulated from emergence to the specified HaunStage
         /// </summary>
         /// <param name="x"></param>
@@ -48,7 +46,7 @@ namespace Models.PMF.Phen
         {
             double PpFactor = 1.0;
             if (Pp == 8)
-                PpFactor = 1+pPpS;
+                PpFactor = 1 + pPpS;
             List<double> HS = new List<double>();
             HS.Add(0);
             HS.AddRange(pLS.X.ToList<double>());
@@ -71,7 +69,7 @@ namespace Models.PMF.Phen
             else
                 return MathUtilities.LinearInterpReal(x, Tt.ToArray<double>(), HS.ToArray<double>(), out DidInterpolate);
         }
-    
+
 
         /// <summary>
         /// Takes observed (or estimated) final leaf numbers and phyllochron for genotype with (V) and without (N) vernalisation in long (L)
@@ -94,13 +92,13 @@ namespace Models.PMF.Phen
             // Get some other parameters from phenology
             double BasePhyllochron = basePhyllochron.Value();
             double PhylloPpSens = phylloPpSens.Value();
-            
+
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Base Phyllochrons)
             //////////////////////////////////////////////////////////////////////////////////////
 
             // ThermalTime duration of Emergence (EmergBP)
-            double HSEmerg = EnvData.TtEmerge/BasePhyllochron;
+            double HSEmerg = EnvData.TtEmerge / BasePhyllochron;
 
             //ThermalTime duration of vernalisation treatment period
             double HSVern = (EnvData.VrnTreatTemp * EnvData.VrnTreatDuration) / BasePhyllochron;
@@ -111,7 +109,7 @@ namespace Models.PMF.Phen
             // Minimum Therval time duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that harve a high TSHS hit VS ~3HS prior to TS 
-            double MinVsTsHS = Math.Min(3.0,FLNset.LV / 2.0);
+            double MinVsTsHS = Math.Min(3.0, FLNset.LV / 2.0);
 
             // The soonist a wheat plant may exhibit termenal spikelet
             double MinTSHS = MinVS + MinVsTsHS;
@@ -128,7 +126,7 @@ namespace Models.PMF.Phen
             double TSHS_LN = camp.calcTSHS(FLNset.LN, Params.IntFLNvsTSHS);
             double TSHS_SV = camp.calcTSHS(FLNset.SV, Params.IntFLNvsTSHS);
             double TSHS_SN = camp.calcTSHS(FLNset.SN, Params.IntFLNvsTSHS);
-            
+
             // Photoperiod sensitivity (PPS) is the Tt difference between TS at 8 and 16 h pp under full vernalisation.
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             double PPS = Math.Max(0, TSHS_SV - TSHS_LV);
@@ -311,7 +309,7 @@ namespace Models.PMF.Phen
             // Maximum rate of Vrnx Expression (MaxDVrnX)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             Params.MaxDVrnX = (camp.VrnSatThreshold - BaseVrn1AtVS_LN) / (VSHS_LN);
-                        
+
             Params.MaxMethColdVern1 = 1 - BaseVrn1AtVS_LV;
 
             return Params;

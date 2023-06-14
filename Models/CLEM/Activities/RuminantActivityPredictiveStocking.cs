@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
@@ -33,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private int numberToSkip = 0;
         private int numberToDo = 0;
@@ -349,11 +348,11 @@ namespace Models.CLEM.Activities
                 else
                     htmlWriter.Write("<span class=\"errorlink\">No month set");
                 htmlWriter.Write("</span></div>");
-                
+
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
                 htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(FeedLowLimit, warnZero: true)} kg/ha at the end of this period");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

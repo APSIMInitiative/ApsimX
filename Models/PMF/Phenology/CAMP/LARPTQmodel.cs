@@ -1,8 +1,5 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
-using Models.Functions;
-using System;
-
 
 namespace Models.PMF.Phen
 {

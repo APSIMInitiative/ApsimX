@@ -1,52 +1,51 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
-  "Version": 118,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 300,
+  "Version": 162,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "W1",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Clock, Models",
           "Start": "1994-08-05T00:00:00",
           "End": "2000-01-23T00:00:00",
           "Name": "clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "summaryfile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "Hudson.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -56,14 +55,13 @@
           "b_interception": 1.0,
           "c_interception": 0.0,
           "d_interception": 0.0,
-          "soil_albedo": 0.23,
           "SoilHeatFluxFraction": 0.4,
           "MinimumHeightDiffForNewLayer": 0.0,
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -74,12 +72,13 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "paddock",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Soil].SoilWater.SW",
+                "[Soil].Water.Volumetric",
                 "[Soil].SoilWater.Runoff",
                 "[Soil].SoilWater.Drainage",
                 "[Soil].SoilWater.Es",
@@ -88,14 +87,14 @@
                 "[Wheat].AboveGround.Wt",
                 "[Wheat].Grain.Wt",
                 "[Weather].Rain",
-                "sum([Soil].Nutrient.NH4.kgha) as NH4",
-                "sum([Soil].Nutrient.NO3.kgha) as NO3",
+                "sum([Soil].NH4.kgha) as NH4",
+                "sum([Soil].NO3.kgha) as NO3",
                 "sum([Soil].Nutrient.Natm) as dnit",
                 "[Wheat].AboveGround.N",
                 "[Wheat].BelowGround.N",
-                "sum([Soil].SoilWater.SWmm[2:6]) as SW110",
-                "sum([Soil].SoilWater.SWmm[7:11]) as SW210",
-                "sum([Soil].SoilWater.SWmm[12:16]) as SW310",
+                "sum([Soil].Water.MM[2:6]) as SW110",
+                "sum([Soil].Water.MM[7:11]) as SW210",
+                "sum([Soil].Water.MM[12:16]) as SW310",
                 "sum([Soil].CL.kgha[2:6]) as Cl110",
                 "sum([Soil].CL.kgha[7:11]) as Cl210",
                 "sum([Soil].CL.kgha[12:16]) as Cl310"
@@ -105,8 +104,8 @@
               ],
               "GroupByVariableName": null,
               "Name": "report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -131,27 +130,10 @@
               "DataSource": null,
               "Comments": null,
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -278,6 +260,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -339,13 +322,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "WheatSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -363,9 +345,9 @@
                   "CN2Bare": 72.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "Slope": "NaN",
                   "DischargeWidth": "NaN",
                   "CatchmentArea": "NaN",
+                  "PSIDul": -100.0,
                   "Thickness": [
                     100.0,
                     200.0,
@@ -403,32 +385,14 @@
                     0.4
                   ],
                   "KLAT": null,
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     100.0,
@@ -466,6 +430,7 @@
                     0.45,
                     0.45
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     14.5,
                     14.5,
@@ -522,15 +487,15 @@
                   ],
                   "FOM": [
                     1.8429940397237832,
-                    1.5186823100179569,
+                    1.518682310017957,
                     1.2514397274486826,
                     1.0312238320721043,
-                    0.84975933599413633,
-                    0.70022715403914981,
-                    0.57700815570345243,
+                    0.8497593359941363,
+                    0.7002271540391498,
+                    0.5770081557034524,
                     0.47547200908704707,
                     0.39180318196656694,
-                    0.32285756146587991,
+                    0.3228575614658799,
                     0.26604430436858767,
                     0.21922847823542707,
                     0.18065083476786425,
@@ -541,31 +506,13 @@
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
                   "Thickness": [
                     100.0,
                     200.0,
@@ -583,42 +530,6 @@
                     200.0,
                     200.0,
                     200.0
-                  ],
-                  "NO3N": [
-                    10.7,
-                    9.99,
-                    7.87,
-                    6.2,
-                    4.85,
-                    3.56,
-                    2.72,
-                    2.34,
-                    2.47,
-                    3.24,
-                    4.25,
-                    4.94,
-                    5.2,
-                    4.95,
-                    4.52,
-                    4.24
-                  ],
-                  "NH4N": [
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3,
-                    0.3
                   ],
                   "PH": [
                     6.0,
@@ -638,56 +549,22 @@
                     8.0,
                     8.0
                   ],
-                  "CL": [
-                    18.0,
-                    13.0,
-                    11.0,
-                    11.0,
-                    16.0,
-                    28.0,
-                    66.0,
-                    122.0,
-                    181.0,
-                    232.0,
-                    270.0,
-                    292.0,
-                    293.0,
-                    270.0,
-                    292.0,
-                    293.0
-                  ],
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
+                  "$type": "Models.Soils.Water, Models",
                   "Thickness": [
                     100.0,
                     200.0,
@@ -706,64 +583,7 @@
                     200.0,
                     200.0
                   ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial nitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-30",
-                    "30-50",
-                    "50-70",
-                    "70-90",
-                    "90-110",
-                    "110-130",
-                    "130-150",
-                    "150-170",
-                    "170-190",
-                    "190-210",
-                    "210-230",
-                    "230-250",
-                    "250-270",
-                    "270-290",
-                    "290-310"
-                  ],
-                  "Thickness": [
-                    100.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0,
-                    200.0
-                  ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": [
+                  "InitialValues": [
                     0.43,
                     0.43,
                     0.48,
@@ -781,60 +601,260 @@
                     0.457,
                     0.43
                   ],
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial water",
+                  "InitialPAWmm": 436.6,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Nutrients.Solute, Models",
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    18.0,
+                    13.0,
+                    11.0,
+                    11.0,
+                    16.0,
+                    28.0,
+                    66.0,
+                    122.0,
+                    181.0,
+                    232.0,
+                    270.0,
+                    292.0,
+                    293.0,
+                    270.0,
+                    292.0,
+                    293.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
                   "Name": "CL",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    10.7,
+                    9.99,
+                    7.87,
+                    6.2,
+                    4.85,
+                    3.56,
+                    2.72,
+                    2.34,
+                    2.47,
+                    3.24,
+                    4.25,
+                    4.94,
+                    5.2,
+                    4.95,
+                    4.52,
+                    4.24
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "unknown",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 1.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOM",
-              "IncludeInDocumentation": true,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -844,22 +864,21 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -882,12 +901,6 @@
                   "$type": "Models.Operation, Models",
                   "Date": "1994-09-07",
                   "Action": " [Wheat].EndCrop();",
-                  "Enabled": true
-                },
-                {
-                  "$type": "Models.Operation, Models",
-                  "Date": "1994-10-27",
-                  "Action": " [Wheat].Harvest();",
                   "Enabled": true
                 },
                 {
@@ -1006,61 +1019,62 @@
                 }
               ],
               "Name": "Operations",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "Wheat",
               "Name": "Wheat",
-              "IncludeInDocumentation": true,
+              "ResourceName": "Wheat",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Crop",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Biomass",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1086,8 +1100,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1115,8 +1129,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Wheat",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1144,13 +1158,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Barley",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1159,33 +1172,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Yield",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1211,8 +1224,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1240,8 +1253,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Wheat",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1269,13 +1282,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Barley",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1284,33 +1296,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "LAI",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1336,8 +1348,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1365,8 +1377,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Wheat",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1394,58 +1406,58 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed Barley",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "SoilWater",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "SW110cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1471,8 +1483,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1500,13 +1512,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1515,33 +1526,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "SW210cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1567,8 +1578,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1596,13 +1607,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1611,33 +1621,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "SW310cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1663,8 +1673,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1692,58 +1702,58 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Chloride",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride110cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1769,8 +1779,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1798,13 +1808,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1813,33 +1822,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride210cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1865,8 +1874,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1894,13 +1903,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1909,33 +1917,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Chloride310cm",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1961,8 +1969,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1990,23 +1998,20 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Observed",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -2015,6 +2020,7 @@
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
@@ -2032,18 +2038,16 @@
             "ObservedSWlayers"
           ],
           "Name": "ExcelInput",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

@@ -1,17 +1,17 @@
-﻿namespace Models
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
@@ -120,7 +120,7 @@
                                 SeriesType type = SeriesType.Scatter,
                                 AxisPosition xAxis = AxisPosition.Bottom,
                                 AxisPosition yAxis = AxisPosition.Left)
-        { 
+        {
             this.Title = title;
             this.Colour = colour;
             this.Line = line;
@@ -318,7 +318,16 @@
 
                 filter = filter?.Replace('\"', '\'');
                 View = new DataView(data);
-                View.RowFilter = filter;
+                try
+                {
+                    View.RowFilter = filter;
+                }
+                catch (Exception ex)
+                {
+                    //this will still cause a pause when running in debug mode, that is due to how visual studio
+                    //works when an exception thrown by external code but is not handled by that external code.
+                    throw new Exception("Filter cannot be parsed: " + ex.Message);
+                }
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(Series.TableName, XFieldName);
@@ -333,7 +342,7 @@
                     Y2 = GetDataFromView(View, Y2FieldName);
                     XError = GetErrorDataFromView(View, XFieldName);
                     YError = GetErrorDataFromView(View, YFieldName);
-                    if (Series.Cumulative)   
+                    if (Series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);

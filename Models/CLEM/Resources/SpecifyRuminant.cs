@@ -1,6 +1,4 @@
 ﻿using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -9,8 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -65,7 +61,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
-        public RuminantType BreedParams { get { return ruminantType;} }
+        public RuminantType BreedParams { get { return ruminantType; } }
 
         /// <summary>
         /// Records if a warning about set weight occurred
@@ -106,8 +102,8 @@ namespace Models.CLEM.Resources
             // check that this model contains children RuminantDestockGroups with filters
             var results = new List<ValidationResult>();
             // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-            
-            if(ruminantType is null)
+
+            if (ruminantType is null)
             {
                 string[] memberNames = new string[] { "Ruminant type" };
                 results.Add(new ValidationResult("An invalid [r=RuminantType] was specified", memberNames));

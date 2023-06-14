@@ -1,15 +1,15 @@
-﻿namespace UnitTests.Functions
+﻿using Models;
+using Models.Core;
+using Models.Functions;
+using Models.PMF;
+using Models.PMF.Phen;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+namespace UnitTests.Functions
 {
-    using Models;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF;
-    using Models.PMF.Phen;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-
     [TestFixture]
     class HoldFunctionTests
     {
@@ -31,6 +31,8 @@
         {
             public string Start { get; set; }
             public string End { get; set; }
+
+            public bool IsEmerged { get; } = true;
 
             public double FractionComplete { get; set; }
 
@@ -98,9 +100,17 @@
 
             Utilities.CallEvent(f.Children[1].Children[0], "Commencing", new object[] { this, new EventArgs() });
 
-            (f.Children[0] as MockFunctionThatThrows).DoThrow = true;
-            Utilities.CallEvent(f, "Commencing", new object[] { this, new EventArgs() });
-            Assert.AreEqual(f.Value(), 0);
+            try
+            {
+                (f.Children[0] as MockFunctionThatThrows).DoThrow = true;
+                Utilities.CallEvent(f, "Commencing", new object[] { this, new EventArgs() });
+                Assert.Fail();
+            }
+            catch
+            {
+                Assert.AreEqual(f.Value(), 0);
+            }
+            
 
             (f.Children[0] as MockFunctionThatThrows).DoThrow = false;
             Utilities.CallEvent(f, "DoUpdate", new object[] { this, new EventArgs() });
