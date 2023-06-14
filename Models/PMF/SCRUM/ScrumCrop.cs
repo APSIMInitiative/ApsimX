@@ -94,8 +94,17 @@ namespace Models.PMF.Scrum
         [Link]
         private Clock clock = null;
 
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary summary = null;
+
+        /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
+        private Cultivar crop = null;
+
         /// <summary> The date this instance of the crop will be harvested</summary>
         private DateTime HarvestDate { get; set; }
+
+        private double ttEmergeToHarv { get; set; }
 
         /// <summary> Field loss assigned at sowing so can be used in harvest event </summary>
         private double FieldLoss { get; set; }
@@ -163,13 +172,18 @@ namespace Models.PMF.Scrum
             double population = 1.0;
             double rowWidth = 0.0;
 
-            Cultivar crop = coeffCalc(management);
+            crop = coeffCalc(management);
             scrum.Children.Add(crop);
             scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
             }
+            summary.WriteMessage(this,"Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
+                " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
+                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoisturePc +
+                " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on "+ this.HarvestDate.ToString("dd-MMM-yyyy")+
+                ", "+ this.ttEmergeToHarv.ToString() +" oCd from now.",MessageType.Information);
         }
 
         /// <summary>
@@ -177,7 +191,7 @@ namespace Models.PMF.Scrum
         /// </summary>
         public Cultivar coeffCalc(ScrumManagement management)
         {
-            Dictionary<string, string> cropParams = blankParams;
+            Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
 
             if (this.Legume)
                 cropParams["FixationRate"] += "1000";
@@ -225,7 +239,7 @@ namespace Models.PMF.Scrum
                 emergeTt = management.PlantingDepth * 5.0; //This is Phenology.Emerging.Target.ShootRate value 
             
             // Derive Crop Parameters
-            double ttEmergeToHarv = 0.0;
+            ttEmergeToHarv = 0.0;
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
             {
                 ttEmergeToHarv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
@@ -302,6 +316,7 @@ namespace Models.PMF.Scrum
                 Remove.SetFractionToRemove("Stover", ResidueRemoval, "dead");
                 scrum.RemoveBiomass("Harvest", Remove);
                 scrum.EndCrop();
+                scrum.Children.Remove(crop);
             }
         }
     }
