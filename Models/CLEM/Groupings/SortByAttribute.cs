@@ -66,8 +66,6 @@ namespace Models.CLEM.Groupings
                         {
                             case IndividualAttribute _:
                                 return float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
-                            case CLEMGenotypeAttribute _:
-                                return MissingAttributeValue;
                             default:
                                 return null;
                         }
