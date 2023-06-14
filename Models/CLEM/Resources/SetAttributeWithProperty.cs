@@ -1,11 +1,16 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Groupings;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Reflection;
+using Display = Models.Core.DisplayAttribute;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -18,11 +23,16 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantTypeCohort))]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("Specify an attribute for the individual with associated value")]
-    [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
+    [Description("Specify an attribute for the individual with associated ruminant property value")]
+    [HelpUri(@"Content/Features/Resources/SetAttributeWithProperty.htm")]
     [Version(1, 0, 1, "")]
-    public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute
+    public class SetAttributeWithProperty : CLEMModel, IValidatableObject, ISetAttribute
     {
+        [NonSerialized]
+        private PropertyInfo propertyInfo;
+
+        private IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
+
         /// <summary>
         /// Store of last instance of the individual attribute defined
         /// </summary>
@@ -36,11 +46,18 @@ namespace Models.CLEM.Resources
         public string AttributeName { get; set; }
 
         /// <summary>
-        /// Attribute value
+        /// The property or method to filter by
+        /// </summary>
+        [Description("Property or method")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Property or method to filter by required")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters), Order = 1)]
+        public string PropertyOfIndividual { get; set; }
+
+        /// <summary>
+        /// Minumum of value
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Value of attribute")]
-        [GreaterThanEqual("Value", ErrorMessage = "Value must be greater than or equal to minimum value")]
+        [Description("Initial value")]
         [Required]
         public float Value { get; set; }
 
@@ -101,17 +118,42 @@ namespace Models.CLEM.Resources
         [Required]
         public bool Mandatory { get; set; }
 
+        /// <summary>
+        /// Get the current property infor for accessing and setting values
+        /// </summary>
+        public PropertyInfo RuminantPropertyInfo { get { return propertyInfo; }  }
+
         /// <inheritdoc/>
         public IndividualAttribute GetAttribute(bool createNewInstance = true)
         {
             if (createNewInstance || lastInstance is null)
             {
+                //double value = Value;
+                //double randStdNormal = 0;
+
+                //if (StandardDeviation != 0)
+                //{
+                //    double u1 = RandomNumberGenerator.Generator.NextDouble();
+                //    double u2 = RandomNumberGenerator.Generator.NextDouble();
+                //    randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                //                    Math.Sin(2.0 * Math.PI * u2);
+                //    if (UseStandardDeviationSign)
+                //    {
+                //        randStdNormal = Math.Abs(randStdNormal);
+                //    }
+                //}
+                //value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
+
+                //Single valuef = Convert.ToSingle(value);
+
                 lastInstance = new IndividualAttribute()
                 {
                     InheritanceStyle = InheritanceStyle,
                     StoredValue = ApplyVariabilityToAttributeValue(Value, false, UseStandardDeviationSign),
                     SetAttributeSettings = this
                 };
+
+                //switch(typeof(Indiv))
             }
             return lastInstance;
         }
@@ -145,10 +187,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public SetAttributeWithValue()
+        public SetAttributeWithProperty()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             SetDefaults();
+            propertyInfo = typeof(RuminantType).GetProperty(PropertyOfIndividual);
         }
 
         #region validation
@@ -185,9 +228,9 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
 
                         if (StandardDeviation == 0)
-                            htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value}</span> ");
+                            htmlWriter.Write($" is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
                         else
-                            htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
+                            htmlWriter.Write($" is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
 
                         htmlWriter.Write($"</div>");
                     }
@@ -209,9 +252,9 @@ namespace Models.CLEM.Resources
 
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     if (StandardDeviation == 0)
-                        htmlWriter.Write($"This attribute has a value of <span class=\"setvalue\">{Value}</span> ");
+                        htmlWriter.Write($"This attribute is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and has a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
                     else
-                        htmlWriter.Write($"This attribute's value is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
+                        htmlWriter.Write($"This attribute's value is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value.ToString()}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
 
                     if (InheritanceStyle != AttributeInheritanceStyle.None)
                         htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
