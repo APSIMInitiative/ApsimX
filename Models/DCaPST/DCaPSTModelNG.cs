@@ -1,3 +1,5 @@
+using APSIM.Shared.APSoil;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.DCAPST.Canopy;
 using Models.DCAPST.Environment;
@@ -183,12 +185,14 @@ namespace Models.DCAPST
             var transpiration = new Transpiration(canopyParameters, pathwayParameters, waterInteraction, temperatureResponse);
 
             // Model the photosynthesis
-            var dcapstModel = new DCAPSTModel(solarGeometry, solarRadiation, temperature, pathwayParameters, canopyAttributes, transpiration)
-            {
-                B = 0.409
-            };
-
-            return dcapstModel;
+            return new DCAPSTModel(
+                solarGeometry, 
+                solarRadiation, 
+                temperature, 
+                pathwayParameters, 
+                canopyAttributes, 
+                transpiration
+            );
         }
 
         /// <summary>
@@ -201,7 +205,7 @@ namespace Models.DCAPST
         {
             if (string.IsNullOrEmpty(CropName))
             {
-                throw new ArgumentNullException("No crop was specified in DCaPST configuration");
+                throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
             }
         }
 
@@ -222,11 +226,7 @@ namespace Models.DCAPST
             double rootShootRatio = GetRootShootRatio(plant);
 
             // fixme - are we using the right SW??
-            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
-            if (leaf is null)
-            {
-                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
-            }
+            var leaf = GetLeaf(plant);
 
             CalculateDcapstTrigger(leaf);
 
@@ -264,13 +264,59 @@ namespace Models.DCAPST
                 {
                     new CanopyEnergyBalanceInterceptionlayerType()
                     {
-                        AmountOnGreen = dcapstModel.InterceptedRadiation,
+                        AmountOnGreen = dcapstModel.InterceptedRadiation
                     }
                 };
 
                 canopy.PotentialEP = dcapstModel.WaterDemanded;
                 canopy.WaterDemand = dcapstModel.WaterDemanded;
             }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            if (dcapstModel is null) return;
+
+            var leaf = GetLeaf();
+
+            if (leaf is SorghumLeaf sorghumLeaf)
+            {
+                if (dcapstModel.InterceptedRadiation > 0)
+                {
+                    sorghumLeaf.BiomassRUE = dcapstModel.ActualBiomass;
+                }
+                if (dcapstModel.WaterSupplied > 0)
+                {
+                    sorghumLeaf.BiomassTE = dcapstModel.ActualBiomass;
+                }
+            }
+            else if (leaf is Leaf complexLeaf)
+            {
+                complexLeaf.DMSupply.Fixation = dcapstModel.ActualBiomass;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
+            }
+        }
+
+        /// <summary>
+        /// Simple helper to extract the current Leaf node.
+        /// </summary>
+        /// <returns>The leaf.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        private ICanopy GetLeaf(IPlant plant = null)
+        {
+            if (plant == null) plant = FindInScope<IPlant>(CropName);
+            if (plant == null) throw new ArgumentNullException(CropName, "No CropName was specified in DCaPST configuration");
+            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
+            if (leaf == null) throw new ArgumentNullException(nameof(leaf), "Cannot find leaf configuration");
+
+            return leaf;
         }
 
         private bool ShouldRunDcapstModel(ICanopy leaf)
@@ -315,25 +361,6 @@ namespace Models.DCAPST
             }
         }
 
-        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoPotentialPlantGrowth")]
-        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-        {
-            if (dcapstModel is null) return;
-
-            IPlant plant = FindInScope<IPlant>(CropName);
-            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
-
-            if (leaf is null)
-            {
-                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
-            }
-
-            SetBiomass(leaf, dcapstModel.ActualBiomass);
-        }
-
         /// <summary>Called when crop is being sown</summary>
         /// <param name="sender"></param>
         /// <param name="sowingData"></param>
@@ -367,23 +394,6 @@ namespace Models.DCAPST
                 function.Value();
 
             return rootShootRatioValue;
-        }
-
-        private static void SetBiomass(ICanopy leaf, double actualBiomass)
-        {
-            if (leaf is SorghumLeaf sorghumLeaf)
-            {
-                sorghumLeaf.BiomassRUE = actualBiomass;
-                sorghumLeaf.BiomassTE = actualBiomass;
-            }
-            else if (leaf is Leaf complexLeaf)
-            {
-                complexLeaf.DMSupply.Fixation = actualBiomass;
-            }
-            else
-            {
-                throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
-            }
         }
 
         private static double GetSln(ICanopy leaf)
