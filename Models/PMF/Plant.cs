@@ -446,7 +446,19 @@ namespace Models.PMF
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
+            if (!IsAlive)
+                throw new Exception("Can not " + biomassRemoveType + " " + this.Name + " because no live crop is currently present in the simulation");
+            
             summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"), MessageType.Diagnostic);
+
+            // Reset the phenology if SetPhenologyStage specified.
+            if (removalData != null && Phenology is Phenology phenology)
+            {
+                if (removalData.SetPhenologyStage != 0)
+                    phenology.SetToStage(removalData.SetPhenologyStage);
+                else if (removalData.SetPhenologyToEnd)
+                    phenology.SetToEndStage();
+            }
 
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
@@ -474,14 +486,6 @@ namespace Models.PMF
                 organ.RemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
-            // Reset the phenology if SetPhenologyStage specified.
-            if (removalData != null && Phenology is Phenology phenology)
-            {
-                if (removalData.SetPhenologyStage != 0)
-                    phenology.SetToStage(removalData.SetPhenologyStage);
-                else if (removalData.SetPhenologyToEnd)
-                    phenology.SetToEndStage();
-            }
             // Reduce plant and stem population if thinning proportion specified
             if (removalData != null && removalData.SetThinningProportion != 0 && structure != null)
                 structure.DoThin(removalData.SetThinningProportion);
@@ -506,7 +510,6 @@ namespace Models.PMF
 
             Clear();
             IsEnding = true;
-            IsAlive = false;
         }
 
         /// <summary>Clears this instance.</summary>

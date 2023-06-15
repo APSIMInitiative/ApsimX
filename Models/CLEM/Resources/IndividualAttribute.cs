@@ -1,34 +1,8 @@
-﻿using System;
+﻿using Models.CLEM.Interfaces;
+using System;
 
 namespace Models.CLEM.Resources
 {
-    /// <summary>
-    /// Interface for all resource attributes
-    /// </summary>
-    public interface IIndividualAttribute
-    {
-        /// <summary>
-        /// The value of the attribute
-        /// </summary>
-        object StoredValue { get; set; }
-
-        /// <summary>
-        /// The value of the attribute of the most recent mate
-        /// </summary>
-        object StoredMateValue { get; set; }
-
-        /// <summary>
-        /// The style for inheritance of attribute
-        /// </summary>
-        AttributeInheritanceStyle InheritanceStyle { get; set; }
-
-        /// <summary>
-        /// Creates an attribute of parent type and returns for new offspring
-        /// </summary>
-        /// <returns>A new attribute inherited from parents</returns>
-        object GetInheritedAttribute();
-    }
-
     /// <summary>
     /// A ruminant attribute that stores an associated object
     /// </summary>
@@ -49,6 +23,11 @@ namespace Models.CLEM.Resources
         /// The style of inheritance of the attribute
         /// </summary>
         public AttributeInheritanceStyle InheritanceStyle { get; set; }
+
+        /// <summary>
+        /// The variability (s.d.) for Mendelian inheritance of attribute
+        /// </summary>
+        public ISetAttribute SetAttributeSettings { get; set; }
 
         /// <summary>
         /// Value as a float
@@ -86,7 +65,8 @@ namespace Models.CLEM.Resources
         {
             IndividualAttribute newAttribute = new IndividualAttribute()
             {
-                InheritanceStyle = this.InheritanceStyle
+                InheritanceStyle = this.InheritanceStyle,
+                SetAttributeSettings = this.SetAttributeSettings
             };
 
             switch (InheritanceStyle)
@@ -163,64 +143,12 @@ namespace Models.CLEM.Resources
                 default:
                     return null;
             }
+            // Apply mendelian variability from the SetAttributeWithValue component using the standard deviation provided from the mother.
+            if(SetAttributeSettings is not null && SetAttributeSettings is SetAttributeWithValue)
+            {
+                newAttribute.StoredValue = (SetAttributeSettings as SetAttributeWithValue).ApplyVariabilityToAttributeValue(Value, true, false);
+            }
             return newAttribute;
-        }
-    }
-
-    /// <summary>
-    /// A ruminant attribute that stores an associated geneotype
-    /// </summary>
-    public class CLEMGenotypeAttribute : IIndividualAttribute
-    {
-        /// <summary>
-        /// Value object of attribute
-        /// </summary>
-        public object StoredValue { get; set; }
-
-        /// <summary>
-        /// The value of the attribute of the most recent mate
-        /// </summary>
-        public object StoredMateValue { get; set; }
-
-        /// <summary>
-        /// The style of inheritance of the attribute
-        /// </summary>
-        public AttributeInheritanceStyle InheritanceStyle { get; set; }
-
-        /// <summary>
-        /// Value as a string (e.g Bb)
-        /// </summary>
-        public string Value
-        {
-            get
-            {
-                return StoredValue.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Value as string from mate recorded by breeder
-        /// </summary>
-        public string MateValue
-        {
-            get
-            {
-                return StoredMateValue.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Get the attribute inherited by an offspring given both parent attribute values stored for a breeder
-        /// </summary>
-        /// <returns>A ruminant attribute to supply the offspring</returns>
-        public object GetInheritedAttribute()
-        {
-            CLEMGenotypeAttribute newAttribute = new CLEMGenotypeAttribute()
-            {
-                InheritanceStyle = this.InheritanceStyle
-            };
-
-            throw new NotImplementedException("Inheritance of Genotype attributes has not been implemented");
         }
     }
 
