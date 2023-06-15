@@ -140,7 +140,7 @@ namespace Models.PMF.Organs
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
-        private bool dcapstLowLAI = false;
+        //private bool dcapstLowLAI = false;
 
         /// <summary>Constructor</summary>
         public SorghumLeaf()
@@ -160,9 +160,9 @@ namespace Models.PMF.Organs
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.</summary>
         [JsonIgnore]
         [Description("Fertile Tiller Number")]
-        public double FertileTillerNumber 
-        { 
-            get  => culms.FertileTillerNumber; 
+        public double FertileTillerNumber
+        {
+            get => culms?.FertileTillerNumber ?? 0.0; 
             set 
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
@@ -1059,7 +1059,7 @@ namespace Models.PMF.Organs
                 DltStressedLAI = culms.dltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
-                //this is done at staet of the day
+                //this is done at start of the day
                 BiomassRUE = photosynthesis.Value();
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = potentialBiomassTEFunction.Value();
