@@ -388,7 +388,7 @@
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
-         
+
             this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -569,7 +569,7 @@
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
 
-                
+
                 // By default, clicking on a datapoint (a bar) of a bar graph
                 // will create a pop-up showing the x/y values at the beginning
                 // and end of the bar. We override this here, so that it only
@@ -857,7 +857,7 @@
             }
         }
 
-        private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
+        private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data,
                                                   APSIM.Shared.Graphing.AxisPosition xAxisType,
                                                   APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
@@ -891,7 +891,7 @@
                     xValue = index;
                 }
             }
-            
+
             EnsureAxisExists(yAxisType, typeof(double));
 
             return new List<BoxPlotItem>() { new BoxPlotItem(xValue, min, lowerQuartile, median, upperQuartile, max) };
@@ -1099,7 +1099,7 @@
                     oxyAxis.Minimum = minimum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
-                
+
                 if (oxyAxis is DateTimeAxis)
                 {
                     DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
@@ -1107,7 +1107,7 @@
                     (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
                     (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
                 }
-                else if(!double.IsNaN(interval) && interval > 0)
+                else if (!double.IsNaN(interval) && interval > 0)
                     oxyAxis.MajorStep = interval;
             }
         }
@@ -1223,7 +1223,7 @@
             Widget editor = editorObj as Widget;
             if (editor != null)
             {
-                expander1.Foreach(delegate(Widget widget) 
+                expander1.Foreach(delegate (Widget widget)
                 {
                     if (widget != label2)
                     {
@@ -1260,7 +1260,7 @@
         public void ExportToClipboard()
         {
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }
@@ -1402,8 +1402,8 @@
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
                 }
 
-                if (axis.PlotModel.Series[0] is BoxPlotSeries && 
-                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom && 
+                if (axis.PlotModel.Series[0] is BoxPlotSeries &&
+                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
                     axis.PlotModel.Series?.Count > 0)
                 {
                     // Need to put a bit of extra space on the x axis.
@@ -1812,8 +1812,17 @@
             }
         }
 
-        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
-        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Maximum = value;
+        }
+
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Minimum = value;
+        }
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
