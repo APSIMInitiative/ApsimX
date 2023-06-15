@@ -53,6 +53,7 @@ namespace APSIM.ZMQServer.IO
                 var msg = connection.ReceiveMultipartMessage();
                 try
                 {
+                    if (verbose) { Console.WriteLine($"Got multipart message with {msg.FrameCount} frames"); }
                     if (msg.FrameCount <= 0) { continue; }
                     var command = msg[0].ConvertToString();
                     if (verbose) { Console.WriteLine($"Command from client: {command}"); }
@@ -87,6 +88,7 @@ namespace APSIM.ZMQServer.IO
                     else if (command == commandGetDataStore)
                     {
                         if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
+                        if (verbose) { Console.WriteLine("get from DS=" + msg[1].ConvertToString()); }
                         byte[] result = apsim.getVariableFromDS(msg[1].ConvertToString());
                         SendBytes(result);
                     }

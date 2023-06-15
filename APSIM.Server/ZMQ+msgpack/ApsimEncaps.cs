@@ -54,7 +54,8 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-            Console.WriteLine("About to start " + s);
+#if false
+            //Console.WriteLine("About to start " + s);
             var sim = sims.FindChild<Simulation>(s);
 
             // fixme hook up a semaphore here
@@ -71,7 +72,7 @@ namespace APSIM.ZMQServer
                     //t4.GetMethod("OnPause") = OnPause = x => Console.WriteLine(x);
                 }
             }
-
+#endif
         }
         public bool HasMethod(object objectToCheck, string methodName)
         {
@@ -162,7 +163,6 @@ namespace APSIM.ZMQServer
                 onRunFinished?.Invoke("idling");
                 workerThread = null;
             };
-
             workerThread = new Thread(
               new ThreadStart(() =>
               {
@@ -187,11 +187,11 @@ namespace APSIM.ZMQServer
             workerThread.Start();
             onRunStart?.Invoke("running");
         }
-
         /// Wait until the simulation terminates (thread exit), or until all 
         /// simulations paused
         public void WaitForStateChange()
         {
+#if false
             while (true)
             {
                 workerThread?.Join(250);
@@ -204,6 +204,9 @@ namespace APSIM.ZMQServer
                     Console.WriteLine("x=", x.ToString());
                 }
             }
+#else
+            workerThread?.Join();
+#endif
         }
         public void Proceed()
         {
