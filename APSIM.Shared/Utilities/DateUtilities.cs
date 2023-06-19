@@ -176,7 +176,7 @@ namespace APSIM.Shared.Utilities
             if (date == null)
                 return false;
             return
-                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
+                today.Month == StringUtilities.IndexOfCaseInsensitive(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
                 &&
                 today.Day == int.Parse(rxDD.Match(date).Value);
         }
