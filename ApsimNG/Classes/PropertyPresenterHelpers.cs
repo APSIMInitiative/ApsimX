@@ -7,6 +7,7 @@ namespace UserInterface.Classes
     using Models.LifeCycle;
     using Models.PMF;
     using Models.PMF.Phen;
+    using Models.PMF.Scrum;
 
     /// <summary>
     /// Helper functions for the property presenter. Most involve
@@ -132,6 +133,26 @@ namespace UserInterface.Classes
                 return lifeCycle.LifeCyclePhaseNames;
             }
 
+            return new string[0];
+        }
+        
+        /// <summary>Get a list of Scrum crops in zone.</summary>
+        /// <param name="zone">The the plant.</param>
+        /// <returns>A list of phases.</returns>
+        public static string[] GetSCRUMcropNames(Zone zone)
+        {
+            List<ScrumCrop> crops = zone.FindAllInScope<ScrumCrop>().ToList();
+            if (crops.Count > 0)
+            {
+                string[] Namelist = new string[crops.Count];
+                int i = 0;
+                foreach (ScrumCrop c in crops)
+                {
+                    Namelist[i] = c.Name;
+                    i++;
+                }
+                return Namelist;
+            }
             return new string[0];
         }
     }

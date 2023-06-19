@@ -360,25 +360,32 @@ namespace Models.CLEM.Resources
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        valueToUse = pools.Sum(a => a.Nitrogen * a.Amount) / pools.Sum(a => a.Amount);
+                        if(pools.Count() == 1)
+                            valueToUse = pools.FirstOrDefault().Nitrogen;
+                        else
+                            valueToUse = pools.Sum(a => a.Nitrogen * a.Amount) / pools.Sum(a => a.Amount);
                     }
-                    break;
+                    return valueToUse;
                 case "DMD":
                     if (age < 0)
                         return DMD;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        valueToUse = pools.Sum(a => a.DMD * a.Amount) / pools.Sum(a => a.Amount);
+                        if (pools.Count() == 1)
+                            valueToUse = pools.FirstOrDefault().DMD;
+                        else
+                            valueToUse = pools.Sum(a => a.DMD * a.Amount) / pools.Sum(a => a.Amount);
                     }
-                    break;
+                    return valueToUse;
                 case "Age":
                     if (age < 0)
                         return Pools.Sum(a => a.Amount * a.Age) / this.Amount;
-                    break;
+                    return valueToUse;
                 default:
                     throw new ApsimXException(this, $"Property [{grazeProperty}] not available for reporting pools");
             }
+            // convert biomass to units specified kg,tonnes & farm,per/hectare
             return valueToUse / convert;
         }
 
@@ -465,9 +472,9 @@ namespace Models.CLEM.Resources
                     double detach = CarryoverDetachRate;
                     if (pool.Age < 12)
                         detach = DetachRate;
-                    double detachedAmount = pool.Amount * (1 - detach);
+                    double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
-                    pool.Set(detachedAmount);
+                    pool.Set(amountRemaining);
                 }
             }
         }
@@ -698,20 +705,6 @@ namespace Models.CLEM.Resources
                     biomassAddedThisYear += pool.Amount;
 
                 ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
-
-                //ResourceTransaction details = new ResourceTransaction
-                //{
-                //    TransactionType = TransactionType.Gain,
-                //    Amount = pool.Amount,
-                //    Activity = activity,
-                //    RelatesToResource = relatesToResource,
-                //    Category = category,
-                //    ResourceType = this
-                //};
-                //LastTransaction = details;
-                //LastGain = pool.Amount;
-                //TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                //OnTransactionOccurred(te);
             }
         }
 

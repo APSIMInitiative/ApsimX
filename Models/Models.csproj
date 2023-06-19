@@ -45,6 +45,7 @@
     <None Remove="Importer\**" />
     <Compile Remove="Importer\**" />
     <EmbeddedResource Remove="Importer\**" />
+	<EmbeddedResource Include="Clock.cs" />
 
     <Content Include="..\DeploymentSupport\Windows\Bin64\sqlite3.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
