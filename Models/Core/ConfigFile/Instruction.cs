@@ -17,12 +17,20 @@
         /// <summary>
         /// An optional node that will be modified.
         /// </summary> 
+        /// <remarks>
+        /// May not be needed in the future with the use of Locator.
+        /// </remarks>
         public string NodeToModify { get; set; }
 
         /// <summary>
         /// An optional file path where a node to copy or add is located.
         /// </summary>
         public string FileContainingNode { get; set; }
+
+        /// <summary>
+        /// A string path with nodes separated with full stops.
+        /// </summary>
+        public string NodePath { get; set; } // TODO: finish this functionality.
 
         /// <summary>
         /// An optional path to file to save to.
@@ -37,6 +45,9 @@
         /// <summary>
         /// A string representing a node to either add, delete or copy.
         /// </summary>
+        /// <remarks>
+        /// May not be needed in the future with the use of Locator.
+        /// </remarks>
         public string NodeForAction { get; set; }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace Models.Core.ConfigFile
                         else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
                         else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
 
-                        if (splitCommands.Length > 1)
+                        if (splitCommands.Length >= 2)
                         {
                             // Determine if its a nodeToModify/SavePath/LoadPath
                             if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
@@ -75,33 +75,37 @@ namespace Models.Core.ConfigFile
                                 // Check for required format
                                 if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
                                 {
-                                    string modifiedNodeName = splitCommands[1].Substring(1).Trim(']');
-                                    nodeToModify = modifiedNodeName;
+                                    string modifiedNodeName = splitCommands[1];
+                                    string keywordStr = keyword.ToString();
+                                    switch (keywordStr)
+                                    {
+                                        case "Add":
+                                            if (!string.IsNullOrEmpty(modifiedNodeName))
+                                            {
+                                                nodeToModify = modifiedNodeName;
+                                            }
+                                            else throw new Exception($"Unable to add new node. The format of model name(s) not recognised in command: {command}");
+                                            break;
+                                        case "Delete":
+                                            if (!string.IsNullOrEmpty(modifiedNodeName))
+                                                nodeToModify = modifiedNodeName;
+                                            else throw new Exception($"Unable to delete node. There was an issue with the delete command: {command}.");
+                                            break;
+                                    }
                                 }
-                                else throw new Exception("Format of parent model type does not match required format: [ModelName]");
-
-                            }
-                            else if (keyword == Keyword.Load)
-                                loadPath = splitCommands[1];
-                            else
-                                savePath = splitCommands[1];
-                        }
-
-                        // Determine 3rd split string usage.
-                        if (splitCommands.Length > 2)
-                        {
-                            switch (keywordString)
-                            {
-                                case "add":
-                                    // Checks for a node in a 
-                                    // Check for back-slash...
+                                else
+                                {
+                                    throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
+                                }
+                                if (splitCommands.Length > 2)
+                                {
                                     if (splitCommands[2].Contains("\\"))
                                     {
                                         string[] filePathAndNodeName = splitCommands[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
                                         {
                                             fileContainingNode = filePathAndNodeName[0];
-                                            string reformattedNode = filePathAndNodeName[1].Substring(1).Trim(']');
+                                            string reformattedNode = filePathAndNodeName[1];
                                             nodeForAction = reformattedNode;
                                         }
                                         else throw new Exception("Add command missing either file or node name.");
@@ -111,14 +115,14 @@ namespace Models.Core.ConfigFile
                                         string reformattedNode = "{\"$type\": \"Models." + splitCommands[2] + ", Models\"}";
                                         nodeForAction = reformattedNode;
                                     }
-                                    break;
-                                case "copy":
-                                    break;
-                                case "delete":
-                                    break;
+                                }
                             }
+                            else if (keyword == Keyword.Load)
+                                loadPath = splitCommands[1];
+                            else
+                                savePath = splitCommands[1];
                         }
-                        // Instruction to be used with Structure.cs.
+
                         Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
                         // Run the instruction.
                         if (string.IsNullOrEmpty(instruction.FileContainingNode))
@@ -159,13 +163,18 @@ namespace Models.Core.ConfigFile
         {
             try
             {
-                //Check for add keyword in instruction.
-                if (instruction.keyword == Keyword.Add)
+                Locator locator = new Locator(simulation);
+                string keyword = instruction.keyword.ToString();
+                switch (keyword)
                 {
-
-                    IModel simulationNode = simulation.FindAllChildren().First(m => m.Name == "Simulation");
-                    IModel parentNode = simulationNode.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
-                    Structure.Add(instruction.NodeForAction, parentNode);
+                    case "Add":
+                        IModel parentNode = locator.Get(instruction.NodeToModify) as IModel;
+                        Structure.Add(instruction.NodeForAction, parentNode);
+                        break;
+                    case "Delete":
+                        IModel nodeToBeDeleted = locator.Get(instruction.NodeToModify) as IModel;
+                        Structure.Delete(nodeToBeDeleted); // TODO: needs testing.
+                        break;
                 }
                 return simulation;
             }
@@ -182,15 +191,20 @@ namespace Models.Core.ConfigFile
         {
             try
             {
+
                 //Check for add keyword in instruction.
                 if (instruction.keyword == Keyword.Add)
                 {
                     // Process for adding an existing node from another file.
                     {
                         Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNode, e => throw e, false).NewModel as Simulations;
-                        IModel nodeToCopy = simToCopyFrom.FindInScope(instruction.NodeForAction); // TODO: needs testing.
-                        IModel simToCopyTo = simulation.FindAllChildren().First(m => m.Name == "Simulation");
-                        IModel parentNode = simToCopyTo.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
+                        //IModel nodeToCopy = simToCopyFrom.FindInScope(instruction.NodeForAction);
+                        //IModel simToCopyTo = simulation.FindAllChildren().First(m => m.Name == "Simulation");
+                        //IModel parentNode = simToCopyTo.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
+                        Locator simToCopyFromLocator = new Locator(simToCopyFrom);
+                        IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NodeForAction) as IModel;
+                        Locator simToCopyToLocator = new Locator(simulation);
+                        IModel parentNode = simToCopyToLocator.Get(instruction.NodeToModify) as IModel;
                         Structure.Add(nodeToCopy, parentNode);
                     }
                 }

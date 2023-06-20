@@ -62,7 +62,7 @@ namespace Models
             try
             {
                 string[] files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive)).ToArray();
-                if (files == null || files.Length < 1)
+                if (files == null || files.Length < 1 && !string.IsNullOrEmpty(options.Apply))
                     throw new ArgumentException($"No files were specified");
                 if (options.NumProcessors == 0)
                     throw new ArgumentException($"Number of processors cannot be 0");

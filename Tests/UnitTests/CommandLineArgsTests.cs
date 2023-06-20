@@ -386,5 +386,33 @@ ExperimentY2
             Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
             Assert.IsNotNull(newReportNode);
         }
+
+        [Test]
+        public void TestApplySwitchDeleteCommand()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string newFileString = "delete [Zone].Report";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report ReportNodeThatShouldHaveBeenDeleted = fieldNodeAfterChange.FindChild<Models.Report>("Report");
+            Assert.IsNull(ReportNodeThatShouldHaveBeenDeleted);
+        }
     }
 }

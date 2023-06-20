@@ -22,6 +22,18 @@
     "--apply w/o .apsimx": {
       "commandName": "Project",
       "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\config.txt"
+    },
+    "--apply delete test": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\config2.txt"
+    },
+    "--apply save edit to new file": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\config.txt,C:\\TestSims\\issue8038\\testWheat2.apsimx"
+    },
+    "--apply create new node": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\config3.txt"
     }
   }
 }
