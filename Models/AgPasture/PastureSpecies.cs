@@ -69,6 +69,9 @@ namespace Models.AgPasture
 
         #region ICanopy implementation  ------------------------------------------------------------------------------------
 
+        /// <summary>Canopy type identifier.</summary>
+        public string CanopyType { get; set; } = "PastureSpecies";
+        
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
         public double Albedo { get; set; } = 0.26;
@@ -4341,8 +4344,7 @@ namespace Models.AgPasture
         /// <summary>
         /// Reduce the plant population.
         /// </summary>
-        /// <param name="newPlantPopulation">The new plant population.</param>
-        public void ReducePopulation(double newPlantPopulation)
+        public void ReducePopulation()
         {
             throw new Exception("AgPasture does not simulate a plant population and so plant population cannot be reduced.");
         }
