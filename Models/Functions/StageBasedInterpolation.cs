@@ -28,8 +28,6 @@ namespace Models.Functions
         [Description("Values at each stage")]
         public double[] Values { get; set; }
 
-
-
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="StageBasedInterpolation"/> is proportional.
         /// </summary>
@@ -43,22 +41,17 @@ namespace Models.Functions
         {
             foreach (int s in phenology.StageCodes)
             {
-                if (phenology.Stage <= s)
+                if ((int)phenology.Stage == s)
                 {
-                    if (s == 0)
-                        return Values[0];
-                    if (phenology.Stage == s)
-                        return Values[s];
-
                     if (Proportional)
                     {
-                        double slope = MathUtilities.Divide(Values[s] - Values[s - 1],1,s);
-                        return Values[s] + slope * (phenology.Stage - s);
+                        double slope = MathUtilities.Divide(Values[s+1] - Values[s],1,s);
+                        return Values[s] + slope * (phenology.Stage - (s));
                     }
                     else
                     {
                         // Simple lookup.
-                        return Values[s - 1];
+                        return Values[s];
                     }
                 }
             }
