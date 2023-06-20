@@ -419,6 +419,7 @@ namespace Models.AgPasture
         {
             DaysSinceGraze += 1;
             ProportionOfTotalDM = new double[zones.First().NumForages];
+            PostGrazeDM = 0;
 
             foreach (var zone in zones)
                 zone.OnStartOfDay();
@@ -428,6 +429,9 @@ namespace Models.AgPasture
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            PreGrazeDM = zones.Sum(z => z.TotalDM);
+            PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
+
             foreach (var zone in zones)
                 zone.DoManagement();
 

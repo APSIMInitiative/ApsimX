@@ -180,6 +180,12 @@ namespace Models.PMF.Phen
             return endPhaseIndex;
         }
 
+        /// <summary>Called to set the phenology to the last stage.</summary>
+        public void SetToEndStage()
+        {
+            SetToStage((double)(phases.Count));
+        }
+
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
@@ -226,8 +232,13 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name) >= oldPhaseIndex)
-                        phasesToFastForward.Add(phase);
+                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex) //If the phase has not yet passed 
+                    {
+                        if (newStage == phases.Count) //If winding to the end add all phases
+                            phasesToFastForward.Add(phase);
+                        else if (IndexFromPhaseName(phase.Name) < (newStage - 1))// Inf only winding part way throug only add the relevent stages
+                            phasesToFastForward.Add(phase);
+                    }
                 }
                 foreach (IPhase phase in phasesToFastForward)
                 {
@@ -236,6 +247,21 @@ namespace Models.PMF.Phen
                         stagesPassedToday.Add(phase.Start); //Fixme.  This is a pretty ordinary bit of programming to get around the fact we use a phenological stage to match observed values. We should change this so plant has a harvest tag to match on.
                     }
                     stagesPassedToday.Add(phase.End);
+                    if (phase is IPhaseWithTarget)
+                    {
+                        IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
+                        AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        {
+                            Emerged = true;
+                            PlantEmerged?.Invoke(this, new EventArgs());
+                        }
+                        else
+                        {
+                            AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        }
+                    }
+                    
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
@@ -369,6 +395,27 @@ namespace Models.PMF.Phen
             RefreshPhases();
         }
 
+        /// <summary>
+        /// Force emergence on the date called if emergence has not occurred already
+        /// </summary>
+        /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
+        public void SetEmergenceDate(string emergenceDate)
+        {
+            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
+                ep.EmergenceDate = emergenceDate;
+            SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occurred already
+        /// </summary>
+        /// <param name="germinationDate">Germination date (dd-mmm).</param>
+        public void SetGerminationDate(string germinationDate)
+        {
+            foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
+                gp.GerminationDate = germinationDate;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
@@ -428,15 +475,6 @@ namespace Models.PMF.Phen
                 if (plant != null && plant.IsAlive && PostPhenology != null)
                     PostPhenology.Invoke(this, new EventArgs());
             }
-        }
-
-        /// <summary>Called when crop is being harvested.</summary>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            //Jump phenology to the end
-            if (this.Parent.Name != "SimpleFruitTree") //Unless you are a perennial fruit tree.  There must be a better way of doing this
-                SetToStage((double)(phases.Count));
         }
 
         /// <summary>Called when crop is being prunned.</summary>

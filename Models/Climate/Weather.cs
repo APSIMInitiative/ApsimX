@@ -28,6 +28,12 @@ namespace Models.Climate
         private IClock clock = null;
 
         /// <summary>
+        /// A link to the the summary
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
+
+        /// <summary>
         /// A reference to the text file reader object
         /// </summary>
         [NonSerialized]
@@ -690,12 +696,15 @@ namespace Models.Climate
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
-            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
+            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+
+            //do sanity check on weather
+            SensibilityCheck(clock as Clock, this);
         }
 
         /// <summary>Method to read one days met data in from file</summary>
         /// <param name="date">the date to read met data</param>
-        private DailyMetDataFromFile GetMetData(DateTime date)
+        public DailyMetDataFromFile GetMetData(DateTime date)
         {
             if (this.doSeek)
             {
@@ -1039,6 +1048,41 @@ namespace Models.Climate
             amp = yearlySumAmp / nyears;    // calc the ave of the yearly amps
 
             reader.SeekToPosition(savedPosition);
+        }
+
+        /// <summary>
+        /// Does a santiy check on this weather data to check that temperatures,
+        /// VP, radition and rain are potentially valid numbers.
+        /// Also checks that every day has weather.
+        /// </summary>
+        private void SensibilityCheck(Clock clock, Weather weatherToday)
+        {
+            //things to check:
+            //Mint > MaxtT
+            //VP(if present) <= 0
+            //Radn < 0 or Radn > 40
+            //Rain < 0
+            if (weatherToday.MinT > weatherToday.MaxT)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has higher minimum temperature (" + weatherToday.MinT + ") than maximum (" + weatherToday.MaxT + ")", MessageType.Warning);
+            }
+            if (weatherToday.VP <= 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has Vapor Pressure (" + weatherToday.VP + ") which is below 0", MessageType.Warning);
+            }
+            if (weatherToday.Radn < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative solar raditation (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            if (weatherToday.Radn > 40)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has solar raditation (" + weatherToday.Radn + ") which is above 40", MessageType.Warning);
+            }
+            if (weatherToday.Rain < 0)
+            {
+                summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")", MessageType.Warning);
+            }
+            return;
         }
     }
 }

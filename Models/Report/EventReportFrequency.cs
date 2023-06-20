@@ -23,31 +23,18 @@ namespace Models
             if (tokens.Length == 1)
             {
                 new EventReportFrequency(report, events, tokens[0]);
+                return true;
             }
-            else if (tokens.Length > 1)
+            else 
+                if (tokens.Length > 1 && line.IndexOfAny(new char[] { '=', '<', '>', '&', '|' }) == 0)
             {
-                try
-                {
-                    new EventReportFrequency(report, events, tokens[0]);
-                }
-                catch
-                {   //if trying with only first token failed, try again with entire line
-                    try
-                    {
-                        new EventReportFrequency(report, events, line);
-                    }
-                    catch
-                    {
-                        return false;
-                    }
-                }
+                new EventReportFrequency(report, events, line);
+                return true;
             }
             else
             {
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>

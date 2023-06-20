@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Models.Soils;
 
 namespace Models.Core
@@ -448,14 +449,26 @@ namespace Models.Core
                             array[i - 1] = newValue; // this will modify obj as well
                         }
                     }
-                    this.property.SetValue(this.Object, obj, null);
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, obj, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
                 }
                 else if (value is string)
                 {
                     this.SetFromString(value as string);
                 }
                 else
-                    this.property.SetValue(this.Object, value, null);
+                {
+                    if (this.property.CanWrite)
+                        this.property.SetValue(this.Object, value, null);
+                    else if (this.property.CanRead)
+                        throw new Exception($"{this.property.Name} is read only and cannot be written to.");
+                    else
+                        throw new Exception($"{this.property.Name} cannot be read or written to.");
+                }
             }
         }
 

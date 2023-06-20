@@ -592,17 +592,26 @@ namespace Models.CLEM.Activities
             // and before breeding, trading, culling etc (See Clock event order)
 
             // Calculated by
-            // critical weight &&
+            // critical weight OR
+            // Body condition score and additional mortality rate &&
             // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
-            // set died flag
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
-            ruminantHerd.RemoveRuminant(died, this);
+            List<Ruminant> died;
+            if (herd.Any())
+            {
+                if (herd.FirstOrDefault().BreedParams.ProportionOfMaxWeightToSurvive >= 0)
+                    died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
+                else
+                    // body condition score based mortality 
+                    died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.BodyConditionScoreForMortality) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                // set died flag
+                died.ForEach(c => c.SaleFlag = HerdChangeReason.DiedUnderweight);
+                ruminantHerd.RemoveRuminant(died, this);
+            }
 
             // base mortality adjusted for condition
             foreach (var ind in ruminantHerd.Herd)
@@ -629,8 +638,8 @@ namespace Models.CLEM.Activities
                     ind.Died = true;
             }
 
-            died = herd.Where(a => a.Died).ToList();
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
