@@ -57,8 +57,8 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (Name)
-            summary.WriteMessage(this, $"{Name} = {Wt:f2} (g/m^2)", MessageType.Diagnostic);
+            if (Name == "AboveGround")
+                summary.WriteMessage(this, $"{Name} = {Wt:f2} (g/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Gets the mass.</summary>
