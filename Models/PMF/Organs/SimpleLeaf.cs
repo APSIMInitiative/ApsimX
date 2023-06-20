@@ -49,6 +49,7 @@ namespace Models.PMF.Organs
         private Plant plant = null;
 
         /// <summary>Link to summary instance.</summary>
+        [Link]
         private ISummary summary = null;
 
         /// <summary>
