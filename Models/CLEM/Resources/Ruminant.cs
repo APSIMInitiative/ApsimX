@@ -2,6 +2,7 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Models.CLEM.Resources
@@ -611,6 +612,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Body condition score
+        /// </summary>
+        [FilterByProperty]
+        public double BodyConditionScore
+        {
+            get
+            {
+                double bcscore = BreedParams.BCScoreRange[1] + (RelativeCondition - 1) / BreedParams.RelBCToScoreRate;
+                return Math.Max(BreedParams.BCScoreRange[0], Math.Min(bcscore, BreedParams.BCScoreRange[2]));
+            }
+        }
+
+        /// <summary>
         /// Method called on offspring when mother is lost (e.g. dies or sold)
         /// </summary>
         public void MotherLost()
@@ -774,6 +788,56 @@ namespace Models.CLEM.Resources
             else
                 return new RuminantFemale(parameters, age, weight);
         }
+
+        /// <summary>
+        /// Adds an attribute to an individual with ability to modify properties associated with the genotype
+        /// </summary>
+        /// <param name="attribute">base attribute from mother</param>
+        public void AddInheritedAttribute(KeyValuePair<string, IIndividualAttribute> attribute)
+        {
+            // get inherited value
+            IIndividualAttribute indAttribute = attribute.Value.GetInheritedAttribute() as IIndividualAttribute;
+
+            // is this a property attribute that may modify the individuals parameter set?
+            if(indAttribute.SetAttributeSettings is SetAttributeWithProperty)
+            {
+                // has the value changed from that in the breed params provided to the individual?
+                if (indAttribute.StoredValue != (attribute.Value.SetAttributeSettings as SetAttributeWithProperty).RuminantPropertyInfo.GetValue(this))
+                {
+                    // is this still the shared breed params with the mother
+                    if(BreedParams != Mother.BreedParams)
+                    {
+                        // create deep copy of BreedParams
+
+
+                    }
+                    // update breedparams property to the new value
+                    (attribute.Value.SetAttributeSettings as SetAttributeWithProperty).RuminantPropertyInfo.SetValue(this, indAttribute.StoredValue);
+                }
+            }
+            Attributes.Add(attribute.Key, indAttribute);
+        }
+
+        /// <summary>
+        /// Adds an attribute to an individual with ability to modify properties associated with the genotype
+        /// </summary>
+        /// <param name="attribute">base attribute from mother</param>
+        public void AddNewAttribute(ISetAttribute attribute)
+        {
+            // get inherited value
+            IIndividualAttribute indAttribute = attribute.GetAttribute(true);
+
+            // if it requires a property modifier then create new modified breedparams
+
+            //if breedparams equals mother's create deep copy
+
+            // update breedparams
+
+            // save breed params to individual
+
+            Attributes.Add(attribute.AttributeName, indAttribute); //.Value.GetInheritedAttribute() as IIndividualAttribute);
+        }
+
     }
 
     /// <summary>

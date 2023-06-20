@@ -3,9 +3,9 @@ title: "Linux"
 draft: false
 ---
 
-Apsim may be built with the .NET SDK - currently version 3.1 is required. When building the solution, assemblies for all projects will be compiled to the bin/ directory. The exact location of a given file will depend upon how it is built - e.g. debug vs release configuration.
+Apsim may be built with the .NET SDK - currently version 6.0 is required. When building the solution, assemblies for all projects will be compiled to the bin/ directory. The exact location of a given file will depend upon how it is built - e.g. debug vs release configuration.
 
-1. Install the .NET Core 3.1 SDK. The [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script) is a simple way to do this. Otherwise, consult [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux)
+1. Install the .NET Core 6.0 SDK. The [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script) is a simple way to do this. Otherwise, consult [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux)
 
 2. Install required packages
 
@@ -13,7 +13,7 @@ Apsim may be built with the .NET SDK - currently version 3.1 is required. When b
 	- git (required for obtaining the source code)
     - gtk-sharp3
 	- libgtksourceview-4-0
-	- dotnet-sdk-3.1
+	- dotnet-sdk-6.0
 
 3. Obtain source code
 
@@ -31,7 +31,7 @@ Apsim may be built with the .NET SDK - currently version 3.1 is required. When b
 
 5. Run apsim
 
-    The outputs may be found under ApsimX/bin. If built in debug mode, they will be in `bin/Debug/netcoreapp3.1/`. If built in release mode, they will be in `bin/Release/netcoreapp3.1/`.
+    The outputs may be found under ApsimX/bin. If built in debug mode, they will be in `bin/Debug/net6.0/`. If built in release mode, they will be in `bin/Release/net6.0/`.
 
 	The entrypoint program for the user interface is called `ApsimNG`.
 
@@ -52,7 +52,7 @@ This error can occur on Debian (and its derivatives) when the sqlite3 package is
 When attempting to install apsim from our binary package:
 
 ```
-E: Unable to locate package dotnet-runtime-3.1
+E: Unable to locate package dotnet-runtime-6.0
 ```
 
 This package is not included in the official Debian repositories. You will need to follow the instructions on [this page](https://docs.microsoft.com/en-us/dotnet/core/install/linux) to install the package from microsoft's repositories.

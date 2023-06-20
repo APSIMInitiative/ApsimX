@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Documentation;
@@ -629,6 +630,43 @@ namespace Models.Core
         {
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
             yield return new Paragraph(CodeDocumentation.GetRemarks(GetType()));
+        }
+
+        /// <summary>
+        /// Gets a list of Event Handles that are Invoked in the prodivded function
+        /// </summary>
+        /// <remarks>
+        /// Model source file must be included as embedded resource in project xml
+        /// </remarks>
+        protected IEnumerable<ITag> GetModelEventsInvoked(Type type, string functionName, string filter = "", bool filterOut = false)
+        {
+            List<string[]> eventNames = CodeDocumentation.GetEventsInvokedInOrder(type, functionName);
+
+            List<string[]> eventNamesFiltered = new List<string[]>();
+            if (filter.Length > 0)
+            {
+                foreach (string[] name in eventNames)
+                    if (name[0].Contains(filter) == !filterOut)
+                    { 
+                        eventNamesFiltered.Add(name); 
+                    }           
+            }
+            yield return new Paragraph($"Function {functionName} of Model {Name} contains the following Events in the given order.\n");
+
+            DataTable data = new DataTable();
+            data.Columns.Add("Event Handle", typeof(string));
+            data.Columns.Add("Summary", typeof(string));
+
+            for (int i = 1; i < eventNamesFiltered.Count; i++)
+            {
+                string[] parts = eventNamesFiltered[i];
+
+                DataRow row = data.NewRow();
+                data.Rows.Add(row);
+                row["Event Handle"] = parts[0];
+                row["Summary"] = parts[1];
+            }
+            yield return new Table(data);
         }
 
         /// <summary>

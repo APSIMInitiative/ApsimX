@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 160; } }
+        public static int LatestVersion { get { return 162; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4789,6 +4789,76 @@ namespace Models.Core.ApsimFile
             foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "HourlyInterpolation"))
             {
                 demand["$type"] = "Models.Functions.SubDailyInterpolation, Models";
+            }
+        }
+
+        /// <summary>
+        /// Change SimpleLeaf.Tallness to Height
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion161(JObject root, string fileName)
+        {
+            foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
+            {
+                JObject tallness = JsonUtilities.ChildWithName(leaf, "Tallness");
+                if (tallness != null)
+                    tallness["Name"] = "HeightFunction";
+            }
+
+            // Remove tallness from manager scripts.
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, ".Tallness", ".HeightFunction");
+            }
+
+
+            // Remove tallness from report variables.
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Tallness", ".HeightFunction");
+            }
+
+            // Remove tallness from cultivars.
+            foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+            {
+                if (!cultivar["Command"].HasValues)
+                    continue;
+
+                foreach (JValue command in cultivar["Command"].Children())
+                    command.Value = command.Value.ToString().Replace("[Leaf].Tallness", "[Leaf].HeightFunction");
+            }
+        }
+
+        /// <summary>
+        /// Move SetEmergenceDate and SetGerminationDate to Phenology.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion162(JObject root, string fileName)
+        {
+            // Move SetEmergenceDate and SetGerminationDat in manager scripts.
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, ".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                JsonUtilities.ReplaceManagerCode(manager, ".SetGerminationDate", ".Phenology.SetGerminationDate");
+            }
+
+            // Move SetEmergenceDate and SetGerminationDate in operations.
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        var specification = operation[i]["Action"];
+                        var specificationString = specification.ToString();
+                        specificationString = specificationString.Replace(".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                        specificationString = specificationString.Replace(".SetGerminationDate", ".Phenology.SetGerminationDate");
+                        operation[i]["Action"] = specificationString;
+                    }
+                }
             }
         }
 

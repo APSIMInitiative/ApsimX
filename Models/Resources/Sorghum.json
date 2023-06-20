@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 160,
+  "Version": 162,
   "Name": "Simulations",
   "Children": [
     {
@@ -3524,7 +3524,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Soil].SoilWater.ESW",
+                  "VariableName": "[ISoilWater].ESW",
                   "Name": "extractable",
                   "ResourceName": null,
                   "Children": [],
