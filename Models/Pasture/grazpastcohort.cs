@@ -1,12 +1,11 @@
-﻿namespace Models.GrazPlan
-{
-    using System;
-    using System.Linq;
-    //using CMPServices;
-    using StdUnits;
-    using static GrazType;
-    using static PastureUtil;
+﻿using System;
+using System.Linq;
+using StdUnits;
+using static Models.GrazPlan.GrazType;
+//using static Models.GrazPlan.PastureUtil;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// TPastureCohort class
     /// Herbage cohort within a pasture population 
@@ -2595,9 +2594,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Uptake nutrients
         /// </summary>
-        /// <param name="elem"></param>
+        /// <param name="elem">N, P, S</param>
         /// <param name="supply"></param>
         public void UptakeNutrients(TPlantElement elem, double[][][] supply)
         {
@@ -3760,143 +3759,5 @@
             return result;
         }
 
-/*        /// <summary>
-        /// Populates a TPastureCohort from a TTypedValue                                
-        /// * The status of the cohort has already been assigned when this method is     
-        ///   called                                                                     
-        /// </summary>
-        /// <param name="aValue"></param>
-        public void WriteToValue(TTypedValue aValue)
-        {
-            int[] iIndexMap = new int[] { 1, 2 };  // [ptLEAF..ptSTEM] = (1,2);
-
-            string sDDML;
-            int iLowDMD;
-            int iHighDMD;
-            int iNoClasses;
-            int iLastLayer;
-            TTypedValue subValue;
-            TTypedValue partValue;
-            int iPart, iDMD;
-            int iLayer;
-            uint Idx;
-
-            PastureUtil.WriteString(ref aValue, "status", PastureUtil.StatusName[this.Status], "");     // Status ------------------------------ 
-
-            sDDML = "<type array=\"T\">"                                                                // Herbage ----------------------------- 
-                     + "<element>"
-                     + "<field name=\"dmd\"    unit=\"-\"     kind=\"double\" array=\"T\"/>"
-                     + "<field name=\"weight\" unit=\"kg/ha\" kind=\"double\" array=\"T\"/>";
-
-            var values = Enum.GetValues(typeof(TPlantElement)).Cast<TPlantElement>();
-            foreach (var Elem in values)
-            {
-                if (this.Owner.FElements.Contains(Elem))
-                {
-                    sDDML = sDDML + "<field name=\"" + PastureUtil.ElemConc[(int)Elem] + "\" unit=\"g/g\" kind=\"double\" array=\"T\"/>";
-                }
-            }
-
-            sDDML = sDDML + "<field name=\"spec_area\" unit=\"cm^2/g\" kind=\"double\" array=\"T\"/>"
-                          + "</element></type>";
-
-            subValue = PastureUtil.GetField(aValue, "herbage", sDDML);
-            subValue.setElementCount(2);
-            for (iPart = GrazType.ptLEAF; iPart <= GrazType.ptSTEM; iPart++)
-            {
-                partValue = subValue.item((uint)iIndexMap[iPart]);
-
-                iLowDMD = HerbClassNo;                                                              // Lowest DMD class (largest index) with non-zero mass
-                while ((iLowDMD >= 1) && (this.Herbage[iPart, iLowDMD].DM == 0.0))                                                
-                {
-                    iLowDMD--;
-                }
-
-                iHighDMD = 1;                                                                       // Highest DMD class (smallest index) with non-zero mass   
-                while ((iHighDMD <= iLowDMD) && (this.Herbage[iPart, iHighDMD].DM == 0.0))
-                {
-                    iHighDMD++;
-                }
-
-                iNoClasses = iLowDMD - iHighDMD + 1;
-
-                if (iNoClasses > 0)
-                {
-                    partValue.member("dmd").setElementCount((uint)iNoClasses + 1);
-                    partValue.member("weight").setElementCount((uint)iNoClasses);
-                    partValue.member("spec_area").setElementCount((uint)iNoClasses);
-                    foreach (var Elem in values)
-                    {
-                        if (this.Owner.FElements.Contains(Elem))
-                        {
-                            partValue.member(PastureUtil.ElemConc[(int)Elem]).setElementCount((uint)iNoClasses);
-                        }
-                    }
-
-                    partValue.member("dmd").item(1).setValue(PastureUtil.DMDLimits[iHighDMD - 1]);
-                    for (Idx = 1; Idx <= iNoClasses; Idx++)
-                    {
-                        iDMD = iHighDMD + ((int)Idx - 1);
-                        partValue.member("dmd").item(Idx + 1).setValue(PastureUtil.DMDLimits[iDMD]);
-                        partValue.member("weight").item(Idx).setValue(PastureUtil.GM2_KGHA * this.Herbage[iPart, iDMD].DM);
-                        partValue.member("spec_area").item(Idx).setValue(PastureUtil.M2_CM2 * this.SpecificArea[iPart, iDMD]);
-                        foreach (var Elem in values)
-                        {
-                            if (this.Owner.FElements.Contains(Elem))
-                            {
-                                partValue.member(PastureUtil.ElemConc[(int)Elem]).item(Idx).setValue(PastureUtil.Div0(this.Herbage[iPart, iDMD].Nu[(int)Elem],
-                                                                       this.Herbage[iPart, iDMD].DM));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    for (Idx = 1; Idx <= partValue.count(); Idx++)
-                    {
-                        partValue.item(Idx).setElementCount(0);
-                    }
-                }
-            } // _ loop over parts _}
-
-            if (this.Status == GrazType.stSEEDL || this.Status == GrazType.stESTAB || this.Status == GrazType.stSENC)
-            {
-                iLastLayer = this.Owner.FSoilLayerCount;
-                while ((iLastLayer >= 1) && (this.Roots[EFFR, iLastLayer].DM + this.Roots[OLDR, iLastLayer].DM == 0.0))
-                {
-                    iLastLayer--;
-                }
-
-                subValue = PastureUtil.GetField(aValue, "root_wt", "<type array=\"T\">"                     // Roots ------------------------------- 
-                                                       + "<element unit=\"kg/ha\" kind=\"double\" array=\"T\"/>"
-                                                       + "</type>");
-                subValue.setElementCount(2);
-                for (Idx = 1; Idx <= 2; Idx++)
-                {
-                    subValue.item(Idx).setElementCount((uint)iLastLayer);
-                }
-
-                for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
-                {
-                    subValue.item(1).item((uint)iLayer).setValue(PastureUtil.GM2_KGHA * this.Roots[EFFR, iLayer].DM);
-                    subValue.item(2).item((uint)iLayer).setValue(PastureUtil.GM2_KGHA * this.Roots[OLDR, iLayer].DM);
-                }
-
-                PastureUtil.WriteReal(ref aValue, "rt_dep", "mm", this.RootDepth, -1.0);
-
-                if (this.Status == GrazType.stSEEDL)                                                         // Other state variables --------------- 
-                {
-                    PastureUtil.WriteReal(ref aValue, "stress_index", "-", this.SeedlStress, 0.0);
-                    PastureUtil.WriteReal(ref aValue, "estab_index", "-", this.EstabIndex, 1.0);
-                }
-
-                if ((this.Owner.Phenology == PastureUtil.TDevelopType.Reproductive) && (this.Owner.DegDays >= this.Params.DevelopK[6]))
-                {
-                    PastureUtil.WriteReal(ref aValue, "stem_reloc", "kg/ha", PastureUtil.GM2_KGHA * this.StemReserve, -1.0);
-                }
-
-                PastureUtil.WriteInteger(ref aValue, "frosts", (int)Math.Round(PastureUtil.Div0(this.FrostFactor, this.Params.DeathK[6])), 0);
-            }
-        }*/
     }
 }

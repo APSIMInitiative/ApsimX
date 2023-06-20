@@ -1,13 +1,12 @@
-﻿namespace Models.GrazPlan
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-//    using CMPServices;
-    using StdUnits;
-    using static GrazType;
-    using static PastureUtil;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using StdUnits;
+using static Models.GrazPlan.GrazType;
+using static Models.GrazPlan.PastureUtil;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// This record is fed into TPasturePopulation objects before calling the        
     /// WaterDemand and computeRates methods.  It contains all the inputs            
@@ -206,7 +205,7 @@
         public double[] FRootRestriction = new double[GrazType.MaxSoilLayers + 1];
 
         /// <summary></summary>
-        public double FFertScalar;
+        public double FFertScalar = 1.0;
 
         // Driving variables -------------------------------------------------------
         TPastureInputs FInputs = new TPastureInputs();
@@ -342,9 +341,6 @@
         /// <summary></summary>
         public double[] fPlant_LL = new double[GrazType.MaxSoilLayers + 1]; // [1..
 
-        /// <summary>Gets the fertility scalar 0-1</summary>
-        public double Fertility { get { return this.FFertScalar; } }
-
         /// <summary>Gets the pasture parameter set</summary>
         public TPastureParamSet Params { get { return this.FParams; } }
 
@@ -406,7 +402,7 @@
         public TPasturePopulation() : base()
         {
             this.FCohorts = new TPastureCohort[0];
-            this.Initialise("", 1.0, new TPlantElement[0]);
+            this.Initialise("", new TPlantElement[0]);
         }
 
         /// <summary>
@@ -418,23 +414,20 @@
         public TPasturePopulation(string speciesName) : base()
         {
             this.FCohorts = new TPastureCohort[0];
-            this.Initialise(speciesName, 1.0, new TPlantElement[0]);
+            this.Initialise(speciesName, new TPlantElement[0]);
         }
 
         // TElementSet = set of TPlantElement; 
 
         /// <summary>
         /// Initializes a new instance of the TPasturePopulation class.
-        /// Constructor for a pasture sward with a single "simple" nutrient model,    
-        /// which imposes a constant "fertility scalar" on growth rates. 
         /// </summary>
         /// <param name="speciesName">Name of a pasture species.  Must match one of the members of ParamsGlb</param>
-        /// <param name="fertScale">Value of the fertility scalar.  Must be positive; value greater than 1.0 will have no effect.</param>
         /// <param name="elements">Set of plant nutrients to be simulated</param>
-        public TPasturePopulation(string speciesName, double fertScale, TPlantElement[] elements /*= []*/) : base()
+        public TPasturePopulation(string speciesName, TPlantElement[] elements /*= []*/) : base()
         {
             this.FCohorts = new TPastureCohort[0];
-            this.Initialise(speciesName, fertScale, elements);
+            this.Initialise(speciesName, elements);
         }
 
         /// <summary>
@@ -446,7 +439,7 @@
         {
             this.FCohorts = new TPastureCohort[0];
 
-            this.Initialise("", 1.0, new TPlantElement[0]);
+            this.Initialise("", new TPlantElement[0]);
 
             this.SetSoilParams(Source.FSoilLayers, Source.FBulkDensity, Source.FSandContent, Source.FCampbellParam);
         }
@@ -469,9 +462,8 @@
         /// Common initialisation logic at construction time.
         /// </summary>
         /// <param name="speciesName">Name of a pasture species. Must match one of the members of ParamsGlb</param>
-        /// <param name="fertScale">Value of the fertility scalar. Must be positive; values greater than 1.0 will have no effect.</param>
         /// <param name="elements">Set of plant nutrients to be simulated</param>
-        public void Initialise(string speciesName, double fertScale, TPlantElement[] elements /*= []*/)
+        public void Initialise(string speciesName, TPlantElement[] elements /*= []*/)
         {
             // create the arrays required by this instance
             for (int i = 0; i <= stSENC; i++)
@@ -530,11 +522,6 @@
 
             this.FMassScalar = 1.0;
             this.ClearState();
-
-            if (fertScale > 0.0)
-            {
-                this.FFertScalar = Math.Min(fertScale, 1.0);
-            }
         }
 
         // Morphology (height profile) calculations
@@ -1384,7 +1371,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Compute seed flows
         /// </summary>
         public void ComputeSeedFlows()
         {
@@ -1745,9 +1732,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Compute nutrient rates
         /// </summary>
-        /// <param name="elem"></param>
+        /// <param name="elem">N, P, S</param>
         private void ComputeNutrientRates(TPlantElement elem)
         {
             int iComp;
@@ -1836,7 +1823,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Compute the nutrient uptake
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="elem"></param>
@@ -3113,7 +3100,7 @@
         /// <summary>
         /// Initialise the model 
         /// </summary>
-        public void ReadParamsFromValues(string nutrients, string species, double fertility, double maxroot, double[] kl, double[] ll)
+        public void ReadParamsFromValues(string nutrients, string species, double maxroot, double[] kl, double[] ll)
         {
             string nutr = nutrients.ToUpper();
 
@@ -3134,11 +3121,10 @@
                 ElemList.Add(TPlantElement.S);
             }
 
-            this.Initialise("", 1.0, ElemList.ToArray());
+            this.Initialise("", ElemList.ToArray());
             this.SetParameters(species, null, "");
             this.ClearState();
-            this.SetFertility(fertility); // do this *after* call to clearState();
-
+            
             bool RecomputeRoots = maxroot < 0.0;
             if (!RecomputeRoots)
             {
@@ -3901,15 +3887,6 @@
         }
 
         /// <summary>
-        /// Fertility scalar for Simple nutrient model
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetFertility(double value)
-        {
-            this.FFertScalar = Math.Max(0.0, Math.Min(value, 1.0));
-        }
-
-        /// <summary>
         /// Number of cohorts matching a particular status                               
         /// </summary>
         /// <param name="comp">Herbage component</param>
@@ -3938,17 +3915,17 @@
         }
 
         /// <summary>
-        /// 
+        /// Get the cohort by index
         /// </summary>
-        /// <param name="cohort"></param>
-        /// <returns></returns>
+        /// <param name="cohort">Cohort index</param>
+        /// <returns>A pasture cohort</returns>
         public TPastureCohort Cohort(int cohort)
         {
             return this.FCohorts[cohort];
         }
 
         /// <summary>
-        /// 
+        /// New dry matter pool
         /// </summary>
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
         /// <param name="DM"></param>
@@ -3986,11 +3963,11 @@
         // Exchange information with other models ..................................
 
         /// <summary>
-        /// 
+        /// Set the soil parameters
         /// </summary>
-        /// <param name="soilLayers"></param>
-        /// <param name="bulkDensity"></param>
-        /// <param name="sandContent"></param>
+        /// <param name="soilLayers">The layer profile</param>
+        /// <param name="bulkDensity">Bulk densities</param>
+        /// <param name="sandContent">Sand contents</param>
         /// <param name="campbellParam"></param>
         public void SetSoilParams(double[] soilLayers, double[] bulkDensity, double[] sandContent, double[] campbellParam)
         {
@@ -4017,7 +3994,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Set the maximum root depth
         /// </summary>
         /// <param name="depthValue"></param>
         public void SetMaxRootDepth(double depthValue)
@@ -4052,7 +4029,7 @@
         }
 
         /// <summary>
-        /// 
+        /// Set to a monoculture soil
         /// </summary>
         public void SetMonocultureSoil()
         {
@@ -4068,9 +4045,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Set the light proportion for this herbage component.
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <param name="value"></param>
         public void SetLightPropn(int comp, double value)
         {
@@ -4085,9 +4062,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Set the transpiration rate for this herbage component.
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <param name="values"></param>
         public void SetTranspiration(int comp, double[] values)
         {
@@ -4098,9 +4075,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Assign soil proportion for this pasture
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent, total</param>
         /// <param name="values"></param>
         public void SetSoilPropn(int comp, double[] values)
         {
@@ -4136,9 +4113,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Get the light fraction for this herbage component.
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <returns></returns>
         public double LightPropn(int comp)
         {
@@ -4286,9 +4263,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Get the transpiration of this herbage component.
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <returns></returns>
         public double[] Transpiration(int comp)
         {
@@ -4324,7 +4301,7 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <returns></returns>
         public double[] RootRadii(int comp)
         {
@@ -4349,7 +4326,7 @@
         /// <summary>
         /// Effective root length density in m/m^3 
         /// </summary>
-        /// <param name="comp">Herbage component</param>
+        /// <param name="comp">Herbage component. seedling...senescent</param>
         /// <returns></returns>
         public double[] EffRootLengthD(int comp)
         {
@@ -4577,9 +4554,6 @@
 
             return result;
         }
-
-        /*function    getHerbageData(   sUnit : string ) : TPopnHerbageData;
-        */
 
         /// <summary>
         /// 

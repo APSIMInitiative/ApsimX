@@ -1,7 +1,6 @@
 ﻿
 using Models.Core;
 using System;
-using System.IO.Pipes;
 using static Models.GrazPlan.GrazType;
 
 namespace Models.GrazPlan
@@ -254,24 +253,27 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// Light interception profiles of plant populations - obtained from the resource allocator (paddock)
+    /// Light interception profiles of plant populations
     /// </summary>
     [Serializable]
     public class LightProfile
     {
-        public Population[] interception;
+        /// <summary>
+        /// Each plant population
+        /// </summary>
+        public Population[] interception = null;
         public double transmission; // MJ/m^2
     }
 
     public class Population
     {
-        public string population;
-        public PopulationItem[] element; 
+        public string population;           // apsim component name
+        public PopulationItem[] element;    // seedling, established, senescing, dead, litter
     }
 
     public class PopulationItem
     {
-        public string name;
+        public string name;                 // "seedling", "established", "senescing", "dead", "litter"
         public Layer[] layer;
     }
 

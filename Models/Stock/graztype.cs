@@ -1,7 +1,7 @@
+using System;
+
 namespace Models.GrazPlan
 {
-    using System;
-
     /// <summary>
     /// This is nearly the same information as "GrazType.ReproType" (below), but is intended for
     /// use in the GUI with Buy events, where we don't really want to include the

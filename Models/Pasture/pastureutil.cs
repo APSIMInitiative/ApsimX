@@ -1,9 +1,8 @@
-﻿namespace Models.GrazPlan
-{
-    //using CMPServices;
-    using System;
-    using static GrazType;
+﻿using System;
+using static Models.GrazPlan.GrazType;
 
+namespace Models.GrazPlan
+{
     /// <summary>
     /// Common definitions used in pastures
     /// </summary>
@@ -579,27 +578,13 @@
             aPool.AshAlk = newDM * Div0(aPool.AshAlk, aPool.DM);
             aPool.DM = newDM;
         }
-        /*
+
         /// <summary>
-        /// Unit is kg/ha unless explicitly specified otherwise
+        /// 
         /// </summary>
         /// <param name="aValue"></param>
+        /// <param name="units"></param>
         /// <returns></returns>
-        public static double ReadMass(TTypedValue aValue)
-        {
-            double result;
-            if (aValue.units() == "g/m^2")
-            {
-                result = aValue.asDouble();
-            }
-            else
-            {
-                result = aValue.asDouble() / GM2_KGHA;
-            }
-
-            return result;
-        }
-        */
         public static double ReadMass(double aValue, string units)
         {
             double result;
@@ -631,169 +616,5 @@
                 dstPool.Nu[(int)Elem] = dstPool.Nu[(int)Elem] + amount;
             }
         }
-
-        // Utility routines for I/O from TTypedValues
-        /*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="DDML"></param>
-        /// <returns></returns>
-        public static TTypedValue GetField(TTypedValue aValue, string field, string DDML)
-        {
-            TDDMLValue Template;
-            TTypedValue result;
-
-            result = aValue.member(field);
-
-            if (result == null)
-            {
-                Template = new TDDMLValue(DDML, "");
-                Template.Name = field;
-                aValue.newMember(Template);
-                result = aValue.member(field);
-            }
-
-            return result;
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="defaultVal"></param>
-        /// <returns></returns>
-        public static double ReadReal(TTypedValue aValue, string field, double defaultVal)
-        {
-            double result;
-            TTypedValue aMember = aValue.member(field);
-
-            if (aMember != null)
-            {
-                result = aMember.asDouble();
-            }
-            else
-            {
-                result = defaultVal;
-            }
-
-            return result;
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="defaultVal"></param>
-        /// <returns></returns>
-        public static int ReadInteger(TTypedValue aValue, string field, int defaultVal)
-        {
-            int result;
-            TTypedValue aMember = aValue.member(field);
-
-            if (aMember != null)
-            {
-                result = aMember.asInteger();
-            }
-            else
-            {
-                result = defaultVal;
-            }
-
-            return result;
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="defaultVal"></param>
-        /// <returns></returns>
-        public static string ReadString(TTypedValue aValue, string field, string defaultVal)
-        {
-            string result;
-            TTypedValue aMember = aValue.member(field);
-
-            if (aMember != null)
-            {
-                result = aMember.asString();
-            }
-            else
-            {
-                result = defaultVal;
-            }
-
-            return result;
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="unit"></param>
-        /// <param name="value"></param>
-        /// <param name="defaultVal"></param>
-        public static void WriteReal(ref TTypedValue aValue, string field, string unit, double value, double defaultVal)
-        {
-            TTypedValue aMember = aValue.member(field);
-            if ((aMember == null) && (Math.Abs(value - defaultVal) > 1.0E-8))
-            {
-                aMember = aValue.addScalar(field, TTypedValue.TBaseType.ITYPE_DOUBLE);
-            }
-
-            if (aMember != null)
-            {
-                aMember.setUnits(unit);
-                aMember.setValue(value);
-            }
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="defaultVal"></param>
-        public static void WriteInteger(ref TTypedValue aValue, string field, int value, int defaultVal)
-        {
-            TTypedValue aMember = aValue.member(field);
-            if ((aMember == null) && (value != defaultVal))
-            {
-                aMember = aValue.addScalar(field, TTypedValue.TBaseType.ITYPE_INT4);
-            }
-
-            if (aMember != null)
-            {
-                aMember.setValue(value);
-            }
-        }
-        *//*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="aValue"></param>
-        /// <param name="field"></param>
-        /// <param name="value"></param>
-        /// <param name="defaultVal"></param>
-        public static void WriteString(ref TTypedValue aValue, string field, string value, string defaultVal)
-        {
-            TTypedValue aMember = aValue.member(field);
-            if ((aMember == null) && (value != defaultVal))
-            {
-                aMember = aValue.addScalar(field, TTypedValue.TBaseType.ITYPE_STR);
-            }
-
-            if (aMember != null)
-            {
-                aMember.setValue(value);
-            }
-        }*/
     }
 }
