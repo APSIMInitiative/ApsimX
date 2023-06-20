@@ -69,6 +69,40 @@ namespace Models.PMF.Phen
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
+        /// <summary>List of stages in phenology</summary>
+        [JsonIgnore]
+        public List<string> StageNames 
+        {
+            get
+            {
+                List<string> stages = new List<string>();
+                stages.Add(phases[0].Start.ToString());
+                foreach (IPhase p in  phases)
+                {
+                    stages.Add(p.End.ToString());
+                }
+            return stages;
+            }
+        }
+
+        /// <summary>List of numerical stage codes</summary>
+        [JsonIgnore]
+        public List<int> StageCodes
+        {
+            get
+            {
+                List<int> stages = new List<int>();
+                int current = 0;
+                stages.Add(current);
+                foreach (IPhase p in phases)
+                {
+                    current += 1;
+                    stages.Add(current);
+                }
+                return stages;
+            }
+        }
+
         /// <summary>The Thermal time accumulated tt</summary>
         [JsonIgnore]
         public double AccumulatedTT { get; set; }
