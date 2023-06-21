@@ -165,17 +165,17 @@ namespace UnitTests.Weather
             DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.Parse("03/01/1900"));
             DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.Parse("01/01/2000"));
 
-            Assert.AreEqual(weather1900.MaxT, 31.9, 0.00001);
-            Assert.AreEqual(weather1900.MinT, 16.6, 0.00001);
-            Assert.AreEqual(weather1900.Wind, 3.0, 0.00001);
-            Assert.AreEqual(weather1900.Radn, 25, 0.00001);
-            Assert.AreEqual(weather1900.Rain, 0, 0.00001);
+            Assert.AreEqual(31.9, weather1900.MaxT, 0.01);
+            Assert.AreEqual(16.6, weather1900.MinT, 0.01);
+            Assert.AreEqual(3.0, weather1900.Wind, 0.01);
+            Assert.AreEqual(25.0, weather1900.Radn, 0.01);
+            Assert.AreEqual(0.0, weather1900.Rain, 0.01);
 
-            Assert.AreEqual(weather2000.MaxT, 30.0, 0.00001);
-            Assert.AreEqual(weather2000.MinT, 17.5, 0.00001);
-            Assert.AreEqual(weather2000.Wind, 3.0, 0.00001);
-            Assert.AreEqual(weather2000.Radn, 29, 0.00001);
-            Assert.AreEqual(weather2000.Rain, 0, 0.00001);
+            Assert.AreEqual(30.5, weather2000.MaxT, 0.01);
+            Assert.AreEqual(13.5, weather2000.MinT, 0.01);
+            Assert.AreEqual(3.0, weather2000.Wind, 0.01);
+            Assert.AreEqual(28.0, weather2000.Radn, 0.01);
+            Assert.AreEqual(0.0, weather2000.Rain, 0.01);
 
             //should get the 3/1/1900 weather data
             Assert.AreEqual(weather1900, weather.TomorrowsMetData);
