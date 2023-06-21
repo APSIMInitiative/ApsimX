@@ -123,6 +123,8 @@ namespace Models
         /// <summary>Final Initialise event. Occurs once at start of simulation.</summary>
         public event EventHandler FinalInitialise;
 
+        /// <summary>Occurs first each day to allow yesterdays values to be caught</summary>
+        public event EventHandler DoCatchYesterday;
         /// <summary>Occurs each day to calculuate weather</summary>
         public event EventHandler DoWeather;
         /// <summary>Occurs each day to do daily updates to models</summary>
@@ -322,6 +324,10 @@ namespace Models
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
+
+                if (DoCatchYesterday != null)
+                    DoCatchYesterday.Invoke(this, args);
+
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 
