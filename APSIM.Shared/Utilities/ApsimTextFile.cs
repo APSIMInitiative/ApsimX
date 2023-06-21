@@ -1,18 +1,16 @@
 // An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
-
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-
     /// <summary>
     /// A simple type for encapsulating a constant
     /// </summary>
@@ -50,18 +48,17 @@ namespace APSIM.Shared.Utilities
     /// <summary>
     /// A simple type for encapsulating a text entry
     /// </summary>
+    [Serializable]
     public class ApsimTextCache
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApsimConstant"/> class.
         /// </summary>
         /// <param name="date">The datetime of this entry.</param>
-        /// <param name="val">The value.</param>
         /// <param name="pos">The file position of this entry.</param>
-        public ApsimTextCache(DateTime date, string val, long pos)
+        public ApsimTextCache(DateTime date, long pos)
         {
             Date = date;
-            Value = val;
             Position = pos;
         }
 
@@ -123,7 +120,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>A cache of lines that have been read to. Stores the date, position and value of the line
         /// Stored in date order for faster searching.</summary>
-        private List<ApsimTextCache> textCache = new List<ApsimTextCache>();
+        private LinkedList<ApsimTextCache> textCache = new LinkedList<ApsimTextCache>();
 
         /// <summary>The words</summary>
         private StringCollection Words = new StringCollection();
@@ -819,22 +816,20 @@ namespace APSIM.Shared.Utilities
             else
             {
                 //check if we've looked at this date before
-                int cacheIndex = 0;
                 ApsimTextCache previousEntry = null; //used as a starting point to save searching from the start of the file if entries exist
                 foreach (ApsimTextCache entry in this.textCache)
                 {
                     if (entry.Date.Equals(date))
                     {
-                        inStreamReader.Seek(entry.Position, SeekOrigin.Begin);
+                        SeekToPosition(entry.Position);
                         return;
-                    } 
+                    }
                     else if (entry.Date < date)
                     {
                         //cache is stored in reverse order, so stop looking after the date is past
                         previousEntry = entry;
                         break;
                     }
-                    cacheIndex += 1;
                 }
 
                 //it's not in the cache, search file for the position while moving to it
@@ -842,12 +837,12 @@ namespace APSIM.Shared.Utilities
                 if (previousEntry != null)
                 {
                     NumRowsToSkip = (date - previousEntry.Date).Days;
-                    inStreamReader.Seek(previousEntry.Position, SeekOrigin.Begin);
+                    SeekToPosition(previousEntry.Position);
                 }
                 else
                 {
                     NumRowsToSkip = (date - _FirstDate).Days;
-                    inStreamReader.Seek(FirstLinePosition, SeekOrigin.Begin);
+                    SeekToPosition(FirstLinePosition);
                 }
 
                 string val = "";
@@ -857,8 +852,11 @@ namespace APSIM.Shared.Utilities
                     NumRowsToSkip--;
                 }
                 //now that we are in the position, insert our entry at this point in the list
-                ApsimTextCache newEntry = new ApsimTextCache(date, val, inStreamReader.Position);
-                this.textCache.Insert(cacheIndex, newEntry);
+                ApsimTextCache newEntry = new ApsimTextCache(date, GetCurrentPosition());
+                if (previousEntry != null)
+                    this.textCache.AddBefore(this.textCache.Find(previousEntry), newEntry);
+                else
+                    this.textCache.AddFirst(newEntry);
                 return;
             }
         }
