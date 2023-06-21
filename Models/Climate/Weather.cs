@@ -702,7 +702,32 @@ namespace Models.Climate
             SensibilityCheck(clock as Clock, this);
         }
 
-        /// <summary>Method to read one days met data in from file</summary>
+        /// <summary>Method to read one days met data in from file
+        /// This comes with a preformance cost as the weather file has to be 
+        /// searched and reset each time</summary>
+        /// <param name="date">the date to read met data</param>
+        public DailyMetDataFromFile GetAnyDateMetData(DateTime date)
+        {
+            if (this.reader == null)
+                if (!this.OpenDataFile())
+                    throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
+
+            long position = this.reader.GetCurrentPosition();
+
+            //seek to the date required
+            this.reader.SeekToDate(date);
+
+            //get weather for that date
+            DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
+            readMetData.Raw = reader.GetNextLineOfData();
+
+            //seek back to the current date
+            this.reader.SeekToPosition(position);
+
+            return CheckDailyMetData(readMetData);
+        }
+
+        /// <summary>Method to read the consecutive daily met data in from file</summary>
         /// <param name="date">the date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
@@ -729,6 +754,13 @@ namespace Models.Climate
 
             if (date != this.reader.GetDateFromValues(readMetData.Raw))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
+
+            readMetData = CheckDailyMetData(readMetData);
+
+            return readMetData;
+        }
+        private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
+        {
 
             if (this.radiationIndex != -1)
                 readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
