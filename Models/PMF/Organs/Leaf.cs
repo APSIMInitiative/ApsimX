@@ -8,6 +8,7 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
+using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Newtonsoft.Json;
 
@@ -2064,6 +2065,16 @@ namespace Models.PMF.Organs
                 foreach (LeafCohort leaf in Leaves)
                     leaf.DoDailyCleanup();
             }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            Summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            Summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
