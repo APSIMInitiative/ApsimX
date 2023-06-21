@@ -444,5 +444,63 @@ ExperimentY2
             Assert.IsNotNull(simulationCopyNodeAfterChange);
             Assert.IsNotNull(originalSimulationAfterChange);
         }
+
+        [Test]
+        public void TestApplySwitchSaveFromConfigFile()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Simulation simulationNode = file.FindInScope<Simulation>();
+
+            string newFileName = file.FileName.Insert(file.FileName.LastIndexOf("."), "2");
+            // Get path string for the config file that changes the date.
+            string newFileString = $"load {file.FileName}\nsave {newFileName}\nadd [Zone] Report";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(newFileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.IsNotNull(secondReportNodeThatShouldBePresent);
+        }
+
+        [Test]
+        public void TestApplySwitchLoadFromConfigFile()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Simulation simulationNode = file.FindInScope<Simulation>();
+
+            string newFileString = $"load {file.FileName}\nadd [Zone] Report";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Get new values from changed simulation.
+            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+
+            // See if the report shows up as a second child of Field with a specific name.
+            Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
+            Assert.IsNotNull(secondReportNodeThatShouldBePresent);
+        }
     }
 }

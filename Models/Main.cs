@@ -28,6 +28,14 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            // Required to allow the --apply switch functionality of not including
+            // an apsimx file path on the command line.
+            if (args.Length > 0 && args[0].Equals("--apply"))
+            {
+                string[] empty = { " " };
+                empty = empty.Concat(args).ToArray();
+                args = empty;
+            }
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
@@ -37,8 +45,8 @@ namespace Models
                 config.AutoHelp = true;
                 config.HelpWriter = Console.Out;
             }).ParseArguments<Options>(args)
-              .WithParsed(Run)
-              .WithNotParsed(HandleParseError);
+            .WithParsed(Run)
+            .WithNotParsed(HandleParseError);
             return exitCode;
         }
 
@@ -62,7 +70,7 @@ namespace Models
             try
             {
                 string[] files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive)).ToArray();
-                if (files == null || files.Length < 1 && !string.IsNullOrEmpty(options.Apply))
+                if (files == null || files.Length < 1 && string.IsNullOrEmpty(options.Apply))
                     throw new ArgumentException($"No files were specified");
                 if (options.NumProcessors == 0)
                     throw new ArgumentException($"Number of processors cannot be 0");
@@ -94,21 +102,79 @@ namespace Models
                 // ===================================
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
-                    List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply).ToList();
-                    foreach (string file in files)
+                    List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
+                    if (files.Length > 0)
                     {
-                        Simulations sim = (Simulations)ConfigFile.RunConfigCommands(file, commands);
-                        Runner runner = new Runner(sim,
-                                            false,
-                                            true,
-                                            options.RunTests,
-                                            runType: options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
-                        sim.Write(file);
+                        foreach (string file in files)
+                        {
+                            Simulations sim = ConfigFile.RunConfigCommands(file, commands) as Simulations;
+                            Runner runner = new Runner(sim,
+                                                false,
+                                                true,
+                                                options.RunTests,
+                                                runType: options.RunType,
+                                                numberOfProcessors: options.NumProcessors,
+                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                            sim.Write(file);
+                        }
                     }
+                    // If no apsimx file path included proceeding --apply switch...              
+                    else if (files.Length < 1)
+                    {
+                        string savePath = "";
+                        string loadPath = "";
+                        string[] commandsArray = commands.ToArray();
 
+                        for (int i = 0; i < commandsArray.Length; i++)
+                        {
+                            string[] splitCommand = commandsArray[i].Split(" ");
+                            if (splitCommand[0] == "save")
+                            {
+                                savePath = splitCommand[1];
+                                continue;
+                            }
+                            else if (splitCommand[0] == "load")
+                            {
+                                loadPath = splitCommand[1];
+                                continue;
+                            }
 
+                            // Throw if the first command is not a save or load command.
+                            if (i == 0 && String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
+                            {
+                                throw new Exception("First command in a config file can only be either a save or load command.");
+                            }
+
+                            // Required as RunConfigCommands() requires list of commands, not just a single command.
+                            List<string> commandWrapper = new()
+                            {
+                                commandsArray[i]
+                            };
+
+                            // As long as a file can be loaded any other command can be run.
+                            if (!String.IsNullOrEmpty(loadPath))
+                            {
+                                Simulations sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper) as Simulations;
+                                Runner runner = new Runner(sim,
+                                                    false,
+                                                    true,
+                                                    options.RunTests,
+                                                    runType: options.RunType,
+                                                    numberOfProcessors: options.NumProcessors,
+                                                    simulationNamePatternMatch: options.SimulationNameRegex);
+
+                                if (!String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
+                                {
+                                    sim.Write(loadPath);
+                                }
+                                else if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
+                                {
+                                    sim.Write(savePath);
+                                }
+                            }
+                            else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
+                        }
+                    }
                 }
                 else
                 {

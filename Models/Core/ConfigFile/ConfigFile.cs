@@ -17,7 +17,7 @@ namespace Models.Core.ConfigFile
         /// </summary>
         /// <param name="configFilePath">String path to config file.</param>
         /// <returns>A combined string List of override and instruction commands.</returns>
-        public static IEnumerable<string> GetConfigFileCommands(string configFilePath)
+        public static List<string> GetConfigFileCommands(string configFilePath)
         {
             // List for all the commands, whether they are override commands or instruction commands.
             // Instructions = used for adding, creating, deleting, copying, saving, loading
@@ -111,10 +111,9 @@ namespace Models.Core.ConfigFile
                                     }
                                 }
                             }
-                            else if (keyword == Keyword.Load)
-                                loadPath = splitCommands[1];
-                            else
-                                savePath = splitCommands[1];
+                            // Ignore the command as these cases are handled outside of this method.
+                            else if (keyword == Keyword.Load || keyword == Keyword.Save)
+                                return null;
                         }
 
                         Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
