@@ -1009,6 +1009,8 @@ namespace Models.PMF.Organs
                 Live.StructuralN = LAI * SLN;
                 Live.StorageN = 0;
             }
+            summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Called when crop is being sown</summary>
