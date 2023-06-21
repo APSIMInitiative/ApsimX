@@ -25,22 +25,26 @@ namespace Models.PMF.Scrum
         [Description("Years from planting to reach Maximum dimension (years)")]
         public int YearsToMaxDimension { get; set; }
 
+        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
+        [Description("Trunk mass when maximum dimension reached (t/ha)")] 
+        public double TrunkMassAtMaxDimension { get; set; }
+
         /// <summary>Bud Break (Days after Winter Solstice)</summary>
         [Separator("Tree Phenology.  Specify when canopy stages occur in days since the winter solstice")]
         [Description("Bud Break (Days after Winter Solstice)")]
-        public double BudBreakDAWS { get; set; }
+        public int BudBreakDAWS { get; set; }
 
         /// <summary>Start Full Canopy (Days after Winter Solstice)</summary>
         [Description("Start Full Canopy (Days after Winter Solstice)")]
-        public double StartFullCanopyDAWS { get; set; }
+        public int StartFullCanopyDAWS { get; set; }
 
         /// <summary>Start of leaf fall (Days after Winter Solstice)</summary>
         [Description("Start of leaf fall (Days after Winter Solstice)")]
-        public double StartLeafFallDAWS { get; set; }
+        public int StartLeafFallDAWS { get; set; }
 
         /// <summary>Start Fruit Growth (Days after Winter Solstice)</summary>
         [Description("End of Leaf fall (Days after Winter Solstice)")]
-        public double EndLeafFallDAWS { get; set; }
+        public int EndLeafFallDAWS { get; set; }
 
         /// <summary>Root depth at harvest (mm)</summary>
         [Separator("Plant Dimnesions")]
@@ -96,7 +100,7 @@ namespace Models.PMF.Scrum
         /// <summary>Maximum green cover</summary>
         [Separator("Fruit parameters")]
         [Description("Fruit number retained (/m2 post thinning)")]
-        public double Number { get; set; }
+        public int Number { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Description("Potential Fruit Size (mm diameter)")]
@@ -112,15 +116,15 @@ namespace Models.PMF.Scrum
 
         /// <summary>Maximum Bloom </summary>
         [Description("Maximum Bloom (Days After Winter Solstice)")]
-        public double DAWSMaxBloom { get; set; }
+        public int DAWSMaxBloom { get; set; }
 
         /// <summary>Start Linear Growth </summary>
         [Description("Start Linear Growth (Days After Winter Solstice)")]
-        public double DAWSLinearGrowth { get; set; }
+        public int DAWSLinearGrowth { get; set; }
 
         /// <summary>Maximum Size </summary>
         [Description("Max Size (Days After Winter Solstice)")]
-        public double DAWSMaxSize { get; set; }
+        public int DAWSMaxSize { get; set; }
 
 
         /// <summary>The plant</summary>
@@ -130,11 +134,17 @@ namespace Models.PMF.Scrum
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
 
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Weather weather = null;
+
         [Link]
         private ISummary summary = null;
 
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
+
+        private int harvestDAWS = 320;
+        private int pruneDAWS = 360;
 
         
         [JsonIgnore]
@@ -202,6 +212,7 @@ namespace Models.PMF.Scrum
             cropParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
             cropParams["FullCanopy"] += StartLeafFallDAWS.ToString();
             cropParams["LeafFall"] += EndLeafFallDAWS.ToString();
+            pruneDAWS = EndLeafFallDAWS;
             cropParams["MaxRootDepth"] += MaxRD.ToString();
             cropParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             cropParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
@@ -224,11 +235,15 @@ namespace Models.PMF.Scrum
             cropParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
             cropParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
             cropParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
+            harvestDAWS = DAWSMaxSize;
+
 
             if (AgeAtSimulationStart <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 0 years");
-            cropParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * 1000).ToString();
-            cropParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * 1000).ToString();
+                throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
+            if (TrunkMassAtMaxDimension <= 0)
+                throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
+            cropParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
+            cropParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
             cropParams["InitialFruitWt"] += (0).ToString();
             cropParams["InitialLeafWt"] += (0).ToString();
                 
@@ -242,7 +257,10 @@ namespace Models.PMF.Scrum
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-
+            if (weather.DaysSinceWinterSolstice == harvestDAWS)
+                strum.RemoveBiomass("Harvest");
+            if (weather.DaysSinceWinterSolstice == pruneDAWS)
+                strum.RemoveBiomass("Prune");
         }
 
         [EventSubscribe("StartOfSimulation")]
