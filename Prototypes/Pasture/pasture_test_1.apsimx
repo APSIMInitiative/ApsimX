@@ -24,7 +24,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "Kingaroy.met",
+          "FileName": "cbr_70014.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
