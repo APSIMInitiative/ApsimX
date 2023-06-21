@@ -2,6 +2,7 @@
 using Models;
 using Models.Core;
 using Models.Core.Run;
+using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
 using System;
@@ -126,6 +127,61 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
+        
+        [Test]
+        public void TestGetAnyDayMetData()
+        {
+
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+
+            Simulation baseSim = new Simulation()
+            {
+                Name = "Base",
+                Children = new List<IModel>()
+                    {
+                        new Models.Climate.Weather()
+                        {
+                            Name = "Weather",
+                            FullFileName = weatherFilePath,
+                            ExcelWorkSheetName = "Sheet1"
+                        },
+                        new Clock()
+                        {
+                            Name = "Clock",
+                        },
+                        new MockSummary()
+                    }
+            };
+
+            Models.Climate.Weather weather = baseSim.Children[0] as Models.Climate.Weather;
+            Clock clock = baseSim.Children[1] as Clock;
+            clock.StartDate = DateTime.Parse("01/01/1900");
+            clock.EndDate = DateTime.Parse("02/01/1900");
+
+            baseSim.Prepare();
+            baseSim.Run();
+
+            DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.Parse("03/01/1900"));
+            DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.Parse("01/01/2000"));
+
+            Assert.AreEqual(weather1900.MaxT, 31.9, 0.00001);
+            Assert.AreEqual(weather1900.MinT, 16.6, 0.00001);
+            Assert.AreEqual(weather1900.Wind, 3.0, 0.00001);
+            Assert.AreEqual(weather1900.Radn, 25, 0.00001);
+            Assert.AreEqual(weather1900.Rain, 0, 0.00001);
+
+            Assert.AreEqual(weather2000.MaxT, 30.0, 0.00001);
+            Assert.AreEqual(weather2000.MinT, 17.5, 0.00001);
+            Assert.AreEqual(weather2000.Wind, 3.0, 0.00001);
+            Assert.AreEqual(weather2000.Radn, 29, 0.00001);
+            Assert.AreEqual(weather2000.Rain, 0, 0.00001);
+
+            //should get the 3/1/1900 weather data
+            Assert.AreEqual(weather1900, weather.TomorrowsMetData);
+        }
+
+
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
          * Useful to keep for later though if we need to check all the example weather.
