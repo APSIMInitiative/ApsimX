@@ -24,7 +24,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "D:\\Projects\\ApsimX\\Examples\\WeatherFiles\\Kingaroy.met",
+          "FileName": "Kingaroy.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
