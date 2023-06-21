@@ -76,21 +76,9 @@ namespace Models.Core.ConfigFile
                                 if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
                                 {
                                     string modifiedNodeName = splitCommands[1];
-                                    string keywordStr = keyword.ToString();
-                                    switch (keywordStr)
+                                    if (!string.IsNullOrEmpty(modifiedNodeName))
                                     {
-                                        case "Add":
-                                            if (!string.IsNullOrEmpty(modifiedNodeName))
-                                            {
-                                                nodeToModify = modifiedNodeName;
-                                            }
-                                            else throw new Exception($"Unable to add new node. The format of model name(s) not recognised in command: {command}");
-                                            break;
-                                        case "Delete":
-                                            if (!string.IsNullOrEmpty(modifiedNodeName))
-                                                nodeToModify = modifiedNodeName;
-                                            else throw new Exception($"Unable to delete node. There was an issue with the delete command: {command}.");
-                                            break;
+                                        nodeToModify = modifiedNodeName;
                                     }
                                 }
                                 else
@@ -99,6 +87,7 @@ namespace Models.Core.ConfigFile
                                 }
                                 if (splitCommands.Length > 2)
                                 {
+                                    // If third command split string is a file path...
                                     if (splitCommands[2].Contains("\\"))
                                     {
                                         string[] filePathAndNodeName = splitCommands[2].Split(';');
@@ -109,6 +98,11 @@ namespace Models.Core.ConfigFile
                                             nodeForAction = reformattedNode;
                                         }
                                         else throw new Exception("Add command missing either file or node name.");
+                                    }
+                                    // If third command split string is a [NodeName]...
+                                    else if (splitCommands[2].Contains("[") && splitCommands[2].Contains("]"))
+                                    {
+                                        nodeForAction = splitCommands[2];
                                     }
                                     else
                                     {
@@ -174,6 +168,14 @@ namespace Models.Core.ConfigFile
                     case "Delete":
                         IModel nodeToBeDeleted = locator.Get(instruction.NodeToModify) as IModel;
                         Structure.Delete(nodeToBeDeleted); // TODO: needs testing.
+                        break;
+                    case "Copy":
+                        IModel nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
+                        IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
+                        IModel nodeClone = nodeToBeCopied.Clone();
+                        string newNodeName = instruction.NodeForAction.ToString().Substring(1).Trim(']');
+                        nodeClone.Name = newNodeName;
+                        Structure.Add(nodeClone, nodeToBeCopiedsParent);
                         break;
                 }
                 return simulation;

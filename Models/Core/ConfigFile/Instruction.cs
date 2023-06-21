@@ -6,11 +6,7 @@
     public class Instruction
     {
         /// <summary>
-        /// Used to hold all the keyword types of an instruction.
-        /// </summary>
-
-        /// <summary>
-        /// A insturction keyword describing the insturctions action.
+        /// A insturction keyword describing the instructions action.
         /// </summary>
         public Keyword keyword { get; set; }
 
@@ -26,11 +22,6 @@
         /// An optional file path where a node to copy or add is located.
         /// </summary>
         public string FileContainingNode { get; set; }
-
-        /// <summary>
-        /// A string path with nodes separated with full stops.
-        /// </summary>
-        public string NodePath { get; set; } // TODO: finish this functionality.
 
         /// <summary>
         /// An optional path to file to save to.
@@ -51,11 +42,6 @@
         public string NodeForAction { get; set; }
 
         /// <summary>
-        /// Creates a new Instruction instance with no arguments.
-        /// </summary>
-        public Instruction() { }
-
-        /// <summary>
         /// Creates a new Instruction instance with all arguments.
         /// </summary>
         /// 
@@ -70,6 +56,7 @@
         }
 
     }
+
     /// <summary>
     /// Supported keyword types for instruction types.
     /// </summary>
