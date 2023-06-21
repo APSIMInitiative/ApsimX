@@ -19,11 +19,11 @@ namespace Models.PMF.Scrum
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Tree Age")]
         [Description("Tree Age At Start of Simulation")]
-        public double AgeAtSimulationStart { get; set; }
+        public int AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Years from planting to reach Maximum dimension (years)")]
-        public double YearsToMaxDimension { get; set; }
+        public int YearsToMaxDimension { get; set; }
 
         /// <summary>Bud Break (Days after Winter Solstice)</summary>
         [Separator("Tree Phenology.  Specify when canopy stages occur in days since the winter solstice")]
@@ -93,9 +93,42 @@ namespace Models.PMF.Scrum
         [Description("Maximum LAI of mature tree prior to pruning (m2/m2)")]
         public double MaxLAI { get; set; }
 
+        /// <summary>Maximum green cover</summary>
+        [Separator("Fruit parameters")]
+        [Description("Fruit number retained (/m2 post thinning)")]
+        public double Number { get; set; }
+
+        /// <summary>Maximum green cover</summary>
+        [Description("Potential Fruit Size (mm diameter)")]
+        public double Size { get; set; }
+
+        /// <summary>Fruit Density </summary>
+        [Description("Fruit Density (g/cm3)")]
+        public double Density { get; set; }
+
+        /// <summary>Fruit DM conc </summary>
+        [Description("Fruit DM conc (g/g)")]
+        public double DMC { get; set; }
+
+        /// <summary>Maximum Bloom </summary>
+        [Description("Maximum Bloom (Days After Winter Solstice)")]
+        public double DAWSMaxBloom { get; set; }
+
+        /// <summary>Start Linear Growth </summary>
+        [Description("Start Linear Growth (Days After Winter Solstice)")]
+        public double DAWSLinearGrowth { get; set; }
+
+        /// <summary>Maximum Size </summary>
+        [Description("Max Size (Days After Winter Solstice)")]
+        public double DAWSMaxSize { get; set; }
+
+
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant strum = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Phenology phenology = null;
 
         [Link]
         private ISummary summary = null;
@@ -128,7 +161,15 @@ namespace Models.PMF.Scrum
             {"InitialFruitWt","[Fruit].InitialWt.Structural.FixedValue = "},
             {"InitialLeafWt", "[Leaf].InitialWt.FixedValue = " },
             {"YearsToMaturity","[RelativeAnnualDimension].XYPairs.X[2] = " },
-            {"YearsToMaxRD","[Root].RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " }
+            {"YearsToMaxRD","[Root].RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
+            {"Number","[Fruit].Number.RetainedPostThinning.FixedValue = " },
+            {"Size","[Fruit].MaximumSize.FixedValue = " },
+            {"Density","[Fruit].Density.FixedValue = " },
+            {"DMC", "[Fruit].MinimumDMC.FixedValue = " },
+            {"DAWSMaxBloom","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
+            {"DAWSLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
+            {"DAWSEndLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
+            {"DAWSMaxSize","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
         };
 
         /// <summary>
@@ -144,6 +185,7 @@ namespace Models.PMF.Scrum
             tree = coeffCalc();
             strum.Children.Add(tree);
             strum.Sow(cropName, population, depth, rowWidth);
+            phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
                 ,MessageType.Information); 
@@ -174,12 +216,20 @@ namespace Models.PMF.Scrum
             cropParams["MaxLAI"] += MaxLAI.ToString();
             cropParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             cropParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
+            cropParams["Number"] += Number.ToString();
+            cropParams["Size"] += Size.ToString();
+            cropParams["Density"] += Density.ToString();
+            cropParams["DMC"] += DMC.ToString();
+            cropParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
+            cropParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
+            cropParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
+            cropParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
 
             if (AgeAtSimulationStart <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 0 years");
-            cropParams["InitialTrunkWt"] += (AgeAtSimulationStart/YearsToMaxDimension * 1000).ToString();
-            cropParams["InitialRootWt"] += (AgeAtSimulationStart / YearsToMaxDimension * 1000).ToString();
-            cropParams["InitialFruitWt"] += (AgeAtSimulationStart / YearsToMaxDimension * 1000).ToString();
+            cropParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * 1000).ToString();
+            cropParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * 1000).ToString();
+            cropParams["InitialFruitWt"] += (0).ToString();
             cropParams["InitialLeafWt"] += (0).ToString();
                 
             string[] commands = new string[cropParams.Count];
