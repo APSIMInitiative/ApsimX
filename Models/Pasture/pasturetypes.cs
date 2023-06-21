@@ -279,9 +279,12 @@ namespace Models.GrazPlan
 
     public class Layer
     {
-        public double thickness;    // m
-        public double amount;       // MJ/m^2
-        public double intensity;    // W/m^2
+        /// <summary>m</summary>
+        public double thickness;   
+        /// <summary>MJ/m^2</summary>
+        public double amount;
+        /// <summary>W/m^2</summary>
+        public double intensity;  
     }
 
     /// <summary>
@@ -339,5 +342,20 @@ namespace Models.GrazPlan
         public double[] avail_nutr; // kg/ha
     }
 
+    /// <summary>
+    /// Removal of herbage and seed
+    /// </summary>
+    public class PastureRemoval
+    {
+        /// <summary>
+        /// The herbage in each digestibility class. kg/ha
+        /// </summary>
+        public double[] herbage = new double[GrazType.DigClassNo];
+
+        /// <summary>
+        /// The seed in each maturity pool. kg/ha
+        /// </summary>
+        public double[] seed = new double[GrazType.RIPE];
+    }
 }
 
