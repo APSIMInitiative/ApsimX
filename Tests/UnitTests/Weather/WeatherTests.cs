@@ -157,8 +157,8 @@ namespace UnitTests.Weather
 
             Models.Climate.Weather weather = baseSim.Children[0] as Models.Climate.Weather;
             Clock clock = baseSim.Children[1] as Clock;
-            clock.StartDate = DateTime.Parse("01/01/1900");
-            clock.EndDate = DateTime.Parse("02/01/1900");
+            clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             baseSim.Prepare();
             baseSim.Run();
