@@ -12,7 +12,7 @@ using System.Data;
 namespace Models
 {
     /// <summary>
-    /// The clock model is resonsible for controlling the daily timestep in APSIM. It 
+    /// The clock model is resonsible for controlling the daily timestep in APSIM. It
     /// keeps track of the simulation date and loops from the start date to the end
     /// date, publishing events that other models can subscribe to.
     /// </summary>
@@ -148,19 +148,18 @@ namespace Models
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
         /// <summary>Occurs each day to do the daily residue decomposition</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
-        /// <summary>Occurs each day to do daily growth increment of total plant biomass</summary>                   
+        /// <summary>Occurs each day to do daily growth increment of total plant biomass</summary>
         public event EventHandler DoUpdateWaterDemand;
         /// <summary>Occurs each day to do water arbitration</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
-
+        /// <summary>Initiates water calculations for the Pasture model</summary>
         public event EventHandler DoPastureWater;
-
         /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
         public event EventHandler PrePhenology;
-        /// <summary>Occurs each day to perform phenology</summary>                             
-        public event EventHandler DoPhenology;                                         // Plant 
+        /// <summary>Occurs each day to perform phenology</summary>
+        public event EventHandler DoPhenology;                                         // Plant
         /// <summary>Occurs each day to do potential growth</summary>
-        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant        
+        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
         /// <summary>Occurs each day to do the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         public event EventHandler DoPotentialPlantPartioning;                          // PMF OrganArbitrator.
@@ -180,9 +179,8 @@ namespace Models
         public event EventHandler DoLifecycle;
         /// <summary>Occurs each day after the simulation is done. Does managment calculations</summary>
         public event EventHandler DoManagementCalculations;
-
+        /// <summary>Occurs after pasture growth and sends material to SOM</summary>
         public event EventHandler DoEndPasture;
-
         /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs at end of each day</summary>
@@ -371,7 +369,7 @@ namespace Models
 
                 if (DoSurfaceOrganicMatterDecomposition != null)
                     DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-                
+
                 if (DoUpdateWaterDemand != null)
                     DoUpdateWaterDemand.Invoke(this, args);
 
