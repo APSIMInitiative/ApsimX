@@ -803,15 +803,45 @@ namespace APSIM.Shared.Utilities
 
             if (IsExcelFile)
             {
+                //check if we've looked at this date before
+                ApsimTextCache previousEntry = null; //used as a starting point to save searching from the start of the file if entries exist
+                foreach (ApsimTextCache entry in this.textCache)
+                {
+                    if (entry.Date.Equals(date))
+                    {
+                        excelIndex = (int)entry.Position;
+                        return;
+                    }
+                    else if (entry.Date < date)
+                    {
+                        //cache is stored in reverse order, so stop looking after the date is past
+                        previousEntry = entry;
+                        break;
+                    }
+                }
+
+                int startingIndex = 0;
+                if (previousEntry != null)
+                {
+                    startingIndex = (int)previousEntry.Position;
+                }
+
                 // Iterate through the DataTable, using excelIndex as the counter.
                 // If we reach a row whose date is greater than or equal to the
                 // desired date, break out of the loop.
-                for (excelIndex = 0; excelIndex < _excelData.Rows.Count; excelIndex++)
+                for (excelIndex = startingIndex; excelIndex < _excelData.Rows.Count; excelIndex++)
                 {
                     DateTime rowDate = GetDateFromValues(_excelData.Rows[excelIndex].ItemArray);
                     if (rowDate >= date)
                         break;
                 }
+
+                //now that we are in the position, insert our entry at this point in the list
+                ApsimTextCache newEntry = new ApsimTextCache(date, excelIndex);
+                if (previousEntry != null)
+                    this.textCache.AddBefore(this.textCache.Find(previousEntry), newEntry);
+                else
+                    this.textCache.AddFirst(newEntry);
             }
             else
             {
@@ -845,10 +875,10 @@ namespace APSIM.Shared.Utilities
                     SeekToPosition(FirstLinePosition);
                 }
 
-                string val = "";
+                //read the file until we reach the correct line
                 while (!inStreamReader.EndOfStream && NumRowsToSkip > 0)
                 {
-                    val = inStreamReader.ReadLine();
+                    inStreamReader.ReadLine();
                     NumRowsToSkip--;
                 }
                 //now that we are in the position, insert our entry at this point in the list

@@ -691,6 +691,7 @@ namespace Models.Climate
         /// <param name="date">the date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
+            
             //check if we've looked at this date before
             WeatherRecordEntry previousEntry = null;
             bool first = true;
@@ -707,18 +708,16 @@ namespace Models.Climate
                 }
                 first = false;
             }
-
+            
             if (this.reader == null)
                 if (!this.OpenDataFile())
                     throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
-
-            //seek to the date required
-            this.reader.SeekToDate(date);
 
             //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
             try
             {
+                this.reader.SeekToDate(date);
                 readMetData.Raw = reader.GetNextLineOfData();
             }
             catch (IndexOutOfRangeException err)
@@ -730,6 +729,7 @@ namespace Models.Climate
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".");
 
             //since this data was valid, store in our cache for next time
+            
             WeatherRecordEntry record = new WeatherRecordEntry();
             record.Date = date;
             record.MetData = readMetData;
@@ -737,6 +737,7 @@ namespace Models.Climate
                 this.weatherCache.AddBefore(this.weatherCache.Find(previousEntry), record);
             else
                 this.weatherCache.AddFirst(record);
+            
 
             return CheckDailyMetData(readMetData);
         }
