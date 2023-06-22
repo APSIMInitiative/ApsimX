@@ -1,11 +1,12 @@
-﻿namespace Models.GrazPlan
-{
-    using System.Collections.Generic;
-    using System;
-    using static GrazType;
+﻿using static Models.GrazPlan.GrazType;
+using System.Collections.Generic;
+using System;
 
-    // Author: A.D. Moore                                                         
-    // GRAZPLAN pasture model: parameter set.                                       
+#pragma warning disable CS1591
+namespace Models.GrazPlan
+{
+    // Author: A.D. Moore
+    // GRAZPLAN pasture model: parameter set.
 
     /// <summary>
     /// The pasture parameters object
@@ -29,12 +30,12 @@
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public enum ReproTriggerEnum { trigLongDayLength, trigDegDay, trigShortDayLength };
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class TPastureParamSet : TParameterSet
     {
@@ -47,63 +48,63 @@
 
         public bool bAnnual;
         public bool bHasSeeds;
-        public bool bVernReqd;                                      // Vernalization requirement?            
+        public bool bVernReqd;                                      // Vernalization requirement?
         public bool bLongDay;                                       // Long day requirement?
-        public bool bShortDay;                                      // Short day requirement?                
+        public bool bShortDay;                                      // Short day requirement?
         public ReproTriggerEnum ReproTrigger;
         public bool bSummerDormant;
         public bool bWinterDormant;
         public bool bHasSetback;
-        public double[] DevelopK = new double[31];          // K(V)                                  
-        public double[] LightK = new double[11];            // K(I)                                  
-        public double[] WaterUseK = new double[7];          // K(WU)                                 
-        public double[] RadnUseK = new double[7];           // K(RU)                                 
-        public double[] TranspEffK = new double[3];         // K(BT)                                 
-        public double[] LowT_K = new double[3];             // K(T)                                  
-        public double[] WaterK = new double[2];             // K(W)                                  
-        public double[] WaterLogK = new double[3];          // K(WL)                                 
-        public double[] MeristemK = new double[2];          // K(MR)                                 
-        public double[] TranslocK = new double[5];          // K(TL)                                 
-        public double[] RespireK = new double[5];           // K(RE)                                 
-        public double[] AllocK = new double[6];             // K(A)                                  
-        public double[] MorphK = new double[2];             // K(MO)                                 
-        public double[] RootK = new double[11];             // K(R)                                  
-        public double[] DeathK = new double[10];            // K(D)                                  
-        public double[] RootLossK = new double[5];          // K(DR)                                 
-        public double[,] FallK = new double[5, 3];          // array[1.. 4,ptLEAF..ptSTEM]  // K(F)                                  
-        public double[,] BreakdownK = new double[6, 3];     // array[1.. 5,ptLEAF..ptSTEM]  // K(SH)                                 
-        public double[,] MatureK = new double[7, 3];        // array[1.. 6,ptLEAF..ptSTEM]  // K(Q)                                  
-        public double[] DecayK = new double[10];            // K(Y,1)-K(Y,10)                        
-        public double[] SeedK = new double[5];              // K(S,1)-K(S,4)                         
-        public double[] SeedDeathK = new double[3];         // K(S,5,s)                              
-        public double[] GermnK = new double[9];             // K(G)                                  
-        public double[] SeedlK = new double[2];             // K(Z)                                  
-        public double[,,] NutrConcK = new double[5, 4, 5];  // array[1..4,TPlantElement,ptLEAF..ptSEED]     // K(nu,1)-K(nu,4)                       
-        public double[] NFixK = new double[6];              // K(nu,5)-K(nu,9)                       
-        public double[] NutrEffK = new double[4];           // array[TPlantNutrient]            // K(nu,10,nutr)                         
-        public double[] NutrRelocateK = new double[4];      // array[TPlantElement]             // K(nu,11,elem)                         
-        public double[,] NutrCO2K = new double[4, 5];       // array[TPlantElement,ptLEAF..ptSEED]         // K(nu,12,elem)                         
-        public double[] AshAlkK = new double[7];                           
+        public double[] DevelopK = new double[31];          // K(V)
+        public double[] LightK = new double[11];            // K(I)
+        public double[] WaterUseK = new double[7];          // K(WU)
+        public double[] RadnUseK = new double[7];           // K(RU)
+        public double[] TranspEffK = new double[3];         // K(BT)
+        public double[] LowT_K = new double[3];             // K(T)
+        public double[] WaterK = new double[2];             // K(W)
+        public double[] WaterLogK = new double[3];          // K(WL)
+        public double[] MeristemK = new double[2];          // K(MR)
+        public double[] TranslocK = new double[5];          // K(TL)
+        public double[] RespireK = new double[5];           // K(RE)
+        public double[] AllocK = new double[6];             // K(A)
+        public double[] MorphK = new double[2];             // K(MO)
+        public double[] RootK = new double[11];             // K(R)
+        public double[] DeathK = new double[10];            // K(D)
+        public double[] RootLossK = new double[5];          // K(DR)
+        public double[,] FallK = new double[5, 3];          // array[1.. 4,ptLEAF..ptSTEM]  // K(F)
+        public double[,] BreakdownK = new double[6, 3];     // array[1.. 5,ptLEAF..ptSTEM]  // K(SH)
+        public double[,] MatureK = new double[7, 3];        // array[1.. 6,ptLEAF..ptSTEM]  // K(Q)
+        public double[] DecayK = new double[10];            // K(Y,1)-K(Y,10)
+        public double[] SeedK = new double[5];              // K(S,1)-K(S,4)
+        public double[] SeedDeathK = new double[3];         // K(S,5,s)
+        public double[] GermnK = new double[9];             // K(G)
+        public double[] SeedlK = new double[2];             // K(Z)
+        public double[,,] NutrConcK = new double[5, 4, 5];  // array[1..4,TPlantElement,ptLEAF..ptSEED]     // K(nu,1)-K(nu,4)
+        public double[] NFixK = new double[6];              // K(nu,5)-K(nu,9)
+        public double[] NutrEffK = new double[4];           // array[TPlantNutrient]            // K(nu,10,nutr)
+        public double[] NutrRelocateK = new double[4];      // array[TPlantElement]             // K(nu,11,elem)
+        public double[,] NutrCO2K = new double[4, 5];       // array[TPlantElement,ptLEAF..ptSEED]         // K(nu,12,elem)
+        public double[] AshAlkK = new double[7];
 
         public bool bGrass;
         public bool bLegume;
         public bool bisC4;
-        public double[] Protein = new double[HerbClassNo + 1];      // CP                                    
-        public double[] DgProtein = new double[HerbClassNo + 1];    // DG                                    
-        public int[] Seed_Class = new int[3];                       // array[UNRIPE..RIPE] of 0..DigClassNo     // QS                                
-        public double[] Seed_Dig = new double[3];                   
+        public double[] Protein = new double[GrazType.HerbClassNo + 1];      // CP
+        public double[] DgProtein = new double[GrazType.HerbClassNo + 1];    // DG
+        public int[] Seed_Class = new int[3];                       // array[UNRIPE..RIPE] of 0..DigClassNo     // QS
+        public double[] Seed_Dig = new double[3];
         public double Seed_Prot;
-        public double HeightRatio;                                  // HR                                    
-        public double SelectFactor;                                 // SF                                    
+        public double HeightRatio;                                  // HR
+        public double SelectFactor;                                 // SF
 
-        public double[,,] BaseDeathRates = new double[3, 3, HerbClassNo + 1];   // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    // Death rates per degree-day            
-        public double[,,] DMDRates = new double[3, 3, HerbClassNo + 1];         // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    // DMD decline rates per degree-day      
-        public double[,,] NewTissuePropns = new double[3, 3, HerbClassNo + 1];  // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    //   (1=vegetative, 2=reproductive)      
+        public double[,,] BaseDeathRates = new double[3, 3, GrazType.HerbClassNo + 1];   // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    // Death rates per degree-day
+        public double[,,] DMDRates = new double[3, 3, GrazType.HerbClassNo + 1];         // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    // DMD decline rates per degree-day
+        public double[,,] NewTissuePropns = new double[3, 3, GrazType.HerbClassNo + 1];  // array[1..2,ptLEAF..ptSTEM,1..HerbClassNo]    //   (1=vegetative, 2=reproductive)
 
 
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         override protected TParameterSet makeChild()
@@ -112,7 +113,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         override protected void defineEntries()
         {
@@ -168,7 +169,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="Idx"></param>
@@ -190,7 +191,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -348,7 +349,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -366,7 +367,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -390,7 +391,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -406,7 +407,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="fValue"></param>
@@ -562,7 +563,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="iValue"></param>
@@ -578,7 +579,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="bValue"></param>
@@ -599,7 +600,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="sValue"></param>
@@ -645,7 +646,7 @@
         protected double[] DMDLimits = { 0.85, 0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30, 0.25 };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         override public void deriveParams()
         {
@@ -687,13 +688,13 @@
             bWinterDormant = bIsDefined("k-v-26");
             bHasSetback = bIsDefined("k-v-22");
 
-            if (!bIsDefined("k-i-9"))                                            // Default extinction coefficients for dry pasture                           
-                LightK[9] = 0.50;                                                        
+            if (!bIsDefined("k-i-9"))                                            // Default extinction coefficients for dry pasture
+                LightK[9] = 0.50;
             if (!bIsDefined("k-i-10"))
                 LightK[10] = 0.50;
 
-            if (!bIsDefined("k-mo-1"))                                            // Default is uniform distribution of leaf over the vertical profile        
-                MorphK[1] = 1.0;                                                           
+            if (!bIsDefined("k-mo-1"))                                            // Default is uniform distribution of leaf over the vertical profile
+                MorphK[1] = 1.0;
 
             if (!bIsDefined("k-br2-5"))
                 BreakdownK[5, ptLEAF] = 100.0; // g/m^2
@@ -756,7 +757,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
@@ -766,13 +767,13 @@
         }
 
         /// <summary>
-        ///  Returns a pointer to a pasture parameter set for the species with a given    
-        /// name.If no direct match is found, tries to locate an equivalence between   
+        ///  Returns a pointer to a pasture parameter set for the species with a given
+        /// name.If no direct match is found, tries to locate an equivalence between
         /// names(previously defined with makeNameEquivalent()) and use that.Returns
         ///
-        /// NIL if no match is found.                                                    
-        /// Parameter:                                                                   
-        ///    sMatchName 
+        /// NIL if no match is found.
+        /// Parameter:
+        ///    sMatchName
         /// </summary>
         /// <param name="sMatchName">Name of the species for which a parameter set is to be found.</param>
         /// <returns></returns>
@@ -781,7 +782,7 @@
             int Jdx;
             TPastureParamSet Result = (TPastureParamSet)getNode(sMatchName);
 
-            if (Result == null)                                                        // No direct match - look for equivalence   
+            if (Result == null)                                                        // No direct match - look for equivalence
             {
                 Jdx = FEquivFrom.IndexOf(sMatchName.ToLower());
                 // The equivalence list is in lower case    }
@@ -793,7 +794,7 @@
         }
 
         /// <summary>
-        /// Lets the class know that references in the Match() method to one name        
+        /// Lets the class know that references in the Match() method to one name
         /// (not in the parameter set) should be treated as references to another name.
         /// </summary>
         /// <param name="sUnknownName">Name to be equivalenced</param>
@@ -806,10 +807,10 @@
                 throw new Exception($"Species {sKnownName} is not available");
 
 
-            sUnknownName = sUnknownName.ToLower();                                      // Force to lowercase for comparisons    
+            sUnknownName = sUnknownName.ToLower();                                      // Force to lowercase for comparisons
 
-            Jdx = FEquivFrom.IndexOf(sUnknownName);                                     // Place in the list of equivalences, overriding any existing entry          
-            if (Jdx == -1)                                                              
+            Jdx = FEquivFrom.IndexOf(sUnknownName);                                     // Place in the list of equivalences, overriding any existing entry
+            if (Jdx == -1)
             {
                 FEquivFrom.Add(sUnknownName);
                 FEquivTo.Add(sKnownName);
@@ -836,4 +837,4 @@
         }
     }
 }
-
+#pragma warning restore CS1591

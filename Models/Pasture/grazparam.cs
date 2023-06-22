@@ -1,21 +1,14 @@
+using CMPServices;
+using System;
 
 namespace Models.GrazPlan
 {
-
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Net.Sockets;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using CMPServices;
-    
     /// <summary>
-    /// TParameterDefinition                                                         
-    /// Class used for the definition of parameter names and types, and for storing  
-    /// whether the value(s) of the parameter is defined. A definition may be either 
-    /// a single parameter, or it may be an array of parameter definitions. Array    
-    /// definitions are indexed by string references                                 
+    /// TParameterDefinition
+    /// Class used for the definition of parameter names and types, and for storing
+    /// whether the value(s) of the parameter is defined. A definition may be either
+    /// a single parameter, or it may be an array of parameter definitions. Array
+    /// definitions are indexed by string references
     /// </summary>
     [Serializable]
     public class TParameterDefinition
@@ -29,20 +22,20 @@ namespace Models.GrazPlan
         private bool FDefined;
 
         /// <summary>
-        /// Each element of a "definition string" array may take one of two forms:       
-        /// * val:val        Integer subrange (e.g. "1:8")                              
-        /// * text[;text]*   List of text indices                                       
-        ///                                                                             
-        /// For example, if the original string from which sDefnStrings was constructed  
-        /// was "KQ-1:4-leaf;stem", then the resulting tree of definitions would be:     
-        /// KQ                                                                         
-        ///  |                                                                         
-        ///  +-+-------------+-------------+-------------+                             
-        ///    |             |             |             |                             
-        ///    1             2             3             4                             
-        ///    +-+-----+     +-+-----+     +-+-----+     +-+-----+                     
-        ///      |     |       |     |       |     |       |     |                     
-        ///      leaf  stem    leaf  stem    leaf  stem    leaf  stem                  
+        /// Each element of a "definition string" array may take one of two forms:
+        /// * val:val        Integer subrange (e.g. "1:8")
+        /// * text[;text]*   List of text indices
+        ///
+        /// For example, if the original string from which sDefnStrings was constructed
+        /// was "KQ-1:4-leaf;stem", then the resulting tree of definitions would be:
+        /// KQ
+        ///  |
+        ///  +-+-------------+-------------+-------------+
+        ///    |             |             |             |
+        ///    1             2             3             4
+        ///    +-+-----+     +-+-----+     +-+-----+     +-+-----+
+        ///      |     |       |     |       |     |       |     |
+        ///      leaf  stem    leaf  stem    leaf  stem    leaf  stem
         /// </summary>
         /// <param name="sDefnStrings"></param>
         /// <param name="aType"></param>
@@ -74,7 +67,7 @@ namespace Models.GrazPlan
                 sIndexStr = sDefnStrings[iOffset + 1];
 
                 iPosn = sIndexStr.IndexOf(':');
-                if (iPosn >= 0)                                                        // Integer subrange                      
+                if (iPosn >= 0)                                                        // Integer subrange
                 {
                     int start = Convert.ToInt32(sIndexStr.Substring(0, iPosn));
                     int endpos = Convert.ToInt32(sIndexStr.Substring(iPosn + 1, sIndexStr.Length - iPosn - 1));
@@ -327,7 +320,7 @@ namespace Models.GrazPlan
         /// </summary>
         public string sLang;
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string sText;
     }
@@ -373,14 +366,14 @@ namespace Models.GrazPlan
         /// <summary>
         /// Registry key used to store setting
         /// </summary>
-        public const string PARAM_KEY = "\\Software\\CSIRO\\Common\\Parameters"; // Base registry key for parameter info  
+        public const string PARAM_KEY = "\\Software\\CSIRO\\Common\\Parameters"; // Base registry key for parameter info
         /// <summary>
         /// Represents all locales
         /// </summary>
         public const string ALL_LOCALES = "#all#";
 
         /// <summary>
-        /// Propagates the new current locale to the entire parameter set              
+        /// Propagates the new current locale to the entire parameter set
         /// </summary>
         /// <param name="sValue"></param>
         private void setCurrLocale(string sValue)
@@ -400,7 +393,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagDefinition"></param>
         /// <param name="aType"></param>
@@ -415,6 +408,12 @@ namespace Models.GrazPlan
             FDefinitions[Kdx] = new TParameterDefinition(sDefn, aType);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="StrA"></param>
+        /// <param name="Idx"></param>
+        /// <returns></returns>
         protected int iIndex(string[] StrA, int Idx)
         {
             return Convert.ToInt32(StrA[Idx]);
@@ -454,7 +453,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="Defn"></param>
@@ -484,7 +483,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="srcSet"></param>
         /// <param name="bCopyData"></param>
@@ -528,7 +527,7 @@ namespace Models.GrazPlan
 
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         virtual protected TParameterSet makeChild()
@@ -536,7 +535,7 @@ namespace Models.GrazPlan
             return new TParameterSet(this);
         }
         /// <summary>
-        /// This is over-ridden in descendant classes and then called within the         
+        /// This is over-ridden in descendant classes and then called within the
         /// </summary>
         virtual protected void defineEntries()
         {
@@ -551,7 +550,7 @@ namespace Models.GrazPlan
             return 0;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -560,7 +559,7 @@ namespace Models.GrazPlan
             return 0;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -569,7 +568,7 @@ namespace Models.GrazPlan
             return false;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <returns></returns>
@@ -578,7 +577,7 @@ namespace Models.GrazPlan
             return "";
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="fValue"></param>
@@ -587,7 +586,7 @@ namespace Models.GrazPlan
             //empty
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="iValue"></param>
@@ -596,7 +595,7 @@ namespace Models.GrazPlan
             //empty
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="bValue"></param>
@@ -605,7 +604,7 @@ namespace Models.GrazPlan
             //empty
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTagList"></param>
         /// <param name="sValue"></param>
@@ -623,7 +622,7 @@ namespace Models.GrazPlan
             FChildren = null;
         }
         /// <summary>
-        /// Constructor for creating a child set 
+        /// Constructor for creating a child set
         /// </summary>
         /// <param name="aParent"></param>
         public TParameterSet(TParameterSet aParent)
@@ -639,7 +638,7 @@ namespace Models.GrazPlan
             FParent = aParent;
         }*/
         /// <summary>
-        /// Copy constructor (with parent) 
+        /// Copy constructor (with parent)
         /// </summary>
         /// <param name="aParent"></param>
         /// <param name="srcSet"></param>
@@ -663,7 +662,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// After calling the constructor, this must be called to 
+        /// After calling the constructor, this must be called to
         /// configure the definitions.
         /// </summary>
         /// <param name="srcSet"></param>
@@ -679,13 +678,13 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// This is over-ridden in descendant classes and then called within the         
+        /// This is over-ridden in descendant classes and then called within the
         /// </summary>
         virtual public void deriveParams()
         {
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="srcSet"></param>
         public void CopyAll(TParameterSet srcSet)
@@ -732,7 +731,7 @@ namespace Models.GrazPlan
             set { FEnglishName = value; }
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public int iTranslationCount()
@@ -743,7 +742,7 @@ namespace Models.GrazPlan
                 return 0;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="lang"></param>
         /// <param name="text"></param>
@@ -772,7 +771,7 @@ namespace Models.GrazPlan
                 sName = text;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
@@ -816,7 +815,7 @@ namespace Models.GrazPlan
             return FLocales[Idx];
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sLocale"></param>
         public void addLocale(string sLocale)
@@ -826,7 +825,7 @@ namespace Models.GrazPlan
             FLocales[Idx] = sLocale;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public string getLocaleText()
@@ -872,7 +871,7 @@ namespace Models.GrazPlan
             }
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sLocale"></param>
         /// <returns></returns>
@@ -925,7 +924,7 @@ namespace Models.GrazPlan
                 return 0;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
@@ -934,7 +933,7 @@ namespace Models.GrazPlan
             return FChildren[Idx];
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sChild"></param>
         /// <returns></returns>
@@ -953,7 +952,7 @@ namespace Models.GrazPlan
                 return null;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public TParameterSet addChild()
@@ -966,7 +965,7 @@ namespace Models.GrazPlan
             return FChildren[FChildren.Length - 1];
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Idx"></param>
         public void deleteChild(int Idx)
@@ -980,7 +979,7 @@ namespace Models.GrazPlan
             Array.Resize(ref FChildren, FChildren.Length - 1);
         }
         /// <summary>
-        /// Returns TRUE i.f.f. this is the root (ultimate parent) node                  
+        /// Returns TRUE i.f.f. this is the root (ultimate parent) node
         /// </summary>
         /// <returns></returns>
         public bool bRootNode()
@@ -988,7 +987,7 @@ namespace Models.GrazPlan
             return (Parent == null);
         }
         /// <summary>
-        /// Returns TRUE i.f.f. this node has no child nodes                             
+        /// Returns TRUE i.f.f. this node has no child nodes
         /// </summary>
         /// <returns></returns>
         public bool bLeafNode()
@@ -1003,15 +1002,15 @@ namespace Models.GrazPlan
         {
             int Idx;
 
-            int result = 1;                                                                 // Include Self in the count of nodes    
+            int result = 1;                                                                 // Include Self in the count of nodes
             for (Idx = 0; Idx <= iChildCount() - 1; Idx++)
                 result = result + getChild(Idx).iNodeCount();
             return result;
         }
 
         /// <summary>
-        /// Locate a node in the tree by ordinal value. Node 0 is the current node;      
-        /// the search then proceeds depth-first (i.e. the first child of node N is node N+1)                                                                         
+        /// Locate a node in the tree by ordinal value. Node 0 is the current node;
+        /// the search then proceeds depth-first (i.e. the first child of node N is node N+1)
         /// </summary>
         /// <param name="iNode"></param>
         /// <returns></returns>
@@ -1040,7 +1039,7 @@ namespace Models.GrazPlan
             return result;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sNode"></param>
         /// <returns></returns>
@@ -1117,7 +1116,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public int iDefinitionCount()
@@ -1129,7 +1128,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Idx"></param>
         /// <returns></returns>
@@ -1163,7 +1162,7 @@ namespace Models.GrazPlan
             return result;
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTags"></param>
         /// <returns></returns>
@@ -1185,7 +1184,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public int iParamCount()
@@ -1350,7 +1349,7 @@ namespace Models.GrazPlan
             }
         }
         /// <summary>
-        /// Sets the value of an integer parameter, noting that its value is now defined 
+        /// Sets the value of an integer parameter, noting that its value is now defined
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="iValue"></param>
@@ -1391,8 +1390,8 @@ namespace Models.GrazPlan
             }
         }
         /// <summary>
-        /// 1. Sets the value of a string parameter, noting that its value is now defined.                                                                  
-        /// 2. Parses and sets the value of a floating-point, integer or Boolean parameter.                                                                
+        /// 1. Sets the value of a string parameter, noting that its value is now defined.
+        /// 2. Parses and sets the value of a floating-point, integer or Boolean parameter.
         /// </summary>
         /// <param name="sTag"></param>
         /// <param name="sValue"></param>
@@ -1455,7 +1454,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Un-defines a parameter value 
+        /// Un-defines a parameter value
         /// </summary>
         /// <param name="sTag"></param>
         public void setUndefined(string sTag)
@@ -1470,7 +1469,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sTag"></param>
         /// <returns>Returns TRUE i.f.f. the nominated parameter has a defined value</returns>
@@ -1540,7 +1539,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Returns the 2-letter ISO 639 language code, or 'en' if that fails            
+        /// Returns the 2-letter ISO 639 language code, or 'en' if that fails
         /// TODO: Test this
         /// </summary>
         /// <returns></returns>
@@ -1571,7 +1570,7 @@ namespace Models.GrazPlan
         }
     }
 
-    /* 
+    /*
 
    {==============================================================================}
    { RealToText                                                                   }
@@ -1616,15 +1615,15 @@ namespace Models.GrazPlan
 */
     /// <summary>
     /// Common locale for use across models and programs
-    /// * The locale is a two-character country code that is stored in the registry. 
+    /// * The locale is a two-character country code that is stored in the registry.
     /// * If there is no entry in the registry, 'au' is returned.
     /// </summary>
     public static class GrazLocale
     {
         /// <summary>
-        /// Common locale for use across models and programs                             
-        /// * The locale is a two-character country code that is stored in the registry. 
-        /// * If there is no entry in the registry, 'au' is returned.                     
+        /// Common locale for use across models and programs
+        /// * The locale is a two-character country code that is stored in the registry.
+        /// * If there is no entry in the registry, 'au' is returned.
         /// </summary>
         /// <returns></returns>
         public static string sDefaultLocale()
@@ -1633,7 +1632,7 @@ namespace Models.GrazPlan
             string sRegString = "";
             /*       TRegistry Registry;
                //  CountryName: array[0..3] of char;
-   
+
                  sRegString = "";
                  Registry   = new TRegistry();
                  if (Registry.OpenKey( PARAM_KEY, false ) )

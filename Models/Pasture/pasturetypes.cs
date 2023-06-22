@@ -5,6 +5,7 @@ using static Models.GrazPlan.GrazType;
 
 namespace Models.GrazPlan
 {
+#pragma warning disable CS1591
     [Serializable]
     public class WaterInfo
     {
@@ -15,18 +16,18 @@ namespace Models.GrazPlan
         public WaterLayer[] Layer;
     }
 
-    [Serializable] 
-    public class WaterLayer 
+    [Serializable]
+    public class WaterLayer
     {
         [Units("mm")]
         public double Thickness;
-        
+
         [Units("kg/m^2")]
         public double MaxSupply;
 
         [Units("mm/mm^3")]
         public double RLD;
-        
+
         [Units("mm")]
         public double Radius;
     }
@@ -49,10 +50,10 @@ namespace Models.GrazPlan
         /// <summary>m^2/m^2</summary>
         [Units("m^2/m^2")]
         public double AreaIndex;
-        
+
         /// <summary>-</summary>
         public double CoverGreen;
-        
+
         /// <summary>-</summary>
         public double CoverTotal;
     }
@@ -64,7 +65,7 @@ namespace Models.GrazPlan
         public double P;    // kg/ha
         public double S;    // kg/ha
     }
-    
+
 
     [Serializable]
     public class OrganicMatter
@@ -86,11 +87,11 @@ namespace Models.GrazPlan
     {
         public void CopyFrom(DM_Pool Pool)
         {
-                Weight = Pool.DM;                    // kg/ha            
-                N = Pool.Nu[(int)TPlantElement.N];   // kg/ha            
-                P = Pool.Nu[(int)TPlantElement.P];   // kg/ha            
-                S = Pool.Nu[(int)TPlantElement.S];   // kg/ha            
-                AshAlk = Pool.AshAlk;                // mol/ha           
+                Weight = Pool.DM;                    // kg/ha
+                N = Pool.Nu[(int)TPlantElement.N];   // kg/ha
+                P = Pool.Nu[(int)TPlantElement.P];   // kg/ha
+                S = Pool.Nu[(int)TPlantElement.S];   // kg/ha
+                AshAlk = Pool.AshAlk;                // mol/ha
         }
     }
 
@@ -102,7 +103,7 @@ namespace Models.GrazPlan
         public double Root;
         public double Seed;
     }
-    
+
 
     [Serializable]
     public class HerbageProfile
@@ -147,7 +148,7 @@ namespace Models.GrazPlan
         /// <summary>cm^2/g</summary>
         public double[] spec_area;
 
-        public Herbage(int count, TPlantElement[] elements) 
+        public Herbage(int count, TPlantElement[] elements)
         {
             dmd = new double[count];
             weight = new double[count];
@@ -179,9 +180,9 @@ namespace Models.GrazPlan
         /// </summary>
         public Herbage[] herbage;
         /// <summary>
-        /// Mass of roots. The first index denotes a root age class (0=effective roots, 1=old roots); 
-        /// if only one sub-array is given, it is taken to be total root mass. 
-        /// The second index denotes a soil layer (defined by the layers property). 
+        /// Mass of roots. The first index denotes a root age class (0=effective roots, 1=old roots);
+        /// if only one sub-array is given, it is taken to be total root mass.
+        /// The second index denotes a soil layer (defined by the layers property).
         /// If only a single value is given in a sub-array, mass will be distributed over all soil layers to the current rooting depth, using a near-exponential distribution.
         /// </summary>
         public double[][] root_wt;  // kg/ha, indexed [0][0]
@@ -198,11 +199,11 @@ namespace Models.GrazPlan
         /// </summary>
         public double stress_index = 0.0;
         /// <summary>
-        /// Maximum amount of stem tissue to be relocated to seed. 
-        /// Only meaningful if 
-        /// (a) the species is modelled as having seeds, 
-        /// (b) status = “established” or “senescing” and 
-        /// (c) the phenological stage is reproductive or senescent. 
+        /// Maximum amount of stem tissue to be relocated to seed.
+        /// Only meaningful if
+        /// (a) the species is modelled as having seeds,
+        /// (b) status = “established” or “senescing” and
+        /// (c) the phenological stage is reproductive or senescent.
         /// Default depends on the above conditions.
         /// </summary>
         public double stem_reloc = -999.0;   // kg/ha
@@ -280,11 +281,11 @@ namespace Models.GrazPlan
     public class Layer
     {
         /// <summary>m</summary>
-        public double thickness;   
+        public double thickness;
         /// <summary>MJ/m^2</summary>
         public double amount;
         /// <summary>W/m^2</summary>
-        public double intensity;  
+        public double intensity;
     }
 
     /// <summary>
@@ -326,7 +327,7 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// Soil nutrient availability 
+    /// Soil nutrient availability
     /// </summary>
     [Serializable]
     public class NutrAvail
@@ -357,5 +358,6 @@ namespace Models.GrazPlan
         /// </summary>
         public double[] seed = new double[GrazType.RIPE];
     }
+#pragma warning restore CS1591
 }
 

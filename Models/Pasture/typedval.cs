@@ -3,7 +3,7 @@ using System.Text;
 using System.Xml;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
+#pragma warning disable CS1591
 namespace CMPServices
 {
     //============================================================================
@@ -91,13 +91,13 @@ namespace CMPServices
         public static uint[] typeSize = { 0, 1, 2, 4, 8, 4, 8, 1, 1, 2, 0 };
 
         /// <summary>
-        /// Lookup table of type name strings. 
+        /// Lookup table of type name strings.
         /// </summary>
         /// <example>
-        /// integer1, 
-        /// integer2, 
-        /// integer4, 
-        /// single, 
+        /// integer1,
+        /// integer2,
+        /// integer4,
+        /// single,
         /// double,
         /// char,
         /// boolean,
@@ -158,7 +158,7 @@ namespace CMPServices
         /// <seealso cref="TTypedValue">TTypedValue Class</seealso>
         public const int ctDODGY = 2;
         /// <summary>
-        /// Return value from TTypedValue.isSameType(). 
+        /// Return value from TTypedValue.isSameType().
         /// </summary>
         /// <seealso cref="TTypedValue">TTypedValue Class</seealso>
         public const int ctBAD = -1;
@@ -286,7 +286,7 @@ namespace CMPServices
         //======================================================================
         /// <summary>
         /// Get the integer value of the dimension bytes. Used for arrays
-        /// and strings 
+        /// and strings
         /// </summary>
         /// <param name="data">The block of byte data.</param>
         /// <param name="startIndex">Start at this index. 0 -> x</param>
@@ -785,7 +785,7 @@ namespace CMPServices
         {
             return FIsRecord;
         }
-        //======================================================================  
+        //======================================================================
         /// <summary>
         /// Tests if this is a character type of scalar.
         /// </summary>
@@ -1092,7 +1092,7 @@ namespace CMPServices
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: 
+                    case TBaseType.ITYPE_INT8:
                         if (value.Length > 0)
                             setValue(Convert.ToInt64(value)); break;
                     case TBaseType.ITYPE_SINGLE:
@@ -1177,7 +1177,7 @@ namespace CMPServices
         }
         //======================================================================
         /// <summary>
-        /// Assignment from a TTypedValue that need not be of identical type, but must   
+        /// Assignment from a TTypedValue that need not be of identical type, but must
         /// be type-compatible.
         /// When converting from a scalar string to a numeric an exception will be thrown
         /// if the source string is not a valid numeric.
@@ -1196,7 +1196,7 @@ namespace CMPServices
                 if (FBaseType == TBaseType.ITYPE_DEF)
                 {
                     bCompatible = (bCompatible && (srcValue.baseType() == TBaseType.ITYPE_DEF));
-                }      
+                }
                 if (!bCompatible)
                 {
                     String error = String.Format("Incompatible assignment from {0} to {1}\nCannot convert {2} to {3}", Name, srcValue.Name, srcValue.baseType().ToString(), FBaseType.ToString());
@@ -1242,7 +1242,7 @@ namespace CMPServices
                     }
                     catch
                     {
-                        throw (new Exception("setValue() cannot convert " + srcValue.asStr() + " to " + FBaseType.ToString())); 
+                        throw (new Exception("setValue() cannot convert " + srcValue.asStr() + " to " + FBaseType.ToString()));
                     }
                 }
                 else
@@ -1272,7 +1272,7 @@ namespace CMPServices
             parser = new TSDMLParser(sXML);    //create a parser, also reads description fields
             getDescription();                  //set the description fields from the parser
 
-            parseType();                       //do the parsing of this type 
+            parseType();                       //do the parsing of this type
             parser = null;
         }
         //======================================================================
@@ -1294,7 +1294,7 @@ namespace CMPServices
             parser.setTopNode(baseNode);
             parser.getDescription();            //gets the values from the dom into the parser fields
             getDescription();                   //set the description fields from the parser
-            parseType();                        //do the parsing of this type 
+            parseType();                        //do the parsing of this type
 
             parser = null;                      //has only been borrowed
             parentParser.setTopNode(parentsNode);   //restore the topElement of the parser
@@ -1775,7 +1775,7 @@ namespace CMPServices
                     case TBaseType.ITYPE_INT8: { if (asInt() == 0) value = false; else value = true; } break;
                     case TBaseType.ITYPE_CHAR:
                     case TBaseType.ITYPE_WCHAR: { if (asStr().ToLower() == "t") value = true; } break;
-                    case TBaseType.ITYPE_WSTR: 
+                    case TBaseType.ITYPE_WSTR:
                     case TBaseType.ITYPE_STR: { if (Char.ToLower(asStr()[0]) == 't') value = true; } break;
                     default:
                         {
@@ -1915,7 +1915,7 @@ namespace CMPServices
         /// Gets the text value for this scalar typed value from the data block.
         /// This representation is intended primarily for use in writing log files.
         /// </summary>
-        /// <returns>The formatted output as a string. <para>If this is a scalar then the result will 
+        /// <returns>The formatted output as a string. <para>If this is a scalar then the result will
         /// be same as asStr().</para><para>An array will be [1,2,3,4,5].</para><para>Records will be
         /// [fieldname1: asStr(), fieldname2: asStr()]</para></returns>
         //============================================================================
@@ -2053,7 +2053,7 @@ namespace CMPServices
                 else if ((srcValue.baseType() <= TBaseType.ITYPE_INT8) && (srcValue.baseType() >= TBaseType.ITYPE_INT1) &&
                          (FBaseType <= TBaseType.ITYPE_INT8) && (FBaseType >= TBaseType.ITYPE_INT1))
                     result = ctCOMP;  //both integers
-                else if ((FBaseType >= TBaseType.ITYPE_SINGLE) && (FBaseType <= TBaseType.ITYPE_DOUBLE) &&           //These conditions are not transitive                        
+                else if ((FBaseType >= TBaseType.ITYPE_SINGLE) && (FBaseType <= TBaseType.ITYPE_DOUBLE) &&           //These conditions are not transitive
                          (srcValue.baseType() >= TBaseType.ITYPE_INT1) && (srcValue.baseType() <= TBaseType.ITYPE_DOUBLE))
                     result = ctCOMP;  //can match an int/single source to single/double destination
                 else if ((srcValue.baseType() == TBaseType.ITYPE_CHAR) &&
@@ -2211,7 +2211,7 @@ namespace CMPServices
         }
         //============================================================================
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sName">Name of the field to find.</param>
         /// <returns>Returns TRUE if the value is a record and it has the nominated field.</returns>
@@ -2503,11 +2503,11 @@ namespace CMPServices
 
     //============================================================================
     /// <summary>
-    /// Thrown when a type mismatch occurs. 
+    /// Thrown when a type mismatch occurs.
     /// For example: attempting to access an array in the manner of a scalar.
     /// </summary>
     //============================================================================
-    [Serializable] 
+    [Serializable]
     public class TypeMisMatchException : ApplicationException
     {
         //============================================================================
@@ -2553,3 +2553,4 @@ namespace CMPServices
         }
     }
 }
+#pragma warning restore CS1591

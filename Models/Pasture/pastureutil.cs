@@ -68,34 +68,89 @@ namespace Models.GrazPlan
         /// <summary></summary>
         public enum TDevelopType
         {
+            /// <summary></summary>
             Vernalizing,
+
+            /// <summary></summary>
             Vegetative,
+
+            /// <summary></summary>
             Reproductive,
+
+            /// <summary></summary>
             Dormant,
+
+            /// <summary></summary>
             Senescent,
+
+            /// <summary></summary>
             SprayTopped,
+
+            /// <summary></summary>
             DormantW
         }
 
-        /// <summary></summary>
+        /// <summary>Pasture development event</summary>
         public enum TDevelopEvent
         {
+            /// <summary></summary>
             startCycle,
+
+            /// <summary></summary>
             endVernalizing,
+
+            /// <summary></summary>
             endVegetative,
+
+            /// <summary></summary>
             startFlowering,
+
+            /// <summary></summary>
             endReproductive,
+
+            /// <summary></summary>
             startSenescing,
+
+            /// <summary></summary>
             endDormant,
+
+            /// <summary></summary>
             endSenescent,
+
+            /// <summary></summary>
             endDormantW
         }
 
-        /// <summary></summary>
-        public enum TGrowthLimit { glGAI, glVPD, glSM, glLowT, glWLog, gl_N, gl_P, gl_S }
+        /// <summary>Growth limiting factor</summary>
+        public enum TGrowthLimit
+        {
+            /// <summary>GAI</summary>
+            glGAI,
+
+            /// <summary></summary>
+            glVPD,
+
+            /// <summary></summary>
+            glSM,
+
+            /// <summary></summary>
+            glLowT,
+
+            /// <summary></summary>
+            glWLog,
+
+            /// <summary></summary>
+            gl_N,
+
+            /// <summary></summary>
+            gl_P,
+
+            /// <summary></summary>
+            gl_S
+        }
 
         /// <summary>
-        /// Division with 0 / 0 = 0 
+        /// Division with 0 / 0 = 0
         /// </summary>
         /// <param name="X"></param>
         /// <param name="Y"></param>
@@ -123,7 +178,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="X"></param>
         /// <param name="X0"></param>
@@ -184,7 +239,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Q10(scaled power) function of temperature 
+        /// Q10(scaled power) function of temperature
         /// </summary>
         /// <param name="X"></param>
         /// <param name="Y10Deg"></param>
@@ -196,7 +251,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="X"></param>
         /// <param name="delta"></param>
@@ -360,7 +415,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="DMDValue"></param>
         /// <param name="bRoundHigh"></param>
@@ -384,10 +439,10 @@ namespace Models.GrazPlan
         }
 
         // =====================================================================
-        // Routines for handling DM pools.                                           
-        // AddPool0, MovePool0, ResizePool0 Used when S, N &P all absent         
-        // AddPool1, MovePool1 Used when N only present                  
-        // AddPool2, MovePool2 Used otherwise                            
+        // Routines for handling DM pools.
+        // AddPool0, MovePool0, ResizePool0 Used when S, N &P all absent
+        // AddPool1, MovePool1 Used when N only present
+        // AddPool2, MovePool2 Used otherwise
 
         /// <summary></summary>
         public const double TOLER = 1.0E-8;
@@ -460,7 +515,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="KgHaDM"></param>
         /// <param name="SrcPool"></param>
@@ -480,7 +535,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="KgHaDM"></param>
         /// <param name="SrcPool"></param>
@@ -509,7 +564,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="KgHaDM"></param>
         /// <param name="SrcPool"></param>
@@ -544,7 +599,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="aPool"></param>
         /// <param name="newDM"></param>
@@ -554,7 +609,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="aPool"></param>
         /// <param name="newDM"></param>
@@ -566,7 +621,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="aPool"></param>
         /// <param name="newDM"></param>
@@ -580,7 +635,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="aValue"></param>
         /// <param name="units"></param>
@@ -601,7 +656,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="srcPool"></param>
         /// <param name="dstPool"></param>

@@ -1,71 +1,42 @@
-using APSIM.Shared.Interfaces;
-using DocumentFormat.OpenXml.Spreadsheet;
-using static Models.Climate.Weather;
+using StdUnits;
 using System;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using MathNet.Numerics.LinearAlgebra.Factorization;
-using Models.GrazPlan;
-using Models.PMF.Phen;
-using Models.Soils;
-using SkiaSharp;
-using static Models.Core.AutoDocumentation;
-using System.Drawing;
-using Models.Aqua;
-using Models.Soils.Arbitrator;
-using APSIM.Shared.APSoil;
-using MathNet.Numerics.LinearAlgebra;
-using Models.CLEM.Resources;
-using System.Runtime.ConstrainedExecution;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using System.Linq;
+
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using DocumentFormat.OpenXml.Bibliography;
-    using DocumentFormat.OpenXml.Office2019.Excel.RichData2;
-    using MathNet.Numerics.Statistics.Mcmc;
-    using Models.DCAPST.Environment;
-    using Models.Soils;
-    using Newtonsoft.Json.Linq;
-    using StdUnits;
-   
     /// <summary>
     /// Environment interface
     /// </summary>
     public static class GrazEnv
     {
-        // Unit conversion constants    
-        
+        // Unit conversion constants
+
         /// <summary>
         /// Convert day-of-year to radians
         /// </summary>
-        public const double DAY2RAD = 2 * Math.PI / 365;    
-        
+        public const double DAY2RAD = 2 * Math.PI / 365;
+
         /// <summary>
         /// Convert degrees to radians
         /// </summary>
-        public const double DEG2RAD = 2 * Math.PI / 360;    
-        
+        public const double DEG2RAD = 2 * Math.PI / 360;
+
         /// <summary>
         /// Convert km/d to m/s
         /// </summary>
-        public const double KMD_2_MS = 1.0E3 / (24 * 60 * 60); 
-        
+        public const double KMD_2_MS = 1.0E3 / (24 * 60 * 60);
+
         /// <summary>
         /// Convert W/m^2 to MJ/m^2/d
         /// </summary>
-        public const double WM2_2_MJM2 = 1.0E6 / (24 * 60 * 60);  
-        
+        public const double WM2_2_MJM2 = 1.0E6 / (24 * 60 * 60);
+
         /// <summary>
         /// Convert degrees C to K
         /// </summary>
-        public const double C_2_K = 273.15;               
-        
+        public const double C_2_K = 273.15;
+
         /// <summary>
         /// The herbage albedo
         /// </summary>
@@ -82,29 +53,59 @@ namespace Models.GrazPlan
     /// </summary>
     public enum EvapMethod
     {
+        /// <summary></summary>
         emPropnPan,
+
+        /// <summary></summary>
         emPenman,
+
+        /// <summary></summary>
         emCERES,
+
+        /// <summary></summary>
         emPriestley,
+
+        /// <summary></summary>
         emFAO
     };
 
     /// <summary>
     /// Daily weather data, used as inputs
     /// </summary>
-    public enum TWeatherData                                                  
+    public enum TWeatherData
     {
-        wdtMaxT,                                                    //   Maximum air temperature     deg C   
-        wdtMinT,                                                    //   Minimum air temperature     deg C   
-        wdtRain,                                                    //   Rainfall                    mm      
-        wdtSnow,                                                    //   Snow (rain equivalents)     mm      
-        wdtRadn,                                                    //   Solar radiation             MJ/m^2/d
-        wdtVP,                                                      //   Actual vapour pressure      kPa     
-        wdtWind,                                                    //   Average windspeed           m/s     
-        wdtEpan,                                                    //   Pan evaporation             mm      
-        wdtRelH,                                                    //   Relative humidity           0-1     
-        wdtSunH,                                                    //   Hours of bright sunshine    hr      
-        wdtTrMT                                                     //   Terrestrial min. temperature deg C  
+        /// <summary>Maximum air temperature     deg C</summary>
+        wdtMaxT,
+
+        /// <summary>Minimum air temperature     deg C</summary>
+        wdtMinT,
+
+        /// <summary>Rainfall                    mm</summary>
+        wdtRain,
+
+        /// <summary>Snow (rain equivalents)     mm</summary>
+        wdtSnow,
+
+        /// <summary>Solar radiation             MJ/m^2/d</summary>
+        wdtRadn,
+
+        /// <summary>Actual vapour pressure      kPa</summary>
+        wdtVP,
+
+        /// <summary>Average windspeed           m/s</summary>
+        wdtWind,
+
+        /// <summary>Pan evaporation             mm</summary>
+        wdtEpan,
+
+        /// <summary>Relative humidity           0-1</summary>
+        wdtRelH,
+
+        /// <summary>Hours of bright sunshine    hr</summary>
+        wdtSunH,
+
+        /// <summary>Terrestrial min. temperature deg C</summary>
+        wdtTrMT
     };
 
     /// <summary>
@@ -113,13 +114,14 @@ namespace Models.GrazPlan
     [Serializable]
     public class TWeatherHandler
     {
+        /// <summary></summary>
         public const int NO_ELEMENTS = 1 + (int)TWeatherData.wdtTrMT;
 
-        private double FLatitude;                                   // Latitude,  in degrees                 
-        private double FLongitude;                                  // Longitude, in degrees                 
-        private double FElevation;                                  // Elevation, in m                       
-        private double FSlope;                                      // Slope,     in degrees                 
-        private double FAspect;                                     // Aspect,    in degrees                 
+        private double FLatitude;                                   // Latitude,  in degrees
+        private double FLongitude;                                  // Longitude, in degrees
+        private double FElevation;                                  // Elevation, in m
+        private double FSlope;                                      // Slope,     in degrees
+        private double FAspect;                                     // Aspect,    in degrees
 
         private double[] FData = new double[NO_ELEMENTS];
         private bool[] FDataKnown = new bool[NO_ELEMENTS];
@@ -131,49 +133,85 @@ namespace Models.GrazPlan
         private double[] FCO2_Coeffs = new double[6];                // Coefficients of a polynomial for [CO2]
         private double FCO2_Conc;
 
-        protected int FToday;      // StdDATE.Date;
+        /// <summary>StdDATE.Date</summary>
+        protected int FToday;
 
+        /// <summary></summary>
         public double this[TWeatherData D]
         { get { return getData(D); } set { setData(D, value); } }
 
+        /// <summary></summary>
         public double fLatDegrees { get { return FLatitude; } set { FLatitude = value; } }
+
+        /// <summary></summary>
         public double fLongDegrees { get { return FLongitude; } set { FLongitude = value; } }
+
+        /// <summary></summary>
         public double fElevationM { get { return FElevation; } set { FElevation = value; } }
+
+        /// <summary></summary>
         public double fSlopeDegrees { get { return FSlope; } set { FSlope = value; } }
+
+        /// <summary></summary>
         public double fAspectDegrees { get { return FAspect; } set { FAspect = value; } }
+
+        /// <summary></summary>
         public double fCO2_PPM { get { return FCO2_Conc; } }
 
-        // Constants for daylength & extraterrestrial radiation calculations            
+        // Constants for daylength & extraterrestrial radiation calculations
 
-        public static double[] DAYANGLE = { 90.0 * GrazEnv.DEG2RAD, 90.833 * GrazEnv.DEG2RAD };     // Horizon angles                        
-        public const double MAXDECLIN = 23.45 * GrazEnv.DEG2RAD;                                    // Maximum declination of the sun (rad)  
-        public const double DECLINBASE = 172;                                                       // Day of year for maximum declination   
+        /// <summary>Horizon angles</summary>
+        public static double[] DAYANGLE = { 90.0 * GrazEnv.DEG2RAD, 90.833 * GrazEnv.DEG2RAD };
 
-        //  SOLARCONST   = 1360;                                                                    // Solar constant (W/m^2)                
-        //  ECCENTRICITY = 0.035;                                                                   // Effect of eccentricity of Earth's orbit
-        public const double SOLARCONST = 1367;                                                      // Solar constant (W/m^2)                
-        public const double ECCENTRICITY = 0.033;                                                   // Effect of eccentricity of Earth's orbit
-        public const double OMEGA = 2 * Math.PI / 24;                                               // Earth's angular velocity (rad/hr)     
+        /// <summary>Maximum declination of the sun (rad)</summary>
+        public const double MAXDECLIN = 23.45 * GrazEnv.DEG2RAD;
 
-        // Constants for the Parton & Logan model of diurnal T variation                
-        // Parton WJ & Logan JA (1981), Agric.Meteorol. 23:205-216                      
+        /// <summary>Day of year for maximum declination</summary>
+        public const double DECLINBASE = 172;
 
+        /// <summary>Solar constant (W/m^2)</summary>
+        public const double SOLARCONST = 1367;
+
+        /// <summary>Effect of eccentricity of Earth's orbit</summary>
+        public const double ECCENTRICITY = 0.033;
+
+        /// <summary>Earth's angular velocity (rad/hr)</summary>
+        public const double OMEGA = 2 * Math.PI / 24;
+
+        // Constants for the Parton & Logan model of diurnal T variation
+        // Parton WJ & Logan JA (1981), Agric.Meteorol. 23:205-216
+
+        /// <summary></summary>
         public const double PARTON_A = 1.86;
+
+        /// <summary></summary>
         public const double PARTON_B = 2.20;
+
+        /// <summary></summary>
         public const double PARTON_C = -0.17;
 
-        // Constants used in evapotranspiration calculations                            
-        public const double SIGMA = 4.903E-9;           // Stefan - Boltzmann constant, MJ / m ^ 2 / d / K ^ 4 
-        public const double KARMAN = 0.41;              //    von Karman's constant                 
-        public const double SEC2DAY = 1.0 / 86400.0;    // Convert seconds to days               
-        public const double EPSILON = 0.622;            // Molecular weight ratio H20:air        
-        public const double GAS_CONST = 0.287;         // Specific gas constant,     kJ / kg / K    
+        // Constants used in evapotranspiration calculations
+
+        /// <summary>Stefan - Boltzmann constant, MJ / m^2 / d / K^4</summary>
+        public const double SIGMA = 4.903E-9;
+
+        /// <summary>von Karman's constant</summary>
+        public const double KARMAN = 0.41;
+
+        /// <summary>Convert seconds to days</summary>
+        public const double SEC2DAY = 1.0 / 86400.0;
+
+        /// <summary>Molecular weight ratio H20:air</summary>
+        public const double EPSILON = 0.622;
+
+        /// <summary>Specific gas constant,     kJ/kg/K</summary>
+        public const double GAS_CONST = 0.287;
 
         /// <summary>
-        /// Default parameters for the fEvaporation method 
+        /// Default parameters for the fEvaporation method
         /// </summary>
         public double[,] EVAPDEFAULTS = {
-                    {0.8, 0.0, 0.0 },                       // emPropnPan              
+                    {0.8, 0.0, 0.0 },                       // emPropnPan
                     { GrazEnv.HERBAGE_ALBEDO, 0.12, 70.0 }, // emPenman
                     { GrazEnv.HERBAGE_ALBEDO, 0.0, 0.0 },   // emCERES
                     { GrazEnv.HERBAGE_ALBEDO, 1.26, 0.0 },  // emPriestley
@@ -203,7 +241,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Horizontal angle of the sun.  All three input angles are in radians   
+        /// Horizontal angle of the sun.  All three input angles are in radians
         /// </summary>
         /// <param name="fLat"></param>
         /// <param name="fDeclin"></param>
@@ -227,7 +265,7 @@ namespace Models.GrazPlan
 
 
         /// <summary>
-        /// Computes daylengths and E-T radiation                                         
+        /// Computes daylengths and E-T radiation
         /// </summary>
         /// <param name="iDOY"></param>
         /// <param name="fDL0"></param>
@@ -238,46 +276,46 @@ namespace Models.GrazPlan
             double fLatRad,
             fSlopeRad,
             fAspectRad,
-            fDeclination,                                                                // Declination of the sun (rad)          
-            fSunRiseRad = 0,                                                             // These are in radians, not hours       
+            fDeclination,                                                                // Declination of the sun (rad)
+            fSunRiseRad = 0,                                                             // These are in radians, not hours
             fSunSetRad = 0,
             fEquivLat,                                                                   // Latitude "equivalent" to the slope/aspect
-            fHalfDay0,                                                                   // Half-daylength on flat surface (rad)  
-            fHalfDayE,                                                                   // Ditto  at "equivalent" latitude       
+            fHalfDay0,                                                                   // Half-daylength on flat surface (rad)
+            fHalfDayE,                                                                   // Ditto  at "equivalent" latitude
             fAlpha,
             fDenom;
 
 
-            fLatRad = GrazEnv.DEG2RAD * fLatDegrees;                                     // Convert latitude, slope and aspect to 
-            fSlopeRad = GrazEnv.DEG2RAD * fSlopeDegrees;                                 //   radians                             
+            fLatRad = GrazEnv.DEG2RAD * fLatDegrees;                                     // Convert latitude, slope and aspect to
+            fSlopeRad = GrazEnv.DEG2RAD * fSlopeDegrees;                                 //   radians
             fAspectRad = GrazEnv.DEG2RAD * fAspectDegrees;
 
             fDeclination = MAXDECLIN * Math.Cos(GrazEnv.DAY2RAD * (iDOY - DECLINBASE));
 
-            fDenom = Math.Cos(fSlopeRad) * Math.Cos(fLatRad)                             // Trap e.g. flat surface at equator     
+            fDenom = Math.Cos(fSlopeRad) * Math.Cos(fLatRad)                             // Trap e.g. flat surface at equator
                       - Math.Cos(fAspectRad) * Math.Sin(fSlopeRad) * Math.Sin(fLatRad);
             if ((Math.Abs(fDenom) < 1.0E-8))
                 fAlpha = Math.Sign(Math.Sin(fSlopeRad) * Math.Sin(fAspectRad)) * Math.PI / 2.0;
             else
                 fAlpha = Math.Atan(Math.Sin(fSlopeRad) * Math.Sin(fAspectRad) / fDenom);
 
-            fEquivLat = Math.Asin(Math.Sin(fSlopeRad) * Math.Cos(fAspectRad) * Math.Cos(fLatRad)         // Determine the "equivalent latitude"   
+            fEquivLat = Math.Asin(Math.Sin(fSlopeRad) * Math.Cos(fAspectRad) * Math.Cos(fLatRad)         // Determine the "equivalent latitude"
                                  + Math.Cos(fSlopeRad) * Math.Sin(fLatRad));
 
-            foreach (bool bCivil in new[] { true, false })                           // Do bCivil=FALSE last so that fSunRise 
-            {                                                                        //   and fSunSet are set for the E-T     
-                fHalfDay0 = HASFunc(fLatRad, fDeclination, DAYANGLE[Convert.ToInt32(bCivil)]);       //   radiation calculation               
+            foreach (bool bCivil in new[] { true, false })                           // Do bCivil=FALSE last so that fSunRise
+            {                                                                        //   and fSunSet are set for the E-T
+                fHalfDay0 = HASFunc(fLatRad, fDeclination, DAYANGLE[Convert.ToInt32(bCivil)]);       //   radiation calculation
                 fHalfDayE = HASFunc(fEquivLat, fDeclination, DAYANGLE[Convert.ToInt32(bCivil)]);
                 fSunRiseRad = Math.Max(-fHalfDay0, -fHalfDayE - fAlpha);
                 fSunSetRad = Math.Min(+fHalfDay0, +fHalfDayE - fAlpha);
                 if (bCivil)
-                    fDLC = (fSunSetRad - fSunRiseRad) / OMEGA;                                // Convert daylength to hours here       
+                    fDLC = (fSunSetRad - fSunRiseRad) / OMEGA;                                // Convert daylength to hours here
                 else
                     fDL0 = (fSunSetRad - fSunRiseRad) / OMEGA;
             }
 
-            fETR = SOLARCONST / GrazEnv.WM2_2_MJM2 / 24.0                                       // Extra-terrestrial radiation           
-                    * (1.0 + ECCENTRICITY * Math.Cos(GrazEnv.DAY2RAD * iDOY))                           //   calculation                         
+            fETR = SOLARCONST / GrazEnv.WM2_2_MJM2 / 24.0                                       // Extra-terrestrial radiation
+                    * (1.0 + ECCENTRICITY * Math.Cos(GrazEnv.DAY2RAD * iDOY))                           //   calculation
                     * (fDL0 * Math.Sin(fDeclination) * Math.Sin(fEquivLat)
                         + (Math.Sin(fSunSetRad + fAlpha) - Math.Sin(fSunRiseRad + fAlpha)) / OMEGA
                           * Math.Cos(fDeclination) * Math.Cos(fEquivLat));
@@ -294,7 +332,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// TRUE i.f.f. the daylength is increasing. The value is pre-computed when      
+        /// TRUE i.f.f. the daylength is increasing. The value is pre-computed when
         /// Today is set.
         /// </summary>
         /// <returns></returns>
@@ -304,8 +342,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Extra-terrestrial radiation, in MJ/m^2/d. The value is pre-computed when     
-        /// Today is set.                                                                
+        /// Extra-terrestrial radiation, in MJ/m^2/d. The value is pre-computed when
+        /// Today is set.
         /// </summary>
         /// <returns></returns>
         public double ExtraT_Radiation()
@@ -314,7 +352,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Mean daily temperature, taken as the average of maximum and minimum T         
+        /// Mean daily temperature, taken as the average of maximum and minimum T
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -327,8 +365,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Equation for the mean temperature during daylight hours.  Integrated from a  
-        /// model of Parton and Logan (1981), Agric.Meteorol. 23:205                       
+        /// Equation for the mean temperature during daylight hours.  Integrated from a
+        /// model of Parton and Logan (1981), Agric.Meteorol. 23:205
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -349,8 +387,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Returns TRUE i.f.f. the data value for the weather element has been assigned 
-        /// since Today was last set.                                                    
+        /// Returns TRUE i.f.f. the data value for the weather element has been assigned
+        /// since Today was last set.
         /// </summary>
         /// <param name="Query"></param>
         /// <returns></returns>
@@ -361,7 +399,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Returns TRUE i.f.f. the data value for all members of Query has been assigned
-        /// since Today was last set.                                                    
+        /// since Today was last set.
         /// </summary>
         /// <param name="Query"></param>
         /// <returns></returns>
@@ -374,6 +412,12 @@ namespace Models.GrazPlan
             return Result;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="iDay"></param>
+        /// <param name="iMonth"></param>
+        /// <param name="iYear"></param>
         public void setToday(int iDay, int iMonth, int iYear)
         {
             int Dt;         // StdDATE.Date;
@@ -383,9 +427,9 @@ namespace Models.GrazPlan
 
             Dt = StdDate.DateVal(iDay, iMonth, iYear);
 
-            if ((FToday == 0) || (StdDate.DateShift(FToday, 1, 0, 0) != Dt))                     
+            if ((FToday == 0) || (StdDate.DateShift(FToday, 1, 0, 0) != Dt))
             {
-                // Compute yesterday's day length where it isn't already known   
+                // Compute yesterday's day length where it isn't already known
                 FToday = StdDate.DateShift(Dt, -1, 0, 0);
                 computeDLandETR(StdDate.DOY(FToday, true), ref FDaylengths[0], ref FDaylengths[1], ref FET_Radn);   // 0 - false
             }
@@ -400,10 +444,10 @@ namespace Models.GrazPlan
             FDayLenIncr = Daylength() > fOldDayLen;
 
             FCO2_Conc = FCO2_Coeffs[0];
-            if (FCO2_Order > 0)                                                      
+            if (FCO2_Order > 0)
             {
-                // Polynomial time course for [CO2]      
-                X = StdDate.Interval(StdDate.DateVal(1, 1, 2001), FToday) / 365.25; // Years since reference date            
+                // Polynomial time course for [CO2]
+                X = StdDate.Interval(StdDate.DateVal(1, 1, 2001), FToday) / 365.25; // Years since reference date
                 XN = 1;
                 for (Idx = 1; Idx <= FCO2_Order; Idx++)
                 {
@@ -436,7 +480,7 @@ namespace Models.GrazPlan
                 FDataKnown[(int)D] = true;
             }
         }
-                     
+
         /// <summary>
         /// Calculate Potential evapotranspiration (mm H2O)
         /// </summary>
@@ -468,20 +512,20 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Evapotranspiration calculation using various methods.                        
-        ///  *All methods return potential evaporation except pmPenman, which returns    
-        ///  the estimated evaporation rate for a nominated surface resistance.         
-        ///  *The meaning of param1, param2 and param3 depends upon the method:       
-        ///  Method Param.  Meaning Unit  Default       
-        ///  emPropnPan     1     potential: pan evaporation ratio - 0.8           
-        ///  emPenman       1     albedo - 0.23          
-        ///                 2     crop height                      m     0.12          
-        ///                 3     surface resistance               s/m   70.0          
-        ///  emCERES        1     albedo - 0.23          
-        ///  emPriestley    1     albedo - 0.23          
-        ///                 2     potential: equilibrium ratio     -1.26          
-        ///  emFAO          1     albedo - 0.23          
-        ///                 2     crop coefficient                 -1.0           
+        /// Evapotranspiration calculation using various methods.
+        ///  *All methods return potential evaporation except pmPenman, which returns
+        ///  the estimated evaporation rate for a nominated surface resistance.
+        ///  *The meaning of param1, param2 and param3 depends upon the method:
+        ///  Method Param.  Meaning Unit  Default
+        ///  emPropnPan     1     potential: pan evaporation ratio - 0.8
+        ///  emPenman       1     albedo - 0.23
+        ///                 2     crop height                      m     0.12
+        ///                 3     surface resistance               s/m   70.0
+        ///  emCERES        1     albedo - 0.23
+        ///  emPriestley    1     albedo - 0.23
+        ///                 2     potential: equilibrium ratio     -1.26
+        ///  emFAO          1     albedo - 0.23
+        ///                 2     crop coefficient                 -1.0
         /// </summary>
         /// <param name="method"></param>
         /// <param name="param1"></param>
@@ -501,7 +545,7 @@ namespace Models.GrazPlan
             switch (method) {
                 case EvapMethod.emPropnPan:
                     result = param1 * getData(TWeatherData.wdtEpan);
-                    if (result >= 12.0)                                    // Large E(pan) values are untrustworthy 
+                    if (result >= 12.0)                                    // Large E(pan) values are untrustworthy
                         result = Math.Min(result, CeresPET(GrazEnv.HERBAGE_ALBEDO ));
                     break;
                 case EvapMethod.emPenman: result = PenmanPET(param1, param2, param3);
@@ -513,7 +557,7 @@ namespace Models.GrazPlan
                       break;
                   case EvapMethod.emFAO: result = param2 * FAO_ReferenceET(param1);
                       break;*/
-                default: result = 0.0; 
+                default: result = 0.0;
                     break;
             }
 
@@ -521,8 +565,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Potential evaporation estimator using the logic from the CERES suite of crop 
-        /// growth models. This estimator is a variant of the Priestley - Taylor estimator 
+        /// Potential evaporation estimator using the logic from the CERES suite of crop
+        /// growth models. This estimator is a variant of the Priestley - Taylor estimator
         /// </summary>
         /// <param name="albedo"></param>
         /// <returns></returns>
@@ -546,20 +590,21 @@ namespace Models.GrazPlan
 
             return fEEQ_FAC * fEEQ;
         }
-
+#pragma warning disable IDE0060
         private const double MEASURE_HEIGHT = 2.0;                                                        // Assumed height of measurement(m)
         private double PenmanPET(double albedo, double cropHeight, double surfaceResist)
         {
+#pragma warning restore IDE0060
             double fDelta;
             double fGamma;
-            double fVirtualT;                                                 // "Virtual temperature" for gas law, K  
+            double fVirtualT;                                                 // "Virtual temperature" for gas law, K
             double fRho_Cp;                                                 // Density x specific heat of air, MJ/m^3/K
 
-            double fSoilFlux;           // Soil heat flux G, MJ/ m ^ 2 / d            
-            double fZeroPlaneDispl;     // Zero plane displacement d, m          
+            double fSoilFlux;           // Soil heat flux G, MJ/ m ^ 2 / d
+            double fZeroPlaneDispl;     // Zero plane displacement d, m
             double fRoughLengthMom;     // Roughness length for momentum z(om), m
-            double fRoughLengthVapour;  // Roughness length for heat & water vapour z(oh), m                     
-            double fAeroResist;         // Aerodynamic resistance, s/ m and d/ m   
+            double fRoughLengthVapour;  // Roughness length for heat & water vapour z(oh), m
+            double fAeroResist;         // Aerodynamic resistance, s/ m and d/ m
 
             if (!bInputKnown(EVAP_REQUIREMENT[(int)EvapMethod.emPenman]))
                 throw new  Exception( "Weather handler: Penman-Monteith evaporation cannot be calculated" );
@@ -573,16 +618,16 @@ namespace Models.GrazPlan
 
             fSoilFlux = 0.0;
 
-            fZeroPlaneDispl = 2 / 3 * Math.Max(0.005, cropHeight);            // Set a floor of 5mm on the height used 
-            fRoughLengthMom = 0.123 * Math.Max(0.005, cropHeight);            //   in calculating the aerodynamic      
-            fRoughLengthVapour = 0.1 * Math.Max(0.005, cropHeight);            // resistance                          
-            // Aerodynamic resistance in s / m         
-            fAeroResist = Math.Log((MEASURE_HEIGHT - fZeroPlaneDispl) / fRoughLengthMom   
+            fZeroPlaneDispl = 2 / 3 * Math.Max(0.005, cropHeight);            // Set a floor of 5mm on the height used
+            fRoughLengthMom = 0.123 * Math.Max(0.005, cropHeight);            //   in calculating the aerodynamic
+            fRoughLengthVapour = 0.1 * Math.Max(0.005, cropHeight);            // resistance
+            // Aerodynamic resistance in s / m
+            fAeroResist = Math.Log((MEASURE_HEIGHT - fZeroPlaneDispl) / fRoughLengthMom
                             * (MEASURE_HEIGHT - fZeroPlaneDispl) / fRoughLengthVapour)
                             / (Math.Pow(KARMAN, 2) * getData(TWeatherData.wdtWind));
 
-            fAeroResist = fAeroResist * SEC2DAY;                // Convert the resistances to d / m for    
-            surfaceResist = fAeroResist * SEC2DAY;             // consistency with other units        
+            fAeroResist = fAeroResist * SEC2DAY;                // Convert the resistances to d / m for
+            surfaceResist = fAeroResist * SEC2DAY;             // consistency with other units
 
             double result = (fDelta * (NetRadiation(albedo) - fSoilFlux) + fRho_Cp * VP_Deficit() / fAeroResist)
                             / (fDelta + fGamma * (1.0 + surfaceResist / fAeroResist))
@@ -603,7 +648,7 @@ namespace Models.GrazPlan
         {
             double fPressure;
 
-            fPressure = 101.3 * Math.Pow(1.0 - 0.0065 * fElevationM / (20.0 + GrazEnv.C_2_K), 5.26); // Atmospheric pressure, in kPa          
+            fPressure = 101.3 * Math.Pow(1.0 - 0.0065 * fElevationM / (20.0 + GrazEnv.C_2_K), 5.26); // Atmospheric pressure, in kPa
             return 6.65E-4 * fPressure;
         }
 
@@ -614,8 +659,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///   Net radiation estimate.                                                      
-        /// This calculation follows Allen et al (1998)                                  
+        ///   Net radiation estimate.
+        /// This calculation follows Allen et al (1998)
         /// </summary>
         /// <param name="albedo"></param>
         /// <returns></returns>
@@ -635,9 +680,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Saturated vapour pressure at a given temperature, in kPa.                   
-        /// The equation is taken from Allen et al(1998), FAO Irrigation and Drainage   
-        /// Paper 56.                                                                    
+        /// Saturated vapour pressure at a given temperature, in kPa.
+        /// The equation is taken from Allen et al(1998), FAO Irrigation and Drainage
+        /// Paper 56.
         /// </summary>
         /// <param name="temperature"></param>
         /// <returns></returns>
@@ -648,10 +693,10 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Daily average vapour pressure deficit
-        /// * The weighting in the saturated VP calculation follows Jeffrey et al.    
-        /// (2001), Env.Modelling and Software 16:309                                   
+        /// * The weighting in the saturated VP calculation follows Jeffrey et al.
+        /// (2001), Env.Modelling and Software 16:309
         /// * In the absence of VP or RH data, assumes that dew point can be approximated
-        /// by the minimum temperature.                                                
+        /// by the minimum temperature.
         /// </summary>
         /// <returns></returns>
         private double VP_Deficit()
@@ -666,10 +711,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Computes the daily average vapour pressure, in kPa, and stores it in   
-        /// Data[wdtVP]. Computation is done as follows:                                 
-        /// 1. If relative humidity is available, it is computed from that.              
-        /// 2. Otherwise, VP is computed by assuming that dew point = min. T.            
+        /// Computes the daily average vapour pressure, in kPa, and stores it in
+        /// Data[wdtVP]. Computation is done as follows:
+        /// 1. If relative humidity is available, it is computed from that.
+        /// 2. Otherwise, VP is computed by assuming that dew point = min. T.
         /// </summary>
         /// <returns></returns>
         private void computeVP()

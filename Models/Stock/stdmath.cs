@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace StdUnits
 {
-
+#pragma warning disable CS1591
     /// <summary>
     /// Math utilities
     /// </summary>
@@ -40,7 +40,7 @@ namespace StdUnits
         }
 
         /// <summary>
-        /// Mimics FORTRAN DIM function              
+        /// Mimics FORTRAN DIM function
         /// </summary>
         /// <param name="X">X value</param>
         /// <param name="Y">Y value</param>
@@ -88,9 +88,9 @@ namespace StdUnits
         }
 
         /// <summary>
-        /// Incomplete beta function, as described in section 6.3 of Press et al.     
-        /// (1986). The code is also taken from Press et al.                          
-        /// Assumes that a > 0, b > 0                                                 
+        /// Incomplete beta function, as described in section 6.3 of Press et al.
+        /// (1986). The code is also taken from Press et al.
+        /// Assumes that a > 0, b > 0
         /// </summary>
         /// <param name="X"></param>
         /// <param name="A"></param>
@@ -243,7 +243,7 @@ namespace StdUnits
         public static double Pow(double X, double Y)
         {
             if (Math.Abs(X) < EPS)
-                return 0.0;                    // Catch underflows 
+                return 0.0;                    // Catch underflows
             else if (X < 0.0)
                 throw new Exception("Power of negative number attempted");
             else
@@ -323,12 +323,12 @@ namespace StdUnits
         private double[] FRandomBuffer;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private double FRandNo;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private uint FSeed; //store for later read access
 
@@ -442,7 +442,7 @@ namespace StdUnits
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="N"></param>
         /// <param name="P"></param>
@@ -468,4 +468,5 @@ namespace StdUnits
             get { return this.FSeed; }
         }
     }
+#pragma warning restore CS1591
 }
