@@ -1,9 +1,12 @@
 ﻿using Models.Climate;
 using Models.Core;
+using Models.Functions;
+using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF.Scrum
 {
@@ -50,6 +53,10 @@ namespace Models.PMF.Scrum
         [Separator("Plant Dimnesions")]
         [Description("Root depth when mature (mm)")]
         public double MaxRD { get; set; }
+
+        /// <summary>Root depth at harvest (mm)</summary>
+        [Description("Grow roots into neighbouring zone (yes or no)")]
+        public bool RootThyNeighbour { get; set; }
 
         /// <summary>Hight of the bottom of the canop (mm)</summary>
         [Description("Hight of the bottom of the canopy (mm)")]
@@ -140,6 +147,15 @@ namespace Models.PMF.Scrum
         [Link]
         private ISummary summary = null;
 
+        [Link(Type = LinkType.Scoped)]
+        private Root root = null;
+
+        [Link(Type = LinkType.Ancestor)]
+        private Zone zone = null;
+
+        [Link(Type = LinkType.Ancestor)]
+        private Simulation simulation = null;
+
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar tree = null;
 
@@ -187,6 +203,32 @@ namespace Models.PMF.Scrum
         /// </summary>
         public void Establish()
         {
+            if (RootThyNeighbour)
+            {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
+                string neighbour = "";
+                List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
+                if (zones.Count > 2)
+                    throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
+                foreach (Zone z in zones)
+                {
+                    if (z.Name != zone.Name)
+                        neighbour = z.Name;
+                }
+                root.ZoneNamesToGrowRootsIn.Add(neighbour);
+                root.ZoneRootDepths.Add(MaxRD);
+                NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
+                Constant InitStruct = new Constant();
+                InitStruct.FixedValue = 10;
+                InitialDM.Structural = InitStruct;
+                Constant InitMetab = new Constant();
+                InitMetab.FixedValue = 0;
+                InitialDM.Metabolic = InitMetab;
+                Constant InitStor = new Constant();
+                InitStor.FixedValue = 0;
+                InitialDM.Storage = InitStor;
+                root.ZoneInitialDM.Add(InitialDM);
+            }
+
             string cropName = this.Name;
             double depth = this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension;
             double population = 1.0;
