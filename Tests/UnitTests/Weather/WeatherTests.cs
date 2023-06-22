@@ -11,6 +11,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Globalization;
 
 namespace UnitTests.Weather
 {
@@ -162,8 +163,8 @@ namespace UnitTests.Weather
             baseSim.Prepare();
             baseSim.Run();
 
-            DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.Parse("03/01/1900"));
-            DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.Parse("01/01/2000"));
+            DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.ParseExact("1900-01-03", "yyyy-MM-dd", CultureInfo.InvariantCulture));
+            DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.ParseExact("2000-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             Assert.AreEqual(31.9, weather1900.MaxT, 0.01);
             Assert.AreEqual(16.6, weather1900.MinT, 0.01);
