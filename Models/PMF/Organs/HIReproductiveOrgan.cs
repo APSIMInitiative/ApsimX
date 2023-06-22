@@ -112,8 +112,8 @@ namespace Models.PMF.Organs
         {
             get
             {
-                yield return new DamageableBiomass(Name, Live, true);
-                yield return new DamageableBiomass(Name, Dead, false);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
             }
         }
 

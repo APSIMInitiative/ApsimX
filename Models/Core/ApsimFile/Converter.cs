@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 162; } }
+        public static int LatestVersion { get { return 163; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4859,6 +4859,29 @@ namespace Models.Core.ApsimFile
                         operation[i]["Action"] = specificationString;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Rearrange the BiomassRemoval defaults in the plant models.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion163(JObject root, string fileName)
+        {
+            // Move SetEmergenceDate and SetGerminationDat in manager scripts.
+            foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemoval"))
+            {
+                // Find a harvest OrganBiomassRemovalType child
+                JObject harvest = JsonUtilities.ChildWithName(biomassRemoval, "Harvest");
+                if (harvest != null)
+                {
+                    biomassRemoval["HarvestFractionLiveToRemove"] = harvest["FractionLiveToRemove"];
+                    biomassRemoval["HarvestFractionDeadToRemove"] = harvest["FractionDeadToRemove"];
+                    biomassRemoval["HarvestFractionLiveToResidue"] = harvest["FractionLiveToResidue"];
+                    biomassRemoval["HarvestFractionDeadToResidue"] = harvest["FractionDeadToResidue"];
+                }
+                biomassRemoval["Children"] = new JArray();
             }
         }
 

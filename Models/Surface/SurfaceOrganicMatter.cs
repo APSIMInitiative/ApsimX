@@ -276,8 +276,8 @@ namespace Models.Surface
             {
                 // Return an empty live material. Stock won't find the dead material unless there 
                 // is matching live material.
-                yield return new DamageableBiomass("Residue", new Biomass(), isLive: true);
-                yield return new DamageableBiomass("Residue", new Biomass()
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2

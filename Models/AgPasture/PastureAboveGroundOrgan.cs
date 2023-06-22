@@ -69,8 +69,8 @@ namespace Models.AgPasture
         {
             get
             {
-                yield return new DamageableBiomass(Name, Live, true, LiveDigestibility);
-                yield return new DamageableBiomass(Name, Dead, false, DeadDigestibility);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true, LiveDigestibility);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false, DeadDigestibility);
             }
         }
 

@@ -36,11 +36,10 @@ namespace Models.ForageDigestibility
             {
                 foreach (var material in forageModel.Material)
                 {
-                    var fullName = $"{Name}.{material.Name}";
-                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(material.Name, StringComparison.InvariantCultureIgnoreCase)
                                                                             && p.IsLive == material.IsLive);
                     if (materialParameters == null)
-                        throw new Exception($"Cannot find forage parameters for {fullName}");
+                        throw new Exception($"Cannot find forage parameters for {material.Name}");
                     if (materialParameters.FractionConsumable > 0)
                     {
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
@@ -236,7 +235,7 @@ namespace Models.ForageDigestibility
 
             }
             else
-                summary.WriteMessage(forageModel as IModel, "Could not graze due to lack of DM available", MessageType.Warning);
+                summary?.WriteMessage(forageModel as IModel, "Could not graze due to lack of DM available", MessageType.Warning);
         }
 
         private class FractionDigestibleBiomass
