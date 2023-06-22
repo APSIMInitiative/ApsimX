@@ -1,4 +1,5 @@
 from decimal import Decimal
+from os.path import exists
  
 SEARCH_TEXT = " has finished. Elapsed time was "
 
@@ -7,7 +8,10 @@ class sim:
     time = 0
 
 def getSimName(line):
-    return line[:line.find(')')+1]
+    if ')' in line:
+        return line[:line.find(')')+1]
+    else:
+        return line[:line.find(SEARCH_TEXT)]
     
 def getSimTime(line):
     end_cut_off = line[0:line.rfind(' ')]
@@ -21,14 +25,33 @@ def makeSimsList(lines):
             s = sim()
             s.name = getSimName(line)
             s.time = getSimTime(line)
+            if len(s.name) == 0:
+                print(line)
             sims.append(s)
     return sims
 
 def main():
-    with open('log1.txt','r') as file:
+    print("This script will compare two jenkin logs and output the difference")
+    print("in time for each simulation that was run.")
+    print(" ")
+    print("Built for APSIM NextGen Build 7256")
+    print(" ")
+
+    logFile1 = input("Enter filename with extension for first log file (log1.txt):")
+    logFile2 = input("Enter filename with extension for second log file (log1.txt):")
+    
+    if exists(logFile1) == False:
+        print("Invalid Filename " + logFile1)
+        return False;
+        
+    if exists(logFile2) == False:
+        print("Invalid Filename " + logFile2)
+        return False;
+
+    with open(logFile1,'r') as file:
         sims1 = makeSimsList(file.readlines())
         
-    with open('log2.txt','r') as file:
+    with open(logFile2,'r') as file:
         sims2 = makeSimsList(file.readlines())
     #this is not efficent at all, but it works
     output = ""

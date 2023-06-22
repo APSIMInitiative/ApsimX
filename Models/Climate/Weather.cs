@@ -691,10 +691,8 @@ namespace Models.Climate
         /// <param name="date">the date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
-            
             //check if we've looked at this date before
             WeatherRecordEntry previousEntry = null;
-            bool first = true;
             foreach (WeatherRecordEntry entry in this.weatherCache)
             {
                 if (entry.Date.Equals(date))
@@ -706,7 +704,6 @@ namespace Models.Climate
                     previousEntry = entry;
                     break;
                 }
-                first = false;
             }
             
             if (this.reader == null)
@@ -733,7 +730,7 @@ namespace Models.Climate
             WeatherRecordEntry record = new WeatherRecordEntry();
             record.Date = date;
             record.MetData = readMetData;
-            if (!first && previousEntry != null)
+            if (previousEntry != null)
                 this.weatherCache.AddBefore(this.weatherCache.Find(previousEntry), record);
             else
                 this.weatherCache.AddFirst(record);

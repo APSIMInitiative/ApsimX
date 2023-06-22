@@ -179,9 +179,12 @@ namespace UnitTests.Weather
             Assert.AreEqual(0.0, weather2000.Rain, 0.01);
 
             //should get the 3/1/1900 weather data
-            Assert.AreEqual(weather1900, weather.TomorrowsMetData);
+            Assert.AreEqual(weather1900.MaxT, weather.TomorrowsMetData.MaxT, 0.01);
+            Assert.AreEqual(weather1900.MinT, weather.TomorrowsMetData.MinT, 0.01);
+            Assert.AreEqual(weather1900.Wind, weather.TomorrowsMetData.Wind, 0.01);
+            Assert.AreEqual(weather1900.Radn, weather.TomorrowsMetData.Radn, 0.01);
+            Assert.AreEqual(weather1900.Rain, weather.TomorrowsMetData.Rain, 0.01);
         }
-
 
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
