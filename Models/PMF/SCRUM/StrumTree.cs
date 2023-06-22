@@ -54,7 +54,7 @@ namespace Models.PMF.Scrum
         [Description("Root depth when mature (mm)")]
         public double MaxRD { get; set; }
 
-        /// <summary>Root depth at harvest (mm)</summary>
+        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
         public bool RootThyNeighbour { get; set; }
 
@@ -103,6 +103,14 @@ namespace Models.PMF.Scrum
         /// <summary>Maximum LAI of mature tree prior to pruning (m2/m2)</summary>
         [Description("Maximum LAI of mature tree prior to pruning (m2/m2)")]
         public double MaxLAI { get; set; }
+
+        /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
+        [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
+        public double GSMax { get; set; }
+
+        /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
+        [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
+        public double R50 { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Separator("Fruit parameters")]
@@ -182,6 +190,8 @@ namespace Models.PMF.Scrum
             {"TrunkNConc","[Trunk].MaximumNConc.FixedValue = "},
             {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.FixedValue = "},
             {"MaxLAI","[Leaf].Area.Maximum.FixedValue = " },
+            {"GSMax","[Leaf].Gsmax350 = " },
+            {"R50","[Leaf].R50 = " },
             {"InitialTrunkWt","[Trunk].InitialWt.Structural.FixedValue = "},
             {"InitialRootWt", "[Root].InitialWt.Structural.FixedValue = " },
             {"InitialFruitWt","[Fruit].InitialWt.Structural.FixedValue = "},
@@ -267,6 +277,8 @@ namespace Models.PMF.Scrum
             cropParams["TrunkNConc"] += TrunkNConc.ToString();
             cropParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             cropParams["MaxLAI"] += MaxLAI.ToString();
+            cropParams["GSMax"] += GSMax.ToString();
+            cropParams["R50"] += R50.ToString();
             cropParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             cropParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             cropParams["Number"] += Number.ToString();
