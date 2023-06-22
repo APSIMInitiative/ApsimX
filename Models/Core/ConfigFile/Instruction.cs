@@ -89,7 +89,11 @@
         /// <summary>
         /// Makes instruction a Run type.
         /// </summary>
-        Run
+        Run,
+        /// <summary>
+        /// Makes instruction a Create type
+        /// </summary>
+        Create
 
     }
 }

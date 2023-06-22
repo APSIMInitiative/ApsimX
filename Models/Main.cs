@@ -119,11 +119,12 @@ namespace Models
                         }
                     }
                     // If no apsimx file path included proceeding --apply switch...              
-                    else if (files.Length < 1)
+                    else if (files.Length < 1) // TODO: Create the 'Create' option functionality.
                     {
                         string savePath = "";
                         string loadPath = "";
                         string[] commandsArray = commands.ToArray();
+                        bool isSimToBeRun = false;
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
@@ -136,6 +137,11 @@ namespace Models
                             else if (splitCommand[0] == "load")
                             {
                                 loadPath = splitCommand[1];
+                                continue;
+                            }
+                            else if (splitCommand[0] == "run")
+                            {
+                                isSimToBeRun = false;
                                 continue;
                             }
 
@@ -170,6 +176,18 @@ namespace Models
                                 else if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
                                 {
                                     sim.Write(savePath);
+                                }
+
+                                if (isSimToBeRun) // TODO: --apply run command needs testing.
+                                {
+                                    runner.SimulationCompleted += OnJobCompleted;
+                                    if (options.Verbose)
+                                        runner.SimulationCompleted += WriteCompleteMessage;
+                                    if (options.ExportToCsv)
+                                        runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+                                    runner.AllSimulationsCompleted += OnAllJobsCompleted;
+                                    // Run simulations.
+                                    runner.Run();
                                 }
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
