@@ -11,6 +11,7 @@ using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 
@@ -4863,13 +4864,12 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Rearrange the BiomassRemoval defaults in the plant models.
+        /// Rearrange the BiomassRemoval defaults in the plant models and manager scripts.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
         private static void UpgradeToVersion163(JObject root, string fileName)
         {
-            // Move SetEmergenceDate and SetGerminationDat in manager scripts.
             foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemoval"))
             {
                 // Find a harvest OrganBiomassRemovalType child
@@ -4883,6 +4883,99 @@ namespace Models.Core.ApsimFile
                 }
                 biomassRemoval["Children"] = new JArray();
             }
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.ToString().Contains(".RemoveBiomass("))
+                {
+                    // Remove the 'RemovalFractions' declaration.
+                    var declarations = manager.GetDeclarations();
+                    var declaration = declarations.Find(d => d.TypeName == "RemovalFractions");
+                    if (declaration != null)
+                    {
+                        declarations.Remove(declaration);
+                        manager.SetDeclarations(declarations);
+                    }
+
+                    // Remove the 'RemovalFractions' instance creation.
+                    manager.ReplaceRegex(@$"{declaration.InstanceName}\W*new\W+{declaration.TypeName}.+;", string.Empty);
+
+                    // Find all biomass removal fractions.
+                    var matches = manager.FindRegexMatches(@$"{declaration.InstanceName}.SetFractionTo(\w+)\(""(\w+)""\W+([\w.]+)(\W+""(\w+)"")*\);");
+                    List<OrganFractions> organs = new List<OrganFractions>();
+                    foreach (Match match in matches)
+                    {
+                        bool remove = match.Groups[1].Value == "Remove";
+                        string organName = match.Groups[2].Value;
+                        string fractionObjectName = match.Groups[3].Value;
+                        bool isLive = true;
+                        if (match.Groups[5].Value == "Dead")
+                            isLive = false;
+                        var organ = organs.Find(o => o.Name == organName);
+                        if (organ == null)
+                        {
+                            organ = new OrganFractions(organName);
+                            organs.Add(organ);
+                        }
+                        if (isLive)
+                        {
+                            if (remove)
+                                organ.FractionLiveToRemove = fractionObjectName;
+                            else
+                                organ.FractionLiveToResidue = fractionObjectName;
+                        }
+                        else
+                        {
+                            if (remove)
+                                organ.FractionDeadToRemove = fractionObjectName;
+                            else
+                                organ.FractionDeadToResidue = fractionObjectName;
+                        }
+                    }
+
+                    TODO: Need to add:
+                    [Link(ByName=true)] IHasDamageableBiomass organName;
+
+                    string code = manager.ToString();
+
+                    // Delete the removal fraction matches lines. 
+                    // Do it in reverse order so that match.Index remains valid.
+                    foreach (Match match in matches.Reverse())
+                        code = code.Remove(match.Index, match.Length);
+
+                    // Find the RemoveBiomass method call.
+                    Match removeBiomassMatch = Regex.Match(code, @"(\w+).RemoveBiomass\(.+\);");
+                    if (removeBiomassMatch.Success)
+                    {
+                        var modelName = removeBiomassMatch.Groups[1].Value;
+
+                        string replacementString = null;
+                        foreach (var organ in organs)
+                            replacementString += $"{organ.Name}.RemoveBiomass(liveToRemove: {organ.FractionLiveToRemove}, deadToRemove: {organ.FractionDeadToRemove}, " +
+                                                                            $"liveToResidue: {organ.FractionLiveToResidue}, deadToResidue: {organ.FractionDeadToResidue});" + Environment.NewLine;
+                        code = code.Remove(removeBiomassMatch.Index, removeBiomassMatch.Length);
+                        code = code.Insert(removeBiomassMatch.Index, replacementString);
+                        manager.Read(code);
+                    }
+
+                    // Save the manager.
+                    manager.Save();
+                }
+            }
+        }
+
+        private class OrganFractions
+        {
+            public OrganFractions(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public string FractionLiveToRemove { get; set; } = "0.0";
+            public string FractionDeadToRemove { get; set; } = "0.0";
+            public string FractionLiveToResidue { get; set; } = "0.0";
+            public string FractionDeadToResidue { get; set; } = "0.0";
         }
 
         /// <summary>

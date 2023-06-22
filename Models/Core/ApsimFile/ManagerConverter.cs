@@ -437,6 +437,19 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Find a string using a regular expression.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <returns>The match.</returns>
+        public MatchCollection FindRegexMatches(string searchPattern)
+        {
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return null;
+            return Regex.Matches(oldCode, searchPattern);
+        }
+
+        /// <summary>
         /// Add a declaration if it doesn't exist.
         /// </summary>
         /// <param name="typeName">The type name of the declaration.</param>
