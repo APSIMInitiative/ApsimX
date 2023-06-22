@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 159,
+  "ExplorerWidth": 438,
+  "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -431,7 +431,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "ResourceName": null,
@@ -458,7 +458,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
@@ -502,6 +502,7 @@
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Sowing",
                   "End": "Germination",
+                  "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [],
@@ -512,6 +513,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
+                  "IsEmerged": true,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -589,6 +591,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
                   "End": "EndJuvenile",
+                  "IsEmerged": true,
                   "Name": "Juvenile",
                   "ResourceName": null,
                   "Children": [
@@ -646,6 +649,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "EndJuvenile",
                   "End": "FloralInitiation",
+                  "IsEmerged": true,
                   "Name": "Inductive",
                   "ResourceName": null,
                   "Children": [
@@ -703,6 +707,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "FloralInitiation",
                   "End": "StartFlowering",
+                  "IsEmerged": true,
                   "Name": "Induced",
                   "ResourceName": null,
                   "Children": [
@@ -733,6 +738,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "StartFlowering",
                   "End": "StartPodfill",
+                  "IsEmerged": true,
                   "Name": "Flowering",
                   "ResourceName": null,
                   "Children": [
@@ -763,6 +769,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "StartPodfill",
                   "End": "Maturity",
+                  "IsEmerged": true,
                   "Name": "Podfilling",
                   "ResourceName": null,
                   "Children": [
@@ -793,6 +800,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Maturity",
                   "End": "HarvestRipe",
+                  "IsEmerged": true,
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
@@ -823,6 +831,7 @@
                   "$type": "Models.PMF.Phen.EndPhase, Models",
                   "Start": "HarvestRipe",
                   "End": "Unused",
+                  "IsEmerged": true,
                   "Name": "ReadyForHarvesting",
                   "ResourceName": null,
                   "Children": [
@@ -1171,7 +1180,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "TemperatureEffect",
                   "ResourceName": null,
@@ -1196,7 +1205,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
@@ -3352,14 +3361,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.3,
-                            0.9,
+                            0.95,
                             1.0
                           ],
                           "Y": [
-                            0.1,
-                            0.1,
-                            1.0,
+                            0.01,
+                            0.01,
                             1.0
                           ],
                           "XVariableName": null,
@@ -3978,7 +3985,7 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "$type": "Models.Functions.SubDailyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "ResourceName": null,
@@ -4005,7 +4012,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                           "TempRangeFactors": null,
                           "Name": "InterpolationMethod",
                           "ResourceName": null,
@@ -4118,7 +4125,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Tallness",
+                  "Name": "HeightFunction",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -9060,9 +9067,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.99",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 117400",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
                     "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023"
                   ],
                   "Name": "FD2",
@@ -9074,9 +9081,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.82",
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 25470",
-                    "[Leaf].Tallness.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.A = 0.82",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.B = 25470",
+                    "[Leaf].HeightFunction.Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.C = -1",
                     "[Nodule].FixationRate.FixationCoefficiency.FixedValue=0.023"
                   ],
                   "Name": "FD10",
@@ -9238,8 +9245,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.27887267511785374,
+              "Maximum": 28.166140186903228,
               "Interval": null
             },
             {
@@ -9248,8 +9255,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5384135981880348,
+              "Maximum": 28.168709899012836,
               "Interval": null
             }
           ],
@@ -9316,8 +9323,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -12.645282549409622,
+              "Maximum": 1277.1735374903717,
               "Interval": null
             },
             {
@@ -9326,8 +9333,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -12.645282549409622,
+              "Maximum": 1277.1735374903717,
               "Interval": null
             }
           ],
@@ -9394,8 +9401,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.08808333333,
+              "Maximum": 8.89641666633,
               "Interval": null
             },
             {
@@ -9404,8 +9411,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.08808333333,
+              "Maximum": 8.89641666633,
               "Interval": null
             }
           ],
@@ -9472,8 +9479,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -97.10625,
+              "Maximum": 9807.73125,
               "Interval": null
             },
             {
@@ -9482,8 +9489,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -97.10625,
+              "Maximum": 9807.73125,
               "Interval": null
             }
           ],
@@ -9550,8 +9557,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -33.90256111,
+              "Maximum": 3424.15867211,
               "Interval": null
             },
             {
@@ -9560,8 +9567,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -33.90256111,
+              "Maximum": 3424.15867211,
               "Interval": null
             }
           ],
@@ -9628,8 +9635,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -336.47632959599997,
+              "Maximum": 7176.346215996,
               "Interval": null
             },
             {
@@ -9638,8 +9645,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -337.82915968608546,
+              "Maximum": 7312.982055094635,
               "Interval": null
             }
           ],
@@ -9706,8 +9713,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5,
+              "Maximum": 598.5,
               "Interval": null
             },
             {
@@ -9716,8 +9723,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -88.70447355708886,
+              "Maximum": 8959.151829265975,
               "Interval": null
             }
           ],
@@ -9735,8 +9742,8 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": -16777216,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": "Experiment",
+              "FactorToVaryColours": "SimulationName",
+              "FactorToVaryMarkers": "SimulationName",
               "FactorToVaryLines": null,
               "Marker": 0,
               "MarkerSize": 0,
@@ -9793,8 +9800,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 2.8172392681760496,
+              "Maximum": 6.909480047641821,
               "Interval": null
             },
             {
@@ -9803,8 +9810,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 2.8172392681760496,
+              "Maximum": 6.909480047641821,
               "Interval": null
             }
           ],
@@ -9871,8 +9878,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 0.6959422339439392,
+              "Maximum": 5.143604532337188,
               "Interval": null
             },
             {
@@ -9881,8 +9888,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 0.6959422339439392,
+              "Maximum": 5.143604532337188,
               "Interval": null
             }
           ],
@@ -9949,8 +9956,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5,
+              "Maximum": 240.5,
               "Interval": null
             },
             {
@@ -9959,8 +9966,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 0.5658707016318137,
+              "Maximum": 2.5742217775637797,
               "Interval": null
             }
           ],
@@ -9988,8 +9995,8 @@
               "TableName": "PredictedObserved",
               "XFieldName": "Observed.RootN",
               "YFieldName": "Predicted.RootN",
-              "X2FieldName": "",
-              "Y2FieldName": "",
+              "X2FieldName": null,
+              "Y2FieldName": null,
               "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -10027,8 +10034,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 168.03688744822568,
+              "Maximum": 1576.1243677292011,
               "Interval": null
             },
             {
@@ -10037,8 +10044,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 168.03688744822568,
+              "Maximum": 1576.1243677292011,
               "Interval": null
             }
           ],
@@ -10105,8 +10112,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5,
+              "Maximum": 212.5,
               "Interval": null
             },
             {
@@ -10115,8 +10122,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.7519037490374711,
+              "Maximum": 92.87319491455418,
               "Interval": null
             }
           ],
@@ -10183,8 +10190,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5,
+              "Maximum": 157.5,
               "Interval": null
             },
             {
@@ -10193,8 +10200,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.6070177437719908,
+              "Maximum": 61.36639902634429,
               "Interval": null
             }
           ],
@@ -10261,8 +10268,8 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -0.5,
+              "Maximum": 200.5,
               "Interval": null
             },
             {
@@ -10271,8 +10278,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": -1.9637966560750975,
+              "Maximum": 199.9834898294375,
               "Interval": null
             }
           ],
@@ -11352,6 +11359,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -14870,6 +14878,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -17843,6 +17852,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -18724,8 +18734,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -18734,8 +18744,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.0629,
+                          "Maximum": 6.3529,
                           "Interval": null
                         }
                       ],
@@ -18834,8 +18844,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -18844,8 +18854,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.00993759221508034,
+                          "Maximum": 1.0036968137231144,
                           "Interval": null
                         }
                       ],
@@ -18929,8 +18939,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -18939,8 +18949,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19024,8 +19034,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19034,8 +19044,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19090,8 +19100,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 37565.33,
+                          "Maximum": 38143.67,
                           "Interval": null
                         },
                         {
@@ -19100,8 +19110,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 49.3,
+                          "Maximum": 120.7,
                           "Interval": null
                         }
                       ],
@@ -19185,8 +19195,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 37485.45,
+                          "Maximum": 38153.55,
                           "Interval": null
                         },
                         {
@@ -19195,8 +19205,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 70.53999999999999,
+                          "Maximum": 1035.46,
                           "Interval": null
                         }
                       ],
@@ -19280,8 +19290,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19290,8 +19300,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19346,8 +19356,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19356,8 +19366,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19412,8 +19422,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19422,8 +19432,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19478,8 +19488,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19488,8 +19498,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19544,8 +19554,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -19554,8 +19564,8 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -19621,8 +19631,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -19631,8 +19641,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -53.4013336,
+                          "Maximum": 5595.7639736,
                           "Interval": null
                         }
                       ],
@@ -19720,8 +19730,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -55.403800000000004,
+                          "Maximum": 5595.7838,
                           "Interval": null
                         },
                         {
@@ -19730,8 +19740,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -55.403800000000004,
+                          "Maximum": 5595.7838,
                           "Interval": null
                         }
                       ],
@@ -19798,8 +19808,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -19808,8 +19818,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -18.1922,
+                          "Maximum": 2039.3722,
                           "Interval": null
                         }
                       ],
@@ -19896,8 +19906,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -19906,8 +19916,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.8470835389289599,
+                          "Maximum": 101.70695900526496,
                           "Interval": null
                         }
                       ],
@@ -19994,8 +20004,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20004,8 +20014,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.6850232556197016,
+                          "Maximum": 69.19704287910649,
                           "Interval": null
                         }
                       ],
@@ -20093,8 +20103,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20103,8 +20113,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -37.1955,
+                          "Maximum": 3756.7455,
                           "Interval": null
                         }
                       ],
@@ -20191,8 +20201,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20201,8 +20211,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 1.2581074945527344,
+                          "Maximum": 5.138038539657893,
                           "Interval": null
                         }
                       ],
@@ -20286,8 +20296,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20296,8 +20306,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.6850232556197016,
+                          "Maximum": 69.19704287910649,
                           "Interval": null
                         }
                       ],
@@ -20385,8 +20395,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20395,8 +20405,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -80.75760967480508,
+                          "Maximum": 8156.518577155313,
                           "Interval": null
                         }
                       ],
@@ -20480,8 +20490,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20490,8 +20500,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.02144,
+                          "Maximum": 2.1654400000000003,
                           "Interval": null
                         }
                       ],
@@ -20575,8 +20585,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20585,8 +20595,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -1.2766347,
+                          "Maximum": 128.9401047,
                           "Interval": null
                         }
                       ],
@@ -20670,8 +20680,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20680,8 +20690,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.3741494268950424,
+                          "Maximum": 37.78909211639928,
                           "Interval": null
                         }
                       ],
@@ -20765,8 +20775,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20775,8 +20785,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -2.3998626990698355,
+                          "Maximum": 242.3861326060534,
                           "Interval": null
                         }
                       ],
@@ -20831,8 +20841,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20841,8 +20851,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -56.821423053642434,
+                          "Maximum": 5738.963728417885,
                           "Interval": null
                         }
                       ],
@@ -20897,8 +20907,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20907,8 +20917,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 9.955821271893175,
+                          "Maximum": 16.707429079178066,
                           "Interval": null
                         }
                       ],
@@ -20966,8 +20976,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -20976,8 +20986,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -7.002483499152251,
+                          "Maximum": 707.2508334143773,
                           "Interval": null
                         }
                       ],
@@ -21032,8 +21042,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21042,8 +21052,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.0629,
+                          "Maximum": 6.3529,
                           "Interval": null
                         }
                       ],
@@ -21171,8 +21181,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21181,8 +21191,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.1803644166536725,
+                          "Maximum": 18.216806082020923,
                           "Interval": null
                         }
                       ],
@@ -21284,8 +21294,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -21294,8 +21304,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -21350,8 +21360,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -21360,8 +21370,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -21428,8 +21438,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21438,8 +21448,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 28.40157822182309,
+                          "Maximum": 50.19734902750671,
                           "Interval": null
                         }
                       ],
@@ -21494,8 +21504,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21504,8 +21514,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 11.084736340353661,
+                          "Maximum": 12.51251280851135,
                           "Interval": null
                         }
                       ],
@@ -21560,8 +21570,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         },
                         {
@@ -21570,8 +21580,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
                           "Interval": null
                         }
                       ],
@@ -21626,8 +21636,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21636,8 +21646,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.0059234395132807816,
+                          "Maximum": 0.5982673908413589,
                           "Interval": null
                         }
                       ],
@@ -21692,8 +21702,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21702,8 +21712,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.09003918845861673,
+                          "Maximum": 9.09395803432029,
                           "Interval": null
                         }
                       ],
@@ -21761,8 +21771,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21771,8 +21781,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.0031179118907920197,
+                          "Maximum": 0.31490910096999397,
                           "Interval": null
                         }
                       ],
@@ -21827,8 +21837,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21837,8 +21847,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -18.57249526251976,
+                          "Maximum": 2143.1439947880986,
                           "Interval": null
                         }
                       ],
@@ -21893,8 +21903,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21903,8 +21913,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.3741494268950424,
+                          "Maximum": 37.78909211639928,
                           "Interval": null
                         }
                       ],
@@ -21959,8 +21969,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -21969,8 +21979,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.5043416137105038,
+                          "Maximum": 50.93850298476088,
                           "Interval": null
                         }
                       ],
@@ -22036,8 +22046,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 36808.32,
+                          "Maximum": 38305.68,
                           "Interval": null
                         },
                         {
@@ -22046,8 +22056,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 566.7596211104972,
+                          "Maximum": 781.0514329360682,
                           "Interval": null
                         }
                       ],
@@ -22112,6 +22122,72 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Date",
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "",
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LeafFw",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.Fw",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -24656,6 +24732,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -25648,8 +25725,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 41903.52,
+                          "Maximum": 43584.48,
                           "Interval": null
                         },
                         {
@@ -25659,7 +25736,7 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "Minimum": 0.0,
-                          "Maximum": null,
+                          "Maximum": 8.89641666633,
                           "Interval": null
                         }
                       ],
@@ -25743,8 +25820,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 41903.56,
+                          "Maximum": 43580.44,
                           "Interval": null
                         },
                         {
@@ -25753,8 +25830,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.009939646834073506,
+                          "Maximum": 1.0039043302414241,
                           "Interval": null
                         }
                       ],
@@ -25838,8 +25915,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 41903.56,
+                          "Maximum": 43580.44,
                           "Interval": null
                         },
                         {
@@ -25848,8 +25925,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -24.775000000000002,
+                          "Maximum": 2502.275,
                           "Interval": null
                         }
                       ],
@@ -25933,8 +26010,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 42271.27,
+                          "Maximum": 43365.73,
                           "Interval": null
                         },
                         {
@@ -25944,7 +26021,7 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "Minimum": 0.0,
-                          "Maximum": null,
+                          "Maximum": 330.4375,
                           "Interval": null
                         }
                       ],
@@ -26028,8 +26105,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 41903.56,
+                          "Maximum": 43580.44,
                           "Interval": null
                         },
                         {
@@ -26038,8 +26115,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.06308798723926375,
+                          "Maximum": 6.371886711165638,
                           "Interval": null
                         }
                       ],
@@ -26126,6 +26203,72 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted1",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Date",
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "",
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LeafFw",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.Fw",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -29530,6 +29673,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -30411,8 +30555,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40448.53,
+                          "Maximum": 41108.47,
                           "Interval": null
                         },
                         {
@@ -30422,7 +30566,7 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "Minimum": 0.0,
-                          "Maximum": null,
+                          "Maximum": 6.904750650980061,
                           "Interval": null
                         }
                       ],
@@ -30506,8 +30650,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40448.53,
+                          "Maximum": 41108.47,
                           "Interval": null
                         },
                         {
@@ -30516,8 +30660,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.009912222631923267,
+                          "Maximum": 1.00113448582425,
                           "Interval": null
                         }
                       ],
@@ -30572,8 +30716,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40448.53,
+                          "Maximum": 41108.47,
                           "Interval": null
                         },
                         {
@@ -30582,8 +30726,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -14.8125,
+                          "Maximum": 1496.0625,
                           "Interval": null
                         }
                       ],
@@ -32063,6 +32207,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -33125,8 +33270,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.71,
+                          "Maximum": 41107.29,
                           "Interval": null
                         },
                         {
@@ -33136,7 +33281,7 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "Minimum": 0.0,
-                          "Maximum": null,
+                          "Maximum": 5.160799069284075,
                           "Interval": null
                         }
                       ],
@@ -33220,8 +33365,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
                           "Interval": null
                         },
                         {
@@ -33230,8 +33375,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -0.009840589647256242,
+                          "Maximum": 0.9938995543728804,
                           "Interval": null
                         }
                       ],
@@ -33286,8 +33431,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
                           "Interval": null
                         },
                         {
@@ -33296,8 +33441,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 201.1125,
+                          "Maximum": 1235.1375,
                           "Interval": null
                         }
                       ],
@@ -33392,8 +33537,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.71,
+                          "Maximum": 41107.29,
                           "Interval": null
                         },
                         {
@@ -33402,8 +33547,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -45.75899215425881,
+                          "Maximum": 4621.65820758014,
                           "Interval": null
                         }
                       ],
@@ -33487,8 +33632,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
                           "Interval": null
                         },
                         {
@@ -33497,8 +33642,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -15.589657890635088,
+                          "Maximum": 1641.8754469541439,
                           "Interval": null
                         }
                       ],
@@ -33582,8 +33727,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
                           "Interval": null
                         },
                         {
@@ -33592,8 +33737,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -3.0204543896384637,
+                          "Maximum": 305.09282135348485,
                           "Interval": null
                         }
                       ],
@@ -33677,8 +33822,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.71,
+                          "Maximum": 41107.29,
                           "Interval": null
                         },
                         {
@@ -33687,8 +33832,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": -60.5046875,
+                          "Maximum": 6110.9734375,
                           "Interval": null
                         }
                       ],
@@ -33761,6 +33906,72 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "Date",
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": 40465.99,
+                          "Maximum": 41079.01,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": "",
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LeafFw",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Sowing",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.Fw",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -33783,8 +33994,8 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 40465.7,
+                          "Maximum": 41108.3,
                           "Interval": null
                         },
                         {
@@ -33793,8 +34004,8 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": null,
-                          "Maximum": null,
+                          "Minimum": 180.43912499999993,
+                          "Maximum": 323.49837499999995,
                           "Interval": null
                         }
                       ],
@@ -35131,6 +35342,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -38384,6 +38596,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -41650,6 +41863,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -44358,6 +44572,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -46731,6 +46946,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -48678,6 +48894,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -50293,6 +50510,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -51604,6 +51822,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -53166,6 +53385,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -55173,6 +55393,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -56669,6 +56890,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -57904,6 +58126,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -60395,6 +60618,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -69216,6 +69440,7 @@
                             6.64100096246391,
                             5.6935817805383
                           ],
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -70454,6 +70679,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -71845,6 +72071,7 @@
                             6.64100096246391,
                             5.6935817805383
                           ],
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -73208,6 +73435,7 @@
                             17.8302196001311,
                             "NaN"
                           ],
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -74661,6 +74889,7 @@
                             4.93128536782538,
                             4.32043204320432
                           ],
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -75948,6 +76177,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -77311,6 +77541,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -79323,6 +79554,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -80551,6 +80783,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -82647,6 +82880,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -86380,6 +86614,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
