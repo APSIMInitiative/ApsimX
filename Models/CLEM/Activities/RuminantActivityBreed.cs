@@ -343,9 +343,8 @@ namespace Models.CLEM.Activities
                         newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
 
                         // add attributes inherited from mother
-                        foreach (var attribute in female.Attributes.Items)
-                            if (attribute.Value != null)
-                                newSucklingRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                        foreach (var attribute in female.Attributes.Items.Where(a => a.Value is not null))
+                            newSucklingRuminant.AddInheritedAttribute(attribute); // .Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
 
                         HerdResource.AddRuminant(newSucklingRuminant, this);
 
