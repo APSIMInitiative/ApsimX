@@ -798,7 +798,7 @@ namespace APSIM.Shared.Utilities
         /// <exception cref="System.Exception">Date  + Date.ToString() +  doesn't exist in file:  + _FileName</exception>
         public void SeekToDate(DateTime date)
         {
-            if (date < _FirstDate || date > _LastDate)
+            if (date < _FirstDate)
                 throw new Exception("Date " + date.ToString() + " doesn't exist in file: " + _FileName);
 
             //check if we've looked at this date before
