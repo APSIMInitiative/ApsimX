@@ -294,19 +294,31 @@ namespace UserInterface.Presenters
                 messages[simulationName] = summaryModel.GetMessages(simulationName).ToArray();
 
             IEnumerable<Message> filteredMessages = GetFilteredMessages(simulationName);
-            var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
+            var groupedMessages = filteredMessages.GroupBy(m => new { m.Date });
             if (filteredMessages.Any())
             {
                 markdown.AppendLine($"## Simulation log");
                 markdown.AppendLine();
                 markdown.AppendLine(string.Join("", groupedMessages.Select(m =>
                 {
+                    string previousPath = null;
                     StringBuilder md = new StringBuilder();
-                    md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
+                    md.AppendLine($"### {m.Key.Date:yyyy-MM-dd}");
                     md.AppendLine();
                     md.AppendLine("```");
-                    foreach (Message msg in m)
-                        md.AppendLine(msg.Text);
+
+                    int spacing = m.Max(msg => msg.RelativePath.Length) + 2;
+                    foreach (var msg in m)
+                    {
+                        if (previousPath == null || msg.RelativePath != previousPath)
+                        {
+                            md.Append($"{msg.RelativePath}:".PadRight(spacing));
+                            previousPath = msg.RelativePath;
+                        }
+                        else
+                            md.Append(' ', spacing);
+                        md.AppendLine($"{msg.Text}");
+                    }
                     md.AppendLine("```");
                     md.AppendLine();
                     return md.ToString();
