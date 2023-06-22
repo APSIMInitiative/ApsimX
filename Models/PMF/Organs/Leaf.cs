@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -1422,30 +1423,32 @@ namespace Models.PMF.Organs
             return 1 - Math.Exp(-extinctionoeff * LAIabove);
         }
 
-        /// <summary>
-        /// remove biomass from the leaf.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The frations of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
             bool writeToSummary = false;
             double totalBiomass = Live.Wt + Dead.Wt;
+            double amountRemoved = 0;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
                 {
-                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    double remainingLiveFraction = 1.0 - (liveToResidue + liveToRemove);
+                    amountRemoved += biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue,
+                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
-
                 needToRecalculateLiveDead = true;
             }
 
-            if (amountToRemove != null && totalBiomass != 0.0)
+            if (totalBiomass != 0.0)
             {
                 double totalFractionToRemove = (Removed.Wt + Detached.Wt) * 100.0 / totalBiomass;
                 double toResidue = Detached.Wt * 100.0 / (Removed.Wt + Detached.Wt);
@@ -1457,6 +1460,16 @@ namespace Models.PMF.Organs
                 Summary.WriteMessage(this, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
                                          + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
             }
+
+            return amountRemoved;
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>

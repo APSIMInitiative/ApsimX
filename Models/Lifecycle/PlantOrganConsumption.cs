@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
 using Models.PMF;
@@ -25,30 +26,26 @@ namespace Models.LifeCycle
         [Link(Type = LinkType.Ancestor)]
         private LifeCyclePhase ParentPhase = null;
 
-        /// <summary>Host plant that Pest/Disease bothers</summary>
-        [Description("Select host plant that Pest/Disease may bother")]
-        [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
-        public IPlantDamage HostPlant { get; set; }
-
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may consume")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]
-        public IOrganDamage HostOrgan { get; set; }
+        public IHasDamageableBiomass HostOrgan { get; set; }
 
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            OrganBiomassRemovalType consumption = new OrganBiomassRemovalType();
+            double fractionLiveToConsume = 0;
             double organWtConsumed = 0;
-            if ((ParentPhase.Cohorts != null) && (HostPlant.IsAlive))
+            if (ParentPhase.Cohorts != null)
             {
                 foreach (Cohort c in ParentPhase.Cohorts)
                 {
                     ParentPhase.CurrentCohort = c;
                     organWtConsumed += c.Population * OrganWtConsumptionPerIndividual.Value();
-                    consumption.FractionLiveToRemove += Math.Max(1, organWtConsumed / HostOrgan.Live.Wt);
+                    DamageableBiomass live = HostOrgan.Material.FirstOrDefault(m => m.IsLive);
+                    fractionLiveToConsume += Math.Max(1, organWtConsumed / live.Total.Wt);
                 }
-                HostPlant.RemoveBiomass(HostOrgan.Name, "Graze", consumption);
+                HostOrgan.RemoveBiomass(fractionLiveToConsume);
             }
 
         }

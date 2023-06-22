@@ -33,14 +33,6 @@ namespace Models.PMF.Interfaces
         double AssimilateAvailable { get; }
 
         /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
-
-        /// <summary>
         /// Set the plant leaf area index.
         /// </summary>
         /// <param name="deltaLAI">Delta LAI.</param>
