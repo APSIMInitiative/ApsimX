@@ -88,7 +88,8 @@ namespace Models.Core.ConfigFile
                                 if (splitCommands.Length > 2)
                                 {
                                     // If third command split string is a file path...
-                                    if (splitCommands[2].Contains("\\"))
+
+                                    if (splitCommands[2].Contains('\\') || splitCommands[2].Contains('/'))
                                     {
                                         string[] filePathAndNodeName = splitCommands[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
@@ -100,7 +101,7 @@ namespace Models.Core.ConfigFile
                                         else throw new Exception("Add command missing either file or node name.");
                                     }
                                     // If third command split string is a [NodeName]...
-                                    else if (splitCommands[2].Contains("[") && splitCommands[2].Contains("]"))
+                                    else if (splitCommands[2].Contains('[') && splitCommands[2].Contains(']'))
                                     {
                                         nodeForAction = splitCommands[2];
                                     }
@@ -166,7 +167,7 @@ namespace Models.Core.ConfigFile
                         break;
                     case "Delete":
                         IModel nodeToBeDeleted = locator.Get(instruction.NodeToModify) as IModel;
-                        Structure.Delete(nodeToBeDeleted); // TODO: needs testing.
+                        Structure.Delete(nodeToBeDeleted);
                         break;
                     case "Copy":
                         IModel nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
