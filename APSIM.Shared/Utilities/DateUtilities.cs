@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -284,26 +285,41 @@ namespace APSIM.Shared.Utilities
 
         private static int ParseMonthString(string monthString, string fullDate)
         {
+            string monthLowerString = monthString.ToLower();
+
             string[] month3Letters = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
             string[] monthAU = CultureInfo.GetCultureInfo("en-AU").DateTimeFormat.AbbreviatedMonthNames;
             string[] monthFull = CultureInfo.InvariantCulture.DateTimeFormat.MonthNames;
 
+            //make all our names lower case because they are capitalised
+            for (int i = 0; i < month3Letters.Length; i++)
+            {
+                month3Letters[i] = month3Letters[i].ToLower();
+                monthAU[i] = month3Letters[i].ToLower();
+                monthFull[i] = month3Letters[i].ToLower();
+            }
+
             int index = -1;
-            if (rxMonthNum.Match(monthString).Success)
-                index = int.Parse(monthString);
-            else if (rxMonth3Letter.Match(monthString).Success)
-                index = Array.IndexOf(month3Letters, monthString) + 1;
-            else if (rxMonth4Letter.Match(monthString).Success)
-                index = Array.IndexOf(monthAU, monthString) + 1;
-            else if (rxMonthFull.Match(monthString).Success)
-                index = Array.IndexOf(monthFull, monthString) + 1;
+            if (rxMonthNum.Match(monthLowerString).Success)
+            {
+                index = int.Parse(monthLowerString);
+            }
             else
-                throw new Exception($"Date {fullDate} has {monthString} for month. Month must be exsactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
+            {
+                if (rxMonth3Letter.Match(monthLowerString).Success)
+                    index = Array.IndexOf(month3Letters, monthLowerString) + 1;
+                else if (rxMonth4Letter.Match(monthLowerString).Success)
+                    index = Array.IndexOf(monthAU, monthLowerString) + 1;
+                else if (rxMonthFull.Match(monthLowerString).Success)
+                    index = Array.IndexOf(monthFull, monthLowerString) + 1;
+                else
+                    throw new Exception($"Date {fullDate} has {monthLowerString} for month. Month must be exsactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
+            }
 
             if (index > 0)
                 return index;
             else
-                throw new Exception($"Date {fullDate} has {monthString} for month, was not found in a month name list.");
+                throw new Exception($"Date {fullDate} has {monthLowerString} for month, was not found in a month name list.");
         }
 
         private static int ParseYearString(string yearString, string fullDate)
