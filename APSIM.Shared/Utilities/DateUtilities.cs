@@ -139,51 +139,6 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Get a DateTime from a ddMMM string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc), year is automatically set to 1900
-        /// </summary>
-        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <returns>A DateTime with the specified date and month, year = 1900</returns>
-        public static DateTime GetDate(string ddMMM)
-        {
-            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
-            ddMMM = ReformatDayMonthString(ddMMM);
-            return GetDate(ddMMM, 1900);
-        }
-
-        /// <summary>
-        /// Get a DateTime from a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc)
-        /// </summary>
-        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <param name="year">The year to use when constructing the DateTime object</param>
-        /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using <paramref name="year"/></returns>
-        public static DateTime GetDate(string ddMMM, int year)
-        {
-            try
-            {
-                int posDelimiter = ddMMM.IndexOfAny(new char[] { '/', '-' });
-                if (posDelimiter == -1)
-                    throw new ArgumentException();
-
-                int month = StringUtilities.IndexOfCaseInsensitive(LowerCaseMonths, ddMMM.Substring(posDelimiter + 1)) + 1;
-                int day = Convert.ToInt32(ddMMM.Substring(0, posDelimiter), CultureInfo.InvariantCulture);
-                return new DateTime(year, month, day);
-
-                //return new DateTime(
-                //    year,
-                //    Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1,
-                //    int.Parse(rxDD.Match(ddMMM).Value),
-                //    0,
-                //    0,
-                //    0
-                //    );
-            }
-            catch
-            {
-                throw new Exception("Error in 'GetDate' - input string should be in form ddmmm (any delimiter may appear between dd and mmm), input string: " + ddMMM);
-            }
-        }
-
-        /// <summary>
         /// Construct a DateTime from <paramref name="ddMMM"/> and <paramref name="today"/> then 'CompareTo' <paramref name="today"/>
         /// </summary>
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
@@ -191,7 +146,7 @@ namespace APSIM.Shared.Utilities
         /// <returns>+1 if <paramref name="ddMMM"/> is less than <paramref name="today"/>, 0 if equal, -1 if greater</returns>
         public static int CompareDates(string ddMMM, DateTime today)
         {
-            return today.CompareTo(GetDate(ddMMM, today));
+            return today.CompareTo(ParseDate(ddMMM));
         }
 
         /// <summary>
@@ -202,12 +157,12 @@ namespace APSIM.Shared.Utilities
         /// <returns>true if the day and month components of <paramref name="today"/> match ddMMM, else false</returns>
         public static bool DatesEqual(string date, DateTime today)
         {
-            if (date == null)
+            //this needs to be renamed to make it clear it's only day and month comparision
+            int result = CompareDates(date, today);
+            if (result == 0)
+                return true;
+            else
                 return false;
-            return
-                today.Month == StringUtilities.IndexOfCaseInsensitive(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
-                &&
-                today.Day == int.Parse(rxDD.Match(date).Value);
         }
 
         /// <summary>
@@ -217,11 +172,12 @@ namespace APSIM.Shared.Utilities
         /// <param name="today">The date to check</param>
         /// <param name="ddMMM_end">The end date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <returns>true if within date window</returns>
+        [Obsolete]
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
-            DateTime
-                start = GetDate(ddMMM_start, today.Year),
-                end = GetDate(ddMMM_end, today.Year);
+            //this is poorly written and needs updating
+            DateTime start = ParseDate(ddMMM_start, today.Year);
+            DateTime end = ParseDate(ddMMM_end, today.Year);
 
             //if start after end (spans end-of-year boundary)
             if (start.CompareTo(end) > 0)
@@ -269,7 +225,7 @@ namespace APSIM.Shared.Utilities
         /// <returns>True if the string matches the date.</returns>
         public static bool DatesAreEqual(string dateStr, DateTime d)
         {
-            return d == validateDateString(dateStr, d.Year);
+            return d == ParseDate(dateStr, d.Year);
         }
 
         /// <summary>
@@ -477,6 +433,29 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Get a DateTime from a ddMMM string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc), year is automatically set to 1900
+        /// </summary>
+        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
+        /// <returns>A DateTime with the specified date and month, year = 1900</returns>
+        [Obsolete]
+        public static DateTime GetDate(string ddMMM)
+        {
+            return ParseDate(ddMMM);
+        }
+
+        /// <summary>
+        /// Get a DateTime from a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc)
+        /// </summary>
+        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
+        /// <param name="year">The year to use when constructing the DateTime object</param>
+        /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using <paramref name="year"/></returns>
+        [Obsolete]
+        public static DateTime GetDate(string ddMMM, int year)
+        {
+            return ParseDate(ddMMM, year);
+        }
+
+        /// <summary>
         /// Get a DateTime from a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc), using <paramref name="today"/> to get the year to use
         /// </summary>
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
@@ -485,9 +464,7 @@ namespace APSIM.Shared.Utilities
         [Obsolete]
         public static DateTime GetDate(string ddMMM, DateTime today)
         {
-            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
-            ddMMM = ReformatDayMonthString(ddMMM);
-            return GetDate(ddMMM, today.Year);
+            return ParseDate(ddMMM, today.Year);
         }
 
         /// <summary>
