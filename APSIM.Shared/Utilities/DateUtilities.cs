@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -88,9 +87,9 @@ namespace APSIM.Shared.Utilities
                 {
                     throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
                 }
-                    
 
-                
+
+
             }
 
             //seperate by \t to get parts
@@ -374,8 +373,16 @@ namespace APSIM.Shared.Utilities
         /// <returns>A DateTime object.</returns>
         public static DateTime ParseDate(int yearNum, int monthNum, int dayNum)
         {
-            // TODO: Requires all data checking.
-            return new DateTime(year: yearNum, month: monthNum, day: dayNum);
+            try
+            {
+                DateTime date = new DateTime(yearNum, monthNum, dayNum);
+                return date;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e.InnerException);
+            }
+
         }
 
         /// <summary>
