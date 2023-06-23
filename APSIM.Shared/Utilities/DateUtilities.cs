@@ -49,7 +49,7 @@ namespace APSIM.Shared.Utilities
         /// 2000-June-01
         /// </summary>
         /// <param name="dateString">The date</param>
-        public static DateTime ParseDateString(string dateString)
+        public static DateTime ParseDate(string dateString)
         {
             string dateWithSymbolsParsed = dateString;
 
@@ -84,7 +84,7 @@ namespace APSIM.Shared.Utilities
             }
 
             //seperate by \t to get parts
-            string[] parts = dateString.Split('\t');
+            string[] parts = dateWithSymbolsParsed.Split('\t');
 
             //check that there are 2 or 3 parts and that each part has text in it
             if (parts.Length < 2 || parts.Length > 3)
@@ -210,7 +210,7 @@ namespace APSIM.Shared.Utilities
         /// <returns>yyyy-mm-dd</returns>
         public static string DMYtoISO(string dmy)
         {
-            DateTime newDateTime = ParseDateString(dmy);
+            DateTime newDateTime = ParseDate(dmy);
             return newDateTime.ToString("yyyy-MM-dd");
 
             //Match m = rxDMY.Match(dmy);
@@ -338,7 +338,7 @@ namespace APSIM.Shared.Utilities
         {
             if (!String.IsNullOrEmpty(dayMonthString) && year.ToString().Length == 4)
             {
-                DateTime tempNewDateTime = ParseDateString(dayMonthString);
+                DateTime tempNewDateTime = ParseDate(dayMonthString);
                 DateTime newDateTime = ParseDate(year, tempNewDateTime.Month, tempNewDateTime.Day);
                 return newDateTime;
             }
