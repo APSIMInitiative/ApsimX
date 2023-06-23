@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -173,7 +172,6 @@ namespace APSIM.Shared.Utilities
         /// <param name="today">The date to check</param>
         /// <param name="ddMMM_end">The end date - a string containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <returns>true if within date window</returns>
-        [Obsolete]
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
             //this is poorly written and needs updating
@@ -451,7 +449,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <returns>A DateTime with the specified date and month, year = 1900</returns>
-        [Obsolete]
+        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime GetDate(string ddMMM)
         {
             return ParseDate(ddMMM);
@@ -463,7 +461,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="year">The year to use when constructing the DateTime object</param>
         /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using <paramref name="year"/></returns>
-        [Obsolete]
+        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime GetDate(string ddMMM, int year)
         {
             return ParseDate(ddMMM, year);
@@ -475,7 +473,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="today">The year in this parameter will be used to construct the result</param>
         /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using the year of <paramref name="today"/></returns>
-        [Obsolete]
+        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime GetDate(string ddMMM, DateTime today)
         {
             return ParseDate(ddMMM, today.Year);
@@ -487,7 +485,6 @@ namespace APSIM.Shared.Utilities
         /// <param name="thedate">The date to change</param>
         /// <param name="today">Today's date</param>
         /// <returns>The next occurrence of <paramref name="thedate"/></returns>
-        [Obsolete]
         public static DateTime GetNextDate(DateTime thedate, DateTime today)
         {
             thedate = thedate.AddYears(today.Year - thedate.Year);
@@ -500,10 +497,9 @@ namespace APSIM.Shared.Utilities
         /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
         /// <param name="today">Today's date</param>
         /// <returns>The next occurrence of <paramref name="ddMMM"/></returns>
-        [Obsolete]
         public static DateTime GetNextDate(string ddMMM, DateTime today)
         {
-            return GetNextDate(GetDate(ddMMM, today), today);
+            return GetNextDate(ParseDate(ddMMM, today.Year), today);
         }
 
         /// <summary>
@@ -513,7 +509,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="date">The DateTime to convert</param>
         /// <returns>The Julian Date representation of <paramref name="date"/></returns>
-        [Obsolete]
+        [Obsolete("To be removed", false)]
         private static double GetJulianDate(DateTime date)
         {
             double yr;
@@ -551,7 +547,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="dyoyr">Day of year</param>
         /// <param name="year">Year</param>
         /// <returns>Date time value.</returns>
-        [Obsolete]
+        [Obsolete("To be removed", false)]
         public static void JulianDayNumberToDayOfYear(int JDN, out int dyoyr, out int year)
         {
             DateTime date = GetJulianDate(JDN);
@@ -567,7 +563,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="JDN"></param>
         /// <returns></returns>
-        [Obsolete]
+        [Obsolete("To be removed", false)]
         public static DateTime JulianDayNumberToDateTime(int JDN)
         {
             double jd = JDN - 0.5;  //Convert to true julian date value (at 00:00).
@@ -582,7 +578,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="adatetime"></param>
         /// <returns></returns>
-        [Obsolete]
+        [Obsolete("To be removed", false)]
         public static int DateTimeToJulianDayNumber(DateTime adatetime)
         {
             return (int)System.Math.Truncate(GetJulianDate(adatetime) + 0.5);
@@ -593,14 +589,10 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dmy">[d]d/[m]m/yyyy</param>
         /// <returns>The date</returns>
-        [Obsolete]
+        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime DMYtoDate(string dmy)
         {
-            Match m = rxDMY.Match(dmy);
-            if (m.Success)
-                return new DateTime(Convert.ToInt32(m.Groups[3].Value), Convert.ToInt32(m.Groups[2].Value), Convert.ToInt32(m.Groups[1].Value));
-            else
-                return new DateTime();    // default??
+            return ParseDate(dmy);
         }
 
         /// <summary>
@@ -609,7 +601,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dateStr"></param>
         /// <returns>a string with the valid dd-Mmm string or a valid date as a string (yyyy-mm-dd)</returns>
-        [Obsolete]
+        [Obsolete("To be deleted", false)]
         public static string validateDateString(string dateStr)
         {
             string returnDate = string.Empty;
@@ -640,7 +632,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateStr">the date as a string, (ie, 01-jan or 2010-01-21)</param>
         /// <param name="year">the year to be added to date, if it doesn't exist (ie, 01-jan)</param>
         /// <returns>a valid date as a datetime value</returns>
-        [Obsolete]
+        [Obsolete("To be deleted", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
             DateTime returnDate = new DateTime();

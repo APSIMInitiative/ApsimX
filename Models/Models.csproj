@@ -14,6 +14,7 @@
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SelfContained>false</SelfContained>
+    <WarningsNotAsErrors>618</WarningsNotAsErrors>
   </PropertyGroup>
   
   <PropertyGroup>
