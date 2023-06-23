@@ -1,8 +1,10 @@
-﻿using Models.Climate;
+﻿using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
+using Models.Soils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -152,6 +154,9 @@ namespace Models.PMF.Scrum
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Weather weather = null;
 
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Physical physical = null;
+
         [Link]
         private ISummary summary = null;
 
@@ -213,34 +218,38 @@ namespace Models.PMF.Scrum
         /// </summary>
         public void Establish()
         {
+            double rootDepth = Math.Min(MaxRD, MathUtilities.Sum(physical.Thickness));
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
                 List<Zone> zones = simulation.FindAllChildren<Zone>().ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
-                foreach (Zone z in zones)
+                if (zones.Count > 1)
                 {
-                    if (z.Name != zone.Name)
-                        neighbour = z.Name;
+                    foreach (Zone z in zones)
+                    {
+                        if (z.Name != zone.Name)
+                            neighbour = z.Name;
+                    }
+                    root.ZoneNamesToGrowRootsIn.Add(neighbour);
+                    root.ZoneRootDepths.Add(rootDepth);
+                    NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
+                    Constant InitStruct = new Constant();
+                    InitStruct.FixedValue = 10;
+                    InitialDM.Structural = InitStruct;
+                    Constant InitMetab = new Constant();
+                    InitMetab.FixedValue = 0;
+                    InitialDM.Metabolic = InitMetab;
+                    Constant InitStor = new Constant();
+                    InitStor.FixedValue = 0;
+                    InitialDM.Storage = InitStor;
+                    root.ZoneInitialDM.Add(InitialDM);
                 }
-                root.ZoneNamesToGrowRootsIn.Add(neighbour);
-                root.ZoneRootDepths.Add(MaxRD);
-                NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
-                Constant InitStruct = new Constant();
-                InitStruct.FixedValue = 10;
-                InitialDM.Structural = InitStruct;
-                Constant InitMetab = new Constant();
-                InitMetab.FixedValue = 0;
-                InitialDM.Metabolic = InitMetab;
-                Constant InitStor = new Constant();
-                InitStor.FixedValue = 0;
-                InitialDM.Storage = InitStor;
-                root.ZoneInitialDM.Add(InitialDM);
             }
 
             string cropName = this.Name;
-            double depth = this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension;
+            double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
