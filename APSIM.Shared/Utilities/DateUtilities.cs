@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -52,12 +53,14 @@ namespace APSIM.Shared.Utilities
         public static DateTime ParseDate(string dateString)
         {
             string dateWithSymbolsParsed = dateString;
+            //trim whitespace
+            dateWithSymbolsParsed = dateWithSymbolsParsed.Trim();
 
             //check that the string has a valid symbol
             //replace it with a tab character
 
             //valid choices: / - , . _
-            char[] validSymbols = new char[] { '/', '-', ',', '.', '_' };
+            char[] validSymbols = new char[] { '/', '-', ',', '.', '_', ' ' };
             char symbolReplacement = '\t';
             int types = 0;
             foreach (char c in validSymbols)
@@ -77,10 +80,17 @@ namespace APSIM.Shared.Utilities
                 foreach (char c in validSymbols)
                     symbols += c + " ";
 
-                if (types == 0)
-                    throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
-                else if (types > 1)
+                if (types > 1)
+                {
                     throw new Exception($"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).");
+                }
+                else if (types == 0)
+                {
+                    throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
+                }
+                    
+
+                
             }
 
             //seperate by \t to get parts
@@ -275,10 +285,10 @@ namespace APSIM.Shared.Utilities
 
         private static int ParseDayString(string dayString, string fullDate)
         {
-            if (!rxDay.Match(dayString).Success)
-                throw new Exception($"Date {fullDate} is formatted for ISO, however has {dayString} for day. Day must be exactly 2 numbers.");
-            else
+            if (rxDay.Match(dayString).Success)
                 return int.Parse(dayString);
+            else
+                throw new Exception($"Date {fullDate} is formatted for ISO, however has {dayString} for day. Day must be exactly 2 numbers.");
         }
 
         private static int ParseMonthString(string monthString, string fullDate)
@@ -322,7 +332,7 @@ namespace APSIM.Shared.Utilities
 
         private static int ParseYearString(string yearString, string fullDate)
         {
-            if (!rxYear.Match(yearString).Success)
+            if (rxYear.Match(yearString).Success)
                 return int.Parse(yearString);
             else
                 throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 4 numbers.");
@@ -350,13 +360,9 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static DateTime ParseDate(string dayMonthString, int year)
         {
-            if (!String.IsNullOrEmpty(dayMonthString) && year.ToString().Length == 4)
-            {
-                DateTime tempNewDateTime = ParseDate(dayMonthString);
-                DateTime newDateTime = ParseDate(year, tempNewDateTime.Month, tempNewDateTime.Day);
-                return newDateTime;
-            }
-            else throw new ArgumentNullException(nameof(dayMonthString));
+            DateTime tempNewDateTime = ParseDate(dayMonthString);
+            DateTime newDateTime = ParseDate(year, tempNewDateTime.Month, tempNewDateTime.Day);
+            return newDateTime;
         }
 
         /// <summary>
@@ -632,20 +638,10 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateStr">the date as a string, (ie, 01-jan or 2010-01-21)</param>
         /// <param name="year">the year to be added to date, if it doesn't exist (ie, 01-jan)</param>
         /// <returns>a valid date as a datetime value</returns>
-        [Obsolete("To be deleted", false)]
+        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
-            DateTime returnDate = new DateTime();
-
-            Match m = rxddMMM.Match(dateStr);
-            //also need to look at the length just in case input value is a full date as 20-Jan-2016 (and not just 20-Jan).
-            if ((m.Success) && (dateStr.Length <= 6))
-                returnDate = DateUtilities.GetDate(dateStr, year);
-            else
-            {
-                DateTime.TryParse(dateStr, out returnDate);
-            }
-            return returnDate;
+            return ParseDate(dateStr, year);
         }
     }
 
