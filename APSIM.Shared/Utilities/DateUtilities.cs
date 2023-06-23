@@ -112,6 +112,11 @@ namespace APSIM.Shared.Utilities
             {
                 yearNum = ParseYearString(parts[0], dateString);
                 monthNum = ParseMonthString(parts[1], dateString);
+
+                //if this is a full ISO, split on the T character
+                if (parts[2].Contains('T'))
+                    parts[2] = parts[2].Split('T')[0];
+
                 dayNum = ParseDayString(parts[2], dateString);
             }
             else
@@ -641,7 +646,17 @@ namespace APSIM.Shared.Utilities
         [Obsolete("Please use ParseDate instead", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
-            return ParseDate(dateStr, year);
+            DateTime returnDate = new DateTime();
+
+            Match m = rxddMMM.Match(dateStr);
+            //also need to look at the length just in case input value is a full date as 20-Jan-2016 (and not just 20-Jan).
+            if ((m.Success) && (dateStr.Length <= 6))
+                returnDate = DateUtilities.GetDate(dateStr, year);
+            else
+            {
+                DateTime.TryParse(dateStr, out returnDate);
+            }
+            return returnDate;
         }
     }
 
