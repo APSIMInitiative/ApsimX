@@ -193,7 +193,7 @@ namespace Models.PMF.Scrum
             {"LeafNConc","[Leaf].MaxNConcAtStartLeafFall.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"TrunkNConc","[Trunk].MaximumNConc.FixedValue = "},
-            {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.FixedValue = "},
+            {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
             {"MaxLAI","[Leaf].Area.Maximum.FixedValue = " },
             {"GSMax","[Leaf].Gsmax350 = " },
             {"R50","[Leaf].R50 = " },
