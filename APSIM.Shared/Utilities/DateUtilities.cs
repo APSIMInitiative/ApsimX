@@ -254,11 +254,14 @@ namespace APSIM.Shared.Utilities
         /// <returns>yyyy-mm-dd</returns>
         public static string DMYtoISO(string dmy)
         {
-            Match m = rxDMY.Match(dmy);
-            if (m.Success)
-                return System.String.Format("{0}-{1,02:d2}-{2,02:d2}", m.Groups[3].Value, Convert.ToInt32(m.Groups[2].Value, CultureInfo.InvariantCulture), Convert.ToInt32(m.Groups[1].Value, CultureInfo.InvariantCulture));
-            else
-                return "0001-01-01";    // default??
+            DateTime newDateTime = ParseDateString(dmy);
+            return newDateTime.ToString("yyyy-MM-dd");
+
+            //Match m = rxDMY.Match(dmy);
+            //if (m.Success)
+            //    return System.String.Format("{0}-{1,02:d2}-{2,02:d2}", m.Groups[3].Value, Convert.ToInt32(m.Groups[2].Value, CultureInfo.InvariantCulture), Convert.ToInt32(m.Groups[1].Value, CultureInfo.InvariantCulture));
+            //else
+            //    return "0001-01-01";    // default??
         }
 
         /// <summary>
@@ -470,11 +473,6 @@ namespace APSIM.Shared.Utilities
             return new DateTime(yr, mnth, day, hr, min, sec, ms);
         }
 
-        // TODO: Andrew will fill this one in.
-        private DateTime ParseDateString(string dateString)
-        {
-
-        }
 
         /// <summary>
         /// Get a DateTime from a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc), using <paramref name="today"/> to get the year to use
