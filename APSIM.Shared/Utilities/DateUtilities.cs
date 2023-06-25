@@ -84,6 +84,8 @@ namespace APSIM.Shared.Utilities
         /// <returns>A DateTime with the specified date and month, year = 1900</returns>
         public static DateTime GetDate(string ddMMM)
         {
+            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
+            ddMMM = ReformatDayMonthString(ddMMM);
             return GetDate(ddMMM, 1900);
         }
 
@@ -128,6 +130,8 @@ namespace APSIM.Shared.Utilities
         /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using the year of <paramref name="today"/></returns>
         public static DateTime GetDate(string ddMMM, DateTime today)
         {
+            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
+            ddMMM = ReformatDayMonthString(ddMMM);
             return GetDate(ddMMM, today.Year);
         }
 
@@ -402,6 +406,30 @@ namespace APSIM.Shared.Utilities
         public static bool IsEndOfYear(DateTime date)
         {
             return date.Day == 31 && date.Month == 12;
+        }
+
+        private static string ReformatDayMonthString(string ddMMM)
+        {
+            string ddMMMReformatted = "";
+            if (!String.IsNullOrEmpty(ddMMM))
+            {
+                if (ddMMM.Length == 7)
+                {
+                    ddMMMReformatted = ddMMM.Substring(0, ddMMM.Length - 1);
+                }
+                else if (ddMMM.Length > 7 || ddMMM.Length < 5)
+                {
+                    throw new Exception("Format of ddMMM string is too long.");
+                }
+                else
+                {
+                    return ddMMM;
+                }
+
+            }
+            else throw new Exception("ddMMM string must not be null.");
+
+            return ddMMMReformatted;
         }
     }
 }
