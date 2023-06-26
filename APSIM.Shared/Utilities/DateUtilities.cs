@@ -1,8 +1,9 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Globalization;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// Some date manipulation routines, transcribed from their Fortran counterparts
@@ -12,7 +13,7 @@
         /// <summary>
         /// a list of month names in lower case.
         /// </summary>
-        static public string[] LowerCaseMonths =  new string[] { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" };
+        static public string[] LowerCaseMonths = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
 
         /// <summary>
         /// A regular expression
@@ -83,6 +84,8 @@
         /// <returns>A DateTime with the specified date and month, year = 1900</returns>
         public static DateTime GetDate(string ddMMM)
         {
+            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
+            ddMMM = ReformatDayMonthString(ddMMM);
             return GetDate(ddMMM, 1900);
         }
 
@@ -96,7 +99,7 @@
         {
             try
             {
-                int posDelimiter = ddMMM.IndexOfAny(new char[] {'/', '-'});
+                int posDelimiter = ddMMM.IndexOfAny(new char[] { '/', '-' });
                 if (posDelimiter == -1)
                     throw new ArgumentException();
 
@@ -127,6 +130,8 @@
         /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using the year of <paramref name="today"/></returns>
         public static DateTime GetDate(string ddMMM, DateTime today)
         {
+            // Required to make sure if a 4 letter month is in ddMMM it will be corrected.
+            ddMMM = ReformatDayMonthString(ddMMM);
             return GetDate(ddMMM, today.Year);
         }
 
@@ -141,7 +146,7 @@
             thedate = thedate.AddYears(today.Year - thedate.Year);
             return today.CompareTo(thedate) < 0 ? thedate : thedate.AddYears(1);
         }
-        
+
         /// <summary>
         /// Given a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc) and <paramref name="today"/>, return the next occurrence of <paramref name="ddMMM"/>
         /// </summary>
@@ -174,8 +179,8 @@
         {
             if (date == null)
                 return false;
-            return 
-                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
+            return
+                today.Month == StringUtilities.IndexOfCaseInsensitive(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
                 &&
                 today.Day == int.Parse(rxDD.Match(date).Value);
         }
@@ -216,7 +221,7 @@
         {
             return today.CompareTo(start) >= 0 && today.CompareTo(end) <= 0;
         }
-        
+
         /// <summary>
         /// Get a Julian Date from a DateTime. Where the Julian day begins at Greenwich mean noon 12pm. 12h UT.
         /// 2429995.5 is 1/1/1941 00:00
@@ -245,7 +250,7 @@
             }
             if (yr >= 1582.1015)
             { //use yyyy.MMDDdd value
-                a = System.Math.Truncate(y / 100);  
+                a = System.Math.Truncate(y / 100);
                 b = 2 - a + System.Math.Truncate(a / 4.0);
             }
 
@@ -253,7 +258,7 @@
 
             return JD;
         }
-        
+
         /// <summary>
         /// Converts a Julian Day Number to Day of year. 
         /// </summary>
@@ -267,7 +272,7 @@
             dyoyr = date.DayOfYear;
             year = date.Year;
         }
-        
+
         /// <summary>
         /// Convert the Julian day number (int value) emitted from Clock to a DateTime. 
         /// This will be the DateTime at 00:00 of the day. 
@@ -281,7 +286,7 @@
             double jd = JDN - 0.5;  //Convert to true julian date value (at 00:00).
             return GetDate(jd);     //equiv to new DateTime(y,m,d)
         }
-        
+
         /// <summary>
         /// Convert the DateTime value to the Julian day number equivalent to what
         /// Clock would emit. Given the DateTime for a day would give the whole number
@@ -340,7 +345,7 @@
             {
                 d = GetDate(dateStr, 2000);
                 //for consistency, return it as 'Title' case (ie, 01-Jan, not 1-jan)
-                returnDate = d.ToString("dd-MMM");  
+                returnDate = d.ToString("dd-MMM");
             }
             else
             {
@@ -401,6 +406,30 @@
         public static bool IsEndOfYear(DateTime date)
         {
             return date.Day == 31 && date.Month == 12;
+        }
+
+        private static string ReformatDayMonthString(string ddMMM)
+        {
+            string ddMMMReformatted = "";
+            if (!String.IsNullOrEmpty(ddMMM))
+            {
+                if (ddMMM.Length == 7)
+                {
+                    ddMMMReformatted = ddMMM.Substring(0, ddMMM.Length - 1);
+                }
+                else if (ddMMM.Length > 7 || ddMMM.Length < 5)
+                {
+                    throw new Exception("Format of ddMMM string is too long.");
+                }
+                else
+                {
+                    return ddMMM;
+                }
+
+            }
+            else throw new Exception("ddMMM string must not be null.");
+
+            return ddMMMReformatted;
         }
     }
 }
