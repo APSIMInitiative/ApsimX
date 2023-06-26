@@ -24,7 +24,7 @@ namespace APSIM.Shared.Utilities
             rxDMY = new Regex(@"^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$"),
             rxddMMM = new Regex(@"^(([0-9])|([0-2][0-9])|([3][0-1]))\-(Jan|jan|Feb|feb|Mar|mar|Apr|apr|May|may|Jun|jun|Jul|jul|Aug|aug|Sep|sep|Oct|oct|Nov|nov|Dec|dec)");
 
-        private const int DEFAULT_YEAR = 1900;
+        private const int DEFAULT_YEAR = 2000;
 
         static private Regex
             rxDay = new Regex(@"^\d\d?$"),
@@ -32,7 +32,10 @@ namespace APSIM.Shared.Utilities
             rxMonth3Letter = new Regex(@"^\w\w\w$"),
             rxMonth4Letter = new Regex(@"^\w\w\w\w$"),
             rxMonthFull = new Regex(@"^[^0-9]\w+[^0-9]$"),
-            rxYear = new Regex(@"^\d\d\d\d$");
+            rxYear = new Regex(@"^\d\d\d\d$"),
+            rxYearShort = new Regex(@"^\d\d$"),
+            rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$");
+            
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
@@ -51,105 +54,8 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateString">The date</param>
         public static DateTime ParseDate(string dateString)
         {
-            string dateWithSymbolsParsed = dateString;
-            //trim whitespace
-            dateWithSymbolsParsed = dateWithSymbolsParsed.Trim();
-
-            //check that the string has a valid symbol
-            //replace it with a tab character
-
-            //valid choices: / - , . _
-            char[] validSymbols = new char[] { '/', '-', ',', '.', '_', ' ' };
-            char symbolReplacement = '\t';
-            int types = 0;
-            foreach (char c in validSymbols)
-            {
-                if (dateString.Contains(c))
-                {
-                    types += 1;
-                    //change symbol to \t
-                    dateWithSymbolsParsed = dateWithSymbolsParsed.Replace(c, symbolReplacement);
-                }
-            }
-
-            //make sure only 1 or two of symbol and only has one type of these symbols
-            if ((types == 0) || (types > 1))
-            {
-                string symbols = " ";
-                foreach (char c in validSymbols)
-                    symbols += c + " ";
-
-                if (types > 1)
-                {
-                    throw new Exception($"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).");
-                }
-                else if (types == 0)
-                {
-                    throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
-                }
-
-
-
-            }
-
-            //seperate by \t to get parts
-            string[] parts = dateWithSymbolsParsed.Split('\t');
-
-            //check that there are 2 or 3 parts and that each part has text in it
-            if (parts.Length < 2 || parts.Length > 3)
-                throw new Exception($"Date {dateString} cannot be parsed as it only has {parts.Length} parts. Date should have 2 or 3 parts (day-month-year or day-month).");
-
-            foreach (string part in parts)
-                if (part.Length == 0)
-                    throw new Exception($"Date {dateString} cannot be parsed as it it has an empty part after a symbol.");
-
-            int dayNum;
-            int monthNum;
-            int yearNum;
-            //if first part is 4 characters - ISO 2000-01-01 or 2000-Jan-01
-            if (parts.Length == 3 && parts[0].Length == 4)
-            {
-                yearNum = ParseYearString(parts[0], dateString);
-                monthNum = ParseMonthString(parts[1], dateString);
-
-                //if this is a full ISO, split on the T character
-                if (parts[2].Contains('T'))
-                    parts[2] = parts[2].Split('T')[0];
-
-                dayNum = ParseDayString(parts[2], dateString);
-            }
-            else
-            {
-                //if first part is numbers, it's a day
-                if (rxDay.Match(parts[0]).Success)
-                {
-                    //first part is day
-                    dayNum = ParseDayString(parts[0], dateString);
-                    //second part is month
-                    monthNum = ParseMonthString(parts[1], dateString);
-                }
-                //else if first part is a word (we can just reused the full month name regex for that)
-                else if (rxMonthFull.Match(parts[0]).Success)
-                {
-                    //second part is day
-                    dayNum = ParseDayString(parts[1], dateString);
-                    //first part is month
-                    monthNum = ParseMonthString(parts[0], dateString);
-                }
-                else
-                {
-                    throw new Exception($"Date {dateString} cannot be parsed as the first part {parts[0]} is neither a valid day or month name.)");
-                }
-
-                //optional third part is year
-                yearNum = DEFAULT_YEAR;
-                if (parts.Length == 3)
-                {
-                    yearNum = ParseYearString(parts[2], dateString);
-                }
-            }
-
-            return ParseDate(yearNum, monthNum, dayNum);
+            int[] values = ParseDateString(dateString);
+            return ParseDate(values[0], values[1], values[2]);
         }
 
         /// <summary>
@@ -337,7 +243,13 @@ namespace APSIM.Shared.Utilities
         private static int ParseYearString(string yearString, string fullDate)
         {
             if (rxYear.Match(yearString).Success)
+            {
                 return int.Parse(yearString);
+            }
+            else if (rxYearShort.Match(yearString).Success)
+            {
+                return DEFAULT_YEAR + int.Parse(yearString);
+            }
             else
                 throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 4 numbers.");
         }
@@ -355,7 +267,7 @@ namespace APSIM.Shared.Utilities
             {
                 return newDateTime = DateTime.ParseExact(dateString, formatString, CultureInfo.InvariantCulture);
             }
-            else throw new Exception("One or both parameters in ParseDate(dateString, formatString) where null or empty.");
+            else throw new Exception($"One or both parameters in ParseDate({dateString}, {formatString}) are null or empty.");
         }
 
         /// <summary>
@@ -364,8 +276,8 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static DateTime ParseDate(string dayMonthString, int year)
         {
-            DateTime tempNewDateTime = ParseDate(dayMonthString);
-            DateTime newDateTime = ParseDate(year, tempNewDateTime.Month, tempNewDateTime.Day);
+            int[] values = ParseDateString(dayMonthString);
+            DateTime newDateTime = ParseDate(year, values[1], values[2]);
             return newDateTime;
         }
 
@@ -407,6 +319,123 @@ namespace APSIM.Shared.Utilities
                 return newDateTime;
             }
             else throw new ArgumentException("dayOfYear is not a valid value. Must be between 0-366.");
+        }
+
+        /// <summary>
+        /// Convert any valid date string into a DateTime objects.
+        /// Valid seprators are: / - , . _
+        /// If a Day-Month is provided, the year is set to 1900
+        /// Can take dates in the following formats:
+        /// Jun-01
+        /// Jun-1
+        /// 01-Jun
+        /// 1-Jun
+        /// 01-Jun-2000
+        /// 1-Jun-2000
+        /// 2000-06-01
+        /// 2000-June-01
+        /// </summary>
+        /// <param name="dateString">The date</param>
+        /// <returns>An int array with [year, month, day]</returns>
+        private static int[] ParseDateString(string dateString)
+        {
+            string dateWithSymbolsParsed = dateString;
+            //trim whitespace
+            string dateTrimmed = dateWithSymbolsParsed.Trim();
+
+            //check that the string has a valid symbol
+            //replace it with a tab character
+
+            //valid choices: / - , . _
+            char[] validSymbols = new char[] { '/', '-', ',', '.', '_', ' ' };
+            char symbolReplacement = '\t';
+            int types = 0;
+            foreach (char c in validSymbols)
+            {
+                if (dateString.Contains(c))
+                {
+                    types += 1;
+                    //change symbol to \t
+                    dateTrimmed = dateTrimmed.Replace(c, symbolReplacement);
+                }
+            }
+
+            //make sure only 1 or two of symbol and only has one type of these symbols
+            if ((types == 0) || (types > 1))
+            {
+                string symbols = " ";
+                foreach (char c in validSymbols)
+                    symbols += c + " ";
+
+                if (types > 1)
+                {
+                    throw new Exception($"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).");
+                }
+                else if (types == 0)
+                {
+                    throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
+                }
+            }
+
+            //seperate by \t to get parts
+            string[] parts = dateTrimmed.Split('\t');
+
+            //check that there are 2 or 3 parts and that each part has text in it
+            if (parts.Length < 2 || parts.Length > 3)
+                throw new Exception($"Date {dateString} cannot be parsed as it only has {parts.Length} parts. Date should have 2 or 3 parts (day-month-year or day-month).");
+
+            foreach (string part in parts)
+                if (part.Length == 0)
+                    throw new Exception($"Date {dateString} cannot be parsed as it it has an empty part after a symbol.");
+
+            int dayNum;
+            int monthNum;
+            int yearNum;
+            //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
+            if (rxISO.Match(dateTrimmed).Success)
+            {
+                yearNum = ParseYearString(parts[0], dateString);
+                monthNum = ParseMonthString(parts[1], dateString);
+
+                //if this is a full ISO, split on the T character
+                if (parts[2].Contains('T'))
+                    parts[2] = parts[2].Split('T')[0];
+
+                dayNum = ParseDayString(parts[2], dateString);
+            }
+            else
+            {
+                //if first part is numbers, it's a day
+                if (rxDay.Match(parts[0]).Success)
+                {
+                    //first part is day
+                    dayNum = ParseDayString(parts[0], dateString);
+                    //second part is month
+                    monthNum = ParseMonthString(parts[1], dateString);
+                }
+                //else if first part is a word (we can just reused the full month name regex for that)
+                else if (rxMonthFull.Match(parts[0]).Success)
+                {
+                    //second part is day
+                    dayNum = ParseDayString(parts[1], dateString);
+                    //first part is month
+                    monthNum = ParseMonthString(parts[0], dateString);
+                }
+                else
+                {
+                    throw new Exception($"Date {dateString} cannot be parsed as the first part {parts[0]} is neither a valid day or month name.)");
+                }
+
+                //optional third part is year
+                yearNum = DEFAULT_YEAR;
+                if (parts.Length == 3)
+                {
+                    yearNum = ParseYearString(parts[2], dateString);
+                }
+            }
+
+            int[] values = { yearNum, monthNum, dayNum };
+            return values;
         }
 
         /// <summary>
