@@ -4825,6 +4825,11 @@ namespace Models.GrazPlan
                 this.WDormMeanTemp = this.Inputs.MeanTemp;
             }
 
+            if (DormMeanTemp < -99.9)
+            {
+                DormMeanTemp = Inputs.MeanTemp;
+            }
+
             // Need extension rates in computing allocation within root pools
             for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
             {
