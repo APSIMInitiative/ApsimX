@@ -103,6 +103,18 @@ namespace Models.Soils.Nutrients
         [Link]
         private CarbonFlow[] CarbonFlows { get; set; }
 
+        /// <summary>Number of soil layers used within Nutrient model</summary>
+        private int NumLayers
+        {
+            get
+            {
+                int n=0 ;
+                if (FOMLignin.C != null)
+                    n = FOMLignin.C.Length;
+                return n;
+            }
+        }
+
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
         {
@@ -141,16 +153,11 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
                 IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>().Where(pool => pool != SurfaceResidue);
 
                 foreach (NutrientPool P in pools)
-                    for (int i = 0; i < numLayers; i++)
+                    for (int i = 0; i < NumLayers; i++)
                         values[i] += P.C[i];
                 return values;
             }
@@ -164,15 +171,10 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
 
                 foreach (CarbonFlow f in CarbonFlows)
-                    for (int i = 0; i < numLayers; i++)
+                    for (int i = 0; i < NumLayers; i++)
                         values[i] += f.Catm[i];
                 return values;
             }
@@ -186,12 +188,7 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
 
                 foreach (NFlow f in FindAllChildren<NFlow>())
                 {
@@ -210,12 +207,7 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
 
                 foreach (NFlow f in FindAllChildren<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
@@ -231,12 +223,7 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
 
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
@@ -272,12 +259,7 @@ namespace Models.Soils.Nutrients
                 // Get the denitrification N flow under NO3.
                 var no3NFlow = FindChild<NFlow>("Denitrification");
 
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
                 if (no3NFlow.Value != null)
                 {
                     for (int i = 0; i < values.Length; i++)
@@ -299,12 +281,7 @@ namespace Models.Soils.Nutrients
                 // Get the denitrification N flow under NO3.
                 var nh4NFlow = FindChild<NFlow>("Nitrification");
 
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
                 for (int i = 0; i < values.Length; i++)
                     values[i] = nh4NFlow.Value[i] + nh4NFlow.Natm[i];
 
@@ -333,12 +310,7 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
                 double[] nh4 = NH4.kgha;
                 double[] no3 = NO3.kgha;
                 values = MathUtilities.Add(values, nh4);
@@ -363,8 +335,8 @@ namespace Models.Soils.Nutrients
                 pools.Remove(SurfaceResidue);
 
                 NutrientPool returnPool = new NutrientPool();
-                returnPool.C = new double[FOMLignin.C.Length];
-                returnPool.N = new double[FOMLignin.C.Length];
+                returnPool.C = new double[NumLayers];
+                returnPool.N = new double[NumLayers];
                 foreach (var pool in pools)
                 {
                     for (int i = 0; i < pool.C.Length; i++)
@@ -386,16 +358,11 @@ namespace Models.Soils.Nutrients
         {
             get
             {
-                int numLayers;
-                if (FOMLignin.N == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.N.Length;
-                double[] values = new double[numLayers];
+                double[] values = new double[NumLayers];
                 IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in Pools)
-                    for (int i = 0; i < numLayers; i++)
+                    for (int i = 0; i < NumLayers; i++)
                         values[i] += P.N[i];
                 return values;
             }
