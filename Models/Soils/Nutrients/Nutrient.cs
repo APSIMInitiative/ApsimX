@@ -516,7 +516,7 @@ namespace Models.Soils.Nutrients
             // Get potential residue decomposition from surfaceom.
             SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
 
-            var surfaceResiduePool = (SurfaceResidueDecompositonPool)SurfaceResidue;
+            var surfaceResiduePool = SurfaceResidue;
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;
