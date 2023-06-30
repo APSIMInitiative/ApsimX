@@ -138,7 +138,7 @@ namespace Models.Soils.Nutrients
         /// </summary> 
         public void Reset()
         {
-            foreach (NutrientPool P in FindAllChildren<NutrientPool>())
+            foreach (INutrientPool P in FindAllChildren<INutrientPool>())
                 P.Reset();
 
             foreach (Solute S in FindAllInScope<ISolute>())
@@ -516,7 +516,7 @@ namespace Models.Soils.Nutrients
             // Get potential residue decomposition from surfaceom.
             SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
 
-            var surfaceResiduePool = (NutrientPool)SurfaceResidue;
+            var surfaceResiduePool = (SurfaceResidueDecompositonPool)SurfaceResidue;
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;

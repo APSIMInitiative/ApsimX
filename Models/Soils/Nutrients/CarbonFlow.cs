@@ -19,7 +19,7 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class CarbonFlow : Model
     {
-        private NutrientPool[] destinations;
+        private INutrientPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
@@ -75,14 +75,14 @@ namespace Models.Soils.Nutrients
 
             for (int i = 0; i < destinationNames.Length; i++)
             {
-                NutrientPool destination = FindInScope<NutrientPool>(destinationNames[i]);
+                INutrientPool destination = FindInScope<INutrientPool>(destinationNames[i]);
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + destinationNames[i]);
                 destinations[i] = destination;
             }
-            MineralisedN = new double[(Parent as NutrientPool).C.Length];
-            MineralisedP = new double[(Parent as NutrientPool).C.Length];
-            Catm = new double[(Parent as NutrientPool).C.Length];
+            MineralisedN = new double[(Parent as INutrientPool).C.Length];
+            MineralisedP = new double[(Parent as INutrientPool).C.Length];
+            Catm = new double[(Parent as INutrientPool).C.Length];
             carbonFlowToDestination = new double[destinations.Length];
             nitrogenFlowToDestination = new double[destinations.Length];
             phosphorusFlowToDestination = new double[destinations.Length];
@@ -96,7 +96,7 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            NutrientPool source = Parent as NutrientPool;
+            INutrientPool source = Parent as INutrientPool;
 
             int numLayers = source.C.Length;
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.Soils.Nutrients
 {
@@ -51,5 +52,35 @@ namespace Models.Soils.Nutrients
                 return values;
             }
         }
+
+        /// <summary>Amount of phosphorus (kg/ha).</summary>
+        public double[] P
+        {
+            get
+            {
+                double[] values = null;
+                foreach (var pool in nutrientPools)
+                {
+                    if (values == null)
+                        values = new double[pool.P.Length];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] += pool.P[i];
+                }
+                return values;
+            }
+        }
+
+
+
+        /// <summary>Layer Fraction</summary>
+        public double[] LayerFraction
+        { 
+            get 
+            {
+                double[] values = nutrientPools.First().LayerFraction;
+                return values;
+            }
+        }
+
     }
 }
