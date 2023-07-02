@@ -99,7 +99,7 @@ namespace APSIM.Shared.Utilities
             DateTime end = ParseDate(ddMMM_end, today.Year);
 
             //if start after end (spans end-of-year boundary)
-            if (start.CompareTo(end) > 0)
+            if (start.CompareTo(end) >= 0)
             {
                 if (today.CompareTo(start) >= 0)
                     end = end.AddYears(1);

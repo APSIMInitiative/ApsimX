@@ -4005,7 +4005,7 @@
                     },
                     {
                       "Key": "FertiliserDates",
-                      "Value": "1-Aug, 15-Aug, 1-Sep-15, Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
+                      "Value": "1-Aug, 15-Aug, 1-Sep, 15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
                     },
                     {
                       "Key": "Amount",
@@ -5399,7 +5399,7 @@
                     },
                     {
                       "Key": "FertiliserDates",
-                      "Value": "1-Aug, 15-Aug, 1-Sep-15, Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
+                      "Value": "1-Aug, 15-Aug, 1-Sep, 15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
                     },
                     {
                       "Key": "Amount",
