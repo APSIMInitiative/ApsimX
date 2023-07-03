@@ -307,7 +307,7 @@ namespace APSIM.Shared.Utilities
         public static DateTime ParseDate(string dayMonthString, int year)
         {
             DateAsParts parts = ParseDateString(dayMonthString);
-            DateTime newDateTime = ParseDate(year, parts.month, parts.day);
+            DateTime newDateTime = ParseDate(parts.day, parts.month, year);
             return newDateTime;
         }
 
@@ -459,8 +459,8 @@ namespace APSIM.Shared.Utilities
             else if (rxDateAllNums.Match(dateTrimmed).Success)
             {
                 //by default we treat these as day-month-year
-                dayNum = ParseYearString(parts[0], dateString);
-                monthNum = ParseYearString(parts[1], dateString);
+                dayNum = ParseDayString(parts[0], dateString);
+                monthNum = ParseMonthString(parts[1], dateString);
                 yearNum = ParseYearString(parts[2], dateString);
                 //but we need to give the user a warning that their date is ambigous
                 //WARNING HERE
@@ -720,7 +720,7 @@ namespace APSIM.Shared.Utilities
             }
             catch
             {
-                return string.Empty;
+                return null;
             }
 
             DateTime date = ParseDate(parts);
