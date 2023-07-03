@@ -90,12 +90,14 @@ namespace APSIM.Shared.Utilities
         public static DateTime GetDate(string dayMonthString, int year)
         {
             DateAsParts parts = ParseDateString(dayMonthString);
-            if (parts.yearWasMissing)
-                return GetDate(parts.day, parts.month, year);
-            else if (parts.year == year)
-                return GetDate(parts);
-            else
-                throw new Exception($"A year ({parts.year}) was found in date {dayMonthString} which does not match the given year ({year})");
+            if (!parts.yearWasMissing && parts.year != year)
+            {
+                //throw new Exception($"A year ({parts.year}) was found in date {dayMonthString} which does not match the given year ({year})");
+                //We need to tell users that they supplied a day/month string with a year, but then have a different year provided
+                //Recommend GetDateReplaceYear if they want to replace.
+                //WARNING HERE
+            }
+            return GetDate(parts.day, parts.month, year);
         }
 
         /// <summary>
@@ -126,7 +128,8 @@ namespace APSIM.Shared.Utilities
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message, e.InnerException);
+                string message = e.Message + " Date: " + day + "-" + month + "-" + year;
+                throw new Exception(message, e.InnerException);
             }
         }
 
@@ -138,15 +141,27 @@ namespace APSIM.Shared.Utilities
         /// <returns>A DateTime object.</returns>
         public static DateTime GetDate(int dayOfYear, int year)
         {
-            if (dayOfYear < 366 && dayOfYear > 0)
+            if (dayOfYear <= 366 && dayOfYear >= 1)
             {
                 // Converting dayOfYear to DateTime to extract the month and days for use below.
                 DateTime tempDateTime = new DateTime(year, 1, 1).AddDays(dayOfYear - 1);
                 // This is necessary as error checking is performed in this method.
-                DateTime newDateTime = GetDate(tempDateTime.Year, tempDateTime.Month, tempDateTime.Day);
+                DateTime newDateTime = GetDate(tempDateTime.Day, tempDateTime.Month, tempDateTime.Year);
                 return newDateTime;
             }
-            else throw new ArgumentException("dayOfYear is not a valid value. Must be between 0-366.");
+            else throw new ArgumentException($"{dayOfYear} is not a valid day number. Must be in range 1-366.");
+        }
+
+        /// <summary>
+        /// Takes a day/month date string <paramref name="dayMonthString"/> and returns a DateTime set to the given year <paramref name="year"/>
+        /// </summary>
+        /// <param name="dayMonthString">String containing a day and month in a valid format</param>
+        /// <param name="year">The year as a number</param>
+        /// <returns>A DateTime constructed from <paramref name="dayMonthString"/> using the year of <paramref name="year"/></returns>
+        public static DateTime GetDateReplaceYear(string dayMonthString, int year)
+        {
+            DateAsParts parts = ParseDateString(dayMonthString);
+            return GetDate(parts.day, parts.month, year);
         }
 
         /// <summary>
@@ -481,7 +496,7 @@ namespace APSIM.Shared.Utilities
             if (rxDay.Match(dayString).Success)
                 return int.Parse(dayString);
             else
-                throw new Exception($"Date {fullDate} is formatted for ISO, however has {dayString} for day. Day must be exactly 2 numbers.");
+                throw new Exception($"Date {fullDate} has {dayString} for day. Day must be exactly 2 numbers.");
         }
 
         private static int ParseMonthString(string monthString, string fullDate)
@@ -520,7 +535,7 @@ namespace APSIM.Shared.Utilities
             if (index > 0)
                 return index;
             else
-                throw new Exception($"Date {fullDate} has {monthLowerString} for month, was not found in a month name list.");
+                throw new Exception($"Date {fullDate} has {monthLowerString} for month, {monthLowerString} was not found in a month name list.");
         }
 
         private static int ParseYearString(string yearString, string fullDate)
@@ -534,7 +549,7 @@ namespace APSIM.Shared.Utilities
                 return DEFAULT_YEAR + int.Parse(yearString);
             }
             else
-                throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 4 numbers.");
+                throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 2 or 4 numbers.");
         }
         
 
@@ -555,6 +570,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="julian_date"></param>
         /// <returns>A DateTime object.</returns>
+        [Obsolete("To be removed", false)]
         private static DateTime GetJulianDate(double julian_date)
         {
             double a, b, c, d, e, f, z, alpha, decDay;
@@ -692,8 +708,6 @@ namespace APSIM.Shared.Utilities
         {
             return GetDate(dmy);
         }
-
-        static Regex rxddMMM = new Regex(@"^(([0-9])|([0-2][0-9])|([3][0-1]))\-(Jan|jan|Feb|feb|Mar|mar|Apr|apr|May|may|Jun|jun|Jul|jul|Aug|aug|Sep|sep|Oct|oct|Nov|nov|Dec|dec)");
 
         /// <summary>
         /// Takes in a string and validates it as a 'dd-mmm' value, or as a full date, and a year value.  When
