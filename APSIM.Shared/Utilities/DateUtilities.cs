@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office.MetaAttributes;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -34,22 +35,13 @@ namespace APSIM.Shared.Utilities
             rxMonthFull = new Regex(@"^[^0-9]\w+[^0-9]$"),
             rxYear = new Regex(@"^\d\d\d\d$"),
             rxYearShort = new Regex(@"^\d\d$"),
+            rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
+            rxDateAllNums = new Regex(@"^\d\d-\d\d-(\d{4}|\d{2})$"),
             rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$");
             
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
-        /// Valid seprators are: / - , . _
-        /// If a Day-Month is provided, the year is set to 1900
-        /// Can take dates in the following formats:
-        /// Jun-01
-        /// Jun-1
-        /// 01-Jun
-        /// 1-Jun
-        /// 01-Jun-2000
-        /// 1-Jun-2000
-        /// 2000-06-01
-        /// 2000-June-01
         /// </summary>
         /// <param name="dateString">The date</param>
         public static DateTime ParseDate(string dateString)
@@ -59,27 +51,50 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Construct a DateTime from <paramref name="ddMMM"/> and <paramref name="today"/> then 'CompareTo' <paramref name="today"/>
+        /// Construct a DateTime from <paramref name="dateString"/> and <paramref name="date"/> then 'CompareTo' <paramref name="date"/>
         /// </summary>
-        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <param name="today">Today's date</param>
-        /// <returns>+1 if <paramref name="ddMMM"/> is less than <paramref name="today"/>, 0 if equal, -1 if greater</returns>
-        public static int CompareDates(string ddMMM, DateTime today)
+        /// <param name="dateString">String containing a date in a supported format</param>
+        /// <param name="date">A DateTime object such as Clock.Today</param>
+        /// <returns>+1 if <paramref name="dateString"/> is less than <paramref name="date"/>, 0 if equal, -1 if greater</returns>
+        public static int CompareDates(string dateString, DateTime date)
         {
-            return today.CompareTo(ParseDate(ddMMM));
+            return date.CompareTo(ParseDate(dateString));
         }
 
         /// <summary>
-        /// Compare <paramref name="date"/> and <paramref name="today"/> (ignoring year component)
+        /// Compares the day and month of <paramref name="date1"/> and <paramref name="date2"/> and ignoring the year.
+        /// This version takes two string dates and parses them before comparing.
         /// </summary>
-        /// <param name="date">String, "dd-mmm" </param>
-        /// <param name="today">DateTime, to compare to date (e.g clock.Today)</param>
-        /// <returns>true if the day and month components of <paramref name="today"/> match ddMMM, else false</returns>
-        public static bool DatesEqual(string date, DateTime today)
+        /// <param name="date1">First Date string</param>
+        /// <param name="date2">Second Date string</param>
+        /// <returns></returns>
+        public static bool DayMonthIsEqual(string date1, string date2)
         {
-            //this needs to be renamed to make it clear it's only day and month comparision
-            int result = CompareDates(date, today);
-            if (result == 0)
+            return DayMonthEqual(ParseDate(date1), ParseDate(date2));
+        }
+
+        /// <summary>
+        /// Compares the day and month of <paramref name="date1"/> and <paramref name="date2"/> and ignoring the year.
+        /// This version takes one date as a string and the other as a DateTime (such as Clock.Today).
+        /// </summary>
+        /// <param name="date1">A Date string</param>
+        /// <param name="date2">A DateTime</param>
+        /// <returns></returns>
+        public static bool DayMonthIsEqual(string date1, DateTime date2)
+        {
+            return DayMonthEqual(ParseDate(date1), date2);
+        }
+
+        /// <summary>
+        /// Compares the day and month of <paramref name="date1"/> and <paramref name="date2"/> and ignoring the year.
+        /// This version takes two DateTime variables and compares them.
+        /// </summary>
+        /// <param name="date1">First DateTime</param>
+        /// <param name="date2">Second DateTime</param>
+        /// <returns></returns>
+        public static bool DayMonthEqual(DateTime date1, DateTime date2)
+        {
+            if ((date1.Day == date2.Day) && (date1.Month == date2.Month))
                 return true;
             else
                 return false;
@@ -99,7 +114,7 @@ namespace APSIM.Shared.Utilities
             DateTime end = ParseDate(ddMMM_end, today.Year);
 
             //if start after end (spans end-of-year boundary)
-            if (start.CompareTo(end) >= 0)
+            if (start.CompareTo(end) > 0)
             {
                 if (today.CompareTo(start) >= 0)
                     end = end.AddYears(1);
@@ -334,6 +349,9 @@ namespace APSIM.Shared.Utilities
         /// 1-Jun-2000
         /// 2000-06-01
         /// 2000-June-01
+        /// Jan01
+        /// 01Jan
+        /// 01-02-2022 (With Warning as it's ambigous)
         /// </summary>
         /// <param name="dateString">The date</param>
         /// <returns>An int array with [year, month, day]</returns>
@@ -348,7 +366,7 @@ namespace APSIM.Shared.Utilities
 
             //valid choices: / - , . _
             char[] validSymbols = new char[] { '/', '-', ',', '.', '_', ' ' };
-            char symbolReplacement = '\t';
+            char symbolReplacement = '-';
             int types = 0;
             foreach (char c in validSymbols)
             {
@@ -373,12 +391,22 @@ namespace APSIM.Shared.Utilities
                 }
                 else if (types == 0)
                 {
-                    throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
+                    //we may be dealing with a Jan01 or 01Jan string, we need to chekc and handle that
+                    Match result = rxDateNoSymbol.Match(dateTrimmed);
+                    if (result.Success && result.Groups.Count == 2)
+                    {
+                        //convert it to 01-Jan format
+                        dateTrimmed = result.Groups[0] + symbolReplacement.ToString() + result.Groups[1];
+                    }
+                    else
+                    {
+                        throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
+                    }
                 }
             }
 
             //seperate by \t to get parts
-            string[] parts = dateTrimmed.Split('\t');
+            string[] parts = dateTrimmed.Split(symbolReplacement);
 
             //check that there are 2 or 3 parts and that each part has text in it
             if (parts.Length < 2 || parts.Length > 3)
@@ -394,14 +422,24 @@ namespace APSIM.Shared.Utilities
             //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
             if (rxISO.Match(dateTrimmed).Success)
             {
-                yearNum = ParseYearString(parts[0], dateString);
-                monthNum = ParseMonthString(parts[1], dateString);
+                yearNum = ParseYearString(parts[0], dateTrimmed);
+                monthNum = ParseMonthString(parts[1], dateTrimmed);
 
                 //if this is a full ISO, split on the T character
                 if (parts[2].Contains('T'))
                     parts[2] = parts[2].Split('T')[0];
 
                 dayNum = ParseDayString(parts[2], dateString);
+            }
+            //if date is in ambigous 01-01-2000 format
+            else if (rxDateAllNums.Match(dateTrimmed).Success)
+            {
+                //by default we treat these as day-month-year
+                dayNum = ParseYearString(parts[0], dateString);
+                monthNum = ParseYearString(parts[1], dateString);
+                yearNum = ParseYearString(parts[2], dateString);
+                //but we need to give the user a warning that their date is ambigous
+                //WARNING HERE
             }
             else
             {
@@ -693,6 +731,18 @@ namespace APSIM.Shared.Utilities
                 DateTime.TryParse(dateStr, out returnDate);
             }
             return returnDate;
+        }
+
+        /// <summary>
+        /// Compare <paramref name="date"/> and <paramref name="today"/> (ignoring year component)
+        /// </summary>
+        /// <param name="date">String, "dd-mmm" </param>
+        /// <param name="today">DateTime, to compare to date (e.g Clock.Today)</param>
+        /// <returns>true if the day and month components of <paramref name="today"/> match ddMMM, else false</returns>
+        [Obsolete("Function renamed to DayMonthIsEqual to avoid confusion.", false)]
+        public static bool DatesEqual(string date, DateTime today)
+        {
+            return DayMonthIsEqual(date, today);
         }
     }
 
