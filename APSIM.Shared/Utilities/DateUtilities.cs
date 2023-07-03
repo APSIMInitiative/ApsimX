@@ -351,7 +351,7 @@ namespace APSIM.Shared.Utilities
         /// 01-02-2022 (With Warning as it's ambigous)
         /// </summary>
         /// <param name="dateString">The date</param>
-        /// <returns>An int array with [year, month, day]</returns>
+        /// <returns>A DateAsParts object with year, month, day, and flag if the year was missing</returns>
         private static DateAsParts ParseDateString(string dateString)
         {
             string dateWithSymbolsParsed = dateString;
@@ -359,7 +359,7 @@ namespace APSIM.Shared.Utilities
             string dateTrimmed = dateWithSymbolsParsed.Trim();
 
             //check that the string has a valid symbol
-            //replace it with a tab character
+            //replace it with a - character
 
             //valid choices: / - , . _
 
@@ -387,7 +387,7 @@ namespace APSIM.Shared.Utilities
                 }
                 else if (types == 0)
                 {
-                    //we may be dealing with a Jan01 or 01Jan string, we need to chekc and handle that
+                    //we may be dealing with a Jan01 or 01Jan string, we need to check and handle that
                     Match result = rxDateNoSymbol.Match(dateTrimmed);
                     if (result.Success && result.Groups.Count == 2)
                     {
@@ -450,7 +450,7 @@ namespace APSIM.Shared.Utilities
                     //second part is month
                     monthNum = ParseMonthString(parts[1], dateString);
                 }
-                //else if first part is a word (we can just reused the full month name regex for that)
+                //else if first part is a word (we can just reuse the full month name regex for that)
                 else if (rxMonthFull.Match(parts[0]).Success)
                 {
                     //second part is day
@@ -514,7 +514,7 @@ namespace APSIM.Shared.Utilities
                 else if (rxMonthFull.Match(monthLowerString).Success)
                     index = Array.IndexOf(monthFull, monthLowerString) + 1;
                 else
-                    throw new Exception($"Date {fullDate} has {monthLowerString} for month. Month must be exsactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
+                    throw new Exception($"Date {fullDate} has {monthLowerString} for month. Month must be exactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
             }
 
             if (index > 0)
@@ -705,7 +705,12 @@ namespace APSIM.Shared.Utilities
         [Obsolete("This has been deprecated. Use the other ValidateDateString(string dateStr) instead", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
-            return GetDate(validateDateString(dateStr), year);
+            //Unlike the normal getDate that takes a year, this should just hand back the date if it has a year
+            DateAsParts parts = ParseDateString(dateStr);
+            if (parts.yearWasMissing)
+                return GetDate(parts.day, parts.month, year);
+            else
+                return GetDate(parts);
         }
 
         /// <summary>
