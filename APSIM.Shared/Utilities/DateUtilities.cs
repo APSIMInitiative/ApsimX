@@ -160,7 +160,7 @@ namespace APSIM.Shared.Utilities
         public static string DMYtoISO(string dmy)
         {
             DateTime newDateTime = ParseDate(dmy);
-            return newDateTime.ToString("yyyy-MM-dd");
+            return newDateTime.ToString(DEFAULT_FORMAT_DAY_MONTH_YEAR);
 
             //Match m = rxDMY.Match(dmy);
             //if (m.Success)
@@ -442,7 +442,7 @@ namespace APSIM.Shared.Utilities
             int dayNum;
             int monthNum;
             int yearNum;
-            bool yearMissing = false;
+            bool yearMissing = true;
             //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
             if (rxISO.Match(dateTrimmed).Success)
             {
@@ -493,7 +493,7 @@ namespace APSIM.Shared.Utilities
                 if (parts.Length == 3)
                 {
                     yearNum = ParseYearString(parts[2], dateString);
-                    yearMissing = true;
+                    yearMissing = false;
                 }
             }
 
@@ -710,7 +710,7 @@ namespace APSIM.Shared.Utilities
         /// with year, month and date (in any recognised date format).
         /// </summary>
         /// <param name="dateStr"></param>
-        /// <returns>a string with the valid dd-Mmm string or a valid date as a string (yyyy-mm-dd)</returns>
+        /// <returns>Return null if not valid, otherwise it returns a string with the valid dd-MMM string or a valid date as a string (yyyy-mm-dd)</returns>
         public static string validateDateString(string dateStr)
         {
             DateAsParts parts;
