@@ -5,27 +5,42 @@ using System.Text.RegularExpressions;
 
 namespace APSIM.Shared.Utilities
 {
-
     /// <summary>
     /// Some date manipulation routines, transcribed from their Fortran counterparts
     /// </summary>
     public class DateUtilities
     {
         /// <summary>
+        /// This class is used to hold the output when parsing a date string.
+        /// It has the day, month, year as integers, with a boolean to note if the year was missing from the date.
+        /// </summary>
+        private class DateAsParts
+        {
+            public int day { get; set; }
+            public int month { get; set; }
+            public int year { get; set; }
+            public bool yearWasMissing { get; set; }
+
+            public DateAsParts(int day, int month, int year, bool yearWasMissing)
+            {
+                this.day = day;
+                this.month = month;
+                this.year = year;
+                this.yearWasMissing = yearWasMissing;
+            }
+        }
+
+        /// <summary>
         /// a list of month names in lower case.
         /// </summary>
         static public string[] LowerCaseMonths = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
 
-        /// <summary>
-        /// A regular expression
-        /// </summary>
-        static Regex
-            rxDD = new Regex(@"\d\d?"),
-            rxMMM = new Regex(@"\w{3}"),
-            rxDMY = new Regex(@"^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$"),
-            rxddMMM = new Regex(@"^(([0-9])|([0-2][0-9])|([3][0-1]))\-(Jan|jan|Feb|feb|Mar|mar|Apr|apr|May|may|Jun|jun|Jul|jul|Aug|aug|Sep|sep|Oct|oct|Nov|nov|Dec|dec)");
+        static private readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
+        private const char SEPERATOR_REPLACEMENT = '-';
 
         private const int DEFAULT_YEAR = 2000;
+        private const string DEFAULT_FORMAT_DAY_MONTH = "dd-MMM";
+        private const string DEFAULT_FORMAT_DAY_MONTH_YEAR = "yyyy-MM-dd";
 
         static private Regex
             rxDay = new Regex(@"^\d\d?$"),
@@ -46,8 +61,8 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateString">The date</param>
         public static DateTime ParseDate(string dateString)
         {
-            int[] values = ParseDateString(dateString);
-            return ParseDate(values[0], values[1], values[2]);
+            DateAsParts parts = ParseDateString(dateString);
+            return ParseDate(parts.day, parts.month, parts.year);
         }
 
         /// <summary>
@@ -291,30 +306,39 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static DateTime ParseDate(string dayMonthString, int year)
         {
-            int[] values = ParseDateString(dayMonthString);
-            DateTime newDateTime = ParseDate(year, values[1], values[2]);
+            DateAsParts parts = ParseDateString(dayMonthString);
+            DateTime newDateTime = ParseDate(year, parts.month, parts.day);
             return newDateTime;
         }
 
         /// <summary>
-        /// Takes 3 integers <paramref name="yearNum"/>, <paramref name="monthNum"/>, <paramref name="dayNum"/> and returns a DateTime.
+        /// Takes a DateAsParts object <paramref name="parts"/> and returns a DateTime.
         /// </summary>
-        /// <param name="yearNum"></param>
-        /// <param name="monthNum"></param>
-        /// <param name="dayNum"></param>
+        /// <param name="parts"></param>
         /// <returns>A DateTime object.</returns>
-        public static DateTime ParseDate(int yearNum, int monthNum, int dayNum)
+        private static DateTime ParseDate(DateAsParts parts)
+        {
+            return ParseDate(parts.day, parts.month, parts.year);
+        }
+
+        /// <summary>
+        /// Takes 3 integers <paramref name="day"/>, <paramref name="month"/>, <paramref name="year"/> and returns a DateTime.
+        /// </summary>
+        /// <param name="day"></param>
+        /// <param name="month"></param>
+        /// <param name="year"></param>
+        /// <returns>A DateTime object.</returns>
+        public static DateTime ParseDate(int day, int month, int year)
         {
             try
             {
-                DateTime date = new DateTime(yearNum, monthNum, dayNum);
+                DateTime date = new DateTime(year, month, day);
                 return date;
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message, e.InnerException);
             }
-
         }
 
         /// <summary>
@@ -355,7 +379,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dateString">The date</param>
         /// <returns>An int array with [year, month, day]</returns>
-        private static int[] ParseDateString(string dateString)
+        private static DateAsParts ParseDateString(string dateString)
         {
             string dateWithSymbolsParsed = dateString;
             //trim whitespace
@@ -365,16 +389,15 @@ namespace APSIM.Shared.Utilities
             //replace it with a tab character
 
             //valid choices: / - , . _
-            char[] validSymbols = new char[] { '/', '-', ',', '.', '_', ' ' };
-            char symbolReplacement = '-';
+            
             int types = 0;
-            foreach (char c in validSymbols)
+            foreach (char c in VALID_SEPERATORS)
             {
                 if (dateString.Contains(c))
                 {
                     types += 1;
                     //change symbol to \t
-                    dateTrimmed = dateTrimmed.Replace(c, symbolReplacement);
+                    dateTrimmed = dateTrimmed.Replace(c, SEPERATOR_REPLACEMENT);
                 }
             }
 
@@ -382,7 +405,7 @@ namespace APSIM.Shared.Utilities
             if ((types == 0) || (types > 1))
             {
                 string symbols = " ";
-                foreach (char c in validSymbols)
+                foreach (char c in VALID_SEPERATORS)
                     symbols += c + " ";
 
                 if (types > 1)
@@ -396,7 +419,7 @@ namespace APSIM.Shared.Utilities
                     if (result.Success && result.Groups.Count == 2)
                     {
                         //convert it to 01-Jan format
-                        dateTrimmed = result.Groups[0] + symbolReplacement.ToString() + result.Groups[1];
+                        dateTrimmed = result.Groups[0] + SEPERATOR_REPLACEMENT.ToString() + result.Groups[1];
                     }
                     else
                     {
@@ -406,7 +429,7 @@ namespace APSIM.Shared.Utilities
             }
 
             //seperate by \t to get parts
-            string[] parts = dateTrimmed.Split(symbolReplacement);
+            string[] parts = dateTrimmed.Split(SEPERATOR_REPLACEMENT);
 
             //check that there are 2 or 3 parts and that each part has text in it
             if (parts.Length < 2 || parts.Length > 3)
@@ -419,6 +442,7 @@ namespace APSIM.Shared.Utilities
             int dayNum;
             int monthNum;
             int yearNum;
+            bool yearMissing = false;
             //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
             if (rxISO.Match(dateTrimmed).Success)
             {
@@ -469,10 +493,11 @@ namespace APSIM.Shared.Utilities
                 if (parts.Length == 3)
                 {
                     yearNum = ParseYearString(parts[2], dateString);
+                    yearMissing = true;
                 }
             }
 
-            int[] values = { yearNum, monthNum, dayNum };
+            DateAsParts values = new DateAsParts(dayNum, monthNum, yearNum, yearMissing);
             return values;
         }
 
@@ -686,28 +711,29 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dateStr"></param>
         /// <returns>a string with the valid dd-Mmm string or a valid date as a string (yyyy-mm-dd)</returns>
-        [Obsolete("To be deleted", false)]
         public static string validateDateString(string dateStr)
         {
-            string returnDate = string.Empty;
-            DateTime d;
-
-            Match m = rxddMMM.Match(dateStr);
-            //also need to look at the length just in case input value is a full date as 20-Jan-2016 (and not just 20-Jan).
-            if ((m.Success) && (dateStr.Length <= 6))
+            DateAsParts parts;
+            try
             {
-                d = GetDate(dateStr, 2000);
-                //for consistency, return it as 'Title' case (ie, 01-Jan, not 1-jan)
-                returnDate = d.ToString("dd-MMM");
+                parts = ParseDateString(dateStr);
             }
+            catch
+            {
+                return string.Empty;
+            }
+
+            DateTime date = ParseDate(parts);
+
+            if (parts.yearWasMissing)
+            {
+                //for consistency, return it as 'Title' case (ie, 01-Jan, not 1-jan)
+                return date.ToString(DEFAULT_FORMAT_DAY_MONTH, CultureInfo.InvariantCulture);
+            } 
             else
             {
-                DateTime.TryParse(dateStr, out d);
-                if (d == DateTime.MinValue)
-                    return null;
-                returnDate = d.ToString("yyyy-MM-dd");
+                return date.ToString(DEFAULT_FORMAT_DAY_MONTH_YEAR, CultureInfo.InvariantCulture);
             }
-            return returnDate;
         }
 
         /// <summary>
@@ -717,20 +743,27 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateStr">the date as a string, (ie, 01-jan or 2010-01-21)</param>
         /// <param name="year">the year to be added to date, if it doesn't exist (ie, 01-jan)</param>
         /// <returns>a valid date as a datetime value</returns>
-        [Obsolete("Please use ParseDate instead", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
-            DateTime returnDate = new DateTime();
+            DateAsParts parts;
+            try
+            {
+                parts = ParseDateString(dateStr);
+            }
+            catch
+            {
+                return new DateTime();
+            }
 
-            Match m = rxddMMM.Match(dateStr);
-            //also need to look at the length just in case input value is a full date as 20-Jan-2016 (and not just 20-Jan).
-            if ((m.Success) && (dateStr.Length <= 6))
-                returnDate = DateUtilities.GetDate(dateStr, year);
+            if (parts.yearWasMissing)
+            {
+                //for consistency, return it as 'Title' case (ie, 01-Jan, not 1-jan)
+                return ParseDate(parts.day, parts.month, year);
+            }
             else
             {
-                DateTime.TryParse(dateStr, out returnDate);
+                return ParseDate(parts);
             }
-            return returnDate;
         }
 
         /// <summary>
