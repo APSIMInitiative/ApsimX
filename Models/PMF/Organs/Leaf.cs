@@ -26,7 +26,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage
+    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
 
         /// <summary>The surface organic matter model</summary>
@@ -224,6 +224,16 @@ namespace Models.PMF.Organs
         [Link]
         public Structure Structure = null;
         #endregion
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
 
         /// <summary>Gets the LAI of the main stem </summary>
         [Units("m^2/m^2")]

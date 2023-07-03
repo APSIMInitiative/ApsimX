@@ -102,10 +102,8 @@ namespace Models.PMF.Library
                         double totalFractionToRemove = (removed.Wt + detaching.Wt) * 100.0 / totalBiomass;
                         double toResidue = detaching.Wt * 100.0 / (removed.Wt + detaching.Wt);
                         double removedOff = removed.Wt * 100.0 / (removed.Wt + detaching.Wt);
-                        summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
-                                                 + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
-                                                 + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.", MessageType.Diagnostic);
+                        summary.WriteMessage(Parent, $"Removing {totalFractionToRemove:F1}% of {Parent.Name.ToLower()} biomass from {plant.Name}. " +
+                                                     $"{removedOff:F1}% is removed from the system and {toResidue:F1}% is returned to the surface", MessageType.Diagnostic);
                         summary.WriteMessage(Parent, "Removed " + removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
                                                  + removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
                     }

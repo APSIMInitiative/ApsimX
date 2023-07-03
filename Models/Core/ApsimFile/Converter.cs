@@ -6,7 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Presentation;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
@@ -4883,59 +4887,70 @@ namespace Models.Core.ApsimFile
                 }
                 biomassRemoval["Children"] = new JArray();
             }
-            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root)
+                                                              .Where(man => !man.IsEmpty))
             {
-                if (manager.ToString().Contains(".RemoveBiomass("))
+                string managerName = manager.Name;
+
+                // Remove the 'RemoveFractions' declaration
+                string declarationPattern = @$".+RemovalFractions\s+(\w+).+";
+                Match declarationMatch = Regex.Match(manager.ToString(), declarationPattern);
+                if (declarationMatch.Success)
                 {
-                    // Remove the 'RemovalFractions' declaration.
-                    var declarations = manager.GetDeclarations();
-                    var declaration = declarations.Find(d => d.TypeName == "RemovalFractions");
-                    if (declaration != null)
-                    {
-                        declarations.Remove(declaration);
-                        manager.SetDeclarations(declarations);
-                    }
+                    // Remove the declaration
+                    string declarationInstanceName = declarationMatch.Groups[1].Value;
+                    manager.ReplaceRegex(declarationPattern, string.Empty);
 
                     // Remove the 'RemovalFractions' instance creation.
-                    manager.ReplaceRegex(@$"{declaration.InstanceName}\W*new\W+{declaration.TypeName}.+;", string.Empty);
+                    manager.ReplaceRegex(@$"{declarationInstanceName}\W*new.+;", string.Empty);
 
                     // Find all biomass removal fractions.
-                    var matches = manager.FindRegexMatches(@$"{declaration.InstanceName}.SetFractionTo(\w+)\(""(\w+)""\W+([\w.]+)(\W+""(\w+)"")*\);");
-                    List<OrganFractions> organs = new List<OrganFractions>();
+                    var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
+                                         .Where(man => !manager.PositionIsCommented(man.Index));
+                    List <OrganFractions> organs = new List<OrganFractions>();
+
                     foreach (Match match in matches)
                     {
-                        bool remove = match.Groups[1].Value == "Remove";
-                        string organName = match.Groups[2].Value;
-                        string fractionObjectName = match.Groups[3].Value;
-                        bool isLive = true;
-                        if (match.Groups[5].Value == "Dead")
-                            isLive = false;
-                        var organ = organs.Find(o => o.Name == organName);
-                        if (organ == null)
+                        if (!manager.PositionIsCommented(match.Index))
                         {
-                            organ = new OrganFractions(organName);
-                            organs.Add(organ);
-                        }
-                        if (isLive)
-                        {
-                            if (remove)
-                                organ.FractionLiveToRemove = fractionObjectName;
+                            bool remove = match.Groups[1].Value == "Remove";
+                            string organName = match.Groups[2].Value;
+                            string fractionObjectName = match.Groups[3].Value;
+                            bool isLive = true;
+                            if (match.Groups[5].Value == "Dead")
+                                isLive = false;
+                            var organ = organs.Find(o => o.Name == organName);
+                            if (organ == null)
+                            {
+                                organ = new OrganFractions(organName);
+                                organs.Add(organ);
+                            }
+                            if (isLive)
+                            {
+                                if (remove)
+                                    organ.FractionLiveToRemove = fractionObjectName;
+                                else
+                                    organ.FractionLiveToResidue = fractionObjectName;
+                            }
                             else
-                                organ.FractionLiveToResidue = fractionObjectName;
-                        }
-                        else
-                        {
-                            if (remove)
-                                organ.FractionDeadToRemove = fractionObjectName;
-                            else
-                                organ.FractionDeadToResidue = fractionObjectName;
+                            {
+                                if (remove)
+                                    organ.FractionDeadToRemove = fractionObjectName;
+                                else
+                                    organ.FractionDeadToResidue = fractionObjectName;
+                            }
                         }
                     }
 
-                    TODO: Need to add:
-                    [Link(ByName=true)] IHasDamageableBiomass organName;
-
                     string code = manager.ToString();
+
+                    // Calculate the level of indentation based on the first match.
+                    int indent = 0;
+                    if (matches.Any())
+                    {
+                        int pos = matches.First().Index;
+                        indent = code.IndexOf(code.Substring(pos).First(ch => ch != ' '), pos) - pos;
+                    }
 
                     // Delete the removal fraction matches lines. 
                     // Do it in reverse order so that match.Index remains valid.
@@ -4943,18 +4958,59 @@ namespace Models.Core.ApsimFile
                         code = code.Remove(match.Index, match.Length);
 
                     // Find the RemoveBiomass method call.
-                    Match removeBiomassMatch = Regex.Match(code, @"(\w+).RemoveBiomass\(.+\);");
+                    Match removeBiomassMatch = Regex.Match(code, @" +(\w+).RemoveBiomass\(.+\);");
                     if (removeBiomassMatch.Success)
                     {
                         var modelName = removeBiomassMatch.Groups[1].Value;
 
-                        string replacementString = null;
+                        // Add in code to get each organ
+                        string codeToInsert = null;
                         foreach (var organ in organs)
-                            replacementString += $"{organ.Name}.RemoveBiomass(liveToRemove: {organ.FractionLiveToRemove}, deadToRemove: {organ.FractionDeadToRemove}, " +
-                                                                            $"liveToResidue: {organ.FractionLiveToResidue}, deadToResidue: {organ.FractionDeadToResidue});" + Environment.NewLine;
+                        {
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"var {organ.Name} = {modelName}.FindChild<IHasDamageableBiomass>(\"{organ.Name}\");" + Environment.NewLine;
+                        }
+
+                        // Add in code to remove biomass from organ.
+                        foreach (var organ in organs)
+                        {
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"{organ.Name}.RemoveBiomass(liveToRemove: {organ.FractionLiveToRemove}, deadToRemove: {organ.FractionDeadToRemove}, " +
+                                                                        $"liveToResidue: {organ.FractionLiveToResidue}, deadToResidue: {organ.FractionDeadToResidue});" + Environment.NewLine;
+                        }
+
+                        // Remove unwanted code and replace with new code.
                         code = code.Remove(removeBiomassMatch.Index, removeBiomassMatch.Length);
-                        code = code.Insert(removeBiomassMatch.Index, replacementString);
+                        if (codeToInsert != null)
+                            code = code.Insert(removeBiomassMatch.Index, codeToInsert);
+
+                        // Replace 'SetThinningProportion'.
+                        Match thinningMatch = Regex.Match(code, $@" +\w+\.SetThinningProportion\s*=\s*(.+);");
+                        if (thinningMatch.Success)
+                        {
+                            string newThinningCode = new string(' ', indent) +
+                                                    $"{modelName}.structure?.DoThin({thinningMatch.Groups[1].Value});";
+                            code = code.Remove(thinningMatch.Index, thinningMatch.Length);
+                            code = code.Insert(thinningMatch.Index, newThinningCode);
+                        }
+
+
+                        // Replace 'SetPhenologyStage'.
+                        Match stageMatch = Regex.Match(code, $@" +\w+\.SetPhenologyStage\s*=\s*(.+);");
+                        if (stageMatch.Success)
+                        {
+                            string newStageCode = new string(' ', indent) +
+                                                    $"{modelName}.structure?.DoThin({stageMatch.Groups[1].Value});";
+                            code = code.Remove(stageMatch.Index, stageMatch.Length);
+                            code = code.Insert(stageMatch.Index, newStageCode);
+                        }
+
                         manager.Read(code);
+
+                        // Add in a using statement.
+                        var usings = manager.GetUsingStatements();
+                        usings = usings.Append("Models.PMF.Interfaces");
+                        manager.SetUsingStatements(usings);
                     }
 
                     // Save the manager.

@@ -24,6 +24,9 @@ namespace Models.Core.ApsimFile
         /// </summary>
         public JObject Token { get; private set; }
 
+        /// <summary>Name of manager model - useful for debugging.</summary>
+        public string Name => Token["Name"].ToString();
+
         /// <summary>Default constructor.</summary>
         public ManagerConverter() { }
 
@@ -43,6 +46,9 @@ namespace Models.Core.ApsimFile
                 return parameters;
             }
         }
+
+        /// <summary>Returns true if manager is empty.</summary>
+        public bool IsEmpty => lines.Count == 0;
 
         /// <summary>
         /// Constructor.
@@ -641,6 +647,19 @@ namespace Models.Core.ApsimFile
             if (replacementMade)
                 SetDeclarations(declarations);
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Return true if the specified position is commented out in the code.
+        /// </summary>
+        /// <param name="pos"></param>
+        public bool PositionIsCommented(int pos)
+        {
+            string code = ToString();
+            // Search backwards for either '/*'
+            int posOpenComment = code.LastIndexOf("/*", pos);
+            int posCloseComment = code.LastIndexOf("*/", pos);
+            return posOpenComment > posCloseComment;
         }
     }
 

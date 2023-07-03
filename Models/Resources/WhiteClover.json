@@ -9386,7 +9386,6 @@
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].HeightFunction.XYPairs.Y = 20,75,110,140,150",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.667",
-                "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.2",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
                 "[Root].MaximumRootDepth.FixedValue = 750",
                 "[Root].SpecificRootLength.FixedValue = 100",
@@ -9417,7 +9416,6 @@
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
                 "[Leaf].HeightFunction.XYPairs.Y = 20,50,75,97.5,104",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.85",
-                "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.05",
                 "[Root].MaximumRootDepth.FixedValue = 500",
                 "[Root].SpecificRootLength.FixedValue = 100"
@@ -9447,7 +9445,6 @@
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].HeightFunction.XYPairs.Y = 20,65,100,130,135",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.7",
-                "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
                 "[Root].MaximumRootDepth.FixedValue = 950",
                 "[Root].SpecificRootLength.FixedValue = 100"
