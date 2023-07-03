@@ -43,7 +43,7 @@
           "Children": [
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0027397260273972603,
+              "FixedValue": 0.002737909,
               "Units": "years",
               "Name": "day",
               "Children": [
