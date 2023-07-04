@@ -31,17 +31,46 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// a list of month names in lower case.
+        /// a list of month names with 3 letter abbreviations.
         /// </summary>
-        static public string[] LowerCaseMonths = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
+        static public readonly string[] MONTHS_3_LETTERS = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
 
-        static private readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
+        /// <summary>
+        /// a list of month names with 3 and 4 letter abbreviations for Australia. Thanks.
+        /// </summary>
+        static public readonly string[] MONTHS_AU_LETTERS = CultureInfo.GetCultureInfo("en-AU").DateTimeFormat.AbbreviatedMonthNames;
+        /// <summary>
+        /// a list of month full names
+        /// </summary>
+        static public readonly string[] MONTHS_FULL_NAME = CultureInfo.InvariantCulture.DateTimeFormat.MonthNames;
+
+        static private bool monthNamesInLowerCase = false;
+
+        /// <summary>
+        /// List of all seperators that can be used for date strings
+        /// </summary>
+        static public readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
         private const char SEPERATOR_REPLACEMENT = '-';
 
-        private const int DEFAULT_YEAR = 2000;
-        private const string DEFAULT_FORMAT_DAY_MONTH = "dd-MMM";
-        private const string DEFAULT_FORMAT_DAY_MONTH_YEAR = "yyyy-MM-dd";
-        private const string DEFAULT_FORMAT_DAY_MONTH_YEAR_ISO = "yyyy-MM-ddT00:00:00";
+        /// <summary>
+        /// The year used to make a date/time if one is not provided
+        /// </summary>
+        public const int DEFAULT_YEAR = 2000;
+
+        /// <summary>
+        /// Format that a date with only month and day is provided in if returned as a sting
+        /// </summary>
+        public const string DEFAULT_FORMAT_DAY_MONTH = "dd-MMM";
+
+        /// <summary>
+        /// Format that a date wtih year, month and day is provided in if returned as a sting
+        /// </summary>
+        public const string DEFAULT_FORMAT_DAY_MONTH_YEAR = "yyyy-MM-dd";
+
+        /// <summary>
+        /// ISO Date format
+        /// </summary>
+        public const string DEFAULT_FORMAT_DAY_MONTH_YEAR_ISO = "yyyy-MM-ddT00:00:00";
 
         static private Regex
             rxDay = new Regex(@"^\d\d?$"),
@@ -52,7 +81,7 @@ namespace APSIM.Shared.Utilities
             rxYear = new Regex(@"^\d\d\d\d$"),
             rxYearShort = new Regex(@"^\d\d$"),
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
-            rxDateAllNums = new Regex(@"^\d\d-\d\d-(\d{4}|\d{2})$"),
+            rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
             rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$");
             
 
@@ -62,8 +91,15 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateString">The date</param>
         public static DateTime GetDate(string dateString)
         {
-            DateAsParts parts = ParseDateString(dateString);
-            return GetDate(parts.day, parts.month, parts.year);
+            try
+            {
+                DateAsParts parts = ParseDateString(dateString);
+                return GetDate(parts.day, parts.month, parts.year);
+            } 
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message, ex.InnerException);
+            }
         }
 
         /// <summary>
@@ -477,8 +513,15 @@ namespace APSIM.Shared.Utilities
                 //by default we treat these as day-month-year
                 dayNum = ParseDayString(parts[0], dateString);
                 monthNum = ParseMonthString(parts[1], dateString);
-                yearNum = ParseYearString(parts[2], dateString);
-                yearMissing = false;
+
+                //optional third part is year
+                yearNum = DEFAULT_YEAR;
+                if (parts.Length == 3)
+                {
+                    yearNum = ParseYearString(parts[2], dateString);
+                    yearMissing = false;
+                }
+
                 //but we need to give the user a warning that their date is ambigous
                 //WARNING HERE
             }
@@ -530,18 +573,19 @@ namespace APSIM.Shared.Utilities
         {
             string monthLowerString = monthString.ToLower();
 
-            string[] month3Letters = CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames;
-            string[] monthAU = CultureInfo.GetCultureInfo("en-AU").DateTimeFormat.AbbreviatedMonthNames;
-            string[] monthFull = CultureInfo.InvariantCulture.DateTimeFormat.MonthNames;
-
             //make all our names lower case because they are capitalised
-            for (int i = 0; i < month3Letters.Length; i++)
+            //we only do this once
+            if (!monthNamesInLowerCase)
             {
-                month3Letters[i] = month3Letters[i].ToLower();
-                monthAU[i] = month3Letters[i].ToLower();
-                monthFull[i] = month3Letters[i].ToLower();
+                for (int i = 0; i < 12; i++)
+                {
+                    MONTHS_3_LETTERS[i] = MONTHS_3_LETTERS[i].ToLower();
+                    MONTHS_AU_LETTERS[i] = MONTHS_AU_LETTERS[i].ToLower();
+                    MONTHS_FULL_NAME[i] = MONTHS_FULL_NAME[i].ToLower();
+                }
+                monthNamesInLowerCase = true;
             }
-
+            
             int index = -1;
             if (rxMonthNum.Match(monthLowerString).Success)
             {
@@ -550,11 +594,11 @@ namespace APSIM.Shared.Utilities
             else
             {
                 if (rxMonth3Letter.Match(monthLowerString).Success)
-                    index = Array.IndexOf(month3Letters, monthLowerString) + 1;
+                    index = Array.IndexOf(MONTHS_3_LETTERS, monthLowerString) + 1;
                 else if (rxMonth4Letter.Match(monthLowerString).Success)
-                    index = Array.IndexOf(monthAU, monthLowerString) + 1;
+                    index = Array.IndexOf(MONTHS_AU_LETTERS, monthLowerString) + 1;
                 else if (rxMonthFull.Match(monthLowerString).Success)
-                    index = Array.IndexOf(monthFull, monthLowerString) + 1;
+                    index = Array.IndexOf(MONTHS_FULL_NAME, monthLowerString) + 1;
                 else
                     throw new Exception($"Date {fullDate} has {monthLowerString} for month. Month must be exactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
             }
