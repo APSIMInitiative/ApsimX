@@ -174,13 +174,22 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Construct a DateTime from <paramref name="dateString"/> and <paramref name="date"/> then 'CompareTo' <paramref name="date"/>
+        /// If the date string does not have a year, only month and day is compared.
         /// </summary>
         /// <param name="dateString">String containing a date in a supported format</param>
         /// <param name="date">A DateTime object such as Clock.Today</param>
         /// <returns>+1 if <paramref name="dateString"/> is less than <paramref name="date"/>, 0 if equal, -1 if greater</returns>
         public static int CompareDates(string dateString, DateTime date)
         {
-            return date.CompareTo(GetDate(dateString));
+            DateAsParts parts = ParseDateString(dateString);
+            if (parts.yearWasMissing)
+            {
+                return date.CompareTo(GetDate(parts.day, parts.month, date.Year));
+            }
+            else
+            {
+                return date.CompareTo(GetDate(dateString));
+            }
         }
 
         /// <summary>
