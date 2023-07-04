@@ -84,7 +84,7 @@ namespace Models
             DateTime operationDate;
             foreach (Operation operation in Operation.Where(o => o.Enabled))
             {
-                operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
+                operationDate = DateUtilities.GetDateReplaceYear(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;

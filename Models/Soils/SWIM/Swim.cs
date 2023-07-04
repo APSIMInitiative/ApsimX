@@ -2347,17 +2347,11 @@ namespace Models.Soils
 
         private double Time(int yy, int dd, int tt)
         {
-            // first we must calculate the julian date for the starting date.
-            // We will calculate time relative to this date.
-            double beginStartYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(start_year, 1, 1)) - 1.0;
-            double julianStartDate = beginStartYear + start_day - 1.0;
-
-            // all times are relative to beginning of the day
-
-            double beginYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(yy, 1, 1)) - 1.0;
-            double julianDate = beginYear + dd - 1.0;
-
-            return (julianDate - julianStartDate) * 24.0 + tt / 60.0; // Convert to hours
+            //Work out the number of days, in hours, between the start date and the given date
+            //Adapted from older code to remove Julian date calculations
+            DateTime startDate = DateUtilities.GetDate(start_day, start_year);
+            DateTime thisDate = DateUtilities.GetDate(dd, yy);
+            return (thisDate - startDate).TotalDays * 24.0 + tt / 60.0; // Convert to hours
         }
 
         private void PurgeLogInfo(double time, ref double[] SWIMTime, ref double[] SWIMAmt)

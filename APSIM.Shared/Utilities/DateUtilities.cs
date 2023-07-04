@@ -41,6 +41,7 @@ namespace APSIM.Shared.Utilities
         private const int DEFAULT_YEAR = 2000;
         private const string DEFAULT_FORMAT_DAY_MONTH = "dd-MMM";
         private const string DEFAULT_FORMAT_DAY_MONTH_YEAR = "yyyy-MM-dd";
+        private const string DEFAULT_FORMAT_DAY_MONTH_YEAR_ISO = "yyyy-MM-ddT00:00:00";
 
         static private Regex
             rxDay = new Regex(@"^\d\d?$"),
@@ -184,7 +185,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static bool DayMonthIsEqual(string date1, string date2)
         {
-            return DayMonthEqual(GetDate(date1), GetDate(date2));
+            return DayMonthIsEqual(GetDate(date1), GetDate(date2));
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static bool DayMonthIsEqual(string date1, DateTime date2)
         {
-            return DayMonthEqual(GetDate(date1), date2);
+            return DayMonthIsEqual(GetDate(date1), date2);
         }
 
         /// <summary>
@@ -206,7 +207,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="date1">First DateTime</param>
         /// <param name="date2">Second DateTime</param>
         /// <returns></returns>
-        public static bool DayMonthEqual(DateTime date1, DateTime date2)
+        public static bool DayMonthIsEqual(DateTime date1, DateTime date2)
         {
             if ((date1.Day == date2.Day) && (date1.Month == date2.Month))
                 return true;
@@ -250,14 +251,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Convert a dd/mm/yyyy to yyyy-mm-dd string
+        /// Converts a valid date string into a date string with full ISO format (yyyy-mm-ddT00:00:00)
         /// </summary>
-        /// <param name="dmy">[d]d/[m]m/yyyy</param>
-        /// <returns>yyyy-mm-dd</returns>
-        public static string DMYtoISO(string dmy)
+        /// <param name="dateString">A valid date string</param>
+        /// <returns>Date as string in ISO format (yyyy-mm-ddT00:00:00)</returns>
+        public static string GetDateISO(string dateString)
         {
-            DateTime newDateTime = GetDate(dmy);
-            return newDateTime.ToString(DEFAULT_FORMAT_DAY_MONTH_YEAR);
+            DateTime newDateTime = GetDate(dateString);
+            return newDateTime.ToString(DEFAULT_FORMAT_DAY_MONTH_YEAR_ISO);
         }
 
         /// <summary>
@@ -343,10 +344,20 @@ namespace APSIM.Shared.Utilities
             return GetNextDate(GetDate(ddMMM, today.Year), today);
         }
 
-        //////////////////////////////////////////////////////////////////////////   
+        /////////////////////////////////////////////////////////////////////////////   
         /////////////////////////////////////////////////////////////////////////////  
         /////////////////////////////////////////////////////////////////////////////  
         /////////////////////////////////////////////////////////////////////////////  
+
+        /// <summary>
+        /// Takes a DateAsParts object <paramref name="parts"/> and returns a DateTime.
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <returns>A DateTime object.</returns>
+        private static DateTime GetDate(DateAsParts parts)
+        {
+            return GetDate(parts.day, parts.month, parts.year);
+        }
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
@@ -551,17 +562,11 @@ namespace APSIM.Shared.Utilities
             else
                 throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 2 or 4 numbers.");
         }
-        
 
-        /// <summary>
-        /// Takes a DateAsParts object <paramref name="parts"/> and returns a DateTime.
-        /// </summary>
-        /// <param name="parts"></param>
-        /// <returns>A DateTime object.</returns>
-        private static DateTime GetDate(DateAsParts parts)
-        {
-            return GetDate(parts.day, parts.month, parts.year);
-        }
+        /////////////////////////////////////////////////////////////////////////////   
+        /////////////////////////////////////////////////////////////////////////////  
+        /////////////////////////////////////////////////////////////////////////////  
+        /////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Convert a Julian Date to a DateTime object
@@ -570,7 +575,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="julian_date"></param>
         /// <returns>A DateTime object.</returns>
-        [Obsolete("To be removed", false)]
+        [Obsolete("Julian date will now longer be calculated manually. Please use the DateTime class methods to find number of days.", false)]
         private static DateTime GetJulianDate(double julian_date)
         {
             double a, b, c, d, e, f, z, alpha, decDay;
@@ -623,7 +628,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="date">The DateTime to convert</param>
         /// <returns>The Julian Date representation of <paramref name="date"/></returns>
-        [Obsolete("To be removed", false)]
+        [Obsolete("Julian date will now longer be calculated manually. Please use the DateTime class methods to find number of days.", false)]
         private static double GetJulianDate(DateTime date)
         {
             double yr;
@@ -661,7 +666,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="dyoyr">Day of year</param>
         /// <param name="year">Year</param>
         /// <returns>Date time value.</returns>
-        [Obsolete("To be removed", false)]
+        [Obsolete("Julian date will now longer be calculated manually. Please use the DateTime class methods to find number of days.", false)]
         public static void JulianDayNumberToDayOfYear(int JDN, out int dyoyr, out int year)
         {
             DateTime date = GetJulianDate(JDN);
@@ -677,7 +682,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="JDN"></param>
         /// <returns></returns>
-        [Obsolete("To be removed", false)]
+        [Obsolete("Julian date will now longer be calculated manually. Please use the DateTime class methods to find number of days.", false)]
         public static DateTime JulianDayNumberToDateTime(int JDN)
         {
             double jd = JDN - 0.5;  //Convert to true julian date value (at 00:00).
@@ -692,7 +697,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="adatetime"></param>
         /// <returns></returns>
-        [Obsolete("To be removed", false)]
+        [Obsolete("Julian date will now longer be calculated manually. Please use the DateTime class methods to find number of days.", false)]
         public static int DateTimeToJulianDayNumber(DateTime adatetime)
         {
             return (int)System.Math.Truncate(GetJulianDate(adatetime) + 0.5);
@@ -703,7 +708,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dmy">[d]d/[m]m/yyyy</param>
         /// <returns>The date</returns>
-        [Obsolete("Please use ParseDate instead", false)]
+        [Obsolete("DMYtoDate has been deprecated. Use GetDate() instead.", false)]
         public static DateTime DMYtoDate(string dmy)
         {
             return GetDate(dmy);
@@ -716,7 +721,7 @@ namespace APSIM.Shared.Utilities
         /// <param name="dateStr">the date as a string, (ie, 01-jan or 2010-01-21)</param>
         /// <param name="year">the year to be added to date, if it doesn't exist (ie, 01-jan)</param>
         /// <returns>a valid date as a datetime value</returns>
-        [Obsolete("This has been deprecated. Use the other ValidateDateString(string dateStr) instead", false)]
+        [Obsolete("This version has been deprecated. Use the other ValidateDateString(string dateStr) instead.", false)]
         public static DateTime validateDateString(string dateStr, int year)
         {
             //Unlike the normal getDate that takes a year, this should just hand back the date if it has a year
@@ -743,7 +748,7 @@ namespace APSIM.Shared.Utilities
         /// 
         /// </summary>
         /// <param name="ddMMM">String </param>
-        [Obsolete("This function has been deprecated, use ValidateDateString instead", false)]
+        [Obsolete("ReformatDayMonthString has been deprecated, use ValidateDateString instead", false)]
         private static string ReformatDayMonthString(string ddMMM)
         {
             return validateDateString(ddMMM);

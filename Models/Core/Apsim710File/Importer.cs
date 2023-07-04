@@ -1128,8 +1128,8 @@ namespace Models.Core.Apsim710File
 
             string startDate = this.GetInnerText(compNode, "start_date");
             string endDate = this.GetInnerText(compNode, "end_date");
-            XmlUtilities.SetValue(newNode, "StartDate", DateUtilities.DMYtoDate(startDate).ToString("yyyy-MM-ddT00:00:00"));
-            XmlUtilities.SetValue(newNode, "EndDate", DateUtilities.DMYtoDate(endDate).ToString("yyyy-MM-ddT00:00:00"));
+            XmlUtilities.SetValue(newNode, "StartDate", DateUtilities.GetDateISO(startDate));
+            XmlUtilities.SetValue(newNode, "EndDate", DateUtilities.GetDateISO(endDate));
 
             return newNode;
         }
@@ -1161,7 +1161,7 @@ namespace Models.Core.Apsim710File
                     childText = when.ToString("yyyy-MM-dd");
                 else if (childNode != null && childNode.InnerText != string.Empty)
                 {
-                    childText = DateUtilities.DMYtoISO(childNode.InnerText);
+                    childText = DateUtilities.GetDateISO(childNode.InnerText);
                     if (childText == "0001-01-01")
                     {
                         childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");

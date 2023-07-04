@@ -808,16 +808,16 @@ namespace Models.Climate
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (StartOfSummer != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today))
+            if (StartOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today))
                 StartOfSummer.Invoke(this, e);
 
-            if (StartOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today))
+            if (StartOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today))
                 StartOfAutumn.Invoke(this, e);
 
-            if (StartOfWinter != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today))
+            if (StartOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today))
                 StartOfWinter.Invoke(this, e);
 
-            if (StartOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today))
+            if (StartOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today))
                 StartOfSpring.Invoke(this, e);
         }
 
@@ -829,16 +829,16 @@ namespace Models.Climate
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
-            if (EndOfSummer != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
+            if (EndOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
                 EndOfSummer.Invoke(this, e);
 
-            if (EndOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
+            if (EndOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
                 EndOfAutumn.Invoke(this, e);
 
-            if (EndOfWinter != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
+            if (EndOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
                 EndOfWinter.Invoke(this, e);
 
-            if (EndOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
+            if (EndOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
                 EndOfSpring.Invoke(this, e);
         }
 
