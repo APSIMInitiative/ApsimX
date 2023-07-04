@@ -83,7 +83,8 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Takes a day/month date string <paramref name="dayMonthString"/> and returns a DateTime set to the given year <paramref name="year"/>
-        /// Will throw an exception if the provided string has a year that is different from the given year.
+        /// If the string has a year component, a warning will be given and the string will just be parse without the year being changed.
+        /// If you want the year to always be applied, use GetDateReplaceYear instead.
         /// </summary>
         /// <param name="dayMonthString">String containing a day and month in a valid format</param>
         /// <param name="year">The year in this parameter will be used to construct the result</param>
@@ -91,14 +92,20 @@ namespace APSIM.Shared.Utilities
         public static DateTime GetDate(string dayMonthString, int year)
         {
             DateAsParts parts = ParseDateString(dayMonthString);
-            if (!parts.yearWasMissing && parts.year != year)
-            {
-                //throw new Exception($"A year ({parts.year}) was found in date {dayMonthString} which does not match the given year ({year})");
-                //We need to tell users that they supplied a day/month string with a year, but then have a different year provided
-                //Recommend GetDateReplaceYear if they want to replace.
-                //WARNING HERE
+            if (parts.yearWasMissing) {
+                return GetDate(parts.day, parts.month, year);
             }
-            return GetDate(parts.day, parts.month, year);
+            else
+            {
+                if (parts.year != year)
+                {
+                    //throw new Exception($"A year ({parts.year}) was found in date {dayMonthString} which does not match the given year ({year})");
+                    //We need to tell users that they supplied a day/month string with a year, but then have a different year provided
+                    //Recommend GetDateReplaceYear if they want to replace.
+                    //WARNING HERE
+                }
+                return GetDate(parts);
+            }            
         }
 
         /// <summary>
