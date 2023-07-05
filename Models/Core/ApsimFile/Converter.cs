@@ -176,7 +176,7 @@ namespace Models.Core.ApsimFile
                     var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
                     var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
                     var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
-                    if (soilNitrogenSample == null)
+                    if (soilNitrogenSample != null)
                     {
                         if (soilNitrogenNO3Sample == null)
                         {
