@@ -24,7 +24,7 @@ namespace Models.Storage
         private List<IRunnable> commands = new List<IRunnable>();
 
         /// <summary>A sleep job to stop the job runner from exiting.</summary>
-        private IRunnable sleepJob = new EmptyJob();
+        private IRunnable sleepJob = new JobRunnerSleepJob(10);
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
         private JobRunner commandRunner;
