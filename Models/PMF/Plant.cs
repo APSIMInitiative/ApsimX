@@ -400,12 +400,13 @@ namespace Models.PMF
         }
 
         /// <summary>Harvest the crop.</summary>
-        public void Harvest()
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
             Phenology.SetToEndStage();
             Harvesting?.Invoke(this, EventArgs.Empty);
-            foreach (var organ in Organs)
-                organ.Harvest();
+            if (removeBiomassFromOrgans)
+                foreach (var organ in Organs)
+                    organ.Harvest();
         }
 
         /// <summary>End the crop.</summary>

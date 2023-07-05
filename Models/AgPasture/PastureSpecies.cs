@@ -256,7 +256,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Harvests the crop.</summary>
-        public void Harvest()
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
             throw new NotImplementedException();
         }

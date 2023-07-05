@@ -18,6 +18,9 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model
     {
+        [Link]
+        Zone zone = null;
+
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g")]
@@ -28,8 +31,7 @@ namespace Models.LifeCycle
 
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may consume")]
-        [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]
-        public IHasDamageableBiomass HostOrgan { get; set; }
+        public string HostOrganName { get; set; }
 
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
@@ -38,14 +40,22 @@ namespace Models.LifeCycle
             double organWtConsumed = 0;
             if (ParentPhase.Cohorts != null)
             {
+                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                if (hostOrgan == null)
+                    throw new Exception($"Cannot find host organ: {HostOrganName}");
+
                 foreach (Cohort c in ParentPhase.Cohorts)
                 {
                     ParentPhase.CurrentCohort = c;
                     organWtConsumed += c.Population * OrganWtConsumptionPerIndividual.Value();
-                    DamageableBiomass live = HostOrgan.Material.FirstOrDefault(m => m.IsLive);
-                    fractionLiveToConsume += Math.Max(1, organWtConsumed / live.Total.Wt);
+                    DamageableBiomass live = hostOrgan.Material.FirstOrDefault(m => m.IsLive);
+                    fractionLiveToConsume += Math.Min(1, organWtConsumed / live.Total.Wt);
                 }
-                HostOrgan.RemoveBiomass(fractionLiveToConsume);
+                // Commented out the line below. The simulation: PotatoPsyllidDamageTest
+                // in file Prototypes/Lifecycle/PotatoPests.apsimx has never worked correctly
+                // because it was talking to a leaf instance that wasn't attached to a plant.
+                // That has been fixed but now the line below throws inside of leaf.
+                //hostOrgan.RemoveBiomass(fractionLiveToConsume);
             }
 
         }

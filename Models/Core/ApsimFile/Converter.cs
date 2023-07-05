@@ -4905,7 +4905,7 @@ namespace Models.Core.ApsimFile
                     manager.ReplaceRegex(@$"{declarationInstanceName}\W*new.+;", string.Empty);
 
                     // Find all biomass removal fractions.
-                    var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
+                    var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.,\(\)+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
                                          .Where(man => !manager.PositionIsCommented(man.Index));
                     List <OrganFractions> organs = new List<OrganFractions>();
 
@@ -5000,7 +5000,7 @@ namespace Models.Core.ApsimFile
                         if (stageMatch.Success)
                         {
                             string newStageCode = new string(' ', indent) +
-                                                    $"{modelName}.structure?.DoThin({stageMatch.Groups[1].Value});";
+                                                    $"{modelName}.Phenology?.SetToStage({stageMatch.Groups[1].Value});";
                             code = code.Remove(stageMatch.Index, stageMatch.Length);
                             code = code.Insert(stageMatch.Index, newStageCode);
                         }

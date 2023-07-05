@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 346,
-  "Version": 160,
+  "ExplorerWidth": 356,
+  "Version": 163,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -259,6 +259,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "ModelInitialisation",
                   "End": "Dormant",
+                  "IsEmerged": true,
                   "Name": "ZeroPhase",
                   "ResourceName": null,
                   "Children": [
@@ -298,6 +299,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "Dormant",
                   "End": "BudBreak",
+                  "IsEmerged": true,
                   "DAWStoProgress": 30,
                   "Name": "SpringDormancy",
                   "ResourceName": null,
@@ -309,6 +311,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "BudBreak",
                   "End": "StartFruitGrowth",
+                  "IsEmerged": true,
                   "DAWStoProgress": 100,
                   "Name": "CanopyExpansion",
                   "ResourceName": null,
@@ -320,6 +323,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "StartFruitGrowth",
                   "End": "FruitRipe",
+                  "IsEmerged": true,
                   "DAWStoProgress": 300,
                   "Name": "FruitGrowth",
                   "ResourceName": null,
@@ -331,6 +335,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "FruitRipe",
                   "End": "BareTree",
+                  "IsEmerged": true,
                   "DAWStoProgress": 340,
                   "Name": "LeafFall",
                   "ResourceName": null,
@@ -342,6 +347,7 @@
                   "$type": "Models.PMF.Phen.DAWSPhase, Models",
                   "Start": "BareTree",
                   "End": "SpringDormant",
+                  "IsEmerged": true,
                   "DAWStoProgress": 365,
                   "Name": "WinterDormancy",
                   "ResourceName": null,
@@ -352,6 +358,7 @@
                 {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "BareTree",
+                  "IsEmerged": true,
                   "PhaseNameToGoto": "SpringDormancy",
                   "Name": "GotoPhase",
                   "ResourceName": null,
@@ -769,58 +776,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1514,7 +1476,7 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Trunk].Tallness",
-                  "Name": "Tallness",
+                  "Name": "HeightFunction",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1562,58 +1524,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2140,58 +2057,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.3,
-                      "FractionDeadToResidue": 0.9,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3040,58 +2912,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.8,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.2,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4652,6 +4479,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -5234,7 +5062,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Harvest\");\r\n                object NotHarvested = 0;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Prune\");\r\n                object NotHarvested = 1;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\nusing Models.PMF.Interfaces;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\n        \n        public event EventHandler Pruning;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n            {\r\n                SimpleFruitTree.Harvest();\r\n                object NotHarvested = 0;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n            {\n            \tvar Leaf = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Leaf\");\n            \tvar Trunk = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Trunk\");\n            \tvar Fruit = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Fruit\");\n            \tPruning?.Invoke(this, EventArgs.Empty);\n            \tLeaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n            \tTrunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);\r\n                Trunk.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\r\n                object NotHarvested = 1;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "HarvestDate",
@@ -5360,6 +5188,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -5895,7 +5724,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -8350,6 +8179,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -9872,7 +9702,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Harvest\");\r\n                object NotHarvested = 0;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Prune\");\r\n                object NotHarvested = 1;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.Utilities;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.PMF.Interfaces;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Plant SimpleFruitTree;\n        [Link] Summary Summary;\n        [Link] Zone zone;\n\n        [Description(\"Harvest date (d-mmm)\")]\n        public string HarvestDate { get; set; }\n        [Description(\"Pruning date (d-mmm)\")]\n        public string PruneDate { get; set; }\n        \n        public event EventHandler Pruning;\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\n            {\n                SimpleFruitTree.Harvest();\n                object NotHarvested = 0;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\n            {\n            \tvar Leaf = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Leaf\");\n            \tvar Trunk = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Trunk\");\n            \tvar Fruit = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Fruit\");\n            \tPruning?.Invoke(this, EventArgs.Empty);\n            \tLeaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n            \tTrunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);\n                Trunk.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n                object NotHarvested = 1;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "HarvestDate",
@@ -9998,6 +9828,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -10554,7 +10385,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 0.9)\r\n            {\r\n                Cover = 0.65;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 0.9)\r\n            {\r\n                Cover = 0.65;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -14340,6 +14171,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -15258,7 +15090,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Harvest\");\r\n                object NotHarvested = 0;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Prune\");\r\n                object NotHarvested = 1;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.Utilities;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.PMF.Interfaces;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Plant SimpleFruitTree;\n        [Link] Summary Summary;\n        [Link] Zone zone;\n\n        [Description(\"Harvest date (d-mmm)\")]\n        public string HarvestDate { get; set; }\n        [Description(\"Pruning date (d-mmm)\")]\n        public string PruneDate { get; set; }\n        \n        public event EventHandler Pruning;\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\n            {\n                SimpleFruitTree.Harvest();\n                object NotHarvested = 0;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\n            {\n            \tvar Leaf = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Leaf\");\n            \tvar Trunk = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Trunk\");\n            \tvar Fruit = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Fruit\");\n            \tPruning?.Invoke(this, EventArgs.Empty);\n            \tLeaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n            \tTrunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);\n                Trunk.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n                object NotHarvested = 1;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "HarvestDate",
@@ -15385,6 +15217,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -15958,7 +15791,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -18988,6 +18821,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -19827,7 +19661,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Summary Summary;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Harvest date (d-mmm)\")]\r\n        public string HarvestDate { get; set; }\r\n        [Description(\"Pruning date (d-mmm)\")]\r\n        public string PruneDate { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Harvest\");\r\n                object NotHarvested = 0;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n\r\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\r\n            {\r\n                SimpleFruitTree.RemoveBiomass(\"Prune\");\r\n                object NotHarvested = 1;\r\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.Utilities;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.PMF.Interfaces;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Plant SimpleFruitTree;\n        [Link] Summary Summary;\n        [Link] Zone zone;\n\n        [Description(\"Harvest date (d-mmm)\")]\n        public string HarvestDate { get; set; }\n        [Description(\"Pruning date (d-mmm)\")]\n        public string PruneDate { get; set; }\n        \n        public event EventHandler Pruning;\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(HarvestDate, Clock.Today, HarvestDate))\n            {\n                SimpleFruitTree.Harvest();\n                object NotHarvested = 0;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n\n            if (DateUtilities.WithinDates(PruneDate, Clock.Today, PruneDate))\n            {\n            \tvar Leaf = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Leaf\");\n            \tvar Trunk = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Trunk\");\n            \tvar Fruit = SimpleFruitTree.FindChild<IHasDamageableBiomass>(\"Fruit\");\n            \tPruning?.Invoke(this, EventArgs.Empty);\n            \tLeaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n            \tTrunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);\n                Trunk.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);\n                object NotHarvested = 1;\n                zone.Set(\"SimpleFruitTree.Fruit.DMDemands.Structural.PartitionFraction.FruitGrowth.Fraction.NotHarvested.FixedValue\", NotHarvested);\n            }\n        }\n        \n    }\n}\n",
               "Parameters": [
                 {
                   "Key": "HarvestDate",
@@ -19953,6 +19787,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -20497,7 +20332,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.0005;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.75;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -25087,6 +24922,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -25766,7 +25602,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Ext_coef",
@@ -25874,6 +25710,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -31897,6 +31734,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -32710,7 +32548,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Ext_coef",
@@ -32834,6 +32672,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -37464,6 +37303,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -38244,7 +38084,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Ext_coef",
@@ -38362,6 +38202,7 @@
                       "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
@@ -40310,6 +40151,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -41549,7 +41391,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.Tallness.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "using Models.Soils;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Weather weather;\r\n\r\n        \r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of leaves\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Minimum height of leaves\")]\r\n        public double MinimumHeight { get; set; }\r\n        \r\n        public double Cover {get; private set;}\r\n        public double LAI { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Cover = 0.5;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            Cover += weather.MeanT * 0.001;\r\n\r\n            if (Cover >= 1.0)\r\n            {\r\n                Cover = 0.5;        \r\n            }\r\n\r\n              LAI = Math.Log(1 - Cover) / -Ext_coef;\r\n\r\n            object LAIResetValue = LAI;\r\n            zone.Set(\"Slurp.Leaf.Area.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = MinimumHeight + Cover * (MaximumHeight-MinimumHeight);\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "Ext_coef",
@@ -41665,6 +41507,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
