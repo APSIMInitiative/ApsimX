@@ -131,6 +131,8 @@ namespace Models.Core.ApsimFile
                     if (sample == null)
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
+                    var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
+
                     bool res = false;
                     if (initWater == null)
                     {
@@ -143,7 +145,7 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(initWater);
                         res = true;
                     }
-                    if (sample == null)
+                    if (sample == null && soilNitrogenSample == null) //no solutes on Soil Nitrogen, don't add them
                     {
                         soilChildren.Add(new JObject
                         {
@@ -170,6 +172,46 @@ namespace Models.Core.ApsimFile
                         });
                         res = true;
                     }
+
+                    var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
+                    var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
+                    var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+                    if (soilNitrogenSample == null)
+                    {
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
+                                ["Name"] = "NO3",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 3 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
+                                ["Name"] = "NH4",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 1 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
+                                ["Name"] = "Urea",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 0.0 })
+                            });
+                        }
+                    }
+
+                    
+
                     return res;
                 }
             }
