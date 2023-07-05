@@ -75,6 +75,9 @@ namespace Models.WaterModel
         /// <summary>Is simulation in summer?</summary>
         private bool isInSummer;
 
+        /// <summary>The value of U yesterday. Used to detect a change in U.</summary>
+        private double UYesterday;
+
         /// <summary>Date for start of summer.</summary>
         private DateTime summerStartDate;
 
@@ -134,6 +137,7 @@ namespace Models.WaterModel
                 u = waterBalance.SummerU;
                 cona = waterBalance.SummerCona;
             }
+            UYesterday = u;
 
             //! set up evaporation stage
             var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]),
@@ -171,6 +175,7 @@ namespace Models.WaterModel
             //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
+            UYesterday = U;
             return Es;
         }
 
@@ -306,6 +311,14 @@ namespace Models.WaterModel
             // Calculate actual soil water evaporation
             double esoil1;     // actual soil evap in stage 1
             double esoil2;     // actual soil evap in stage 2
+
+            // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop 
+            // artificially entering stage 1 evap. GitHub Issue #8112
+            if (UYesterday != U)
+            {
+                sumes1 = U;
+                sumes2 = CONA * Math.Pow(t, 0.5);
+            }
 
             // if infiltration, reset sumes1
             // reset sumes2 if infil exceeds sumes1
