@@ -324,7 +324,7 @@
                     new Draft()
                     {
                         StartDate = "1-Jan",
-                        EndDate = " 10-Jan",
+                        EndDate = "10-Jan",
                         TypeOfDraft = Draft.DraftType.Fixed,
                         TagNumbers = new int[] { 1 },
                         PaddockNames = new string[] { "Field2" }
@@ -434,7 +434,7 @@
                     new Draft()
                     {
                         StartDate = "1-Jan",
-                        EndDate = " 10-Jan",
+                        EndDate = "10-Jan",
                         TypeOfDraft = Draft.DraftType.Flexible,
                         CheckEvery = 1,
                         TagNumberPriority1 = new int[] { 2 },
