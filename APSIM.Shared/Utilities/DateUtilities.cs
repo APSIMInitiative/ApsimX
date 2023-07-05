@@ -1,4 +1,7 @@
-﻿using DocumentFormat.OpenXml.Office.MetaAttributes;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Office.MetaAttributes;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.VisualBasic;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -103,21 +106,6 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Takes a <paramref name="dateString"/> and <paramref name="formatString"/> and returns a DateTime in the specified format.
-        /// </summary>
-        /// <param name="dateString"></param>
-        /// <param name="formatString"></param>
-        /// <returns></returns>
-        public static DateTime GetDate(string dateString, string formatString)
-        {
-            if (!String.IsNullOrEmpty(dateString) || !String.IsNullOrEmpty(formatString))
-            {
-                return DateTime.ParseExact(dateString, formatString, CultureInfo.InvariantCulture);
-            }
-            else throw new Exception($"One or both parameters in GetDate({dateString}, {formatString}) are null or empty.");
-        }
-
-        /// <summary>
         /// Takes a day/month date string <paramref name="dayMonthString"/> and returns a DateTime set to the given year <paramref name="year"/>
         /// If the string has a year component, a warning will be given and the string will just be parse without the year being changed.
         /// If you want the year to always be applied, use GetDateReplaceYear instead.
@@ -146,7 +134,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Takes a day/month date string <paramref name="ddMMM"/> and returns a DateTime set to the same year as the provided Date <paramref name="date"/>
-        /// Will throw an exception if the provided string has a year that is different from the given year.
+        /// Will give a warning if the provided string has a year that is different from the given year.
         /// </summary>
         /// <param name="ddMMM">String containing a day and month in a valid format</param>
         /// <param name="date">The year in this date will be used to construct the result</param>
@@ -314,14 +302,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Does a date comparison where a datestring can be dd-mmm or yyyy-mm-dd
+        /// Does a date comparison between a string and a datetime
         /// </summary>
-        /// <param name="dateStr">The date as a string, (ie, 01-jan or 2010-01-21)</param>
+        /// <param name="dateStr">The date as a string in valid format.</param>
         /// <param name="d">The date to compare the string with.</param>
         /// <returns>True if the string matches the date.</returns>
         public static bool DatesAreEqual(string dateStr, DateTime d)
         {
-            return (d == GetDate(dateStr, d.Year));
+            return d == GetDate(dateStr, d.Year);
         }
 
         /// <summary>
@@ -348,7 +336,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="dateStr"></param>
         /// <returns>Return null if not valid, otherwise it returns a string with the valid dd-MMM string or a valid date as a string (yyyy-mm-dd)</returns>
-        public static string validateDateString(string dateStr)
+        public static string ValidateDateString(string dateStr)
         {
             DateAsParts parts;
             try
@@ -374,26 +362,37 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Given today's date (<paramref name="today"/>), get the next occurrence of <paramref name="thedate"/> by adding/subtracting year(s)
+        /// Given a <paramref name="dateToChange"/>, get the next occurrence of <paramref name="dateToChange"/> after <paramref name="date"/> by adding year(s)
         /// </summary>
-        /// <param name="thedate">The date to change</param>
-        /// <param name="today">Today's date</param>
-        /// <returns>The next occurrence of <paramref name="thedate"/></returns>
-        public static DateTime GetNextDate(DateTime thedate, DateTime today)
+        /// <param name="dateToChange">The date to change</param>
+        /// <param name="date">Today's date</param>
+        /// <returns>The next occurrence of <paramref name="dateToChange"/></returns>
+        public static DateTime GetNextDate(DateTime dateToChange, DateTime date)
         {
-            thedate = thedate.AddYears(today.Year - thedate.Year);
-            return today.CompareTo(thedate) < 0 ? thedate : thedate.AddYears(1);
+            DateTime newDate;
+            newDate = dateToChange.AddYears(date.Year - dateToChange.Year);
+            if (newDate.CompareTo(date) < 0)
+                newDate = newDate.AddYears(1);
+            return newDate;
         }
 
         /// <summary>
-        /// Given a 'ddMMM' string (ie '01Jan' OR '1-Jan' OR '1 Jan' etc) and <paramref name="today"/>, return the next occurrence of <paramref name="ddMMM"/>
+        /// Given a 'dateString' with day and month, and <paramref name="date"/> (such as clock.Today), get the next occurrence of <paramref name="dateString"/> after <paramref name="date"/> by adding year(s)
+        /// If <paramref name="dateString"/> does not have a year, the year in <paramref name="date"/> will be used
         /// </summary>
-        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <param name="today">Today's date</param>
-        /// <returns>The next occurrence of <paramref name="ddMMM"/></returns>
-        public static DateTime GetNextDate(string ddMMM, DateTime today)
+        /// <param name="dateString">String containing 'day of month' and at least the first 3 letters of a month's name</param>
+        /// <param name="date">Today's date</param>
+        /// <returns>The next occurrence of <paramref name="dateString"/></returns>
+        public static DateTime GetNextDate(string dateString, DateTime date)
         {
-            return GetNextDate(GetDate(ddMMM, today.Year), today);
+            DateAsParts parts = ParseDateString(dateString);
+            DateTime dateToChange;
+            if (parts.yearWasMissing)
+                dateToChange = GetDate(parts.day, parts.month, date.Year);
+            else
+                dateToChange = GetDate(parts);
+
+            return GetNextDate(dateToChange, date);
         }
 
         /////////////////////////////////////////////////////////////////////////////   
@@ -764,6 +763,22 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Takes a <paramref name="dateString"/> and <paramref name="formatString"/> and returns a DateTime in the specified format.
+        /// </summary>
+        /// <param name="dateString"></param>
+        /// <param name="formatString"></param>
+        /// <returns></returns>
+        [Obsolete("This is deprecated. Use GetDate(string) with a valid format, or directly use the DateTime library ParseExact Function.", false)]
+        public static DateTime GetDate(string dateString, string formatString)
+        {
+            if (!String.IsNullOrEmpty(dateString) || !String.IsNullOrEmpty(formatString))
+            {
+                return DateTime.ParseExact(dateString, formatString, CultureInfo.InvariantCulture);
+            }
+            else throw new Exception($"One or both parameters in GetDate({dateString}, {formatString}) are null or empty.");
+        }
+
+        /// <summary>
         /// Convert a dd/mm/yyyy to DateTime
         /// </summary>
         /// <param name="dmy">[d]d/[m]m/yyyy</param>
@@ -811,7 +826,7 @@ namespace APSIM.Shared.Utilities
         [Obsolete("ReformatDayMonthString has been deprecated, use ValidateDateString instead", false)]
         private static string ReformatDayMonthString(string ddMMM)
         {
-            return validateDateString(ddMMM);
+            return ValidateDateString(ddMMM);
         }
     }
 
