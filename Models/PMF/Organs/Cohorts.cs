@@ -125,23 +125,6 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Set the total live biomass of the cohort.
-        /// </summary>
-        public void SetLive(Biomass b)
-        {
-            live = b;
-        }
-
-        /// <summary>
-        /// Set the total dead biomass of the cohort.
-        /// </summary>
-        public void SetDead(Biomass b)
-        {
-            dead = b;
-        }
-
-
-        /// <summary>
         /// Add new leaf material to the last leaf in the list.
         /// </summary>
         /// <param name="structuralMass">Structural biomass to add to the leaf.</param>
