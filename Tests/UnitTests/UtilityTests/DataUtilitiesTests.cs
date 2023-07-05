@@ -137,6 +137,7 @@ namespace UnitTests.UtilityTests
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-23-2000")); //US Format with no month name
             Assert.Throws<Exception>(() => DateUtilities.GetDate("01-13-2000")); //Impossible month
             Assert.Throws<Exception>(() => DateUtilities.GetDate("40-01-2000")); //Impossible day
+            Assert.Throws<Exception>(() => DateUtilities.GetDate("1-Aug-15-Aug")); //typo in date list
         }
 
         [Test]
@@ -160,8 +161,8 @@ namespace UnitTests.UtilityTests
             Assert.Negative(DateUtilities.CompareDates(ddmmyyyy, date.AddDays(-1)));
 
             //DayMonth comparisions
-            Assert.IsTrue(DateUtilities.DayMonthIsEqual(ddmmyyyy, date.ToShortDateString()));
-            Assert.IsFalse(DateUtilities.DayMonthIsEqual(ddmmyyyy, date.AddDays(1).ToShortDateString()));
+            Assert.IsTrue(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-10"));
+            Assert.IsFalse(DateUtilities.DayMonthIsEqual(ddmmyyyy, "2000-01-11"));
 
             Assert.IsTrue(DateUtilities.DayMonthIsEqual(ddmmyyyy, date));
             Assert.IsFalse(DateUtilities.DayMonthIsEqual(ddmmyyyy, date.AddDays(1)));

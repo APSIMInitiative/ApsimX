@@ -1,8 +1,4 @@
-﻿using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Office.MetaAttributes;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -86,10 +82,10 @@ namespace APSIM.Shared.Utilities
             rxDateNoSymbol = new Regex(@"^\d\d\w\w\w$|^\w\w\w\d\d$"),
             rxDateAllNums = new Regex(@"^\d\d?-\d\d?-(\d{4}|\d{2})$|^\d\d?-\d\d?$"),
             rxISO = new Regex(@"^\d\d\d\d-\d\d-\d\d$|^\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d$");
-            
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
+        /// Ambigous dates such as "01/04/2000" will be parsed as "Day/Month/Year"
         /// </summary>
         /// <param name="dateString">The date</param>
         public static DateTime GetDate(string dateString)
@@ -107,7 +103,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Takes a day/month date string <paramref name="dayMonthString"/> and returns a DateTime set to the given year <paramref name="year"/>
-        /// If the string has a year component, a warning will be given and the string will just be parse without the year being changed.
+        /// WARNING: If the string has a year component, the string will just be parsed without the year being changed.
         /// If you want the year to always be applied, use GetDateReplaceYear instead.
         /// </summary>
         /// <param name="dayMonthString">String containing a day and month in a valid format</param>
@@ -121,27 +117,20 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                if (parts.year != year)
-                {
-                    //throw new Exception($"A year ({parts.year}) was found in date {dayMonthString} which does not match the given year ({year})");
-                    //We need to tell users that they supplied a day/month string with a year, but then have a different year provided
-                    //Recommend GetDateReplaceYear if they want to replace.
-                    //WARNING HERE
-                }
                 return GetDate(parts);
             }            
         }
 
         /// <summary>
-        /// Takes a day/month date string <paramref name="ddMMM"/> and returns a DateTime set to the same year as the provided Date <paramref name="date"/>
+        /// Takes a day/month date string <paramref name="dateString"/> and returns a DateTime set to the same year as the provided Date <paramref name="date"/>
         /// Will give a warning if the provided string has a year that is different from the given year.
         /// </summary>
-        /// <param name="ddMMM">String containing a day and month in a valid format</param>
+        /// <param name="dateString">String containing a day and month in a valid format</param>
         /// <param name="date">The year in this date will be used to construct the result</param>
-        /// <returns>A DateTime constructed from <paramref name="ddMMM"/> using the year of <paramref name="date"/></returns>
-        public static DateTime GetDate(string ddMMM, DateTime date)
+        /// <returns>A DateTime constructed from <paramref name="dateString"/> using the year of <paramref name="date"/></returns>
+        public static DateTime GetDate(string dateString, DateTime date)
         {
-            return GetDate(ddMMM, date.Year);
+            return GetDate(dateString, date.Year);
         }
 
         /// <summary>
@@ -425,7 +414,7 @@ namespace APSIM.Shared.Utilities
         /// 2000-June-01
         /// Jan01
         /// 01Jan
-        /// 01-02-2022 (With Warning as it's ambigous)
+        /// 01-02-2022
         /// </summary>
         /// <param name="dateString">The date</param>
         /// <returns>A DateAsParts object with year, month, day, and flag if the year was missing</returns>
@@ -520,9 +509,6 @@ namespace APSIM.Shared.Utilities
                     yearNum = ParseYearString(parts[2], dateString);
                     yearMissing = false;
                 }
-
-                //but we need to give the user a warning that their date is ambigous
-                //WARNING HERE
             }
             else
             {
@@ -622,10 +608,8 @@ namespace APSIM.Shared.Utilities
                 throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 2 or 4 numbers.");
         }
 
-        /////////////////////////////////////////////////////////////////////////////   
-        /////////////////////////////////////////////////////////////////////////////  
-        /////////////////////////////////////////////////////////////////////////////  
-        /////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////
+        //Deprecated Functions
 
         /// <summary>
         /// Convert a Julian Date to a DateTime object
