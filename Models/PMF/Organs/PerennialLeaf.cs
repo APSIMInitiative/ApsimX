@@ -675,6 +675,8 @@ namespace Models.PMF.Organs
             Biomass liveAfterRemoval = Live;
             Biomass deadAfterRemoval = Dead;
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
+            cohort.SetLive(liveAfterRemoval);
+            cohort.SetDead(deadAfterRemoval);
 
             double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
             double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0);
