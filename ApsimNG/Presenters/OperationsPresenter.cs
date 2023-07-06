@@ -78,7 +78,7 @@
                     // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
                     string dateStr = null;
                     if (!string.IsNullOrEmpty(operation.Date))
-                        dateStr = DateUtilities.validateDateString(operation.Date);
+                        dateStr = DateUtilities.ValidateDateString(operation.Date);
                     string commentChar = operation.Enabled ? string.Empty : "// ";
                     st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
                 }
@@ -113,7 +113,7 @@
                     {
                         Operation operation = new Operation();
                         string dateString = currentLine.Substring(0, pos);
-                        operation.Date = DateUtilities.validateDateString(dateString);
+                        operation.Date = DateUtilities.ValidateDateString(dateString);
                         if (operation.Date == null)
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse date string {dateString}", Models.Core.Simulation.MessageType.Warning);
 

@@ -27,6 +27,11 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        /// <summary>
+        /// The plant
+        /// </summary>
+        [Link]
+        private Plant plant = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
@@ -388,6 +393,9 @@ namespace Models.PMF.Organs
                 if (Phenology.OnStartDayOf("Emergence"))
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
+
+            if (plant.IsAlive || plant.IsEnding)
+                ClearBiomassFlows();
         }
         #endregion
 
@@ -414,6 +422,15 @@ namespace Models.PMF.Organs
             if (Structure != null)
                 Structure.LeafTipsAppeared = 0;
 
+        }
+
+        /// <summary>
+        /// Clears the transferring biomass amounts.
+        /// </summary>
+        private void ClearBiomassFlows()
+        {
+            Detached.Clear();
+            Removed.Clear();
         }
         #endregion
 
@@ -688,6 +705,9 @@ namespace Models.PMF.Organs
             Biomass liveAfterRemoval = Live;
             Biomass deadAfterRemoval = Dead;
             double amountRemoved = biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, liveAfterRemoval, deadAfterRemoval, Removed, Detached);
+
+            cohort.ReduceLeavesUniformly(liveFraction: MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0),
+                                         deadFraction: MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0));
 
             double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
             double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0);
