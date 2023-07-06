@@ -317,6 +317,8 @@ namespace Models
                 }
 
                 filter = filter?.Replace('\"', '\'');
+                filter = RemoveMiddleWildcards(filter);
+
                 View = new DataView(data);
                 try
                 {
@@ -521,6 +523,36 @@ namespace Models
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
+        }
+
+        /// <summary>Rewrites a filter that has a wildcard in the middle of a field
+        /// Wildcards in the middle are not supported by Row Filters, so it's broken into multiple filters</summary>
+        /// <param name="filter">The filter as a string</param>
+        /// <returns>The modified filter as a string</returns>
+        private string RemoveMiddleWildcards(string filter)
+        {
+            string newString = filter;
+            string likePattern = @"(.*\sLIKE\s['""])(.*?[^""'])([%*])([^""'][^%*]+)(.*)";
+            bool stillMatches = true;
+            while (stillMatches)
+            {
+                Match match = Regex.Match(newString, likePattern);
+                stillMatches = match.Success;
+                if (stillMatches)
+                {
+                    newString = "";
+                    newString += match.Groups[1];
+                    newString += match.Groups[2];
+                    newString += match.Groups[3];
+                    newString += "' AND ";
+                    newString += match.Groups[1];
+                    newString += match.Groups[3];
+                    newString += match.Groups[4];
+                    if (match.Groups.Count == 6)
+                        newString += match.Groups[5];
+                }
+            }
+            return newString;
         }
 
     }
