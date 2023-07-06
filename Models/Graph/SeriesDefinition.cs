@@ -531,11 +531,19 @@ namespace Models
         /// <returns>The modified filter as a string</returns>
         private string RemoveMiddleWildcards(string filter)
         {
+            if (filter == null || filter == "")
+                return filter;
+
             string newString = filter;
             string likePattern = @"(.*\sLIKE\s['""])(.*?[^""'])([%*])([^""'][^%*]+)(.*)";
             bool stillMatches = true;
-            while (stillMatches)
+
+            //add a bit of protection to this loop so we can break it and return an error if it loops forever.
+            int maxTries = 10;
+            int loops = 0;
+            while (stillMatches && loops < maxTries)
             {
+                loops += 1;
                 Match match = Regex.Match(newString, likePattern);
                 stillMatches = match.Success;
                 if (stillMatches)
@@ -552,6 +560,10 @@ namespace Models
                         newString += match.Groups[5];
                 }
             }
+
+            if (loops == maxTries)
+                throw new Exception($"Row Filter '{filter}' contains wildcard characters that cannot be parsed correctly.");
+
             return newString;
         }
 
