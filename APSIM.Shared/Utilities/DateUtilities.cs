@@ -19,13 +19,17 @@ namespace APSIM.Shared.Utilities
             public int month { get; set; }
             public int year { get; set; }
             public bool yearWasMissing { get; set; }
+            public bool parseError { get; set; }
+            public string errorMsg { get; set; }
 
-            public DateAsParts(int day, int month, int year, bool yearWasMissing)
+            public DateAsParts(int day, int month, int year, bool yearWasMissing, bool parseError, string errorMsg)
             {
                 this.day = day;
                 this.month = month;
                 this.year = year;
                 this.yearWasMissing = yearWasMissing;
+                this.parseError = parseError;
+                this.errorMsg = errorMsg;
             }
         }
 
@@ -46,7 +50,7 @@ namespace APSIM.Shared.Utilities
         static private bool monthNamesInLowerCase = false;
 
         /// <summary>
-        /// List of all seperators that can be used for date strings
+        /// List of all separators that can be used for date strings
         /// </summary>
         static public readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
         private const char SEPERATOR_REPLACEMENT = '-';
@@ -62,7 +66,7 @@ namespace APSIM.Shared.Utilities
         public const string DEFAULT_FORMAT_DAY_MONTH = "dd-MMM";
 
         /// <summary>
-        /// Format that a date wtih year, month and day is provided in if returned as a sting
+        /// Format that a date with year, month and day is provided in if returned as a sting
         /// </summary>
         public const string DEFAULT_FORMAT_DAY_MONTH_YEAR = "yyyy-MM-dd";
 
@@ -85,7 +89,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Convert any valid date string into a DateTime objects.
-        /// Ambigous dates such as "01/04/2000" will be parsed as "Day/Month/Year"
+        /// Ambiguous dates such as "01/04/2000" will be parsed as "Day/Month/Year"
         /// </summary>
         /// <param name="dateString">The date</param>
         public static DateTime GetDate(string dateString)
@@ -93,6 +97,9 @@ namespace APSIM.Shared.Utilities
             try
             {
                 DateAsParts parts = ParseDateString(dateString);
+                if (parts.parseError)
+                    throw new Exception(parts.errorMsg);
+
                 return GetDate(parts.day, parts.month, parts.year);
             } 
             catch(Exception ex)
@@ -112,6 +119,9 @@ namespace APSIM.Shared.Utilities
         public static DateTime GetDate(string dayMonthString, int year)
         {
             DateAsParts parts = ParseDateString(dayMonthString);
+            if (parts.parseError)
+                throw new Exception(parts.errorMsg);
+
             if (parts.yearWasMissing) {
                 return GetDate(parts.day, parts.month, year);
             }
@@ -182,6 +192,9 @@ namespace APSIM.Shared.Utilities
         public static DateTime GetDateReplaceYear(string dayMonthString, int year)
         {
             DateAsParts parts = ParseDateString(dayMonthString);
+            if (parts.parseError)
+                throw new Exception(parts.errorMsg);
+
             return GetDate(parts.day, parts.month, year);
         }
 
@@ -195,6 +208,9 @@ namespace APSIM.Shared.Utilities
         public static int CompareDates(string dateString, DateTime date)
         {
             DateAsParts parts = ParseDateString(dateString);
+            if (parts.parseError)
+                throw new Exception(parts.errorMsg);
+
             if (parts.yearWasMissing)
             {
                 return date.CompareTo(GetDate(parts.day, parts.month, date.Year));
@@ -328,14 +344,9 @@ namespace APSIM.Shared.Utilities
         public static string ValidateDateString(string dateStr)
         {
             DateAsParts parts;
-            try
-            {
-                parts = ParseDateString(dateStr);
-            }
-            catch
-            {
+            parts = ParseDateString(dateStr);
+            if (parts.parseError)
                 return null;
-            }
 
             DateTime date = GetDate(parts);
 
@@ -375,6 +386,9 @@ namespace APSIM.Shared.Utilities
         public static DateTime GetNextDate(string dateString, DateTime date)
         {
             DateAsParts parts = ParseDateString(dateString);
+            if (parts.parseError)
+                throw new Exception(parts.errorMsg);
+
             DateTime dateToChange;
             if (parts.yearWasMissing)
                 dateToChange = GetDate(parts.day, parts.month, date.Year);
@@ -424,6 +438,8 @@ namespace APSIM.Shared.Utilities
             //trim whitespace
             string dateTrimmed = dateWithSymbolsParsed.Trim();
 
+            DateAsParts values = new DateAsParts(1, 1, DEFAULT_YEAR, false, false, "");
+
             //check that the string has a valid symbol
             //replace it with a - character
 
@@ -449,7 +465,8 @@ namespace APSIM.Shared.Utilities
 
                 if (types > 1)
                 {
-                    throw new Exception($"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).");
+                    values.parseError = true;
+                    values.errorMsg = $"Date {dateString} cannot be parsed as it multiple symbol types. ({symbols}).";
                 }
                 else if (types == 0)
                 {
@@ -462,52 +479,62 @@ namespace APSIM.Shared.Utilities
                     }
                     else
                     {
-                        throw new Exception($"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).");
+                        values.parseError = true;
+                        values.errorMsg = $"Date {dateString} cannot be parsed as it contains no valid symbols. ({symbols}).";
                     }
                 }
             }
 
-            //seperate by \t to get parts
+            //separate by \t to get parts
             string[] parts = dateTrimmed.Split(SEPERATOR_REPLACEMENT);
 
             //check that there are 2 or 3 parts and that each part has text in it
             if (parts.Length < 2 || parts.Length > 3)
-                throw new Exception($"Date {dateString} cannot be parsed as it only has {parts.Length} parts. Date should have 2 or 3 parts (day-month-year or day-month).");
+            {
+                values.parseError = true;
+                values.errorMsg = "Date {dateString} cannot be parsed as it only has {parts.Length} parts. Date should have 2 or 3 parts (day-month-year or day-month).";
+                return values;
+            }
 
             foreach (string part in parts)
+            {
                 if (part.Length == 0)
-                    throw new Exception($"Date {dateString} cannot be parsed as it it has an empty part after a symbol.");
+                {
+                    values.parseError = true;
+                    values.errorMsg = $"Date {dateString} cannot be parsed as it it has an empty part after a symbol.";
+                    return values;
+                }
+            }
 
-            int dayNum;
-            int monthNum;
-            int yearNum;
-            bool yearMissing = true;
+            string dayError = "";
+            string monthError = "";
+            string yearError = "";
             //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
             if (rxISO.Match(dateTrimmed).Success)
             {
-                yearNum = ParseYearString(parts[0], dateTrimmed);
-                monthNum = ParseMonthString(parts[1], dateTrimmed);
-
+                values.year = ParseYearString(parts[0], dateTrimmed, out yearError);
+                values.month = ParseMonthString(parts[1], dateTrimmed, out monthError);
                 //if this is a full ISO, split on the T character
                 if (parts[2].Contains('T'))
                     parts[2] = parts[2].Split('T')[0];
 
-                dayNum = ParseDayString(parts[2], dateString);
-                yearMissing = false;
+                values.day = ParseDayString(parts[2], dateString, out dayError);
             }
-            //if date is in ambigous 01-01-2000 format
+            //if date is in ambiguous 01-01-2000 format
             else if (rxDateAllNums.Match(dateTrimmed).Success)
             {
                 //by default we treat these as day-month-year
-                dayNum = ParseDayString(parts[0], dateString);
-                monthNum = ParseMonthString(parts[1], dateString);
+                values.day = ParseDayString(parts[0], dateString, out dayError);
+                values.month = ParseMonthString(parts[1], dateString, out monthError);
 
-                //optional third part is year
-                yearNum = DEFAULT_YEAR;
                 if (parts.Length == 3)
                 {
-                    yearNum = ParseYearString(parts[2], dateString);
-                    yearMissing = false;
+                    values.year = ParseYearString(parts[2], dateString, out yearError);
+                    values.yearWasMissing = false;
+                } 
+                else
+                {
+                    values.yearWasMissing = true;
                 }
             }
             else
@@ -516,47 +543,67 @@ namespace APSIM.Shared.Utilities
                 if (rxDay.Match(parts[0]).Success)
                 {
                     //first part is day
-                    dayNum = ParseDayString(parts[0], dateString);
+                    values.day = ParseDayString(parts[0], dateString, out dayError);
                     //second part is month
-                    monthNum = ParseMonthString(parts[1], dateString);
+                    values.month = ParseMonthString(parts[1], dateString, out monthError);
                 }
                 //else if first part is a word (we can just reuse the full month name regex for that)
                 else if (rxMonthFull.Match(parts[0]).Success)
                 {
                     //second part is day
-                    dayNum = ParseDayString(parts[1], dateString);
+                    values.day = ParseDayString(parts[1], dateString, out dayError);
                     //first part is month
-                    monthNum = ParseMonthString(parts[0], dateString);
+                    values.month = ParseMonthString(parts[0], dateString, out monthError);
                 }
                 else
                 {
-                    throw new Exception($"Date {dateString} cannot be parsed as the first part {parts[0]} is neither a valid day or month name.)");
+                    values.parseError = true;
+                    values.errorMsg = $"Date {dateString} cannot be parsed as the first part {parts[0]} is neither a valid day or month name.)";
                 }
 
-                //optional third part is year
-                yearNum = DEFAULT_YEAR;
                 if (parts.Length == 3)
                 {
-                    yearNum = ParseYearString(parts[2], dateString);
-                    yearMissing = false;
+                    values.year = ParseYearString(parts[2], dateString, out yearError);
+                    values.yearWasMissing = false;
+                }
+                else
+                {
+                    values.yearWasMissing = true;
                 }
             }
+            string combinedErrors = "";
+            if (dayError.Length > 0)
+                combinedErrors += dayError + "\n";
+            if (monthError.Length > 0)
+                combinedErrors += monthError + "\n";
+            if (yearError.Length > 0)
+                combinedErrors += yearError + "\n";
 
-            DateAsParts values = new DateAsParts(dayNum, monthNum, yearNum, yearMissing);
+            values.errorMsg = combinedErrors;
+            if (values.errorMsg.Length > 0)
+                values.parseError = true;
+
             return values;
         }
 
-        private static int ParseDayString(string dayString, string fullDate)
+        private static int ParseDayString(string dayString, string fullDate, out string errorMsg)
         {
             if (rxDay.Match(dayString).Success)
+            {
+                errorMsg = "";
                 return int.Parse(dayString);
+            }
             else
-                throw new Exception($"Date {fullDate} has {dayString} for day. Day must be exactly 2 numbers.");
+            {
+                errorMsg = $"Date {fullDate} has {dayString} for day. Day must be exactly 2 numbers.";
+                return 0;
+            }
         }
 
-        private static int ParseMonthString(string monthString, string fullDate)
+        private static int ParseMonthString(string monthString, string fullDate, out string errorMsg)
         {
             string monthLowerString = monthString.ToLower();
+            errorMsg = "";
 
             //make all our names lower case because they are capitalised
             //we only do this once
@@ -585,17 +632,21 @@ namespace APSIM.Shared.Utilities
                 else if (rxMonthFull.Match(monthLowerString).Success)
                     index = Array.IndexOf(MONTHS_FULL_NAME, monthLowerString) + 1;
                 else
-                    throw new Exception($"Date {fullDate} has {monthLowerString} for month. Month must be exactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)");
+                {
+                    errorMsg = $"Date {fullDate} has {monthLowerString} for month. Month must be exactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)";
+                    return 0;
+                }
             }
 
-            if (index > 0)
-                return index;
-            else
-                throw new Exception($"Date {fullDate} has {monthLowerString} for month, {monthLowerString} was not found in a month name list.");
+            if (index < 1)
+                errorMsg = $"Date {fullDate} has {monthLowerString} for month, {monthLowerString} was not found in a month name list.";
+
+            return index;
         }
 
-        private static int ParseYearString(string yearString, string fullDate)
+        private static int ParseYearString(string yearString, string fullDate, out string errorMsg)
         {
+            errorMsg = "";
             if (rxYear.Match(yearString).Success)
             {
                 return int.Parse(yearString);
@@ -605,7 +656,10 @@ namespace APSIM.Shared.Utilities
                 return DEFAULT_YEAR + int.Parse(yearString);
             }
             else
-                throw new Exception($"Date {fullDate} has {yearString} for year. Year must be exactly 2 or 4 numbers.");
+            {
+                errorMsg = $"Date {fullDate} has {yearString} for year. Year must be exactly 2 or 4 numbers.";
+                return 0;
+            }
         }
 
         ////////////////////////////////////////////
@@ -785,6 +839,9 @@ namespace APSIM.Shared.Utilities
         {
             //Unlike the normal getDate that takes a year, this should just hand back the date if it has a year
             DateAsParts parts = ParseDateString(dateStr);
+            if (parts.parseError)
+                throw new Exception(parts.errorMsg);
+
             if (parts.yearWasMissing)
                 return GetDate(parts.day, parts.month, year);
             else
