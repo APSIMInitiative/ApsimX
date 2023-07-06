@@ -1182,7 +1182,7 @@ namespace Models.Surface
                 if (fractionToRemove > 0)
                 {
                     summary.WriteMessage(this, $"Removing {mass:F2} kg/ha of biomass from surface organic matter pool", MessageType.Diagnostic);
-                    RemoveBiomass(null, null, new OrganBiomassRemovalType() { FractionDeadToRemove = fractionToRemove });
+                    RemoveBiomass(deadToRemove: fractionToRemove);
                 }
             }
         }

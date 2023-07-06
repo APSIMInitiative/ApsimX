@@ -61,9 +61,9 @@ namespace UnitTests.Stock
                                 Name = "Crop1",
                                 Material = new List<DamageableBiomass>()
                                 {
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),   // g/m2
-                                    new DamageableBiomass("Stem", new Biomass() {StructuralWt = 100 }, isLive: false),  // g/m2
-                                    new DamageableBiomass("Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)    // g/m2
+                                    new DamageableBiomass("Crop1.Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),   // g/m2
+                                    new DamageableBiomass("Crop1.Stem", new Biomass() {StructuralWt = 100 }, isLive: false),  // g/m2
+                                    new DamageableBiomass("Crop1.Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)    // g/m2
                                 }
                             }
                         }
@@ -86,21 +86,21 @@ namespace UnitTests.Stock
             Assert.AreEqual(190, forageMaterial[0].Consumable.Wt);  // 200 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
             Assert.IsTrue(forageMaterial[0].IsLive);
             Assert.AreEqual(0.7, forageMaterial[0].Digestibility);
-            Assert.AreEqual("Leaf", forageMaterial[0].Name);
+            Assert.AreEqual("Crop1.Leaf", forageMaterial[0].Name);
 
             // stem dead
             Assert.AreEqual(100, forageMaterial[1].Total.Wt);      // 100 (StructuralWt)
             Assert.AreEqual(45, forageMaterial[1].Consumable.Wt);  // 100 (StructuralWt) * 0.5 (FractionConsumable) - 5 (MinimumAmount)
             Assert.IsFalse(forageMaterial[1].IsLive);
             Assert.AreEqual(0.3, forageMaterial[1].Digestibility);
-            Assert.AreEqual("Stem", forageMaterial[1].Name);
+            Assert.AreEqual("Crop1.Stem", forageMaterial[1].Name);
 
             // stolon live
             Assert.AreEqual(5, forageMaterial[2].Total.Wt);        // 5 (StructuralWt)
             Assert.AreEqual(0, forageMaterial[2].Consumable.Wt);    // 5 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
             Assert.IsTrue(forageMaterial[2].IsLive);
             Assert.AreEqual(0.6, forageMaterial[2].Digestibility);
-            Assert.AreEqual("Stolon", forageMaterial[2].Name);
+            Assert.AreEqual("Crop1.Stolon", forageMaterial[2].Name);
         }
 
         /// <summary>Make sure digestibility can be expressed as a function.</summary>
@@ -140,7 +140,7 @@ namespace UnitTests.Stock
                                 Name = "Crop1",
                                 Material = new List<DamageableBiomass>()
                                 {
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),  // g/m2
+                                    new DamageableBiomass("Crop1.Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),  // g/m2
                                 }
                             }
                         }
@@ -196,7 +196,7 @@ namespace UnitTests.Stock
                                 Name = "Crop1",
                                 Material = new List<DamageableBiomass>()
                                 {
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
+                                    new DamageableBiomass("Crop1.Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
                                 }
                             }
                         }
@@ -245,7 +245,7 @@ namespace UnitTests.Stock
                                 Name = "Crop1",
                                 Material = new List<DamageableBiomass>()
                                 {
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
+                                    new DamageableBiomass("Crop1.Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
                                 }
                             }
                         }
