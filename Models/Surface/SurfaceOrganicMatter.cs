@@ -1140,23 +1140,44 @@ namespace Models.Surface
         /// <param name="name">Name of the biomass written to summary file</param>
         public void Add(double mass, double N, double P, string type, string name)
         {
-            // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
-            int SOMNo = GetResidueNumber(type);
-            if (SOMNo < 0)
-                SOMNo = AddNewSurfOM(type, type);
-
-            // convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
-
-            // Assume all surfom added is in the LYING pool, ie No STANDING component;
-            for (int i = 0; i < maxFr; i++)
+            if (mass > 0 || N > 0 || P > 0)
             {
-                SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
+                // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
+                int SOMNo = GetResidueNumber(type);
+                if (SOMNo < 0)
+                    SOMNo = AddNewSurfOM(type, type);
+
+                summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
+
+                // convert the ppm figures into kg/ha;
+                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
+
+                // Assume all surfom added is in the LYING pool, ie No STANDING component;
+                for (int i = 0; i < maxFr; i++)
+                {
+                    SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
+                }
+            }
+        }
+
+        /// <summary>Remove material from the surface organic matter pool.</summary>
+        /// <param name="mass">The amount of biomass to remove (kg/ha).</param>
+        public void Remove(double mass)
+        {
+            if (mass > 0 )
+            {
+                
+                double fractionToRemove = MathUtilities.Bound(MathUtilities.Divide(mass, Wt, 0), 0, 1);
+                if (fractionToRemove > 0)
+                {
+                    summary.WriteMessage(this, $"Removing {mass:F2} kg/ha of biomass from surface organic matter pool", MessageType.Diagnostic);
+                    RemoveBiomass(null, null, new OrganBiomassRemovalType() { FractionDeadToRemove = fractionToRemove });
+                }
             }
         }
 

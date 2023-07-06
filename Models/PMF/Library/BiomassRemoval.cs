@@ -81,9 +81,8 @@ namespace Models.PMF.Library
                     //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
                     if (plant.PlantType == null)
                         throw new Exception($"PlantType is null in plant {plant.Name}. The most likely cause is the use of an unofficial/unreleased plant model.");
-                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.PlantType, Name);
 
-                    if (writeToSummary)
+                    if (writeToSummary && (removing.Wt > 0 || detaching.Wt > 0))
                     {
                         double totalFractionToRemove = (Removed.Wt + detaching.Wt) * 100.0 / totalBiomass;
                         double toResidue = detaching.Wt * 100.0 / (Removed.Wt + detaching.Wt);
@@ -92,9 +91,10 @@ namespace Models.PMF.Library
                                                  + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
                                                  + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
                                                  + toResidue.ToString("0.0") + "% is returned to the surface organic matter.", MessageType.Diagnostic);
-                        summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
-                                                 + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
                     }
+
+                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.PlantType, Name);
+
                     return remainingLiveFraction;
                 }
             }
