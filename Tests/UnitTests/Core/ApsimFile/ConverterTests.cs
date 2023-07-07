@@ -368,14 +368,14 @@ namespace UnitTests.Core.ApsimFile
         }
 
         [Test]
-        public void Version163() //no this is not a typo, this is test 163
+        public void Version164() //no this is not a typo, this is test 164
         {
-            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest163FileBefore.apsimx");
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileBefore.apsimx");
             ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
             Simulations actualModel = converter.NewModel as Simulations;
             Assert.IsTrue(converter.DidConvert);
 
-            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest163FileAfter.apsimx");
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest164FileAfter.apsimx");
             converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
             Simulations expectedModel = converter.NewModel as Simulations;
 
