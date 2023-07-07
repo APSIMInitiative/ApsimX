@@ -100,14 +100,17 @@ namespace UserInterface.Presenters
                 List<Operation> operations = new List<Operation>();
                 foreach (string line in this.view.Lines)
                 {
-                    Operation operation = Operation.ParseOperationString(line);
-                    if (operation != null)
+                    if (line.Length > 0)
                     {
-                        operations.Add(operation);
-                    } 
-                    else
-                    {
-                        explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
+                        Operation operation = Operation.ParseOperationString(line);
+                        if (operation != null)
+                        {
+                            operations.Add(operation);
+                        }
+                        else
+                        {
+                            explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
+                        }
                     }
                 }
 
