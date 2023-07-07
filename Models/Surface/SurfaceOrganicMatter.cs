@@ -276,8 +276,8 @@ namespace Models.Surface
             {
                 // Return an empty live material. Stock won't find the dead material unless there 
                 // is matching live material.
-                yield return new DamageableBiomass("Residue", new Biomass(), isLive: true);
-                yield return new DamageableBiomass("Residue", new Biomass()
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
@@ -297,14 +297,15 @@ namespace Models.Surface
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
 
-        /// <summary>
-        /// Biomass removal logic for this organ.
-        /// </summary>
-        /// <param name="materialName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove</param>
-        public void RemoveBiomass(string materialName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
+            double amountRemoved = 0;
             for (int i = 0; i < SurfOM.Count; i++)
             {
                 double totalMassRemoved = 0;
@@ -316,13 +317,15 @@ namespace Models.Surface
                         double nFraction = standing.N / standing.amount;
                         double pFraction = standing.P / standing.amount;
 
-                        double amountToRemove = standing.amount * biomassToRemove.FractionDeadToRemove;
+                        double amountToRemove = standing.amount * deadToRemove;
                         standing.amount -= amountToRemove;
                         totalMassRemoved += amountToRemove;
 
                         standing.C = cFraction * standing.amount;
                         standing.N = nFraction * standing.amount;
                         standing.P = pFraction * standing.amount;
+
+                        amountRemoved += amountToRemove;
                     }
                 }
                 foreach (var lying in SurfOM[i].Lying)
@@ -333,12 +336,14 @@ namespace Models.Surface
                         double nFraction = lying.N / lying.amount;
                         double pFraction = lying.P / lying.amount;
 
-                        double amountToRemove = lying.amount * biomassToRemove.FractionDeadToRemove;
+                        double amountToRemove = lying.amount * deadToRemove;
                         lying.amount -= amountToRemove;
                         totalMassRemoved += amountToRemove;
                         lying.C = cFraction * lying.amount;
                         lying.N = nFraction * lying.amount;
                         lying.P = pFraction * lying.amount;
+
+                        amountRemoved += amountToRemove;
                     }
                 }
 
@@ -346,6 +351,7 @@ namespace Models.Surface
                 SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
                 SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
             }
+            return amountRemoved;
         }
 
         /// <summary>Called when [reset].</summary>
@@ -1176,7 +1182,7 @@ namespace Models.Surface
                 if (fractionToRemove > 0)
                 {
                     summary.WriteMessage(this, $"Removing {mass:F2} kg/ha of biomass from surface organic matter pool", MessageType.Diagnostic);
-                    RemoveBiomass(null, null, new OrganBiomassRemovalType() { FractionDeadToRemove = fractionToRemove });
+                    RemoveBiomass(deadToRemove: fractionToRemove);
                 }
             }
         }
