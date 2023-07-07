@@ -93,10 +93,11 @@ namespace Models.Core.ApsimFile
 
         /// <summary>
         /// Save the manager object code back to the manager JSON object.
+        /// Changed how Manager Code is stored in version 163, stored as array of lines instead of single string
         /// </summary>
         public void Save()
         {
-            Token["Code"] = ToString();
+            Token["Code"] = new JArray(lines);
         }
 
         /// <summary>Write script</summary>

@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 162; } }
+        public static int LatestVersion { get { return 163; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -4901,6 +4901,20 @@ namespace Models.Core.ApsimFile
                         operation[i]["Action"] = specificationString;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Change Manger Code from String into Array of Strings (each line is an element)
+        /// For better readability of apsim files.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion163(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Save();
             }
         }
 
