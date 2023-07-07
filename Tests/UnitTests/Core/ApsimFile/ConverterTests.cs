@@ -1,16 +1,17 @@
-﻿namespace UnitTests.Core.ApsimFile
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
-    using Newtonsoft.Json.Linq;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-	using System.Globalization;
-	using System.IO;
-    using System.Linq;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
+namespace UnitTests.Core.ApsimFile
+{
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
     public class ConverterTests
@@ -364,6 +365,24 @@
                 writer.Write(converter.Root.ToString());
                 Assert.AreEqual(writer.ToString(), expectedJson);
             }
+        }
+
+        [Test]
+        public void Version163() //no this is not a typo, this is test 163
+        {
+            string beforeJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest163FileBefore.apsimx");
+            ConverterReturnType converter = FileFormat.ReadFromString<Simulations>(beforeJSON, null, true, null);
+            Simulations actualModel = converter.NewModel as Simulations;
+            Assert.IsTrue(converter.DidConvert);
+
+            string afterJSON = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.CoverterTest163FileAfter.apsimx");
+            converter = FileFormat.ReadFromString<Simulations>(afterJSON, null, true, null);
+            Simulations expectedModel = converter.NewModel as Simulations;
+
+            string actual = FileFormat.WriteToString(actualModel);
+            string expected = FileFormat.WriteToString(expectedModel);
+
+            Assert.AreEqual(actual, expected);
         }
 
         /// <summary>

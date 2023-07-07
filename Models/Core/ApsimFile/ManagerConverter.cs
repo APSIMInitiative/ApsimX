@@ -100,7 +100,8 @@ namespace Models.Core.ApsimFile
             if (Token["CodeArray"] != null)
             {
                 Token["CodeArray"] = new JArray(lines);
-                Token["Code"] = null;
+                if (Token["Code"] != null)
+                    Token.Remove("Code");
             }
             else
             {
