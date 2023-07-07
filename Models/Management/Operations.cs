@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -44,6 +45,43 @@ namespace Models
         /// Used to determine whether the operation is enabled or not.
         /// </summary>
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Parses a string into an Operation
+        /// Format: // 2000-01-01 [Element].Function(1000)
+        /// </summary>
+        /// <param name="line">The string to parse</param>
+        /// <returns>An Operation or null if there was an error parsing the string</returns>
+        public static Operation ParseOperationString(string line)
+        {
+            string lineTrimmed = line.Trim();
+
+            Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s*(\S*)$");
+            Match match = parser.Match(lineTrimmed);
+
+            if (match.Success)
+            {
+                Operation operation = new Operation();
+                if (match.Groups[1].Value.CompareTo("//") == 0)
+                    operation.Enabled = false;
+                else
+                    operation.Enabled = true;
+
+                string dateString = match.Groups[2].Value;
+                operation.Date = DateUtilities.ValidateDateString(dateString);
+                if (operation.Date == null)
+                {
+                    return null;
+                }
+                operation.Action = match.Groups[3].Value;
+
+                return operation;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
