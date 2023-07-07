@@ -97,7 +97,15 @@ namespace Models.Core.ApsimFile
         /// </summary>
         public void Save()
         {
-            Token["Code"] = new JArray(lines);
+            if (Token["CodeArray"] != null)
+            {
+                Token["CodeArray"] = new JArray(lines);
+                Token["Code"] = null;
+            }
+            else
+            {
+                Token["Code"] = ToString();
+            }            
         }
 
         /// <summary>Write script</summary>

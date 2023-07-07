@@ -4914,6 +4914,8 @@ namespace Models.Core.ApsimFile
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
+                string[] code = manager.Token["Code"].ToString().Split('\n');
+                manager.Token["CodeArray"] = new JArray(code);
                 manager.Save();
             }
         }
