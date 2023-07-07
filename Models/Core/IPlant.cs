@@ -46,7 +46,7 @@ namespace Models.Core
         bool IsReadyForHarvesting { get; }
 
         /// <summary>Harvest the crop</summary>
-        void Harvest();
+        void Harvest(bool removeBiomassFromOrgans = true);
 
         /// <summary>End the crop</summary>
         void EndCrop();

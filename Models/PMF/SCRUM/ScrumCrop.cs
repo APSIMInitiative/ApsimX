@@ -1,5 +1,6 @@
 ﻿using Models.Climate;
 using Models.Core;
+using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
 using System;
@@ -97,6 +98,12 @@ namespace Models.PMF.Scrum
         /// <summary>The summary</summary>
         [Link]
         private ISummary summary = null;
+
+        [Link(ByName = true)]
+        private IHasDamageableBiomass product = null;
+
+        [Link(ByName = true)]
+        private IHasDamageableBiomass stover = null;
 
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar crop = null;
@@ -307,14 +314,8 @@ namespace Models.PMF.Scrum
         {
             if (clock.Today == HarvestDate)
             {
-                RemovalFractions Remove = new RemovalFractions();
-                Remove.SetFractionToResidue("Product", FieldLoss);
-                Remove.SetFractionToRemove("Product", 1 - FieldLoss);
-                Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval);
-                Remove.SetFractionToRemove("Stover", ResidueRemoval);
-                Remove.SetFractionToResidue("Stover", 1 - ResidueRemoval, "dead");
-                Remove.SetFractionToRemove("Stover", ResidueRemoval, "dead");
-                scrum.RemoveBiomass("Harvest", Remove);
+                product.RemoveBiomass(liveToRemove: 1-FieldLoss, deadToRemove: 1-FieldLoss, liveToResidue: FieldLoss, deadToResidue: FieldLoss);
+                stover.RemoveBiomass(liveToRemove: ResidueRemoval, deadToRemove: ResidueRemoval, liveToResidue: 1 - ResidueRemoval, deadToResidue: 1 - ResidueRemoval);
                 scrum.EndCrop();
                 scrum.Children.Remove(crop);
             }
