@@ -10,6 +10,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.ConfigFile;
 using Models.Core.Run;
+using Models.Storage;
 
 namespace Models
 {
@@ -28,10 +29,12 @@ namespace Models
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+            bool isApplyOptionPresent = false;
             // Required to allow the --apply switch functionality of not including
             // an apsimx file path on the command line.
             if (args.Length > 0 && args[0].Equals("--apply"))
             {
+                isApplyOptionPresent = true;
                 string[] empty = { " " };
                 empty = empty.Concat(args).ToArray();
                 args = empty;
@@ -40,13 +43,30 @@ namespace Models
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             ReplaceObsoleteArguments(ref args);
-            new Parser(config =>
+
+            Parser parser = new Parser(config =>
             {
                 config.AutoHelp = true;
                 config.HelpWriter = Console.Out;
-            }).ParseArguments<Options>(args)
-            .WithParsed(Run)
-            .WithNotParsed(HandleParseError);
+            });
+
+            // Shows the switch(es) used in the command line call.
+            ParserResult<Options> result = parser.ParseArguments<Options>(args);
+
+            if (isApplyOptionPresent)
+            {
+                if (args.Length > 2)
+                {
+                    result.Value.Apply = args[3];
+                }
+                else
+                {
+                    string argsListString = string.Join(" ", args.ToList());
+                    throw new Exception($"No config file was given with the --apply switch. Arguments given: {argsListString}");
+                }
+            }
+
+            result.WithParsed(Run).WithNotParsed(HandleParseError);
             return exitCode;
         }
 
@@ -97,34 +117,67 @@ namespace Models
                     string outFile = Path.Combine(Path.GetDirectoryName(dbFiles[0]), "merged.db");
                     DBMerger.MergeFiles(dbFiles, outFile);
                 }
-                // ===================================
-                // TODO: --apply switch functionality.
-                // ===================================
+                // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
                     List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
+                    bool isSimToBeRun = false;
+                    string[] commandsArray = commands.ToArray();
+                    string savePath = "";
+                    string loadPath = "";
+
                     if (files.Length > 0)
                     {
                         foreach (string file in files)
                         {
-                            Simulations sim = ConfigFile.RunConfigCommands(file, commands) as Simulations;
-                            Runner runner = new Runner(sim,
-                                                false,
-                                                true,
-                                                options.RunTests,
-                                                runType: options.RunType,
-                                                numberOfProcessors: options.NumProcessors,
-                                                simulationNamePatternMatch: options.SimulationNameRegex);
-                            sim.Write(file);
+                            for (int i = 0; i < commandsArray.Length; i++)
+                            {
+                                string[] splitCommand = commandsArray[i].Split(" ");
+                                if (splitCommand[0] == "save")
+                                {
+                                    savePath = splitCommand[1];
+                                }
+                                else if (splitCommand[0] == "load")
+                                {
+                                    loadPath = splitCommand[1];
+                                }
+                                else if (splitCommand[0] == "run")
+                                {
+                                    isSimToBeRun = true;
+                                }
+
+                                // Required as RunConfigCommands() requires list, not just a string.
+                                List<string> commandWrapper = new()
+                                {
+                                    commandsArray[i]
+                                };
+
+                                Simulations sim = ConfigFile.RunConfigCommands(file, commands) as Simulations;
+
+                                sim.Write(file);
+
+                                if (isSimToBeRun)
+                                {
+                                    Runner runner = new Runner(sim,
+                                                                true,
+                                                                true,
+                                                                options.RunTests,
+                                                                runType: options.RunType,
+                                                                numberOfProcessors: options.NumProcessors,
+                                                                simulationNamePatternMatch: options.SimulationNameRegex);
+                                    RunSimulations(runner, options);
+                                }
+                            }
                         }
                     }
                     // If no apsimx file path included proceeding --apply switch...              
                     else if (files.Length < 1) // TODO: Create the 'Create' option functionality.
                     {
-                        string savePath = "";
-                        string loadPath = "";
-                        string[] commandsArray = commands.ToArray();
-                        bool isSimToBeRun = false;
+                        // Create a new simulation as an existing apsimx file was not included.
+                        Simulations sims = CreateMinimalSimulation();
+
+                        savePath = "";
+                        loadPath = sims.FileName;
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
@@ -141,17 +194,17 @@ namespace Models
                             }
                             else if (splitCommand[0] == "run")
                             {
-                                isSimToBeRun = false;
+                                isSimToBeRun = true;
                                 continue;
                             }
 
                             // Throw if the first command is not a save or load command.
                             if (i == 0 && String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
                             {
-                                throw new Exception("First command in a config file can only be either a save or load command.");
+                                throw new Exception("First command in a config file can only be either a save or load command if no apsimx file is included.");
                             }
 
-                            // Required as RunConfigCommands() requires list of commands, not just a single command.
+                            // Required as RunConfigCommands() requires list, not just a string.
                             List<string> commandWrapper = new()
                             {
                                 commandsArray[i]
@@ -161,13 +214,6 @@ namespace Models
                             if (!String.IsNullOrEmpty(loadPath))
                             {
                                 Simulations sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper) as Simulations;
-                                Runner runner = new Runner(sim,
-                                                    false,
-                                                    true,
-                                                    options.RunTests,
-                                                    runType: options.RunType,
-                                                    numberOfProcessors: options.NumProcessors,
-                                                    simulationNamePatternMatch: options.SimulationNameRegex);
 
                                 if (!String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
                                 {
@@ -178,16 +224,16 @@ namespace Models
                                     sim.Write(savePath);
                                 }
 
-                                if (isSimToBeRun) // TODO: --apply run command needs testing.
+                                if (isSimToBeRun)
                                 {
-                                    runner.SimulationCompleted += OnJobCompleted;
-                                    if (options.Verbose)
-                                        runner.SimulationCompleted += WriteCompleteMessage;
-                                    if (options.ExportToCsv)
-                                        runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
-                                    runner.AllSimulationsCompleted += OnAllJobsCompleted;
-                                    // Run simulations.
-                                    runner.Run();
+                                    Runner runner = new Runner(sim,
+                                                            true,
+                                                            true,
+                                                            options.RunTests,
+                                                            runType: options.RunType,
+                                                            numberOfProcessors: options.NumProcessors,
+                                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                                    RunSimulations(runner, options);
                                 }
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
@@ -197,9 +243,7 @@ namespace Models
                 else
                 {
                     Runner runner = null;
-                    if (string.IsNullOrEmpty(options.EditFilePath) &&
-                        string.IsNullOrEmpty(options.EditUseConfig) &&
-                        string.IsNullOrEmpty(options.RunUseConfig))
+                    if (string.IsNullOrEmpty(options.EditFilePath))
                     {
                         runner = new Runner(files,
                                             options.RunTests,
@@ -207,64 +251,13 @@ namespace Models
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
 
-                        runner.SimulationCompleted += OnJobCompleted;
-                        if (options.Verbose)
-                            runner.SimulationCompleted += WriteCompleteMessage;
-                        if (options.ExportToCsv)
-                            runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
-                        runner.AllSimulationsCompleted += OnAllJobsCompleted;
-                        // Run simulations.
-                        runner.Run();
-                    }
-                    else if (!string.IsNullOrEmpty(options.EditUseConfig) &&
-                              string.IsNullOrEmpty(options.RunUseConfig) &&
-                              string.IsNullOrEmpty(options.EditFilePath))
-                    {
-                        foreach (string f in files)
-                        {
-                            string configPath = null;
-                            string savePath = null;
-
-                            // Get the white-space separated paths of the config and save file.
-                            if (options.EditUseConfig.Contains(","))
-                            {
-                                string[] configAndSavePaths = options.EditUseConfig.Split(",");
-                                if (configAndSavePaths.Length > 2)
-                                    throw new ArgumentException("Incorrect arguments given for --edit-use-config");
-                                configPath = configAndSavePaths[0];
-                                savePath = configAndSavePaths[1];
-                            }
-                            else configPath = options.EditUseConfig;
-
-                            Simulations sim = ApplyConfigToApsimFile(f, configPath) as Simulations;
-
-                            runner = new Runner(sim,
-                                                false,
-                                                true,
-                                                options.RunTests,
-                                                runType: options.RunType,
-                                                numberOfProcessors: options.NumProcessors,
-                                                simulationNamePatternMatch: options.SimulationNameRegex);
-                            if (!string.IsNullOrEmpty(savePath))
-                                sim.Write(savePath);
-                            else
-                                sim.Write(f);
-                        }
+                        RunSimulations(runner, options);
 
                     }
-                    else if (!string.IsNullOrEmpty(options.EditFilePath) ||
-                             !string.IsNullOrEmpty(options.RunUseConfig) &&
-                              string.IsNullOrEmpty(options.EditUseConfig))
+                    else if (!string.IsNullOrEmpty(options.EditFilePath))
                     {
-                        // Check which option is not null
-                        string selectedOption = null;
-                        if (!string.IsNullOrEmpty(options.EditFilePath))
-                        {
-                            selectedOption = options.EditFilePath;
-                        }
-                        else selectedOption = options.RunUseConfig;
 
-                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, selectedOption)),
+                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
                                             options.RunTests,
@@ -272,15 +265,7 @@ namespace Models
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
 
-
-                        runner.SimulationCompleted += OnJobCompleted;
-                        if (options.Verbose)
-                            runner.SimulationCompleted += WriteCompleteMessage;
-                        if (options.ExportToCsv)
-                            runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
-                        runner.AllSimulationsCompleted += OnAllJobsCompleted;
-                        // Run simulations.
-                        runner.Run();
+                        RunSimulations(runner, options);
                     }
 
                     // If errors occurred, write them to the console.
@@ -432,5 +417,45 @@ namespace Models
             message.Append($" has finished. Elapsed time was {duration} seconds.");
             Console.WriteLine(message);
         }
+
+        /// <summary>
+        /// Runs a specified runner.
+        /// </summary>
+        /// <param cref="Runner" name="runner">The runner to be ran.</param>
+        /// <param cref="Options" name="options">The command line switches/flags.</param>
+        private static void RunSimulations(Runner runner, Options options)
+        {
+            runner.SimulationCompleted += OnJobCompleted;
+            if (options.Verbose)
+                runner.SimulationCompleted += WriteCompleteMessage;
+            if (options.ExportToCsv)
+                runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
+            runner.AllSimulationsCompleted += OnAllJobsCompleted;
+            // Run simulations.
+            runner.Run();
+        }
+
+        private static Simulations CreateMinimalSimulation() // TODO: needs testing.
+        {
+            try
+            {
+                Simulations sims = new Simulations()
+                {
+                    Children = new List<IModel>()
+                    {
+                        new DataStore()
+                    }
+                };
+
+                sims.Write("NewSimulation");
+                return sims;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occured when trying to create a new minimal simulation." + ex.Message);
+            }
+
+        }
+
     }
 }

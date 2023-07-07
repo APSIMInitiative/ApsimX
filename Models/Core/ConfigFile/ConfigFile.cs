@@ -200,9 +200,6 @@ namespace Models.Core.ConfigFile
                     // Process for adding an existing node from another file.
                     {
                         Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNode, e => throw e, false).NewModel as Simulations;
-                        //IModel nodeToCopy = simToCopyFrom.FindInScope(instruction.NodeForAction);
-                        //IModel simToCopyTo = simulation.FindAllChildren().First(m => m.Name == "Simulation");
-                        //IModel parentNode = simToCopyTo.FindAllChildren().First(m => m.Name == instruction.NodeToModify);
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
                         IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NodeForAction) as IModel;
                         Locator simToCopyToLocator = new Locator(simulation);
