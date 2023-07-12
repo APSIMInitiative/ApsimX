@@ -146,7 +146,7 @@ namespace Models
                 if (doOutput)
                 {
                     var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
-                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", amount, type, cumThickness[layer], layer + 1), MessageType.Diagnostic);
+                    Summary.WriteMessage(this, $"{amount:F1} kg/ha of {type} added at depth {cumThickness[layer]:F0} layer {layer + 1}", MessageType.Diagnostic);
                 }
             }
         }

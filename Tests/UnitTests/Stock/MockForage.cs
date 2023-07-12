@@ -1,14 +1,11 @@
-﻿namespace UnitTests.Stock
-{
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System;
+using System.Collections.Generic;
 
+namespace UnitTests.Stock
+{
     public class MockForage : Model, IHasDamageableBiomass
     {
         
@@ -23,7 +20,13 @@
 
         public IEnumerable<DamageableBiomass> Material { get; set; }
 
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             throw new NotImplementedException();
         }

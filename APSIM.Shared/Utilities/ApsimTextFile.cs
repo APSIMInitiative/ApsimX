@@ -1,18 +1,16 @@
 // An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
-
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Specialized;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-
     /// <summary>
     /// A simple type for encapsulating a constant
     /// </summary>
@@ -45,6 +43,33 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>The comment</summary>
         public string Comment;
+    }
+
+    /// <summary>
+    /// A simple type for encapsulating a text entry
+    /// </summary>
+    [Serializable]
+    public class ApsimPositionCacheEntry
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApsimConstant"/> class.
+        /// </summary>
+        /// <param name="date">The datetime of this entry.</param>
+        /// <param name="pos">The file position of this entry.</param>
+        public ApsimPositionCacheEntry(DateTime date, long pos)
+        {
+            Date = date;
+            Position = pos;
+        }
+
+        /// <summary>The datetime of the line</summary>
+        public DateTime Date;
+
+        /// <summary>The value of the line</summary>
+        public string Value;
+
+        /// <summary>The position of the line in the file</summary>
+        public long Position;
     }
 
     /// <summary>
@@ -92,6 +117,10 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>The first line position</summary>
         private long FirstLinePosition;
+
+        /// <summary>A cache of lines that have been read to. Stores the date, position and value of the line
+        /// Stored in date order for faster searching.</summary>
+        private LinkedList<ApsimPositionCacheEntry> positionCache = new LinkedList<ApsimPositionCacheEntry>();
 
         /// <summary>The words</summary>
         private StringCollection Words = new StringCollection();
@@ -314,7 +343,7 @@ namespace APSIM.Shared.Utilities
 
             if (IsExcelFile == true)
             {
-                data = ToTableFromExcel(addConsts);
+                data = ToTableFromExcel();
             }
             else
             {
@@ -379,7 +408,7 @@ namespace APSIM.Shared.Utilities
         /// Convert this file to a DataTable.
         /// </summary>
         /// <returns></returns>
-        public DataTable ToTableFromExcel(List<string> addConsts = null)
+        public DataTable ToTableFromExcel()
         {
             System.Data.DataTable data = new System.Data.DataTable();
 
@@ -772,29 +801,76 @@ namespace APSIM.Shared.Utilities
             if (date < _FirstDate)
                 throw new Exception("Date " + date.ToString() + " doesn't exist in file: " + _FileName);
 
+            //check if we've looked at this date before
+            ApsimPositionCacheEntry previousEntry = null; //used as a starting point to save searching from the start of the file if entries exist
+            foreach (ApsimPositionCacheEntry entry in this.positionCache)
+            {
+                if (entry.Date.Equals(date))
+                {
+                    if (IsExcelFile)
+                        excelIndex = (int)entry.Position;
+                    else
+                        SeekToPosition(entry.Position);
+                    return;
+                }
+                else if (entry.Date < date)
+                {
+                    //cache is stored in reverse order, so stop looking after the date is past
+                    previousEntry = entry;
+                    break;
+                }
+            }
+
+            long newPosition = 0;
+            //did not find date in cache, start looking from closest entry found
             if (IsExcelFile)
             {
+                int startingIndex = 0;
+                if (previousEntry != null)
+                    startingIndex = (int)previousEntry.Position;
+
                 // Iterate through the DataTable, using excelIndex as the counter.
                 // If we reach a row whose date is greater than or equal to the
                 // desired date, break out of the loop.
-                for (excelIndex = 0; excelIndex < _excelData.Rows.Count; excelIndex++)
+                for (excelIndex = startingIndex; excelIndex < _excelData.Rows.Count; excelIndex++)
                 {
                     DateTime rowDate = GetDateFromValues(_excelData.Rows[excelIndex].ItemArray);
                     if (rowDate >= date)
                         break;
                 }
+                newPosition = excelIndex;
             }
             else
             {
-                int NumRowsToSkip = (date - _FirstDate).Days;
+                //calculate how many rows we need to read through to each the given date
+                //one day per row is written in the file
+                int NumRowsToSkip = 0;
+                if (previousEntry != null)
+                {
+                    NumRowsToSkip = (date - previousEntry.Date).Days;
+                    SeekToPosition(previousEntry.Position);
+                }
+                else
+                {
+                    NumRowsToSkip = (date - _FirstDate).Days;
+                    SeekToPosition(FirstLinePosition);
+                }
 
-                inStreamReader.Seek(FirstLinePosition, SeekOrigin.Begin);
+                //read the file until we reach the correct line
                 while (!inStreamReader.EndOfStream && NumRowsToSkip > 0)
                 {
                     inStreamReader.ReadLine();
                     NumRowsToSkip--;
                 }
+                newPosition = GetCurrentPosition();
             }
+
+            //now that we are in the position, insert our entry at this point in the list
+            ApsimPositionCacheEntry newEntry = new ApsimPositionCacheEntry(date, newPosition);
+            if (previousEntry != null)
+                this.positionCache.AddBefore(this.positionCache.Find(previousEntry), newEntry);
+            else
+                this.positionCache.AddFirst(newEntry);
         }
 
         /// <summary>
