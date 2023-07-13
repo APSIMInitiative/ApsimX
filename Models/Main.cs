@@ -50,14 +50,14 @@ namespace Models
                 config.HelpWriter = Console.Out;
             });
 
-            // Shows the switch(es) used in the command line call.
+            // Holds the switch(es) used in the command line call.
             ParserResult<Options> result = parser.ParseArguments<Options>(args);
 
             if (isApplyOptionPresent)
             {
                 if (args.Length > 2)
                 {
-                    result.Value.Apply = args[3];
+                    result.Value.Apply = args[2];
                 }
                 else
                 {
@@ -173,11 +173,8 @@ namespace Models
                     // If no apsimx file path included proceeding --apply switch...              
                     else if (files.Length < 1) // TODO: Create the 'Create' option functionality.
                     {
-                        // Create a new simulation as an existing apsimx file was not included.
-                        Simulations sims = CreateMinimalSimulation();
-
                         savePath = "";
-                        loadPath = sims.FileName;
+                        loadPath = "";
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
@@ -185,17 +182,14 @@ namespace Models
                             if (splitCommand[0] == "save")
                             {
                                 savePath = splitCommand[1];
-                                continue;
                             }
                             else if (splitCommand[0] == "load")
                             {
                                 loadPath = splitCommand[1];
-                                continue;
                             }
                             else if (splitCommand[0] == "run")
                             {
                                 isSimToBeRun = true;
-                                continue;
                             }
 
                             // Throw if the first command is not a save or load command.
@@ -235,6 +229,16 @@ namespace Models
                                                             simulationNamePatternMatch: options.SimulationNameRegex);
                                     RunSimulations(runner, options);
                                 }
+                            }
+                            else if (!string.IsNullOrEmpty(savePath))
+                            {
+                                // Create a new simulation as an existing apsimx file was not included.
+                                Simulations sim = CreateMinimalSimulation();
+                                // Need the directory and file name.
+                                //string[] savePathStrings = savePath.Split('\\');
+                                //string newFileName = savePathStrings.ToList()[^1];
+                                //string directoryPath = savePathStrings.Take(savePathStrings.Length - 1).Join<string>("\\");
+                                sim.Write(sim.FileName, savePath);
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
                         }

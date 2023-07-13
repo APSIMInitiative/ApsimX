@@ -38,6 +38,22 @@
     "--apply copy node": {
       "commandName": "Project",
       "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\copyConfig.txt"
+    },
+    "--apply run test": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx --apply C:\\TestSims\\issue8038\\runConfig.txt"
+    },
+    "normal models run": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\TestSims\\issue8038\\testWheat.apsimx"
+    },
+    "--apply no file no config": {
+      "commandName": "Project",
+      "commandLineArgs": "--apply"
+    },
+    "--apply new sim add sim": {
+      "commandName": "Project",
+      "commandLineArgs": "--apply C:\\TestSims\\issue8038\\addSimConfig.txt"
     }
   }
 }
