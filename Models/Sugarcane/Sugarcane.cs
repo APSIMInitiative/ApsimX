@@ -12055,7 +12055,7 @@ namespace Models
         public bool IsReadyForHarvesting { get { return false; } }
 
         /// <summary>Harvest the crop</summary>
-        public void Harvest() { HarvestCrop(); }
+        public void Harvest(bool removeBiomassFromOrgans = true) { HarvestCrop(); }
 
         /// <summary>
         /// Gets a list of cultivar names
@@ -12125,7 +12125,7 @@ namespace Models
         /// <param name="tillering">tillering method (-1, 0, 1).</param>
         /// <param name="ftn">Fertile Tiller Number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
-        {
+            {
             SowNewPlant(population, depth, cultivar);
         }
 
