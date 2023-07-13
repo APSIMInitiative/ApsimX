@@ -27,6 +27,17 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Folder))]
     public class Cultivar : Model, ILineEditor
     {
+        /// <summary>
+        /// Constructor to initialise culivar instance with specified commands
+        /// </summary>
+        /// <param name="commnads">list of parameter overwrite commands</param>
+        /// <param name="name">The name of the cultivar</param>
+        public Cultivar (string name, string[] commnads)
+        {
+            this.Name = name;
+            Command = commnads;
+        }
+        
         /// <summary>The model the cultvar is relative to.</summary>
         private IModel relativeToModel;
 

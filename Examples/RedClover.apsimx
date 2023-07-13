@@ -1,33 +1,33 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 131,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 273,
+  "Version": 163,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "Simulation",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Clock, Models",
           "Start": "2014-02-01T00:00:00",
           "End": "2016-11-30T00:00:00",
           "Name": "clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -37,27 +37,179 @@
           "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "summaryfile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.ForageDigestibility.Forages, Models",
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Leaf",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Leaf",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Petiole",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Petiole",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Stem",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Stem",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Inflorescence",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Inflorescence",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Nodule",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Nodule",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Taproot",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Taproot",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Root",
+              "IsLive": true,
+              "DigestibilityString": "0",
+              "FractionConsumable": 0.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "RedClover.Root",
+              "IsLive": false,
+              "DigestibilityString": "0",
+              "FractionConsumable": 0.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            }
+          ],
+          "Name": "Forages",
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -68,11 +220,14 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Field",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": false,
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Management",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Operations, Models",
@@ -85,8 +240,8 @@
                     }
                   ],
                   "Name": "Sowing",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1127,8 +1282,8 @@
                     }
                   ],
                   "Name": "IrrigationSchedule",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1136,8 +1291,8 @@
                   "$type": "Models.Operations, Models",
                   "Operation": null,
                   "Name": "NRate",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1242,14 +1397,14 @@
                     }
                   ],
                   "Name": "DefoliationSchedule",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "// Performs defoliations, or removes biomass, from any existing plant (PMF and/or AgPasture) based on a set of given rules.  \n// Defoliations can be triggered automatically by this manager or be called from another Script or a Schedule model.\n// Developed by RCichota, last updated in 31/Mar/2019\n\nnamespace Models\n{\nusing Newtonsoft.Json;\nusing System.Linq;\nusing Models.PMF.Interfaces;\nusing Models.Interfaces;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Core;\nusing APSIM.Shared.Utilities;\nusing System.Collections.Generic;\nusing System.Xml.Serialization;\nusing System;\nusing Models.Soils.Nutrients;\n\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] private Clock clock;\n        [Link] private Zone myZone;\n        [Link] private Soil mySoil;\n        [Link(ByName = true)] private ISolute Urea;\n        [Link] private ISummary mySummary;\n        public event BiomassRemovedDelegate BiomassRemoved;\n        private string baseDefoliationType;\n        private string typeOfDefoliation;\n        private string baseAmountType;\n        private string typeOfAmount;\n        private double amountGiven;\n        private double herbageToRemove;\n        private RemovalFractions defoliationFractions;\n        private int durationOfDefoliation;\n        private int daysDefoliating;\n        private double cumAmountHarvested;\n        private double atZ0;\n        private double atZ1;\n        private double fractionToRemove;\n        private double fractionToResidue;\n        private double speciesHarvestedWt;\n        private double speciesHarvestedN;\n        private double speciesFractionToRemove;\n        [Link]\n        private IPhysical soilPhysical;\n        //> Links to other Apsim models\n        //Auxiliary 'links'\n        private List<Plant> PMFSpecies = new List<Plant>();\n        private List<AgPasture.PastureSpecies> AgPSpecies = new List<AgPasture.PastureSpecies>();\n\n        //> Events raised by this manager\n\n        //> User inputs from properties tab\n        [Separator(\"Generic defoliation management - removes biomass from PMF and AgPasture species, plus residue management\")]\n        [Description(\"Allow this manager to control defoliations? \")]\n        public bool AutomaticManagementIsEnabled { get; set; }\n        [Description(\"Date to start the defoliation management (dd/mm/yyyy): \")]\n        public DateTime DefoliationRotationStartDate { get; set; }\n        [Description(\"Date to end the defoliation management (dd/mm/yyyy): \")]\n        public DateTime DefoliationRotationEndDate { get; set; }\n\n        [Separator(\"Parameters defining how the defoliation is managed\")]\n        [Description(\"What type of defoliation should be triggered? \")]\n        public DefoliationTypes DefoliateType { get; set; }\n        [Description(\"How the defoliations should be triggered? \")]\n        public DefoliationTriggerTypes DefoliationTriggerType { get; set; }\n        [Description(\"  Minimum number of days between defoliations, used if trigger is an interval: \")]\n        public int IntervalBetweenDefoliations { get; set; }\n        [Description(\"  Minimum standing biomass to start defoliations, used if trigger is DM target(g/m2): \")]\n        public int TargetStandingBiomass { get; set; }\n        [Description(\"Duration of each defoliation event (days): \")]\n        public int DurationOfEachDefoliation { get; set; }\n        [Description(\"Which amount is being defined? \")]\n        public DefoliateAmountTypes RemoveAmountType { get; set; }\n        [Description(\"DM amount to use (g/m2): \")]\n        public double AmountForEachDefoliation { get; set; }\n        [Description(\"For PMF species, allow all biomass to be removed? \")]\n        public bool RemoveAllBiomassIsEnabled { get; set; }\n\n        [Separator(\"Parameters defining the management of the defoliated biomass\")]\n        [Description(\"How much of the DM defoliated is to be removed from the field? \")]\n        public DMRemovalTypes DMRemoveType { get; set; }\n        [Description(\"  Fraction of DM to remove off field, if using UserDefinedFraction (0-1): \")]\n        public double FractionDMToRemove { get; set; }\n        [Description(\"How much of the N defoliated is to be removed from the field? \")]\n        public NRemovalTypes NRemoveType { get; set; }\n        [Description(\"  Fraction of N to remove off field, if using UserDefinedFraction (0-1): \")]\n        public double FractionNToRemove { get; set; }\n        [Description(\"How the non-removed material is returned to the field? \")]\n        public ReturnAsTypes ReturnType { get; set; }\n\n        [Separator(\"Parameters for partitioning non-removed N into urine and dung\")]\n        [Description(\"How the partition of N to dung and urine is defined? \")]\n        public DungNContentTypes NDungType { get; set; }\n        [Description(\"  Proportion of N returned in dung, if using DefineProportion (0-1): \")]\n        public double ProportionN2Dung { get; set; }\n        [Description(\"  The C:N of dung, if using DefineCNratio (typically around 20): \")]\n        public double CNRatioDung { get; set; }\n        [Description(\"Soil depth down to which urine should be applied (mm): \")]\n        public double UrineDepth { get; set; }\n\n        //> Outputs from this manager\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM defoliated (removed from plants) today\n        public double DefoliatedWt{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material defoliated today\n        public double DefoliatedN{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM harvested (removed from plants minus direct residue) today\n        public double HarvestedWt{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material harvested today\n        public double HarvestedN{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM actually removed from the field\n        public double RemovedWt{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material removed from the field\n        public double RemovedN{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM returned by this manager to the field\n        public double ReturnedWt{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material returned by this manager to the field\n        public double ReturnedN{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Non-removed N returned as dung (to SurfaceOM)\n        public double NReturnedInDung{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Non-removed N returned as urine (soil urea)\n        public double NReturnedInUrine{ get; set; }\n        [JsonIgnore][Units(\"days\")] // Number of days since the end of last defoliation event\n        public int DaysSinceLastDefoliation{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Total standing aboveground DM before a defoliation\n        public double PreHarvestDM{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Total standing aboveground DM after a defoliation\n        public double PostHarvestDM{ get; set; }\n        [JsonIgnore][Units(\"g/m2\")] // Total pasture DM harvested over a complete defoliation event\n        public double RotationHarvestedDM{ get; set; }\n\n        //> Internal variables\n        private double[] urineFraction;                  // fraction of urine to be applied in each soil layer\n        // auxiliary boolean\n        private bool aDefoliationHasHappened = false; // flag whether a defoliation has happened in this simulation run\n\n        // auxiliary - lists of species and removal fractions\n        private string[] swardSpeciesName;              // name of each species in the sward\n        private string[] swardSpeciesType;              // type of each species in the sward (PMF or AgPasture)\n        private double[] speciesFraction;              // biomass fraction of harvestable material of each species\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            // check the type of defoliation given\n            if (DefoliateType == DefoliationTypes.Cut)\n                baseDefoliationType = \"Cut\";\n            else if (DefoliateType == DefoliationTypes.Graze)\n                baseDefoliationType = \"Graze\";\n            else\n                baseDefoliationType = \"Harvest\";\n\n            // check the type of amount given\n            if (RemoveAmountType == DefoliateAmountTypes.DMToRemove)\n                baseAmountType = \"DMToRemove\";\n            else if (RemoveAmountType == DefoliateAmountTypes.ResidualDM)\n                baseAmountType = \"ResidualDM\";\n            else\n                baseAmountType = \"UseDefoliationFractions\";\n\n            // check the interval between events\n            if (IntervalBetweenDefoliations < 1)\n                throw new Exception(\"The interval between defoliation events must be at least one day\");\n\n            // check the duration for each defoliation\n            if(DurationOfEachDefoliation <= 0)\n                throw new Exception(\"The duration of defoliations cannot be zero or negative!\");\n\n            // check the fraction of defoliated material to remove from the field\n            if (DMRemoveType == DMRemovalTypes.RemoveAll)\n                FractionDMToRemove = 1.0;\n            else if (DMRemoveType == DMRemovalTypes.RemoveNone)\n                FractionDMToRemove = 0.0;\n            else if (DMRemoveType == DMRemovalTypes.BasedOnDigestibility)\n                FractionDMToRemove = -1.0;  // will be calculated dynamically\n            else // DMRemoveType == DMRemovalTypes.UserDefinedFraction\n            {\n                if (FractionDMToRemove < 0.0)\n                    throw new Exception(\"The fraction of DM defoliated to remove from the field cannot be negative!\");\n            }\n\n            // check the fraction of defoliated N to remove from the field\n            if (NRemoveType == NRemovalTypes.RemoveAll)\n                FractionNToRemove = 1.0;\n            else if (NRemoveType == NRemovalTypes.RemoveNone)\n                FractionNToRemove = 0.0;\n            else if (NRemoveType == NRemovalTypes.ProportionalToDM)\n                FractionNToRemove = FractionDMToRemove;\n            else // NRemoveType == NRemovalTypes.UserDefinedFraction\n            {\n                if (FractionNToRemove < 0.0)\n                    throw new Exception(\"The fraction of defoliated N to remove from the field cannot be negative!\");\n            }\n\n            // set up the links to all plant species\n            PMFSpecies = myZone.FindAllChildren<Plant>().ToList();\n            AgPSpecies = myZone.FindAllChildren<AgPasture.PastureSpecies>().ToList();\n\n            int numPlants = PMFSpecies.Count + AgPSpecies.Count;\n            swardSpeciesName = new string[numPlants];\n            swardSpeciesType = new string[numPlants];\n            int i = 0;\n            foreach (Plant species in myZone.FindAllChildren<Plant>().OfType<IModel>().ToList())\n            {\n                swardSpeciesName[i] = species.Name;\n                swardSpeciesType[i] = \"PMF\";\n                i += 1;\n            }\n            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())\n            {\n                swardSpeciesName[i] = species.Name;\n                swardSpeciesType[i] = \"AgPasture\";\n                i += 1;\n            }\n\n            // initialise some variables\n            speciesFraction = new double[numPlants];\n            defoliationFractions = new RemovalFractions();\n            DaysSinceLastDefoliation = 0;\n            durationOfDefoliation = -1;\n            daysDefoliating = 0;\n            resetMyOutputs();\n\n            // set the fraction of urine for each layer\n            if (ReturnType == ReturnAsTypes.AsDungUrine)\n            {\n                double depthFromSurface = 0.0;\n                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)\n                {\n                    depthFromSurface += soilPhysical.Thickness[layer];\n                    if (depthFromSurface >= UrineDepth)\n                    { // bottom layer found\n                        urineFraction = new double[layer + 1];\n                        double distFactor = 1.5;\n                        double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\n                        depthFromSurface = 0.0;\n                        atZ1 = (UrineDepth - depthFromSurface) * Math.Pow(1.0 - depthFromSurface / UrineDepth, distFactor) / (distFactor + 1.0);\n                        for (int z = 0; z < layer+1; z++)\n                        {\n                            atZ0 = atZ1;\n                            depthFromSurface += soilPhysical.Thickness[z];\n                            atZ1 = (UrineDepth - depthFromSurface) * Math.Pow(1.0 - depthFromSurface / UrineDepth, distFactor) / (distFactor + 1);\n                            if (1.0 - (depthFromSurface / UrineDepth) < 0.0)\n                                atZ1 = 0;\n                            urineFraction[z] = (atZ0 - atZ1) / totalProp;\n                        }\n                        layer = soilPhysical.Thickness.Length;\n                    }\n                }\n            }\n\n            // write message in summary\n            mySummary.WriteMessage(this,\" Automatic defoliation manager initialised\");\n            if (AutomaticManagementIsEnabled)\n            {\n                mySummary.WriteMessage(this, \"   Defoliations will happen between \" + DefoliationRotationStartDate.ToShortDateString()\n                                          + \" and \" + DefoliationRotationEndDate.ToShortDateString() + \".\");\n                mySummary.WriteMessage(this, \"   Biomass from the sward will be defoliated simulating a \\\"\" + baseDefoliationType + \"\\\" rotation.\");\n                if (DefoliationTriggerType == DefoliationTriggerTypes.TargetStandingBiomass)\n                    mySummary.WriteMessage(this, \"   Events will happen whenever aboveground biomass surpasses \" + TargetStandingBiomass.ToString(\"#0.0\") + \" g/m2.\");\n                else\n                    mySummary.WriteMessage(this, \"   Events will happen every \" + IntervalBetweenDefoliations + \" days, if there is enough biomass.\");\n                if(baseAmountType == \"ResidualDM\")\n                    mySummary.WriteMessage(this, \"   Removing biomass down to a residual amount of \" + AmountForEachDefoliation.ToString(\"#.0\") + \" g/m2 over \" \n                                             + DurationOfEachDefoliation + \" days.\");\n                else\n                    mySummary.WriteMessage(this, \"   Removing \" + AmountForEachDefoliation.ToString(\"#.0\") + \" g/m2 of biomass per day over \" \n                                             + DurationOfEachDefoliation + \" days.\");\n            }\n            else\n            {\n                mySummary.WriteMessage(this,\"   Automatic defoliations are currently disabled, though defoliations can be triggered by another manager\");\n                mySummary.WriteMessage(this,\"   If called, the manager will remove biomass from the sward simulating a \\\"\" + baseDefoliationType + \"\\\" event.\");\n            }\n\n            if(ReturnType == ReturnAsTypes.AsDungUrine)\n            {\n                mySummary.WriteMessage(this,\"   Non-removed material will be returned as dung and urine. Urine added to soil according to proportions: \"\n                + string.Join(\", \",urineFraction));\n            }\n            else\n                mySummary.WriteMessage(this,\"   Non-removed material will be returned as residue.\");\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            // check whether we need to continue defoliationg, i.e. within a multi-day defoliation event (need to check this first in the day)\n            if ((daysDefoliating > 0) && (daysDefoliating < durationOfDefoliation))\n            {\n                // reset outputs\n                resetMyOutputs();\n\n                // re-check the amount to defoliate\n                double harvestableBiomass = harvestableSwardBiomass(\"All\", \"Harvestable\");\n                if (typeOfAmount == \"DMToRemove\")\n                {\n                    if(harvestableBiomass > 0.001)\n                        herbageToRemove = Math.Min(harvestableBiomass, (amountGiven - cumAmountHarvested) / (durationOfDefoliation - daysDefoliating));\n                }\n                else if (typeOfAmount == \"ResidualDM\")\n                {\n                    double currentDM = standingSwardBiomassWt;\n                    if (currentDM > amountGiven)\n                        herbageToRemove = Math.Min(harvestableBiomass, (currentDM - amountGiven) / (durationOfDefoliation - daysDefoliating));\n                }\n\n                // remove plant biomass and return residue\n                if (Math.Abs(herbageToRemove) >= 0.001)\n                {\n                    // set biomass removal\nmySummary.WriteMessage(this, \"   Defoliation initialised on DoManagement - \" + clock.Today.Date.ToShortDateString());\n                    defoliateSward(herbageToRemove, typeOfDefoliation);\n\n                    // return residue or excreta\n                    if(ReturnedWt + ReturnedN > 0.0)\n                    {\n                        if (ReturnType == ReturnAsTypes.AsResidue)\n                            returnResidues();\n                        else\n                            returnExcreta();\n                    }\n\n                    // gather amount removed this event\n                    cumAmountHarvested += HarvestedWt;\n                }\n\n                daysDefoliating += 1;\n            }\n\n            // check whether a defoliation ended yesterday\n            if (daysDefoliating < 0)\n            { // clean up variables\n                resetMyOutputs();\n                daysDefoliating = 0;\n            }\n\n            // check whether automatic defoliations are enabled\n            if (AutomaticManagementIsEnabled)\n            {\n                // check whether we are within the period in which defoliations can happen\n                if ((clock.Today.Date >= DefoliationRotationStartDate.Date) && (clock.Today.Date <= DefoliationRotationEndDate.Date))\n                {\n                    if (clock.Today.Date == DefoliationRotationStartDate.Date)\n                        DaysSinceLastDefoliation = IntervalBetweenDefoliations;\n\n                    // check whether we should start a defoliation event\n                    if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)\n                    {\n                        if (DaysSinceLastDefoliation == IntervalBetweenDefoliations)\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\n                    }\n                    else if (DefoliationTriggerType == DefoliationTriggerTypes.TargetInterval)\n                    {\n                        if (DaysSinceLastDefoliation >= IntervalBetweenDefoliations)\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\n                    }\n                    else  //DefoliationTriggerType == DefoliationTriggerTypes.TargetStandingBiomass\n                    {\n                        if (standingSwardBiomassWt >= TargetStandingBiomass)\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\n                    }\n                }\n                //// Note: Only the code above, responsible for triggering automatic events, is limited by 'AutomaticManagementIsEnabled'. \n                ////       The rest of the code is still available to perform one-off defoliations.\n                ////       It can be called from another manager or a schedulle thingy via Defoliate().\n            }\n        }\n\n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            // check whether a defoliation event has just been completed\n            if (daysDefoliating == durationOfDefoliation)\n            {\n                // get amount of biomass remaining and zero counters\n                PostHarvestDM = standingSwardBiomassWt;\n                RotationHarvestedDM = cumAmountHarvested;\n                aDefoliationHasHappened = true;\n                daysDefoliating = -1;\n            }\n\n            // count the days after a defoliation\n            if (aDefoliationHasHappened && (daysDefoliating == 0))\n                DaysSinceLastDefoliation += 1;\n        }\n\n        /// <summary>Sets up a defoliation event.</summary>\n        /// <param name=\"defoliationType\">Type of defoliation (cut, graze, or harvest)</param>\n        /// <param name=\"amountDM\">Amount of biomass to use (g/m2)</param>\n        /// <param name=\"amountType\">How the DM amount is interpreted (toRemove, residual)</param>\n        /// <param name=\"duration\">Number of days to defoliate over</param>\n        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)\n        {\n            // check whether there are plants in the sward that can be defoliated\n            if (swardHasLivingPlants)\n            {\n                // check the defoliation type\n                if (defoliationType.ToLower() == \"cut\")\n                    typeOfDefoliation = \"Cut\";\n                else if (defoliationType.ToLower() == \"graze\")\n                    typeOfDefoliation = \"Graze\";\n                else if (defoliationType.ToLower() == \"harvest\")\n                    typeOfDefoliation = \"Harvest\";\n                else\n                    throw new Exception(\"Defoliation type should be either \\\"Cut\\\", \\\"Graze\\\", or \\\"Harvest\\\"!\");\n\n                // check DM amount given\n                if (amountDM < 0.0)\n                    throw new Exception(\"Amount to defoliate cannot be negative!\");\n                else\n                    amountGiven = amountDM;\n\n                // check the type of amount given\n                if (amountType.ToLower() == \"dmtoremove\")\n                    typeOfAmount = \"DMToRemove\";\n                else if (amountType.ToLower() == \"residualdm\")\n                    typeOfAmount = \"ResidualDM\";\n                else if (amountType.ToLower() == \"usedefoliationfractions\")\n                    typeOfAmount = \"UseDefoliationFractions\";\n                else\n                    throw new Exception(\"Amount type should be \\\"DMToRemove\\\", \\\"ResidualDM\\\", or \\\"UseDefoliationFractions\\\"!\");\n\n                // check duration given\n                if (duration <= 0)\n                    throw new Exception(\"Duration of defoliation cannot be zero or negative!\");\n                else\n                    durationOfDefoliation = duration;\n\n                // check existing biomass and amount to remove\n                PreHarvestDM = standingSwardBiomassWt;\n                herbageToRemove = 0.0;\n                double harvestableBiomass = harvestableSwardBiomass(\"All\", \"Harvestable\");\n                if (typeOfAmount == \"UseDefoliationFractions\")\n                { // amount given is ignored, removal based on fractions\n                    amountGiven = 0.0;\n                    if (harvestableBiomass > 0.0)\n                        herbageToRemove = -1.0;\n\n                    mySummary.WriteMessage(this, \"   Defoliation triggered, removing biomass using the removal fractions (set or default), during \" + durationOfDefoliation + \" days\");\n                }\n                else if (typeOfAmount == \"DMToRemove\")\n                {\n                    if (amountGiven > 0.001)\n                    { // a meaningful amount was given, check whether all can be removed\n                        if (harvestableBiomass > 0.001)\n                            herbageToRemove = Math.Min(harvestableBiomass, amountGiven / durationOfDefoliation);\n\n                        mySummary.WriteMessage(this, \"   Defoliation triggered, attempting to remove \" + amountGiven.ToString(\"#0.0\") + \" g/m2 of biomass over \" + durationOfDefoliation + \" days\");\n                    }\n                }\n                else if (typeOfAmount == \"ResidualDM\")\n                {\n                    // check how much biomass will be removed\n                    if (PreHarvestDM > amountGiven)\n                        herbageToRemove = Math.Min(harvestableBiomass, (PreHarvestDM - amountGiven) / durationOfDefoliation);\n\n                    mySummary.WriteMessage(this, \"   Defoliation triggered, attempting to remove biomass down to \" + amountGiven.ToString(\"#0.0\") + \" g/m2 over \" + durationOfDefoliation + \" days\");\n                }\n\n                // can defoliation begin?\n                if (Math.Abs(herbageToRemove) >= 0.001)\n                {\n                    // set off first defoliation\nmySummary.WriteMessage(this, \"   Defoliation initialised on Defoliate - \" + clock.Today.Date.ToShortDateString());\n                    defoliateSward(herbageToRemove, typeOfDefoliation);\n\n                    // return residue or excreta\n                    if(ReturnedWt + ReturnedN > 0.0)\n                    {\n                        if (ReturnType == ReturnAsTypes.AsResidue)\n                            returnResidues();\n                        else\n                            returnExcreta();\n                    }\n\n                    // gather values for this event\n                    cumAmountHarvested = HarvestedWt;\n                    daysDefoliating = 1;\n                    DaysSinceLastDefoliation = 0;\n                }\n                else\n                {\n                    // abort command as there is not enough biomass, check interval type\n                    if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)\n                    { // count the event as if it did happen\n                        cumAmountHarvested = 0.0;\n                        daysDefoliating = 1;\n                        DaysSinceLastDefoliation = 0;\n                    }\n\n                    mySummary.WriteMessage(this, \"   Defoliation did not happend because current biomass (\" + PreHarvestDM.ToString(\"#0.0\") + \" g/m2) is too low (total harvestable = \" + harvestableBiomass.ToString(\"#0.0\") + \" g/m2)\");\n                }\n            }\n            else\n            {\n                mySummary.WriteMessage(this, \"   Defoliation did not happend because there is no growing plants in the sward\");\n            }\n        }\n\n        /// <summary>Resets the values of outputs.</summary>\n        private void resetMyOutputs()\n        {\n            DefoliatedWt = 0.0;\n            DefoliatedN = 0.0;\n            HarvestedWt = 0.0;\n            HarvestedN = 0.0;\n            RemovedWt = 0.0;\n            RemovedN = 0.0;\n            ReturnedWt = 0.0;\n            ReturnedN = 0.0;\n            NReturnedInDung = 0.0;\n            NReturnedInUrine = 0.0;\n            RotationHarvestedDM = 0.0;\n        }\n\n        /// <summary>Flags whether there is any living plant in the sward.</summary>\n        private bool swardHasLivingPlants\n        {\n            get\n            {\n                bool result = false;\n                foreach (Plant species in PMFSpecies)\n                       result |= species.IsAlive;\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\n                       result |= species.IsAlive;\n                return result;\n            }\n        }\n\n        /// <summary>Amount of plant biomass aboveground (g/m2).</summary>\n        private double standingSwardBiomassWt\n        {\n            get\n            {\n                double result = 0.0;\n                foreach (Plant species in PMFSpecies)\n                   result += (double)myZone.Get(species.Name+\".AboveGround.Wt\");\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\n                    result += species.Standing.Wt*0.1;\n                return result;\n            }\n        }\n\n        /// <summary>Amount of N in plant's biomass aboveground (g/m2).</summary>\n        private double standingSwardBiomassN\n        {\n            get\n            {\n                double result = 0.0;\n                foreach (Plant species in PMFSpecies)\n                   result += (double)myZone.Get(species.Name+\".AboveGround.N\");\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\n                    result += species.Standing.N*0.1;\n                return result;\n            }\n        }\n\n        /// <summary>Amount of plant biomass from all organs available for defoliation (g/m2).</summary>\n        /// <remarks>Assumes that organs with a BiomassRemoval.FractionToRemove > 0 are harvestable.\n        /// For AgPasture, harvestable is based on minimum DM.</remarks>\n        /// <param name=\"plantName\">The name of the plant to retrieve its biomass</param>\n        /// <param name=\"fractionType\">The type of fraction to use (harvestable or total)</param>\n        private double harvestableSwardBiomass(string plantName, string fractionType)\n        {\n            double amountWt = 0.0;\n            double fraction = 0.0;\n            foreach (Plant species in PMFSpecies)\n            {\n                if ((plantName == \"All\") || (species.Name == plantName))\n                {\n                    if (species.AboveGround.Wt > 0.0)\n                    {\n                        foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())\n                        { // consider only amounts toRemove\n                            fraction = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionLiveToRemove\");\n                            if ((fractionType == \"Total\") && (fraction > 0.0))\n                                fraction = 1.0;\n                            else if (RemoveAllBiomassIsEnabled && (fraction > 0.0))\n                                fraction = 0.95;\n                            amountWt += (double)myZone.Get(species.Name + \".\" + organ.Name + \".Live.Wt\") * fraction;\n                            fraction = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionDeadToRemove\");\n                            if ((fractionType == \"Total\") && (fraction > 0.0))\n                                fraction = 1.0;\n                            else if (RemoveAllBiomassIsEnabled && (fraction > 0.0))\n                                fraction = 0.95;\n                            amountWt += (double)myZone.Get(species.Name + \".\" + organ.Name + \".Dead.Wt\") * fraction;\n                        }\n                    }\n                }\n            }\n\n            foreach (AgPasture.PastureSpecies species in AgPSpecies)\n            {\n                if ((plantName == \"All\") || (species.Name == plantName))\n                {\n                    if (fractionType == \"Total\")\n                        amountWt += species.AboveGroundWt*0.1;\n                    else\n                        amountWt += species.Harvestable.Wt*0.1;\n                }\n            }\n\n            return amountWt;\n        }\n\n        /// <summary>Triggers the actual biomass removal and gather DM and N amounts.</summary>\n        /// <param name=\"amountToRemove\">The total DM amount to remove (g/m2)</param>\n        /// <param name=\"removalType\">The type of removal (Cut, Graze, Harvest)</param>\n        private void defoliateSward(double amountToRemove, string removalType)\n        {\n            // get the amounts of biomass and N before today's defoliation\n            double preRemovalDM = standingSwardBiomassWt;\n            double preRemovalN = standingSwardBiomassN;\n            double fractionToRemove = 0.0;\n\n            // gather the actual biomass removal fractions, checking whether they need to be adjusted\n            double totalHarvestableAmount = harvestableSwardBiomass(\"All\", \"Harvestable\");\n            if (amountToRemove > 0.0)\n            { // an amount was given for defoliation, adjust removal fractions for each species in order to remove the amount specified\n                fractionToRemove = amountToRemove / totalHarvestableAmount;\n            }\n            else if (amountToRemove < 0.0)\n            { // defoliation is not based on an amount, removal is determined simply by the removal fractions\n                fractionToRemove = 1.0;\n            }\n\n            for (int i = 0; i < swardSpeciesName.Length; i++)\n            {\n                speciesFraction[i] = harvestableSwardBiomass(swardSpeciesName[i], \"Harvestable\") / totalHarvestableAmount;\n                if (swardSpeciesType[i] == \"PMF\")\n                {\n                    // check whether the plant is alive\n                    bool speciesIsAlive = (bool)myZone.Get(swardSpeciesName[i]+\".IsEmerged\");\n                    if (speciesIsAlive)\n                    {\n                        // set removal fractions (these overrides the default removals in the plant)\n                        setRemoveFraction(swardSpeciesName[i], fractionToRemove);\n\n                        // do the actual biomass removal\n                        foreach (Plant species in PMFSpecies)\n                        {\n                            if(species.Name == swardSpeciesName[i])\n                            {\n                                species.RemoveBiomass(removalType, defoliationFractions);\n                                break;\n                            }\n                        }\n                    }\n                }\n                else\n                {\n                    // check whether the plant is alive\n                    bool speciesIsAlive = (bool)myZone.Get(swardSpeciesName[i]+\".IsAlive\");\n                    if (speciesIsAlive)\n                    {\n                        // set removal amount (needs to be in kg/ha)\n                        double amountRequired = (double)myZone.Get(swardSpeciesName[i]+\".Harvestable.Wt\");\n                        if (amountToRemove > 0.0)\n                            amountRequired = amountToRemove * speciesFraction[i] * 10.0;\n\n                        // do the actual biomass removal\n                        foreach (AgPasture.PastureSpecies species in AgPSpecies)\n                        {\n                            if(species.Name == swardSpeciesName[i])\n                            {\n                                species.RemoveBiomass(amount: amountRequired, type: \"SetRemoveAmount\");\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n\n            // get the amounts of biomass and N after today's defoliation\n            double postRemovalDM = standingSwardBiomassWt;\n            double postRemovalN = standingSwardBiomassN;\n\n            // get total defoliation (total plant stuff lost)\n            DefoliatedWt = preRemovalDM - postRemovalDM;\n            DefoliatedN = preRemovalN - postRemovalN;\n\n            // get amounts harvested, removed, and returned\n            manageDefoliatedBiomass();\n        }\n\n        /// <summary>Sets the biomass removal fractions for PMF plants.</summary>\n        /// <param name=\"plantName\">The name of PMF species</param>\n        /// <param name=\"fractionHarvestable\">The fraction of harvestable biomass to be removed (0-1)</param>\n        private void setRemoveFraction(string plantName, double fractionHarvestable)\n        {\n            foreach (Plant species in PMFSpecies)\n            {\n                if ((species.Name == plantName) && (species.IsAlive))\n                {\n\n                    // set removal fractions (these overrides the default removals in the plant)\n                    foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())\n                    {\n                        // first get the removal for Live material\n                        fractionToRemove = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionLiveToRemove\");\n                        if (RemoveAllBiomassIsEnabled && (fractionToRemove > 0.0))\n                            fractionToRemove = 0.95;\n                        fractionToRemove = fractionHarvestable * fractionToRemove;\n                        fractionToRemove = Math.Min(1.0, fractionToRemove);\n                        defoliationFractions.SetFractionToRemove(organ.Name, fractionToRemove, \"Live\");\n                        if (RemoveAllBiomassIsEnabled)\n                            fractionToResidue = 0.0;\n                        else\n                            fractionToResidue = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionLiveToResidue\");\n                        fractionToResidue = Math.Min(fractionHarvestable * fractionToResidue, 1.0 - fractionToRemove);\n                        defoliationFractions.SetFractionToResidue(organ.Name, fractionToResidue, \"Live\");\n\n                        // then get the removal for Dead material\n                        fractionToRemove = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionDeadToRemove\");\n                        if (RemoveAllBiomassIsEnabled && (fractionToRemove > 0.0))\n                            fractionToRemove = 0.95;\n                        fractionToRemove = fractionHarvestable * fractionToRemove;\n                        fractionToRemove = Math.Min(1.0, fractionToRemove);\n                        defoliationFractions.SetFractionToRemove(organ.Name, fractionToRemove, \"Dead\");\n                        if (RemoveAllBiomassIsEnabled)\n                            fractionToResidue = 0.0;\n                        else\n                            fractionToResidue = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionDeadToResidue\");\n                        fractionToResidue = Math.Min(fractionHarvestable * fractionToResidue, 1.0 - fractionToRemove);\n                        defoliationFractions.SetFractionToResidue(organ.Name, fractionToResidue, \"Dead\");\n                    }\n                }\n            }\n        }\n\n        /// <summary>Gathers the DM and N amounts harvested, to be removed, and to be returned.</summary>\n        private void manageDefoliatedBiomass()\n        {\n            double digestibilityStructural = 0.65;\n            double digestibilityNonStrucutural = 1.0;\n\n            if (DefoliatedWt > 0.0)\n            {\n                HarvestedWt = 0.0;\n                HarvestedN = 0.0;\n                RemovedWt = 0.0;\n                RemovedN = 0.0;\n\n                foreach (Plant species in PMFSpecies)\n                {\n                    if(species.AboveGround.Wt > 0.0)\n                    {\n                        // get the amount harvested (plant stuff removed from plants)\n                        speciesHarvestedWt = 0.0;\n                        speciesHarvestedN = 0.0;\n                        foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())\n                        {\n                            speciesHarvestedWt += (double)myZone.Get(species.Name+\".\"+organ.Name+\".Removed.Wt\");\n                            speciesHarvestedN += (double)myZone.Get(species.Name+\".\"+organ.Name+\".Removed.N\");\n                        }\n\n                        HarvestedWt += speciesHarvestedWt;\n                        HarvestedN += speciesHarvestedN;\n\n                        // get the DM fraction to be removed\n                        if(FractionDMToRemove>=0.0)\n                        {\n                            speciesFractionToRemove = FractionDMToRemove;\n                        }\n                        else\n                        { // use digestibility to define the fraction\n                            double fracStructural = species.AboveGround.StructuralWt/species.AboveGround.Wt;\n                            speciesFractionToRemove = (1.0 - fracStructural)*digestibilityNonStrucutural + fracStructural*digestibilityStructural;\n                            speciesFractionToRemove = Math.Min(1.0, Math.Max(0.0, speciesFractionToRemove));\n                        }\n\n                        // get the amounts actually removed from field\n                        RemovedWt += speciesHarvestedWt * speciesFractionToRemove;\n                        RemovedN += speciesHarvestedN * FractionNToRemove;\n                   }\n                }\n\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\n                {\n                    if(species.AboveGroundWt > 0.0)\n                    {\n                        // get the amount harvested\n                        speciesHarvestedWt = species.HarvestedWt*0.1;\n                        speciesHarvestedN = species.HarvestedN*0.1;\n                        HarvestedWt += speciesHarvestedWt;\n                        HarvestedN += speciesHarvestedN;\n\n                        // get fraction to be removed\n                        if(FractionDMToRemove>=0.0)\n                        {\n                            speciesFractionToRemove = FractionDMToRemove;\n                        }\n                        else\n                        { // use digestibility to define the fraction\n                            speciesFractionToRemove = species.HarvestedDigestibility;\n                        }\n\n                        // get the amounts actually removed from field\n                        RemovedWt += speciesHarvestedWt * speciesFractionToRemove;\n                        RemovedN += speciesHarvestedN * FractionNToRemove;\n                    }\n                }\n\n                // get the amounts to be returned to the field (as residue or dung+urine)\n                ReturnedWt = HarvestedWt - RemovedWt;\n                ReturnedN = HarvestedN - RemovedN;\n                if (ReturnType == ReturnAsTypes.AsDungUrine)\n                {\n                    if (NDungType == DungNContentTypes.DefineProportion)\n                        NReturnedInDung = ReturnedN * ProportionN2Dung;\n                    else\n                        NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);\n                    NReturnedInDung = Math.Min(NReturnedInDung, ReturnedN);\n                    NReturnedInUrine = ReturnedN - NReturnedInDung;\n                }\n                else\n                {\n                    NReturnedInDung = 0.0;\n                    NReturnedInUrine = 0.0;\n                }\n            }\n        }\n\n        /// <summary>Returns the material not removed off field as residue.</summary>\n        private void returnResidues()\n        {\n            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))\n            {\n                PMF.BiomassRemovedType BiomassResidue = new PMF.BiomassRemovedType();\n                string[] type = new string[] { \"Grass\" };\n                float[] dltdm = new float[] { (float)(10.0 * ReturnedWt) };\n                float[] dltn = new float[] { (float)(10.0 * ReturnedN) };\n                float[] dltp = new float[] { 0 };\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\n\n                BiomassResidue.crop_type = \"Grass\";\n                BiomassResidue.dm_type = type;\n                BiomassResidue.dlt_crop_dm = dltdm;\n                BiomassResidue.dlt_dm_n = dltn;\n                BiomassResidue.dlt_dm_p = dltp;\n                BiomassResidue.fraction_to_residue = fraction;\n                BiomassRemoved.Invoke(BiomassResidue);\n            }\n        }\n\n        /// <summary>Returns the material not removed off field as dung and urine).</summary>\n        private void returnExcreta()\n        {\n            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))\n            {\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\n                float[] dltdm = new float[] { (float)(10.0 * ReturnedWt) };\n                float[] dltn = new float[] { (float)(10.0 * NReturnedInDung) };\n                float[] dltp = new float[] { 0 };\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\n\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\n                BiomassDung.dm_type = type;\n                BiomassDung.dlt_crop_dm = dltdm;\n                BiomassDung.dlt_dm_n = dltn;\n                BiomassDung.dlt_dm_p = dltp;\n                BiomassDung.fraction_to_residue = fraction;\n                BiomassRemoved.Invoke(BiomassDung);\n            }\n\n            if (NReturnedInUrine > 0.0)\n            {\n                double[] myUrineDeposition = new double[soilPhysical.Thickness.Length];\n                for (int z = 0; z < urineFraction.Length; z++)\n                    myUrineDeposition[z] = NReturnedInUrine * 10.0 * urineFraction[z];\n                Urea.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\n            }\n        }\n\n        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n        /// <summary>Type of defoliation to use</summary>\n        public enum DefoliationTypes\n        {\n            /// <summary>Cut</summary>\n            Cut,\n            /// <summary>Graze</summary>\n            Graze,\n            /// <summary>Harvest</summary>\n            Harvest\n        }\n\n        /// <summary>Flag how defoliations will be triggered</summary>\n        public enum DefoliationTriggerTypes\n        {\n            /// <summary>Setting a fixed interval</summary>\n            FixedInterval,\n            /// <summary>Setting a target (minimum) inteval</summary>\n            TargetInterval,\n            /// <summary>Setting a target (maximum) standing biomass</summary>\n            TargetStandingBiomass\n        }\n\n        /// <summary>How the DM amount given is interpreted</summary>\n        public enum DefoliateAmountTypes\n        {\n            /// <summary>Setting a DM amount to remove</summary>\n            DMToRemove,\n            /// <summary>Setting the residual DM amount</summary>\n            ResidualDM,\n            /// <summary>Remove according to crop's BiomassRemovalFractions</summary>\n            None_UseDefoliationFractions\n        }\n\n        /// <summary>Fraction of defoliated DM to remove from field</summary>\n        public enum DMRemovalTypes\n        {\n            /// <summary>Remove all DM</summary>\n            RemoveAll,\n            /// <summary>Remove no DM</summary>\n            RemoveNone,\n            /// <summary>Remove a user-defined fraction</summary>\n            UserDefinedFraction,\n            /// <summary>Remove a fraction based on plant digestibility</summary>\n            BasedOnDigestibility\n        }\n\n        /// <summary>Fraction of N in the defoliated material to remove from field</summary>\n        public enum NRemovalTypes\n        {\n            /// <summary>Remove all N</summary>\n            RemoveAll,\n            /// <summary>Remove no N</summary>\n            RemoveNone,\n            /// <summary>Remove a user-defined fraction</summary>\n            UserDefinedFraction,\n            /// <summary>Remove a fraction equal to DM removed</summary>\n            ProportionalToDM\n        }\n\n        /// <summary>Define how the non-removed material is returned to the field</summary>\n        public enum ReturnAsTypes\n        {\n            /// <summary>Return plant material as residue</summary>\n            AsResidue,\n            /// <summary>Return meterial as dung and urine</summary>\n            AsDungUrine\n        }\n\n        /// <summary>Define how the proportion of N in dung is defined</summary>\n        public enum DungNContentTypes\n        {\n            /// <summary>Define the proportion of N returned as dung</summary>\n            DefineProportion,\n            /// <summary>Define the C:N of dung</summary>\n            DefineCNratio\n        }\n    }\n}\n",
+                  "Code": "// Performs defoliations, or removes biomass, from any existing plant (PMF and/or AgPasture) based on a set of given rules.  \r\n// Defoliations can be triggered automatically by this manager or be called from another Script or a Schedule model.\r\n// Developed by RCichota, last updated in 31/Mar/2019\r\n\r\nnamespace Models\r\n{\r\nusing Models.PMF.Interfaces;\r\nusing Models.Soils.Nutrients;\r\nusing System;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Core;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Interfaces;\r\nusing Models.PMF.Interfaces;\r\nusing System.Linq;\r\nusing Newtonsoft.Json;\nusing Models.ForageDigestibility;\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock clock;\r\n        [Link] private Zone myZone;\r\n        [Link] private Soil mySoil;\r\n        [Link(ByName = true)] private ISolute Urea;\r\n        [Link] private ISummary mySummary;\n        [Link] private Forages forages;\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n        private string baseDefoliationType;\r\n        private string typeOfDefoliation;\r\n        private string baseAmountType;\r\n        private string typeOfAmount;\r\n        private double amountGiven;\r\n        private double herbageToRemove;\r\n\r\n        private int durationOfDefoliation;\r\n        private int daysDefoliating;\r\n        private double cumAmountHarvested;\r\n        private double atZ0;\r\n        private double atZ1;\r\n        private double fractionToRemove;\r\n        private double fractionToResidue;\r\n        private double speciesHarvestedWt;\r\n        private double speciesHarvestedN;\r\n        private double speciesFractionToRemove;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        //> Links to other Apsim models\r\n        //Auxiliary 'links'\r\n        private List<Plant> PMFSpecies = new List<Plant>();\r\n        private List<AgPasture.PastureSpecies> AgPSpecies = new List<AgPasture.PastureSpecies>();\r\n\r\n        //> Events raised by this manager\r\n\r\n        //> User inputs from properties tab\r\n        [Separator(\"Generic defoliation management - removes biomass from PMF and AgPasture species, plus residue management\")]\r\n        [Description(\"Allow this manager to control defoliations? \")]\r\n        public bool AutomaticManagementIsEnabled { get; set; }\r\n        [Description(\"Date to start the defoliation management (dd/mm/yyyy): \")]\r\n        public DateTime DefoliationRotationStartDate { get; set; }\r\n        [Description(\"Date to end the defoliation management (dd/mm/yyyy): \")]\r\n        public DateTime DefoliationRotationEndDate { get; set; }\r\n\r\n        [Separator(\"Parameters defining how the defoliation is managed\")]\r\n        [Description(\"What type of defoliation should be triggered? \")]\r\n        public DefoliationTypes DefoliateType { get; set; }\r\n        [Description(\"How the defoliations should be triggered? \")]\r\n        public DefoliationTriggerTypes DefoliationTriggerType { get; set; }\r\n        [Description(\"  Minimum number of days between defoliations, used if trigger is an interval: \")]\r\n        public int IntervalBetweenDefoliations { get; set; }\r\n        [Description(\"  Minimum standing biomass to start defoliations, used if trigger is DM target(g/m2): \")]\r\n        public int TargetStandingBiomass { get; set; }\r\n        [Description(\"Duration of each defoliation event (days): \")]\r\n        public int DurationOfEachDefoliation { get; set; }\r\n        [Description(\"Which amount is being defined? \")]\r\n        public DefoliateAmountTypes RemoveAmountType { get; set; }\r\n        [Description(\"DM amount to use (g/m2): \")]\r\n        public double AmountForEachDefoliation { get; set; }\r\n        [Description(\"For PMF species, allow all biomass to be removed? \")]\r\n        public bool RemoveAllBiomassIsEnabled { get; set; }\r\n\r\n        [Separator(\"Parameters defining the management of the defoliated biomass\")]\r\n        [Description(\"How much of the DM defoliated is to be removed from the field? \")]\r\n        public DMRemovalTypes DMRemoveType { get; set; }\r\n        [Description(\"  Fraction of DM to remove off field, if using UserDefinedFraction (0-1): \")]\r\n        public double FractionDMToRemove { get; set; }\r\n        [Description(\"How much of the N defoliated is to be removed from the field? \")]\r\n        public NRemovalTypes NRemoveType { get; set; }\r\n        [Description(\"  Fraction of N to remove off field, if using UserDefinedFraction (0-1): \")]\r\n        public double FractionNToRemove { get; set; }\r\n        [Description(\"How the non-removed material is returned to the field? \")]\r\n        public ReturnAsTypes ReturnType { get; set; }\r\n\r\n        [Separator(\"Parameters for partitioning non-removed N into urine and dung\")]\r\n        [Description(\"How the partition of N to dung and urine is defined? \")]\r\n        public DungNContentTypes NDungType { get; set; }\r\n        [Description(\"  Proportion of N returned in dung, if using DefineProportion (0-1): \")]\r\n        public double ProportionN2Dung { get; set; }\r\n        [Description(\"  The C:N of dung, if using DefineCNratio (typically around 20): \")]\r\n        public double CNRatioDung { get; set; }\r\n        [Description(\"Soil depth down to which urine should be applied (mm): \")]\r\n        public double UrineDepth { get; set; }\r\n\r\n        //> Outputs from this manager\r\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM defoliated (removed from plants) today\r\n        public double DefoliatedWt{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material defoliated today\r\n        public double DefoliatedN{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM harvested (removed from plants minus direct residue) today\r\n        public double HarvestedWt{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material harvested today\r\n        public double HarvestedN{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM actually removed from the field\r\n        public double RemovedWt{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material removed from the field\r\n        public double RemovedN{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Pasture DM returned by this manager to the field\r\n        public double ReturnedWt{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // N in the pasture material returned by this manager to the field\r\n        public double ReturnedN{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Non-removed N returned as dung (to SurfaceOM)\r\n        public double NReturnedInDung{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Non-removed N returned as urine (soil urea)\r\n        public double NReturnedInUrine{ get; set; }\r\n        [JsonIgnore][Units(\"days\")] // Number of days since the end of last defoliation event\r\n        public int DaysSinceLastDefoliation{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Total standing aboveground DM before a defoliation\r\n        public double PreHarvestDM{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Total standing aboveground DM after a defoliation\r\n        public double PostHarvestDM{ get; set; }\r\n        [JsonIgnore][Units(\"g/m2\")] // Total pasture DM harvested over a complete defoliation event\r\n        public double RotationHarvestedDM{ get; set; }\r\n\r\n        //> Internal variables\r\n        private double[] urineFraction;                  // fraction of urine to be applied in each soil layer\r\n        // auxiliary boolean\r\n        private bool aDefoliationHasHappened = false; // flag whether a defoliation has happened in this simulation run\r\n\r\n        // auxiliary - lists of species and removal fractions\r\n        private string[] swardSpeciesName;              // name of each species in the sward\r\n        private string[] swardSpeciesType;              // type of each species in the sward (PMF or AgPasture)\r\n        private double[] speciesFraction;              // biomass fraction of harvestable material of each species\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            // check the type of defoliation given\r\n            if (DefoliateType == DefoliationTypes.Cut)\r\n                baseDefoliationType = \"Cut\";\r\n            else if (DefoliateType == DefoliationTypes.Graze)\r\n                baseDefoliationType = \"Graze\";\r\n            else\r\n                baseDefoliationType = \"Harvest\";\r\n\r\n            // check the type of amount given\r\n            if (RemoveAmountType == DefoliateAmountTypes.DMToRemove)\r\n                baseAmountType = \"DMToRemove\";\r\n            else if (RemoveAmountType == DefoliateAmountTypes.ResidualDM)\r\n                baseAmountType = \"ResidualDM\";\r\n            else\r\n                baseAmountType = \"UseDefoliationFractions\";\r\n\r\n            // check the interval between events\r\n            if (IntervalBetweenDefoliations < 1)\r\n                throw new Exception(\"The interval between defoliation events must be at least one day\");\r\n\r\n            // check the duration for each defoliation\r\n            if(DurationOfEachDefoliation <= 0)\r\n                throw new Exception(\"The duration of defoliations cannot be zero or negative!\");\r\n\r\n            // check the fraction of defoliated material to remove from the field\r\n            if (DMRemoveType == DMRemovalTypes.RemoveAll)\r\n                FractionDMToRemove = 1.0;\r\n            else if (DMRemoveType == DMRemovalTypes.RemoveNone)\r\n                FractionDMToRemove = 0.0;\r\n            else if (DMRemoveType == DMRemovalTypes.BasedOnDigestibility)\r\n                FractionDMToRemove = -1.0;  // will be calculated dynamically\r\n            else // DMRemoveType == DMRemovalTypes.UserDefinedFraction\r\n            {\r\n                if (FractionDMToRemove < 0.0)\r\n                    throw new Exception(\"The fraction of DM defoliated to remove from the field cannot be negative!\");\r\n            }\r\n\r\n            // check the fraction of defoliated N to remove from the field\r\n            if (NRemoveType == NRemovalTypes.RemoveAll)\r\n                FractionNToRemove = 1.0;\r\n            else if (NRemoveType == NRemovalTypes.RemoveNone)\r\n                FractionNToRemove = 0.0;\r\n            else if (NRemoveType == NRemovalTypes.ProportionalToDM)\r\n                FractionNToRemove = FractionDMToRemove;\r\n            else // NRemoveType == NRemovalTypes.UserDefinedFraction\r\n            {\r\n                if (FractionNToRemove < 0.0)\r\n                    throw new Exception(\"The fraction of defoliated N to remove from the field cannot be negative!\");\r\n            }\r\n\r\n            // set up the links to all plant species\r\n            PMFSpecies = myZone.FindAllChildren<Plant>().ToList();\r\n            AgPSpecies = myZone.FindAllChildren<AgPasture.PastureSpecies>().ToList();\r\n\r\n            int numPlants = PMFSpecies.Count + AgPSpecies.Count;\r\n            swardSpeciesName = new string[numPlants];\r\n            swardSpeciesType = new string[numPlants];\r\n            int i = 0;\r\n            foreach (Plant species in myZone.FindAllChildren<Plant>().OfType<IModel>().ToList())\r\n            {\r\n                swardSpeciesName[i] = species.Name;\r\n                swardSpeciesType[i] = \"PMF\";\r\n                i += 1;\r\n            }\r\n            foreach (AgPasture.PastureSpecies species in myZone.FindAllChildren<AgPasture.PastureSpecies>().OfType<IModel>().ToList())\r\n            {\r\n                swardSpeciesName[i] = species.Name;\r\n                swardSpeciesType[i] = \"AgPasture\";\r\n                i += 1;\r\n            }\r\n\r\n            // initialise some variables\r\n            speciesFraction = new double[numPlants];\r\n            \r\n            DaysSinceLastDefoliation = 0;\r\n            durationOfDefoliation = -1;\r\n            daysDefoliating = 0;\r\n            resetMyOutputs();\r\n\r\n            // set the fraction of urine for each layer\r\n            if (ReturnType == ReturnAsTypes.AsDungUrine)\r\n            {\r\n                double depthFromSurface = 0.0;\r\n                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)\r\n                {\r\n                    depthFromSurface += soilPhysical.Thickness[layer];\r\n                    if (depthFromSurface >= UrineDepth)\r\n                    { // bottom layer found\r\n                        urineFraction = new double[layer + 1];\r\n                        double distFactor = 1.5;\r\n                        double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\r\n                        depthFromSurface = 0.0;\r\n                        atZ1 = (UrineDepth - depthFromSurface) * Math.Pow(1.0 - depthFromSurface / UrineDepth, distFactor) / (distFactor + 1.0);\r\n                        for (int z = 0; z < layer+1; z++)\r\n                        {\r\n                            atZ0 = atZ1;\r\n                            depthFromSurface += soilPhysical.Thickness[z];\r\n                            atZ1 = (UrineDepth - depthFromSurface) * Math.Pow(1.0 - depthFromSurface / UrineDepth, distFactor) / (distFactor + 1);\r\n                            if (1.0 - (depthFromSurface / UrineDepth) < 0.0)\r\n                                atZ1 = 0;\r\n                            urineFraction[z] = (atZ0 - atZ1) / totalProp;\r\n                        }\r\n                        layer = soilPhysical.Thickness.Length;\r\n                    }\r\n                }\r\n            }\r\n\r\n            // write message in summary\r\n            mySummary.WriteMessage(this,\" Automatic defoliation manager initialised\", MessageType.Diagnostic);\r\n            if (AutomaticManagementIsEnabled)\r\n            {\r\n                mySummary.WriteMessage(this, \"   Defoliations will happen between \" + DefoliationRotationStartDate.ToShortDateString()\r\n                                          + \" and \" + DefoliationRotationEndDate.ToShortDateString() + \".\", MessageType.Diagnostic);\r\n                mySummary.WriteMessage(this, \"   Biomass from the sward will be defoliated simulating a \\\"\" + baseDefoliationType + \"\\\" rotation.\", MessageType.Diagnostic);\r\n                if (DefoliationTriggerType == DefoliationTriggerTypes.TargetStandingBiomass)\r\n                    mySummary.WriteMessage(this, \"   Events will happen whenever aboveground biomass surpasses \" + TargetStandingBiomass.ToString(\"#0.0\") + \" g/m2.\", MessageType.Diagnostic);\r\n                else\r\n                    mySummary.WriteMessage(this, \"   Events will happen every \" + IntervalBetweenDefoliations + \" days, if there is enough biomass.\", MessageType.Diagnostic);\r\n                if(baseAmountType == \"ResidualDM\")\r\n                    mySummary.WriteMessage(this, \"   Removing biomass down to a residual amount of \" + AmountForEachDefoliation.ToString(\"#.0\") + \" g/m2 over \" \r\n                                             + DurationOfEachDefoliation + \" days.\", MessageType.Diagnostic);\r\n                else\r\n                    mySummary.WriteMessage(this, \"   Removing \" + AmountForEachDefoliation.ToString(\"#.0\") + \" g/m2 of biomass per day over \" \r\n                                             + DurationOfEachDefoliation + \" days.\", MessageType.Diagnostic);\r\n            }\r\n            else\r\n            {\r\n                mySummary.WriteMessage(this,\"   Automatic defoliations are currently disabled, though defoliations can be triggered by another manager\", MessageType.Diagnostic);\r\n                mySummary.WriteMessage(this,\"   If called, the manager will remove biomass from the sward simulating a \\\"\" + baseDefoliationType + \"\\\" event.\", MessageType.Diagnostic);\r\n            }\r\n\r\n            if(ReturnType == ReturnAsTypes.AsDungUrine)\r\n            {\r\n                mySummary.WriteMessage(this,\"   Non-removed material will be returned as dung and urine. Urine added to soil according to proportions: \"\r\n                + string.Join(\", \",urineFraction), MessageType.Diagnostic);\r\n            }\r\n            else\r\n                mySummary.WriteMessage(this,\"   Non-removed material will be returned as residue.\", MessageType.Diagnostic);\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // check whether we need to continue defoliationg, i.e. within a multi-day defoliation event (need to check this first in the day)\r\n            if ((daysDefoliating > 0) && (daysDefoliating < durationOfDefoliation))\r\n            {\r\n                // reset outputs\r\n                resetMyOutputs();\r\n\r\n                // re-check the amount to defoliate\r\n                double harvestableBiomass = harvestableSwardBiomass(\"All\", \"Harvestable\");\r\n                if (typeOfAmount == \"DMToRemove\")\r\n                {\r\n                    if(harvestableBiomass > 0.001)\r\n                        herbageToRemove = Math.Min(harvestableBiomass, (amountGiven - cumAmountHarvested) / (durationOfDefoliation - daysDefoliating));\r\n                }\r\n                else if (typeOfAmount == \"ResidualDM\")\r\n                {\r\n                    double currentDM = standingSwardBiomassWt;\r\n                    if (currentDM > amountGiven)\r\n                        herbageToRemove = Math.Min(harvestableBiomass, (currentDM - amountGiven) / (durationOfDefoliation - daysDefoliating));\r\n                }\r\n\r\n                // remove plant biomass and return residue\r\n                if (Math.Abs(herbageToRemove) >= 0.001)\r\n                {\r\n                    // set biomass removal\r\nmySummary.WriteMessage(this, \"   Defoliation initialised on DoManagement - \" + clock.Today.Date.ToShortDateString(), MessageType.Diagnostic);\r\n                    defoliateSward(herbageToRemove, typeOfDefoliation);\r\n\r\n                    // return residue or excreta\r\n                    if(ReturnedWt + ReturnedN > 0.0)\r\n                    {\r\n                        if (ReturnType == ReturnAsTypes.AsResidue)\r\n                            returnResidues();\r\n                        else\r\n                            returnExcreta();\r\n                    }\r\n\r\n                    // gather amount removed this event\r\n                    cumAmountHarvested += HarvestedWt;\r\n                }\r\n\r\n                daysDefoliating += 1;\r\n            }\r\n\r\n            // check whether a defoliation ended yesterday\r\n            if (daysDefoliating < 0)\r\n            { // clean up variables\r\n                resetMyOutputs();\r\n                daysDefoliating = 0;\r\n            }\r\n\r\n            // check whether automatic defoliations are enabled\r\n            if (AutomaticManagementIsEnabled)\r\n            {\r\n                // check whether we are within the period in which defoliations can happen\r\n                if ((clock.Today.Date >= DefoliationRotationStartDate.Date) && (clock.Today.Date <= DefoliationRotationEndDate.Date))\r\n                {\r\n                    if (clock.Today.Date == DefoliationRotationStartDate.Date)\r\n                        DaysSinceLastDefoliation = IntervalBetweenDefoliations;\r\n\r\n                    // check whether we should start a defoliation event\r\n                    if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)\r\n                    {\r\n                        if (DaysSinceLastDefoliation == IntervalBetweenDefoliations)\r\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\r\n                    }\r\n                    else if (DefoliationTriggerType == DefoliationTriggerTypes.TargetInterval)\r\n                    {\r\n                        if (DaysSinceLastDefoliation >= IntervalBetweenDefoliations)\r\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\r\n                    }\r\n                    else  //DefoliationTriggerType == DefoliationTriggerTypes.TargetStandingBiomass\r\n                    {\r\n                        if (standingSwardBiomassWt >= TargetStandingBiomass)\r\n                            Defoliate(baseDefoliationType, AmountForEachDefoliation, baseAmountType, DurationOfEachDefoliation);\r\n                    }\r\n                }\r\n                //// Note: Only the code above, responsible for triggering automatic events, is limited by 'AutomaticManagementIsEnabled'. \r\n                ////       The rest of the code is still available to perform one-off defoliations.\r\n                ////       It can be called from another manager or a schedulle thingy via Defoliate().\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            // check whether a defoliation event has just been completed\r\n            if (daysDefoliating == durationOfDefoliation)\r\n            {\r\n                // get amount of biomass remaining and zero counters\r\n                PostHarvestDM = standingSwardBiomassWt;\r\n                RotationHarvestedDM = cumAmountHarvested;\r\n                aDefoliationHasHappened = true;\r\n                daysDefoliating = -1;\r\n            }\r\n\r\n            // count the days after a defoliation\r\n            if (aDefoliationHasHappened && (daysDefoliating == 0))\r\n                DaysSinceLastDefoliation += 1;\r\n        }\r\n\r\n        /// <summary>Sets up a defoliation event.</summary>\r\n        /// <param name=\"defoliationType\">Type of defoliation (cut, graze, or harvest)</param>\r\n        /// <param name=\"amountDM\">Amount of biomass to use (g/m2)</param>\r\n        /// <param name=\"amountType\">How the DM amount is interpreted (toRemove, residual)</param>\r\n        /// <param name=\"duration\">Number of days to defoliate over</param>\r\n        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)\r\n        {\r\n            // check whether there are plants in the sward that can be defoliated\r\n            if (swardHasLivingPlants)\r\n            {\r\n                // check the defoliation type\r\n                if (defoliationType.ToLower() == \"cut\")\r\n                    typeOfDefoliation = \"Cut\";\r\n                else if (defoliationType.ToLower() == \"graze\")\r\n                    typeOfDefoliation = \"Graze\";\r\n                else if (defoliationType.ToLower() == \"harvest\")\r\n                    typeOfDefoliation = \"Harvest\";\r\n                else\r\n                    throw new Exception(\"Defoliation type should be either \\\"Cut\\\", \\\"Graze\\\", or \\\"Harvest\\\"!\");\r\n\r\n                // check DM amount given\r\n                if (amountDM < 0.0)\r\n                    throw new Exception(\"Amount to defoliate cannot be negative!\");\r\n                else\r\n                    amountGiven = amountDM;\r\n\r\n                // check the type of amount given\r\n                if (amountType.ToLower() == \"dmtoremove\")\r\n                    typeOfAmount = \"DMToRemove\";\r\n                else if (amountType.ToLower() == \"residualdm\")\r\n                    typeOfAmount = \"ResidualDM\";\r\n                else if (amountType.ToLower() == \"usedefoliationfractions\")\r\n                    typeOfAmount = \"UseDefoliationFractions\";\r\n                else\r\n                    throw new Exception(\"Amount type should be \\\"DMToRemove\\\", \\\"ResidualDM\\\", or \\\"UseDefoliationFractions\\\"!\");\r\n\r\n                // check duration given\r\n                if (duration <= 0)\r\n                    throw new Exception(\"Duration of defoliation cannot be zero or negative!\");\r\n                else\r\n                    durationOfDefoliation = duration;\r\n\r\n                // check existing biomass and amount to remove\r\n                PreHarvestDM = standingSwardBiomassWt;\r\n                herbageToRemove = 0.0;\r\n                double harvestableBiomass = harvestableSwardBiomass(\"All\", \"Harvestable\");\r\n                if (typeOfAmount == \"UseDefoliationFractions\")\r\n                { // amount given is ignored, removal based on fractions\r\n                    amountGiven = 0.0;\r\n                    if (harvestableBiomass > 0.0)\r\n                        herbageToRemove = -1.0;\r\n\r\n                    mySummary.WriteMessage(this, \"   Defoliation triggered, removing biomass using the removal fractions (set or default), during \" + durationOfDefoliation + \" days\", MessageType.Diagnostic);\r\n                }\r\n                else if (typeOfAmount == \"DMToRemove\")\r\n                {\r\n                    if (amountGiven > 0.001)\r\n                    { // a meaningful amount was given, check whether all can be removed\r\n                        if (harvestableBiomass > 0.001)\r\n                            herbageToRemove = Math.Min(harvestableBiomass, amountGiven / durationOfDefoliation);\r\n\r\n                        mySummary.WriteMessage(this, \"   Defoliation triggered, attempting to remove \" + amountGiven.ToString(\"#0.0\") + \" g/m2 of biomass over \" + durationOfDefoliation + \" days\", MessageType.Diagnostic);\r\n                    }\r\n                }\r\n                else if (typeOfAmount == \"ResidualDM\")\r\n                {\r\n                    // check how much biomass will be removed\r\n                    if (PreHarvestDM > amountGiven)\r\n                        herbageToRemove = Math.Min(harvestableBiomass, (PreHarvestDM - amountGiven) / durationOfDefoliation);\r\n\r\n                    mySummary.WriteMessage(this, \"   Defoliation triggered, attempting to remove biomass down to \" + amountGiven.ToString(\"#0.0\") + \" g/m2 over \" + durationOfDefoliation + \" days\", MessageType.Diagnostic);\r\n                }\r\n\r\n                // can defoliation begin?\r\n                if (Math.Abs(herbageToRemove) >= 0.001)\r\n                {\r\n                    // set off first defoliation\r\nmySummary.WriteMessage(this, \"   Defoliation initialised on Defoliate - \" + clock.Today.Date.ToShortDateString(), MessageType.Diagnostic);\r\n                    defoliateSward(herbageToRemove, typeOfDefoliation);\r\n\r\n                    // return residue or excreta\r\n                    if(ReturnedWt + ReturnedN > 0.0)\r\n                    {\r\n                        if (ReturnType == ReturnAsTypes.AsResidue)\r\n                            returnResidues();\r\n                        else\r\n                            returnExcreta();\r\n                    }\r\n\r\n                    // gather values for this event\r\n                    cumAmountHarvested = HarvestedWt;\r\n                    daysDefoliating = 1;\r\n                    DaysSinceLastDefoliation = 0;\r\n                }\r\n                else\r\n                {\r\n                    // abort command as there is not enough biomass, check interval type\r\n                    if (DefoliationTriggerType == DefoliationTriggerTypes.FixedInterval)\r\n                    { // count the event as if it did happen\r\n                        cumAmountHarvested = 0.0;\r\n                        daysDefoliating = 1;\r\n                        DaysSinceLastDefoliation = 0;\r\n                    }\r\n\r\n                    mySummary.WriteMessage(this, \"   Defoliation did not happend because current biomass (\" + PreHarvestDM.ToString(\"#0.0\") + \" g/m2) is too low (total harvestable = \" + harvestableBiomass.ToString(\"#0.0\") + \" g/m2)\", MessageType.Diagnostic);\r\n                }\r\n            }\r\n            else\r\n            {\r\n                mySummary.WriteMessage(this, \"   Defoliation did not happend because there is no growing plants in the sward\", MessageType.Diagnostic);\r\n            }\r\n        }\r\n\r\n        /// <summary>Resets the values of outputs.</summary>\r\n        private void resetMyOutputs()\r\n        {\r\n            DefoliatedWt = 0.0;\r\n            DefoliatedN = 0.0;\r\n            HarvestedWt = 0.0;\r\n            HarvestedN = 0.0;\r\n            RemovedWt = 0.0;\r\n            RemovedN = 0.0;\r\n            ReturnedWt = 0.0;\r\n            ReturnedN = 0.0;\r\n            NReturnedInDung = 0.0;\r\n            NReturnedInUrine = 0.0;\r\n            RotationHarvestedDM = 0.0;\r\n        }\r\n\r\n        /// <summary>Flags whether there is any living plant in the sward.</summary>\r\n        private bool swardHasLivingPlants\r\n        {\r\n            get\r\n            {\r\n                bool result = false;\r\n                foreach (Plant species in PMFSpecies)\r\n                       result |= species.IsAlive;\r\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\r\n                       result |= species.IsAlive;\r\n                return result;\r\n            }\r\n        }\r\n\r\n        /// <summary>Amount of plant biomass aboveground (g/m2).</summary>\r\n        private double standingSwardBiomassWt\r\n        {\r\n            get\r\n            {\r\n                double result = 0.0;\r\n                foreach (Plant species in PMFSpecies)\r\n                   result += (double)myZone.Get(species.Name+\".AboveGround.Wt\");\r\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\r\n                    result += species.Standing.Wt*0.1;\r\n                return result;\r\n            }\r\n        }\r\n\r\n        /// <summary>Amount of N in plant's biomass aboveground (g/m2).</summary>\r\n        private double standingSwardBiomassN\r\n        {\r\n            get\r\n            {\r\n                double result = 0.0;\r\n                foreach (Plant species in PMFSpecies)\r\n                   result += (double)myZone.Get(species.Name+\".AboveGround.N\");\r\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\r\n                    result += species.Standing.N*0.1;\r\n                return result;\r\n            }\r\n        }\r\n\r\n        /// <summary>Amount of plant biomass from all organs available for defoliation (g/m2).</summary>\r\n        /// <remarks>Assumes that organs with a BiomassRemoval.FractionToRemove > 0 are harvestable.\r\n        /// For AgPasture, harvestable is based on minimum DM.</remarks>\r\n        /// <param name=\"plantName\">The name of the plant to retrieve its biomass</param>\r\n        /// <param name=\"fractionType\">The type of fraction to use (harvestable or total)</param>\r\n        private double harvestableSwardBiomass(string plantName, string fractionType)\r\n        {\r\n            double amountWt = 0.0;\r\n            double fraction = 0.0;\r\n        \tforeach (var forage in forages.ModelsWithDigestibleBiomass)\n        \t{\n        \t\tif (plantName == \"All\" || forage.Name == plantName)\n        \t\t{\n\t\t    \t\tforeach (var material in forage.Material) \n\t\t    \t\t{\n\t\t    \t\t\tif (fractionType == \"Total\")\n\t\t    \t\t\t\tamountWt += material.Total.Wt;\n\t\t    \t\t\telse\n\t\t    \t\t\t\tamountWt += material.Consumable.Wt;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t\t\r\n            return amountWt;\r\n        }\r\n\r\n        /// <summary>Triggers the actual biomass removal and gather DM and N amounts.</summary>\r\n        /// <param name=\"amountToRemove\">The total DM amount to remove (g/m2)</param>\r\n        /// <param name=\"removalType\">The type of removal (Cut, Graze, Harvest)</param>\r\n        private void defoliateSward(double amountToRemove, string removalType)\r\n        {\r\n            // get the amounts of biomass and N before today's defoliation\r\n            double preRemovalDM = standingSwardBiomassWt;\r\n            double preRemovalN = standingSwardBiomassN;\r\n            double fractionToRemove = 0.0;\r\n\r\n            // gather the actual biomass removal fractions, checking whether they need to be adjusted\r\n            double totalHarvestableAmount = harvestableSwardBiomass(\"All\", \"Harvestable\");\r\n            if (amountToRemove > 0.0)\r\n            { // an amount was given for defoliation, adjust removal fractions for each species in order to remove the amount specified\r\n                fractionToRemove = amountToRemove / totalHarvestableAmount;\r\n            }\r\n            else if (amountToRemove < 0.0)\r\n            { // defoliation is not based on an amount, removal is determined simply by the removal fractions\r\n                fractionToRemove = 1.0;\r\n            }\r\n\r\n            for (int i = 0; i < swardSpeciesName.Length; i++)\r\n            {\r\n                speciesFraction[i] = harvestableSwardBiomass(swardSpeciesName[i], \"Harvestable\") / totalHarvestableAmount;\r\n                if (swardSpeciesType[i] == \"PMF\")\r\n                {\r\n                    // check whether the plant is alive\r\n                    bool speciesIsAlive = (bool)myZone.Get(swardSpeciesName[i]+\".IsEmerged\");\r\n                    if (speciesIsAlive)\r\n                    {\r\n                        // set removal fractions (these overrides the default removals in the plant)\r\n                        setRemoveFraction(swardSpeciesName[i], fractionToRemove);\r\n\r\n                        // do the actual biomass removal\r\n                        foreach (Plant species in PMFSpecies)\r\n                        {\r\n                            if(species.Name == swardSpeciesName[i])\r\n                            {\r\n\r\n                                break;\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n                else\r\n                {\r\n                    // check whether the plant is alive\r\n                    bool speciesIsAlive = (bool)myZone.Get(swardSpeciesName[i]+\".IsAlive\");\r\n                    if (speciesIsAlive)\r\n                    {\r\n                        // set removal amount (needs to be in kg/ha)\r\n                        double amountRequired = (double)myZone.Get(swardSpeciesName[i]+\".Harvestable.Wt\");\r\n                        if (amountToRemove > 0.0)\r\n                            amountRequired = amountToRemove * speciesFraction[i] * 10.0;\r\n\r\n                        // do the actual biomass removal\r\n                        foreach (AgPasture.PastureSpecies species in AgPSpecies)\r\n                        {\r\n                            if(species.Name == swardSpeciesName[i])\r\n                            {\r\n                                species.RemoveBiomass(amount: amountRequired, type: \"SetRemoveAmount\");\r\n                                break;\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n\r\n            // get the amounts of biomass and N after today's defoliation\r\n            double postRemovalDM = standingSwardBiomassWt;\r\n            double postRemovalN = standingSwardBiomassN;\r\n\r\n            // get total defoliation (total plant stuff lost)\r\n            DefoliatedWt = preRemovalDM - postRemovalDM;\r\n            DefoliatedN = preRemovalN - postRemovalN;\r\n\r\n            // get amounts harvested, removed, and returned\r\n            manageDefoliatedBiomass();\r\n        }\r\n\r\n        /// <summary>Sets the biomass removal fractions for PMF plants.</summary>\r\n        /// <param name=\"plantName\">The name of PMF species</param>\r\n        /// <param name=\"fractionHarvestable\">The fraction of harvestable biomass to be removed (0-1)</param>\r\n        private void setRemoveFraction(string plantName, double fractionHarvestable)\r\n        {\r\n            /*foreach (Plant species in PMFSpecies)\r\n            {\r\n                if ((species.Name == plantName) && (species.IsAlive))\r\n                {\r\n\r\n                    // set removal fractions (these overrides the default removals in the plant)\r\n                    foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())\r\n                    {\r\n                        // first get the removal for Live material\r\n                        fractionToRemove = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionLiveToRemove\");\r\n                        if (RemoveAllBiomassIsEnabled && (fractionToRemove > 0.0))\r\n                            fractionToRemove = 0.95;\r\n                        fractionToRemove = fractionHarvestable * fractionToRemove;\r\n                        fractionToRemove = Math.Min(1.0, fractionToRemove);\r\n                        defoliationFractions.SetFractionToRemove(organ.Name, fractionToRemove, \"Live\");\r\n                        if (RemoveAllBiomassIsEnabled)\r\n                            fractionToResidue = 0.0;\r\n                        else\r\n                            fractionToResidue = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionLiveToResidue\");\r\n                        fractionToResidue = Math.Min(fractionHarvestable * fractionToResidue, 1.0 - fractionToRemove);\r\n                        defoliationFractions.SetFractionToResidue(organ.Name, fractionToResidue, \"Live\");\r\n\r\n                        // then get the removal for Dead material\r\n                        fractionToRemove = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionDeadToRemove\");\r\n                        if (RemoveAllBiomassIsEnabled && (fractionToRemove > 0.0))\r\n                            fractionToRemove = 0.95;\r\n                        fractionToRemove = fractionHarvestable * fractionToRemove;\r\n                        fractionToRemove = Math.Min(1.0, fractionToRemove);\r\n                        defoliationFractions.SetFractionToRemove(organ.Name, fractionToRemove, \"Dead\");\r\n                        if (RemoveAllBiomassIsEnabled)\r\n                            fractionToResidue = 0.0;\r\n                        else\r\n                            fractionToResidue = (double)myZone.Get(species.Name + \".\" + organ.Name + \".BiomassRemovalDefaults.\" + typeOfDefoliation + \".FractionDeadToResidue\");\r\n                        fractionToResidue = Math.Min(fractionHarvestable * fractionToResidue, 1.0 - fractionToRemove);\r\n                        defoliationFractions.SetFractionToResidue(organ.Name, fractionToResidue, \"Dead\");\r\n                    }\r\n                }\r\n            }*/\r\n        }\r\n\r\n        /// <summary>Gathers the DM and N amounts harvested, to be removed, and to be returned.</summary>\r\n        private void manageDefoliatedBiomass()\r\n        {\r\n            double digestibilityStructural = 0.65;\r\n            double digestibilityNonStrucutural = 1.0;\r\n\r\n            if (DefoliatedWt > 0.0)\r\n            {\r\n                HarvestedWt = 0.0;\r\n                HarvestedN = 0.0;\r\n                RemovedWt = 0.0;\r\n                RemovedN = 0.0;\r\n\r\n                foreach (Plant species in PMFSpecies)\r\n                {\r\n                    if(species.AboveGround.Wt > 0.0)\r\n                    {\r\n                        // get the amount harvested (plant stuff removed from plants)\r\n                        speciesHarvestedWt = 0.0;\r\n                        speciesHarvestedN = 0.0;\r\n                        foreach (IOrgan organ in species.FindAllChildren<IOrgan>().OfType<IModel>().ToList())\r\n                        {\r\n                            speciesHarvestedWt += (double)myZone.Get(species.Name+\".\"+organ.Name+\".Removed.Wt\");\r\n                            speciesHarvestedN += (double)myZone.Get(species.Name+\".\"+organ.Name+\".Removed.N\");\r\n                        }\r\n\r\n                        HarvestedWt += speciesHarvestedWt;\r\n                        HarvestedN += speciesHarvestedN;\r\n\r\n                        // get the DM fraction to be removed\r\n                        if(FractionDMToRemove>=0.0)\r\n                        {\r\n                            speciesFractionToRemove = FractionDMToRemove;\r\n                        }\r\n                        else\r\n                        { // use digestibility to define the fraction\r\n                            double fracStructural = species.AboveGround.StructuralWt/species.AboveGround.Wt;\r\n                            speciesFractionToRemove = (1.0 - fracStructural)*digestibilityNonStrucutural + fracStructural*digestibilityStructural;\r\n                            speciesFractionToRemove = Math.Min(1.0, Math.Max(0.0, speciesFractionToRemove));\r\n                        }\r\n\r\n                        // get the amounts actually removed from field\r\n                        RemovedWt += speciesHarvestedWt * speciesFractionToRemove;\r\n                        RemovedN += speciesHarvestedN * FractionNToRemove;\r\n                   }\r\n                }\r\n\r\n                foreach (AgPasture.PastureSpecies species in AgPSpecies)\r\n                {\r\n                    if(species.AboveGroundWt > 0.0)\r\n                    {\r\n                        // get the amount harvested\r\n                        speciesHarvestedWt = species.HarvestedWt*0.1;\r\n                        speciesHarvestedN = species.HarvestedN*0.1;\r\n                        HarvestedWt += speciesHarvestedWt;\r\n                        HarvestedN += speciesHarvestedN;\r\n\r\n                        // get fraction to be removed\r\n                        if(FractionDMToRemove>=0.0)\r\n                        {\r\n                            speciesFractionToRemove = FractionDMToRemove;\r\n                        }\r\n                        else\r\n                        { // use digestibility to define the fraction\r\n                            speciesFractionToRemove = species.HarvestedDigestibility;\r\n                        }\r\n\r\n                        // get the amounts actually removed from field\r\n                        RemovedWt += speciesHarvestedWt * speciesFractionToRemove;\r\n                        RemovedN += speciesHarvestedN * FractionNToRemove;\r\n                    }\r\n                }\r\n\r\n                // get the amounts to be returned to the field (as residue or dung+urine)\r\n                ReturnedWt = HarvestedWt - RemovedWt;\r\n                ReturnedN = HarvestedN - RemovedN;\r\n                if (ReturnType == ReturnAsTypes.AsDungUrine)\r\n                {\r\n                    if (NDungType == DungNContentTypes.DefineProportion)\r\n                        NReturnedInDung = ReturnedN * ProportionN2Dung;\r\n                    else\r\n                        NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);\r\n                    NReturnedInDung = Math.Min(NReturnedInDung, ReturnedN);\r\n                    NReturnedInUrine = ReturnedN - NReturnedInDung;\r\n                }\r\n                else\r\n                {\r\n                    NReturnedInDung = 0.0;\r\n                    NReturnedInUrine = 0.0;\r\n                }\r\n            }\r\n        }\r\n\r\n        /// <summary>Returns the material not removed off field as residue.</summary>\r\n        private void returnResidues()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassResidue = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"Grass\" };\r\n                float[] dltdm = new float[] { (float)(10.0 * ReturnedWt) };\r\n                float[] dltn = new float[] { (float)(10.0 * ReturnedN) };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassResidue.crop_type = \"Grass\";\r\n                BiomassResidue.dm_type = type;\r\n                BiomassResidue.dlt_crop_dm = dltdm;\r\n                BiomassResidue.dlt_dm_n = dltn;\r\n                BiomassResidue.dlt_dm_p = dltp;\r\n                BiomassResidue.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassResidue);\r\n            }\r\n        }\r\n\r\n        /// <summary>Returns the material not removed off field as dung and urine).</summary>\r\n        private void returnExcreta()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n                float[] dltdm = new float[] { (float)(10.0 * ReturnedWt) };\r\n                float[] dltn = new float[] { (float)(10.0 * NReturnedInDung) };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n\r\n            if (NReturnedInUrine > 0.0)\r\n            {\r\n                double[] myUrineDeposition = new double[soilPhysical.Thickness.Length];\r\n                for (int z = 0; z < urineFraction.Length; z++)\r\n                    myUrineDeposition[z] = NReturnedInUrine * 10.0 * urineFraction[z];\r\n                Urea.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\r\n            }\r\n        }\r\n\r\n        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\r\n\r\n        /// <summary>Type of defoliation to use</summary>\r\n        public enum DefoliationTypes\r\n        {\r\n            /// <summary>Cut</summary>\r\n            Cut,\r\n            /// <summary>Graze</summary>\r\n            Graze,\r\n            /// <summary>Harvest</summary>\r\n            Harvest\r\n        }\r\n\r\n        /// <summary>Flag how defoliations will be triggered</summary>\r\n        public enum DefoliationTriggerTypes\r\n        {\r\n            /// <summary>Setting a fixed interval</summary>\r\n            FixedInterval,\r\n            /// <summary>Setting a target (minimum) inteval</summary>\r\n            TargetInterval,\r\n            /// <summary>Setting a target (maximum) standing biomass</summary>\r\n            TargetStandingBiomass\r\n        }\r\n\r\n        /// <summary>How the DM amount given is interpreted</summary>\r\n        public enum DefoliateAmountTypes\r\n        {\r\n            /// <summary>Setting a DM amount to remove</summary>\r\n            DMToRemove,\r\n            /// <summary>Setting the residual DM amount</summary>\r\n            ResidualDM,\r\n            /// <summary>Remove according to crop's BiomassRemovalFractions</summary>\r\n            None_UseDefoliationFractions\r\n        }\r\n\r\n        /// <summary>Fraction of defoliated DM to remove from field</summary>\r\n        public enum DMRemovalTypes\r\n        {\r\n            /// <summary>Remove all DM</summary>\r\n            RemoveAll,\r\n            /// <summary>Remove no DM</summary>\r\n            RemoveNone,\r\n            /// <summary>Remove a user-defined fraction</summary>\r\n            UserDefinedFraction,\r\n            /// <summary>Remove a fraction based on plant digestibility</summary>\r\n            BasedOnDigestibility\r\n        }\r\n\r\n        /// <summary>Fraction of N in the defoliated material to remove from field</summary>\r\n        public enum NRemovalTypes\r\n        {\r\n            /// <summary>Remove all N</summary>\r\n            RemoveAll,\r\n            /// <summary>Remove no N</summary>\r\n            RemoveNone,\r\n            /// <summary>Remove a user-defined fraction</summary>\r\n            UserDefinedFraction,\r\n            /// <summary>Remove a fraction equal to DM removed</summary>\r\n            ProportionalToDM\r\n        }\r\n\r\n        /// <summary>Define how the non-removed material is returned to the field</summary>\r\n        public enum ReturnAsTypes\r\n        {\r\n            /// <summary>Return plant material as residue</summary>\r\n            AsResidue,\r\n            /// <summary>Return meterial as dung and urine</summary>\r\n            AsDungUrine\r\n        }\r\n\r\n        /// <summary>Define how the proportion of N in dung is defined</summary>\r\n        public enum DungNContentTypes\r\n        {\r\n            /// <summary>Define the proportion of N returned as dung</summary>\r\n            DefineProportion,\r\n            /// <summary>Define the C:N of dung</summary>\r\n            DefineCNratio\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "AutomaticManagementIsEnabled",
@@ -1333,21 +1488,22 @@
                     }
                   ],
                   "Name": "DefoliationManager",
-                  "IncludeInDocumentation": false,
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\n\nusing Models.Core;\nusing System;\r\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n",
+                  "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\r\n\r\nusing Models.Soils;\r\nusing System.Linq;\r\nusing System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
                   "Parameters": [],
                   "Name": "ExtraVariables",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1357,44 +1513,45 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.23,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "IncludeInDocumentation": true,
+              "ResourceName": "Fertiliser",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "grass",
               "InitialResidueType": "grass",
               "InitialResidueMass": 1000.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 30.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": true,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1419,19 +1576,10 @@
               "DataSource": "Adapted based on data from the NZ National Soils Database plus published data (Carey et al, 2002; Schwaertzel et al, 2011; Woods et al, 2016)",
               "Comments": "Different references name the soil at the site as either Templeton sandy loam or Paparua sandy loam (very similar soils)",
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-22",
-                    "22-37",
-                    "37-60",
-                    "60-73",
-                    "73-98",
-                    "98-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     100.0,
                     120.0,
@@ -1441,26 +1589,6 @@
                     250.0,
                     220.0,
                     300.0
-                  ],
-                  "NO3N": [
-                    11.10185956147655,
-                    8.8747914734271873,
-                    4.0559509831354781,
-                    0.36671947427096357,
-                    0.3667194742709608,
-                    0.15159344482840426,
-                    0.072921934919511183,
-                    0.066925445054209068
-                  ],
-                  "NH4N": [
-                    1.3877324451845687,
-                    1.0031235177747662,
-                    0.42270867377952642,
-                    0.07334389485419221,
-                    0.073343894854192432,
-                    0.054769866343026476,
-                    0.017000511230675516,
-                    0.013385089010841966
                   ],
                   "PH": [
                     6.0,
@@ -1472,31 +1600,22 @@
                     6.0,
                     6.0
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-22",
-                    "22-37",
-                    "37-60",
-                    "60-73",
-                    "73-98",
-                    "98-120",
-                    "120-150"
-                  ],
                   "Thickness": [
                     100.0,
                     120.0,
@@ -1593,6 +1712,7 @@
                   "ParticleSizeSiltMetadata": null,
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -1630,13 +1750,12 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "RedCloverSoil",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1656,6 +1775,7 @@
                   "CNCov": 0.8,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
+                  "PSIDul": -100.0,
                   "Thickness": [
                     100.0,
                     120.0,
@@ -1677,24 +1797,14 @@
                     0.45
                   ],
                   "KLAT": null,
-                  "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "WaterBalance",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-22",
-                    "22-37",
-                    "37-60",
-                    "60-73",
-                    "73-98",
-                    "98-120",
-                    "120-150"
-                  ],
                   "FOMCNRatio": 35.0,
                   "Thickness": [
                     100.0,
@@ -1716,6 +1826,7 @@
                     0.15,
                     0.1
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     11.3,
                     11.3,
@@ -1759,49 +1870,178 @@
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.InitialWater, Models",
-                  "PercentMethod": 1,
-                  "FractionFull": 0.75,
-                  "DepthWetSoil": "NaN",
-                  "RelativeTo": null,
-                  "Name": "Initial water",
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    100.0,
+                    120.0,
+                    150.0,
+                    230.0,
+                    130.0,
+                    250.0,
+                    220.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.29125,
+                    0.2825,
+                    0.24150000000000002,
+                    0.23100000000000004,
+                    0.20299999999999999,
+                    0.1935,
+                    0.21175,
+                    0.21325
+                  ],
+                  "InitialPAWmm": 188.505,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": true,
+                  "ResourceName": "Nutrient",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    120.0,
+                    150.0,
+                    230.0,
+                    130.0,
+                    250.0,
+                    220.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    11.10185956147655,
+                    8.874791473427187,
+                    4.055950983135478,
+                    0.3667194742709636,
+                    0.3667194742709608,
+                    0.15159344482840426,
+                    0.07292193491951118,
+                    0.06692544505420907
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    120.0,
+                    150.0,
+                    230.0,
+                    130.0,
+                    250.0,
+                    220.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    1.3877324451845687,
+                    1.0031235177747662,
+                    0.4227086737795264,
+                    0.07334389485419221,
+                    0.07334389485419243,
+                    0.054769866343026476,
+                    0.017000511230675516,
+                    0.013385089010841966
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    120.0,
+                    150.0,
+                    230.0,
+                    130.0,
+                    250.0,
+                    220.0,
+                    300.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "ResourceName": "RedClover",
               "Name": "RedClover",
-              "IncludeInDocumentation": true,
+              "ResourceName": "RedClover",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1819,7 +2059,7 @@
                 "[RedClover].Leaf.Transpiration as Transpiration",
                 "[Soil].SoilWater.Drainage as Drainage",
                 "[Soil].SoilWater.Runoff as Runoff",
-                "sum([Soil].SoilWater.SWmm) as TotalSWC",
+                "sum([Soil].Water.MM) as TotalSWC",
                 "sum([Soil].Physical.DULmm) as TotalDUL",
                 "sum([Soil].Physical.LL15mm) as TotalLL15",
                 "[Fertiliser].NitrogenApplied as FertiliserN",
@@ -1845,13 +2085,12 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1860,34 +2099,33 @@
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "AnnotationPosition": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Biomass",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -1913,8 +2151,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Total",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1942,8 +2180,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "AboveGround",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1971,13 +2209,12 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "BelowGround",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1986,34 +2223,33 @@
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "AnnotationPosition": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "PlantParts",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -2039,8 +2275,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Leaf",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2068,8 +2304,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Stem",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2097,8 +2333,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Inflorescence",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2126,8 +2362,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Taproot",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2155,13 +2391,12 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Root",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -2170,45 +2405,43 @@
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 2,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
+              "Position": 2,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "AnnotationPosition": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Harvests",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -2234,8 +2467,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Events",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2263,13 +2496,12 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Cumulative",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -2278,34 +2510,33 @@
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
-              "Type": 3,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": "Date",
+              "Position": 3,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             },
             {
-              "$type": "Models.Axis, Models",
-              "Type": 0,
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
               "Title": null,
+              "Position": 0,
               "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
-          "AnnotationPosition": 0,
+          "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Water",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -2331,8 +2562,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "WaterContent",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2360,8 +2591,8 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "DUL",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2389,23 +2620,20 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "LL15",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

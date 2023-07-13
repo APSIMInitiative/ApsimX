@@ -115,6 +115,11 @@
         private Widget hbox1 = null;
 
         /// <summary>
+        /// Gtk vpane which holds two main parts of the viuw
+        /// </summary>
+        private VPaned vpaned1 = null;
+
+        /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
 
@@ -140,6 +145,7 @@
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -162,6 +168,9 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
+
+            int paneHeight = MainWidget.Screen.RootWindow.Height;
+            vpaned1.Position = (int)Math.Round(paneHeight * 0.8); //set the slider for the pane at about 80% down
 
             // Normally, one would specify the style class in the UI (.glade) file.
             // However, doing so breaks gtk2-compatibility, so for now, we will just

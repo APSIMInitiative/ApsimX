@@ -108,7 +108,7 @@ namespace Models
         public bool IsReadyForHarvesting { get { return false; } }
 
         /// <summary>Harvest the crop</summary>
-        public void Harvest() { }
+        public void Harvest(bool removeBiomassFromOrgans = true) { }
 
         /// <summary>End the crop</summary>
         public void EndCrop() { }
