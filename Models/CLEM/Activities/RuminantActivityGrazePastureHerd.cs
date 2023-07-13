@@ -31,7 +31,7 @@ namespace Models.CLEM.Activities
         /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         private DateTime lastResourceRequest = new DateTime();
         private double totalPastureRequired = 0;
@@ -112,9 +112,9 @@ namespace Models.CLEM.Activities
         /// Potential intake limit
         /// </summary>
         [JsonIgnore]
-        public double PotentialIntakeLimit 
+        public double PotentialIntakeLimit
         {
-            get { return PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * GrazingCompetitionLimiter; } 
+            get { return PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * GrazingCompetitionLimiter; }
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
             double pastureDMD = GrazeFoodStoreModel.DMD;
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-            // this will still occur when grazing on improved, irrigated or crops. 
+            // this will still occur when grazing on improved, irrigated or crops.
             // CLEM does not allow grazing on two pastures in the month, whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
             if (MathUtilities.IsGreaterThanOrEqual(0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100, 0))
                 return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
@@ -309,12 +309,12 @@ namespace Models.CLEM.Activities
                 // shortfall already takes into account competition (AdjustResourcesForActivity) and availability
                 double shortfall = (pastureRequest?.Provided??0) / totalPastureRequired;
 
-                // allocate to individuals in proportion to what they requested 
+                // allocate to individuals in proportion to what they requested
 
                 // current DMD and N of intake is stored in th DMD and N properties of this class as passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
                 foodDetails = new FoodResourcePacket()
                 {
-                    DMD = DMD, 
+                    DMD = DMD,
                     PercentN = N
                 };
 
@@ -450,9 +450,9 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

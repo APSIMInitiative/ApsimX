@@ -1,17 +1,18 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Models.PMF;
+using Models.Core;
+using Models.Soils;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+
 namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using Models.Interfaces;
-    using Models.Functions;
 
     /// <summary>
     /// Describes a pasture species.
@@ -21,7 +22,7 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : Model, IPlant, ICanopy, IUptake, IHasDamageableBiomass
+    public class PastureSpecies : Model, IPlant, ICanopy, IUptake
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -255,7 +256,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Harvests the crop.</summary>
-        public void Harvest()
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
             throw new NotImplementedException();
         }
@@ -3548,7 +3549,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
         /// <remarks>This method considers leaves plus an additional effect of stems and stolons</remarks>
-        private void EvaluateLAI()
+        public void EvaluateLAI()
         {
             // Get the amount of green tissue of leaves (converted from kg/ha to kg/m2)
             double greenTissue = Leaf.DMLive / 10000.0;
@@ -3619,30 +3620,6 @@ namespace Models.AgPasture
             }
 
             SetInitialState();
-        }
-
-        /// <summary>Remove biomass from an organ.</summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
-        {
-            var organ = Organs.Find(o => o.Name == organName);
-            if (organ == null)
-            {
-                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
-            }
-            if (organ is PastureAboveGroundOrgan)
-            {
-                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
-            }
-            else if (organ is PastureBelowGroundOrgan)
-            {
-                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
-            }
-            // Update LAI and herbage digestibility
-            EvaluateLAI();
-            EvaluateDigestibility();
         }
 
         /// <summary>Removes plant material, from all organ, based on an amount given.</summary>
@@ -3771,21 +3748,15 @@ namespace Models.AgPasture
                 DefoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
-                Leaf.RemoveBiomass(new OrganBiomassRemovalType()
-                {
-                    FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0, Epsilon)),
-                    FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDead, 0.0, Epsilon))
-                });
-                Stem.RemoveBiomass(new OrganBiomassRemovalType()
-                {
-                    FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLive, 0.0, Epsilon)),
-                    FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDead, 0.0, Epsilon))
-                });
-                Stolon.RemoveBiomass(new OrganBiomassRemovalType()
-                {
-                    FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0, Epsilon)),
-                    FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0, Epsilon))
-                });
+                Leaf.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0, Epsilon)),
+                                   deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDead, 0.0, Epsilon)));
+
+                Stem.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLive, 0.0, Epsilon)),
+                                   deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDead, 0.0, Epsilon)));
+
+                Stolon.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0, Epsilon)),
+                                     deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0, Epsilon)));
+                
 
                 // Update LAI and herbage digestibility
                 EvaluateLAI();
@@ -4301,7 +4272,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the average digestibility of above-ground plant material.</summary>
-        private void EvaluateDigestibility()
+        public void EvaluateDigestibility()
         {
             double result = 0.0;
             if (AboveGroundWt > Epsilon)
@@ -4345,7 +4316,7 @@ namespace Models.AgPasture
             if (LAI > 0)
             {
                 var prop = deltaLAI / LAI;
-                Leaf.RemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToRemove = prop * Leaf.DMLive });
+                Leaf.RemoveBiomass(liveToRemove: prop * Leaf.DMLive);
             }
         }
 

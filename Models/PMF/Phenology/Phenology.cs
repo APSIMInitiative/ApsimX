@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using Newtonsoft.Json;
-using System.Data;
-using System.Linq;
-using Models.PMF.Struct;
-using System.Globalization;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Documentation;
+using Models.PMF.Struct;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -23,7 +23,7 @@ namespace Models.PMF.Phen
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
-        
+
         [Link]
         private Plant plant = null;
 
@@ -42,14 +42,14 @@ namespace Models.PMF.Phen
 
         /// <summary>The phases</summary>
         private List<IPhase> phases = new List<IPhase>();
-        
+
         /// <summary>The current phase index</summary>
         private int currentPhaseIndex;
 
         /// <summary>This lists all the stages that are pased on this day</summary>
         private List<string> stagesPassedToday = new List<string>();
 
-        
+
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 
@@ -71,8 +71,8 @@ namespace Models.PMF.Phen
 
         /// <summary>The Thermal time accumulated tt</summary>
         [JsonIgnore]
-        public double AccumulatedTT {get; set;}
-      
+        public double AccumulatedTT { get; set; }
+
         /// <summary>The Thermal time accumulated tt following emergence</summary>
         [JsonIgnore]
         public double AccumulatedEmergedTT { get; set; }
@@ -80,7 +80,7 @@ namespace Models.PMF.Phen
         /// <summary>The emerged</summary>
         [JsonIgnore]
         public bool Emerged { get; set; } = false;
-                
+
         /// <summary>A one based stage number.</summary>
         [JsonIgnore]
         public double Stage { get; set; }
@@ -110,7 +110,7 @@ namespace Models.PMF.Phen
                     return "";
             }
         }
-        
+
         /// <summary>Gets the fraction in current phase.</summary>
         public double FractionInCurrentPhase
         {
@@ -132,9 +132,9 @@ namespace Models.PMF.Phen
                     return phases[currentPhaseIndex];
             }
         }
-        
+
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
-        public double Zadok {  get { return zadok?.Stage ?? 0; } }
+        public double Zadok { get { return zadok?.Stage ?? 0; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -180,6 +180,12 @@ namespace Models.PMF.Phen
             return endPhaseIndex;
         }
 
+        /// <summary>Called to set the phenology to the last stage.</summary>
+        public void SetToEndStage()
+        {
+            SetToStage((double)(phases.Count));
+        }
+
         /// <summary>A function that resets phenology to a specified stage</summary>
         public void SetToStage(double newStage)
         {
@@ -188,25 +194,25 @@ namespace Models.PMF.Phen
 
             if (newStage <= 0)
                 throw new Exception(this + "Must pass positive stage to set to");
-            if (newStage > phases.Count()+1)
+            if (newStage > phases.Count() + 1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
             currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage), CultureInfo.InvariantCulture) - 1;
 
-            if (newStage < Stage) 
+            if (newStage < Stage)
             {
                 //Make a list of phases to rewind
                 List<IPhase> phasesToRewind = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if ((IndexFromPhaseName(phase.Name) >= currentPhaseIndex)&&(IndexFromPhaseName(phase.Name)<=oldPhaseIndex))
+                    if ((IndexFromPhaseName(phase.Name) >= currentPhaseIndex) && (IndexFromPhaseName(phase.Name) <= oldPhaseIndex))
                         phasesToRewind.Add(phase);
                 }
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind))
-                        { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
+                    if (!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind))
+                    { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
                         IPhaseWithTarget rewindingPhase = phase as IPhaseWithTarget;
@@ -226,8 +232,13 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name) >= oldPhaseIndex)
-                        phasesToFastForward.Add(phase);
+                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex) //If the phase has not yet passed 
+                    {
+                        if (newStage == phases.Count) //If winding to the end add all phases
+                            phasesToFastForward.Add(phase);
+                        else if (IndexFromPhaseName(phase.Name) < (newStage - 1))// Inf only winding part way throug only add the relevent stages
+                            phasesToFastForward.Add(phase);
+                    }
                 }
                 foreach (IPhase phase in phasesToFastForward)
                 {
@@ -236,6 +247,21 @@ namespace Models.PMF.Phen
                         stagesPassedToday.Add(phase.Start); //Fixme.  This is a pretty ordinary bit of programming to get around the fact we use a phenological stage to match observed values. We should change this so plant has a harvest tag to match on.
                     }
                     stagesPassedToday.Add(phase.End);
+                    if (phase is IPhaseWithTarget)
+                    {
+                        IPhaseWithTarget PhaseSkipped = phase as IPhaseWithTarget;
+                        AccumulatedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        if ((phase is EmergingPhase) || (phase is StartPhase) || (phase.End == structure?.LeafInitialisationStage) || (phase is DAWSPhase))
+                        {
+                            Emerged = true;
+                            PlantEmerged?.Invoke(this, new EventArgs());
+                        }
+                        else
+                        {
+                            AccumulatedEmergedTT += (PhaseSkipped.Target - PhaseSkipped.ProgressThroughPhase);
+                        }
+                    }
+                    
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = phase.End;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
@@ -276,7 +302,7 @@ namespace Models.PMF.Phen
         {
             if (phases == null)
                 return false;
-            
+
             if (startPhaseIndex > endPhaseIndex)
                 throw new Exception("Start phase " + startPhaseIndex + " is after phase " + endPhaseIndex);
 
@@ -369,6 +395,27 @@ namespace Models.PMF.Phen
             RefreshPhases();
         }
 
+        /// <summary>
+        /// Force emergence on the date called if emergence has not occurred already
+        /// </summary>
+        /// <param name="emergenceDate">Emergence date (dd-mmm)</param>
+        public void SetEmergenceDate(string emergenceDate)
+        {
+            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
+                ep.EmergenceDate = emergenceDate;
+            SetGerminationDate(plant.SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
+        }
+
+        /// <summary>
+        /// Force germination on the date called if germination has not occurred already
+        /// </summary>
+        /// <param name="germinationDate">Germination date (dd-mmm).</param>
+        public void SetGerminationDate(string germinationDate)
+        {
+            foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
+                gp.GerminationDate = germinationDate;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
@@ -393,16 +440,16 @@ namespace Models.PMF.Phen
             {
                 if (thermalTime.Value() < 0)
                     throw new Exception("Negative Thermal Time, check the set up of the ThermalTime Function in" + this);
-               
+
                 // Calculate progression through current phase
                 double propOfDayToUse = 1;
                 bool incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase is StartPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
+                    if (!Emerged && (CurrentPhase.IsEmerged || CurrentPhase.End == structure?.LeafInitialisationStage))
                     {
-                         Emerged = true;
+                        Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());
                     }
 
@@ -413,8 +460,8 @@ namespace Models.PMF.Phen
                     currentPhaseIndex = currentPhaseIndex + 1;
 
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
-                        PhaseChangedData.StageName = CurrentPhase.Start;
-                        PhaseChanged?.Invoke(plant, PhaseChangedData);
+                    PhaseChangedData.StageName = CurrentPhase.Start;
+                    PhaseChanged?.Invoke(plant, PhaseChangedData);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
@@ -426,24 +473,15 @@ namespace Models.PMF.Phen
                 Stage = (currentPhaseIndex + 1) + CurrentPhase.FractionComplete;
 
                 if (plant != null && plant.IsAlive && PostPhenology != null)
-                        PostPhenology.Invoke(this, new EventArgs());
+                    PostPhenology.Invoke(this, new EventArgs());
             }
-        }
-
-        /// <summary>Called when crop is being harvested.</summary>
-        [EventSubscribe("Harvesting")]
-        private void OnHarvesting(object sender, EventArgs e)
-        {
-            //Jump phenology to the end
-             if(this.Parent.Name != "SimpleFruitTree") //Unless you are a perennial fruit tree.  There must be a better way of doing this
-                SetToStage((double)(phases.Count));
         }
 
         /// <summary>Called when crop is being prunned.</summary>
         [EventSubscribe("Pruning")]
         private void OnPruning(object sender, EventArgs e)
         {
-             Emerged = false;            
+            Emerged = false;
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -452,7 +490,7 @@ namespace Models.PMF.Phen
         {
             Clear();
         }
-  
+
         /// <summary>Called at the start of each day</summary>
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
@@ -460,7 +498,7 @@ namespace Models.PMF.Phen
             stagesPassedToday.Clear();
             //reset StagesPassedToday to zero to restart count for the new day
         }
-        
+
         /// <summary> /// A helper property that checks the parent plant (old or new) to see if it is alive. /// </summary>
         private bool PlantIsAlive
         {
@@ -471,8 +509,8 @@ namespace Models.PMF.Phen
                 return false;
             }
         }
-        
-         private void Clear()
+
+        private void Clear()
         {
             Stage = 1;
             AccumulatedTT = 0;
@@ -483,7 +521,7 @@ namespace Models.PMF.Phen
             foreach (IPhase phase in phases)
                 phase.ResetPhase();
         }
-       
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public override IEnumerable<ITag> Document()
         {

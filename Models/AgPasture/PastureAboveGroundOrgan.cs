@@ -1,17 +1,22 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using System.Linq;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+using Models.PMF.Organs;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility
+    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
+        [Link(Type = LinkType.Ancestor)]
+        PastureSpecies species = null;
+
         /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
         public GenericTissue[] Tissue;
@@ -58,6 +63,16 @@
         internal const double Epsilon = 0.000000001;
 
         //----------------------- States -----------------------
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true, LiveDigestibility);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false, DeadDigestibility);
+            }
+        }
 
         /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
         public bool IsAboveGround { get { return true; } }
@@ -240,6 +255,7 @@
         /// <summary>Fraction of dry matter removed (0-1).</summary>
         private double removedFraction = 0.0;
 
+
         //----------------------- Public methods -----------------------
 
         /// <summary>Initialise this organ instance (and tissues).</summary>
@@ -274,8 +290,12 @@
         }
 
         /// <summary>Remove biomass from organ.</summary>
-        /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
-        public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             // The fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
@@ -283,17 +303,23 @@
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+                Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
             }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+            Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
 
             // Calculate the fraction of DM removed from this organ
-            removedFraction = MathUtilities.Divide(Tissue.Sum(tissue => tissue.DMRemoved), previousDM, 0.0, Epsilon);
+            double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
+            removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0, Epsilon);
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();
+
+            // Update LAI and herbage digestibility
+            species.EvaluateLAI();
+            species.EvaluateDigestibility();
+            return removedDM;
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>

@@ -9,6 +9,8 @@
     using Views;
     using Models;
     using Interfaces;
+    using System.Collections;
+    using System.Collections.Generic;
 
     /// <summary>
     /// The Report presenter class

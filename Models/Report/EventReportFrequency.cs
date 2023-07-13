@@ -1,6 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using System;
 
 namespace Models
 {
@@ -25,7 +25,16 @@ namespace Models
                 new EventReportFrequency(report, events, tokens[0]);
                 return true;
             }
-            return false;
+            else 
+                if (tokens.Length > 1 && line.IndexOfAny(new char[] { '=', '<', '>', '&', '|' }) == 0)
+            {
+                new EventReportFrequency(report, events, line);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>

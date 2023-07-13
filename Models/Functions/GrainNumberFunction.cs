@@ -1,10 +1,6 @@
-using APSIM.Shared.Utilities;
-using Models;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Organs;
-using Models.PMF.Phen;
 using System;
+using Models.Core;
+using Models.PMF.Organs;
 
 namespace Models.Functions
 {

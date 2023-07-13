@@ -1,13 +1,8 @@
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Xml;
 using System.Linq;
-using System.Text;
-using Models.Core;
-using Models;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Soils.NutrientPatching;
 
 namespace Models.Soils

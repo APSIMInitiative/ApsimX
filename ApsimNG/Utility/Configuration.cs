@@ -8,39 +8,6 @@ using Models.Core;
 
 namespace Utility
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    internal class InputAttribute : Attribute
-    {
-        public string Name { get; set; }
-        public string OnChanged { get; set; }
-        public InputAttribute(string name)
-        {
-            Name = name;
-        }
-    }
-
-    internal class FileInput : InputAttribute
-    {
-        /// <summary>
-        /// Recommended file extension.
-        /// </summary>
-        public string[] Extensions { get; set; }
-
-        /// <summary>
-        /// Constructor to provide recommended file extensions.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="extensions">Recommended file extensions.</param>
-        public FileInput(string name, params string[] extensions) : base(name)
-        {
-            Extensions = extensions;
-        }
-    }
-
-    internal class FontInput : InputAttribute
-    {
-        public FontInput(string name) : base(name) { }
-    }
 
     /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>
     public class Configuration
@@ -94,7 +61,7 @@ namespace Utility
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
-        public bool Muted { get; set; }
+        public bool Muted { get; set; } = true;
 
         /// <summary>
         /// In theory, if there are any commands in the command history,

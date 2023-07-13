@@ -1,15 +1,13 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using MathNet.Numerics.Integration;
-    using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.Design;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 

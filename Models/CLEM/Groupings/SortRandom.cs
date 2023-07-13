@@ -2,9 +2,9 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {

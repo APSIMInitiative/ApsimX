@@ -1,11 +1,12 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Newtonsoft.Json;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Documentation;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// A cultivar model - used to override properties of another model
@@ -26,6 +27,17 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Cultivar : Model, ILineEditor
     {
+        /// <summary>
+        /// Constructor to initialise culivar instance with specified commands
+        /// </summary>
+        /// <param name="commnads">list of parameter overwrite commands</param>
+        /// <param name="name">The name of the cultivar</param>
+        public Cultivar (string name, string[] commnads)
+        {
+            this.Name = name;
+            Command = commnads;
+        }
+        
         /// <summary>The model the cultvar is relative to.</summary>
         private IModel relativeToModel;
 

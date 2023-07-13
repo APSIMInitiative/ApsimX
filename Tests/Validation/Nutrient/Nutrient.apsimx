@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 159,
+  "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -96,6 +96,7 @@
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Sowing",
                   "End": "Germination",
+                  "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [],
@@ -106,6 +107,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
+                  "IsEmerged": true,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -174,6 +176,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
                   "End": "EndJuvenile",
+                  "IsEmerged": true,
                   "Name": "Juvenile",
                   "ResourceName": null,
                   "Children": [
@@ -205,6 +208,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "EndJuvenile",
                   "End": "Maturity",
+                  "IsEmerged": true,
                   "Name": "Mature",
                   "ResourceName": null,
                   "Children": [
@@ -236,6 +240,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Maturity",
                   "End": "Old",
+                  "IsEmerged": true,
                   "Name": "Declining",
                   "ResourceName": null,
                   "Children": [
@@ -267,6 +272,7 @@
                   "$type": "Models.PMF.Phen.EndPhase, Models",
                   "Start": "Old",
                   "End": "Unused",
+                  "IsEmerged": true,
                   "Name": "Old",
                   "ResourceName": null,
                   "Children": [
@@ -654,7 +660,7 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "$type": "Models.Functions.SubDailyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
                       "ResourceName": null,
@@ -681,7 +687,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                           "TempRangeFactors": null,
                           "Name": "InterpolationMethod",
                           "ResourceName": null,
@@ -4278,6 +4284,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -4304,7 +4311,8 @@
                                     0.293,
                                     0.264
                                   ],
-                                  "RelativeTo": null,
+                                  "InitialPAWmm": 121.00000000000001,
+                                  "RelativeTo": "LL15",
                                   "FilledFromTop": true,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -5563,12 +5571,6 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "1994-10-27",
-                                  "Action": " [Wheat].Harvest();",
-                                  "Enabled": true
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
                                   "Date": "1995-06-01",
                                   "Action": " [Wheat].Sow(cultivar:Hartog, population:126, depth:40, rowSpacing:300);",
                                   "Enabled": true
@@ -6308,6 +6310,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -6356,7 +6359,8 @@
                                     0.457,
                                     0.43
                                   ],
-                                  "RelativeTo": null,
+                                  "InitialPAWmm": 436.6,
+                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -9184,6 +9188,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -9224,7 +9229,8 @@
                                     0.24,
                                     0.24
                                   ],
-                                  "RelativeTo": null,
+                                  "InitialPAWmm": 35.99999999999999,
+                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -10559,6 +10565,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -10607,7 +10614,8 @@
                                     0.457,
                                     0.43
                                   ],
-                                  "RelativeTo": null,
+                                  "InitialPAWmm": 436.6,
+                                  "RelativeTo": "LL15",
                                   "FilledFromTop": false,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -15695,6 +15703,7 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
+                                  "CEC": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -15725,7 +15734,8 @@
                                     0.3,
                                     0.3
                                   ],
-                                  "RelativeTo": null,
+                                  "InitialPAWmm": 366.0,
+                                  "RelativeTo": "LL15",
                                   "FilledFromTop": true,
                                   "Name": "Water",
                                   "ResourceName": null,
@@ -17602,6 +17612,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -17642,7 +17653,8 @@
                             0.4,
                             0.4
                           ],
-                          "RelativeTo": null,
+                          "InitialPAWmm": 500.0,
+                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -18469,6 +18481,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -18499,7 +18512,8 @@
                             0.457070570557793,
                             0.452331759845006
                           ],
-                          "RelativeTo": null,
+                          "InitialPAWmm": 361.2454283127387,
+                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -19141,7 +19155,8 @@
                             0.41,
                             0.41
                           ],
-                          "RelativeTo": null,
+                          "InitialPAWmm": 216.0,
+                          "RelativeTo": "LL15",
                           "FilledFromTop": true,
                           "Name": "Water",
                           "ResourceName": null,
@@ -19398,6 +19413,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -20136,6 +20152,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -20174,7 +20191,8 @@
                             0.27,
                             0.27
                           ],
-                          "RelativeTo": null,
+                          "InitialPAWmm": 482.0,
+                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -21282,6 +21300,7 @@
                               "ESP": [
                                 "NaN"
                               ],
+                              "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -21330,7 +21349,8 @@
                               "InitialValues": [
                                 0.52100021807301
                               ],
-                              "RelativeTo": null,
+                              "InitialPAWmm": 26.0500109036505,
+                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
                               "ResourceName": null,

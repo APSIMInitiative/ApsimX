@@ -1,14 +1,14 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
 using System.IO;
-using Models.CLEM.Reporting;
-using Models.CLEM.Activities;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -30,7 +30,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Start date of period to perform activities
@@ -39,7 +39,7 @@ namespace Models.CLEM.Timers
         [System.ComponentModel.DefaultValue(typeof(DateTime), "1/1/1900")]
         [Required]
         public DateTime StartDate { get; set; }
-        
+
         /// <summary>
         /// End date of period to perform activities
         /// </summary>
@@ -85,7 +85,7 @@ namespace Models.CLEM.Timers
                     return true;
                 }
                 bool inrange = IsMonthInRange(clock.Today);
-                if(inrange)
+                if (inrange)
                 {
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
@@ -161,7 +161,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write("</div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -181,9 +181,9 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

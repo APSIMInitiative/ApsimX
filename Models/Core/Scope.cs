@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Linq;
 
     /// <summary>
     /// Implements APSIMs scoping rules.
@@ -150,7 +151,7 @@
                     return relativeTo;
                 relativeTo = relativeTo.Parent;
             }
-            while (relativeTo != null) ;
+            while (relativeTo != null);
 
             return null;
         }

@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+
+namespace Models.Core
 {
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// When dropped on a model, this model will apply a set of overides to its parent model.
@@ -11,7 +12,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.EditorPresenter")]
-    [ValidParent(ParentType = typeof(IModel))]
+    [ValidParent(ParentType = typeof(IPlant))]
     public class ModelOverrides : Model, ILineEditor
     {
         /// <summary>The collection of undo overrides that undo the overrides.</summary>

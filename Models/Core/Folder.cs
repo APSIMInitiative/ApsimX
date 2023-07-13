@@ -1,14 +1,14 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Factorial;
+using Models.PMF;
+using Models.PMF.Interfaces;
+
+namespace Models.Core
 {
-    using Models.Factorial;
-    using Models;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// A folder model

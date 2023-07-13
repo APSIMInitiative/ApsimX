@@ -1,9 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
-using System;
-
 
 namespace Models.PMF
 {
@@ -35,9 +33,9 @@ namespace Models.PMF
                 double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + StorageRequirement) > 0.0)
                 {
-                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * MathUtilities.Divide(BAT.StructuralDemand[i], BAT.TotalPlantDemand,0));
+                    double StructuralAllocation = Math.Min(StructuralRequirement, TotalSupply * MathUtilities.Divide(BAT.StructuralDemand[i], BAT.TotalPlantDemand, 0));
                     double MetabolicAllocation = Math.Min(MetabolicRequirement, TotalSupply * MathUtilities.Divide(BAT.MetabolicDemand[i], BAT.TotalPlantDemand, 0));
-                    double StorageAllocation = Math.Min(StorageRequirement, TotalSupply *  MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalPlantDemand, 0));
+                    double StorageAllocation = Math.Min(StorageRequirement, TotalSupply * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalPlantDemand, 0));
 
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;

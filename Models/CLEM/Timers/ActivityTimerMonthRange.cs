@@ -1,15 +1,15 @@
 ﻿using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using Newtonsoft.Json;
-using System.IO;
-using Models.CLEM.Reporting;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -29,10 +29,10 @@ namespace Models.CLEM.Timers
     [Description("This timer defines a range between months upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerMonthRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private int startMonth;
         private int endMonth;
@@ -155,7 +155,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write("</div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -175,9 +175,9 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

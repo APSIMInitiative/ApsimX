@@ -18,7 +18,7 @@ namespace Models.CLEM.Limiters
     [Description("This carry limiter will limit the amount that can be carried for all activities located at or below the UI level it is placed.")]
     [HelpUri(@"Content/Features/Limiters/CutAndCarryLimiter.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityCarryLimiter: CLEMModel
+    public class ActivityCarryLimiter : CLEMModel
     {
         private double amountUsedThisMonth = 0;
 
@@ -111,7 +111,7 @@ namespace Models.CLEM.Limiters
                 htmlWriter.Write("</span> dry kg/day ");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -125,7 +125,7 @@ namespace Models.CLEM.Limiters
         public override string ModelSummaryOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

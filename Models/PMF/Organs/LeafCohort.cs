@@ -1,14 +1,13 @@
 using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Linq;
-using Models.Core;
-using Newtonsoft.Json;
-using Models.PMF.Interfaces;
-using Models.Interfaces;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
 using Models.PMF.Struct;
-using Models.Functions;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Organs
 {
@@ -16,9 +15,9 @@ namespace Models.PMF.Organs
     /// A leaf cohort model
     /// </summary>
     /// <remarks>
-    /// 
+    ///
     /// @startuml
-    /// Initialized -> Appeared: Appearance 
+    /// Initialized -> Appeared: Appearance
     /// Appeared -> Expanded: GrowthDuration
     /// Expanded -> Senescing: LagDuration
     /// Senescing -> Senesced: SenescenceDuration
@@ -35,12 +34,12 @@ namespace Models.PMF.Organs
     /// Appeared -> Detached: IsAppeared
     /// Initialized -> Detached: IsInitialised
     /// @enduml
-    /// 
+    ///
     /// Leaf death
     /// ------------------------
-    /// The leaf area, structural biomass and structural nitrogen of 
+    /// The leaf area, structural biomass and structural nitrogen of
     /// green (live) parts is subtracted by a fraction.
-    /// 
+    ///
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -71,7 +70,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The clock</summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         [Link]
         private ISurfaceOrganicMatter SurfaceOrganicMatter = null;
@@ -436,7 +435,7 @@ namespace Models.PMF.Organs
                     return 0;
                 if (Age >= GrowthDuration)
                     return 1;
-                return Age/GrowthDuration;
+                return Age / GrowthDuration;
             }
         }
 
@@ -447,7 +446,7 @@ namespace Models.PMF.Organs
             get
             {
                 if (Live.Wt > 0)
-                    return LiveArea/Live.Wt;
+                    return LiveArea / Live.Wt;
                 return 0;
             }
         }
@@ -466,11 +465,11 @@ namespace Models.PMF.Organs
             {
                 if (IsGrowing)
                 {
-                    double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
-                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
+                    double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2),
+                        DeltaStressConstrainedArea / SpecificLeafAreaMin);
                     if (TotalDMDemand < 0)
                         throw new Exception("Negative DMDemand in" + this);
-                    return TotalDMDemand*StructuralFraction;
+                    return TotalDMDemand * StructuralFraction;
 
                 }
                 return 0;
@@ -485,9 +484,9 @@ namespace Models.PMF.Organs
             {
                 if (IsGrowing)
                 {
-                    double TotalDMDemand = Math.Min(DeltaPotentialArea/((SpecificLeafAreaMax + SpecificLeafAreaMin)/2),
-                        DeltaStressConstrainedArea/SpecificLeafAreaMin);
-                    return TotalDMDemand*(1 - StructuralFraction);
+                    double TotalDMDemand = Math.Min(DeltaPotentialArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2),
+                        DeltaStressConstrainedArea / SpecificLeafAreaMin);
+                    return TotalDMDemand * (1 - StructuralFraction);
                 }
                 return 0;
             }
@@ -502,7 +501,7 @@ namespace Models.PMF.Organs
                 if (IsNotSenescing)
                 {
                     double MaxStorageDM = (MetabolicDMDemand + StructuralDMDemand + LiveStart.MetabolicWt +
-                                                 LiveStart.StructuralWt)*StorageFraction;
+                                                 LiveStart.StructuralWt) * StorageFraction;
                     return Math.Max(0.0, MaxStorageDM - LiveStart.StorageWt);
                 }
                 return 0.0;
@@ -517,7 +516,7 @@ namespace Models.PMF.Organs
             {
                 if ((IsNotSenescing) && (ShadeInducedSenRate == 0.0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return MinimumNConc*PotentialStructuralDMAllocation;
+                    return MinimumNConc * PotentialStructuralDMAllocation;
                 return 0.0;
             }
         }
@@ -529,8 +528,8 @@ namespace Models.PMF.Organs
             get
             {
                 if (IsNotSenescing && (ShadeInducedSenRate == 0.0) && (StorageFraction > 0))
-                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is 
-                    return Math.Max(0.0, LuxaryNConc*(LiveStart.StructuralWt + LiveStart.MetabolicWt
+                    // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions.  Also if there is
+                    return Math.Max(0.0, LuxaryNConc * (LiveStart.StructuralWt + LiveStart.MetabolicWt
                                                       + PotentialStructuralDMAllocation + PotentialMetabolicDMAllocation) -
                                          Live.StorageN);
                 return 0.0;
@@ -545,7 +544,7 @@ namespace Models.PMF.Organs
             {
                 if (IsNotSenescing && (ShadeInducedSenRate == 0.0))
                     // Assuming a leaf will have no demand if it is senescing and will have no demand if it is is shaded conditions
-                    return FunctionalNConc*PotentialMetabolicDMAllocation;
+                    return FunctionalNConc * PotentialMetabolicDMAllocation;
 
                 return 0.0;
             }
@@ -594,10 +593,10 @@ namespace Models.PMF.Organs
                 if (value.Reallocation > 0.0)
                 {
                     StorageWtReallocated = Math.Min(LeafStartStorageDMReallocationSupply, value.Reallocation);
-                        //Reallocate Storage first
+                    //Reallocate Storage first
                     MetabolicWtReallocated = Math.Max(0.0,
                             Math.Min(value.Reallocation - StorageWtReallocated, LeafStartMetabolicDMReallocationSupply));
-                        //Then reallocate metabolic DM
+                    //Then reallocate metabolic DM
                     Live.StorageWt -= StorageWtReallocated;
                     Live.MetabolicWt -= MetabolicWtReallocated;
                 }
@@ -640,9 +639,9 @@ namespace Models.PMF.Organs
                 if (value.Reallocation > 0.0)
                 {
                     StorageNReallocated = Math.Min(LeafStartStorageNReallocationSupply, value.Reallocation);
-                        //Reallocate Storage first
+                    //Reallocate Storage first
                     MetabolicNReallocated = Math.Max(0.0, value.Reallocation - LeafStartStorageNReallocationSupply);
-                        //Then reallocate metabolic N
+                    //Then reallocate metabolic N
                     Live.StorageN -= StorageNReallocated;
                     Live.MetabolicN -= MetabolicNReallocated;
                 }
@@ -659,7 +658,7 @@ namespace Models.PMF.Organs
                         value.Retranslocation); //Reallocate Storage first
                     MetabolicNRetranslocated = Math.Max(0.0,
                             value.Retranslocation - LeafStartStorageNRetranslocationSupply);
-                        //Then reallocate metabolic N
+                    //Then reallocate metabolic N
                     Live.StorageN -= StorageNRetrasnlocated;
                     Live.MetabolicN -= MetabolicNRetranslocated;
                 }
@@ -705,12 +704,12 @@ namespace Models.PMF.Organs
             Detached = new Biomass();
             Removed = new Biomass();
         }
-        
+
         /// <summary>Returns a clone of this object</summary>
         /// <returns></returns>
         public virtual LeafCohort Clone()
         {
-            LeafCohort newLeaf = (LeafCohort) MemberwiseClone();
+            LeafCohort newLeaf = (LeafCohort)MemberwiseClone();
             newLeaf.Live = new Biomass();
             newLeaf.Dead = new Biomass();
             newLeaf.Detached = new Biomass();
@@ -742,7 +741,7 @@ namespace Models.PMF.Organs
             }
             else
                 CohortPopulation = Structure.TotalStemPopn;
-                CohortPopulation *= cohortParams.FinalFraction;
+            CohortPopulation *= cohortParams.FinalFraction;
             Age = cohortParams.CohortAge;
 
             Name = "Leaf" + Rank.ToString();
@@ -813,7 +812,7 @@ namespace Models.PMF.Organs
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
 
-            
+
             if (Structure.ProportionPlantMortality > 0)
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
@@ -861,7 +860,7 @@ namespace Models.PMF.Organs
                 DeltaStressConstrainedArea = DeltaPotentialArea * leafCohortParameters.ExpansionStressValue;
                 //Reduce potential growth for water stress
 
-                CoverAbove = Leaf.CoverAboveCohort(Rank,extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
+                CoverAbove = Leaf.CoverAboveCohort(Rank, extinctionCoefficient); // Calculate cover above leaf cohort (unit??? FIXME-EIT)
                 ShadeInducedSenRate = leafCohortParameters.ShadeInducedSenescenceRate.Value();
                 SenessingLeafRelativeSize = leafCohortParameters.SenessingLeafRelativeSize.Value();
                 SenescedFrac = FractionSenescing(thermalTime, propnStemMortality, SenessingLeafRelativeSize, leafCohortParameters);
@@ -939,30 +938,30 @@ namespace Models.PMF.Organs
             else thermalTime = tt;
 
             //Growing leaf area after DM allocated
-            DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation)*SpecificLeafAreaMax;
+            DeltaCarbonConstrainedArea = (StructuralDMAllocation + MetabolicDMAllocation) * SpecificLeafAreaMax;
             //Fixme.  Live.Nonstructural should probably be included in DM supply for leaf growth also
             double deltaActualArea = Math.Min(DeltaStressConstrainedArea, DeltaCarbonConstrainedArea);
 
-            
+
             //Fixme.  Live.Storage should probably be included in DM supply for leaf growth also
             LiveArea += deltaActualArea;
-            
+
             //Senessing leaf area
-            double areaSenescing = LiveArea*SenescedFrac;
+            double areaSenescing = LiveArea * SenescedFrac;
             double areaSenescingN = 0;
             if ((Live.MetabolicNConc <= MinimumNConc) && (MetabolicNRetranslocated - MetabolicNAllocation > 0.0))
-                areaSenescingN = LeafStartArea*(MetabolicNRetranslocated - MetabolicNAllocation)/LiveStart.MetabolicN;
+                areaSenescingN = LeafStartArea * (MetabolicNRetranslocated - MetabolicNAllocation) / LiveStart.MetabolicN;
 
             double leafAreaLoss = Math.Max(areaSenescing, areaSenescingN);
             if (leafAreaLoss > 0)
-                SenescedFrac = Math.Min(1.0, leafAreaLoss/LeafStartArea);
+                SenescedFrac = Math.Min(1.0, leafAreaLoss / LeafStartArea);
 
-            double structuralWtSenescing = SenescedFrac*LiveStart.StructuralWt;
-            double structuralNSenescing = SenescedFrac*LiveStart.StructuralN;
-            double metabolicWtSenescing = SenescedFrac*LiveStart.MetabolicWt;
-            double metabolicNSenescing = SenescedFrac*LiveStart.MetabolicN;
-            double StorageWtSenescing = SenescedFrac*LiveStart.StorageWt;
-            double StorageNSenescing = SenescedFrac*LiveStart.StorageN;
+            double structuralWtSenescing = SenescedFrac * LiveStart.StructuralWt;
+            double structuralNSenescing = SenescedFrac * LiveStart.StructuralN;
+            double metabolicWtSenescing = SenescedFrac * LiveStart.MetabolicWt;
+            double metabolicNSenescing = SenescedFrac * LiveStart.MetabolicN;
+            double StorageWtSenescing = SenescedFrac * LiveStart.StorageWt;
+            double StorageNSenescing = SenescedFrac * LiveStart.StorageN;
 
             DeadArea = DeadArea + leafAreaLoss;
             LiveArea = LiveArea - leafAreaLoss;
@@ -984,7 +983,7 @@ namespace Models.PMF.Organs
 
             Live.StorageN -= Math.Max(0.0,
                 StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
-            //Dont Senesess todays Storage N if it was retranslocated or reallocated 
+            //Dont Senesess todays Storage N if it was retranslocated or reallocated
             Dead.StorageN += Math.Max(0.0,
                 StorageNSenescing - StorageNReallocated - StorageNRetrasnlocated);
 
@@ -1009,8 +1008,8 @@ namespace Models.PMF.Organs
             DetachedFrac = FractionDetaching(thermalTime);
             if (DetachedFrac > 0.0)
             {
-                double detachedWt = Dead.Wt*DetachedFrac;
-                double detachedN = Dead.N*DetachedFrac;
+                double detachedWt = Dead.Wt * DetachedFrac;
+                double detachedN = Dead.N * DetachedFrac;
 
                 DeadArea *= 1 - DetachedFrac;
                 Dead.StructuralWt *= 1 - DetachedFrac;
@@ -1021,7 +1020,7 @@ namespace Models.PMF.Organs
                 Dead.MetabolicN *= 1 - DetachedFrac;
 
                 if (detachedWt > 0)
-                    SurfaceOrganicMatter.Add(detachedWt*10, detachedN*10, 0, Plant.PlantType, "Leaf");
+                    SurfaceOrganicMatter.Add(detachedWt * 10, detachedN * 10, 0, Plant.PlantType, "Leaf");
             }
         }
 
@@ -1032,23 +1031,23 @@ namespace Models.PMF.Organs
             if (!IsInitialised)
                 return;
 
-            double change = LiveArea*fraction;
+            double change = LiveArea * fraction;
             LiveArea -= change;
             DeadArea += change;
 
-            change = Live.StructuralWt*fraction;
+            change = Live.StructuralWt * fraction;
             Live.StructuralWt -= change;
             Dead.StructuralWt += change;
 
-            change = Live.StorageWt*fraction;
+            change = Live.StorageWt * fraction;
             Live.StorageWt -= change;
             Dead.StorageWt += change;
 
-            change = Live.StructuralN*fraction;
+            change = Live.StructuralN * fraction;
             Live.StructuralN -= change;
             Dead.StructuralN += change;
 
-            change = Live.StorageN*fraction;
+            change = Live.StorageN * fraction;
             Live.StorageN -= change;
             Dead.StorageN += change;
         }
@@ -1082,7 +1081,7 @@ namespace Models.PMF.Organs
             double leafSizeDelta = SizeFunction(ageToday) - SizeFunction(Age);
             //mm2 of leaf expanded in one day at this cohort (Today's minus yesterday's Area/cohort)
             double growth = CohortPopulation * leafSizeDelta;
-                // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
+            // Daily increase in leaf area for that cohort position in a per m2 basis (mm2/m2/day)
             if (growth < 0)
                 throw new Exception("Netagive potential leaf area expansion in" + this);
             return growth;
@@ -1097,18 +1096,18 @@ namespace Models.PMF.Organs
                 throw new Exception(
                     "Trying to calculate leaf size with a growth duration parameter value of zero won't work");
             double oneLessShape = 1 - LeafSizeShape;
-            double alpha = -Math.Log((1/oneLessShape - 1)/(MaxArea/(MaxArea*LeafSizeShape) - 1))/GrowthDuration;
-            double leafSize = MaxArea/(1 + (MaxArea/(MaxArea*LeafSizeShape) - 1)*Math.Exp(-alpha*tt));
-            double y0 = MaxArea/(1 + (MaxArea/(MaxArea*LeafSizeShape) - 1)*Math.Exp(-alpha*0));
-            double yDiffprop = y0/(MaxArea/2);
-            double scaledLeafSize = (leafSize - y0)/(1 - yDiffprop);
+            double alpha = -Math.Log((1 / oneLessShape - 1) / (MaxArea / (MaxArea * LeafSizeShape) - 1)) / GrowthDuration;
+            double leafSize = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * tt));
+            double y0 = MaxArea / (1 + (MaxArea / (MaxArea * LeafSizeShape) - 1) * Math.Exp(-alpha * 0));
+            double yDiffprop = y0 / (MaxArea / 2);
+            double scaledLeafSize = (leafSize - y0) / (1 - yDiffprop);
             return scaledLeafSize;
         }
 
         /// <summary>Live leaf number</summary>
-        public double LiveStemNumber (Leaf.LeafCohortParameters leafCohortParameters)
+        public double LiveStemNumber(Leaf.LeafCohortParameters leafCohortParameters)
         {
-            if (Age <=0)
+            if (Age <= 0)
             {
                 return 0;
             }
@@ -1122,7 +1121,7 @@ namespace Models.PMF.Organs
                 double lsn = 0;
                 for (int i = 0; i < ApexCohort.GroupAge.Length; i++)
                 {
-                    
+
                     if (i == 0)
                     {
                         _lagDuration = LagDuration;
@@ -1224,8 +1223,8 @@ namespace Models.PMF.Organs
             double fracSenShade = 0;
             if (LiveArea > 0)
             {
-                fracSenShade = Math.Min(MaxLiveArea*ShadeInducedSenRate, LiveArea)/LiveArea;
-                fracSenShade += stemMortality*senessingLeafRelativeSize;
+                fracSenShade = Math.Min(MaxLiveArea * ShadeInducedSenRate, LiveArea) / LiveArea;
+                fracSenShade += stemMortality * senessingLeafRelativeSize;
                 fracSenShade = Math.Min(fracSenShade, 1.0);
             }
 
@@ -1250,7 +1249,7 @@ namespace Models.PMF.Organs
                 if (remainingTt == 0)
                     fracDetach = 1;
                 else
-                    fracDetach = Math.Min(1, Math.Min(tt, ttInDetachPhase)/remainingTt);
+                    fracDetach = Math.Min(1, Math.Min(tt, ttInDetachPhase) / remainingTt);
                 if ((fracDetach > 1) || (fracDetach < 0))
                     throw new Exception("Bad Fraction Detaching");
             }

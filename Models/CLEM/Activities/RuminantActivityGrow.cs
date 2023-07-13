@@ -1,15 +1,14 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
-using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -33,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -91,6 +90,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             List<Ruminant> herd = ruminantHerd.Herd;
+            ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
 
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in herd.Where(a => a.Weaned == false))
@@ -104,7 +104,8 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural");
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                    ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
         }
@@ -191,12 +192,12 @@ namespace Models.CLEM.Activities
                         // Reference: Intake multiplier for lactating cow (M.Freer)
                         // double intakeMilkMultiplier = 1 + 0.57 * Math.Pow((dayOfLactation / 81.0), 0.7) * Math.Exp(0.7 * (1 - (dayOfLactation / 81.0)));
                         double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * (ind.Weight/ind.NormalisedAnimalWeight));
-                        
+
                         // To make this flexible for sheep and goats, added three new Ruminant Coeffs
                         // Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
                         // For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
                         // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
-                        // replaces (A), (B) and (C) 
+                        // replaces (A), (B) and (C)
                         potentialIntake *= intakeMilkMultiplier;
 
                         // calculate estimated milk production for time step here
@@ -215,7 +216,7 @@ namespace Models.CLEM.Activities
                         femaleind.MilkProducedThisTimeStep = 0;
                     }
                 }
-                
+
                 //TODO: option to restrict potential further due to stress (e.g. heat, cold, rain)
 
             }
@@ -386,7 +387,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources 
+        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources
         /// This is called at the end of CLEMAnimalWeightGain so after intake determines and before deaths and sales.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -414,7 +415,7 @@ namespace Models.CLEM.Activities
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
             // all energy calculations are per day and multiplied at end to give monthly weight gain
-            
+
             // ind.MetabolicIntake is the inake received adjusted by any crude protein shortfall in AnimalWeightGain()
             double intakeDaily = ind.MetabolicIntake / 30.4;
 
@@ -519,7 +520,7 @@ namespace Models.CLEM.Activities
 
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
-                // 0.000082 is -0.03 Age in Years/365 for days 
+                // 0.000082 is -0.03 Age in Years/365 for days
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
                 ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
@@ -556,12 +557,12 @@ namespace Models.CLEM.Activities
                 Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange),
                 ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual
                 );
-            
+
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
             // methane is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
             // methane is methaneProduced / 55.28 * 1000; // grams per day
-            
+
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
         }
@@ -591,17 +592,26 @@ namespace Models.CLEM.Activities
             // and before breeding, trading, culling etc (See Clock event order)
 
             // Calculated by
-            // critical weight &&
+            // critical weight OR
+            // Body condition score and additional mortality rate &&
             // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
-            // set died flag
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
-            ruminantHerd.RemoveRuminant(died, this);
+            List<Ruminant> died;
+            if (herd.Any())
+            {
+                if (herd.FirstOrDefault().BreedParams.ProportionOfMaxWeightToSurvive >= 0)
+                    died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
+                else
+                    // body condition score based mortality 
+                    died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.BodyConditionScoreForMortality) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                // set died flag
+                died.ForEach(c => c.SaleFlag = HerdChangeReason.DiedUnderweight);
+                ruminantHerd.RemoveRuminant(died, this);
+            }
 
             // base mortality adjusted for condition
             foreach (var ind in ruminantHerd.Herd)
@@ -628,8 +638,8 @@ namespace Models.CLEM.Activities
                     ind.Died = true;
             }
 
-            died = herd.Where(a => a.Died).ToList();
-            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
@@ -672,7 +682,7 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.FloatsAreEqual(EnergyGross, 0))
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
                 else
-                    htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{EnergyGross}</span>");
                 htmlWriter.Write(" MJ/kg dry matter</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
@@ -681,9 +691,9 @@ namespace Models.CLEM.Activities
                 else
                     htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using Models.PMF.Struct;
-using APSIM.Shared.Documentation;
 using System.Data;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -21,7 +16,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ZadokPMFWheat: Model
+    public class ZadokPMFWheat : Model
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -76,7 +71,7 @@ namespace Models.PMF.Phen
                     zadok_stage = 90.0f;
                 }
 
-                    return zadok_stage;
+                return zadok_stage;
             }
         }
 

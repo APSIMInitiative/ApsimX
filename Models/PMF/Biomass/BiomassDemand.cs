@@ -1,9 +1,9 @@
-﻿using APSIM.Shared.Documentation;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace Models.PMF
 {

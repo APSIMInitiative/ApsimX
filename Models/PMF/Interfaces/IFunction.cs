@@ -1,6 +1,7 @@
+using Models.Core;
+
 namespace Models.Functions
 {
-    using Models.Core;
 
     /// <summary>Interface for a function</summary>
     [ValidParent(DropAnywhere = true)]

@@ -31,22 +31,22 @@ namespace Models.DCAPST.Environment
         /// <summary>
         /// Day of the year
         /// </summary>
-        public double DayOfYear { get; set; }        
-        
+        public double DayOfYear { get; set; }
+
         /// <summary>
         /// Time the sun is in the sky (hours)
         /// </summary>
         public double DayLength { get; private set; }
-        
+
         /// <summary>
         /// Time of sunrise (hours)
         /// </summary>
         public double Sunrise { get; private set; }
-        
+
         /// <summary>
         /// Time of sunset (hours)
         /// </summary>
-        public double Sunset { get; private set; }        
+        public double Sunset { get; private set; }
 
         /// <summary>
         /// 
@@ -64,7 +64,7 @@ namespace Models.DCAPST.Environment
             DayLength = 2 * SunsetAngle.ToDegrees() / 15;
             Sunrise = 12.0 - DayLength / 2.0;
             Sunset = 12.0 + DayLength / 2.0;
-        }     
+        }
 
         /// <summary>
         /// Calculates the solar declination angle (radians)
@@ -75,7 +75,7 @@ namespace Models.DCAPST.Environment
         /// Calculates the angle of the sun at sunset
         /// </summary>
         private double CalcSunsetAngle() => Math.Acos(-1 * Math.Tan(Latitude) * Math.Tan(SolarDeclination));
-        
+
         /// <summary>
         /// Calculates the angle of the sun in the sky (radians)
         /// </summary>
@@ -88,6 +88,6 @@ namespace Models.DCAPST.Environment
                 * Math.Cos(Math.PI / 12.0 * DayLength * (((hour - Sunrise) / DayLength) - 0.5)));
             return angle;
         }
-       
+
     }
 }

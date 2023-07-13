@@ -1,14 +1,15 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
@@ -82,10 +83,10 @@
             if (!string.IsNullOrEmpty(model.ResourceName))
                 ReplaceModel(model, model.Enabled);
             else
-            { 
-               foreach (var child in model.FindAllDescendants()
-                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
-                                        .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
+            {
+                foreach (var child in model.FindAllDescendants()
+                                         .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
+                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
                 {
                     ReplaceModel(child, model.Enabled);
                 }
@@ -250,7 +251,7 @@
             /// <param name="resourceJson">The resource JSON.</param>
             public ResourceModel(string resourceJson)
             {
-                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false);
+                Model = FileFormat.ReadFromString<IModel>(resourceJson, e => throw e, false).NewModel as IModel;
                 Model = Model.Children.First();
                 Properties = GetPropertiesFromResourceModel(Model, resourceJson);
             }
@@ -269,7 +270,7 @@
                 string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
 
                 List<PropertyInfo> properties = new List<PropertyInfo>();
-                
+
                 var children = JObject.Parse(resourceJson)["Children"] as JArray;
                 if (children == null)
                     throw new Exception($"Invalid resource {model.Name}");

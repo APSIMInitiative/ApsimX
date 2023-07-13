@@ -7,8 +7,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities

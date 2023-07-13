@@ -1,20 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Organs;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
+
 namespace Models.PMF
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
-    using System.Globalization;
-
     /// <summary>
     /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
     /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
@@ -25,7 +23,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : Model, IPlant, IPlantDamage, IHasDamageableBiomass
+    public class Plant : Model, IPlant, IPlantDamage
     {
         /// <summary>The summary</summary>
         [Link]
@@ -47,7 +45,7 @@ namespace Models.PMF
 
         /// <summary>The phenology</summary>
         [Link(Type = LinkType.Child)]
-        public IPhenology Phenology = null;
+        public Phenology Phenology = null;
 
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
@@ -237,22 +235,6 @@ namespace Models.PMF
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;
 
-        /// <summary>A list of material (biomass) that can be damaged.</summary>
-        public IEnumerable<DamageableBiomass> Material
-        {
-            get
-            {
-                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
-                {
-                    yield return new DamageableBiomass(organ.Name, organ.Live, true);
-                    yield return new DamageableBiomass(organ.Name, organ.Dead, false);
-                }
-            }
-        }
-
-        /// <summary>Harvest the crop</summary>
-        public void Harvest() { Harvest(null); }
-
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
@@ -261,16 +243,10 @@ namespace Models.PMF
         public event EventHandler Harvesting;
         /// <summary>Occurs when a plant is ended via EndCrop.</summary>
         public event EventHandler PlantEnding;
-        /// <summary>Occurs when a plant is about to be winter pruned.</summary>
-        public event EventHandler Pruning;
-        /// <summary>Occurs when a plant is about to be leaf plucking.</summary>
-        public event EventHandler LeafPlucking;
-        /// <summary>Occurs when a plant is about to be cutted.</summary>
-        public event EventHandler Cutting;
-        /// <summary>Occurs when a plant is about to be grazed.</summary>
-        public event EventHandler Grazing;
         /// <summary>Occurs when a plant is about to flower</summary>
         public event EventHandler Flowering;
+        /// <summary>Occurs when a plant is about to start pod development</summary>
+        public event EventHandler StartPodDevelopment;
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -288,7 +264,7 @@ namespace Models.PMF
             Clear();
             IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
-                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",",duplicates));
+                throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",", duplicates));
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -297,18 +273,10 @@ namespace Models.PMF
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
-            if (sender == this && Leaf != null && AboveGround != null)
-            {
-                string message = Phenology.CurrentPhase.Start + "\r\n";
-                if (Leaf != null)
-                {
-                    message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
-                    message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
-                }
-                summary.WriteMessage(this, message, MessageType.Diagnostic);
-                if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
-                    Flowering.Invoke(this, null);
-            }
+            if (Phenology.CurrentPhase.Start == "Flowering")
+                Flowering?.Invoke(this, null);
+            if (Phenology.CurrentPhase.Start == "StartPodDevelopment")
+                StartPodDevelopment?.Invoke(this, null);
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -432,53 +400,13 @@ namespace Models.PMF
         }
 
         /// <summary>Harvest the crop.</summary>
-        public void Harvest(RemovalFractions removalData)
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
-            RemoveBiomass("Harvest", removalData);
-        }
-
-        /// <summary>Harvest the crop.</summary>
-        public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
-        {
-            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"), MessageType.Diagnostic);
-
-            // Invoke specific defoliation events.
-            if (biomassRemoveType == "Harvest" && Harvesting != null)
-                Harvesting.Invoke(this, new EventArgs());
-
-            if (biomassRemoveType == "Prune" && Pruning != null)
-                Pruning.Invoke(this, new EventArgs());
-
-            if (biomassRemoveType == "LeafPluck" && LeafPlucking != null)
-                LeafPlucking.Invoke(this, new EventArgs());
-
-            if (biomassRemoveType == "Cut" && Cutting != null)
-                Cutting.Invoke(this, new EventArgs());
-
-            if (biomassRemoveType == "Graze" && Grazing != null)
-                Grazing.Invoke(this, new EventArgs());
-
-            // Set up the default BiomassRemovalData values
-            foreach (IOrgan organ in Organs)
-            {
-                // Get the default removal fractions
-                OrganBiomassRemovalType biomassRemoval = null;
-                if (removalData != null)
-                    biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
-                organ.RemoveBiomass(biomassRemoveType, biomassRemoval);
-            }
-
-            // Reset the phenology if SetPhenologyStage specified.
-            if (removalData != null && removalData.SetPhenologyStage != 0 && Phenology is Phenology phenology)
-                phenology.SetToStage(removalData.SetPhenologyStage);
-
-            // Reduce plant and stem population if thinning proportion specified
-            if (removalData != null && removalData.SetThinningProportion != 0 && structure != null)
-                structure.DoThin(removalData.SetThinningProportion);
-
-            // Remove nodes from the main-stem
-            if (removalData != null && removalData.NodesToRemove > 0)
-                structure.DoNodeRemoval(removalData.NodesToRemove);
+            Phenology.SetToEndStage();
+            Harvesting?.Invoke(this, EventArgs.Empty);
+            if (removeBiomassFromOrgans)
+                foreach (var organ in Organs)
+                    organ.Harvest();
         }
 
         /// <summary>End the crop.</summary>
@@ -496,7 +424,6 @@ namespace Models.PMF
 
             Clear();
             IsEnding = true;
-            IsAlive = false;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -556,29 +483,6 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
-        {
-            var organ = Organs.FirstOrDefault(o => o.Name.Equals(organName, StringComparison.InvariantCultureIgnoreCase));
-            if (organ == null)
-                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
-            organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
-
-            // Also need to reduce LAI if canopy.
-            if (organ is ICanopy)
-            {
-                var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
-                var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-                var lai = leaf.LAI;
-                ReduceCanopy(lai * totalFractionToRemove);
-            }
-        }
-
-        /// <summary>
         /// Set the plant leaf area index.
         /// </summary>
         /// <param name="deltaLAI">Delta LAI.</param>
@@ -607,31 +511,6 @@ namespace Models.PMF
         public void RemoveAssimilate(double deltaAssimilate)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Force emergence on the date called if emergence has not occured already
-        /// </summary>
-        public void SetEmergenceDate(string emergencedate)
-        {
-            foreach (EmergingPhase ep in this.FindAllDescendants<EmergingPhase>())
-                {
-                    ep.EmergenceDate=emergencedate;
-                }
-            SetGerminationDate(SowingDate.ToString("d-MMM", CultureInfo.InvariantCulture));
-        }
-
-        /// <summary>
-        /// Force germination on the date called if germination has not occured already
-        /// </summary>
-        public void SetGerminationDate(string germinationdate)
-        {
-            {
-                foreach (GerminatingPhase gp in this.FindAllDescendants<GerminatingPhase>())
-                {
-                    gp.GerminationDate = germinationdate;
-                }
-            }
         }
 
         /// <summary>

@@ -1,21 +1,23 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Models.PMF;
+using Models.Core;
+using Models.Soils;
+using Models.Surface;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.ForageDigestibility;
+using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
+
 namespace Models.AgPasture
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Functions;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
-    /// 
+    /// A model for cutting pasture / plants and calculating and returning excreta to the
+    /// soil based on the biomass cut. If this model is put at the top level of the simulation
+    /// all child zones (paddocks) are treated uniformly (e.g. for urine patch modelling)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -23,18 +25,15 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Zone))]
     public class SimpleGrazing : Model
     {
-        [Link] Clock clock = null;
+        [Link] IClock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        [Link(ByName = true)] ISolute Urea = null;
-        [Link] IPhysical soilPhysical = null;
-        [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
         [Link] ScriptCompiler compiler = null;
 
         private double residualBiomass;
         private IBooleanFunction expressionFunction;
         private int simpleGrazingFrequency;
-        private List<ModelWithDigestibleBiomass> allForages;
+        private List<ZoneWithForage> zones;
 
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         private const double PotentialMEOfHerbage = 16.0;
@@ -56,32 +55,29 @@ namespace Models.AgPasture
         }
 
         /// <summary>class for encapsulating a urine return.</summary>
-        public class UrineReturnType : EventArgs
+        public class UrineDungReturnType : EventArgs
         {
-            /// <summary>Amount of urine to return (kg)</summary>
-            public double Amount { get; set;  }
+            /// <summary>Grazed dry matter (kg/ha)</summary>
+            public double GrazedDM { get; set;  }
 
-            /// <summary>Depth (mm) of soil to return urine into.</summary>
-            public double Depth { get; set;  }
+            /// <summary>N in grazed dry matter (kg/ha).</summary>
+            public double GrazedN { get; set;  }
 
-            /// <summary>Grazed dry matter.</summary>
-            public double GrazedDM { get; set; }
+            /// <summary>Metabolisable energy in grazed dry matter.</summary>
+            public double GrazedME { get; set; }
         }
 
         /// <summary>Invoked when a grazing occurs.</summary>
         public event EventHandler Grazed;
 
-        /// <summary>Invoked when biomass is removed.</summary>
-        public event BiomassRemovedDelegate BiomassRemoved;
-
-        /// <summary>Invoked when urine is to be returned to soil.</summary>
+        /// <summary>Invoked when urine and dung is to be returned to soil.</summary>
         /// <remarks>
         /// This event provides a mechanism for another model to perform a
-        /// urine return to the soil. If no other model subscribes to this 
-        /// event then SimpleGrazing will do the urine return. This mechanism
+        /// urine and dung return to the soil. If no other model subscribes to this
+        /// event then SimpleGrazing will do the return. This mechanism
         /// allows a urine patch model to work.
         /// </remarks>
-        public event EventHandler<UrineReturnType> DoUrineReturn;
+        public event EventHandler<UrineDungReturnType> DoUrineDungReturn;
 
         ////////////// GUI parameters shown to user //////////////
 
@@ -95,68 +91,68 @@ namespace Models.AgPasture
         [Separator("Settings for the 'Simple Rotation'")]
         [Description("Frequency of grazing (days) or \"end of month\"")]
         [Units("days")]
-        [Display(EnabledCallback = nameof(IsSimpleGrazingTurnedOn))]
+        [Display(VisibleCallback = nameof(IsSimpleGrazingTurnedOn))]
         public string SimpleGrazingFrequencyString { get; set; }
 
         /// <summary></summary>
         [Description("Minimum grazeable dry matter to trigger grazing (kgDM/ha). Set to zero to turn off.")]
         [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
+        [Display(VisibleCallback = "IsSimpleGrazingTurnedOn")]
         public double SimpleMinGrazable { get; set; }
 
         /// <summary></summary>
         [Description("Residual pasture mass after grazing (kgDM/ha)")]
         [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsSimpleGrazingTurnedOn")]
+        [Display(VisibleCallback = "IsSimpleGrazingTurnedOn")]
         public double SimpleGrazingResidual { get; set; }
 
         /// <summary></summary>
         [Separator("Settings for the 'Target Mass' - all values by month from January")]
         [Description("Target mass of pasture to trigger grazing event, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn")]
+        [Display(VisibleCallback = "IsTargetMassTurnedOn")]
         public double[] PreGrazeDMArray { get; set; }
 
         /// <summary></summary>
         [Description("Residual mass of pasture post grazing, monthly values (kgDM/ha)")]
         [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsTargetMassTurnedOn")]
+        [Display(VisibleCallback = "IsTargetMassTurnedOn")]
         public double[] PostGrazeDMArray { get; set; }
 
         /// <summary></summary>
         [Separator("Settings for flexible grazing")]
         [Description("Expression for timing of grazing (e.g. AGPRyegrass.CoverTotal > 0.95)")]
-        [Display(EnabledCallback = "IsFlexibleGrazingTurnedOn")]
+        [Display(VisibleCallback = "IsFlexibleGrazingTurnedOn")]
         public string FlexibleExpressionForTimingOfGrazing { get; set; }
 
         /// <summary></summary>
         [Description("Residual pasture mass after grazing (kgDM/ha)")]
         [Units("kgDM/ha")]
-        [Display(EnabledCallback = "IsFlexibleGrazingTurnedOn")]
+        [Display(VisibleCallback = "IsFlexibleGrazingTurnedOn")]
         public double FlexibleGrazePostDM { get; set; }
 
         /// <summary></summary>
         [Separator("Optional rules for rotation length")]
         [Description("Monthly maximum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = nameof(IsMaximumRotationLengthArrayTurnedOn))]
+        [Display(VisibleCallback = nameof(IsMaximumRotationLengthArrayTurnedOn))]
         public double[] MaximumRotationLengthArray { get; set; }
 
         /// <summary></summary>
         [Description("Monthly minimum rotation length (days)")]
         [Units("days")]
-        [Display(EnabledCallback = nameof(IsMinimumRotationLengthArrayTurnedOn))]
+        [Display(VisibleCallback = nameof(IsMinimumRotationLengthArrayTurnedOn))]
         public double[] MinimumRotationLengthArray { get; set; }
 
         /// <summary></summary>
         [Separator("Optional no-grazing window")]
         [Description("Start of the no-grazing window (dd-mmm)")]
-        [Display(EnabledCallback = "IsNotTimingControlledElsewhere")]
+        [Display(VisibleCallback = "IsNotTimingControlledElsewhere")]
         public string NoGrazingStartString { get; set; }
 
         /// <summary></summary>
         [Description("End of the no-grazing window (dd-mmm)")]
-        [Display(EnabledCallback = "IsNotTimingControlledElsewhere")]
+        [Display(VisibleCallback = "IsNotTimingControlledElsewhere")]
         public string NoGrazingEndString { get; set; }
 
         /// <summary></summary>
@@ -167,16 +163,16 @@ namespace Models.AgPasture
 
         /// <summary></summary>
         [Description("Fraction of defoliated N going to soil. Remainder is exported as animal product or to lanes/camps (0-1).")]
-        public double[] FractionDefoliatedNToSoil { get; set; }   
+        public double[] FractionDefoliatedNToSoil { get; set; }
 
         /// <summary></summary>
         [Description("Proportion of excreted N going to dung (0-1). Yearly or 12 monthly values. Blank means use C:N ratio of dung.")]
-        [Display(EnabledCallback = "IsFractionExcretedNToDungEnabled")]
+        [Display(VisibleCallback = "IsFractionExcretedNToDungEnabled")]
         public double[] FractionExcretedNToDung { get; set; }
 
         /// <summary></summary>
         [Description("C:N ratio of biomass for dung. If set to zero it will calculate the C:N using digestibility. ")]
-        [Display(EnabledCallback = "IsCNRatioDungEnabled")]
+        [Display(VisibleCallback = "IsCNRatioDungEnabled")]
         public double CNRatioDung { get; set; }
 
         /// <summary></summary>
@@ -196,12 +192,12 @@ namespace Models.AgPasture
 
         /// <summary> </summary>
         [Description("Maximum proportion of litter moved to the soil")]
-        [Display(EnabledCallback = "IsTramplingTurnedOn")]
+        [Display(VisibleCallback = "IsTramplingTurnedOn")]
         public double MaximumPropLitterMovedToSoil { get; set; } = 0.1;
 
         /// <summary> </summary>
         [Description("Pasture removed at the maximum rate (e.g. 900 for heavy cattle, 1200 for ewes)")]
-        [Display(EnabledCallback = "IsTramplingTurnedOn")]
+        [Display(VisibleCallback = "IsTramplingTurnedOn")]
         public double PastureConsumedAtMaximumRateOfLitterRemoval { get; set; } = 1200;
 
         /// <summary></summary>
@@ -291,32 +287,32 @@ namespace Models.AgPasture
         /// <summary>DM grazed</summary>
         [JsonIgnore]
         [Units("kgDM/ha")]
-        public double GrazedDM { get; private set; }
+        public double GrazedDM => zones.Sum(z => z.GrazedDM);
 
         /// <summary>N in the DM grazed.</summary>
         [JsonIgnore]
         [Units("kgN/ha")]
-        public double GrazedN { get; private set; }
+        public double GrazedN => zones.Sum(z => z.GrazedN);
 
         /// <summary>N in the DM grazed.</summary>
         [JsonIgnore]
         [Units("MJME/ha")]
-        public double GrazedME { get; private set; }
+        public double GrazedME => zones.Sum(z => z.GrazedME);
 
         /// <summary>N in urine returned to the paddock.</summary>
         [JsonIgnore]
         [Units("kgN/ha")]
-        public double AmountUrineNReturned { get; private set; }
+        public double AmountUrineNReturned => zones.Sum(z => z.AmountUrineNReturned);
 
         /// <summary>C in dung returned to the paddock.</summary>
         [JsonIgnore]
         [Units("kgDM/ha")]
-        public double AmountDungWtReturned { get; private set; }
+        public double AmountDungWtReturned => zones.Sum(z => z.AmountDungWtReturned);
 
         /// <summary>N in dung returned to the paddock.</summary>
         [JsonIgnore]
         [Units("kgN/ha")]
-        public double AmountDungNReturned { get; private set; }
+        public double AmountDungNReturned => zones.Sum(z => z.AmountDungNReturned);
 
         /// <summary>Mass of herbage just before grazing.</summary>
         [JsonIgnore]
@@ -354,9 +350,16 @@ namespace Models.AgPasture
                 throw new Exception("No forages component found in simulation.");
             var parentZone = Parent as Zone;
             if (parentZone == null)
-                throw new Exception("SimpleGrazing is not in a zone");
-            allForages = forages.ModelsWithDigestibleBiomass.Where(forage => forage.Zone == parentZone).ToList();
-            ProportionOfTotalDM = new double[allForages.Count()];
+                summary.WriteMessage(this, "When SimpleGrazing is in the top level of the simulation (above the paddocks) it is assumed that the child paddocks are zones within a paddock.",
+                                     MessageType.Information);
+            double areaOfAllZones = forages.ModelsWithDigestibleBiomass.Select(f => f.Zone)
+                                                                       .Distinct()
+                                                                       .Sum(z => z.Area);
+            zones = forages.ModelsWithDigestibleBiomass.GroupBy(f => f.Zone,
+                                                                f => f,
+                                                                (z, f) => new ZoneWithForage(z, f.ToList(), areaOfAllZones))
+                                                       .ToList();
+
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
             {
@@ -378,10 +381,16 @@ namespace Models.AgPasture
             if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
                 throw new Exception("You must specify either a single value for 'proportion of defoliated nitrogen going to dung' or 12 monthly values.");
 
+            // If we are at the top level of the simulation then look in first zone for number of forages.
+            int numForages;
+            if (Parent is Simulation)
+                numForages = zones.First().NumForages;
+            else
+                numForages = zones.Where(z => z.Zone == this.Parent).First().NumForages;
             if (SpeciesCutProportions == null)
-                SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, allForages.Count());
+                SpeciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, numForages);
 
-            if (SpeciesCutProportions.Sum() != allForages.Count)
+            if (SpeciesCutProportions.Sum() != numForages)
                 throw new Exception("The species cut weightings must add up to the number of species.");
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
@@ -409,31 +418,22 @@ namespace Models.AgPasture
         private void OnStartOfDay(object sender, EventArgs e)
         {
             DaysSinceGraze += 1;
-            PostGrazeDM = 0.0;
-            GrazedDM = 0.0;
-            GrazedN = 0.0;
-            GrazedME = 0.0;
-            AmountDungNReturned = 0;
-            AmountDungWtReturned = 0;
-            AmountUrineNReturned = 0;
+            ProportionOfTotalDM = new double[zones.First().NumForages];
+            PostGrazeDM = 0;
+
+            foreach (var zone in zones)
+                zone.OnStartOfDay();
         }
 
         /// <summary>This method is invoked at the beginning of each day to perform management actions.</summary>
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            // Calculate pre-grazed dry matter.
-            PreGrazeDM = 0.0;
-            PreGrazeHarvestableDM = 0.0;
-            foreach (var forage in allForages)
-            {
-                PreGrazeDM += forage.Material.Sum(m => m.Total.Wt);
-                PreGrazeHarvestableDM += forage.Material.Sum(m => m.Consumable.Wt);
-            }
+            PreGrazeDM = zones.Sum(z => z.TotalDM);
+            PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
 
-            // Convert to kg/ha
-            PreGrazeDM *= 10;
-            PreGrazeHarvestableDM *= 10;
+            foreach (var zone in zones)
+                zone.DoManagement();
 
             // Determine if we can graze today.
             GrazedToday = false;
@@ -458,110 +458,59 @@ namespace Models.AgPasture
         /// <param name="residual">The residual biomass to graze to (kg/ha).</param>
         public void GrazeToResidual(double residual)
         {
-            var amountDMToRemove = Math.Max(0, PreGrazeDM - residual);
-            Graze(amountDMToRemove);
-
-
-            if (TramplingOn)
-            {
-                var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(PastureConsumedAtMaximumRateOfLitterRemoval, amountDMToRemove, 0),
-                                                           MaximumPropLitterMovedToSoil);
-                surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
-            }
-        }
-
-        /// <summary>Perform grazing</summary>
-        /// <param name="amountDMToRemove">The amount of biomas to remove (kg/ha).</param>
-        public void Graze(double amountDMToRemove)
-        {
             GrazingInterval = DaysSinceGraze;  // i.e. yesterday's value
             DaysSinceGraze = 0;
 
-            RemoveDMFromPlants(amountDMToRemove);
+            foreach (var zone in zones)
+                zone.RemoveDMFromPlants(residual, SpeciesCutProportions);
 
-            AddUrineToSoil();
-
-            AddDungToSurface();
+            DoUrineDungTrampling();
 
             // Calculate post-grazed dry matter.
-            PostGrazeDM = 0.0;
-            foreach (var forage in allForages)
-                PostGrazeDM += forage.Material.Sum(m => m.Total.Wt);
+            PostGrazeDM = zones.Sum(z => z.TotalDM);
 
             // Calculate proportions of each species to the total biomass.
-            for (int i = 0; i < allForages.Count; i++)
-            {
-                var proportionToTotalDM = MathUtilities.Divide(allForages[i].Material.Sum(m => m.Total.Wt), PostGrazeDM, 0);
-                ProportionOfTotalDM[i] = proportionToTotalDM;
-            }
+            for (int i = 0; i < zones.First().NumForages; i++)
+                ProportionOfTotalDM[i] = zones.Select(z => z.ProportionsToTotal[i]).Average();
 
             summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME), MessageType.Diagnostic);
 
             // Reduce plant population if necessary.
             if (MathUtilities.IsGreaterThan(FractionPopulationDecline, 0.0))
-            {
-                foreach (var forage in allForages)
-                {
-                    if ((forage as IModel) is IHasPopulationReducer populationReducer)
-                        populationReducer.ReducePopulation(populationReducer.Population * (1.0 - FractionPopulationDecline));
-                    else
-                        throw new Exception($"Model {forage.Name} is unable to reduce its population due to grazing. Not implemented.");
-                }
-            }
-
-            // Convert PostGrazeDM to kg/ha
-            PostGrazeDM *= 10;
+                foreach (var zone in zones)
+                    zone.ReducePopulation(FractionPopulationDecline);
 
             // Invoke grazed event.
             Grazed?.Invoke(this, new EventArgs());
         }
 
-        /// <summary>Add dung to the soil surface.</summary>
-        private void AddDungToSurface()
-        {
-            var SOMData = new BiomassRemovedType();
-            SOMData.crop_type = "RuminantDung_PastureFed";
-            SOMData.dm_type = new string[] { SOMData.crop_type };
-            SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned };
-            SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned };
-            SOMData.dlt_dm_p = new float[] { 0.0F };
-            SOMData.fraction_to_residue = new float[] { 1.0F };
-            BiomassRemoved.Invoke(SOMData);
-        }
-
         /// <summary>Add urine to the soil.</summary>
-        private void AddUrineToSoil()
+        private void DoUrineDungTrampling()
         {
-            if (DoUrineReturn == null)
+            if (DoUrineDungReturn == null)
             {
-                // We will do the urine return.
-                // find the layer that the fertilizer is to be added to.
-                int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, DepthUrineIsAdded);
-
-                var ureaValues = Urea.kgha;
-                ureaValues[layer] += AmountUrineNReturned;
-                Urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+                if (Parent is Zone)
+                {
+                    foreach (var zone in zones)
+                        zone.DoUrineDungTrampling(clock.Today.Month, FractionDefoliatedBiomassToSoil,
+                                                  FractionDefoliatedNToSoil, FractionExcretedNToDung,
+                                                  CNRatioDung, DepthUrineIsAdded, TramplingOn,
+                                                  PastureConsumedAtMaximumRateOfLitterRemoval, MaximumPropLitterMovedToSoil);
+                }
+                else
+                    throw new Exception("Currently, when SimpleGrazing is at the top level of a simulation it must have a SimpleCow sibling present.");
             }
             else
             {
                 // Another model (e.g. urine patch) will do the urine return.
-                DoUrineReturn.Invoke(this,
-                    new UrineReturnType()
+                DoUrineDungReturn.Invoke(this,
+                    new UrineDungReturnType()
                     {
-                        Amount = AmountUrineNReturned,
-                        Depth = DepthUrineIsAdded,
-                        GrazedDM = GrazedDM
+                        GrazedDM = GrazedDM,
+                        GrazedN = GrazedN,
+                        GrazedME = GrazedME
                     });
             }
-        }
-
-        /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
-        private double GetValueFromMonthArray(double[] arr)
-        {
-            if (arr.Length == 1)
-                return arr[0];
-            else
-                return arr[clock.Today.Month - 1];
         }
 
         /// <summary>Calculate whether simple rotation can graze today.</summary>
@@ -621,71 +570,235 @@ namespace Models.AgPasture
                 return expressionFunction.Value();
         }
 
-        /// <summary>Remove biomass from the specified forage.</summary>
-        /// <param name="removeAmount">The total amount to remove from all forages (kg/ha).</param>
-        private void RemoveDMFromPlants(double removeAmount)
+
+        private class ZoneWithForage
         {
-            // This is a simple implementation. It proportionally removes biomass from organs.
-            // What about non harvestable biomass?
-            // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
+            private SurfaceOrganicMatter surfaceOrganicMatter;
+            private Solute urea;
+            private IPhysical physical;
+            private List<ModelWithDigestibleBiomass> forages;
+            private double areaOfAllZones;
+            private double grazedDM;
+            private double grazedN;
+            private double grazedME;
+            private double preGrazeDM;
+            private double amountDungNReturned;
+            private double amountDungWtReturned;
+            private double amountUrineNReturned;
+            private double dmRemovedToday;
+            private double areaWeighting;
+            private List<DigestibleBiomass> grazedForages = new List<DigestibleBiomass>();
 
-            if (MathUtilities.IsGreaterThan(removeAmount*0.1, 0.0))
+            /// <summary>onstructor</summary>
+            /// <param name="zone">Our zone.</param>
+            /// <param name="forages">Our forages.</param>
+            /// <param name="areaOfAllZones">The area of all zones in the simulation.</param>
+            public ZoneWithForage(Zone zone, List<ModelWithDigestibleBiomass> forages, double areaOfAllZones)
             {
-                // Remove a proportion of required DM from each species
-                double totalHarvestableWt = 0.0;
-                double totalWeightedHarvestableWt = 0.0;
-                for (int i = 0; i < allForages.Count; i++)
+                this.Zone = zone;
+                this.forages = forages;
+                this.areaOfAllZones = areaOfAllZones;
+                surfaceOrganicMatter = zone.FindInScope<SurfaceOrganicMatter>();
+                urea = zone.FindInScope<Solute>("Urea");
+                physical = zone.FindInScope<IPhysical>();
+                areaWeighting = zone.Area / areaOfAllZones;
+            }
+
+            public Zone Zone { get; private set; }
+
+            /// <summary>The number of forages in our care</summary>
+            public int NumForages => forages.Count;
+
+            /// <summary>Dry matter of all forages in zone, weighted for area on zone (kg/ha)</summary>
+            public double TotalDM => forages.Sum(f => f.Material.Sum(m => m.Total.Wt) * 10) * areaWeighting;
+
+            /// <summary>Harvestable dry matter of all forages in zone, weighted for area on zone (kg/ha)</summary>
+            public double HarvestableDM => forages.Sum(f => f.Material.Sum(m => m.Consumable.Wt) * 10) * areaWeighting;
+
+            /// <summary>Proportions of each species within the zone to the total dm within the zone (0-1).</summary>
+            public List<double> ProportionsToTotal => forages.Select(f => f.Material.Sum(m => m.Total.Wt) / TotalDM).ToList();
+
+            /// <summary>Area weighted grazed dry matter (kg/ha)</summary>
+            public double GrazedDM => grazedDM * areaWeighting;
+
+            /// <summary>Area weighted grazed nitrogen (kg N/ha)</summary>
+            public double GrazedN => grazedN * areaWeighting;
+
+            /// <summary>Area weighted metabolisable energy in grazed dry matter (kg/ha)</summary>
+            public double GrazedME => grazedME * areaWeighting;
+
+            /// <summary>Area weighted nitrogen in dung (kg N/ha)</summary>
+            public double AmountDungNReturned => amountDungNReturned * areaWeighting;
+
+            /// <summary>Area weighted dry matter in dung (kg/ha)</summary>
+            public double AmountDungWtReturned => amountDungWtReturned * areaWeighting;
+
+            /// <summary>Area weighted nitrogen in uring (kg N/ha)</summary>
+            public double AmountUrineNReturned => amountUrineNReturned * areaWeighting;
+
+            /// <summary>
+            /// Called at start of day.
+            /// </summary>
+            public void OnStartOfDay()
+            {
+                grazedDM = 0.0;
+                grazedN = 0.0;
+                grazedME = 0.0;
+                amountDungNReturned = 0;
+                amountDungWtReturned = 0;
+                amountUrineNReturned = 0;
+                grazedForages.Clear();
+            }
+
+            /// <summary>
+            /// Called at DoManagement event.
+            /// </summary>
+            public void DoManagement()
+            {
+                // Calculate pre-grazed dry matter.
+                preGrazeDM = TotalDM;
+            }
+
+            /// <summary>
+            /// Reduce the forage population,
+            /// </summary>
+            /// <param name="fractionPopulationDecline">The fraction to reduce to population to.</param>
+            public void ReducePopulation(double fractionPopulationDecline)
+            {
+                foreach (var forage in forages)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
-                    totalHarvestableWt += harvestableWt;
-                    totalWeightedHarvestableWt += SpeciesCutProportions[i] * harvestableWt;
+                    if ((forage as IModel) is IHasPopulationReducer populationReducer)
+                        populationReducer.ReducePopulation(populationReducer.Population * (1.0 - fractionPopulationDecline));
+                    else
+                        throw new Exception($"Model {forage.Name} is unable to reduce its population due to grazing. Not implemented.");
                 }
+            }
 
-                var grazedForages = new List<DigestibleBiomass>();
-                for (int i = 0; i < allForages.Count; i++)
+            /// <summary>Remove biomass from the specified forage.</summary>
+            /// <param name="residual">The residual to cut to (kg/ha).</param>
+            /// <param name="speciesCutProportions">The proportions to cut each species.</param>
+            public void RemoveDMFromPlants(double residual, double[] speciesCutProportions)
+            {
+                // This is a simple implementation. It proportionally removes biomass from organs.
+                // What about non harvestable biomass?
+                // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
+                double removeAmount = Math.Max(0, preGrazeDM - residual);
+                dmRemovedToday = removeAmount;
+                if (MathUtilities.IsGreaterThan(removeAmount * 0.1, 0.0))
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
-                    var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
-                    var amountToRemove = removeAmount * proportion;
-                    if (MathUtilities.IsGreaterThan(amountToRemove*0.1, 0.0))
+                    // Remove a proportion of required DM from each species
+                    double totalHarvestableWt = 0.0;
+                    double totalWeightedHarvestableWt = 0.0;
+                    for (int i = 0; i < forages.Count; i++)
                     {
-                        var grazed = allForages[i].RemoveBiomass(amountToRemove*0.1);
-                        double grazedDigestibility = grazed.Digestibility;
-                        var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
+                        var harvestableWt = forages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
+                        totalHarvestableWt += harvestableWt;
+                        totalWeightedHarvestableWt += speciesCutProportions[i] * harvestableWt;
+                    }
 
-                        GrazedDM += grazed.Total.Wt * 10;  // kg/ha
-                        GrazedN += grazed.Total.N * 10;    // kg/ha
-                        GrazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
+                    for (int i = 0; i < forages.Count; i++)
+                    {
+                        var harvestableWt = forages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
+                        var proportion = harvestableWt * speciesCutProportions[i] / totalWeightedHarvestableWt;
+                        var amountToRemove = removeAmount * proportion;
+                        if (MathUtilities.IsGreaterThan(amountToRemove * 0.1, 0.0))
+                        {
+                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove * 0.1);
+                            double grazedDigestibility = grazed.Digestibility;
+                            var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                        grazedForages.Add(grazed);
+                            grazedDM += grazed.Total.Wt * 10;  // kg/ha
+                            grazedN += grazed.Total.N * 10;    // kg/ha
+                            grazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
+
+                            grazedForages.Add(grazed);
+                        }
+                    }
+
+                    // Check the amount grazed is the same as requested amount to graze.
+                    if (!MathUtilities.FloatsAreEqual(grazedDM, removeAmount, 0.0001))
+                        throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
+                }
+            }
+
+            /// <summary>
+            /// Perform urine and dung return and trampling.
+            /// </summary>
+            /// <param name="month"></param>
+            /// <param name="fractionDefoliatedBiomassToSoil"></param>
+            /// <param name="fractionDefoliatedNToSoil"></param>
+            /// <param name="fractionExcretedNToDung"></param>
+            /// <param name="CNRatioDung"></param>
+            /// <param name="depthUrineIsAdded"></param>
+            /// <param name="doTrampling"></param>
+            /// <param name="pastureConsumedAtMaximumRateOfLitterRemoval"></param>
+            /// <param name="maximumPropLitterMovedToSoil"></param>
+            public void DoUrineDungTrampling(int month, double[] fractionDefoliatedBiomassToSoil,
+                                    double[] fractionDefoliatedNToSoil,
+                                    double[] fractionExcretedNToDung,
+                                    double CNRatioDung,
+                                    double depthUrineIsAdded,
+                                    bool doTrampling,
+                                    double pastureConsumedAtMaximumRateOfLitterRemoval,
+                                    double maximumPropLitterMovedToSoil)
+            {
+                if (grazedForages.Any())
+                {
+                    double returnedToSoilWt = 0;
+                    double returnedToSoilN = 0;
+                    foreach (var grazedForage in grazedForages)
+                    {
+                        returnedToSoilWt += GetValueFromMonthArray(fractionDefoliatedBiomassToSoil, month) *
+                                            (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
+                        returnedToSoilN += GetValueFromMonthArray(fractionDefoliatedNToSoil, month) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
+                    }
+
+                    double dungNReturned;
+                    if (CNRatioDung == 0 || double.IsNaN(CNRatioDung))
+                        dungNReturned = GetValueFromMonthArray(fractionExcretedNToDung, month) * returnedToSoilN;
+                    else
+                    {
+                        const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
+                        dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
+                    }
+
+                    amountDungNReturned += dungNReturned;
+                    amountDungWtReturned += returnedToSoilWt;
+                    amountUrineNReturned += returnedToSoilN - dungNReturned;
+
+                    // We will do the urine and dung return.
+                    // find the layer that the fertilizer is to be added to.
+                    int layer = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depthUrineIsAdded);
+                    var ureaValues = urea.kgha;
+                    ureaValues[layer] += AmountUrineNReturned;
+                    urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
+
+                    // Send dung to surface
+                    var SOMData = new BiomassRemovedType();
+                    SOMData.crop_type = "RuminantDung_PastureFed";
+                    SOMData.dm_type = new string[] { SOMData.crop_type };
+                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned };
+                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned };
+                    SOMData.dlt_dm_p = new float[] { 0.0F };
+                    SOMData.fraction_to_residue = new float[] { 1.0F };
+                    surfaceOrganicMatter.OnBiomassRemoved(SOMData);
+
+                    if (doTrampling)
+                    {
+                        var proportionLitterMovedToSoil = Math.Min(MathUtilities.Divide(pastureConsumedAtMaximumRateOfLitterRemoval, dmRemovedToday, 0),
+                                                                   maximumPropLitterMovedToSoil);
+                        surfaceOrganicMatter.Incorporate(proportionLitterMovedToSoil, depth: 100);
                     }
                 }
+            }
 
-                // Check the amount grazed is the same as requested amount to graze.
-                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount, 0.0001))
-                    throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
-
-                double returnedToSoilWt = 0;
-                double returnedToSoilN = 0;
-                foreach (var grazedForage in grazedForages)
-                {
-                    returnedToSoilWt += GetValueFromMonthArray(FractionDefoliatedBiomassToSoil) *
-                                        (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
-                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
-                }
-
-                double dungNReturned;
-                if (CNRatioDung == 0 || double.IsNaN(CNRatioDung))
-                    dungNReturned = GetValueFromMonthArray(FractionExcretedNToDung) * returnedToSoilN;
+            /// <summary>Return a value from an array that can have either 1 yearly value or 12 monthly values.</summary>
+            private static double GetValueFromMonthArray(double[] arr, int month)
+            {
+                if (arr.Length == 1)
+                    return arr[0];
                 else
-                {
-                    const double CToDMRatio = 0.4; // 0.4 is C:DM ratio.
-                    dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
-                }
-
-                AmountDungNReturned += dungNReturned;
-                AmountDungWtReturned += returnedToSoilWt;
-                AmountUrineNReturned += returnedToSoilN - dungNReturned;
+                    return arr[month - 1];
             }
         }
     }

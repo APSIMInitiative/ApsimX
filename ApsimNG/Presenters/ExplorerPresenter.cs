@@ -1,21 +1,20 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Utility;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Extensions;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Threading.Tasks;
-    using Utility;
-    using Views;
 
     /// <summary>
     /// This presenter class is responsible for populating the view
@@ -87,6 +86,11 @@
         /// <summary>Gets the presenter for the main window</summary>
         /// To be revised if we want to replicate the Windows.Forms version
         public MainPresenter MainPresenter { get; private set; }
+
+        /// <summary>
+        /// Used for holding the column and row filter strings from a reports' datastore view.
+        /// </summary>
+        private List<string> tempColumnAndRowFilters = new();
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
@@ -833,6 +837,17 @@
         {
             return this.view as ExplorerView;
         }
+        
+        public void KeepFilter(string columnFilters, string rowFilters)
+        {
+            tempColumnAndRowFilters.Add(columnFilters);
+            tempColumnAndRowFilters.Add(rowFilters);
+        }
+
+        public List<string> GetFilters()
+        {
+            return tempColumnAndRowFilters;
+        }
 
         #region Events from view
 
@@ -1172,30 +1187,5 @@
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// An object that encompasses the data that is dragged during a drag/drop operation.
-    /// </summary>
-    [Serializable]
-    public sealed class DragObject : ISerializable
-    {
-        /// <summary>Gets or sets the path to the node</summary>
-        public string NodePath { get; set; }
-
-        /// <summary>Gets or sets the string representation of a model.</summary>
-        public string ModelString { get; set; }
-
-        /// <summary>Gets or sets the type of model</summary>
-        public Type ModelType { get; set; }
-
-        /// <summary>Get data for the specified object in the xml</summary>
-        /// <param name="info">Serialized object</param>
-        /// <param name="context">The context</param>
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("NodePath", this.NodePath);
-            info.AddValue("Xml", this.ModelString);
-        }
     }
 }

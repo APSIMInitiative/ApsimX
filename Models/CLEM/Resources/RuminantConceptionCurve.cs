@@ -1,11 +1,7 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -19,7 +15,7 @@ namespace Models.CLEM.Resources
     [Description("Define ruminant conception using a single curve")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCurve.htm")]
-    public class RuminantConceptionCurve: CLEMModel, IConceptionModel
+    public class RuminantConceptionCurve : CLEMModel, IConceptionModel
     {
         /// <summary>
         /// constructor
@@ -61,7 +57,7 @@ namespace Models.CLEM.Resources
             if (female.StandardReferenceWeight > 0)
                 rate = ConceptionRateAsymptote / (1 + Math.Exp(ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept));
 
-            rate = Math.Max(0,Math.Min(rate, 100));
+            rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
 

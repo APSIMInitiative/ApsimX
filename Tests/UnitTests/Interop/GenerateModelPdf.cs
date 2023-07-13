@@ -33,7 +33,7 @@ namespace UnitTests.Interop.Documentation
             var modelsAssembly = Assembly.GetAssembly(typeof(Model));
             var json = JObject.Parse(ReflectionUtilities.GetResourceAsString(modelsAssembly, "Models.Resources.Wheat.json"));
             var children = json["Children"] as JArray;
-            var model = FileFormat.ReadFromString<Plant>(children[0].ToString(), (ex) => throw ex, false);
+            var model = FileFormat.ReadFromString<Plant>(children[0].ToString(), (ex) => throw ex, false).NewModel;
 
             var links = new Links();
             links.Resolve(model, allLinks: true, recurse: true, throwOnFail: false);

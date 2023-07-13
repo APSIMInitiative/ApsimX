@@ -1,7 +1,7 @@
-﻿using APSIM.Shared.Documentation;
-using Models.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -24,7 +24,7 @@ namespace Models.Functions.DemandFunctions
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction YValue = null;
 
-                /// <summary>Gets the value.</summary>
+        /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
         /// Cannot find variable:  + XProperty +  in function:  + this.Name

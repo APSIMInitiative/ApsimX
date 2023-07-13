@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
-using Models.LifeCycle;
 using Models.PMF;
 using Models.PMF.Interfaces;
 
@@ -18,6 +18,9 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model
     {
+        [Link]
+        Zone zone = null;
+
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g")]
@@ -26,32 +29,35 @@ namespace Models.LifeCycle
         [Link(Type = LinkType.Ancestor)]
         private LifeCyclePhase ParentPhase = null;
 
-        /// <summary>Host plant that Pest/Disease bothers</summary>
-        [Description("Select host plant that Pest/Disease may bother")]
-        [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
-        public IPlantDamage HostPlant { get; set; }
-        
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may consume")]
-        [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]
-        public IOrganDamage HostOrgan { get; set; }
+        public string HostOrganName { get; set; }
 
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            OrganBiomassRemovalType consumption = new OrganBiomassRemovalType();
+            double fractionLiveToConsume = 0;
             double organWtConsumed = 0;
-            if ((ParentPhase.Cohorts != null)&&(HostPlant.IsAlive))
+            if (ParentPhase.Cohorts != null)
             {
+                var hostOrgan = zone.Get(HostOrganName) as IHasDamageableBiomass;
+                if (hostOrgan == null)
+                    throw new Exception($"Cannot find host organ: {HostOrganName}");
+
                 foreach (Cohort c in ParentPhase.Cohorts)
                 {
                     ParentPhase.CurrentCohort = c;
                     organWtConsumed += c.Population * OrganWtConsumptionPerIndividual.Value();
-                    consumption.FractionLiveToRemove += Math.Max(1, organWtConsumed / HostOrgan.Live.Wt);
+                    DamageableBiomass live = hostOrgan.Material.FirstOrDefault(m => m.IsLive);
+                    fractionLiveToConsume += Math.Min(1, organWtConsumed / live.Total.Wt);
                 }
-                HostPlant.RemoveBiomass(HostOrgan.Name, "Graze", consumption);
+                // Commented out the line below. The simulation: PotatoPsyllidDamageTest
+                // in file Prototypes/Lifecycle/PotatoPests.apsimx has never worked correctly
+                // because it was talking to a leaf instance that wasn't attached to a plant.
+                // That has been fixed but now the line below throws inside of leaf.
+                //hostOrgan.RemoveBiomass(fractionLiveToConsume);
             }
-           
+
         }
     }
 }

@@ -1,14 +1,16 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Xml;
-    using System;
-    using Newtonsoft.Json.Linq;
-    using System.Text;
+
 
     /// <summary>
     /// Provides helper methods to read and manipulate manager scripts.
@@ -21,6 +23,9 @@
         /// The Json token.
         /// </summary>
         public JObject Token { get; private set; }
+
+        /// <summary>Name of manager model - useful for debugging.</summary>
+        public string Name => Token["Name"].ToString();
 
         /// <summary>Default constructor.</summary>
         public ManagerConverter() { }
@@ -41,6 +46,9 @@
                 return parameters;
             }
         }
+
+        /// <summary>Returns true if manager is empty.</summary>
+        public bool IsEmpty => lines.Count == 0;
 
         /// <summary>
         /// Constructor.
@@ -91,10 +99,20 @@
 
         /// <summary>
         /// Save the manager object code back to the manager JSON object.
+        /// Changed how Manager Code is stored in version 163, stored as array of lines instead of single string
         /// </summary>
         public void Save()
         {
-            Token["Code"] = ToString();
+            if (Token["CodeArray"] != null)
+            {
+                Token["CodeArray"] = new JArray(lines);
+                if (Token["Code"] != null)
+                    Token.Remove("Code");
+            }
+            else
+            {
+                Token["Code"] = ToString();
+            }            
         }
 
         /// <summary>Write script</summary>
@@ -217,7 +235,7 @@
         public void SetDeclarations(List<Declaration> newDeclarations)
         {
             int lineNumberStartDeclarations;
-            
+
             var existingDeclarations = GetDeclarations();
             if (existingDeclarations.Count == 0)
             {
@@ -239,7 +257,7 @@
             else
             {
                 // Remove existing declarations
-                for (int i = existingDeclarations.Count-1; i >= 0; i--)
+                for (int i = existingDeclarations.Count - 1; i >= 0; i--)
                 {
                     int beginLineIndex = existingDeclarations[i].LineIndex;
                     if (existingDeclarations[i].AttributesOnPreviousLines)
@@ -323,7 +341,7 @@
                     }
                 }
 
-                lineIndex = FindString("." + methodName, lineIndex+1);
+                lineIndex = FindString("." + methodName, lineIndex + 1);
             }
             return methods;
         }
@@ -366,7 +384,7 @@
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);
                     lines[i] = lines[i].Insert(pos, replacePattern);
                     replacementDone = true;
-                    pos = lines[i].IndexOf(searchPattern, pos+1);
+                    pos = lines[i].IndexOf(searchPattern, pos + 1);
                 }
             }
             return replacementDone;
@@ -435,6 +453,19 @@
         }
 
         /// <summary>
+        /// Find a string using a regular expression.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <returns>The match.</returns>
+        public MatchCollection FindRegexMatches(string searchPattern)
+        {
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return null;
+            return Regex.Matches(oldCode, searchPattern);
+        }
+
+        /// <summary>
         /// Add a declaration if it doesn't exist.
         /// </summary>
         /// <param name="typeName">The type name of the declaration.</param>
@@ -477,7 +508,7 @@
                 SetDeclarations(declarations);
                 return true;
             }
-            
+
             return false;
         }
 
@@ -560,7 +591,7 @@
             foreach (var parameter in Token["Parameters"].Children())
                 if (parameter["Key"].ToString() == key)
                     parameter["Value"] = newParam;
-                    //return;
+            //return;
         }
 
         /// <summary>
@@ -627,6 +658,19 @@
                 SetDeclarations(declarations);
             return replacementMade;
         }
+
+        /// <summary>
+        /// Return true if the specified position is commented out in the code.
+        /// </summary>
+        /// <param name="pos"></param>
+        public bool PositionIsCommented(int pos)
+        {
+            string code = ToString();
+            // Search backwards for either '/*'
+            int posOpenComment = code.LastIndexOf("/*", pos);
+            int posCloseComment = code.LastIndexOf("*/", pos);
+            return posOpenComment > posCloseComment;
+        }
     }
 
     /// <summary>A manager declaration</summary>
@@ -653,7 +697,7 @@
         /// <summary>Is declaration an event?</summary>
         public bool IsEvent { get; set; }
     }
-        
+
 
     /// <summary>Encapsulates a manager method call</summary>
     public class MethodCall

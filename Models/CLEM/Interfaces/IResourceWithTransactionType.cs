@@ -21,6 +21,5 @@ namespace Models.CLEM.Interfaces
         /// Last gain transaction amount
         /// </summary>
         double LastGain { get; }
-
     }
 }

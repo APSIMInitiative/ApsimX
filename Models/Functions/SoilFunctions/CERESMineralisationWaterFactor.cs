@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Soils;
-using Models.Interfaces;
 
 namespace Models.Functions
 {
