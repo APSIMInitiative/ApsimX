@@ -625,13 +625,14 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                if (rxMonth3Letter.Match(monthLowerString).Success)
-                    index = Array.IndexOf(MONTHS_3_LETTERS, monthLowerString) + 1;
-                else if (rxMonth4Letter.Match(monthLowerString).Success)
-                    index = Array.IndexOf(MONTHS_AU_LETTERS, monthLowerString) + 1;
-                else if (rxMonthFull.Match(monthLowerString).Success)
+                if (index < 1 && rxMonthFull.Match(monthLowerString).Success)
                     index = Array.IndexOf(MONTHS_FULL_NAME, monthLowerString) + 1;
-                else
+                if (index < 1 && rxMonth4Letter.Match(monthLowerString).Success)
+                    index = Array.IndexOf(MONTHS_AU_LETTERS, monthLowerString) + 1;
+                if (index < 1 && rxMonth3Letter.Match(monthLowerString).Success)
+                    index = Array.IndexOf(MONTHS_3_LETTERS, monthLowerString) + 1;
+
+                if (index == 0)
                 {
                     errorMsg = $"Date {fullDate} has {monthLowerString} for month. Month must be exactly 1 or 2 digits, a 3 or 4 letter abbrivation or the full name. (eg: 1, 01, Jun, June, September)";
                     return 0;
