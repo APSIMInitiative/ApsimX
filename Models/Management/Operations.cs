@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -21,6 +22,21 @@ namespace Models
         {
             Enabled = true;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Operation(bool enabled, string date, string action)
+        {
+            Enabled = enabled;
+            Date = date;
+            Action = action;
+        }
+
+        /// <summary>
+        /// Used to determine whether the operation is enabled or not.
+        /// </summary>
+        public bool Enabled { get; set; }
 
         /// <summary>Gets or sets the date.</summary>
         public string Date { get; set; }
@@ -41,9 +57,56 @@ namespace Models
         }
 
         /// <summary>
-        /// Used to determine whether the operation is enabled or not.
+        /// Parses a string into an Operation
+        /// Format: // 2000-01-01 [NodeName].Function(1000)
         /// </summary>
-        public bool Enabled { get; set; }
+        /// <param name="line">The string to parse</param>
+        /// <returns>An Operation or null if there was an error parsing the string</returns>
+        public static Operation ParseOperationString(string line)
+        {
+            try
+            {
+                if (line == null)
+                    return null;
+
+                if (line.Length == 0)
+                    return null;
+
+                string lineTrimmed = line.Trim();
+
+                Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s*(\S*)$");
+                Match match = parser.Match(lineTrimmed);
+
+                if (match.Success)
+                {
+                    Operation operation = new Operation();
+                    if (match.Groups[1].Value.CompareTo("//") == 0)
+                        operation.Enabled = false;
+                    else
+                        operation.Enabled = true;
+
+                    string dateString = match.Groups[2].Value;
+                    operation.Date = DateUtilities.ValidateDateString(dateString);
+                    if (operation.Date == null)
+                        return null;
+
+                    if (match.Groups[3].Value.Length > 0)
+                        operation.Action = match.Groups[3].Value;
+                    else
+                        return null;
+
+                    return operation;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
@@ -84,7 +147,7 @@ namespace Models
             DateTime operationDate;
             foreach (Operation operation in Operation.Where(o => o.Enabled))
             {
-                operationDate = DateUtilities.validateDateString(operation.Date, Clock.Today.Year);
+                operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {
                     string st = operation.Action;
