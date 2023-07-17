@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
+using Models.PMF.Organs;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
