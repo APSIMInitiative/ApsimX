@@ -77,10 +77,8 @@ namespace Models
                 if (line.Length == 0)
                     return null;
 
-                string lineTrimmed = line.Trim();
-
-                Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s*(\S*)$");
-                Match match = parser.Match(lineTrimmed);
+                Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s+(.+)$");
+                Match match = parser.Match(line.Trim());
 
                 if (match.Success)
                 {

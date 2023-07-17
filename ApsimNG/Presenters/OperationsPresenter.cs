@@ -109,14 +109,19 @@ namespace UserInterface.Presenters
                 {
                     if (line.Length > 0)
                     {
-                        Operation operation = Operation.ParseOperationString(line);
+                        string lineTrimmed = line;
+                        lineTrimmed = lineTrimmed.Replace("\n", string.Empty);
+                        lineTrimmed = lineTrimmed.Replace("\r", string.Empty);
+                        lineTrimmed = lineTrimmed.Trim();
+                        
+                        Operation operation = Operation.ParseOperationString(lineTrimmed);
                         if (operation != null)
                         {
                             operations.Add(operation);
                         }
                         else
                         {
-                            operations.Add(new Operation(true, null, null, line));
+                            operations.Add(new Operation(true, null, null, lineTrimmed));
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
                         }
                     }
