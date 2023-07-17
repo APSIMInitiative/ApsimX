@@ -26,6 +26,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
+    [ValidParent(ParentType = typeof(IPlant))]
     public class Folder : Model
     {
         /// <summary>Show in the autodocs?</summary>
