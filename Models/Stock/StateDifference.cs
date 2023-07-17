@@ -1,6 +1,7 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+
+namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// Set of differences between two sub-groups of animals.  Used in the Split  

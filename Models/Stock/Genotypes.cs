@@ -1,11 +1,12 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using APSIM.Shared.Utilities;
+
+namespace Models.GrazPlan
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml;
 
     /// <summary>
     /// Encapsulates a collection of stock genotype parameters. It can read the GrazPlan .prm

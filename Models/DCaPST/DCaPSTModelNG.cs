@@ -150,7 +150,7 @@ namespace Models.DCAPST
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="CP"></param>
         /// <param name="PP"></param>
@@ -162,12 +162,12 @@ namespace Models.DCAPST
         /// <param name="rpar"></param>
         /// <returns></returns>
         public static DCAPSTModel SetUpModel(
-            ICanopyParameters CP, 
+            ICanopyParameters CP,
             IPathwayParameters PP,
-            int DOY, 
-            double latitude, 
-            double maxT, 
-            double minT, 
+            int DOY,
+            double latitude,
+            double maxT,
+            double minT,
             double radn,
             double rpar)
         {

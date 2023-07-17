@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Models.Core;
-using Models.PMF;
 
 namespace Models.DCAPST
 {
@@ -31,5 +28,5 @@ namespace Models.DCAPST
         [Description("Pathway Parameters")]
         [Display(Type = DisplayType.SubModel)]
         public PathwayParameters Pathway { get; set; } = new PathwayParameters();
-}
+    }
 }

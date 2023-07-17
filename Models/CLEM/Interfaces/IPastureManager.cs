@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.CLEM.Interfaces
+﻿namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// Interface for a pasture manager

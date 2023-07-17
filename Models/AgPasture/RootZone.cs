@@ -1,6 +1,7 @@
-﻿namespace Models.AgPasture
+﻿using System;
+
+namespace Models.AgPasture
 {
-    using System;
 
     [Serializable]
     class RootZone

@@ -1,15 +1,15 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using Models.Core.Run;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
 
     /// <summary>
     /// This class encapsulates all writing to a DataStore
@@ -24,7 +24,7 @@
         private List<IRunnable> commands = new List<IRunnable>();
 
         /// <summary>A sleep job to stop the job runner from exiting.</summary>
-        private IRunnable sleepJob = new EmptyJob();
+        private IRunnable sleepJob = new JobRunnerSleepJob(10);
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
         private JobRunner commandRunner;
@@ -136,7 +136,7 @@
                     tables.Add(table.TableName, tableDetails);
                 }
 
-                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteOldData:false));
+                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteOldData: false));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -441,7 +441,7 @@
                         checkpoint.ID = checkpointIDs.Select(c => c.Value.ID).Max() + 1;
                     else
                         checkpoint.ID = 1;
-                    checkpointIDs.Add(checkpointName, checkpoint); 
+                    checkpointIDs.Add(checkpointName, checkpoint);
                 }
                 return checkpoint.ID;
             }
@@ -481,7 +481,7 @@
                     checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
                     {
                         ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
-                        ShowOnGraphs = data.Columns["OnGraphs"] != null && 
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null &&
                                        !Convert.IsDBNull(row["OnGraphs"]) &&
                                        Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
                     });
@@ -528,7 +528,7 @@
                     if (commandRunner == null)
                     {
                         stopping = false;
-                        commandRunner = new JobRunner(numProcessors:1);
+                        commandRunner = new JobRunner(numProcessors: 1);
                         commandRunner.Add(this);
                         commandRunner.Run();
                         ReadExistingDatabase(Connection);
@@ -622,7 +622,7 @@
                         unitTable.Rows.Add(unitRow);
                     }
                 }
-                WriteTable(unitTable, deleteAllData:true);
+                WriteTable(unitTable, deleteAllData: true);
             }
         }
 

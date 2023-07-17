@@ -1,9 +1,9 @@
-﻿namespace Models.PMF
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
 
+namespace Models.PMF
+{
 
     /// <summary>
     /// The class that holds states of Structural, Metabolic and Storage components of a resource
@@ -33,7 +33,7 @@
 
         /// <summary>parameterless constructor.</summary>
         public NutrientPoolsState()
-        { 
+        {
         }
 
 

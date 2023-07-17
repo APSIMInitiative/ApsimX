@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using DocumentFormat.OpenXml.Drawing.Charts;
     using EventArguments;
     using global::UserInterface.Interfaces;
     using Models.Core;
@@ -54,7 +55,23 @@
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
-            tabularData = (model as ITabularData).GetTabularData();
+            try
+            {
+                tabularData = (model as ITabularData).GetTabularData();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Data["tableData"] != null)
+                {
+                    tabularData = ex.Data["tableData"] as TabularData;
+                    explorerPresenter.MainPresenter.ShowMsgDialog(ex.Message, "Warning", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
+                }
+                else
+                {
+                    throw new Exception(ex.Message, ex);
+                }
+            }
+           
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 

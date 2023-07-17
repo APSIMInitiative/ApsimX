@@ -1,13 +1,11 @@
-﻿using Models.CLEM.Interfaces;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
-using Models.CLEM.Resources;
 using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -36,7 +34,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
     [Description("This filter group provides a link to an existing ruminant group")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroupLinked.htm")]
-    public class RuminantGroupLinked: RuminantGroup, IValidatableObject
+    public class RuminantGroupLinked : RuminantGroup, IValidatableObject
     {
         [NonSerialized]
         private IEnumerable<RuminantGroup> groupsAvailable;
@@ -73,7 +71,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<T> Filter<T>(IEnumerable<T> source) 
+        public override IEnumerable<T> Filter<T>(IEnumerable<T> source)
         {
             return linkedGroup.Filter<T>(source);
         }
@@ -109,7 +107,7 @@ namespace Models.CLEM.Groupings
             return results;
         }
         #endregion
- 
+
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -153,7 +151,7 @@ namespace Models.CLEM.Groupings
                     htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
                 else
                 {
-                    if((ExistingGroupName??"")=="")
+                    if ((ExistingGroupName ?? "") == "")
                         htmlWriter.Write("<div class=\"errorbanner\">Linked RuminantGroup not specified</div>");
                     else
                         htmlWriter.Write($"<div class=\"errorbanner\">Linked RuminantGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");

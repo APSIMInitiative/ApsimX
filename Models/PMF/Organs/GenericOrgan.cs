@@ -1,16 +1,17 @@
-﻿namespace Models.PMF.Organs
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Models.Interfaces;
-    using Functions;
-    using Interfaces;
-    using Library;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using PMF;
 
     /// <summary>
     /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
@@ -19,10 +20,10 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, IOrganDamage
+    public class GenericOrgan : Model, IOrgan, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
         /// <summary>Tolerance for biomass comparisons</summary>
-        protected double BiomassToleranceValue = 0.0000000001; 
+        protected double BiomassToleranceValue = 0.0000000001;
 
         /// <summary>The parent plant</summary>
         [Link]
@@ -137,13 +138,13 @@
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
-        public BiomassSupplyType NSupply { get;  set; }
+        public BiomassSupplyType NSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemand { get;  set; }
+        public BiomassPoolType DMDemand { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
-        public BiomassPoolType NDemand { get;  set; }
+        public BiomassPoolType NDemand { get; set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
@@ -170,7 +171,7 @@
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
         public Biomass Total { get { return Live + Dead; } }
-        
+
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
         public Biomass Allocated { get; private set; }
@@ -244,12 +245,34 @@
             }
         }
 
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        {
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, 
+                                                     Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
@@ -273,7 +296,7 @@
         protected virtual void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.ReAllocation = AvailableDMReallocation();
-            DMSupply.ReTranslocation = AvailableDMRetranslocation();         
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
@@ -303,8 +326,8 @@
             if (dMCE > 0.0)
             {
                 DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE) ;
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE);
                 DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
                 DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
                 DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
@@ -341,7 +364,7 @@
         /// <summary>Gets the biomass retranslocation.</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double RetranslocationWt { get; private set;}
+        public double RetranslocationWt { get; private set; }
 
         /// <summary>Sets the dry matter allocation.</summary>
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
@@ -519,6 +542,10 @@
                     Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
                     Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
+                else
+                {
+                    MaintenanceRespiration = 0.0;
+                }
             }
         }
 
@@ -586,7 +613,7 @@
 
             // Document senescence and detachment.
             yield return new Section("Senescence and Detachment", DocumentSenescence());
-            
+
             if (biomassRemovalModel != null)
                 foreach (ITag tag in biomassRemovalModel.Document())
                     yield return tag;
@@ -618,7 +645,7 @@
             foreach (ITag tag in maxNConc.Document())
                 yield return tag;
         }
-    
+
         private IEnumerable<ITag> DocumentDMSupply()
         {
             IModel dmReallocFactor = FindChild("DMReallocationFactor");

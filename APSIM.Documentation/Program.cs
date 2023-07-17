@@ -32,6 +32,7 @@ namespace APSIM.Documentation
         {
             try
             {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 // Get autodocs config - ie which models to document.
                 IEnumerable<IDocumentationTable> tables = new[]
                 {
@@ -101,6 +102,7 @@ namespace APSIM.Documentation
                 StandardTutorialRow("Parameter sensitivity (Factorial ANOVA)", "Sensitivity_FactorialANOVA"),
                 StandardTutorialRow("Predicted/Observed data handling", "PredictedObserved"),
                 StandardTutorialRow("Report", "Report"),
+                CustomModelRow("Clock", "Clock")
             };
             return new DocumentationTable("Tutorials", cols, rows);
         }
@@ -178,6 +180,13 @@ namespace APSIM.Documentation
             IDocumentationFile file = new DocsFromFile("Tutorial", inputFile, $"{fileName}.pdf", options);
             IDocumentationCell cell = new DocumentationCell(file);
             return new DocumentationRow(rowName, cell.ToEnumerable());
+        }
+
+        private static IDocumentationRow ClockRow()
+        {
+            string apsimxFile = Path.Combine(examples, "Tutorials", "clock.apsimx");
+            string outFile = "clock.pdf";
+            return CustomModelRow("Tutorial", outFile);
         }
 
         private static IDocumentationRow ClemDocsRow()
@@ -301,6 +310,15 @@ namespace APSIM.Documentation
         {
             List<IDocumentationCell> cells = new List<IDocumentationCell>();
             cells.Add(new DocumentationCell(new DocsFromFile(subName, inputs, output, options)));
+            if (extraCells != null)
+                cells.AddRange(extraCells);
+            return new DocumentationRow(name, cells);
+        }
+
+        private static IDocumentationRow CustomModelRow(string name, string output, IEnumerable<IDocumentationCell> extraCells = null)
+        {
+            List<IDocumentationCell> cells = new List<IDocumentationCell>();
+            cells.Add(new DocumentationCell(new DocsFromModel<Clock>($"{output}.pdf", options)));
             if (extraCells != null)
                 cells.AddRange(extraCells);
             return new DocumentationRow(name, cells);

@@ -320,6 +320,8 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Average(IEnumerable Values)
         {
+            if (Values == null)
+                return 0;
             double Sum = 0.0;
             int Count = 0;
             foreach (object Value in Values)

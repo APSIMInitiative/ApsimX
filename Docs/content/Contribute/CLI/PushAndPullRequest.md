@@ -1,6 +1,6 @@
 ---
 title: "3. Merge changes"
-draft: false
+draft: true
 ---
 
 ## Push changes to a remote

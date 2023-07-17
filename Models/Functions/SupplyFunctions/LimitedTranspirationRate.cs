@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
-using Models.PMF.Organs;
-using System.Xml.Serialization;
 using System.Linq;
+using System.Xml.Serialization;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Documentation;
+using Models.PMF.Organs;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
     /// This module simulates photosynthesis using the Soil-Plant-Atmosphere System Simulation(SPASS) developed by Wang(1997), with a few modifications, such as a downscaling to hourly time step with the temperature diurnal pattern from Resource et al. (1981). Hence, the model simulates hourly potential biomass assimilation.VPD is calculated as the difference between hourly saturated vapor pressure(SVP) and SVP at minimum temperature(Messina et al., 2015) and is used to calculate hourly transpiration as follows:
-    /// 
+    ///
     /// TR<sub>pot,t</sub> = (ΔDM<sub>pot, t</sub>× VPD<sub>t</sub>) / TEC
-    /// 
+    ///
     /// where TR<sub>pot</sub> is the potential transpiration driven by radiation interception (mm), ΔDM<sub>pot</sub>is the hourly potential increase in dry matter (i.e.amount of CO<sub>2</sub> fixed by photosynthesis; g.m<sup>-2</sup>), TEC is the transpiration efficiency coefficient (kPa.gC<sup>-1</sup>.m<sup>-2</sup>.mm water<sup>-1</sup>), and t is time.
-    /// 
+    ///
     /// The potential transpiration is then adjusted based on the level of evaporative demand and soil water stress when applicable.First, VPD-limited hourly transpiration(TR<sub>VPD-limited,t</sub>) is calculated as follows for VPD<sub>t</sub> > VPD<sub>ref</sub>:
-    /// 
+    ///
     /// TR<sub>VPDref</sub> = (ΔDM<sub>pot, VPDref</sub> × VPD<sub>ref</sub>)/TEC
-    /// 
+    ///
     /// Reduction<sub>t</sub> = Max(0, TR<sub>pot,t </sub> - TR<sub>VPDref</sub>) × α
-    /// 
+    ///
     /// TR<sub>VPD-limited,t</sub> = TR<sub>pot,t</sub> - Reduction<sub>t</sub>
-    /// 
+    ///
     /// where VPD<sub>ref</sub> is the threshold VPD above which transpiration rate is reduced (kPa), TR<sub>VPDref</sub> is the transpiration rate at VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), ΔDM<sub>pot,VPDref</sub> is the interpolated hourly growth at VPD<sub>ref</sub> (g.m<sup>-2</sup>). Reduction is the reduction in transpiration rate above VPD<sub>ref</sub>(mm.hr<sup>-1</sup>), and α is the reduction factor for VPD<sub>t</sub> > VPD<sub>ref</sub>(decimal; zero for no reduction, 1 for complete capping of transpiration rate at TR<sub>VPDref</sub>)
-    /// 
+    ///
     /// Then, soil-water-limited hourly transpiration (TR<sub>water-limited</sub>) is calculated.Hourly transpiration is capped starting from the maximum TR<sub>VPD-limited</sub> at midday until the total plant available soil moisture can meet the crop daily water demand.Finally, actual hourly increase in dry matter (ΔDM) is calculated based on TR<sub>water-limited</sub>, as follows:
-    /// 
+    ///
     /// ΔDM<sub>t</sub> = (TR<sub>water-limited,t</sub> × TEC) / VPD<sub>t</sub>
     /// </summary>
     [Serializable]
@@ -178,7 +178,7 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Total potential daily assimilation in g/m2</summary>
         private double dailyPotDM;
 
-        /// <summary>Total daily assimilation in g/m2</summary>    
+        /// <summary>Total daily assimilation in g/m2</summary>
         private double dailyActDM;
 
         /// <summary>The ratio of TEC of gross assimilate to TEC of net assimilate</summary>
@@ -848,7 +848,7 @@ namespace Models.Functions.SupplyFunctions
                 //EffPAR   = LUEref * (fCO2-fCO2PhotoCmp)/(fCO2+2*fCO2PhotoCmp);
 
                 //--------------------------------------------------------------------------------------------------------------
-                //The following equations were from Bauman et al (2001) ORYZA2000 
+                //The following equations were from Bauman et al (2001) ORYZA2000
                 //The tempeature function was standardised to 20C.
                 //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.48 kgCO2/ha/h / J/m2/s
                 double Ft = (0.6667 - 0.0067 * Temp) / (0.6667 - 0.0067 * 20);
@@ -884,7 +884,7 @@ namespace Models.Functions.SupplyFunctions
             //Check wheather a C3 or C4 crop
             if (Pathway == "C3")   //C3 plants
             {
-                CO2Cmp = 50; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
+                CO2Cmp = 50; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4
                 CO2R = 0.7;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
                 CO2ref = 340;
 
@@ -901,7 +901,7 @@ namespace Models.Functions.SupplyFunctions
             }
             else if (Pathway == "C4")
             {
-                CO2Cmp = 5; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4 
+                CO2Cmp = 5; //CO2 compensation point (vppm), value based on Wang (1997) SPASS Table 3.4
                 CO2R = 0.4;  //CO2 internal/external ratio of leaf(C3= 0.7, C4= 0.4)
                 CO2ref = 380;
 

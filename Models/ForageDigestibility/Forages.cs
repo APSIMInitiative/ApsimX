@@ -1,10 +1,10 @@
-﻿using Models.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
 
 namespace Models.ForageDigestibility
 {
@@ -81,12 +81,11 @@ namespace Models.ForageDigestibility
             {
                 foreach (var material in forage.Material)
                 {
-                    var fullName = $"{forage.Name}.{material.Name}";
-                    if (!materialNames.Contains(fullName))
+                    if (!materialNames.Contains(material.Name))
                     {
-                        DataRow row = GetForageParametersAsRow(data, forage.Name, material.Name);
+                        DataRow row = GetForageParametersAsRow(data, material.Name);
                         data.Rows.Add(row);
-                        materialNames.Add(fullName);
+                        materialNames.Add(material.Name);
                     }
                 }
             }
@@ -100,21 +99,18 @@ namespace Models.ForageDigestibility
         /// Get, as a DataRow, forage parameters for a model and organ.
         /// </summary>
         /// <param name="data">The DataTable the row is to belong to.</param>
-        /// <param name="modelName">The name of the model.</param>
-        /// <param name="organName">The name of the organ.</param>
+        /// <param name="materialName">The name of the material.</param>
         /// <returns></returns>
-        private DataRow GetForageParametersAsRow(DataTable data, string modelName, string organName)
+        private DataRow GetForageParametersAsRow(DataTable data, string materialName)
         {
-            var fullName = $"{ modelName}.{ organName}";
-
             var row = data.NewRow();
-            row[0] = fullName;
+            row[0] = materialName;
             row[1] = 0.7;
             row[2] = 0.3;
             row[3] = 1;
             row[4] = 1;
             row[5] = 100;
-            if (organName == "Root")
+            if (materialName.Contains("Root"))
             {
                 row[1] = 0.0;
                 row[2] = 0.0;
@@ -122,7 +118,7 @@ namespace Models.ForageDigestibility
                 row[4] = 0;
                 row[5] = 0;
             }
-            var live = Parameters?.Find(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+            var live = Parameters?.Find(p => p.Name.Equals(materialName, StringComparison.InvariantCultureIgnoreCase)
                                              && p.IsLive);
             if (live != null)
             {
@@ -130,7 +126,7 @@ namespace Models.ForageDigestibility
                 row[3] = live.FractionConsumable;
                 row[5] = live.MinimumAmount;
 
-                var dead = Parameters?.Find(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+                var dead = Parameters?.Find(p => p.Name.Equals(materialName, StringComparison.InvariantCultureIgnoreCase)
                                                  && !p.IsLive);
                 if (dead != null)
                 {

@@ -1,13 +1,13 @@
-﻿namespace Models.Soils.NutrientPatching
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+
+namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Encapsulates a nutrient patch.
@@ -40,7 +40,7 @@
         {
             soilThickness = soilThicknesses;
             patchManager = nutrientPatchManager;
-            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json"), e => throw e, false);
+            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("Models.Resources.Nutrient.json"), e => throw e, false).NewModel as Simulations;
             if (simulations.Children.Count != 1 || !(simulations.Children[0] is Nutrient))
                 throw new Exception("Cannot create nutrient model in NutrientPatchManager");
             Nutrient = simulations.Children[0] as Nutrient;
@@ -120,10 +120,10 @@
         /// <returns></returns>
         public double[] GetSoluteKgHa(string name)
         {
-            if (name == "PlantAvailableNO3")
-                return CalculateSoluteAvailableToPlants(GetSoluteObject("NO3").kgha);
-            else if (name == "PlantAvailableNH4")
-                return CalculateSoluteAvailableToPlants(GetSoluteObject("NH4").kgha);
+            //if (name == "NO3")
+            //    return CalculateSoluteAvailableToPlants(GetSoluteObject("NO3").kgha);
+            //else if (name == "NH4")
+            //    return CalculateSoluteAvailableToPlants(GetSoluteObject("NH4").kgha);
             return GetSoluteObject(name).kgha;
         }
 
@@ -174,7 +174,7 @@
                     throw new Exception("Expected 3 pools of FOM to be added in PatchManager");
                 if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Length ||
                     StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Length ||
-                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length || 
+                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length ||
                     StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Length ||
                     StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Length ||
                     StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Length)
@@ -192,45 +192,45 @@
             }
         }
 
-        /// <summary>Calculate the amount of solute made available to plants (kgN/ha).</summary>
-        /// <param name="solute">The solute to convert to plant available.</param>
-        /// <returns>The amount of solute available to the plant.</returns>
-        private double[] CalculateSoluteAvailableToPlants(double[] solute)
-        {
-            double rootDepth = soilThickness.Sum();
-            double depthFromSurface = 0.0;
-            double[] result = new double[solute.Length];
-            double fractionAvailable = Math.Min(1.0,
-                MathUtilities.Divide(patchManager.MaximumNitrogenAvailableToPlants, CalcTotalMineralNInRootZone(), 0.0));
-            for (int layer = 0; layer < solute.Length; layer++)
-            {
-                result[layer] = solute[layer] * fractionAvailable;
-                depthFromSurface += soilThickness[layer];
-                if (depthFromSurface >= rootDepth)
-                    break;
-            }
-            return result;
-        }
+        ///// <summary>Calculate the amount of solute made available to plants (kgN/ha).</summary>
+        ///// <param name="solute">The solute to convert to plant available.</param>
+        ///// <returns>The amount of solute available to the plant.</returns>
+        //private double[] CalculateSoluteAvailableToPlants(double[] solute)
+        //{
+        //    double rootDepth = soilThickness.Sum();
+        //    double depthFromSurface = 0.0;
+        //    double[] result = new double[solute.Length];
+        //    double fractionAvailable = Math.Min(1.0,
+        //        MathUtilities.Divide(patchManager.MaximumNitrogenAvailableToPlants, CalcTotalMineralNInRootZone(), 0.0));
+        //    for (int layer = 0; layer < solute.Length; layer++)
+        //    {
+        //        result[layer] = solute[layer] * fractionAvailable;
+        //        depthFromSurface += soilThickness[layer];
+        //        if (depthFromSurface >= rootDepth)
+        //            break;
+        //    }
+        //    return result;
+        //}
 
-        /// <summary>
-        /// Computes the amount of NH4 and NO3 in the root zone
-        /// </summary>
-        private double CalcTotalMineralNInRootZone()
-        {
-            double rootDepth = soilThickness.Sum();
-            var no3 = GetSoluteObject("NO3").kgha;
-            var nh4 = GetSoluteObject("NH4").kgha;
-            double totalMineralNInRootZone = 0.0;
-            double depthFromSurface = 0.0;
-            for (int layer = 0; layer < no3.Length; layer++)
-            {
-                totalMineralNInRootZone += nh4[layer] + no3[layer];
-                depthFromSurface += soilThickness[layer];
-                if (depthFromSurface >= rootDepth)
-                    break;
-            }
-            return totalMineralNInRootZone;
-        }
+        ///// <summary>
+        ///// Computes the amount of NH4 and NO3 in the root zone
+        ///// </summary>
+        //private double CalcTotalMineralNInRootZone()
+        //{
+        //    double rootDepth = soilThickness.Sum();
+        //    var no3 = GetSoluteObject("NO3").kgha;
+        //    var nh4 = GetSoluteObject("NH4").kgha;
+        //    double totalMineralNInRootZone = 0.0;
+        //    double depthFromSurface = 0.0;
+        //    for (int layer = 0; layer < no3.Length; layer++)
+        //    {
+        //        totalMineralNInRootZone += nh4[layer] + no3[layer];
+        //        depthFromSurface += soilThickness[layer];
+        //        if (depthFromSurface >= rootDepth)
+        //            break;
+        //    }
+        //    return totalMineralNInRootZone;
+        //}
 
         /// <summary>Get a solute object under the nutrient model.</summary>
         /// <param name="name"></param>

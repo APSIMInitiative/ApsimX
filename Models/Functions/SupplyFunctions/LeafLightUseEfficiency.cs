@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions.SupplyFunctions
 {
@@ -68,13 +64,13 @@ namespace Models.Functions.SupplyFunctions
                 //--------------------------------------------------------------------------------------------------------------
                 //Original SPASS version based on Goudriaan && van Laar (1994)
                 //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.5 kgCO2/ha/h / J/m2/s
-                EffPAR   = LUEref * (fCO2-CO2PhotoCmp)/(fCO2+2*CO2PhotoCmp);
+                EffPAR = LUEref * (fCO2 - CO2PhotoCmp) / (fCO2 + 2 * CO2PhotoCmp);
 
             }
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
 
-  
+
             return EffPAR;
         }
 

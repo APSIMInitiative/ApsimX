@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using Models.PMF.Struct;
-using APSIM.Shared.Documentation;
 using System.Data;
-using Models.Functions;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
@@ -22,7 +16,7 @@ namespace Models.PMF.Phen
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ZadokPMFWheat: Model
+    public class ZadokPMFWheat : Model
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -79,7 +73,7 @@ namespace Models.PMF.Phen
                     zadok_stage = 90.0f;
                 }
 
-                    return zadok_stage;
+                return zadok_stage;
             }
         }
 
@@ -121,39 +115,48 @@ namespace Models.PMF.Phen
             yield return new Paragraph("**List of growth stages**");
             table = new DataTable();
             table.Columns.Add("Growth Stage", typeof(double));
+            table.Columns.Add("Stage Name", typeof(string));
             table.Columns.Add("ZadokStage", typeof(int));
 
             row = table.NewRow();
             row[0] = 4.3;
-            row[1] = 30;
+            row[1] = "Pseudostem";
+            row[2] = 30;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 4.9;
-            row[1] = 33;
+            row[1] = "Third node detectable";
+            row[2] = 33;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 5.0;
-            row[1] = 39;
+            row[1] = "Flag leaf ligule just visible";
+            row[2] = 39;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 6.0;
-            row[1] = 55;
+            row[1] = "Heading (Ear half emerged)";
+            row[2] = 55;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 7.0;
-            row[1] = 65;
+            row[1] = "Flowering (Anthesis half-way)";
+            row[2] = 65;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 8.0;
-            row[1] = 71;
+            row[1] = "Kernel water ripe";
+            row[2] = 71;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 9.0;
-            row[1] = 87;
+            row[1] = "Hard dough";
+            row[2] = 87;
             table.Rows.Add(row);
             row = table.NewRow();
             row[0] = 10.0;
-            row[1] = 90;
+            row[1] = "Ripening";
+            row[2] = 90;
             table.Rows.Add(row);
             yield return new Table(table);
         }

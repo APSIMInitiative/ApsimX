@@ -1,13 +1,13 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.WaterModel;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.WaterModel;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// A generic class for turning a DataTable of soil information into
@@ -108,7 +108,7 @@
                 organic.FInert = GetDoubleValues(table, "FINERT (0-1)", row, numLayers);
                 organic.Carbon = GetDoubleValues(table, "OC", row, numLayers);
                 organic.CarbonMetadata = GetCodeValues(table, "OCCode", row, numLayers);
-                 
+
                 var chemical = new Chemical();
                 soil.Children.Add(chemical);
                 chemical.Thickness = physical.Thickness;
@@ -341,7 +341,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row);
+                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                 {
                     // Convert MissingValue for Nan
@@ -395,7 +395,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow);
+                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                     return Values;
             }
@@ -417,7 +417,7 @@
             if (!table.Columns.Contains(variableName))
                 return null;
 
-            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row);
+            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row, CultureInfo.InvariantCulture);
         }
 
         /// <summary>Set a column of metadata values for the specified column.</summary>

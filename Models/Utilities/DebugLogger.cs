@@ -1,10 +1,10 @@
-﻿
+﻿using System;
+using System.IO;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
 namespace Models.Utilities
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.IO;
 
     /// <summary>
     /// A class used when trying to compare two models. It allows the caller to write objects
@@ -27,7 +27,7 @@ namespace Models.Utilities
         Simulation simulation = null;
 
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>
         /// <param name="sender"></param>
@@ -55,7 +55,7 @@ namespace Models.Utilities
         /// <param name="includePrivates">Include privates when writing an object?</param>
         public void WriteObject(string name, object o, bool includePrivates = false)
         {
-            // Open and close the file every time we write because when debugging simulations 
+            // Open and close the file every time we write because when debugging simulations
             // they can crash with an exception which then means the writer isn't closed.
             using (StreamWriter writer = new StreamWriter(fileName, append: true))
             {

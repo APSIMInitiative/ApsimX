@@ -1,16 +1,17 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using APSIM.Shared.JobRunning;
+using Models.Core.ApsimFile;
+using Models.PostSimulationTools;
+using Models.Storage;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
@@ -153,8 +154,7 @@
         protected override void PostAllRuns()
         {
             Status = "Waiting for datastore to finish writing";
-            storage?.Writer.Stop();
-            storage?.Reader.Refresh();
+            StorageFinishWriting();
 
             if (runPostSimulationTools)
                 RunPostSimulationTools();
@@ -162,6 +162,14 @@
             if (runTests)
                 RunTests();
 
+            StorageFinishWriting();
+        }
+
+        /// <summary>
+        /// Tell the datastore to finish writing.
+        /// </summary>
+        public void StorageFinishWriting()
+        {
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
         }
@@ -179,7 +187,7 @@
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
                     relativeTo = sims;
                 }
 
@@ -214,6 +222,14 @@
                     if (duplicates != null && duplicates.Any())
                         throw new Exception($"Duplicate simulation names found: {string.Join(", ", duplicates)}");
 
+                    // Check for duplicate soils
+                    foreach (var zone in rootModel.FindAllDescendants<Zone>().Where(z => z.Enabled))
+                    {
+                        bool duplicateSoils = zone.FindAllChildren<Models.Soils.Soil>().Where(s => s.Enabled).Count() > 1;
+                        if (duplicateSoils)
+                            throw new Exception($"Duplicate soils found in zone: {zone.FullPath}");
+                    }
+
                     // Publish BeginRun event.
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
@@ -243,9 +259,9 @@
                         foreach (IRunnable job in jobs)
                             Add(job);
                     }
-                    
+
                     if (numJobsToRun == 0)
-                       Add(new EmptyJob());
+                        Add(new EmptyJob());
                 }
             }
             catch (Exception readException)
@@ -363,7 +379,7 @@
                 DateTime startTime = DateTime.Now;
 
                 links.Resolve(test as IModel, true);
-                
+
                 // If we run into problems, we will want to include the name of the test in the 
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the

@@ -1,19 +1,19 @@
-﻿namespace Models.PMF.Organs
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Models.Soils;
+using Models.Soils.Arbitrator;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Library;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils.Nutrients;
-    using System.Linq;
-    using APSIM.Shared.Documentation;
 
     ///<summary>
     /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
@@ -22,7 +22,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot, IHasDamageableBiomass
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -109,7 +109,7 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
- 
+
         /// <summary>The maximum daily N uptake</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("kg N/ha/d")]
@@ -124,12 +124,12 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("mm")]
         private IFunction maximumRootDepth = null;
-        
+
         /// <summary>Dry matter efficiency function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction dmConversionEfficiency = null;
-        
+
         /// <summary>Carbon concentration</summary>
         [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
@@ -154,7 +154,7 @@
         private Biomass deadBiomass = new Biomass();
 
         /// <summary>The dry matter supply</summary>
-        public BiomassSupplyType DMSupply {get; set;}
+        public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The nitrogen supply</summary>
         public BiomassSupplyType NSupply { get; set; }
@@ -243,7 +243,7 @@
             get
             {
                 if (PlantZone == null)    // Can be null in autodoc
-                    return new double[0]; 
+                    return new double[0];
                 double[] value;
                 value = new double[PlantZone.Physical.Thickness.Length];
                 double SRL = specificRootLength.Value();
@@ -316,7 +316,7 @@
             {
                 if (Zones == null || Zones.Count == 0)
                     return null;
-                double[] uptake = (double[]) Zones[0].WaterUptake;
+                double[] uptake = (double[])Zones[0].WaterUptake;
                 for (int i = 1; i != Zones.Count; i++)
                     uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
                 return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
@@ -348,7 +348,7 @@
                     throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
                 double[] uptake = new double[Zones[0].Physical.Thickness.Length];
                 if (Zones[0].NitUptake != null)
-                        uptake = Zones[0].NitUptake;
+                    uptake = Zones[0].NitUptake;
                 return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }
@@ -380,8 +380,8 @@
                     TotalArea += zone.Area;
 
                     fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
-                }    
-                    fasw = fasw / TotalArea;
+                }
+                fasw = fasw / TotalArea;
                 return fasw;
             }
         }
@@ -468,8 +468,8 @@
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc { get{ return MathUtilities.Divide(N,Wt,0.0);}}
-        
+        public double Nconc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
+
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
         public double NFixationCost { get { return 0; } }
@@ -737,7 +737,7 @@
                         NH4Uptake += NH4Supply[layer];
                     }
                 }
-                
+
             }
         }
 
@@ -826,25 +826,44 @@
         //------------------------------------------------------------------------------------------------
         // sorghum specific variables
 
-        /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public IFunction DltThermalTime = null;
-
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
 
-        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
         {
-            biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        {
+            double amountRemoved = biomassRemovalModel.RemoveBiomassToSoil(liveToRemove, liveToResidue, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
             needToRecalculateLiveDead = true;
 
             // Commented out code below because about 10 validation files failed on Jenkins
             // e.g. Chicory, Oats
             //if (biomassRemoveType != null && biomassRemoveType != "Harvest")
             //    IsKLModiferDueToDamageActive = true;
+
+            return amountRemoved;
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>Initialise all zones.</summary>
@@ -1087,7 +1106,7 @@
                 needToRecalculateLiveDead = true;
             }
         }
-        
+
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
@@ -1113,7 +1132,7 @@
                     Z.GrowRootDepth();
 
                 // Do Root Senescence
-                RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = senescenceRate.Value() });
+                RemoveBiomass(liveToResidue: senescenceRate.Value());
 
                 // Do maintenance respiration
                 if (maintenanceRespirationFunction.Value() > 0)
@@ -1136,7 +1155,7 @@
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                RemoveBiomass(null, new OrganBiomassRemovalType() { FractionLiveToResidue = 1.0 });
+                RemoveBiomass(liveToResidue: 1.0);
             }
 
             Clear();

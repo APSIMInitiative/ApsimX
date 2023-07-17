@@ -1,36 +1,37 @@
-﻿namespace Models.WaterModel
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
-    ///Soil evaporation is assumed to take place in two stages: the constant and the falling rate stages. 
+    ///Soil evaporation is assumed to take place in two stages: the constant and the falling rate stages.
     ///
-    /// In the first stage the soil is sufficiently wet for water to be transported to the surface at a rate 
-    /// at least equal to the potential evaporation rate. Potential evapotranspiration is calculated using an 
+    /// In the first stage the soil is sufficiently wet for water to be transported to the surface at a rate
+    /// at least equal to the potential evaporation rate. Potential evapotranspiration is calculated using an
     /// equilibrium evaporation concept as modified by Priestly and Taylor(1972).
     ///
-    /// Once the water content of the soil has decreased below a threshold value the rate of supply from the soil 
-    /// will be less than potential evaporation (second stage evaporation). These behaviors are described in SoilWater 
+    /// Once the water content of the soil has decreased below a threshold value the rate of supply from the soil
+    /// will be less than potential evaporation (second stage evaporation). These behaviors are described in SoilWater
     /// through the use of two parameters: U and CONA.
     ///
-    /// The parameter U (as from CERES) represents the amount of cumulative evaporation before soil supply decreases 
-    /// below atmospheric demand. The rate of soil evaporation during the second stage is specified as a function of 
-    /// time since the end of first stage evaporation. The parameter CONA (from PERFECT) specifies the change in 
+    /// The parameter U (as from CERES) represents the amount of cumulative evaporation before soil supply decreases
+    /// below atmospheric demand. The rate of soil evaporation during the second stage is specified as a function of
+    /// time since the end of first stage evaporation. The parameter CONA (from PERFECT) specifies the change in
     /// cumulative second stage evaporation against the square root of time.
-    /// 
-    ///    i.e. Es = CONA t^1/2^ 
     ///
-    /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry 
-    /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry). 
-    /// 
-    /// ![Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.](CurveNumberCover.png) 
+    ///    i.e. Es = CONA t^1/2^
+    ///
+    /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry
+    /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry).
+    ///
+    /// ![Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.](CurveNumberCover.png)
     ///
     /// For t &lt;=  t~1~
     ///    Es = Eos
@@ -44,9 +45,9 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance waterBalance = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link]
@@ -73,6 +74,9 @@
 
         /// <summary>Is simulation in summer?</summary>
         private bool isInSummer;
+
+        /// <summary>The value of U yesterday. Used to detect a change in U.</summary>
+        private double UYesterday;
 
         /// <summary>Date for start of summer.</summary>
         private DateTime summerStartDate;
@@ -133,10 +137,11 @@
                 u = waterBalance.SummerU;
                 cona = waterBalance.SummerCona;
             }
+            UYesterday = u;
 
             //! set up evaporation stage
-            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]), 
-                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]), 
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]),
+                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]),
                                             0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 
@@ -170,6 +175,7 @@
             //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
+            UYesterday = U;
             return Es;
         }
 
@@ -306,8 +312,16 @@
             double esoil1;     // actual soil evap in stage 1
             double esoil2;     // actual soil evap in stage 2
 
+            // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop 
+            // artificially entering stage 1 evap. GitHub Issue #8112
+            if (UYesterday != U)
+            {
+                sumes1 = U;
+                sumes2 = CONA * Math.Pow(t, 0.5);
+            }
+
             // if infiltration, reset sumes1
-            // reset sumes2 if infil exceeds sumes1      
+            // reset sumes2 if infil exceeds sumes1
             if (waterBalance.Infiltration > 0.0)
             {
                 sumes2 = Math.Max(0.0, (sumes2 - Math.Max(0.0, waterBalance.Infiltration - sumes1)));
@@ -344,7 +358,7 @@
                 }
                 else
                 {
-                    // no deficit (or esoil1 = eos_max) no esoil2 on this day            
+                    // no deficit (or esoil1 = eos_max) no esoil2 on this day
                     esoil2 = 0.0;
                 }
 
@@ -352,14 +366,14 @@
                 esoil2 = Math.Min(esoil2, avail_sw_top - esoil1);
 
 
-                // update 1st and 2nd stage soil evaporation.     
+                // update 1st and 2nd stage soil evaporation.
                 sumes1 = sumes1 + esoil1;
                 sumes2 = sumes2 + esoil2;
                 t = MathUtilities.Sqr(MathUtilities.Divide(sumes2, CONA, 0.0));
             }
             else
             {
-                // no 1st stage drying. calc. 2nd stage         
+                // no 1st stage drying. calc. 2nd stage
                 esoil1 = 0.0;
 
                 t = t + 1.0;
@@ -374,7 +388,7 @@
 
             Es = esoil1 + esoil2;
 
-            // make sure we are within bounds      
+            // make sure we are within bounds
             Es = MathUtilities.Bound(Es, 0.0, Eos);
             Es = MathUtilities.Bound(Es, 0.0, avail_sw_top);
         }

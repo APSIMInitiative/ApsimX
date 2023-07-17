@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
 
@@ -8,25 +7,27 @@ namespace Models.Functions
     /// <summary>Fraction of NO3 which denitrifies today</summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval fraction of NO3 denitrified.
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [Serializable]
     [Description("Soil NO3 Denitrification model from CERES-Maize")]
     public class CERESDenitrificationModel : Model, IFunction
     {
         [Link]
         Soils.IPhysical soilPhysical = null;
-        
+
         [Link(ByName = true)]
         INutrientPool Humic = null;
-        
+
         [Link(ByName = true)]
         INutrientPool Inert = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMCarbohydrate = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMCellulose = null;
-        
+
         [Link(ByName = true)]
         INutrientPool FOMLignin = null;
 
@@ -40,11 +41,13 @@ namespace Models.Functions
         /// <summary>
         /// Rate modifier on the CERES denitrification model. Default = 0.0006.
         /// </summary>
+        [Description("Denitrification rate modifier")]
         public double DenitrificationRateModifier { get; set; } = 0.0006;
 
         /// <summary>
         /// Kludge
         /// </summary>
+        [Description("Is inert pool active?")]
         public bool IsInertActive { get; set; } = true;
 
 
@@ -60,10 +63,10 @@ namespace Models.Functions
             else
                 ActiveC = Humic.C[arrayIndex] + 0.0 + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
 
-            double ActiveCppm = ActiveC/(soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
+            double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
-             
+
             return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
         }
 

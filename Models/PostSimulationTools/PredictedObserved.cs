@@ -1,18 +1,17 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
 
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
@@ -218,8 +217,8 @@ namespace Models.PostSimulationTools
                         if (predictedObservedData.Columns.Contains("Predicted." + columnName) &&
                             predictedObservedData.Columns["Predicted." + columnName].DataType == typeof(double))
                         {
-                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName);
-                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName);
+                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName, CultureInfo.InvariantCulture);
+                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName, CultureInfo.InvariantCulture);
                             if (predicted.Length > 0 && predicted.Length == observed.Length)
                             {
                                 var errorData = MathUtilities.Subtract(predicted, observed);

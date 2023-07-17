@@ -17,3 +17,4 @@ weight: 10
 * [Write manager scripts](/usage/writemanagerscript)
 * [Rotation Manager](/usage/rotationmanager)
 * [APSIM Server](/usage/server)
+* [Reports](/usage/report)

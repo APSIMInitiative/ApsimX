@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
     /// Object for an individual male Ruminant.
     /// </summary>
-    public class RuminantMale: Ruminant
+    [Serializable]
+    public class RuminantMale : Ruminant
     {
         /// <summary>
         /// Sex of individual
@@ -21,11 +18,11 @@ namespace Models.CLEM.Resources
         /// Represents any uncastrated male of breeding age
         /// </summary>
         [FilterByProperty]
-        public bool IsSire 
+        public bool IsSire
         {
             get
             {
-                if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                if (Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
@@ -55,8 +52,8 @@ namespace Models.CLEM.Resources
         /// Indicates if individual is castrated
         /// </summary>
         [FilterByProperty]
-        public bool IsCastrated 
-        { 
+        public bool IsCastrated
+        {
             get
             {
                 return Attributes.Exists("Castrated");

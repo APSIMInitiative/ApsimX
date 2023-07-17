@@ -1,15 +1,17 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using System.Linq;
+using Models.PMF;
+using Models.Core;
+using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.Nutrients;
+using Models.Soils.Arbitrator;
+using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
+using System.Collections.Generic;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.PMF;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using Models.Soils.Nutrients;
-    using Models.Interfaces;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -322,21 +324,25 @@
             Dead.SetBiomass(blankArray, blankArray); // assumes there's no dead material
         }
 
-        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             // Remove live tissue
-            Live.RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+            Live.RemoveBiomass(liveToRemove, liveToResidue);
 
             // Remove dead tissue
-            Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+            Dead.RemoveBiomass(deadToRemove, deadToResidue);
 
-            if (biomassRemoveType != "Harvest" || biomassRemoveType != "Cut")
-            {
-                IsKLModiferDueToDamageActive = true;
-            }
+            // Update LAI and herbage digestibility
+            species.EvaluateLAI();
+            species.EvaluateDigestibility();
+
+            return Live.DMRemoved + Dead.DMRemoved;
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>

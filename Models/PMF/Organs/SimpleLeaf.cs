@@ -1,16 +1,17 @@
-﻿namespace Models.PMF.Organs
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using System.Collections.Generic;
-    using Models.PMF.Phen;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
@@ -33,7 +34,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, IOrganDamage
+    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
         /// <summary>
         /// The met data
@@ -46,6 +47,10 @@
         /// </summary>
         [Link]
         private Plant plant = null;
+
+        /// <summary>Link to summary instance.</summary>
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>
         /// The surface organic matter model.
@@ -75,7 +80,7 @@
         /// The height function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction tallness = null;
+        private IFunction heightFunction = null;
 
         /// <summary>
         /// The lai dead function.
@@ -711,6 +716,16 @@
         [JsonIgnore]
         public double WaterAllocation { get; set; }
 
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
         /// <summary>
         /// Clears this instance.
         /// </summary>
@@ -766,6 +781,8 @@
         {
             if (phaseChange.StageName == LeafInitialisationStage)
                 leafInitialised = true;
+            summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>
@@ -789,7 +806,7 @@
                 if (area != null)
                     LAI = area.Value();
 
-                Height = tallness.Value();
+                Height = heightFunction.Value();
                 if (baseHeight == null)
                     BaseHeight = 0;
                 else
@@ -972,16 +989,25 @@
             Clear();
         }
 
-        /// <summary>
-        /// Removes biomass from organs when harvest, graze or cut events are called.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
         }
-        
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
+        }
+
         /// <summary>
         /// Calculates the water demand.
         /// </summary>
@@ -1166,7 +1192,7 @@
                 canopyTags.AddRange(cover.Document());
             }
             canopyTags.AddRange(extinctionCoefficient.Document());
-            canopyTags.AddRange(tallness.Document());
+            canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             var stomatalConductanceTags = new List<ITag>();
@@ -1200,7 +1226,7 @@
             else
             {
                 senescenceTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                senescenceTags.AddRange(detachmentRate.Document()); 
+                senescenceTags.AddRange(detachmentRate.Document());
             }
             yield return new Section("Senescence and Detachment", senescenceTags);
 

@@ -1,17 +1,12 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
-using Newtonsoft.Json;
 using Models.CLEM.Resources;
-using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Timers;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
 using System.IO;
-using Models.CLEM.Interfaces;
-using System.Xml.Serialization;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -38,6 +33,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
+    [ValidParent(ParentType = typeof(ActivityTimerRuminantLevel))]
     [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
@@ -46,7 +42,7 @@ namespace Models.CLEM.Groupings
     {
         #region descriptive summary
 
-            /// <inheritdoc/>
+        /// <inheritdoc/>
         public override string ModelSummary()
         {
             return "";

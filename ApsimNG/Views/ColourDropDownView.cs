@@ -1,26 +1,14 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Drawing;
+using global::UserInterface.Extensions;
+using Gtk;
+using Utility;
+using CellLayout = Gtk.ICellLayout;
+using TreeModel = Gtk.ITreeModel;
+
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Drawing;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Utility;
-    using CellLayout = Gtk.ICellLayout;
-    using TreeModel = Gtk.ITreeModel;
-
-
-    /// <summary>An interface for a drop down</summary>
-    public interface IColourDropDownView
-    {
-        /// <summary>Invoked when the user changes the selection</summary>
-        event EventHandler Changed;
-
-        /// <summary>Get or sets the list of valid values. Can be Color or string objects.</summary>
-        object[] Values { get; set; }
-
-        /// <summary>Gets or sets the selected value.</summary>
-        object SelectedValue { get; set; }
-    }
 
     /// <summary>A colour drop down capable of showing colours and/or strings.</summary>
     public class ColourDropDownView : ViewBase, IColourDropDownView
@@ -210,5 +198,18 @@
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>An interface for a drop down</summary>
+    public interface IColourDropDownView
+    {
+        /// <summary>Invoked when the user changes the selection</summary>
+        event EventHandler Changed;
+
+        /// <summary>Get or sets the list of valid values. Can be Color or string objects.</summary>
+        object[] Values { get; set; }
+
+        /// <summary>Gets or sets the selected value.</summary>
+        object SelectedValue { get; set; }
     }
 }

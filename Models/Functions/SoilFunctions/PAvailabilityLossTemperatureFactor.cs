@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
 namespace Models.Functions
@@ -23,9 +21,9 @@ namespace Models.Functions
         {
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to P Availability Loss Temperature Factor");
-            
+
             double ActivationEnergy = 90000;  //J/mole
-            return Math.Exp(ActivationEnergy / 8.314 * ((1.0 / 298.0) - (1.0 / (273.0 + soilTemperature.Value[arrayIndex]))));            
+            return Math.Exp(ActivationEnergy / 8.314 * ((1.0 / 298.0) - (1.0 / (273.0 + soilTemperature.Value[arrayIndex]))));
         }
     }
 }

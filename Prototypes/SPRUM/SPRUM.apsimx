@@ -1,35 +1,40 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 297,
-  "Version": 148,
+  "ExplorerWidth": 273,
+  "Version": 162,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
       "Enabled": true,
       "ReadOnly": false
     },
     {
-      "$type": "Models.Core.Replacements, Models",
+      "$type": "Models.Core.Folder, Models",
+      "ShowInDocs": false,
+      "GraphsPerPage": 6,
       "Name": "Replacements",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "SPRUM",
-          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
-          "ResourceName": null,
           "Name": "SPRUM",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Memo, Models",
               "Text": "\n# SPRUM: the Simple Crop Resource Uptake Model\n\n_Hamish Brown and Rob Zyskowski, Plant and Food Research, New Zealand_\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate a range of different crops in simulations where water and nitrogen balance are of interest but a fully mechanistic plant model is not needed or is not available. It is a daily time step implementation of the crop model that is used on the Overseer nutrient balance model [Cichota_etal_2010].  It uses simple sigmoidal functions for estimating daily cover and biomass deltas to give realistic water and nitrogen demands. It does not simulate potential yield, this is specified as an input. Yield will be reduced below the specified potential yield if N or water supplies from the soil are insufficient to meet demand. The model has been paramaterised for simulating water and nitrogen balances of cropping rotations in New Zealand (where over 50 different crop types are grown and it is not feasible to produce full crop models for each of these).  Because of this the model is not as generically applicable as full APSIM crop models.   It may be adapted for other purposes and other crop types may be added but the user will need to keep in mind that because it is a simple model the the parameters might need changing for crops in different locations or for crops sown at different times of the year.  Some sensibility testing or validation is recommended before application in different sutuations.   \n\nSPRUM has a simple phenology model which divides the crop growth into three main phases; a vegetative phase when the canopy is expanding, a reproductive phase when product is being formed and a senescing phase when the canopy is contracting.  SPRUM has 4 organ classes to represent different biomass components and the real biomass components that these classes represent changes from crop to crop:  \n   1. A Simple leaf class called <b>Stover</b> which represents the unharvested parts of the plant.  Generally, this represents the leaf and stem components of the crop but for crops where stem and leaf are part of the harvested product (e.g forages and leafy vegetables) than stover is the residual fraction of leaf and stem that is not harvested.  \n   2. A Generic organ class called <b>Product</b> which represents the plant parts that are harvested and removed from the field.  This could represent grain, fruits, tubers, leaf or stem depending on what sort of crop is being represented.  \n   3. A Root organ which extracts water and nitrogen from the soil for plant growth and returns biomass to the soil on harvest  \n   4. A Nodule organ which is only activated and fixes nitrogen for the legume crops.  \nAn Arbitrator is also included which determines the allocation of drymatter and nitrogen biomass between each of these organs.\n\n#Inclusion in APSIM simulations\nA SPRUM crop is included in a simulation the same as any other APSIM crop  \n * The SPRUM object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSPRUM.Sow(cultivar: Wheat_Autumn, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n  * Note that SPRUM has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * To specify an expected Expected Yield that differs to the defalt value provided, included the following code in a manager script to be executed on the day of sowing.\n~~~\n zone.Set(\"[SPRUM].Product.ExpectedYield.Value()\", ResetValue);  \n~~~\n* SPRUM can be Harvested, Cut, Grazed and Pruned like other crops.  Defalt proportions of the biomass in each organ are removed from the sysem and/or added to the fields residue pools.  Note that defalt removal fraction for product on harvest is 0 (becaue it is represented with a generic organ) so more appropriate removal fractions should be sepcified in a manager script as follows:  \n~~~\n[EventSubscribe(\"Commencing\")]  \nprivate void OnSimulationCommencing(object sender, EventArgs e)  \n{  \n  Remove = new RemovalFractions(SPRUM.Organs);  \n}  \n[EventSubscribe(\"DoManagement\")]    \nprivate void OnDoManagement(object sender, EventArgs e)  \n{  \n  if (Clock.Today.Date == HarvestDate2)  \n  {  \n    Remove.SetFractionLiveToRemove(\"Product\", 1.0);\n    Remove.SetFractionLiveToRemove(\"Stover\", 0.05);  \n    Remove.SetFractionLiveToResidue(\"Stover\",0.95)\n    SPRUM.Harvest(Remove);  \n    SPRUM.EndCrop();  \n  }  \n}  \n~~~\n* A Remove class as shown above can be sent with Harvest, Cut, Graze and Prune events to specificy the proportions of removals.\n * Once a crop has been ended the field is open to plant another crop using another APSIM crop model or sowing another SPRUM crop.  \n",
               "Name": "TitlePage",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -37,16 +42,19 @@
             {
               "$type": "Models.PMF.Phen.Phenology, Models",
               "Name": "Phenology",
+              "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -67,14 +75,16 @@
                       ],
                       "XVariableName": null,
                       "Name": "Response",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -87,6 +97,7 @@
                   "$type": "Models.Memo, Models",
                   "Text": "As ThermalTime accumulates the crop progresses through the following phases:",
                   "Name": "Description1",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -95,7 +106,9 @@
                   "$type": "Models.PMF.Phen.StartPhase, Models",
                   "Start": "Grazing",
                   "End": "PostGraze",
+                  "IsEmerged": true,
                   "Name": "ReStart",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -104,12 +117,15 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "PostGraze",
                   "End": "CanopyClosure",
+                  "IsEmerged": true,
                   "Name": "CanopyExpanding",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\nDuring this phase the plant only partitions biomass to Root and Stover (leaf and stem) Organs\n",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -119,6 +135,7 @@
                       "FixedValue": 150.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -127,6 +144,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -139,12 +157,15 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "CanopyClosure",
                   "End": "Grazing",
+                  "IsEmerged": true,
                   "Name": "FullCanopy",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\nDuring this phase the plant is partitioning biomass to Root, Stover and Product organs.\n",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -154,6 +175,7 @@
                       "FixedValue": 151.0,
                       "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -162,6 +184,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -173,8 +196,10 @@
                 {
                   "$type": "Models.PMF.Phen.GrazeAndRewind, Models",
                   "Start": "Grazing",
+                  "IsEmerged": true,
                   "PhaseNameToGoto": "ReStart",
                   "Name": "Graze",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -182,8 +207,10 @@
                 {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "Grazing",
+                  "IsEmerged": true,
                   "PhaseNameToGoto": "ReStart",
                   "Name": "GotoPhase",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": false,
                   "ReadOnly": false
@@ -195,20 +222,24 @@
             {
               "$type": "Models.PMF.OrganArbitrator, Models",
               "Name": "Arbitrator",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.PMF.BiomassTypeArbitrator, Models",
                   "Name": "DMArbitration",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
                       "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                           "Name": "ReallocationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -216,6 +247,7 @@
                         {
                           "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
                           "Name": "AllocateFixationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -223,6 +255,7 @@
                         {
                           "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                           "Name": "RetranslocationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -230,6 +263,7 @@
                         {
                           "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                           "Name": "SendPotentialDMAllocationsMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -243,10 +277,12 @@
                       "ShowInDocs": false,
                       "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
                           "Name": "NutrientConstrainedAllocationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -254,6 +290,7 @@
                         {
                           "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                           "Name": "DryMatterAllocationsMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -265,6 +302,7 @@
                     {
                       "$type": "Models.PMF.RelativeAllocation, Models",
                       "Name": "ArbitrationMethod",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -276,16 +314,19 @@
                 {
                   "$type": "Models.PMF.BiomassTypeArbitrator, Models",
                   "Name": "NArbitration",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Core.Folder, Models",
                       "ShowInDocs": false,
                       "GraphsPerPage": 6,
                       "Name": "PotentialPartitioningMethods",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                           "Name": "ReallocationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -299,10 +340,12 @@
                       "ShowInDocs": false,
                       "GraphsPerPage": 6,
                       "Name": "ActualPartitioningMethods",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
                           "Name": "AllocateFixationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -310,6 +353,7 @@
                         {
                           "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                           "Name": "RetranslocationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -323,10 +367,12 @@
                       "ShowInDocs": false,
                       "GraphsPerPage": 6,
                       "Name": "AllocationMethods",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                           "Name": "NitrogenAllocationsMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -338,6 +384,7 @@
                     {
                       "$type": "Models.PMF.RelativeAllocation, Models",
                       "Name": "ArbitrationMethod",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -345,6 +392,7 @@
                     {
                       "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
                       "Name": "AllocateUptakesMethod",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -356,6 +404,7 @@
                 {
                   "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
                   "Name": "WaterUptakeMethod",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -363,6 +412,7 @@
                 {
                   "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
                   "Name": "NitrogenUptakeMethod",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -381,11 +431,13 @@
               "potentialDMAllocation": null,
               "IsAboveGround": true,
               "Name": "Product",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "It is the biomass that is removed from the crop at harvest and may include grain, root, leaf, stem, pod or any other organ type depending on the type of crop and how it is harvested.",
                   "Name": "Description",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -395,6 +447,7 @@
                   "FixedValue": 0.05,
                   "Units": null,
                   "Name": "MaximumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -404,6 +457,7 @@
                   "FixedValue": 0.02,
                   "Units": null,
                   "Name": "MinimumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -413,6 +467,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -422,6 +477,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -431,6 +487,7 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "SenescenceRate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -438,6 +495,7 @@
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
@@ -446,6 +504,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -457,6 +516,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -468,6 +528,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -479,6 +540,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -492,6 +554,7 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -501,6 +564,7 @@
                   "FixedValue": 0.0,
                   "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -510,6 +574,7 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -519,6 +584,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -528,6 +594,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NitrogenDemandSwitch",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -537,6 +604,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -546,6 +614,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -554,6 +623,7 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Product].MinimumNConc",
                   "Name": "CriticalNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -563,32 +633,38 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                           "Name": "DMDemandFunction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 0.75,
                               "Units": null,
                               "Name": "PartitionFraction",
+                              "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
                                   "Text": "\n\nThe proportion of total biomass in harvested product\n",
                                   "Name": "Description",
+                                  "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -606,6 +682,7 @@
                           "FixedValue": 1.0,
                           "Units": "0-1",
                           "Name": "StructuralFraction",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -619,6 +696,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -626,16 +704,19 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "StorageFraction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.0,
                               "Units": null,
                               "Name": "One",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -644,6 +725,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Product].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -661,6 +743,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -670,6 +753,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -679,6 +763,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -688,17 +773,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].minimumNconc",
                           "Name": "MinNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -707,6 +795,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -718,15 +807,18 @@
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "MetabolicNconc",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Product].criticalNConc",
                               "Name": "CritNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -735,6 +827,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Product].minimumNconc",
                               "Name": "MinNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -747,6 +840,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -758,11 +852,13 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -771,6 +867,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Product].maximumNconc",
                           "Name": "MaxNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -784,6 +881,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -793,6 +891,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -802,6 +901,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -813,19 +913,22 @@
                 {
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": "g/m^2",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -835,6 +938,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -844,6 +948,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -857,6 +962,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "Photosynthesis",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -865,6 +971,7 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Product].MaximumNConc",
                   "Name": "initialNConcFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -894,11 +1001,13 @@
               "NDemand": null,
               "potentialDMAllocation": null,
               "Name": "Stover",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
                   "Name": "Description",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -908,6 +1017,7 @@
                   "FixedValue": 1.0,
                   "Units": "",
                   "Name": "StomatalConductanceCO2Modifier",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -917,6 +1027,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -926,6 +1037,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -935,6 +1047,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "SenescenceRate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -944,6 +1057,7 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -951,12 +1065,14 @@
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "InitialWt",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": "g/plant",
                       "Name": "InitialPlantWt",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -965,6 +1081,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Plant].Population",
                       "Name": "Population",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -978,6 +1095,7 @@
                   "FixedValue": 0.0,
                   "Units": "m^2/m^2",
                   "Name": "LaiDead",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -985,16 +1103,19 @@
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "Photosynthesis",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Potential",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.1,
                           "Units": null,
                           "Name": "g_per_oCd",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1003,19 +1124,22 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].Cover",
                           "Name": "Cover",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.HourlyInterpolation, Models",
+                          "$type": "Models.Functions.SubDailyInterpolation, Models",
                           "agregationMethod": 0,
                           "Name": "ThermalTime",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
                               "Text": "Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress",
                               "Name": "Description",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1034,14 +1158,16 @@
                               ],
                               "XVariableName": null,
                               "Name": "Response",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                               "TempRangeFactors": null,
                               "Name": "InterpolationMethod",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1057,6 +1183,7 @@
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "WaterStressFactor",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
@@ -1074,6 +1201,7 @@
                           ],
                           "XVariableName": null,
                           "Name": "XYPairs",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1082,6 +1210,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].Fw",
                           "Name": "XValue",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1097,11 +1226,13 @@
                 {
                   "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "FRGR",
+                  "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.HourlyInterpolation, Models",
+                      "$type": "Models.Functions.SubDailyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "FRGRFunctionTemp",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
@@ -1119,14 +1250,16 @@
                           ],
                           "XVariableName": null,
                           "Name": "Response",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.ThreeHourSin, Models",
+                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                           "TempRangeFactors": null,
                           "Name": "InterpolationMethod",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1142,12 +1275,14 @@
                 {
                   "$type": "Models.Functions.SigmoidFunction, Models",
                   "Name": "Cover",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.97,
                       "Units": null,
                       "Name": "Ymax",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1156,6 +1291,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].AccumulatedTT",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1165,6 +1301,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Xo",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1174,6 +1311,7 @@
                       "FixedValue": 50.0,
                       "Units": null,
                       "Name": "b",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1187,11 +1325,13 @@
                   "FixedValue": 0.5,
                   "Units": null,
                   "Name": "ExtinctionCoefficient",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\nThe extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover\n",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1202,7 +1342,8 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "Tallness",
+                  "Name": "HeightFunction",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -1216,6 +1357,7 @@
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1224,6 +1366,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1237,6 +1380,7 @@
                   "FixedValue": 0.01,
                   "Units": null,
                   "Name": "MaximumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1246,6 +1390,7 @@
                   "FixedValue": 0.005,
                   "Units": null,
                   "Name": "MinimumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1253,6 +1398,7 @@
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
@@ -1261,6 +1407,7 @@
                       "FractionLiveToResidue": 0.5,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1272,6 +1419,7 @@
                       "FractionLiveToResidue": 0.5,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1283,6 +1431,7 @@
                       "FractionLiveToResidue": 0.5,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1294,6 +1443,7 @@
                       "FractionLiveToResidue": 0.5,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1307,6 +1457,7 @@
                   "FixedValue": 0.0,
                   "Units": "0-1",
                   "Name": "MaintenanceRespiration",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1316,6 +1467,7 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1325,6 +1477,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1334,6 +1487,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1343,6 +1497,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1351,6 +1506,7 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Stover].MinimumNConc",
                   "Name": "CriticalNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1360,26 +1516,31 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                           "Name": "DMDemandFunction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
                               "Text": "\nDM demand is based on a simple partitioning coefficients.  At harvest the biomass partitioned to the stover = TotalDM * (1 - RootProportion) * (1 - Harvest index).  However the partitioningFraction is more complicated that this as it partitions more biomass to the stover in the CanopyExpanding Phase and less in the Yield increasing phase to give realistic patterns of accumulation of biomass in the Stover and Product over the duration of the crop\n",
                               "Name": "Description",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1389,6 +1550,7 @@
                               "FixedValue": 0.15,
                               "Units": null,
                               "Name": "PartitionFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1402,6 +1564,7 @@
                           "FixedValue": 1.0,
                           "Units": "0-1",
                           "Name": "StructuralFraction",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1415,6 +1578,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1422,16 +1586,19 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "StorageFraction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.0,
                               "Units": null,
                               "Name": "One",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1440,6 +1607,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stover].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1457,6 +1625,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1466,6 +1635,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1475,6 +1645,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1484,17 +1655,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].minimumNconc",
                           "Name": "MinNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1503,6 +1677,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1514,15 +1689,18 @@
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "MetabolicNconc",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stover].criticalNConc",
                               "Name": "CritNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1531,6 +1709,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Stover].minimumNconc",
                               "Name": "MinNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1543,6 +1722,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1554,11 +1734,13 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1567,6 +1749,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Stover].maximumNconc",
                           "Name": "MaxNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1580,6 +1763,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1589,6 +1773,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1598,6 +1783,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1611,6 +1797,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NitrogenDemandSwitch",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1627,11 +1814,13 @@
               "NDemand": null,
               "potentialDMAllocation": null,
               "Name": "Nodule",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nThe nodule organ is unparameterised and simply has a switch that is turned on for legume crops (so they can fix what ever N the crop demands) and switched off for non legume crops (which fix no N)\n",
                   "Name": "Description",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1641,6 +1830,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MaximumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1650,6 +1840,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1659,6 +1850,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MinimumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1668,6 +1860,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1677,6 +1870,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "SenescenceRate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1684,12 +1878,14 @@
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "FixationRate",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.03,
                       "Units": "g N / g Photosynthesis",
                       "Name": "MaximumFixation",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1698,6 +1894,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Stover].Photosynthesis",
                       "Name": "DailyPhotosynthesis",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1706,6 +1903,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[SPRUM].LegumePropn",
                       "Name": "LegumePropn",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1717,6 +1915,7 @@
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
@@ -1725,6 +1924,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1736,6 +1936,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1747,6 +1948,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1758,6 +1960,7 @@
                       "FractionLiveToResidue": 0.0,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1771,6 +1974,7 @@
                   "FixedValue": 0.0,
                   "Units": "g/m^2",
                   "Name": "InitialWtFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1780,6 +1984,7 @@
                   "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1789,6 +1994,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "FixationMetabolicCost",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1798,6 +2004,7 @@
                   "FixedValue": 0.0,
                   "Units": "0-1",
                   "Name": "MaintenanceRespirationFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1807,6 +2014,7 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1816,6 +2024,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1825,6 +2034,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NitrogenDemandSwitch",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1834,6 +2044,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1843,6 +2054,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1851,6 +2063,7 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Nodule].MinimumNConc",
                   "Name": "CriticalNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1860,23 +2073,27 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "DMDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": "g/m^2",
                           "Name": "DMDemandFunction",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1886,6 +2103,7 @@
                           "FixedValue": 1.0,
                           "Units": "0-1",
                           "Name": "StructuralFraction",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1899,6 +2117,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1906,16 +2125,19 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "StorageFraction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.0,
                               "Units": null,
                               "Name": "One",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1924,6 +2146,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1941,17 +2164,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "NDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Nodule].minimumNconc",
                           "Name": "MinNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1960,6 +2186,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Nodule].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1971,15 +2198,18 @@
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "MetabolicNconc",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Nodule].criticalNConc",
                               "Name": "CritNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -1988,6 +2218,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Nodule].minimumNconc",
                               "Name": "MinNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2000,6 +2231,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Nodule].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2011,11 +2243,13 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Nodule].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2024,6 +2258,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Nodule].maximumNconc",
                           "Name": "MaxNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2050,10 +2285,12 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "Name": "Root",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
                   "Name": "RootShape",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2062,6 +2299,7 @@
                   "$type": "Models.Memo, Models",
                   "Text": "\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
                   "Name": "Description",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2071,6 +2309,7 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2080,6 +2319,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2087,6 +2327,7 @@
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "KLModifier",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -2156,6 +2397,7 @@
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2164,14 +2406,16 @@
                       "$type": "Models.Memo, Models",
                       "Text": "\nThis is important in SPRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Physical.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SPRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].LayerMidPointDepth",
+                      "VariableName": "[Physical].DepthMidPoints",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2185,6 +2429,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "SoilWaterEffect",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2194,6 +2439,7 @@
                   "FixedValue": 12.0,
                   "Units": null,
                   "Name": "MaxDailyNUptake",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2203,6 +2449,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "SenescenceRate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2212,6 +2459,7 @@
                   "FixedValue": 0.009,
                   "Units": null,
                   "Name": "MaximumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2221,6 +2469,7 @@
                   "FixedValue": 0.009,
                   "Units": null,
                   "Name": "MinimumNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2230,6 +2479,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NitrogenDemandSwitch",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2239,6 +2489,7 @@
                   "FixedValue": 1500.0,
                   "Units": null,
                   "Name": "MaximumRootDepth",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2248,11 +2499,13 @@
                   "FixedValue": 0.1,
                   "Units": null,
                   "Name": "RootProportion",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "\nThis is the proportion of total biomass that is paritioned into the roots and is used to set the partitioning fraction for the roots\n",
                       "Name": "Description",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2264,6 +2517,7 @@
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
@@ -2272,6 +2526,7 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2283,6 +2538,7 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2294,6 +2550,7 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Prune",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2305,6 +2562,7 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2318,6 +2576,7 @@
                   "FixedValue": 40.0,
                   "Units": "m/g",
                   "Name": "SpecificRootLength",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2325,6 +2584,7 @@
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "KNO3",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -2338,6 +2598,7 @@
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2346,6 +2607,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Root].LengthDensity",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2357,6 +2619,7 @@
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "KNH4",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -2370,6 +2633,7 @@
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2378,6 +2642,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Root].LengthDensity",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2389,6 +2654,7 @@
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "NUptakeSWFactor",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
@@ -2402,6 +2668,7 @@
                       ],
                       "XVariableName": null,
                       "Name": "XYPairs",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2410,6 +2677,7 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Root].RWC",
                       "Name": "XValue",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2423,6 +2691,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MaintenanceRespirationFunction",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2432,27 +2701,32 @@
                   "FixedValue": 0.4,
                   "Units": null,
                   "Name": "CarbonConcentration",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                           "Name": "DMDemandFunction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 0.1,
                               "Units": null,
                               "Name": "PartitionFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2466,6 +2740,7 @@
                           "FixedValue": 1.0,
                           "Units": null,
                           "Name": "StructuralFraction",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2479,6 +2754,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2486,16 +2762,19 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "StorageFraction",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.0,
                               "Units": null,
                               "Name": "One",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2504,6 +2783,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2521,6 +2801,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2530,6 +2811,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2539,6 +2821,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2548,17 +2831,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2567,6 +2853,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Root].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2578,15 +2865,18 @@
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
                           "Name": "MetabolicNconc",
+                          "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2595,6 +2885,7 @@
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
+                              "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -2607,6 +2898,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Root].potentialDMAllocation.Structural",
                           "Name": "PotentialDMAllocation",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2618,11 +2910,13 @@
                     {
                       "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2631,6 +2925,7 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -2644,6 +2939,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStructuralPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2653,6 +2949,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QMetabolicPriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2662,6 +2959,7 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2674,19 +2972,22 @@
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Root].MinimumNConc",
                   "Name": "CriticalNConc",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.2,
                       "Units": "g/plant",
                       "Name": "Structural",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2696,6 +2997,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Metabolic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2705,6 +3007,7 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Storage",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2718,6 +3021,7 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "RootDepthStressFactor",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2727,6 +3031,7 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RootFrontVelocity",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2745,6 +3050,7 @@
               "IncludeLive": true,
               "IncludeDead": true,
               "Name": "Total",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2758,11 +3064,13 @@
               "IncludeLive": true,
               "IncludeDead": true,
               "Name": "AboveGround",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "\nThe AboveGround composite biomass object includes Stover and Product organs.\n",
                   "Name": "memo",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2777,6 +3085,7 @@
                 ""
               ],
               "Name": "Pasture",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2786,6 +3095,7 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "MortalityRate",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2795,6 +3105,17 @@
               "FixedValue": 1.0,
               "Units": null,
               "Name": "LegumePropn",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "SeedMortalityRate",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2811,11 +3132,13 @@
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
       "Name": "PotentialYieldTest",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
           "Text": "Eaxining APSIM values for N upatkes\n",
           "Name": "Description",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -2823,15 +3146,18 @@
         {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Factorial.Permutation, Models",
               "Name": "Permutation",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
                   "Name": "PotentialYield",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
@@ -2841,6 +3167,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Low",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2853,6 +3180,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Mid",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2865,6 +3193,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "High",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2877,6 +3206,7 @@
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
                   "Name": "NReplacement",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
@@ -2886,6 +3216,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "100kgN",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2898,6 +3229,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "300kgN",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2910,6 +3242,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "600kgN",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2928,9 +3261,9 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "IsRunning": false,
           "Descriptors": null,
           "Name": "CropCompBase",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Climate.Weather, Models",
@@ -2938,6 +3271,7 @@
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2947,6 +3281,7 @@
               "Start": "1999-08-01T00:00:00",
               "End": "2000-08-01T00:00:00",
               "Name": "Clock",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2955,6 +3290,7 @@
               "$type": "Models.Summary, Models",
               "Verbosity": 100,
               "Name": "Summary",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2962,6 +3298,7 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "Soil Arbitrator",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -2973,6 +3310,7 @@
               "AspectAngle": 0.0,
               "Altitude": 50.0,
               "Name": "Field",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.MicroClimate, Models",
@@ -2985,6 +3323,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3010,6 +3349,7 @@
                   "DataSource": null,
                   "Comments": "",
                   "Name": "Soil",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.Chemical, Models",
@@ -3022,24 +3362,6 @@
                         300.0,
                         200.0
                       ],
-                      "NO3N": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4N": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "PH": [
                         6.0,
                         6.0,
@@ -3049,16 +3371,16 @@
                         6.0,
                         6.0
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -3177,6 +3499,7 @@
                       "ParticleSizeSiltMetadata": null,
                       "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -3211,6 +3534,7 @@
                           "KLMetadata": null,
                           "XFMetadata": null,
                           "Name": "SPRUMSoil",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -3235,6 +3559,7 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
+                      "PSIDul": -100.0,
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3265,8 +3590,9 @@
                         "NaN",
                         "NaN"
                       ],
-                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
+                      "ResourceName": "WaterBalance",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3306,29 +3632,8 @@
                       ],
                       "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                          "Name": "NO3",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                          "Name": "NH4",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                          "Name": "Urea",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3351,6 +3656,7 @@
                         1.0,
                         1.0
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         11.5,
                         11.5,
@@ -3386,6 +3692,7 @@
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
                       "Name": "Organic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -3393,17 +3700,141 @@
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
                       "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
-                      "RelativeTo": null,
-                      "Name": "Initial water",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.34999999999999976
+                      ],
+                      "InitialPAWmm": 399.99999999999994,
+                      "RelativeTo": "LL15",
+                      "FilledFromTop": true,
+                      "Name": "Water",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "NO3",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "NH4",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "Urea",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -3414,28 +3845,33 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 2000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Irrigation, Models",
                   "Name": "Irrigation",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
-                  "ResourceName": "Fertiliser",
                   "Name": "Fertiliser",
+                  "ResourceName": "Fertiliser",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3462,7 +3898,7 @@
                     "[SPRUM].Root.Wt",
                     "[SPRUM].Root.NUptakeLayered",
                     "[Fertiliser].NitrogenApplied",
-                    "[Soil].SoilWater.SWmm",
+                    "[Soil].Water.MM",
                     "[Soil].SoilNitrogen.MineralN",
                     "[Soil].SoilNitrogen.MineralisedN",
                     "[Soil].SoilWater.FlowNO3",
@@ -3473,14 +3909,19 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "Report",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "ResourceName": "SPRUM",
+                  "PlantType": null,
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
                   "Name": "SPRUM",
+                  "ResourceName": "SPRUM",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3526,12 +3967,14 @@
                     }
                   ],
                   "Name": "AutomaticIrrigation",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\n        public double MaxRootDep { get; set;}\n        [Description(\"potential growth rate (g_dm_oCd)\")]\n        public double PotGrowth { get; set;}\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n                zone.Set(\"[SPRUM].Stover.Photosynthesis.Potential.g_per_oCd.FixedValue\", PotGrowth);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Soils;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Newtonsoft.Json;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\r\n        public double MaxRootDep { get; set;}\r\n        [Description(\"potential growth rate (g_dm_oCd)\")]\r\n        public double PotGrowth { get; set;}\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\r\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n                zone.Set(\"[SPRUM].Stover.Photosynthesis.Potential.g_per_oCd.FixedValue\", PotGrowth);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Cultivar",
@@ -3547,12 +3990,14 @@
                     }
                   ],
                   "Name": "SowAndHarvest",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "FertiliserType",
@@ -3560,7 +4005,7 @@
                     },
                     {
                       "Key": "FertiliserDates",
-                      "Value": "1-Aug, 15-Aug, 1-Sep-15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
+                      "Value": "1-Aug, 15-Aug, 1-Sep, 15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
                     },
                     {
                       "Key": "Amount",
@@ -3572,6 +4017,8 @@
                     }
                   ],
                   "Name": "ApplyFertOnDates",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3614,6 +4061,7 @@
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Cover",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -3639,6 +4087,7 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -3652,6 +4101,7 @@
           "ShowInDocs": false,
           "GraphsPerPage": 6,
           "Name": "Biomass",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -3684,6 +4134,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Photosynthesis Accum",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -3709,6 +4160,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Photosynthesis",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3748,6 +4200,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Product",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -3773,6 +4226,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Product",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3812,6 +4266,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Stover",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -3837,6 +4292,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Stover",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3876,6 +4332,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Root",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -3901,6 +4358,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Root",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -3918,6 +4376,7 @@
           "ShowInDocs": false,
           "GraphsPerPage": 6,
           "Name": "Nitrogen",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -3950,6 +4409,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Uptake",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -3975,6 +4435,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Uptake",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -4014,6 +4475,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Total N",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -4039,6 +4501,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "TotalN",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -4059,11 +4522,13 @@
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
       "Name": "NFixationTest",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
           "Text": "Eaxining APSIM values for N upatkes\n",
           "Name": "Description",
+          "ResourceName": null,
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -4071,15 +4536,18 @@
         {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Factorial.Permutation, Models",
               "Name": "Permutation",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
                   "Name": "PotentialYield",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
@@ -4089,6 +4557,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Low",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4101,6 +4570,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Mid",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4113,6 +4583,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "High",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4125,6 +4596,7 @@
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
                   "Name": "Legume",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
@@ -4134,6 +4606,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Legume",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4146,6 +4619,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Mix",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4158,6 +4632,7 @@
                       "Paths": null,
                       "Values": null,
                       "Name": "Grass",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4176,9 +4651,9 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "IsRunning": false,
           "Descriptors": null,
           "Name": "LegCompBase",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Climate.Weather, Models",
@@ -4186,6 +4661,7 @@
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": null,
               "Name": "Weather",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4195,6 +4671,7 @@
               "Start": "1999-08-01T00:00:00",
               "End": "2000-08-01T00:00:00",
               "Name": "Clock",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4203,6 +4680,7 @@
               "$type": "Models.Summary, Models",
               "Verbosity": 100,
               "Name": "Summary",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4210,6 +4688,7 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "Soil Arbitrator",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4221,6 +4700,7 @@
               "AspectAngle": 0.0,
               "Altitude": 50.0,
               "Name": "Field",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.MicroClimate, Models",
@@ -4233,6 +4713,7 @@
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -4258,6 +4739,7 @@
                   "DataSource": null,
                   "Comments": "",
                   "Name": "Soil",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Soils.Chemical, Models",
@@ -4270,24 +4752,6 @@
                         300.0,
                         200.0
                       ],
-                      "NO3N": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4N": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
                       "PH": [
                         6.0,
                         6.0,
@@ -4297,16 +4761,16 @@
                         6.0,
                         6.0
                       ],
-                      "CL": null,
+                      "PHUnits": 0,
                       "EC": null,
                       "ESP": null,
-                      "LabileP": null,
-                      "UnavailableP": null,
+                      "CEC": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4425,6 +4889,7 @@
                       "ParticleSizeSiltMetadata": null,
                       "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
+                      "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -4459,6 +4924,7 @@
                           "KLMetadata": null,
                           "XFMetadata": null,
                           "Name": "SPRUMSoil",
+                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -4483,6 +4949,7 @@
                       "CNCov": 0.8,
                       "DischargeWidth": 0.0,
                       "CatchmentArea": 0.0,
+                      "PSIDul": -100.0,
                       "Thickness": [
                         150.0,
                         150.0,
@@ -4513,8 +4980,9 @@
                         "NaN",
                         "NaN"
                       ],
-                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
+                      "ResourceName": "WaterBalance",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4554,29 +5022,8 @@
                       ],
                       "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                          "Name": "NO3",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                          "Name": "NH4",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                          "Name": "Urea",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4599,6 +5046,7 @@
                         1.0,
                         1.0
                       ],
+                      "CarbonUnits": 0,
                       "SoilCNRatio": [
                         11.5,
                         11.5,
@@ -4634,6 +5082,7 @@
                       "CarbonMetadata": null,
                       "FOMMetadata": null,
                       "Name": "Organic",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4641,17 +5090,141 @@
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
                       "Name": "Temperature",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.InitialWater, Models",
-                      "PercentMethod": 0,
-                      "FractionFull": 1.0,
-                      "DepthWetSoil": "NaN",
-                      "RelativeTo": null,
-                      "Name": "Initial water",
+                      "$type": "Models.Soils.Water, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.35,
+                        0.34999999999999976
+                      ],
+                      "InitialPAWmm": 399.99999999999994,
+                      "RelativeTo": "LL15",
+                      "FilledFromTop": true,
+                      "Name": "Water",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "NO3",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 0,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "NH4",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Thickness": [
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        200.0
+                      ],
+                      "InitialValues": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "InitialValuesUnits": 1,
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.0,
+                      "Exco": null,
+                      "FIP": null,
+                      "DepthConstant": 0.0,
+                      "MaxDepthSoluteAccessible": 0.0,
+                      "RunoffEffectivenessAtMovingSolute": 0.0,
+                      "MaxEffectiveRunoff": 0.0,
+                      "Name": "Urea",
+                      "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4662,28 +5235,33 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 2000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "ResourceName": "SurfaceOrganicMatter",
                   "Name": "surface organic matter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Irrigation, Models",
                   "Name": "Irrigation",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
-                  "ResourceName": "Fertiliser",
                   "Name": "Fertiliser",
+                  "ResourceName": "Fertiliser",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4710,7 +5288,7 @@
                     "[SPRUM].Root.Wt",
                     "[SPRUM].Root.NUptakeLayered",
                     "[Fertiliser].NitrogenApplied",
-                    "[Soil].SoilWater.SWmm",
+                    "[Soil].Water.MM",
                     "[Soil].SoilNitrogen.MineralN",
                     "[Soil].SoilNitrogen.MineralisedN",
                     "[Soil].SoilWater.FlowNO3",
@@ -4721,14 +5299,19 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "Report",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "ResourceName": "SPRUM",
+                  "PlantType": null,
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
                   "Name": "SPRUM",
+                  "ResourceName": "SPRUM",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4774,12 +5357,14 @@
                     }
                   ],
                   "Name": "AutomaticIrrigation",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\n        public double MaxRootDep { get; set;}\n        [Description(\"potential growth rate (g_dm_oCd)\")]\n        public double PotGrowth { get; set;}\r\n        [Description(\"Proportion legume (0-1)\")]\n        public double LegPropn { get; set;}\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n                zone.Set(\"[SPRUM].Stover.Photosynthesis.Potential.g_per_oCd.FixedValue\", PotGrowth);\n                zone.Set(\"[SPRUM].LegumePropn.FixedValue\", LegPropn);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Soils;\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Newtonsoft.Json;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\r\n        public double MaxRootDep { get; set;}\r\n        [Description(\"potential growth rate (g_dm_oCd)\")]\r\n        public double PotGrowth { get; set;}\r\n        [Description(\"Proportion legume (0-1)\")]\r\n        public double LegPropn { get; set;}\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\r\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n                zone.Set(\"[SPRUM].Stover.Photosynthesis.Potential.g_per_oCd.FixedValue\", PotGrowth);\r\n                zone.Set(\"[SPRUM].LegumePropn.FixedValue\", LegPropn);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Cultivar",
@@ -4799,12 +5384,14 @@
                     }
                   ],
                   "Name": "SowAndHarvest",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] \r\n        public string[] FertiliserDates { get; set; } \r\n\r\n        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] \r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] \r\n        public bool AmountType { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            foreach (string ddMMM in FertiliserDates)\r\n            {\r\n                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))\r\n                {\r\n                    if (AmountType)\r\n                        Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                    else\r\n                        Fertiliser.Apply(Amount: Amount / FertiliserDates.Length, Type: FertiliserType);\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "FertiliserType",
@@ -4812,7 +5399,7 @@
                     },
                     {
                       "Key": "FertiliserDates",
-                      "Value": "1-Aug, 15-Aug, 1-Sep-15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
+                      "Value": "1-Aug, 15-Aug, 1-Sep, 15-Sep, 1-Nov, 15-Nov, 1-dec, 15-dec, 1-Jan, 15-Jan, 1-Feb, 15-Feb, 1-Mar, 15-Mar"
                     },
                     {
                       "Key": "Amount",
@@ -4824,6 +5411,8 @@
                     }
                   ],
                   "Name": "ApplyFertOnDates",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4866,6 +5455,7 @@
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Cover",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -4891,6 +5481,7 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
+              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -4904,6 +5495,7 @@
           "ShowInDocs": false,
           "GraphsPerPage": 6,
           "Name": "Biomass",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -4936,6 +5528,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Photosynthesis Accum",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -4961,6 +5554,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Photosynthesis",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5000,6 +5594,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Product",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -5025,6 +5620,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Product",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5064,6 +5660,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Stover",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -5089,6 +5686,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Stover",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5128,6 +5726,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Root",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -5153,6 +5752,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Root",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5170,6 +5770,7 @@
           "ShowInDocs": false,
           "GraphsPerPage": 6,
           "Name": "Nitrogen",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
@@ -5202,6 +5803,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Uptake",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -5227,6 +5829,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Uptake",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -5266,6 +5869,7 @@
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Total N",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -5291,6 +5895,7 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "TotalN",
+                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false

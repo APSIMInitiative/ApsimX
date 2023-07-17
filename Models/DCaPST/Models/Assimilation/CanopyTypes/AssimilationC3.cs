@@ -19,7 +19,7 @@ namespace Models.DCAPST
 
         /// <inheritdoc/>
         protected override AssimilationFunction GetAc1Function(AssimilationPathway pathway, TemperatureResponse leaf)
-        {            
+        {
             var x = new Terms()
             {
                 _1 = leaf.VcMaxT,
@@ -67,7 +67,7 @@ namespace Models.DCAPST
             };
 
             var func = new AssimilationFunction()
-            {        
+            {
                 x = x,
 
                 MesophyllRespiration = leaf.GmRd,

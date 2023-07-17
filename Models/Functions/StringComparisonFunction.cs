@@ -1,8 +1,7 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
-
 
 namespace Models.Functions
 {

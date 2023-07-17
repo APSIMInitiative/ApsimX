@@ -1,8 +1,7 @@
-﻿namespace Models.Soils.Nutrients
+﻿using System.Collections.Generic;
+
+namespace Models.Soils.Nutrients
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Encapsulates a collection of nutrient pools and aggregates them

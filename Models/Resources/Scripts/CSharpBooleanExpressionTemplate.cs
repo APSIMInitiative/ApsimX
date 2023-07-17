@@ -14,7 +14,7 @@ namespace Models
     [Serializable]
     public class Script : Model, IBooleanFunction
     {
-        [Link] Clock Clock = null;
+        [Link] IClock Clock = null;
 
         /// <summary>Gets the value of the function.</summary>
         public bool Value()

@@ -1,13 +1,9 @@
-﻿namespace Models.Storage
+﻿using System.Collections.Generic;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Reflection;
-    using System.Threading;
 
     /// <summary>Encapsulates a command to delete a checkpoint.</summary>
     class DeleteCheckpointCommand : IRunnable
@@ -28,7 +24,7 @@
         /// <summary>Constructor</summary>
         /// <param name="dataStoreWriter">The datastore writer that called this constructor.</param>
         /// <param name="checkpointID">The new checkpoint name to create.</param>
-        public DeleteCheckpointCommand(DataStoreWriter dataStoreWriter, 
+        public DeleteCheckpointCommand(DataStoreWriter dataStoreWriter,
                                        int checkpointID)
         {
             writer = dataStoreWriter;

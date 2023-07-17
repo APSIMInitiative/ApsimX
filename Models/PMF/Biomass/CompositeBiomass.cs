@@ -1,11 +1,10 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
-using System.Collections;
-using Models.Core;
-using Newtonsoft.Json;
 using System.Collections.Generic;
-using Models.PMF.Interfaces;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
 
 namespace Models.PMF
 {
@@ -17,6 +16,9 @@ namespace Models.PMF
     public class CompositeBiomass : Model, IBiomass
     {
         private List<IOrganDamage> organs;
+
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>List of organs to agregate.</summary>
         [Description("List of organs to agregate.")]
@@ -47,6 +49,16 @@ namespace Models.PMF
                     throw new Exception($"In {Name}, cannot find a plant organ called {organName}");
                 organs.Add(organ as IOrganDamage);
             }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (Name == "AboveGround")
+                summary.WriteMessage(this, $"{Name} = {Wt:f2} (g/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Gets the mass.</summary>

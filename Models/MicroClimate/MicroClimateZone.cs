@@ -1,18 +1,19 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
 
     /// <summary>
     /// A micro climate wrapper around a Zone instance.
     /// </summary>
     /// <remarks>
     /// We need to store Radn, MaxT and MinT in here rather than weather because
-    /// of timestep issues. e.g. A manager module (in DoManagement) asks for 
+    /// of timestep issues. e.g. A manager module (in DoManagement) asks for
     /// CanopyCover from this zone. It is:
     ///    RadiationIntercepted (yesterdays value) / weather.Radn (todays value)
     /// RadiationIntercepted isn't updated until after DoManagement.
@@ -21,7 +22,7 @@
     public class MicroClimateZone
     {
         /// <summary>The clock model.</summary>
-        private Clock clock;
+        private IClock clock;
 
         /// <summary>Solar radiation.</summary>
         private double Radn;
@@ -89,7 +90,7 @@
         /// <summary>The SVP_ b Teten coefficient</summary>
         private const double svp_B = 17.27;
 
-        /// <summary>The SVP_ c Teten coefficient</summary> 
+        /// <summary>The SVP_ c Teten coefficient</summary>
         private const double svp_C = 237.3;
 
         /// <summary>molecular weight water (kg/mol)</summary>
@@ -172,7 +173,7 @@
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        public MicroClimateZone(Clock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
@@ -233,7 +234,7 @@
         /// <summary>Gets the total canopy cover.</summary>
         [Description("Total canopy cover (0-1)")]
         [Units("0-1")]
-        public double CanopyCover {  get { return RadiationInterception / Radn; } }
+        public double CanopyCover { get { return RadiationInterception / Radn; } }
 
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
@@ -307,7 +308,7 @@
             SoilHeatFlux = 0.0;
             DryLeafFraction = 0.0;
 
-            // Canopies come and go each day so clear the list of canopies and 
+            // Canopies come and go each day so clear the list of canopies and
             // go find the canopies we need to work with today.
             Canopies.Clear();
 
@@ -565,7 +566,7 @@
             nodes = nodes.Distinct().ToArray();  //Remove nodes that are the same hight to avoid zero depth layers
             numLayers = nodes.Length - 1;
             if (DeltaZ.Length != numLayers)
-             {
+            {
                 // Number of layers has changed; adjust array lengths
                 Array.Resize<double>(ref DeltaZ, numLayers);
                 Array.Resize<double>(ref layerKtot, numLayers);
@@ -778,7 +779,7 @@
         }
 
         /// <summary>
-        /// Calculate Non_dQs_dT - the dimensionless valu for 
+        /// Calculate Non_dQs_dT - the dimensionless valu for
         /// d(sat spec humidity)/dT ((kg/kg)/K) FROM TETEN FORMULA
         /// </summary>
         private double CalcNondQsdT(double temperature, double airPressure)
@@ -825,7 +826,7 @@
         {
             return svp_A * Math.Exp(svp_B * temperature / (temperature + svp_C));
         }
-        
+
         /// <summary>
         /// Calculate the vapour pressure deficit
         /// <param name="vp">(INPUT) vapour pressure (hPa = mbar)</param>
@@ -838,7 +839,7 @@
             double VPDmaxt = Math.Max(0.0, CalcSVP(maxt) - vp);  // VPD at maximum temperature
             return svp_fract * VPDmaxt + (1 - svp_fract) * VPDmint;
         }
-        
+
         /// <summary>
         /// Calculate the radiation-driven term for the Penman-Monteith water demand
         /// </summary>

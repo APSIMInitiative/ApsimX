@@ -1,9 +1,5 @@
-﻿using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Models.Core;
 
 namespace Models.Soils
 {
@@ -28,11 +24,11 @@ namespace Models.Soils
         /// <param name="Lattitude"></param>
         public double PenmanEO(double Radiation, double Temperature, double Windrun, double VaporPressure, double Albedo, double Lattitude, double DayOfYear)
         {
-            double D = SatVaporPressureSlope(Temperature)*10; //Function returns kPa, * 10 to convert to hPa
+            double D = SatVaporPressureSlope(Temperature) * 10; //Function returns kPa, * 10 to convert to hPa
             double l = lamda(Temperature);
-            double G = gama(Temperature)*10;  //Function returns kPa, * 10 to convert to hPa
+            double G = gama(Temperature) * 10;  //Function returns kPa, * 10 to convert to hPa
             double p = AirDensity(Temperature);
-            double Rad = NetRadiation(Radiation, Temperature, VaporPressure/10, Lattitude, DayOfYear, Albedo); //Function uses VP in kPa, /10 to convert from hPa
+            double Rad = NetRadiation(Radiation, Temperature, VaporPressure / 10, Lattitude, DayOfYear, Albedo); //Function uses VP in kPa, /10 to convert from hPa
             double VPD = VaporPressureDeficit(Temperature, VaporPressure); //This function returns hPa
             double Ea = 0.27 * VPD * (1 + Windrun / 160);
             return (D * Rad / l + G * Ea) / (D + G);
@@ -172,7 +168,8 @@ namespace Models.Soils
         double InverseRelativeDistance(double DOY) { return 1 + 0.033 * Math.Cos((2 * Math.PI) / 365 * DOY); }
 
         double SunsetHourAngel(double DOY, double Lattitude)
-        { double Lat = Lattitude * Math.PI / 180;
+        {
+            double Lat = Lattitude * Math.PI / 180;
             return Math.Acos(-Math.Tan(Lat) * Math.Tan(SolarDecimation(DOY)));
         }
 

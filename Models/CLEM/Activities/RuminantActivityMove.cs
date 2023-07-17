@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -101,6 +100,11 @@ namespace Models.CLEM.Activities
             {
                 RequestResourcesForTimestep();
                 PerformTasksForTimestep();
+                if (numberToDo > 0)
+                {
+                    AddStatusMessage("Moved individuals at start up");
+                    Status = ActivityStatus.Success;
+                }
             }
         }
 

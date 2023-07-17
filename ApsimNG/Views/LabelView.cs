@@ -1,13 +1,7 @@
-﻿namespace UserInterface.Views
-{
-    using Gtk;
+﻿using Gtk;
 
-    /// <summary>An interface for a label.</summary>
-    public interface ILabelView
-    {
-        /// <summary>Gets or sets the text of the label.</summary>
-        string Text { get; set; }
-    }
+namespace UserInterface.Views
+{
 
     /// <summary>A drop down view.</summary>
     public class LabelView : ViewBase, ILabelView
@@ -50,5 +44,12 @@
             label = (Label)gtkControl;
             mainWidget = label;
         }
+    }
+
+    /// <summary>An interface for a label.</summary>
+    public interface ILabelView
+    {
+        /// <summary>Gets or sets the text of the label.</summary>
+        string Text { get; set; }
     }
 }

@@ -1,8 +1,6 @@
-﻿
-
+﻿using System;
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// An enumeration for display types.
@@ -88,7 +86,23 @@ namespace Models.Core
         /// text editor. Each line of input is treated as an
         /// element in the array.
         /// </summary>
-        MultiLineText
+        MultiLineText,
+            
+        /// <summary>
+        /// This is a list of SCRUMcrop model parameterisations that 
+        /// may be established in a simulation.
+        /// </summary>
+        SCRUMcropName,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model establishment stages.
+        /// </summary>
+        ScrumEstablishStages,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model harvest stages.
+        /// </summary>
+        ScrumHarvestStages
     }
 
     /// <summary>

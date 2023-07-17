@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.DCAPST.Interfaces
+﻿namespace Models.DCAPST.Interfaces
 {
     /// <summary>
     /// Represents a model that simulates daily photosynthesis

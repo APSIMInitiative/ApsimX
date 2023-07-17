@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using System.Xml;
-using Models.Core;
-using Models;
 using APSIM.Shared.Utilities;
 
 namespace Models.Soils

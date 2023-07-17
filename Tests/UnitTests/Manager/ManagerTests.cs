@@ -61,7 +61,7 @@ namespace UnitTests.ManagerTests
         public void TestScriptNotRebuilt()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
-            IModel file = FileFormat.ReadFromString<IModel>(json, e => throw e, false);
+            IModel file = FileFormat.ReadFromString<IModel>(json, e => throw e, false).NewModel as IModel;
             Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
@@ -101,7 +101,7 @@ namespace UnitTests.ManagerTests
         public void TestManagerOverrides()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {

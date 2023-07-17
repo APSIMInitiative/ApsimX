@@ -1,15 +1,14 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.PMF.Interfaces;
-using Models.PMF.Organs;
-using Models.Soils.Arbitrator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Organs;
 using Models.Soils;
-using Models.Functions.RootShape;
+using Models.Soils.Arbitrator;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Arbitrator
 {
@@ -28,7 +27,7 @@ namespace Models.PMF.Arbitrator
 
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Root root = null;
-        
+
         ///<summary>The soil</summary> needed to get KL values
         [Link]
         public Soils.Soil Soil = null;
@@ -173,7 +172,7 @@ namespace Models.PMF.Arbitrator
 
                 var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
                 if (soilCrop == null)
-                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 
                 double[] kl = soilCrop.KL;
 

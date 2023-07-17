@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
     /// <summary>
     /// A summary model interface for writing to the summary file.

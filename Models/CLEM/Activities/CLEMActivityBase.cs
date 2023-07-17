@@ -7,8 +7,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
@@ -297,6 +295,7 @@ namespace Models.CLEM.Activities
         {
             // create Transaction category based on Zone settings
             TransactionCategory = UpdateTransactionCategory(this);
+            Status = ActivityStatus.Ignored;
         }
 
         /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
@@ -466,8 +465,8 @@ namespace Models.CLEM.Activities
             {
                 valuesForCompanionModels[key] = null;
             }
-            Status = ActivityStatus.Ignored;
             statusMessageList.Clear();
+            Status = ActivityStatus.Ignored;
         }
 
         /// <summary>
@@ -482,28 +481,33 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
-        public void ReportActivityStatus()
+        public void ReportActivityStatus(int level, bool fromSetup = false)
         {
-            this.TriggerOnActivityPerformed();
+            this.TriggerOnActivityPerformed(level);
+            level++;
+            string spaces = new string(' ', level*2);
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
+            if (!fromSetup)
             {
-                if (timer.ActivityDue)
+                // report timer status and messages when not from setup
+                foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
                 {
                     // report activity performed.
                     ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
                     {
-                        Name = (timer as IModel).Name,
-                        Status = ActivityStatus.Timer,
+                        Name = spaces+(timer as IModel).Name,
+                        Status = (timer.ActivityDue) ? ActivityStatus.Timer : ActivityStatus.Ignored,
                         Id = (timer as CLEMModel).UniqueID.ToString(),
-                        ModelType = (int)ActivityPerformedType.Timer
+                        ModelType = (int)ActivityPerformedType.Timer,
+                        StatusMessage = timer.StatusMessage
                     });
+                    timer.StatusMessage = "";
                 }
             }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
-                activity.ReportActivityStatus();
+                activity.ReportActivityStatus(level);
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
@@ -689,7 +693,8 @@ namespace Models.CLEM.Activities
 
                     // tests for invalid identifier
                     bool test = ((iChild.Identifier ?? "") == "") && identifiers.Any();
-                    bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
+                    //bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
+                    bool test2 = ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
 
                     if (test | test2)
                     {
@@ -701,7 +706,8 @@ namespace Models.CLEM.Activities
 
                     var units = DefineCompanionModelLabels(iChildType).Measures;
                     test = ((iChild.Measure ?? "") == "") == units.Any();
-                    test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
+                    //test2 = units.Any() && ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
+                    test2 = ((iChild.Measure ?? "") != "") && !units.Contains(iChild.Measure ?? "");
                     if (test | test2)
                     {
                         string warn = $"Invalid parameter value in {(iChild as CLEMModel).FullPath}{Environment.NewLine}PARAMETER: Units of measure";
@@ -824,40 +830,43 @@ namespace Models.CLEM.Activities
                 skipped.Status = ActivityStatus.Skipped;
 
             // check if need to do transmutations
-            int countTransmutationsSuccessful = shortfallsToTransmute.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
-            bool allTransmutationsSuccessful = (shortfallsToTransmute.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
+            //int countTransmutationsSuccessful = shortfallsToTransmute.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
+            //bool allTransmutationsSuccessful = (shortfallsToTransmute.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Any() == false);
 
             // if error and stop on shortfall and shortfalls still occur after any transmutation
             // racalc shortfalls ignoring any components with skip action
             shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped);
             if (shortfallsToTransmute.Any())
             {
-                if (!allTransmutationsSuccessful)
+                if(shortfallsToTransmute.Where(a => a.TransmutationPossible == false).Any())
                 {
-                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                    switch (OnPartialResourcesAvailableAction)
                     {
-                        Status = ActivityStatus.Critical;
-                        string errorMessage = "";
-                        // if this is a labour shortfall, improve the error message
-                        foreach (var sfallItem in shortfallsToTransmute)
-                        {
-                            if(sfallItem.ActivityModel is LabourRequirement)
+                        case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
+                            Status = ActivityStatus.Critical;
+                            string errorMessage = "";
+                            // if this is a labour shortfall, improve the error message
+                            foreach (var sfallItem in shortfallsToTransmute)
                             {
-                                errorMessage = $"Unable to provide labour resource for [a={this.NameWithParent}] with [Report error and stop] selected as shortfall of resources action{Environment.NewLine}The reason [{sfallItem.ShortfallStatus}] states labour could not be added as whole individuals for the full amount requested.";
-                                Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
-                                throw new ApsimXException(this, errorMessage);
+                                if (sfallItem.ActivityModel is LabourRequirement)
+                                {
+                                    errorMessage = $"[f={sfallItem.ActivityModel.NameWithParent}] with shortfall action for [a={this.NameWithParent}] cannot provide all labour resources needed for [a={NameWithParent}]{Environment.NewLine}The reason [{sfallItem.ShortfallStatus}] states labour could not be added as whole individuals for the full amount requested.";
+                                    Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
+                                    throw new ApsimXException(this, errorMessage);
+                                }
                             }
-                        }
 
-                        errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected as action when shortfall of resources for the activity";
-                        Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
-                        throw new ApsimXException(this, errorMessage);
-                    }
-                    if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity)
-                    {
-                        Status = ActivityStatus.Skipped;
+                            errorMessage = $"Insufficient resources for [a={this.NameWithParent}] with [Report error and stop] selected when resource shortfall occurs";
+                            Warnings.CheckAndWrite(errorMessage, Summary, this, MessageType.Error);
+                            throw new ApsimXException(this, errorMessage);
+                        case OnPartialResourcesAvailableActionTypes.SkipActivity:
+                            Status = ActivityStatus.Skipped;
+                            break;
+                        default:
+                            break;
                     }
                 }
+
                 // if we get to this point we have handled situation where shortfalls occurred and skip or error set as OnPartialResourceAction
                 // OR at least one transmutation successful and PerformWithPartialResources
                 if (Status != ActivityStatus.Skipped)
@@ -1038,6 +1047,7 @@ namespace Models.CLEM.Activities
             // start with top most LabourFilterGroup
             while (current != null && amountProvided < amountNeeded)
             {
+                request.ShortfallStatus = "Labour issues";
                 IEnumerable<LabourType> items = resourceHolder.FindResource<Labour>().Items.Where(a => ((a.LastActivityRequestID[checkTakeIndex] != callingModel.UniqueID)?0: a.LastActivityLabour[checkTakeIndex]) < lr.MaximumDaysPerPerson);
                 //items = items.Where(a => (a.LastActivityRequestID[checkTakeIndex] != callingModel.UniqueID) || (a.LastActivityLabour[checkTakeIndex] < lr.MaximumDaysPerPerson));
                 items = current.Filter(items);
@@ -1151,8 +1161,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to trigger an Activity Performed event 
         /// </summary>
-        public void TriggerOnActivityPerformed()
+        public void TriggerOnActivityPerformed(int level = 0)
         {
+            string spaces = new string(' ', level*2);
+
             int type = 0;
             if (GetType().Name.Contains("ActivityTimer"))
             {
@@ -1162,10 +1174,12 @@ namespace Models.CLEM.Activities
             {
                 type = 1;
             }
+
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
-                Name = this.Name,
+                Name = spaces + this.Name,
                 Status = this.Status,
+                StatusMessage = StatusMessage,
                 Id = this.UniqueID.ToString(),
                 ModelType = type
             });
@@ -1177,23 +1191,24 @@ namespace Models.CLEM.Activities
         /// <param name="status">The status of this activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
-            int type = 0;
-            if (GetType().Name.Contains("ActivityTimer"))
-            {
-                type = 2;
-            }
-            if (GetType().Name.Contains("Folder"))
-            {
-                type = 1;
-            }
+            //int type = 0;
+            //if (GetType().Name.Contains("ActivityTimer"))
+            //{
+            //    type = 2;
+            //}
+            //if (GetType().Name.Contains("Folder"))
+            //{
+            //    type = 1;
+            //}
             this.Status = status;
-            ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
-            {
-                Name = this.Name,
-                Status = status,
-                Id = this.UniqueID.ToString(),
-                ModelType = type
-            });
+            TriggerOnActivityPerformed();
+            //ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
+            //{
+            //    Name = this.Name,
+            //    Status = status,
+            //    Id = this.UniqueID.ToString(),
+            //    ModelType = type
+            //});
         }
     }
 }

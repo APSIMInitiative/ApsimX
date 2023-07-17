@@ -4,9 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
@@ -35,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Public so children can be dynamically created after links defined
         /// </summary>
         [Link]
-        public Clock Clock = null;
+        public IClock Clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -131,7 +129,7 @@ namespace Models.CLEM.Activities
             // This determines the proportional amount available for competing breeds with different green diet proportions
             // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
             double available = GrazeFoodStoreModel.Amount;
-            double limit = 0;
+            double limit = 1.0;
             if(MathUtilities.IsPositive(totalNeeded))
                 limit = Math.Min(1.0, available / totalNeeded);
 
@@ -189,9 +187,9 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

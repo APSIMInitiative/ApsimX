@@ -1,8 +1,8 @@
-﻿namespace Models.Storage
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.
@@ -61,8 +61,8 @@
         /// <summary>Delete a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to delete.</param>
         void DeleteCheckpoint(string name);
-        
-            /// <summary>Revert a checkpoint.</summary>
+
+        /// <summary>Revert a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to revert to.</param>
         void RevertCheckpoint(string name);
 

@@ -1,12 +1,13 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Extensions.Collections;
+using Models.Core.ApsimFile;
+using Models.Storage;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.Extensions.Collections;
-    using Models.Core.ApsimFile;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// This class generates individual .apsimx files for each simulation in a runner.
@@ -34,7 +35,7 @@
         /// <returns>null for success or a list of exceptions.</returns>
         public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
         {
-            IModel model = FileFormat.ReadFromFile<IModel>(file, e => throw e, false);
+            IModel model = FileFormat.ReadFromFile<IModel>(file, e => throw e, false).NewModel as IModel;
             Runner runner = new Runner(file);
             return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
         }
@@ -79,7 +80,7 @@
                     FixSimulation(sim, path, collectExternalFiles);
                     sims.Children.Add(sim);
                 }
-                
+
                 string st = FileFormat.WriteToString(sims);
                 string fileName = Path.Combine(path, $"generated-{i}.apsimx");
                 generatedFiles.Add(fileName);
