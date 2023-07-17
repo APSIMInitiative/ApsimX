@@ -15,13 +15,13 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     public class CompositeBiomass : Model, IBiomass
     {
-        private List<IOrganDamage> organs;
+        private List<IOrganDamage> organs = null;
 
         [Link]
         private ISummary summary = null;
 
-        /// <summary>List of organs to agregate.</summary>
-        [Description("List of organs to agregate.")]
+        /// <summary>List of organs to aggregate.</summary>
+        [Description("List of organs to aggregate.")]
         public string[] OrganNames { get; set; }
 
         /// <summary>Include live material?</summary>
@@ -44,7 +44,7 @@ namespace Models.PMF
                 throw new Exception("CompositeBiomass can only be dropped on a plant.");
             foreach (var organName in OrganNames)
             {
-                var organ = parentPlant.Organs.FirstOrDefault(o => o.Name == organName);
+                var organ = parentPlant.Children.FirstOrDefault(o => o.Name == organName);
                 if (organ == null && !(organ is IOrganDamage))
                     throw new Exception($"In {Name}, cannot find a plant organ called {organName}");
                 organs.Add(organ as IOrganDamage);

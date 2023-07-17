@@ -67,6 +67,10 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IBiomass AboveGround { get; set; }
 
+        /// <summary>Plant organs.</summary>
+        [Link]
+        private IOrgan[] Organs { get; set; }
+
         /// <summary>Above ground weight</summary>
         public IBiomass AboveGroundHarvestable { get { return AboveGround; } }
 
@@ -80,9 +84,6 @@ namespace Models.PMF
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
 
-        /// <summary>Gets the organs.</summary>
-        [JsonIgnore]
-        public IOrgan[] Organs { get; private set; }
 
         /// <summary>Gets a list of cultivar names</summary>
         public string[] CultivarNames
@@ -172,9 +173,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>A list of organs that can be damaged.</summary>
-        List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
-
         /// <summary>
         /// Total plant green cover from all organs
         /// </summary>
@@ -254,11 +252,6 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<IOrgan> organs = new List<IOrgan>();
-            foreach (IOrgan organ in this.FindAllChildren<IOrgan>())
-                organs.Add(organ);
-
-            Organs = organs.ToArray();
             IsEnding = false;
             DaysAfterEnding = 0;
             Clear();
