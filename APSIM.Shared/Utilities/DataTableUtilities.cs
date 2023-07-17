@@ -659,6 +659,16 @@ namespace APSIM.Shared.Utilities
                 stringTable.Rows.Add(newRow);
             }
 
+            //Sort Rows by SimulationName in alphabetical order
+            if (stringTable.Columns.Contains("SimulationName"))
+            {
+                DataView dv = stringTable.DefaultView;
+                dv.Sort = "SimulationName ASC";
+                if (stringTable.Columns.Contains("Clock.Today"))
+                    dv.Sort += ", Clock.Today ASC";
+                stringTable = dv.ToTable();
+            }
+
             // Need to work out column widths
             List<int> columnWidths = new List<int>();
             foreach (DataColumn column in stringTable.Columns)
