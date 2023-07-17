@@ -3,7 +3,6 @@
   "ExplorerWidth": 0,
   "Version": 164,
   "Name": "Simulations",
-  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
@@ -1190,7 +1189,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The CAMP model was derived to integrate molecular and physiological models of cereal flowering time to better capture G x E x M interactions and to provide a framework for linking genetic data to field behaviour.  It calculates the current levels of expression of Vrn1, 2 and 3 genes from daily deltas that are all calculated relative to haun stage deltas in addition to temperature (Vrn1) and photoperiod (Vrn 2 and 3).  To reach the vernalisation stage Vrn1 must be upregulated to a value of at least 1.0.  Where Vrn2 is also being expressed the target for Vrn1 expression increases in parallel as more Vrn1 expression is needed to block Vrn2 and allow Vrn3 expression.  Once Vrn2 expression is blocked Vrn3 will be upregulated and terminal spikelet occurs when its apparent expression reaches 1.0.  CAMP also predicts expression of VrnX which represents the relative contributions of Vrn2 and Vrn3 prior to vernalisation.  The genotype specific rates of gene expression are derived from final leaf number parameters (FLNparams):  \n\nMinLN - The final leaf number (FLN) of the genotype when fully vernalised early and grown under long (>=16) photoperiod following vernalisation (FLN_LV).  These conditions maximise the expression of vernalisation and photoperiod genes and this parameter provides a measure of inherent earliness of the genotype. It may vary between 5 and 15 leaves (7 is typical).  \n\nPpLN - The difference between MinLN and the FLN of a genotype when fully vernalised early and grown under short (<=8h) photoperiod following vernalisation (FLN_SV).  These conditions maximise Vrn1 expression but minimise Vrn2 and 3 expression and PpLN provides a measure of photoperiod sensitivity of the genotype.  It may vary between 0 and 8 leaves with 1 being typical of a low sensitivity genotype and 4 being typical of a high sensitivity genotype.  \n\nVrnLN - The difference between MinLN and the FLN â€“ PpLN of the genotype when not vernalised and grown under short photoperiod (FLN_SN).  These conditions minimise Vrn and Pp gene expression to base (minimal) values and VrnLN is a measure of vernalisation sensitivity of the genotype.  It may vary between 0 and 9 leaves with 1 being typical for an insensitive variety and 5 being typical for a sensitive variety.  \n\nVxPLN - The difference between MinLN + VrnLN and the FLN of the genotype when not vernalised and grown under long photoperiod (FLN_LN).  These conditions minimise upregulation of Vrn1 and maximise upregulation of Vrn2 and 3 and this parameter provides a measure of the relative activities of Vrn2 and Vrn3 during the vernalisation phase. A positive value shows short days accelerate vernalisation and a negative value shows short days slow vernalisation.  The value of VxPLN should be greater than the negative of VrnLN and typically varies between +2 and -4.",
+                  "Text": "The CAMP model was derived to integrate molecular and physiological models of cereal flowering time to better capture G x E x M interactions and to provide a framework for linking genetic data to field behaviour.  It calculates the current levels of expression of Vrn1, 2 and 3 genes from daily deltas that are all calculated relative to haun stage deltas in addition to temperature (Vrn1) and photoperiod (Vrn 2 and 3).  To reach the vernalisation stage Vrn1 must be upregulated to a value of at least 1.0.  Where Vrn2 is also being expressed the target for Vrn1 expression increases in parallel as more Vrn1 expression is needed to block Vrn2 and allow Vrn3 expression.  Once Vrn2 expression is blocked Vrn3 will be upregulated and terminal spikelet occurs when its apparent expression reaches 1.0.  CAMP also predicts expression of VrnX which represents the relative contributions of Vrn2 and Vrn3 prior to vernalisation.  The genotype specific rates of gene expression are derived from final leaf number parameters (FLNparams):  \n\nMinLN - The final leaf number (FLN) of the genotype when fully vernalised early and grown under long (>=16) photoperiod following vernalisation (FLN_LV).  These conditions maximise the expression of vernalisation and photoperiod genes and this parameter provides a measure of inherent earliness of the genotype. It may vary between 5 and 15 leaves (7 is typical).  \n\nPpLN - The difference between MinLN and the FLN of a genotype when fully vernalised early and grown under short (<=8h) photoperiod following vernalisation (FLN_SV).  These conditions maximise Vrn1 expression but minimise Vrn2 and 3 expression and PpLN provides a measure of photoperiod sensitivity of the genotype.  It may vary between 0 and 8 leaves with 1 being typical of a low sensitivity genotype and 4 being typical of a high sensitivity genotype.  \n\nVrnLN - The difference between MinLN and the FLN Ã¢â‚¬â€œ PpLN of the genotype when not vernalised and grown under short photoperiod (FLN_SN).  These conditions minimise Vrn and Pp gene expression to base (minimal) values and VrnLN is a measure of vernalisation sensitivity of the genotype.  It may vary between 0 and 9 leaves with 1 being typical for an insensitive variety and 5 being typical for a sensitive variety.  \n\nVxPLN - The difference between MinLN + VrnLN and the FLN of the genotype when not vernalised and grown under long photoperiod (FLN_LN).  These conditions minimise upregulation of Vrn1 and maximise upregulation of Vrn2 and 3 and this parameter provides a measure of the relative activities of Vrn2 and Vrn3 during the vernalisation phase. A positive value shows short days accelerate vernalisation and a negative value shows short days slow vernalisation.  The value of VxPLN should be greater than the negative of VrnLN and typically varies between +2 and -4.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1656,7 +1655,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71",
+              "Expression": "divide(([Grain].Live.N + [Grain].Dead.N),([Grain].Live.Wt + [Grain].Dead.Wt)) * 100 * 5.71",
               "Name": "Protein",
               "ResourceName": null,
               "Children": [],
@@ -1669,11 +1668,11 @@
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 1.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -1902,70 +1901,13 @@
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.2,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Harvest",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.3,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Cut",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Prune",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.15,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Graze",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Thin",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.2,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -4080,70 +4022,13 @@
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.3,
-                  "FractionDeadToResidue": 0.3,
-                  "Name": "Harvest",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.8,
-                  "FractionDeadToRemove": 0.8,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Cut",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.6,
-                  "FractionDeadToResidue": 0.6,
-                  "Name": "Prune",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.6,
-                  "FractionDeadToRemove": 0.6,
-                  "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.1,
-                  "Name": "Graze",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.05,
-                  "FractionDeadToResidue": 0.05,
-                  "Name": "Thin",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 1.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
