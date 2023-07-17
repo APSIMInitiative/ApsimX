@@ -75,12 +75,19 @@ namespace UserInterface.Presenters
             if (operations.Operation != null)
                 foreach (Operation operation in this.operations.Operation)
                 {
-                    // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                    string dateStr = null;
-                    if (!string.IsNullOrEmpty(operation.Date))
-                        dateStr = DateUtilities.ValidateDateString(operation.Date);
-                    string commentChar = operation.Enabled ? string.Empty : "// ";
-                    st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                    if (operation.Action != null)
+                    {
+                        // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                        string dateStr = null;
+                        if (!string.IsNullOrEmpty(operation.Date))
+                            dateStr = DateUtilities.ValidateDateString(operation.Date);
+                        string commentChar = operation.Enabled ? string.Empty : "// ";
+                        st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                    }
+                    else
+                    {
+                        st += operation.Line + Environment.NewLine;
+                    }
                 }
 
             this.view.Text = st;
@@ -109,6 +116,7 @@ namespace UserInterface.Presenters
                         }
                         else
                         {
+                            operations.Add(new Operation(true, null, null, line));
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
                         }
                     }
