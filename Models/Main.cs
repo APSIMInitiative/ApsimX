@@ -171,10 +171,12 @@ namespace Models
                         }
                     }
                     // If no apsimx file path included proceeding --apply switch...              
-                    else if (files.Length < 1) // TODO: Create the 'Create' option functionality.
+                    else if (files.Length < 1) // TODO: create run functionality. Needs to run the file referenced in loadPath.
                     {
                         savePath = "";
                         loadPath = "";
+                        List<string> commandWrapper = new List<string>();
+
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
@@ -199,10 +201,11 @@ namespace Models
                             }
 
                             // Required as RunConfigCommands() requires list, not just a string.
-                            List<string> commandWrapper = new()
+                            commandWrapper = new List<string>()
                             {
                                 commandsArray[i]
                             };
+
 
                             // As long as a file can be loaded any other command can be run.
                             if (!String.IsNullOrEmpty(loadPath))
@@ -239,6 +242,7 @@ namespace Models
                                 //string newFileName = savePathStrings.ToList()[^1];
                                 //string directoryPath = savePathStrings.Take(savePathStrings.Length - 1).Join<string>("\\");
                                 sim.Write(sim.FileName, savePath);
+                                savePath = "";
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
                         }

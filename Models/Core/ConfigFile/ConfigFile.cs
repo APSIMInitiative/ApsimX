@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
 
@@ -23,7 +25,17 @@ namespace Models.Core.ConfigFile
             // Instructions = used for adding, creating, deleting, copying, saving, loading
             // Overrides = used for modifying existing .apsimx node values.
             List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
-            return configFileCommands;
+            // Used to remove any comments from list.
+            List<string> commandsWithoutCommentLines = new List<string>();
+            foreach (string commandString in configFileCommands)
+            {
+                char firstChar = commandString[0];
+                if (firstChar != '#' && firstChar != '\\')
+                {
+                    commandsWithoutCommentLines.Add(commandString);
+                }
+            }
+            return commandsWithoutCommentLines;
         }
 
         /// <summary>
@@ -107,14 +119,16 @@ namespace Models.Core.ConfigFile
                                     }
                                     else
                                     {
-                                        string reformattedNode = "{\"$type\": \"Models." + splitCommands[2] + ", Models\"}";
+                                        //string reformattedNode = "{\"$type\": \"Models." + splitCommands[2] + ", Models\"}";
+                                        Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(splitCommands[2], Assembly.GetExecutingAssembly());
+                                        string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
                                         nodeForAction = reformattedNode;
                                     }
                                 }
                             }
                             // Ignore the command as these cases are handled outside of this method.
                             else if (keyword == Keyword.Load || keyword == Keyword.Save)
-                                return null;
+                                return sim;
                         }
 
                         Instruction instruction = new Instruction(keyword, nodeToModify, fileContainingNode, savePath, loadPath, nodeForAction);
