@@ -242,7 +242,7 @@ namespace Models.PMF.Phen
                     RelPp = PpResponse.Value(); //relative Pp, scaled between 0 at lower threshold and 1 at upper threshold
                     if (RelPp == 0) //Reduce MaxVrn2 if short Pp encountered
                     {
-                        MaxVrn2 = Math.Max(0,MaxVrn2-dBaseVrn);
+                        MaxVrn2 = Math.Max(0,MaxVrn2-dBaseVrn);  // Fixme.  I don't think this should be here. I dont think is doing anything and can be removed
                     }
                     if (isVernalised == false) // Set Vrn2 relative to MaxVrn2 and current Pp
                     {
