@@ -1107,6 +1107,8 @@ namespace UserInterface.Presenters
             description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
+            if (!string.IsNullOrEmpty(resourceName))
+                description.ToolTip += $" ({resourceName})";
 
             description.Children = new List<TreeViewNode>();
             foreach (IModel child in model.Children)
@@ -1115,6 +1117,11 @@ namespace UserInterface.Presenters
             description.Strikethrough = !model.Enabled;
             description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
+
+
+            if (model.ReadOnly)
+                description.Colour = System.Drawing.Color.DarkGray;
+
             return description;
         }
 
