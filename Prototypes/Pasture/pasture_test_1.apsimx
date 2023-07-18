@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 162,
+  "Version": 164,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -86,7 +86,57 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Cultivar name\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                Barley.Sow(cultivar: Cultivar, population: 280, depth: InitialRootDepth, rowSpacing: 150);\r\n                \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n    \r\n        \r\n",
+              "CodeArray": [
+                "using Models.Soils;",
+                "using System;",
+                "using System.Linq;",
+                "using Models.Core;",
+                "using System.Collections.Generic;",
+                "using System.Text;",
+                "using Models.PMF;",
+                "using Models;",
+                "using System.Xml.Serialization;",
+                "using APSIM.Shared.Utilities;",
+                "using System.Data;",
+                "using Models.PMF.Interfaces;",
+                "using Models.Surface;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    //[System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Plant Barley;",
+                "        [Link] Clock Clock;",
+                "        [Link] Zone zone;",
+                "        [Link] Simulation Simulation;",
+                "        [Link] SurfaceOrganicMatter SurfOM;",
+                "        ",
+                "                ",
+                "        [Description(\"Initial Root Depth\")]",
+                "        public double InitialRootDepth { get; set; }",
+                "        [Description(\"Cultivar name\")]",
+                "        public string Cultivar { get; set; }",
+                "        [Description(\"Sowing Date\")]",
+                "        public DateTime SowingDate { get; set; }",
+                "        ",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (Clock.Today.Date == SowingDate)",
+                "            {",
+                "                Barley.Sow(cultivar: Cultivar, population: 280, depth: InitialRootDepth, rowSpacing: 150);",
+                "                ",
+                "            }",
+                "        }",
+                "    }",
+                "}",
+                "                ",
+                "    ",
+                "        "
+              ],
               "Parameters": [
                 {
                   "Key": "InitialRootDepth",
@@ -112,63 +162,63 @@
               "Operation": [
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-11-11",
-                  "Action": "[Irrigation].Apply(20); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(20); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-11-19",
-                  "Action": "[Irrigation].Apply(25); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(25); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-11-26",
-                  "Action": "[Irrigation].Apply(25); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(25); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-12-11",
-                  "Action": "[Irrigation].Apply(20); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(20); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-12-21",
-                  "Action": "[Irrigation].Apply(35); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(35); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-12-29",
-                  "Action": "[Irrigation].Apply(40); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(40); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2010-01-05",
-                  "Action": "[Irrigation].Apply(35); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(35); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2010-01-13",
-                  "Action": "[Irrigation].Apply(30); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(30); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2010-03-02",
-                  "Action": "[Irrigation].Apply(40); ",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(40); "
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2010-03-03",
-                  "Action": "[Irrigation].Apply(40);",
-                  "Enabled": true
+                  "Action": "[Irrigation].Apply(40);"
                 }
               ],
               "Name": "IrrigationEvents",
@@ -182,9 +232,9 @@
               "Operation": [
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2009-11-23",
-                  "Action": "[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);",
-                  "Enabled": true
+                  "Action": "[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);"
                 }
               ],
               "Name": "FertiliserEvents",
@@ -198,9 +248,9 @@
               "Operation": [
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "2010-02-23",
-                  "Action": "[Barley].Harvest();",
-                  "Enabled": true
+                  "Action": "[Barley].Harvest();"
                 }
               ],
               "Name": "Harvest",
@@ -762,12 +812,15 @@
                 "[Pasture].Growth",
                 "[Pasture].GreenDM",
                 "[Pasture].AvailGreen",
+                "[Pasture].AvailDM",
                 "[Pasture].DryDM",
                 "[Pasture].LitterDM",
                 "[Pasture].WaterDemand",
                 "[Pasture].WaterDemandSupply",
-                "[Pasture].SWUptake",
-                "[Pasture].Uptake_NH4"
+                "sum([Pasture].SWUptake)",
+                "sum([Pasture].Uptake_NH4) as NH4Uptake",
+                "sum([Pasture].Uptake_NO3) as NO3Uptake",
+                "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -783,8 +836,8 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Barley].AboveGroundLive.Wt",
-                "[Barley].Leaf.LAI"
+                "//[Barley].AboveGroundLive.Wt",
+                "//[Barley].Leaf.LAI"
               ],
               "EventNames": [
                 "[Clock].EndOfSimulation"
@@ -864,28 +917,210 @@
               "Children": [
                 {
                   "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
                   "TableName": "DailyReport",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "Pasture.Growth",
                   "X2FieldName": null,
                   "Y2FieldName": null,
-                  "FactorToVaryColours": null,
-                  "Type": 1,
-                  "Marker": 11,
-                  "FactorToVaryMarkers": null,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryLines": null,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "ShowInLegend": false,
+                  "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "Series",
+                  "Name": "growth",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 1,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "sum(Pasture.SWUptake)",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "swuptake",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 1,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "NH4Uptake",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NH4uptake",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 1,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "NO3Uptake",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NO3uptake",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "PastureMasses",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Pasture.AvailGreen",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "AvailGreenDM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Pasture.AvailDM",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "AvailDM",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
