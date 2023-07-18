@@ -5108,10 +5108,22 @@ namespace Models.Core.ApsimFile
                     for (int i = 0; i < operation.Count(); i++)
                     {
                         string dateStr = null;
-                        if (!string.IsNullOrEmpty(operation[i]["Date"].ToString()))
-                            dateStr = DateUtilities.ValidateDateString(operation[i]["Date"].ToString());
-                        string enabled = operation[i]["Enabled"].ToString().ToLower();
-                        string commentChar = enabled.CompareTo("false") == 0 ? string.Empty : "// ";
+                        if (operation[i]["Date"] != null)
+                        {
+                            dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
+                        }
+
+                        string commentChar = "";
+                        if (operation[i]["Enabled"] != null)
+                        {
+                            string enabled = operation[i]["Enabled"].ToString().ToLower();
+                            commentChar = enabled.CompareTo("false") == 0 ? string.Empty : "// ";
+                        } 
+                        else
+                        {
+                            operation[i]["Enabled"] = false;
+                        }
+
                         operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
                     }
                 }
