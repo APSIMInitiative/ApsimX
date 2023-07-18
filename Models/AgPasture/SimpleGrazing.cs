@@ -703,7 +703,7 @@ namespace Models.AgPasture
                         var amountToRemove = removeAmount * proportion;
                         if (MathUtilities.IsGreaterThan(amountToRemove * 0.1, 0.0))
                         {
-                            var grazed = forages[i].RemoveBiomass(amountToRemove * 0.1);
+                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove * 0.1);
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 

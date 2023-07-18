@@ -74,6 +74,7 @@ namespace Models.PMF
         protected const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
+        [Link]
         protected List<IArbitration> Organs = new List<IArbitration>();
 
         ///4. Public Events And Enums
@@ -141,13 +142,6 @@ namespace Models.PMF
         [EventSubscribe("PlantSowing")]
         virtual protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            List<IArbitration> organsToArbitrate = new List<IArbitration>();
-
-            foreach (IOrgan organ in plant.Organs)
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
-
-            Organs = organsToArbitrate;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }

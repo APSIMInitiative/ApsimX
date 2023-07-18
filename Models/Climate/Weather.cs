@@ -10,7 +10,6 @@ using System.IO;
 
 namespace Models.Climate
 {
-
     ///<summary>
     /// Reads in weather data and makes it available to other models.
     ///</summary>
@@ -95,12 +94,6 @@ namespace Models.Climate
         /// </summary>
         private int dayLengthIndex;
 
-
-        /// <summary>
-        /// A flag indicating whether this model should do a seek on the weather file
-        /// </summary>
-        private bool doSeek;
-
         /// <summary>
         /// This event will be invoked immediately before models get their weather data.
         /// models and scripts an opportunity to change the weather data before other models
@@ -114,6 +107,12 @@ namespace Models.Climate
         /// relative/absolute paths.
         /// </summary>
         private string constantsFile;
+
+        /// <summary>
+        /// A LinkedList of weather that has previously been read.
+        /// Stored in order of date from newest to oldest as most recent weather is most common to search for
+        /// </summary>
+        private LinkedList<WeatherRecordEntry> weatherCache = new LinkedList<WeatherRecordEntry>();
 
         /// <summary>
         /// Allows to specify a second file which contains constants such as lat, long,
@@ -428,7 +427,7 @@ namespace Models.Climate
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+        public DailyMetDataFromFile YesterdaysMetData { get { return GetAdjacentMetData(-1); } }
 
         /// <summary>Met Data for Today</summary>
         [JsonIgnore]
@@ -436,7 +435,7 @@ namespace Models.Climate
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+        public DailyMetDataFromFile TomorrowsMetData { get { return GetAdjacentMetData(1); } }
 
         /// <summary>First date of summer.</summary>
         [JsonIgnore]
@@ -553,7 +552,6 @@ namespace Models.Climate
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            this.doSeek = true;
             this.maximumTemperatureIndex = 0;
             this.minimumTemperatureIndex = 0;
             this.radiationIndex = 0;
@@ -643,22 +641,7 @@ namespace Models.Climate
         [EventSubscribe("DoWeather")]
         private void OnDoWeather(object sender, EventArgs e)
         {
-            if (First)
-            {
-                TodaysMetData = GetMetData(this.clock.Today); //Read first date to get todays data
-                YesterdaysMetData = TodaysMetData; //Use todays Data to represent yesterday on the first day
-                TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1)); // Read another line ahead to get tomorrows data
-            }
-            else
-            { // Move everything forward a day
-                YesterdaysMetData = TodaysMetData;
-                TodaysMetData = TomorrowsMetData;
-
-                if (clock.Today == clock.EndDate && clock.EndDate == reader.LastDate)
-                    TomorrowsMetData = TodaysMetData;
-                else
-                    TomorrowsMetData = GetMetData(this.clock.Today.AddDays(1));
-            }
+            TodaysMetData = GetMetData(this.clock.Today); //Read first date to get todays data
 
             this.Radn = TodaysMetData.Radn;
             this.MaxT = TodaysMetData.MaxT;
@@ -696,30 +679,42 @@ namespace Models.Climate
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
 
-            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
+            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, VP);
 
             //do sanity check on weather
             SensibilityCheck(clock as Clock, this);
         }
 
-        /// <summary>Method to read one days met data in from file</summary>
+        /// <summary>
+        /// Method to read one days met data in from file
+        /// </summary>
         /// <param name="date">the date to read met data</param>
         public DailyMetDataFromFile GetMetData(DateTime date)
         {
-            if (this.doSeek)
+            //check if we've looked at this date before
+            WeatherRecordEntry previousEntry = null;
+            foreach (WeatherRecordEntry entry in this.weatherCache)
             {
+                if (entry.Date.Equals(date))
+                {
+                    return entry.MetData;
+                }
+                else if (entry.Date < date)
+                {
+                    previousEntry = entry;
+                    break;
+                }
+            }
+            
+            if (this.reader == null)
                 if (!this.OpenDataFile())
                     throw new ApsimXException(this, "Cannot find weather file '" + this.FileName + "'");
 
-                this.doSeek = false;
-                this.reader.SeekToDate(date);
-            }
-
-
+            //get weather for that date
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
-
             try
             {
+                this.reader.SeekToDate(date);
                 readMetData.Raw = reader.GetNextLineOfData();
             }
             catch (IndexOutOfRangeException err)
@@ -728,7 +723,24 @@ namespace Models.Climate
             }
 
             if (date != this.reader.GetDateFromValues(readMetData.Raw))
-                throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
+                throw new Exception("Non consecutive dates found in file: " + this.FileName + ".");
+
+            //since this data was valid, store in our cache for next time
+            
+            WeatherRecordEntry record = new WeatherRecordEntry();
+            record.Date = date;
+            record.MetData = readMetData;
+            if (previousEntry != null)
+                this.weatherCache.AddBefore(this.weatherCache.Find(previousEntry), record);
+            else
+                this.weatherCache.AddFirst(record);
+            
+
+            return CheckDailyMetData(readMetData);
+        }
+
+        private DailyMetDataFromFile CheckDailyMetData(DailyMetDataFromFile readMetData)
+        {
 
             if (this.radiationIndex != -1)
                 readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
@@ -808,16 +820,16 @@ namespace Models.Climate
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (StartOfSummer != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today))
+            if (StartOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today))
                 StartOfSummer.Invoke(this, e);
 
-            if (StartOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today))
+            if (StartOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today))
                 StartOfAutumn.Invoke(this, e);
 
-            if (StartOfWinter != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today))
+            if (StartOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today))
                 StartOfWinter.Invoke(this, e);
 
-            if (StartOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today))
+            if (StartOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today))
                 StartOfSpring.Invoke(this, e);
         }
 
@@ -829,16 +841,16 @@ namespace Models.Climate
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
-            if (EndOfSummer != null && DateUtilities.DatesEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
+            if (EndOfSummer != null && DateUtilities.DayMonthIsEqual(FirstDateOfAutumn, clock.Today.AddDays(1)))
                 EndOfSummer.Invoke(this, e);
 
-            if (EndOfAutumn != null && DateUtilities.DatesEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
+            if (EndOfAutumn != null && DateUtilities.DayMonthIsEqual(FirstDateOfWinter, clock.Today.AddDays(1)))
                 EndOfAutumn.Invoke(this, e);
 
-            if (EndOfWinter != null && DateUtilities.DatesEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
+            if (EndOfWinter != null && DateUtilities.DayMonthIsEqual(FirstDateOfSpring, clock.Today.AddDays(1)))
                 EndOfWinter.Invoke(this, e);
 
-            if (EndOfSpring != null && DateUtilities.DatesEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
+            if (EndOfSpring != null && DateUtilities.DayMonthIsEqual(FirstDateOfSummer, clock.Today.AddDays(1)))
                 EndOfSpring.Invoke(this, e);
         }
 
@@ -1055,6 +1067,8 @@ namespace Models.Climate
         /// VP, radition and rain are potentially valid numbers.
         /// Also checks that every day has weather.
         /// </summary>
+        /// <param name="clock">The clock</param>
+        /// <param name="weatherToday">The weather</param>
         private void SensibilityCheck(Clock clock, Weather weatherToday)
         {
             //things to check:
@@ -1083,6 +1097,25 @@ namespace Models.Climate
                 summary.WriteMessage(weatherToday, "Error: Weather on " + clock.Today.ToString() + " has negative ranfaill (" + weatherToday.Radn + ")", MessageType.Warning);
             }
             return;
+        }
+
+        /// <summary>
+        /// Returns an adjacent day's weather data as defined by the offset.
+        /// Will return today's data if yesterday is not a valid entry in the weather file.
+        /// </summary>
+        /// <param name="offset">The number of days away from today</param>
+        private DailyMetDataFromFile GetAdjacentMetData(int offset)
+        {
+            if ((this.clock.Today.Equals(this.reader.FirstDate) && offset < 0) ||
+                this.clock.Today.Equals(this.reader.LastDate) && offset > 0)
+            {
+                //in the case that we try to get yesterdays/tomorrows weather and today is the same as the start or end of the weather file
+                //we should instead return today's weather
+                summary.WriteMessage(this, "Warning: Weather on " + this.clock.Today.AddDays(offset).ToString("d") + " does not exist. Today's weather on " + this.clock.Today.ToString("d") + " was used instead.", MessageType.Warning);
+                return GetMetData(this.clock.Today);
+            }
+            else
+                return GetMetData(this.clock.Today.AddDays(offset));
         }
     }
 }

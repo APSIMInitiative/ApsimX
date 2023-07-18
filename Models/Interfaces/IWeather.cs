@@ -130,4 +130,18 @@ namespace Models.Interfaces
         /// </summary>
         public object[] Raw { get; set; }
     }
+
+    ///<summary>
+    /// Stores a weather data file with a datetime it was read from
+    ///</summary>
+    [Serializable]
+    public class WeatherRecordEntry
+    {
+        /// <summary>Date this weather was recorded on</summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>The weather data</summary>
+        public DailyMetDataFromFile MetData { get; set; }
+        
+    }
 }

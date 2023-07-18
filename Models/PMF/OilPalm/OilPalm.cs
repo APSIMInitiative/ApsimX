@@ -815,7 +815,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>Harvest the crop.</summary>
-        public void Harvest()
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
             // Invoke a harvesting event.
             if (Harvesting != null)
