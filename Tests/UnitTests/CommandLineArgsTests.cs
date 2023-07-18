@@ -502,5 +502,92 @@ ExperimentY2
             Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
             Assert.IsNotNull(secondReportNodeThatShouldBePresent);
         }
+
+        [Test]
+        public void TestApplySwitchCreateFromConfigFile()
+        {
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), "newSim.apsimx");
+
+            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile.txt");
+            string newCommandString = $"save {newApsimxFilePath}";
+            File.WriteAllText(newConfigFilePath, newCommandString);
+
+            bool fileExists = File.Exists(newConfigFilePath);
+            Assert.True(File.Exists(newConfigFilePath));
+
+            Utilities.RunModels($"--apply {newConfigFilePath}");
+
+            string text = File.ReadAllText(newApsimxFilePath);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+
+            // Ensure that the sim was created.
+            Assert.IsNotNull(sim);
+        }
+
+        [Test]
+        public void TestApplySwitchRunFromConfigFile()
+        {
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), "newSim.apsimx");
+
+            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile.txt");
+
+            string newCommands = $@"save {newApsimxFilePath}
+load {newApsimxFilePath}
+add [Simulations] Simulation
+add [Simulation] Summary
+add [Simulation] Clock
+add [Simulation] Weather
+[Weather].FileName=Dalby.met
+[Clock].Start=1900/01/01
+[Clock].End=1900/01/02
+run";
+
+            File.WriteAllText(newConfigFilePath, newCommands);
+            bool configFileExists = File.Exists(newConfigFilePath);
+            Assert.True(configFileExists);
+
+            string newDalbyMetFilePath = Path.Combine(Path.GetTempPath(), "dalby.met");
+
+            string dalbyMetFileText =
+@"[weather.met.weather]
+!station number = 041023
+!station name = DALBY POST OFFICE
+latitude = -27.18(DECIMAL DEGREES)
+longitude = 151.26(DECIMAL DEGREES)
+tav = 19.09(oC)! annual average ambient temperature
+amp = 14.63(oC)! annual amplitude in mean monthly temperature
+!Data extracted from Silo (by odin) on 20140902
+!As evaporation is read at 9am, it has been shifted to day before
+!ie The evaporation measured on 20 April is in row for 19 April
+!The 6 digit code indicates the source of the 6 data columns
+!0 actual observation, 1 actual observation composite station
+!2 daily raster, 7 long term average raster
+!more detailed two digit codes are available
+!
+!For further information see the documentation on the datadrill
+!  http://www.dnr.qld.gov.au/silo/datadril.html
+!
+year  day radn  maxt   mint  rain  pan    vp      code
+ ()   () (MJ/m^2) (oC) (oC)  (mm)  (mm)  (hPa)      ()
+1900   1   24.0  29.4  18.6   0.0   8.2  20.3 300070
+1900   2   25.0  31.6  17.2   0.0   8.2  16.5 300070
+";
+
+            File.WriteAllText(newDalbyMetFilePath, dalbyMetFileText);
+            bool dalbyMetFileExists = File.Exists(newDalbyMetFilePath);
+            Assert.True(dalbyMetFileExists);
+
+            Utilities.RunModels($"--apply {newConfigFilePath}");
+
+            string text = File.ReadAllText(newApsimxFilePath);
+
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            Summary summaryNode = sim.FindInScope<Summary>();
+            var summaryFileText = summaryNode.GetMessages(sim.Name);
+            // Ensure that the sim was created.
+            Assert.IsNotNull(summaryFileText);
+        }
     }
 }
