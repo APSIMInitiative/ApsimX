@@ -39,9 +39,9 @@ namespace APSIM.Documentation
                 // Get autodocs config - ie which models to document.
                 IEnumerable<IDocumentationTable> tables = new[]
                 {
-                    //GetAutodocsConfig(),
+                    GetAutodocsConfig(),
                     GetTutorialsTable(),
-                    //GetClemTable(),
+                    GetClemTable(),
                 };
                 StringBuilder html = new StringBuilder();
                 html.AppendLine("<html>");
