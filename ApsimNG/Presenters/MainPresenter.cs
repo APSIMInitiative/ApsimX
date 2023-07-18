@@ -83,11 +83,25 @@ namespace UserInterface.Presenters
             this.view.TabClosing += this.OnTabClosing;
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
-            if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
-                this.view.StatusPanelHeight = 20;
+
+            int height = this.view.WindowSize.Height;
+            int savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            if (savedHeight > 90)
+                this.view.StatusPanelHeight = (int)Math.Round(height * 0.9);
+            else if (savedHeight < 10)
+                this.view.StatusPanelHeight = (int)Math.Round(height * 0.1);
             else
-                this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
-            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
+                this.view.StatusPanelHeight = (int)Math.Round(height * (savedHeight/100.0f));
+
+            int width = this.view.WindowSize.Width;
+            int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
+            if (savedWidth > 90)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.9);
+            else if (savedWidth < 10)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.1);
+            else
+                this.view.SplitScreenPosition = (int)Math.Round(width * (savedWidth / 100.0f));
+
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -964,14 +978,14 @@ namespace UserInterface.Presenters
             // restore the simulation tree width on the form
             if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
-                if (simulations.ExplorerWidth == 0)
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = 250;
-                }
+                int width = this.view.WindowSize.Width;
+                int savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
+                if (savedWidth > 90)
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.9);
+                else if (savedWidth < 10)
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.1);
                 else
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = simulations.ExplorerWidth;
-                }
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * (savedWidth / 100.0f));
             }
             return newPresenter;
         }
@@ -1308,14 +1322,20 @@ namespace UserInterface.Presenters
         /// <param name="e">Close arguments</param>
         private void OnClosing(object sender, AllowCloseArgs e)
         {
+            int treeWidth = 0;
+            if (this.GetCurrentExplorerPresenter() != null)
+                treeWidth = this.GetCurrentExplorerPresenter().TreeWidth;
+
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
+                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round(((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)MathF.Round(((float)this.view.StatusPanelHeight / (float)this.view.WindowSize.Height)*100);
+                if (treeWidth > 0)
+                    Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();
             }
         }
