@@ -9,6 +9,7 @@ using APSIM.Shared.Utilities;
 using Models;
 using System.Text;
 using Models.Core;
+using System.Diagnostics;
 
 namespace APSIM.Documentation
 {
@@ -32,13 +33,15 @@ namespace APSIM.Documentation
         {
             try
             {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 // Get autodocs config - ie which models to document.
                 IEnumerable<IDocumentationTable> tables = new[]
                 {
-                    GetAutodocsConfig(),
+                    //GetAutodocsConfig(),
                     GetTutorialsTable(),
-                    GetClemTable(),
+                    //GetClemTable(),
                 };
                 StringBuilder html = new StringBuilder();
                 html.AppendLine("<html>");
@@ -80,7 +83,7 @@ namespace APSIM.Documentation
                 string index = Path.Combine(outputPath, "index.html");
                 File.WriteAllText(index, html.ToString());
 
-                Console.WriteLine($"Successfully generated files at {outputPath}");
+                Console.WriteLine($"Successfully generated files at {outputPath}. Elapsed time: {stopwatch.Elapsed.TotalSeconds} seconds.");
             }
             catch (Exception err)
             {
