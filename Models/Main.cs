@@ -171,7 +171,7 @@ namespace Models
                         }
                     }
                     // If no apsimx file path included proceeding --apply switch...              
-                    else if (files.Length < 1) // TODO: create run functionality. Needs to run the file referenced in loadPath.
+                    else if (files.Length < 1)
                     {
                         savePath = "";
                         loadPath = "";
@@ -237,10 +237,6 @@ namespace Models
                             {
                                 // Create a new simulation as an existing apsimx file was not included.
                                 Simulations sim = CreateMinimalSimulation();
-                                // Need the directory and file name.
-                                //string[] savePathStrings = savePath.Split('\\');
-                                //string newFileName = savePathStrings.ToList()[^1];
-                                //string directoryPath = savePathStrings.Take(savePathStrings.Length - 1).Join<string>("\\");
                                 sim.Write(sim.FileName, savePath);
                                 savePath = "";
                             }
