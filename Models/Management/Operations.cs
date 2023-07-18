@@ -77,7 +77,7 @@ namespace Models
                 if (line.Length == 0)
                     return null;
 
-                Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s+(.+)$");
+                Regex parser = new Regex(@"^(\/?\/?)\s*(\S*)\s+(.+)$");
                 Match match = parser.Match(line.Trim());
 
                 if (match.Success)
