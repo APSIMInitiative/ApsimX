@@ -8,7 +8,7 @@ namespace Models.GrazPlan
 {
     /// <summary>
     /// TPastureCohort class
-    /// Herbage cohort within a pasture population 
+    /// Herbage cohort within a pasture population
     /// </summary>
     public class TPastureCohort
     {
@@ -33,90 +33,90 @@ namespace Models.GrazPlan
         private double FPotRootTranslocSum;
 
         /// <summary>Biomass translocated from belowground</summary>
-        private readonly double[,] FRootTransloc = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];   // [EFFR..OLDR,1..MaxSoilLayers]         
+        private readonly double[,] FRootTransloc = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];   // [EFFR..OLDR,1..MaxSoilLayers]
 
         /// <summary></summary>
-        private readonly double[] FPotStemTransloc = new double[GrazType.HerbClassNo + 1];                      
+        private readonly double[] FPotStemTransloc = new double[GrazType.HerbClassNo + 1];
 
         /// <summary></summary>
         private double FPotStemTranslocSum;
 
         /// <summary></summary>
-        private readonly double[] FPotPartNetGrowth = new double[GrazType.ptSEED + 1];                          // ptLEAF..ptSEED 
+        private readonly double[] FPotPartNetGrowth = new double[GrazType.ptSEED + 1];                          // ptLEAF..ptSEED
 
         /// <summary></summary>
-        public double[] FStemTransloc = new double[GrazType.HerbClassNo + 1];                               
+        public double[] FStemTransloc = new double[GrazType.HerbClassNo + 1];
 
         /// <summary>Maintenance respiration rates   g/g/d </summary>
-        private readonly double[] FMaintRespRate = new double[GrazType.ptSEED + 1];                                 // ptLEAF..ptSEED                     
+        private readonly double[] FMaintRespRate = new double[GrazType.ptSEED + 1];                                 // ptLEAF..ptSEED
 
         /// <summary>Maintenance respiration rates g/m^2/ds</summary>
-        private readonly double[,] FShootMaintResp = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];     // [ptLEAF..ptSTEM,1..HerbClassNo]       
+        private readonly double[,] FShootMaintResp = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];     // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary></summary>
-        private readonly double[,] FRootMaintResp = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];      // [EFFR..OLDR, 1..MaxSoilLayers] 
+        private readonly double[,] FRootMaintResp = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];      // [EFFR..OLDR, 1..MaxSoilLayers]
 
         /// <summary>Growth respiration rate  g/g</summary>
-        private double FGrowthRespRate;                                                                        
+        private double FGrowthRespRate;
 
         /// <summary>Net growth incl.translocation,g/m^2/d</summary>
-        public double[] FPartNetGrowth = new double[GrazType.ptSEED + 1];                                       // ptLEAF..ptSEED                      
+        public double[] FPartNetGrowth = new double[GrazType.ptSEED + 1];                                       // ptLEAF..ptSEED
 
         /// <summary></summary>
-        public GrazType.DM_Pool[,] FShootNetGrowth = new GrazType.DM_Pool[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];   // [ptLEAF..ptSTEM,1..HerbClassNo] 
+        public GrazType.DM_Pool[,] FShootNetGrowth = new GrazType.DM_Pool[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];   // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary></summary>
-        public GrazType.DM_Pool[,] FRootNetGrowth = new GrazType.DM_Pool[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];    // [EFFR..OLDR,  1..MaxSoilLayers] 
+        public GrazType.DM_Pool[,] FRootNetGrowth = new GrazType.DM_Pool[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];    // [EFFR..OLDR,  1..MaxSoilLayers]
         private readonly GrazType.DM_Pool FSeedNetGrowth = new DM_Pool();
 
         /// <summary></summary>
         public int FMaxRootLayer;
 
         /// <summary></summary>
-        public double[] FRootExtension = new double[GrazType.MaxSoilLayers + 1];                            
+        public double[] FRootExtension = new double[GrazType.MaxSoilLayers + 1];
 
         /// <summary></summary>
         public int[] FHighestDMDClass = new int[GrazType.ptSTEM + 1];                                           // ptLEAF..ptSTEM
 
         /// <summary></summary>
-        public int[] FLowestDMDClass = new int[GrazType.ptSTEM + 1];                                            // ptLEAF..ptSTEM 
+        public int[] FLowestDMDClass = new int[GrazType.ptSTEM + 1];                                            // ptLEAF..ptSTEM
 
         /// <summary></summary>
-        public double[,] FNewShootDistn = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];            // [ptLEAF..ptSTEM,1..HerbClassNo]  
+        public double[,] FNewShootDistn = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];            // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary></summary>
-        private readonly double[,] FNewRootDistn = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];   // [EFFR..OLDR, 1..MaxSoilLayers] 
+        private readonly double[,] FNewRootDistn = new double[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];   // [EFFR..OLDR, 1..MaxSoilLayers]
 
         /// <summary>
         /// Death or fall                   g/g/d
         /// </summary>
-        private readonly double[,] FShootLossRate = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];  // [ptLEAF..ptSTEM,1..HerbClassNo]       
+        private readonly double[,] FShootLossRate = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];  // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary>Death, fall, etc                g/m^2</summary>
-        public double[,] FBiomassExitGM2 = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];           // [ptLEAF..ptSTEM,1..HerbClassNo]       
+        public double[,] FBiomassExitGM2 = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];           // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary>
         /// Net respiration loss            g/m^2
         /// </summary>
-        private readonly double[,] FBiomassRespireGM2 = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];  // [ptLEAF..ptSTEM,1..HerbClassNo]       
+        private readonly double[,] FBiomassRespireGM2 = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];  // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary></summary>
         private double FRootAgingRate;
 
         /// <summary></summary>
-        private readonly double[] FRootLossRate = new double[GrazType.OLDR + 1];                                    // EFFR..OLDR 
+        private readonly double[] FRootLossRate = new double[GrazType.OLDR + 1];                                    // EFFR..OLDR
 
         /// <summary></summary>
         private double FRootRelocRate;
 
         /// <summary>Digestibility decline         (g/g)/d</summary>
-        public double[,] FDMDDecline = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];               // [ptLEAF..ptSTEM,1..HerbClassNo]       
+        public double[,] FDMDDecline = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];               // [ptLEAF..ptSTEM,1..HerbClassNo]
 
         /// <summary>Change in FH</summary>
         private double FDeltaFrost;
 
         /// <summary>Change in SI</summary>
-        private double FDelta_SI;                                                                                                     
+        private double FDelta_SI;
 
         /// <summary></summary>
         public TNutrientInfo[] FNutrientInfo = new TNutrientInfo[Enum.GetNames(typeof(GrazType.TPlantElement)).Length + 1]; // [TPlantElement] of TNutrientInfo
@@ -133,7 +133,7 @@ namespace Models.GrazPlan
         public double[,] SpecificArea;
 
         /// <summary>B(j, k, root, m, a)  g/m^2</summary>
-        public GrazType.DM_Pool[,] Roots = new GrazType.DM_Pool[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];     // [TOTAL..OLDR, TOTAL..MaxSoilLayers]    
+        public GrazType.DM_Pool[,] Roots = new GrazType.DM_Pool[GrazType.OLDR + 1, GrazType.MaxSoilLayers + 1];     // [TOTAL..OLDR, TOTAL..MaxSoilLayers]
 
         /// <summary>SSR0 maximum stem translocation g/m^2</summary>
         public double StemReserve;
@@ -148,20 +148,20 @@ namespace Models.GrazPlan
         public double SeedlStress;
 
         /// <summary>EI establishment index -</summary>
-        public double EstabIndex;                                                                                       
+        public double EstabIndex;
 
         /// <summary>
-        /// Moisture content of dead     mm water 
+        /// Moisture content of dead     mm water
         /// </summary>
-        public double[] DeadMoisture = new double[GrazType.ptSTEM + 1];                                            // [ptLEAF..ptSTEM]     
+        public double[] DeadMoisture = new double[GrazType.ptSTEM + 1];                                            // [ptLEAF..ptSTEM]
 
         /// <summary>Average relative moisture content of dead</summary>
-        public double[] RelMoisture = new double[GrazType.ptSTEM + 1];                                             // [ptLEAF..ptSTEM]     
+        public double[] RelMoisture = new double[GrazType.ptSTEM + 1];                                             // [ptLEAF..ptSTEM]
 
         // Reporting variables -----------------------------------------------------}
 
         /// <summary>Values of growth limiting factors</summary>
-        public double[] LimitFactors = new double[Enum.GetNames(typeof(PastureUtil.TGrowthLimit)).Length];          
+        public double[] LimitFactors = new double[Enum.GetNames(typeof(PastureUtil.TGrowthLimit)).Length];
 
         /// <summary>Gross assimilation rate g/m^2/d </summary>
         public double Assimilation;
@@ -173,7 +173,7 @@ namespace Models.GrazPlan
         public double StemTranslocSum;
 
         /// <summary></summary>
-        public double[] fMaintRespiration = new double[GrazType.ptSEED + 1];        // TOTAL..ptSEED 
+        public double[] fMaintRespiration = new double[GrazType.ptSEED + 1];        // TOTAL..ptSEED
 
         /// <summary></summary>
         public double[] fGrowthRespiration = new double[GrazType.ptSEED + 1];       // TOTAL..ptSEED
@@ -182,7 +182,7 @@ namespace Models.GrazPlan
         public double fR2S_Target;
 
         /// <summary>Allocation pattern g/g</summary>
-        public double[] Allocation = new double[GrazType.ptSEED + 1];               // ptLEAF..ptSEED  
+        public double[] Allocation = new double[GrazType.ptSEED + 1];               // ptLEAF..ptSEED
 
         /// <summary>
         /// Constructor
@@ -224,7 +224,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="growthPool"></param>
         private void Zero2D_DMPool(ref DM_Pool[,] growthPool)
@@ -239,8 +239,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Ratio of (mass in a pool):(mass of all pools in the same plant part)         
-        /// Used to compute net growth when NPP of a plant part is negative              
+        /// Ratio of (mass in a pool):(mass of all pools in the same plant part)
+        /// Used to compute net growth when NPP of a plant part is negative
         /// </summary>
         /// <param name="part">Leaf, stem, root or total part</param>
         /// <param name="idx"></param>
@@ -267,7 +267,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -287,7 +287,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -313,7 +313,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -324,7 +324,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -343,7 +343,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -412,7 +412,7 @@ namespace Models.GrazPlan
         */
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="age"></param>
         /// <param name="layer"></param>
@@ -442,7 +442,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="age"></param>
         /// <param name="layer"></param>
@@ -454,7 +454,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Assumes that marginal totals in FCohorts[] are up-to-date               
+        /// Assumes that marginal totals in FCohorts[] are up-to-date
         /// </summary>
         /// <param name="age"></param>
         /// <param name="layer"></param>
@@ -490,7 +490,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void SetParameters()
         {
@@ -537,10 +537,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///   Returns the default distribution across DMD classes of a herbage component   
-        ///  of given average DMD                                                         
-        ///  * Implemented as a procedure, not a method, so that it can be used in        
-        /// dialogs                                                                    
+        ///   Returns the default distribution across DMD classes of a herbage component
+        ///  of given average DMD
+        ///  * Implemented as a procedure, not a method, so that it can be used in
+        /// dialogs
         /// </summary>
         /// <param name="Params"></param>
         /// <param name="green"></param>
@@ -615,8 +615,8 @@ namespace Models.GrazPlan
 
                     if (((testDMDValue < DMDValue) && (delta > 0.0))
                      || ((testDMDValue > DMDValue) && (delta < 0.0)))
-                    { 
-                        delta = -0.5 * delta; 
+                    {
+                        delta = -0.5 * delta;
                     }
 
                     _B = _B * (1.0 + delta);
@@ -649,8 +649,8 @@ namespace Models.GrazPlan
         /// <param name="isGreen"></param>
         public void ReadFromValue(GreenInit green, DryInit dry, bool isGreen)
         {
-            int[] partMap = { 0, ptLEAF, ptSTEM };                              // [1..2] 
-            int[] RootMap = { 0, GrazType.EFFR, GrazType.OLDR };                // [1..2] 
+            int[] partMap = { 0, ptLEAF, ptSTEM };                              // [1..2]
+            int[] RootMap = { 0, GrazType.EFFR, GrazType.OLDR };                // [1..2]
 
             int DMDCount;
             double upperDMD;
@@ -695,7 +695,7 @@ namespace Models.GrazPlan
                         // DMD distribution given...
                         for (jdx = 0; jdx < DMDCount - 1; jdx++)
                         {
-                            upperDMD = subValue[idx].dmd[jdx];                // DMD distribution in descending order  
+                            upperDMD = subValue[idx].dmd[jdx];                // DMD distribution in descending order
                             lowerDMD = subValue[idx].dmd[jdx + 1];
                             mass = PastureUtil.ReadMass(subValue[idx].weight[jdx], "kg/ha");
 
@@ -719,7 +719,7 @@ namespace Models.GrazPlan
                                 }
                             }
 
-                            specArea = 0.0;                                                        // The zero value will be replaced with a default (that depends on environment) during simulation 
+                            specArea = 0.0;                                                        // The zero value will be replaced with a default (that depends on environment) during simulation
                             if (subValue[idx].spec_area != null)
                             {
                                 kdx = Math.Min(jdx, subValue[idx].spec_area.Length);
@@ -759,11 +759,11 @@ namespace Models.GrazPlan
                                     }
                                 }
                             }
-                        } // loop over entries for this part 
-                    } // iDMDCount > 1 
+                        } // loop over entries for this part
+                    } // iDMDCount > 1
                     else if (DMDCount == 1)
                     {
-                        // Average DMD & nutrients given         
+                        // Average DMD & nutrients given
                         meanDMD = subValue[idx].dmd[0];
                         mass = PastureUtil.ReadMass(subValue[idx].weight[0], "kg/ha");
                         foreach (var Elem in values)
@@ -817,20 +817,20 @@ namespace Models.GrazPlan
 
                                 this.AddHerbage(part, DMD, ref newPool, specArea);
                             }
-                        } // fMass > 0.0 
-                    } // iDMDCount = 1 
-                } // loop over plant parts 
+                        } // fMass > 0.0
+                    } // iDMDCount = 1
+                } // loop over plant parts
 
-                this.ComputeTotals();                                                               // Total shoot values are needed for root defaults, so compute here    
+                this.ComputeTotals();                                                               // Total shoot values are needed for root defaults, so compute here
 
                 if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
                 {
                     this.RootDepth = green.rt_dep;
                     if (green.rt_dep == 0)
-                        this.RootDepth = this.Owner.MaxRootingDepth; // Roots ------------------------------- 
+                        this.RootDepth = this.Owner.MaxRootingDepth; // Roots -------------------------------
 
                     double[][] root_wts;
-                    root_wts = green.root_wt;                                            // "root_wt[i][j]" is age i and layer j  
+                    root_wts = green.root_wt;                                            // "root_wt[i][j]" is age i and layer j
                     if ((root_wts != null) && (root_wts.Length >= 2))                    // Effective & old roots given separately
                     {
                         for (idx = 0; idx <= 1; idx++)
@@ -855,7 +855,7 @@ namespace Models.GrazPlan
                         // Total over root age classes
                         effPropn = this.DefaultPropnEffRoots();
 
-                        if (root_wts[0].Length > 1)                                                // Layers, default age distribution     
+                        if (root_wts[0].Length > 1)                                                // Layers, default age distribution
                         {
                             for (layer = 0; layer < root_wts[1].Length; layer++)
                             {
@@ -872,14 +872,14 @@ namespace Models.GrazPlan
                     }
                     else
                     {
-                        // No value given - compute a default root mass & distribution    
+                        // No value given - compute a default root mass & distribution
                         this.ComputeAllocation();
                         this.SetDefaultRoots(TOTAL, this.fR2S_Target * this.Herbage[TOTAL, TOTAL].DM, this.RootDepth);
                     }
 
-                    this.ComputeTotals();                                                                       // Compute marginal totals for roots     
+                    this.ComputeTotals();                                                                       // Compute marginal totals for roots
 
-                    this.FrostFactor = this.Params.DeathK[6] * green.frosts;    // Other state variables --------------- 
+                    this.FrostFactor = this.Params.DeathK[6] * green.frosts;    // Other state variables ---------------
 
                     if (!((this.Owner.Phenology == PastureUtil.TDevelopType.Reproductive) && (this.Owner.DegDays >= this.Params.DevelopK[6])))
                     {
@@ -903,9 +903,9 @@ namespace Models.GrazPlan
                 }
             }
         }
-        
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -927,7 +927,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -950,9 +950,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///  Quadratic function of relative nutrient content vs relative DMD              
-        /// NutrConc[2,] is minimum nutrient content at maximum DMD                      
-        /// NutrConc[3,] is minimum nutrient content at midpoint DMD                     
+        ///  Quadratic function of relative nutrient content vs relative DMD
+        /// NutrConc[2,] is minimum nutrient content at maximum DMD
+        /// NutrConc[3,] is minimum nutrient content at midpoint DMD
         /// NutrConc[4,] is minimum nutrient content at minimum DMD
         /// </summary>
         /// <param name="Params"></param>
@@ -981,7 +981,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -1000,7 +1000,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -1051,11 +1051,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Default value for the proportion of roots that are effective. Used in        
-        /// initialisation.                                                              
-        /// * This equation is arrived at by assuming that the root system is in         
-        /// equilibrium, with(a) NPP going to roots, (b) transfer between             
-        /// effective and old roots and(c) death of roots all equal.                  
+        /// Default value for the proportion of roots that are effective. Used in
+        /// initialisation.
+        /// * This equation is arrived at by assuming that the root system is in
+        /// equilibrium, with(a) NPP going to roots, (b) transfer between
+        /// effective and old roots and(c) death of roots all equal.
         /// </summary>
         /// <returns></returns>
         public double DefaultPropnEffRoots()
@@ -1071,16 +1071,16 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Set the root mass profile within a cohort and root age class to a default 
-        /// value. Used in initialisation.                                            
-        /// * Assumes that iAge = TOTAL, EFFR or OLDR                                 
+        /// Set the root mass profile within a cohort and root age class to a default
+        /// value. Used in initialisation.
+        /// * Assumes that iAge = TOTAL, EFFR or OLDR
         /// </summary>
         /// <param name="age"></param>
         /// <param name="rootDM"></param>
         /// <param name="depth"></param>
         public void SetDefaultRoots(int age, double rootDM, double depth)
         {
-            double[] wet_ASW = new double[MaxSoilLayers + 1];  
+            double[] wet_ASW = new double[MaxSoilLayers + 1];
             double[] rootDist = new double[MaxSoilLayers + 1]; // 0..
             double effFract;
             DM_Pool rootPool;
@@ -1116,8 +1116,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Area index of a herbage cohort.                                              
-        /// *fCO2_SpecLeafArea is a method - see past_CO2.inc                        
+        /// Area index of a herbage cohort.
+        /// *fCO2_SpecLeafArea is a method - see past_CO2.inc
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
@@ -1155,7 +1155,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="meanTemp"></param>
@@ -1166,8 +1166,8 @@ namespace Models.GrazPlan
             double result;
             if (part != TOTAL)
             {
-                this.FNewSpecificArea[part] = this.Params.LightK[part]                              // Reference specific area               
-                                               * this.CO2_SpecLeafArea()                                
+                this.FNewSpecificArea[part] = this.Params.LightK[part]                              // Reference specific area
+                                               * this.CO2_SpecLeafArea()
                                                * (PastureUtil.REF_RADN + this.Params.LightK[3]) / (radn + this.Params.LightK[3])
                                                * (this.Params.LightK[5] + (1.0 - this.Params.LightK[5]) * PastureUtil.RAMP(meanTemp, 0.0, this.Params.LightK[4]));
                 result = this.FNewSpecificArea[part];
@@ -1186,7 +1186,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="meanTemp"></param>
@@ -1204,7 +1204,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="limits"></param>
@@ -1215,7 +1215,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void SetStemReserve()
         {
@@ -1230,7 +1230,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="DMRemoval"></param>
         public void RemoveStemReserve(double[] DMRemoval)
@@ -1253,7 +1253,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="DMRemoval"></param>
         public void RemoveStemReserve(double DMRemoval)
@@ -1269,7 +1269,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="meanTemp"></param>
         public void ComputePotTranslocation(double meanTemp)
@@ -1278,20 +1278,20 @@ namespace Models.GrazPlan
             double translocRate;
             double endDegDays;
             double DDToday;
-            double[] digestibleDM = new double[HerbClassNo + 1]; 
+            double[] digestibleDM = new double[HerbClassNo + 1];
             double DDM_Sum;
             int age, layer;
             int DMD;
 
             limitFactor = Math.Min(this.LimitFactors[(int)PastureUtil.TGrowthLimit.glLowT], Math.Min(this.LimitFactors[(int)PastureUtil.TGrowthLimit.glSM], this.LimitFactors[(int)PastureUtil.TGrowthLimit.glWLog]));
 
-            if (!this.Params.bAnnual                                                        
+            if (!this.Params.bAnnual
                && (this.Status == stESTAB)
                && (this.Owner.Phenology == PastureUtil.TDevelopType.Vernalizing || this.Owner.Phenology == PastureUtil.TDevelopType.Vegetative || this.Owner.Phenology == PastureUtil.TDevelopType.Reproductive)
                && ((this.Root2Shoot() > this.fR2S_Target) || (this.Herbage[TOTAL, TOTAL].DM == 0.0))
                && (limitFactor > this.Params.TranslocK[1]))
             {
-                // Relocation from belowground reserves  
+                // Relocation from belowground reserves
                 translocRate = this.Params.TranslocK[2];
                 if (this.Herbage[TOTAL, TOTAL].DM > 0.0)
                 {
@@ -1317,15 +1317,15 @@ namespace Models.GrazPlan
                 }
             }
 
-            if (this.Params.bHasSeeds                                                          
+            if (this.Params.bHasSeeds
                && ((this.Status == stESTAB) || (this.Status == stSENC))
                && (this.Params.TranslocK[4] > 0.0)
                && (this.Owner.Phenology == PastureUtil.TDevelopType.Reproductive || this.Owner.Phenology == PastureUtil.TDevelopType.SprayTopped || this.Owner.Phenology == PastureUtil.TDevelopType.Senescent)
                && (this.Owner.DegDays >= this.Params.DevelopK[6]))
             {
-                // Translocation from stem to seed      
+                // Translocation from stem to seed
                 endDegDays = this.Params.DevelopK[6] + this.Params.TranslocK[4];
-                DDToday = Math.Max(0.0, meanTemp - this.Params.DevelopK[3]);                 // Degree days (base Kv3)                
+                DDToday = Math.Max(0.0, meanTemp - this.Params.DevelopK[3]);                 // Degree days (base Kv3)
                 if (this.Owner.DegDays + DDToday > endDegDays)
                 {
                     DDToday = Math.Max(0.0, endDegDays - this.Owner.DegDays);
@@ -1333,7 +1333,7 @@ namespace Models.GrazPlan
 
                 translocRate = this.Owner.SeedSetPropn() * (DDToday / this.Params.TranslocK[4]) * this.StemReserve;
 
-                if (this.Owner.DegDays >= endDegDays)                                      // End of translocation period           
+                if (this.Owner.DegDays >= endDegDays)                                      // End of translocation period
                 {
                     this.StemReserve = 0.0;
                 }
@@ -1364,8 +1364,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Computes the specific and absolute rates of maintenance respiration and the    
-        /// growth respiration rate(g/g).                                               
+        /// Computes the specific and absolute rates of maintenance respiration and the
+        /// growth respiration rate(g/g).
         /// </summary>
         /// <param name="meanTemp"></param>
         /// <param name="dormant"></param>
@@ -1375,18 +1375,18 @@ namespace Models.GrazPlan
             int part, DMD,
             age, layer;
 
-            TFactor = PastureUtil.Q10Func(meanTemp, 1.0, this.Params.RespireK[2]);                    // Temperature effect                    
-            
-            // Maintenance respiration rates (g/g/d) 
+            TFactor = PastureUtil.Q10Func(meanTemp, 1.0, this.Params.RespireK[2]);                    // Temperature effect
+
+            // Maintenance respiration rates (g/g/d)
             this.FMaintRespRate[ptLEAF] = this.Params.RespireK[1] * TFactor * this.GetHerbageConc(ptLEAF, TOTAL, TPlantElement.N);
             this.FMaintRespRate[ptSTEM] = this.Params.RespireK[1] * TFactor * this.GetHerbageConc(ptSTEM, TOTAL, TPlantElement.N);
             this.FMaintRespRate[ptROOT] = this.Params.RespireK[1] * TFactor * Math.Min(this.GetRootConc(TOTAL, TOTAL, TPlantElement.N),
                                                                            this.Params.NutrConcK[1, (int)TPlantElement.N, ptROOT]);
             this.FMaintRespRate[ptSEED] = 0.0;
 
-            if (dormant)                                                                           
+            if (dormant)
             {
-                // Slowed respiration in dormancy        
+                // Slowed respiration in dormancy
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     this.FMaintRespRate[part] = this.Params.RespireK[3] * this.FMaintRespRate[part];
@@ -1395,8 +1395,8 @@ namespace Models.GrazPlan
 
             PastureUtil.FillArray(this.fMaintRespiration, 0);
 
-            // Compute maintenance respiration amounts and totals                  
-            for (part = ptLEAF; part <= ptSTEM; part++)                                          
+            // Compute maintenance respiration amounts and totals
+            for (part = ptLEAF; part <= ptSTEM; part++)
             {
                 for (DMD = 1; DMD <= HerbClassNo; DMD++)
                 {
@@ -1419,7 +1419,7 @@ namespace Models.GrazPlan
                 this.fMaintRespiration[TOTAL] = this.fMaintRespiration[TOTAL] + this.fMaintRespiration[part];
             }
 
-            this.FGrowthRespRate = this.Owner.GrowthRespirationRate();                                       // Growth respiration rate (g/g)         
+            this.FGrowthRespRate = this.Owner.GrowthRespirationRate();                                       // Growth respiration rate (g/g)
         }
 
         /// <summary>
@@ -1444,7 +1444,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="required"></param>
         /// <param name="remaining"></param>
@@ -1466,13 +1466,13 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Final computation of the gross assimilation rate, taking into account      
-        /// nutrient limitations and meristem(sink)-limits on assimilation rate       
+        /// Final computation of the gross assimilation rate, taking into account
+        /// nutrient limitations and meristem(sink)-limits on assimilation rate
         /// Final computation of the translocation rates
-        /// Computation of the absolute values of respiration and of the "net growth   
-        /// including translocation".                                                  
+        /// Computation of the absolute values of respiration and of the "net growth
+        /// including translocation".
         ///
-        /// Assumes that the following values have been computed: 
+        /// Assumes that the following values have been computed:
         /// </summary>
         /// <param name="dormant"></param>
         public void ComputeNetGrowth(bool dormant)
@@ -1494,9 +1494,9 @@ namespace Models.GrazPlan
 
             if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
             {
-                if (dormant)                                                           
+                if (dormant)
                 {
-                    // Meristem-limited growth in dormant plants   
+                    // Meristem-limited growth in dormant plants
                     sink_ShootNPP = 0.0;
                     sink_ShootAlloc = 0.0;
                     sink_Respired = 0.0;
@@ -1532,7 +1532,7 @@ namespace Models.GrazPlan
                 this.Assimilation = Math.Min(limitNu * this.FPotAssimilation, sink_Assim);
 
                 this.RootTranslocSum = 0.0;                                                   // Compute the final translocation rates for the cohort
-                for (age = EFFR; age <= OLDR; age++)                                                         
+                for (age = EFFR; age <= OLDR; age++)
                 {
                     for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
                     {
@@ -1564,14 +1564,14 @@ namespace Models.GrazPlan
                 remainingAssim = this.Assimilation;
                 remainingTrans = this.RootTranslocSum;
 
-                required = Math.Max(0.0, -this.FPartNetGrowth[ptSEED]);             // Maintenance of seed gets highest priority     
-                delta = this.AssignGrowth(required, ref remainingAssim);                                      
+                required = Math.Max(0.0, -this.FPartNetGrowth[ptSEED]);             // Maintenance of seed gets highest priority
+                delta = this.AssignGrowth(required, ref remainingAssim);
                 this.FPartNetGrowth[ptSEED] = this.FPartNetGrowth[ptSEED] + delta;
                 required = Math.Max(0.0, -this.FPartNetGrowth[ptSEED]);
                 delta = this.AssignGrowth(required, ref remainingTrans);
                 this.FPartNetGrowth[ptSEED] = this.FPartNetGrowth[ptSEED] + delta;
 
-                // Then other maintenance respiration    
+                // Then other maintenance respiration
                 required = Math.Max(0.0, -(this.FPartNetGrowth[ptLEAF] + this.FPartNetGrowth[ptSTEM] + this.FPartNetGrowth[ptROOT]));
                 if (required > 0.0)
                 {
@@ -1650,7 +1650,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public double Root2Shoot()
@@ -1666,8 +1666,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///  Computes the allocation of assimilate to each plant part, and the            
-        /// allocation of net root growth to each soil layer.                            
+        ///  Computes the allocation of assimilate to each plant part, and the
+        /// allocation of net root growth to each soil layer.
         /// * Assumes that FRootExtension has been computed
         /// </summary>
         public void ComputeAllocation()
@@ -1677,9 +1677,9 @@ namespace Models.GrazPlan
             double shootAlloc;
             double leafScale;
             double leafToShoot;
-            double[] sinkStrength = new double[MaxSoilLayers + 1];   
+            double[] sinkStrength = new double[MaxSoilLayers + 1];
             double sinkStrengthSum;
-            double[] nextLayerFract = new double[MaxSoilLayers + 1]; 
+            double[] nextLayerFract = new double[MaxSoilLayers + 1];
             double fractionOccupied;
             double extendRatio;
             int layer;
@@ -1738,8 +1738,8 @@ namespace Models.GrazPlan
                 this.Allocation[ptROOT] = (1.0 - seedAlloc) * (1.0 - shootAlloc);
                 this.Allocation[ptSEED] = seedAlloc;
 
-                this.ComputeRootDistn(this.RootDepth, this.Owner.Inputs.ASW, ref sinkStrength);         // Allocation of new (net) root growth between soil layers   
-                sinkStrengthSum = 0.0;                                                                   
+                this.ComputeRootDistn(this.RootDepth, this.Owner.Inputs.ASW, ref sinkStrength);         // Allocation of new (net) root growth between soil layers
+                sinkStrengthSum = 0.0;
                 for (layer = 1; layer <= this.Owner.FSoilLayerCount; layer++)
                 {
                     sinkStrengthSum += sinkStrength[layer];
@@ -1776,7 +1776,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="DMD"></param>
         /// <param name="roundHigh"></param>
@@ -1799,7 +1799,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
@@ -1809,7 +1809,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
@@ -1836,7 +1836,7 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Computes the death rates in green cohorts and the fall rate in standing cohorts
-        /// Computes the rates of digestibility decline (g/g/d) for all cohorts   
+        /// Computes the rates of digestibility decline (g/g/d) for all cohorts
         /// </summary>
         /// <param name="minTemp"></param>
         /// <param name="meanTemp"></param>
@@ -1848,7 +1848,7 @@ namespace Models.GrazPlan
         {
             const double DECAY_REF_TEMP = 20.0;
 
-            double[,] baseDeath = new double[ptSTEM + 1, HerbClassNo + 1]; // [ptLEAF..ptSTEM,1..HerbClassNo] 
+            double[,] baseDeath = new double[ptSTEM + 1, HerbClassNo + 1]; // [ptLEAF..ptSTEM,1..HerbClassNo]
             double frostTemp;
             double frostDeath;
             double seedlDeath;
@@ -1870,9 +1870,9 @@ namespace Models.GrazPlan
 
             if ((this.Status == stSEEDL) || (this.Status == stESTAB) || (this.Status == stSENC))
             {
-                degDays = Math.Max(0.0, meanTemp - this.Params.MatureK[6, ptLEAF]);                     // Thermal time for aging of shoots      
+                degDays = Math.Max(0.0, meanTemp - this.Params.MatureK[6, ptLEAF]);                     // Thermal time for aging of shoots
 
-                for (part = ptLEAF; part <= ptSTEM; part++)                                             // Background death rate                 
+                for (part = ptLEAF; part <= ptSTEM; part++)                                             // Background death rate
                 {
                     for (DMD = 1; DMD <= HerbClassNo; DMD++)
                     {
@@ -1892,7 +1892,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                frostTemp = minTemp - PastureUtil.FrostThreshold;                                 // Frost deaths                          
+                frostTemp = minTemp - PastureUtil.FrostThreshold;                                 // Frost deaths
                 if (frostTemp <= 0.0)
                 {
                     frostDeath = PastureUtil.SIG(frostTemp, this.Params.DeathK[4] - this.FrostFactor, this.Params.DeathK[5] - this.FrostFactor);
@@ -1915,7 +1915,7 @@ namespace Models.GrazPlan
                     this.FDelta_SI = 0.0;
                 }
 
-                for (part = ptLEAF; part <= ptSTEM; part++)                                      // Overall shoot death rate              
+                for (part = ptLEAF; part <= ptSTEM; part++)                                      // Overall shoot death rate
                 {
                     for (DMD = 1; DMD <= HerbClassNo; DMD++)
                     {
@@ -1930,20 +1930,20 @@ namespace Models.GrazPlan
                     }
                 }
 
-                // Root flow rates                       
+                // Root flow rates
                 this.FRootAgingRate = PastureUtil.Q10Func(laggedTemp, this.Params.RootLossK[1], this.Params.RootLossK[4]);
                 rootsDying = PastureUtil.Q10Func(laggedTemp, this.Params.RootLossK[2], this.Params.RootLossK[4]);
 
                 if (!this.Params.bAnnual || (this.Status != stSENC))
                 {
-                    if (this.Params.RootLossK[1] > 0.0)                                                  // This indicates "use old the root pool" 
+                    if (this.Params.RootLossK[1] > 0.0)                                                  // This indicates "use old the root pool"
                     {
                         this.FRootRelocRate = this.Params.RootLossK[3] * rootsDying;
                         this.FRootLossRate[EFFR] = seedlDeath;
                         this.FRootLossRate[OLDR] = seedlDeath + rootsDying - this.FRootRelocRate;
                     }
                     else
-                    {                                                                                   // Don't use the old root pool           
+                    {                                                                                   // Don't use the old root pool
                         this.FRootRelocRate = 0.0;
                         this.FRootLossRate[EFFR] = seedlDeath + rootsDying;
                         this.FRootLossRate[OLDR] = 1.0;
@@ -1983,7 +1983,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            if ((this.Status == stDEAD) || (this.Status == stLITT1) || (this.Status == stLITT2))        // Digestibility decline of dry herbage  
+            if ((this.Status == stDEAD) || (this.Status == stLITT1) || (this.Status == stLITT2))        // Digestibility decline of dry herbage
             {
                 if (meanTemp > 0.0)
                 {
@@ -2008,7 +2008,7 @@ namespace Models.GrazPlan
                     moistFactorDead = this.Params.DecayK[4] + (1.0 - this.Params.DecayK[4]) * this.RelMoisture[part];
                     moistFactorLitter = PastureUtil.SIG(surfaceASW, this.Params.DecayK[6], this.Params.DecayK[7]);
 
-                    if (this.Status == stDEAD)                                                // RelMoisture has been calculated previously 
+                    if (this.Status == stDEAD)                                                // RelMoisture has been calculated previously
                     {
                         moistFactor = moistFactorDead;
                     }
@@ -2035,9 +2035,9 @@ namespace Models.GrazPlan
                 }
             }
 
-            if (this.Status == stDEAD)                                                     
+            if (this.Status == stDEAD)
             {
-                // Fall of standing dead                 
+                // Fall of standing dead
                 for (part = ptLEAF; part <= ptSTEM; part++)
                 {
                     fallRate = this.Params.FallK[1, part]
@@ -2049,9 +2049,9 @@ namespace Models.GrazPlan
                     }
                 }
             }
-            else if (this.Status == stLITT1)                                              
+            else if (this.Status == stLITT1)
             {
-                // Comminution of litter                 
+                // Comminution of litter
                 if (this.Owner.HerbageMassGM2(sgLITTER, TOTAL, TOTAL) <= this.Params.BreakdownK[5, ptLEAF])
                 {
                     thatchFactor = 1.0;
@@ -2070,9 +2070,9 @@ namespace Models.GrazPlan
                     }
                 }
             }
-            else if (this.Status == stLITT2)                                               
+            else if (this.Status == stLITT2)
             {
-                // Incorporation of litter               
+                // Incorporation of litter
                 if (meanTemp >= 0.0)
                 {
                     incorpRate = this.Params.BreakdownK[3, ptLEAF]
@@ -2094,24 +2094,24 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// N.B. fDeadMoisture is a state variable 
+        /// N.B. fDeadMoisture is a state variable
         /// </summary>
         /// <param name="moistureChange">Net rate of moisture input (mm/d)</param>
         public void DeadMoistureBalance(double moistureChange)
         {
-            double deadArea;                   // Area index of this plant part (m^2/m^2)  
-            double maxMoisture;                // Maximum moisture content (mm)            
+            double deadArea;                   // Area index of this plant part (m^2/m^2)
+            double maxMoisture;                // Maximum moisture content (mm)
             double moistureRate;               // Rate of change of herbage moisture (mm/d)
-            double endMoisture;                // Moisture content at the end of the time step (mm) 
-            double meanMoisture;                                             
+            double endMoisture;                // Moisture content at the end of the time step (mm)
+            double meanMoisture;
             int iPart;
 
             if (this.Status == stDEAD)
             {
                 for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
                 {
-                    maxMoisture = this.Params.DecayK[5] * (0.001 * this.Herbage[iPart, TOTAL].DM);         // This is in mm water, i.e. kg/m^2      
-                    this.DeadMoisture[iPart] = StdMath.XMin(this.DeadMoisture[iPart], maxMoisture);        // Trap case where dead mass has reduced 
+                    maxMoisture = this.Params.DecayK[5] * (0.001 * this.Herbage[iPart, TOTAL].DM);         // This is in mm water, i.e. kg/m^2
+                    this.DeadMoisture[iPart] = StdMath.XMin(this.DeadMoisture[iPart], maxMoisture);        // Trap case where dead mass has reduced
 
                     deadArea = this.AreaIndex(iPart);
                     moistureRate = moistureChange * StdMath.XDiv(deadArea, this.Owner.PastureAreaIndex);
@@ -2124,7 +2124,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="minTemp"></param>
         public void ComputeFrostHardening(double minTemp)
@@ -2143,7 +2143,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public bool EstablishesToday()
@@ -2152,7 +2152,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="meanTemp"></param>
         /// <param name="ASW"></param>
@@ -2162,7 +2162,7 @@ namespace Models.GrazPlan
 
             if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
             {
-                this.FMaxRootLayer = 1;                                                        // Deepest layer containing roots        
+                this.FMaxRootLayer = 1;                                                        // Deepest layer containing roots
                 while ((this.FMaxRootLayer < this.Owner.FSoilLayerCount)
                       && (this.RootDepth > this.Owner.FSoilDepths[this.FMaxRootLayer]))
                 {
@@ -2182,7 +2182,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="ASW"></param>
@@ -2193,7 +2193,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="depth"></param>
         /// <param name="ASW"></param>
@@ -2204,7 +2204,7 @@ namespace Models.GrazPlan
             double sum;
             int layer;
 
-            distn = new double[MaxSoilLayers + 1];   
+            distn = new double[MaxSoilLayers + 1];
             if (depth <= 0.0)
             {
                 distn[1] = 1.0;
@@ -2252,7 +2252,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Add root masses and flows from one cohort into this cohort                     
+        /// Add root masses and flows from one cohort into this cohort
         /// </summary>
         /// <param name="srcCohort"></param>
         public void AddRoots(TPastureCohort srcCohort)
@@ -2317,14 +2317,14 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Compute the maximum and critical nutrient demand for this element
         /// </summary>
-        /// <param name="elem"></param>
+        /// <param name="elem">Nutrient. N, P, S</param>
         public void ComputeNutrientDemand(TPlantElement elem)
         {
             int stage;
-            double[] currDM = new double[ptSEED + 1];   // ptLEAF..ptSEED 
-            double[] currNu = new double[ptSEED + 1];   // ptLEAF..ptSEED 
+            double[] currDM = new double[ptSEED + 1];   // ptLEAF..ptSEED
+            double[] currNu = new double[ptSEED + 1];   // ptLEAF..ptSEED
             double imbalance;
             double growthMax;
             double growthCrit;
@@ -2357,8 +2357,8 @@ namespace Models.GrazPlan
                 currDM[ptSEED] = 0.0;
                 currNu[ptSEED] = 0.0;
 
-                // Compute the maximum & critical demand 
-                for (part = ptLEAF; part <= ptSEED; part++)                                      
+                // Compute the maximum & critical demand
+                for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     imbalance = currNu[part] - this.Params.NutrConcK[1, (int)elem, part] * currDM[part];
                     growthMax = Math.Max(0.0, this.Params.NutrConcK[1, (int)elem, part] * this.FPotPartNetGrowth[part]);
@@ -2369,8 +2369,8 @@ namespace Models.GrazPlan
                     this.FNutrientInfo[(int)elem].fCritDemand[part] = Math.Min(this.FNutrientInfo[(int)elem].fMaxDemand[part], this.FNutrientInfo[(int)elem].fCritDemand[part]);
                 }
 
-                this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] = 0.0;                                   // Compute the total demands for this cohort   
-                this.FNutrientInfo[(int)elem].fCritDemand[TOTAL] = 0.0;                                                                
+                this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] = 0.0;                                   // Compute the total demands for this cohort
+                this.FNutrientInfo[(int)elem].fCritDemand[TOTAL] = 0.0;
                 for (part = ptLEAF; part <= ptSEED; part++)
                 {
                     this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] = this.FNutrientInfo[(int)elem].fMaxDemand[TOTAL] + this.FNutrientInfo[(int)elem].fMaxDemand[part];
@@ -2380,7 +2380,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Elem"></param>
         public void ResetNutrientSupply(TPlantElement Elem)
@@ -2398,7 +2398,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Add nutrients moving in translocated DM to today's nutrient supply  
+        /// Add nutrients moving in translocated DM to today's nutrient supply
         /// </summary>
         /// <param name="Elem"></param>
         public void TranslocateNutrients(TPlantElement Elem)
@@ -2427,29 +2427,29 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// As green biomass declines in digestibility, it is assumed to release         
-        /// nutrients which then become available to meet the day's demand               
+        /// As green biomass declines in digestibility, it is assumed to release
+        /// nutrients which then become available to meet the day's demand
         /// </summary>
         /// <param name="elem"></param>
         public void RecycleNutrients(TPlantElement elem)
         {
             double demandLeft;
-            double[] conc = new double[HerbClassNo + 1];                   
-            double[] relConc = new double[HerbClassNo + 1];                
-            double flux;                                                   // Flux of element out of each herbage pool due to DMD decline  
-            double lowerConc;                                                           
+            double[] conc = new double[HerbClassNo + 1];
+            double[] relConc = new double[HerbClassNo + 1];
+            double flux;                                                   // Flux of element out of each herbage pool due to DMD decline
+            double lowerConc;
             int part, DMD;
 
             TNutrientInfo nutrInfo = this.FNutrientInfo[(int)elem];
 
-            demandLeft = Math.Max(0.0, nutrInfo.fMaxDemand[TOTAL] - nutrInfo.fSupplied);               // Compute unsatisfied demand            
+            demandLeft = Math.Max(0.0, nutrInfo.fMaxDemand[TOTAL] - nutrInfo.fSupplied);               // Compute unsatisfied demand
 
             nutrInfo.fRecycledSum = 0.0;
             for (part = ptLEAF; part <= ptSTEM; part++)
             {
-                for (DMD = this.FHighestDMDClass[part]; DMD <= this.FLowestDMDClass[part]; DMD++)            
+                for (DMD = this.FHighestDMDClass[part]; DMD <= this.FLowestDMDClass[part]; DMD++)
                 {
-                    // Concentration in each herbage pool, relative to max & min concentrations   
+                    // Concentration in each herbage pool, relative to max & min concentrations
                     conc[DMD] = Math.Max(PastureUtil.Div0(this.Herbage[part, DMD].Nu[(int)elem], this.Herbage[part, DMD].DM),
                                         nutrInfo.fMinShootConc[part, DMD]);
                     relConc[DMD] = PastureUtil.RAMP(conc[DMD], nutrInfo.fMinShootConc[part, DMD], nutrInfo.fMaxShootConc[part, DMD]);
@@ -2470,11 +2470,11 @@ namespace Models.GrazPlan
                     }
                 }
 
-                for (DMD = this.FHighestDMDClass[part]; DMD <= this.FLowestDMDClass[part]; DMD++)            
+                for (DMD = this.FHighestDMDClass[part]; DMD <= this.FLowestDMDClass[part]; DMD++)
                 {
-                    // Any nutrients above the maximum concentration are assumed to becompletely mobile               
-                    if (conc[DMD] > nutrInfo.fMaxShootConc[part, DMD])                                    
-                    {                                                                                       
+                    // Any nutrients above the maximum concentration are assumed to becompletely mobile
+                    if (conc[DMD] > nutrInfo.fMaxShootConc[part, DMD])
+                    {
                         flux = this.Herbage[part, DMD].Nu[(int)elem] - nutrInfo.fMaxShootConc[part, DMD] * this.Herbage[part, DMD].DM;
                         nutrInfo.fRecycled[part, DMD] = nutrInfo.fRecycled[part, DMD] + flux;
                         nutrInfo.fRecycledSum += flux;
@@ -2482,7 +2482,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            if (demandLeft < nutrInfo.fRecycledSum)                                                           
+            if (demandLeft < nutrInfo.fRecycledSum)
             {
                 // Case where recycling meets all remaining demand
                 for (part = ptLEAF; part <= ptSTEM; part++)
@@ -2496,26 +2496,26 @@ namespace Models.GrazPlan
                 nutrInfo.fRecycledSum = demandLeft;
             }
 
-            nutrInfo.fSupplied += nutrInfo.fRecycledSum;                                                // Cumulate supply of this element       
+            nutrInfo.fSupplied += nutrInfo.fRecycledSum;                                                // Cumulate supply of this element
         }
 
         /// <summary>
-        /// The fixation model is based on the one in EPIC, and requires the demand      
-        /// as an input.  EPIC assumes that rhizobia are not limiting when plants        
-        /// are in the appropriate stage of development.                                 
-        /// Note the following changes:                                                  
-        /// 1. Fixation is computed in a depth-distributed manner, rather than being     
-        ///    kept to 300 mm depth for water and the entire root zone for NO3 as        
-        ///    the original.                                                             
-        /// 2. Fixation activity per unit root mass declines linearly from the           
-        ///    surface to a proportion (NutrK[5]) of the current rooting depth. At       
-        ///    lower depths, activity per unit root mass remains constant at             
-        ///    NutrK[2] of the level at the surface.  Integration of the product of      
-        ///    root mass density and relative nodule activity gives the complex-         
-        ///    looking function for NodulePropn                                          
-        /// 3. The NO3-per-unit-depth concept used in EPIC for the NO3 inhibition        
-        ///    effect has been changed to use soil solution NO3 concentration, in        
-        ///    parts per million.                                                        
+        /// The fixation model is based on the one in EPIC, and requires the demand
+        /// as an input.  EPIC assumes that rhizobia are not limiting when plants
+        /// are in the appropriate stage of development.
+        /// Note the following changes:
+        /// 1. Fixation is computed in a depth-distributed manner, rather than being
+        ///    kept to 300 mm depth for water and the entire root zone for NO3 as
+        ///    the original.
+        /// 2. Fixation activity per unit root mass declines linearly from the
+        ///    surface to a proportion (NutrK[5]) of the current rooting depth. At
+        ///    lower depths, activity per unit root mass remains constant at
+        ///    NutrK[2] of the level at the surface.  Integration of the product of
+        ///    root mass density and relative nodule activity gives the complex-
+        ///    looking function for NodulePropn
+        /// 3. The NO3-per-unit-depth concept used in EPIC for the NO3 inhibition
+        ///    effect has been changed to use soil solution NO3 concentration, in
+        ///    parts per million.
         /// </summary>
         public void FixNitrogen()
         {
@@ -2533,10 +2533,10 @@ namespace Models.GrazPlan
 
             TNutrientInfo nutrInfo = this.FNutrientInfo[(int)TPlantElement.N];
 
-            fDemandLeft = nutrInfo.fMaxDemand[TOTAL] - nutrInfo.fSupplied;                          // Compute unsatisfied demand            
+            fDemandLeft = nutrInfo.fMaxDemand[TOTAL] - nutrInfo.fSupplied;                          // Compute unsatisfied demand
 
             fNoduleDepth = this.Params.NFixK[1] * this.RootDepth;
-            fNoduleSum = 0.0;                                                                       // Relative nodule density distribution  
+            fNoduleSum = 0.0;                                                                       // Relative nodule density distribution
             for (iLayer = 1; iLayer <= this.FMaxRootLayer; iLayer++)
             {
                 fDepth = 0.5 * (this.Owner.FSoilDepths[iLayer - 1] + this.Owner.FSoilDepths[iLayer]);
@@ -2562,21 +2562,21 @@ namespace Models.GrazPlan
             }
 
             switch (this.Status)
-            {                                                                                       
-                // Age effect on nodulation              
-                case stSEEDL: fPropnFixing = (this.EstabIndex - 1.0) / (this.Params.SeedlK[1] - 1.0); 
+            {
+                // Age effect on nodulation
+                case stSEEDL: fPropnFixing = (this.EstabIndex - 1.0) / (this.Params.SeedlK[1] - 1.0);
                     break;
-                case stESTAB: fPropnFixing = 1.0; 
+                case stESTAB: fPropnFixing = 1.0;
                     break;
-                default: fPropnFixing = 0.0; 
+                default: fPropnFixing = 0.0;
                     break;
             }
 
             fLimitFactor = 0.0;
 
-            // Depth-distributed computation, weighted by root activity       
-            for (iLayer = 1; iLayer <= this.FMaxRootLayer; iLayer++)                                     
-            {                                                                                                  
+            // Depth-distributed computation, weighted by root activity
+            for (iLayer = 1; iLayer <= this.FMaxRootLayer; iLayer++)
+            {
                 fWaterLimit = PastureUtil.RAMP(this.Owner.Inputs.ASW[iLayer], 0.0, this.Params.NFixK[3]);
                 fNO3Limit = 0.0;
 
@@ -2589,7 +2589,7 @@ namespace Models.GrazPlan
                 fLimitFactor += fNodulePropn[iLayer] * StdMath.XMin(fWaterLimit, fNO3Limit);
             }
 
-            nutrInfo.fFixed = fDemandLeft * fPropnFixing * fLimitFactor;                            // Finally, compute the amount fixed     
+            nutrInfo.fFixed = fDemandLeft * fPropnFixing * fLimitFactor;                            // Finally, compute the amount fixed
             nutrInfo.fSupplied += nutrInfo.fFixed;
         }
 
@@ -2664,7 +2664,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         public void RelocateNutrients(TPlantElement elem)
@@ -2686,13 +2686,13 @@ namespace Models.GrazPlan
 
             TNutrientInfo nutrInfo = this.FNutrientInfo[(int)elem];
 
-            fDemandLeft = Math.Max(0.0, nutrInfo.fCritDemand[TOTAL] - nutrInfo.fSupplied);          // Compute unsatisfied *critical* demand 
+            fDemandLeft = Math.Max(0.0, nutrInfo.fCritDemand[TOTAL] - nutrInfo.fSupplied);          // Compute unsatisfied *critical* demand
 
             nutrInfo.fRelocatedSum = 0.0;
-            for (iDMD = HerbClassNo; iDMD >= 1; iDMD--)                                              
+            for (iDMD = HerbClassNo; iDMD >= 1; iDMD--)
             {
                 // Lower DMD before higher, leaf before stem
-                for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)                                                                       
+                for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
                 {
                     if ((iDMD >= this.FHighestDMDClass[iPart]) && (iDMD <= this.FLowestDMDClass[iPart]))
                     {
@@ -2707,9 +2707,9 @@ namespace Models.GrazPlan
 
             nutrInfo.fSupplied += nutrInfo.fRelocatedSum;
 
-            if ((nutrInfo.fCritDemand[ptSEED] > 0.0) && (fDemandLeft > 0.0))                        
+            if ((nutrInfo.fCritDemand[ptSEED] > 0.0) && (fDemandLeft > 0.0))
             {
-                // Demand for seed nutrient can be met by relocating out of roots 
+                // Demand for seed nutrient can be met by relocating out of roots
                 nutrInfo.fRelocatedRoot[TOTAL] = 0.0;
                 for (iLayer = 1; iLayer <= this.FMaxRootLayer; iLayer++)
                 {
@@ -2733,8 +2733,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Moves mobile nutrient(taken to be all above MinConc) out of                 
-        /// litter biomass in response to rainfall                                       
+        /// Moves mobile nutrient(taken to be all above MinConc) out of
+        /// litter biomass in response to rainfall
         /// </summary>
         /// <param name="elem"></param>
         public void LeachNutrients(TPlantElement elem)
@@ -2757,8 +2757,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Reduce nutrient fluxes to match the growth rate determined by the most-      
-        /// limiting nutrient                                                            
+        /// Reduce nutrient fluxes to match the growth rate determined by the most-
+        /// limiting nutrient
         /// </summary>
         /// <param name="elem"></param>
         public void RescaleNutrientRates(TPlantElement elem)
@@ -2788,8 +2788,8 @@ namespace Models.GrazPlan
                 nutrInfo.fCritDemand[TOTAL] += nutrInfo.fCritDemand[iPart];
             }
 
-            if ((nutrInfo.fSupplied - nutrInfo.fMaxDemand[TOTAL] > EPSILON)                          
-               && (nutrInfo.fRelocatedRoot[TOTAL] > 0.0))                                                                      
+            if ((nutrInfo.fSupplied - nutrInfo.fMaxDemand[TOTAL] > EPSILON)
+               && (nutrInfo.fRelocatedRoot[TOTAL] > 0.0))
             {
                 // Work backward through the sources of nutrients
                 fDelta = Math.Min(nutrInfo.fSupplied - nutrInfo.fMaxDemand[TOTAL], nutrInfo.fRelocatedRoot[TOTAL]);
@@ -2867,10 +2867,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 1. Collects recycled, relocated, fixed and taken-up nutrients into the         
-        ///    nutrSupply variable for later distribution amongst net growth             
-        /// 2. In litter cohorts, moves leached nutrients into the Leachate holding      
-        ///    variable                                                                  
+        /// 1. Collects recycled, relocated, fixed and taken-up nutrients into the
+        ///    nutrSupply variable for later distribution amongst net growth
+        /// 2. In litter cohorts, moves leached nutrients into the Leachate holding
+        ///    variable
         /// </summary>
         /// <param name="nutrSupply"></param>
         public void UpdateNutrientFlows(ref DM_Pool nutrSupply)
@@ -2920,18 +2920,18 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Distributes the supply of nutrients between the net growth of the various    
-        /// plant parts, i.e. FShootNetGrowth, FRootNetGrowth and FSeedNetGrowth         
-        /// * Critical demand for seed gets first priority.                              
-        /// * Critical demand for other plant parts gets next priority.                  
-        /// * Any excess over critical demand is allocated in proportion to the          
-        ///   amounts of (maximum demand - critical demand).                             
+        /// Distributes the supply of nutrients between the net growth of the various
+        /// plant parts, i.e. FShootNetGrowth, FRootNetGrowth and FSeedNetGrowth
+        /// * Critical demand for seed gets first priority.
+        /// * Critical demand for other plant parts gets next priority.
+        /// * Any excess over critical demand is allocated in proportion to the
+        ///   amounts of (maximum demand - critical demand).
         /// </summary>
         /// <param name="nutrSupply"></param>
         public void AllocateNutrientFlows(DM_Pool nutrSupply)
         {
             double fSupply;
-            double[] fPartSupply = new double[ptSEED + 1]; // [ptLEAF..ptSEED] 
+            double[] fPartSupply = new double[ptSEED + 1]; // [ptLEAF..ptSEED]
             double fRelSupply;
             double fPropn;
             int iPart, iDMD;
@@ -2952,18 +2952,18 @@ namespace Models.GrazPlan
                             fPartSupply[iPart] = 0.0;
                         }
                     }
-                    else if (nutrInfo.fMaxDemand[TOTAL] <= 0.0)                                     
+                    else if (nutrInfo.fMaxDemand[TOTAL] <= 0.0)
                     {
-                        // This can happen when translocation is occurring but net growth is negative  
-                        fPartSupply[ptLEAF] = 0.0;                                                                              
+                        // This can happen when translocation is occurring but net growth is negative
+                        fPartSupply[ptLEAF] = 0.0;
                         fPartSupply[ptSTEM] = Math.Min(fSupply, nutrInfo.fStemTranslocSupply);
                         fPartSupply[ptROOT] = fSupply - fPartSupply[ptSTEM];
                         fPartSupply[ptSEED] = 0.0;
                     }
-                    else if (fSupply < nutrInfo.fCritDemand[TOTAL])                                  
+                    else if (fSupply < nutrInfo.fCritDemand[TOTAL])
                     {
                         // Insufficient to meet critical demands
-                        fPartSupply[ptSEED] = Math.Min(fSupply, nutrInfo.fCritDemand[ptSEED]);      // Seed gets absolute priority           
+                        fPartSupply[ptSEED] = Math.Min(fSupply, nutrInfo.fCritDemand[ptSEED]);      // Seed gets absolute priority
                         PastureUtil.XDec(ref fSupply, fPartSupply[ptSEED]);
 
                         fRelSupply = PastureUtil.Div0(fSupply, nutrInfo.fCritDemand[TOTAL] - nutrInfo.fCritDemand[ptSEED]);
@@ -2972,7 +2972,7 @@ namespace Models.GrazPlan
                             fPartSupply[iPart] = fRelSupply * nutrInfo.fCritDemand[iPart];
                         }
                     }
-                    else                                                                               
+                    else
                     {
                         // Sufficient to meet critical demands
                         for (iPart = ptLEAF; iPart <= ptSEED; iPart++)
@@ -2990,10 +2990,10 @@ namespace Models.GrazPlan
                         }
                     }
 
-                    for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)                                       
+                    for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
                     {
                         // Subdivide the nutrient supply to each plant part
-                        for (iDMD = this.FHighestDMDClass[iPart]; iDMD <= this.FLowestDMDClass[iPart]; iDMD++)                               
+                        for (iDMD = this.FHighestDMDClass[iPart]; iDMD <= this.FLowestDMDClass[iPart]; iDMD++)
                         {
                             if (this.FPartNetGrowth[iPart] > 0.0)
                             {
@@ -3029,7 +3029,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            if (this.Owner.FElements.Contains(TPlantElement.N))                                                            
+            if (this.Owner.FElements.Contains(TPlantElement.N))
             {
                 // Ash alkalinity increments
                 for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
@@ -3053,7 +3053,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         public void LoseExcessNutrients(TPlantElement elem)
@@ -3086,9 +3086,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Traps nutrient uptake allocated to roots by senescing plants on the day of   
-        /// senescence and moves it to the established cohort (where the root DM has       
-        /// already been shifted)                                                        
+        /// Traps nutrient uptake allocated to roots by senescing plants on the day of
+        /// senescence and moves it to the established cohort (where the root DM has
+        /// already been shifted)
         /// </summary>
         /// <param name="elem"></param>
         public void TransferSenescedNutrients(TPlantElement elem)
@@ -3124,7 +3124,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         /// <param name="age"></param>
@@ -3160,7 +3160,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         /// <returns></returns>
@@ -3205,7 +3205,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         /// <returns></returns>
@@ -3241,7 +3241,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="nutr"></param>
         /// <returns></returns>
@@ -3251,7 +3251,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public double[] CationUptake()
@@ -3297,7 +3297,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="elem"></param>
         /// <returns></returns>
@@ -3307,7 +3307,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public double CO2_SpecLeafArea()
@@ -3326,7 +3326,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="part"></param>
         /// <param name="elem"></param>
@@ -3351,7 +3351,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <param name="flux"></param>
@@ -3366,7 +3366,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="source"></param>
         /// <param name="propn"></param>
@@ -3381,26 +3381,26 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// This method carries out the following flows, in order:                       
-        /// - translocation out of roots and stems               fTranslocated             
-        /// - grazing removal                                  fRemoved                  
-        /// - plant and tissue death, litterfall and degradation   fFluxOver                 
-        /// - DMD decline                                      fFluxDown                 
-        /// - root aging                                       fRootFlux                 
-        /// - root loss and recycling                          fRootFlux                 
-        /// - addition of new growth (incl. new seeds)         fNewGrowth                
-        /// This method does *not* carry out the following flows:                        
-        /// - addition of newly germinating seedlings                                    
-        /// - removal through conservation or killing events                             
-        /// - establishment, senescence or resprouting at the commencement of the        
-        ///   phenological cycle                                                         
+        /// This method carries out the following flows, in order:
+        /// - translocation out of roots and stems               fTranslocated
+        /// - grazing removal                                  fRemoved
+        /// - plant and tissue death, litterfall and degradation   fFluxOver
+        /// - DMD decline                                      fFluxDown
+        /// - root aging                                       fRootFlux
+        /// - root loss and recycling                          fRootFlux
+        /// - addition of new growth (incl. new seeds)         fNewGrowth
+        /// This method does *not* carry out the following flows:
+        /// - addition of newly germinating seedlings
+        /// - removal through conservation or killing events
+        /// - establishment, senescence or resprouting at the commencement of the
+        ///   phenological cycle
         /// </summary>
         /// <param name="newSeeds"></param>
         public void UpdateState(ref DM_Pool newSeeds)
         {
             bool bGreenCohort;
             DM_Pool nutrSupply = new DM_Pool();
-            double[] digDMFlux = new double[HerbClassNo + 1];                  
+            double[] digDMFlux = new double[HerbClassNo + 1];
             double respireLoss;
             double digDMLoss;
             double DMDFlux;
@@ -3408,7 +3408,7 @@ namespace Models.GrazPlan
             double[,] fluxOver = new double[ptSTEM + 1, HerbClassNo + 1];      // [ptLEAF..ptSTEM,1..HerbClassNo]
             double[,] fluxDown = new double[ptSTEM + 1, HerbClassNo + 1];      // [ptLEAF..ptSTEM,1..HerbClassNo]
             double[,] fluxCO2 = new double[ptSTEM + 1, HerbClassNo + 1];       // [ptLEAF..ptSTEM,1..HerbClassNo]
-            double[,] rootsDying = new double[OLDR + 1, MaxSoilLayers + 1];    // [EFFR..OLDR,1..MaxSoilLayers] 
+            double[,] rootsDying = new double[OLDR + 1, MaxSoilLayers + 1];    // [EFFR..OLDR,1..MaxSoilLayers]
             double[] rootsAging = new double[MaxSoilLayers + 1];               // [1..
             double[] rootsRenewed = new double[MaxSoilLayers + 1];             // [1..
             int iOver;
@@ -3426,10 +3426,10 @@ namespace Models.GrazPlan
 
             bGreenCohort = (this.Status == stSEEDL) || (this.Status == stESTAB) || (this.Status == stSENC);
 
-            for (iDMD = 1; iDMD <= HerbClassNo; iDMD++)                                                     
+            for (iDMD = 1; iDMD <= HerbClassNo; iDMD++)
             {
                 // Amount moving to next lower DMD class when a transfer of digestible DM is made
-                digDMFlux[iDMD] = (1.0 - PastureUtil.HerbageDMD[iDMD]) / PastureUtil.CLASSWIDTH;                
+                digDMFlux[iDMD] = (1.0 - PastureUtil.HerbageDMD[iDMD]) / PastureUtil.CLASSWIDTH;
             }
 
             if ((this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC) && (this.FPartNetGrowth[ptROOT] > 0.0))
@@ -3439,19 +3439,19 @@ namespace Models.GrazPlan
 
             if (this.Status == stSEEDL || this.Status == stESTAB || this.Status == stSENC)
             {
-                this.FrostFactor += this.FDeltaFrost;                                                                 // Also updated in addSeedlings()        
+                this.FrostFactor += this.FDeltaFrost;                                                                 // Also updated in addSeedlings()
             }
 
             if (this.Status == stSEEDL)
             {
-                this.SeedlStress += this.FDelta_SI;                                                                   // Also updated in addSeedlings()        
+                this.SeedlStress += this.FDelta_SI;                                                                   // Also updated in addSeedlings()
             }
             else
             {
                 this.SeedlStress = 0.0;
             }
 
-            if ((this.Status == stSEEDL) && (this.Herbage[TOTAL, TOTAL].DM > 0.0))                                    // Also updated in addSeedlings()        
+            if ((this.Status == stSEEDL) && (this.Herbage[TOTAL, TOTAL].DM > 0.0))                                    // Also updated in addSeedlings()
             {
                 this.EstabIndex *= (1.0 + Math.Max(0.0, this.FPartNetGrowth[ptLEAF] + this.FPartNetGrowth[ptSTEM])
                                                      / this.Herbage[TOTAL, TOTAL].DM);
@@ -3469,8 +3469,8 @@ namespace Models.GrazPlan
             {
                 for (iDMD = 1; iDMD <= HerbClassNo; iDMD++)
                 {
-                    DMDFlux = this.FDMDDecline[iPart, iDMD] / PastureUtil.CLASSWIDTH;                      // Flux due to tissue aging (g/g/d)      
-                    respireLoss = Math.Max(0.0, -this.FShootNetGrowth[iPart, iDMD].DM);                         // Respiratory losses (g/m^2/d) including losses in dry herbage              
+                    DMDFlux = this.FDMDDecline[iPart, iDMD] / PastureUtil.CLASSWIDTH;                      // Flux due to tissue aging (g/g/d)
+                    respireLoss = Math.Max(0.0, -this.FShootNetGrowth[iPart, iDMD].DM);                         // Respiratory losses (g/m^2/d) including losses in dry herbage
 
                     if (iPart == ptSTEM)
                     {
@@ -3555,29 +3555,29 @@ namespace Models.GrazPlan
             }
 
             PastureUtil.ZeroPool(ref ExitDM);
-            
-            // Now execute the mass flows 
-            for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)                                                     
+
+            // Now execute the mass flows
+            for (iPart = ptLEAF; iPart <= ptSTEM; iPart++)
             {
                 for (iDMD = HerbClassNo; iDMD >= 1; iDMD--)
                 {
-                    if (!bGreenCohort)                                                              // Respiratory losses come first in dry herbage     
-                    {                                                                                                          
+                    if (!bGreenCohort)                                                              // Respiratory losses come first in dry herbage
+                    {
                         area = this.SpecificArea[iPart, iDMD] * this.Herbage[iPart, iDMD].DM;
                         this.Herbage[iPart, iDMD].DM = this.Herbage[iPart, iDMD].DM - fluxCO2[iPart, iDMD];
-                        if (this.Herbage[iPart, iDMD].DM > 0.0)                                          // Respiratory losses don't change the herbage area  
+                        if (this.Herbage[iPart, iDMD].DM > 0.0)                                          // Respiratory losses don't change the herbage area
                         {
-                            this.SpecificArea[iPart, iDMD] = area / this.Herbage[iPart, iDMD].DM;                                    
+                            this.SpecificArea[iPart, iDMD] = area / this.Herbage[iPart, iDMD].DM;
                         }
                     }
 
-                    if (iPart == ptSTEM)                                                            // Translocated DM is already incorporated into F*NetGrowth;           
+                    if (iPart == ptSTEM)                                                            // Translocated DM is already incorporated into F*NetGrowth;
                     {
-                        this.Herbage[iPart, iDMD].DM = this.Herbage[iPart, iDMD].DM - this.FStemTransloc[iDMD];          
+                        this.Herbage[iPart, iDMD].DM = this.Herbage[iPart, iDMD].DM - this.FStemTransloc[iDMD];
                     }
-                    
-                    // nutrients were moved in AllocateNutrientFlows()            
-                    this.Owner.MovePool(grazed[iPart][iDMD], ref this.Herbage[iPart, iDMD], ref ExitDM);                  
+
+                    // nutrients were moved in AllocateNutrientFlows()
+                    this.Owner.MovePool(grazed[iPart][iDMD], ref this.Herbage[iPart, iDMD], ref ExitDM);
 
                     TPastureCohort pastureCohort = null;
                     if (iDMD < HerbClassNo)
@@ -3632,7 +3632,7 @@ namespace Models.GrazPlan
                         this.DoDeadRootNutrients(Elem, iAge, iLayer, ref ExitDM);
                     }
 
-                    AddDMPool(MultiplyDMPool(ExitDM, -1.0), this.Roots[iAge, iLayer]);            // Subtract ExitDM from Roots[]          
+                    AddDMPool(MultiplyDMPool(ExitDM, -1.0), this.Roots[iAge, iLayer]);            // Subtract ExitDM from Roots[]
                     this.Owner.MoveToResidue(ExitDM.DM, ref ExitDM, this.Status, ptROOT, TOTAL, iLayer);
                 }
 
@@ -3668,7 +3668,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void ComputeTotals()
         {
@@ -3726,10 +3726,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Remove part of a single herbage pool, ensuring that the nutrient contents    
-        /// and ash alkalinity are populated                                             
-        /// * The fHerbageNutrConc[] property and fAshAlkalinity() function contain      
-        ///   logic for building default quality values                                  
+        /// Remove part of a single herbage pool, ensuring that the nutrient contents
+        /// and ash alkalinity are populated
+        /// * The fHerbageNutrConc[] property and fAshAlkalinity() function contain
+        ///   logic for building default quality values
         /// </summary>
         /// <param name="part"></param>
         /// <param name="DMD"></param>
