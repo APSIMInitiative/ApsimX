@@ -14,9 +14,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Return true if plant is alive and in the ground.</summary>
         bool IsAlive { get; }
 
-        /// <summary>A list of organs that can be damaged.</summary>
-        List<IOrganDamage> Organs { get; }
-
         /// <summary>Total amount of above ground biomass.</summary>
         IBiomass AboveGround { get; }
 
