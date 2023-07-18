@@ -5107,23 +5107,20 @@ namespace Models.Core.ApsimFile
                 {
                     for (int i = 0; i < operation.Count(); i++)
                     {
-                        string dateStr = null;
-                        if (operation[i]["Date"] != null)
-                        {
-                            dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
-                        }
-
                         string commentChar = "";
+                        bool enabled = false;
                         if (operation[i]["Enabled"] != null)
-                        {
-                            string enabled = operation[i]["Enabled"].ToString().ToLower();
-                            commentChar = enabled.CompareTo("false") == 0 ? string.Empty : "// ";
-                        } 
+                            enabled = (bool)operation[i]["Enabled"];
                         else
-                        {
-                            operation[i]["Enabled"] = false;
-                        }
+                            operation[i]["Enabled"] = "//";
 
+                        commentChar = enabled ? "" : "//";
+
+                        string dateStr = "";
+                        if (enabled)
+                            if (operation[i]["Date"] != null)
+                                dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
+                        
                         operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
                     }
                 }
