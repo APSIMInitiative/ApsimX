@@ -79,8 +79,8 @@ namespace UserInterface.Presenters
         /// <value>The width of the tree.</value>
         public int TreeWidth
         {
-            get { return view.Tree.TreeWidth; }
-            set { this.view.Tree.TreeWidth = value; }
+            get { return view.DividerPosition; }
+            set { this.view.DividerPosition = value; }
         }
 
         /// <summary>Gets the presenter for the main window</summary>
@@ -364,7 +364,6 @@ namespace UserInterface.Presenters
         /// <param name="fileName">Path to which the file will be saved.</param>
         public void WriteSimulation(string fileName)
         {
-            ApsimXFile.ExplorerWidth = TreeWidth;
             ApsimXFile.Write(fileName);
             CommandHistory.Save();
         }
