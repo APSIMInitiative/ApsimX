@@ -3078,21 +3078,21 @@ namespace Models.GrazPlan
 
                     EvaluateSoilNitrogenAvailability(zone); // get the N amount available in the soil
 
-                    UptakeDemands.NO3N = mySoilNO3Available;
+                    UptakeDemands.NO3N = mySoilNO3Available;    // kg/ha
                     UptakeDemands.NH4N = mySoilNH4Available;
                     UptakeDemands.Water = new double[zone.NO3N.Length];
 
                     NSupply += (this.mySoilNH4Available.Sum() + this.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
 
                 }
-                /*
-                // TODO: calculate the demand
-                // ComputeNutrientRates() ?
-                double[] NH4_layerUptake = this.UptakeByLayer(TPlantNutrient.pnNH4);
-                double[] NO3_layerUptake = this.UptakeByLayer(TPlantNutrient.pnNO3);
-                mySoilNDemand <-
-                */
-                mySoilNDemand = NSupply; // temporary
+
+                // Calculate the demand
+                double maxDemand = 0;
+                double critDemand = 0;
+                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand);
+
+                // kg/ha
+                mySoilNDemand = maxDemand * GM2_KGHA;
 
                 // get the amount of soil N demanded
                 double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.

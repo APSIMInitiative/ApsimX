@@ -1738,6 +1738,29 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Do the calculations to determine the maximum and critical demand
+        /// and this is then available as the nutrient demand estimate.
+        /// </summary>
+        /// <param name="elem">N, P, S</param>
+        /// <param name="maxDemand"></param>
+        /// <param name="critDemand"></param>
+        public void ComputeNutrientRatesEstimate(TPlantElement elem, ref double maxDemand, ref double critDemand)
+        {
+            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+            {
+                for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+                {
+                    if (this.FCohorts[iCohort].Status == iComp)
+                    {
+                        this.FCohorts[iCohort].ComputeNutrientDemand(elem);
+                        maxDemand += this.FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL];     // accumulate the max demand
+                        critDemand += this.FCohorts[iCohort].FNutrientInfo[(int)elem].fCritDemand[TOTAL];   // accumulate the critical demand
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Compute nutrient rates
         /// </summary>
         /// <param name="elem">N, P, S</param>
