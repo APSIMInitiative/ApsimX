@@ -767,7 +767,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReAllocation = AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt);
             DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = photosynthesis.Value();
@@ -847,7 +847,7 @@ namespace Models.PMF.Organs
             {
                 DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
-                DMDemand.Metabolic = 0;
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dmConversionEfficiency.Value());
                 DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
                 DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
                 DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
@@ -1024,7 +1024,7 @@ namespace Models.PMF.Organs
         /// </summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.ReAllocation) * dmRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, startLive.StorageWt - AvailableDMReallocation(startLive.StorageWt)) * dmRetranslocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -1032,11 +1032,15 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Computes the amount of DM available for reallocation.
+        /// Computes the amount of Metabolic DM available for reallocation.
         /// </summary>
-        public double AvailableDMReallocation()
+        public double AvailableDMReallocation(double source)
         {
-            double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
+            double availableDM = 0;
+            if (senescenceRate.Value() > 0)
+            {
+                availableDM = source * senescenceRate.Value() * dmReallocationFactor.Value();
+            }
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM reallocation value computed for " + Name);
 
@@ -1078,12 +1082,11 @@ namespace Models.PMF.Organs
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
-            // allocate non structural DM
+            // allocate storage DM
             if (MathUtilities.IsGreaterThan(dryMatter.Storage * dmConversionEfficiency.Value(), DMDemand.Storage))
-                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
-
-            // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-            double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
+                throw new Exception("Storage DM allocation to " + Name + " is in excess of its capacity");
+            double stoRetransFrac = MathUtilities.Divide(AvailableDMReallocation(startLive.StorageWt),AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt),0);
+            double diffWt = dryMatter.Storage - dryMatter.Retranslocation * stoRetransFrac;
             if (MathUtilities.IsPositive(diffWt))
             {
                 diffWt *= dmConversionEfficiency.Value();
@@ -1093,8 +1096,17 @@ namespace Models.PMF.Organs
             Live.StorageWt += diffWt;
 
             // allocate metabolic DM
-            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
-            GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
+            if (MathUtilities.IsGreaterThan(dryMatter.Metabolic * dmConversionEfficiency.Value(), DMDemand.Metabolic))
+                throw new Exception("Metabolic DM allocation to " + Name + " is in excess of its capacity");
+            double metRetransFrac = MathUtilities.Divide(AvailableDMReallocation(startLive.MetabolicWt),AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt),0);
+            diffWt = dryMatter.Metabolic - dryMatter.Retranslocation * metRetransFrac;
+            if (MathUtilities.IsPositive(diffWt))
+            {
+                diffWt *= dmConversionEfficiency.Value();
+                GrowthRespiration += diffWt * growthRespFactor;
+            }
+            Allocated.MetabolicWt = diffWt;
+            Live.MetabolicWt += diffWt; 
 
         }
 
