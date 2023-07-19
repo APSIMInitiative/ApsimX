@@ -2,16 +2,6 @@
 using UserInterface.Views;
 using System;
 using APSIM.Shared.Utilities;
-using UserInterface.Interfaces;
-using Models.Factorial;
-using System.Collections.Generic;
-using UserInterface.EventArguments;
-using static Models.Core.AutoDocumentation;
-using BruTile.Wmts.Generated;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using DocumentFormat.OpenXml.Vml.Spreadsheet;
-using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -32,11 +22,6 @@ namespace UserInterface.Presenters
         /// The presenter
         /// </summary>
         private ExplorerPresenter explorerPresenter;
-
-        /// <summary>
-        /// The intellisense object used to generate completion options.
-        /// </summary>
-        private IntellisensePresenter intellisense;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
@@ -62,11 +47,6 @@ namespace UserInterface.Presenters
             instructions += "\n";
             instructions += "This node can be disabled to restore the default simulation running behaviour.\n";
             playlistView.SetLabelText(instructions);
-
-            //playlistView.ContextItemsNeeded += this.OnContextItemsNeeded;
-
-            intellisense = new IntellisensePresenter(playlistView as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
         }
 
         private void HelpBtnClicked(object sender, EventArgs e)
@@ -109,27 +89,10 @@ namespace UserInterface.Presenters
             //playlistView.Lines = model.Specifications.ToArray();
         }
 
-        /// <summary>
-        /// Invoked when the user selects an item in the intellisense.
-        /// Inserts the selected item at the caret.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
-        {
-            if (string.IsNullOrEmpty(args.ItemSelected))
-                playlistView.editorView.InsertAtCaret(args.ItemSelected);
-            else
-                playlistView.editorView.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
-        }
-
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            intellisense.Cleanup();
             playlistView.editorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
-            //playlistView.ContextItemsNeeded -= this.OnContextItemsNeeded;
             explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
     }
