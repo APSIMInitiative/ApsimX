@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 164,
+  "Version": 165,
   "Name": "Simulations",
   "Children": [
     {
@@ -3599,7 +3599,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Wheat].Leaf.Fn",
+                          "VariableName": "[Leaf].Fn",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -3719,7 +3719,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Wheat].Leaf.Fn",
+                          "VariableName": "[Leaf].Fn",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],

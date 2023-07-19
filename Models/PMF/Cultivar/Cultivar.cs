@@ -25,20 +25,28 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(ModelOverrides))]
     public class Cultivar : Model, ILineEditor
     {
         /// <summary>
-        /// Constructor to initialise culivar instance with specified commands
+        /// Default constructor - needed for AddModel to work.
         /// </summary>
-        /// <param name="commnads">list of parameter overwrite commands</param>
+        public Cultivar()
+        {
+        }
+
+        /// <summary>
+        /// Constructor to initialise cultivar instance with specified commands
+        /// </summary>
+        /// <param name="commands">list of parameter overwrite commands</param>
         /// <param name="name">The name of the cultivar</param>
-        public Cultivar (string name, string[] commnads)
+        public Cultivar (string name, string[] commands)
         {
             this.Name = name;
-            Command = commnads;
+            Command = commands;
         }
-        
-        /// <summary>The model the cultvar is relative to.</summary>
+
+        /// <summary>The model the cultivar is relative to.</summary>
         private IModel relativeToModel;
 
         /// <summary>The collection of undo overrides that undo the overrides.</summary>
