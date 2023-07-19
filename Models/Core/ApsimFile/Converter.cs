@@ -5107,14 +5107,11 @@ namespace Models.Core.ApsimFile
                 {
                     for (int i = 0; i < operation.Count(); i++)
                     {
-                        string commentChar = "";
                         bool enabled = false;
                         if (operation[i]["Enabled"] != null)
                             enabled = (bool)operation[i]["Enabled"];
-                        else
-                            operation[i]["Enabled"] = "//";
 
-                        commentChar = enabled ? "" : "//";
+                        string commentChar = enabled ? "" : "//";
 
                         string dateStr = "";
                         if (enabled)
