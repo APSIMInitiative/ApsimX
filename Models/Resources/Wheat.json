@@ -7460,7 +7460,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
                     "[Phenology].CAMP.FLNparams.MinLN = 9.0",
                     "[Phenology].CAMP.FLNparams.PpLN = 2.0",
