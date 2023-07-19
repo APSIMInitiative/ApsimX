@@ -60,13 +60,6 @@ namespace UserInterface.Presenters
                 markdown.AppendLine();
             }
 
-            string section = model.GetMarkdownToIncludeInGUI();
-            if (!string.IsNullOrEmpty(section))
-            {
-                markdown.AppendLine(section);
-                markdown.AppendLine();
-            }
-
             string typeName = model.GetType().Name;
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));

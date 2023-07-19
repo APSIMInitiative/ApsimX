@@ -633,17 +633,6 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get a list of sections from the documentation that should be shown in the GUI
-        /// </summary>
-        /// <remarks>
-        /// Note that the returned tags are not inside a section.
-        /// </remarks>
-        public virtual string GetMarkdownToIncludeInGUI()
-        {
-            return "";
-        }
-
-        /// <summary>
         /// Gets a list of Event Handles that are Invoked in the prodivded function
         /// </summary>
         /// <remarks>

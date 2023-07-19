@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -524,8 +522,23 @@ namespace Models.PMF.Phen
                 phase.ResetPhase();
         }
 
-        private DataTable PhasesDataTable()
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
         {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            // Document thermal time function.
+            yield return new Section("ThermalTime", thermalTime.Document());
+
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph("**List of stages and phases used in the simulation of crop phenological development**");
+
             DataTable phaseTable = new DataTable();
             phaseTable.Columns.Add("Phase Number", typeof(int));
             phaseTable.Columns.Add("Phase Name", typeof(string));
@@ -543,26 +556,7 @@ namespace Models.PMF.Phen
                 phaseTable.Rows.Add(row);
                 n++;
             }
-            return phaseTable;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public override IEnumerable<ITag> Document()
-        {
-            // Write description of this class from summary and remarks XML documentation.
-            foreach (var tag in GetModelDescription())
-                yield return tag;
-
-            // Write memos.
-            foreach (var tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            // Document thermal time function.
-            yield return new Section("ThermalTime", thermalTime.Document());
-
-            // Write a table containing phase numbers and start/end stages.
-            yield return new Paragraph("**List of stages and phases used in the simulation of crop phenological development**");
-            yield return new Table(PhasesDataTable());
+            yield return new Table(phaseTable);
 
             // Document Phases
             foreach (var phase in FindAllChildren<IPhase>())
@@ -581,18 +575,6 @@ namespace Models.PMF.Phen
                                                           !(child is Constant) &&
                                                           child != thermalTime))
                 yield return new Section(phase.Name, phase.Document());
-        }
-
-        /// <summary>
-        /// Get a list of sections from the documentation that should be shown in the GUI
-        /// </summary>
-        public override string GetMarkdownToIncludeInGUI()
-        {
-            StringBuilder markdown = new StringBuilder();
-            markdown.AppendLine("## Phases");
-            markdown.AppendLine();
-            markdown.AppendLine(DataTableUtilities.ToMarkdown(PhasesDataTable(), true));
-            return markdown.ToString();
         }
     }
 }
