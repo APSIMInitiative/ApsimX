@@ -147,14 +147,6 @@ namespace Models.Soils.NutrientPatching
             GetSoluteObject(name).AddKgHaDelta(callingModelType, value);
         }
 
-        /// <summary>Calculate actual decomposition</summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            var somDecomp = Nutrient.CalculateActualSOMDecomp();
-            somDecomp.Multiply(RelativeArea);
-            return somDecomp;
-        }
-
         /// <summary>
         /// Add a solutes and FOM.
         /// </summary>

@@ -133,10 +133,6 @@ namespace Models.Surface
         /// <summary>fraction of incoming faeces to add</summary>
         private double fractionFaecesAdded = 1.0;
 
-        /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
-        private SurfaceOrganicMatterDecompType actualSOMDecomp;
-
-
         /// <summary>Delegate for a IncorpFOMPool</summary>
         public delegate void FOMPoolDelegate(FOMPoolType Data);
 
@@ -402,7 +398,7 @@ namespace Models.Surface
         }
 
         /// <summary>Return the potential residue decomposition for today.</summary>
-        public SurfaceOrganicMatterDecompType PotentialDecomposition()
+        public void PotentialDecomposition(NutrientPool residueDecompositionPool)
         {
             // This method can be called multiple times when nutrient patching is running. Each
             // patch will call this method. Because of the cumeos accumulation below we only
@@ -422,9 +418,15 @@ namespace Models.Surface
 
                 irrig = 0.0; // reset irrigation log now that we have used that information;
 
-                potentialDecomposition = SendPotDecompEvent();
+                potentialDecomposition = GetPotentialDecomposition();
             }
-            return potentialDecomposition;
+
+            residueDecompositionPool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
+            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
+            {
+                residueDecompositionPool.C[0] += potentialDecomposition.Pool[i].FOM.C;
+                residueDecompositionPool.N[0] += potentialDecomposition.Pool[i].FOM.N;
+            }
         }
 
         /// <summary>
@@ -571,9 +573,24 @@ namespace Models.Surface
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
-            actualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
-            if (actualSOMDecomp != null)
-                DecomposeSurfom(actualSOMDecomp);
+            double InitialResidueC = 0;  // Potential residue decomposition provided by surface organic matter model
+            double FinalResidueC = 0;    // How much is left after decomposition
+            double FractionDecomposed;
+
+            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
+                InitialResidueC += potentialDecomposition.Pool[i].FOM.C;
+            FinalResidueC = SoilNitrogen.SurfaceResidue.C[0];
+            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
+            if (FractionDecomposed < 1)
+            { }
+            SurfaceOrganicMatterDecompType actualDecomposition = ReflectionUtilities.Clone(potentialDecomposition) as SurfaceOrganicMatterDecompType;
+            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
+            {
+                actualDecomposition.Pool[i].FOM.C = potentialDecomposition.Pool[i].FOM.C * FractionDecomposed;
+                actualDecomposition.Pool[i].FOM.N = potentialDecomposition.Pool[i].FOM.N * FractionDecomposed;
+            }
+            if (actualDecomposition != null)
+                DecomposeSurfom(actualDecomposition);
 
             Canopies = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
@@ -826,9 +843,8 @@ namespace Models.Surface
 
         /// <summary>Notify other modules of the potential to decompose.</summary>
         /// <returns></returns>
-        private SurfaceOrganicMatterDecompType SendPotDecompEvent()
+        private SurfaceOrganicMatterDecompType GetPotentialDecomposition()
         {
-
             SurfaceOrganicMatterDecompType SOMDecomp = new SurfaceOrganicMatterDecompType()
             {
                 Pool = new SurfaceOrganicMatterDecompPoolType[numSurfom]

@@ -119,7 +119,7 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>Potential soil organic matter decomposition for today.</summary>
-        public SurfaceOrganicMatterDecompType SurfaceResidueDecomposition { get; private set; } = null;
+        public NutrientPool SurfaceResidueDecomposition { get; private set; } = null;
 
         /// <summary>
         /// Reset all pools and solutes
@@ -501,40 +501,6 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Calculate actual decomposition
-        /// </summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[SurfaceResidueDecomposition.Pool.Length];
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
-                actualSOMDecomp.Pool[i].Name = SurfaceResidueDecomposition.Pool[i].Name;
-                actualSOMDecomp.Pool[i].OrganicMatterType = SurfaceResidueDecomposition.Pool[i].OrganicMatterType;
-                actualSOMDecomp.Pool[i].FOM = new FOMType();
-                actualSOMDecomp.Pool[i].FOM.amount = SurfaceResidueDecomposition.Pool[i].FOM.amount;
-            }
-
-            double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
-            double FinalResidueC = 0;    // How much is left after decomposition
-            double FractionDecomposed;
-
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-                InitialResidueC += SurfaceResidueDecomposition.Pool[i].FOM.C;
-            FinalResidueC = SurfaceResidue.C[0];
-            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
-            if (FractionDecomposed < 1)
-            { }
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                actualSOMDecomp.Pool[i].FOM.C = SurfaceResidueDecomposition.Pool[i].FOM.C * FractionDecomposed;
-                actualSOMDecomp.Pool[i].FOM.N = SurfaceResidueDecomposition.Pool[i].FOM.N * FractionDecomposed;
-            }
-            return actualSOMDecomp;
-        }
-
-        /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -546,20 +512,8 @@ namespace Models.Soils.Nutrients
                 FOMCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
                                                      FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
 
-            // Get potential residue decomposition from surfaceom.
-            SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
-
-            var surfaceResiduePool = (NutrientPool)SurfaceResidue;
-
-            surfaceResiduePool.C[0] = 0;
-            surfaceResiduePool.N[0] = 0;
-            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
-
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                surfaceResiduePool.C[0] += SurfaceResidueDecomposition.Pool[i].FOM.C;
-                surfaceResiduePool.N[0] += SurfaceResidueDecomposition.Pool[i].FOM.N;
-            }
+            // Get potential residue decomposition from surface organic matter
+            SurfaceOrganicMatter.PotentialDecomposition(SurfaceResidue as NutrientPool);
         }
 
         /// <summary>Calculate / create a directed graph from model</summary>

@@ -178,28 +178,6 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Total N for each patch</summary>
         public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
 
-        /// <summary>Calculate actual decomposition</summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            // Note:
-            //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
-
-            SurfaceOrganicMatterDecompType returnSOMDecomp = null;
-            foreach (var patch in patches)
-            {
-                var somDecomp = patch.CalculateActualSOMDecomp();
-                foreach (var pool in somDecomp.Pool)
-                    pool.FOM.amount = 0;
-
-                if (returnSOMDecomp == null)
-                    returnSOMDecomp = somDecomp;
-                else
-                    returnSOMDecomp.Add(somDecomp);
-            }
-
-            return returnSOMDecomp;
-        }
-
         /// <summary>
         /// Called by solutes to get the value of a solute.
         /// </summary>

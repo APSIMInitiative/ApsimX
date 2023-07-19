@@ -80,10 +80,6 @@
         double[] FOMCNRFactor { get; }
 
         /// <summary>
-        /// Calculate actual decomposition
-        /// </summary>
-        SurfaceOrganicMatterDecompType CalculateActualSOMDecomp();
-        /// <summary>
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
