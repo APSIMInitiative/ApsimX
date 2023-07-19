@@ -13,7 +13,7 @@ namespace Models
     /// A report class for writing output to the data store.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PlaylistView")]
+    [ViewName("UserInterface.Views.TextAndCodeView")]
     [PresenterName("UserInterface.Presenters.PlaylistPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class Playlist : Model
@@ -47,6 +47,7 @@ namespace Models
             {
                 //convert our wildcard to regex symbol
                 string expression = line.Replace("*", "[\\s\\S]*");
+                expression = expression.Replace("#", ".");
                 expression = "^" + expression + "$";
                 Regex regex = new Regex(expression);
 

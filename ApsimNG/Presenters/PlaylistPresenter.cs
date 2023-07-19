@@ -7,6 +7,11 @@ using Models.Factorial;
 using System.Collections.Generic;
 using UserInterface.EventArguments;
 using static Models.Core.AutoDocumentation;
+using BruTile.Wmts.Generated;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -21,7 +26,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view object
         /// </summary>
-        private PlaylistView playlistView;
+        private TextAndCodeView playlistView;
 
         /// <summary>
         /// The presenter
@@ -46,12 +51,20 @@ namespace UserInterface.Presenters
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            playlistView = view as PlaylistView;
+            playlistView = view as TextAndCodeView;
             playlistView.editorView.Text = playlistModel.Text;
             playlistView.editorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
+            
+            string instructions = "";
+            instructions += "Enter a list of names of simulations that you want to run. If this list is left empty, all active simulations will be run.\n";
+            instructions += "A wildcard * can be used to represent any number of characters.\n";
+            instructions += "A wildcard # can be used to represent any single character.\n";
+            instructions += "\n";
+            instructions += "This node can be disabled to restore the default simulation running behaviour.\n";
+            playlistView.SetLabelText(instructions);
 
             //playlistView.ContextItemsNeeded += this.OnContextItemsNeeded;
-            
+
             intellisense = new IntellisensePresenter(playlistView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
         }

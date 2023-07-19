@@ -7,16 +7,18 @@ using UserInterface.Interfaces;
 namespace UserInterface.Views
 {
 
-    public class PlaylistView : ViewBase
+    public class TextAndCodeView : ViewBase
     {
 
         public IEditorView editorView { get; private set; } = null;
 
+        private Gtk.Label label1;
+
         /// <summary>Constructor</summary>
         /// <param name="owner">The owner widget.</param>
-        public PlaylistView(ViewBase owner) : base(owner)
+        public TextAndCodeView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.PlaylistView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TextAndCodeView.glade");
             mainWidget = (Widget)builder.GetObject("scrolledwindow1");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
@@ -24,6 +26,15 @@ namespace UserInterface.Views
 
             VBox vbox = (VBox)builder.GetObject("vbox");
             vbox.Add((editorView as ViewBase).MainWidget);
+
+            label1 = (Label)builder.GetObject("label1");
+        }
+
+        /// <summary>Invoked when main widget has been destroyed.</summary>
+        /// <param name="text"></param>
+        public void SetLabelText(string text)
+        {
+            label1.Text = text;
         }
 
         /// <summary>Invoked when main widget has been destroyed.</summary>
