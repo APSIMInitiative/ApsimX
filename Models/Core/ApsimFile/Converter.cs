@@ -28,7 +28,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 164; } }
+        public static int LatestVersion { get { return 165; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5089,6 +5089,38 @@ namespace Models.Core.ApsimFile
                 string[] code = manager.Token["Code"].ToString().Split('\n');
                 manager.Token["CodeArray"] = new JArray(code);
                 manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Adds a line property to the Operation object. This stores the input that is given, 
+        /// even if it is not able to be parsed as an Operation
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion165(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        bool enabled = false;
+                        if (operation[i]["Enabled"] != null)
+                            enabled = (bool)operation[i]["Enabled"];
+
+                        string commentChar = enabled ? "" : "//";
+
+                        string dateStr = "";
+                        if (enabled)
+                            if (operation[i]["Date"] != null)
+                                dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
+                        
+                        operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
+                    }
+                }
             }
         }
 
