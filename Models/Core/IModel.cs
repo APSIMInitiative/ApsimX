@@ -312,5 +312,13 @@ namespace Models.Core
         /// It is a mistake to call this method without first resolving links.
         /// </remarks>
         IEnumerable<ITag> Document();
+
+        /// <summary>
+        /// Get a list of sections from the documentation that should be shown in the GUI
+        /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are not inside a section.
+        /// </remarks>
+        string GetMarkdownToIncludeInGUI();
     }
 }
