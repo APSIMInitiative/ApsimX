@@ -32,7 +32,7 @@ namespace Models
         private ScriptCompiler scriptCompiler = null;
 
         /// <summary>The code to compile.</summary>
-        private string cSharpCode = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.BlankManager.cs");
+        private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
@@ -67,8 +67,8 @@ namespace Models
             return true;
         }
 
-        /// <summary>Gets or sets the code to compile.</summary>
-        public string Code
+        /// <summary>The array of code lines that gets stored in file</summary>
+        public string[] CodeArray
         {
             get
             {
@@ -77,6 +77,28 @@ namespace Models
             set
             {
                 cSharpCode = value;
+            }
+        }
+
+        /// <summary>Gets or sets the code to compile.</summary>
+        [JsonIgnore]
+        public string Code
+        {
+            get
+            {
+                string output = "";
+                for (int i = 0; i < cSharpCode.Length; i++)
+                {
+                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
+                    output += line;
+                    if (i < cSharpCode.Length-1)
+                        output += "\n";
+                }
+                return output;
+            }
+            set
+            {
+                cSharpCode = value.Split('\n');
                 RebuildScriptModel();
             }
         }

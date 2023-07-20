@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 424,
-  "Version": 160,
+  "ExplorerWidth": 273,
+  "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -149,7 +149,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "1-jan,15-jan,1-feb,15-feb,1-mar,15-mar,1-apr,15-apr,1-may,15-may,1-jun,15-jun,1-jul,15-jul,1-aug-15-aug,1-sep,15-sep,1-oct,15-oct,1-nov,15-nov,1-dec,15-dec"
+                  "Value": "1-jan, 15-jan, 1-feb, 15-feb, 1-mar, 15-mar, 1-apr, 15-apr, 1-may, 15-may, 1-jun, 15-jun, 1-jul, 15-jul, 1-aug, 15-aug, 1-sep, 15-sep, 1-oct, 15-oct, 1-nov, 15-nov, 1-dec, 15-dec"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -678,6 +678,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -1572,7 +1573,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "1-jan,15-jan,1-feb,15-feb,1-mar,15-mar,1-apr,15-apr,1-may,15-may,1-jun,15-jun,1-jul,15-jul,1-aug-15-aug,1-sep,15-sep,1-oct,15-oct,1-nov,15-nov,1-dec,15-dec"
+                  "Value": "1-jan, 15-jan, 1-feb, 15-feb, 1-mar, 15-mar, 1-apr, 15-apr, 1-may, 15-may, 1-jun, 15-jun, 1-jul, 15-jul, 1-aug, 15-aug, 1-sep, 15-sep, 1-oct, 15-oct, 1-nov, 15-nov, 1-dec, 15-dec"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -2101,6 +2102,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -3041,7 +3043,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "1-jan, 15-jan, 1-feb, 15-feb, 1-mar, 15-mar, 1-apr, 15-apr, 1-may, 15-may, 1-jun, 15-jun, 1-jul, 15-jul, 1-aug-15-aug, 1-sep, 15-sep, 1-oct, 15-oct, 1-nov, 15-nov, 1-dec, 15-dec"
+                  "Value": "1-jan, 15-jan, 1-feb, 15-feb, 1-mar, 15-mar, 1-apr, 15-apr, 1-may, 15-may, 1-jun, 15-jun, 1-jul, 15-jul, 1-aug, 15-aug, 1-sep, 15-sep, 1-oct, 15-oct, 1-nov, 15-nov, 1-dec, 15-dec"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -3570,6 +3572,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -4463,7 +4466,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "1-jan,15-jan,1-feb,15-feb,1-mar,15-mar,1-apr,15-apr,1-may,15-may,1-jun,15-jun,1-jul,15-jul,1-aug-15-aug,1-sep,15-sep,1-oct,15-oct,1-nov,15-nov,1-dec,15-dec"
+                  "Value": "1-jan, 15-jan, 1-feb, 15-feb, 1-mar, 15-mar, 1-apr, 15-apr, 1-may, 15-may, 1-jun, 15-jun, 1-jul, 15-jul, 1-aug, 15-aug, 1-sep, 15-sep, 1-oct, 15-oct, 1-nov, 15-nov, 1-dec, 15-dec"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -4992,6 +4995,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -5885,7 +5889,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "5-jan,5-feb,5-mar,5-apr,5-aug,5-sep,5-oct,5-nov,5-dec"
+                  "Value": "5-jan, 5-feb, 5-mar, 5-apr, 5-aug, 5-sep, 5-oct, 5-nov, 5-dec"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -6059,6 +6063,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -69,11 +70,15 @@ namespace APSIM.Documentation.Models
 
         private static async Task DocumentRow(IDocumentationRow row, string path, CancellationToken cancelToken)
         {
+            Stopwatch docStopWatch = Stopwatch.StartNew();
+
             List<Task> tasks = new List<Task>();
             foreach (IDocumentationCell cell in row.Cells)
                 tasks.Add(DocumentCell(cell, path, cancelToken));
             foreach (Task task in tasks)
                 await task.ConfigureAwait(false);
+
+            Console.WriteLine($"Successfully generated doc for {row.Name}. Elapsed time: {docStopWatch.Elapsed.TotalSeconds} seconds.");
         }
 
         private static async Task DocumentCell(IDocumentationCell cell, string path, CancellationToken cancelToken)

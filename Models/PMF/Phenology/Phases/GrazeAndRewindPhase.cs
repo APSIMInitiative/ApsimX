@@ -22,10 +22,6 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
-        [Link]
-        private Plant plant = null;
-
-
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>The start</summary>
@@ -64,7 +60,8 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
-            plant.RemoveBiomass("Graze");
+            // TODO: Defaults don't exist anymore for 'Graze'. Need to specify fractions to graze on RemoveBiomass line.
+            //plant.RemoveBiomass("Graze");
             return true;
         }
 

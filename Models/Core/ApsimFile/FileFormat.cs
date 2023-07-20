@@ -246,8 +246,8 @@ namespace Models.Core.ApsimFile
                     if (model is Manager)
                         return new Model[0];
 
-                    // Serialise all child if ResourceName is empty or the model is under Replacements.
-                    if (string.IsNullOrEmpty(model.ResourceName) || model.FindAncestor<Folder>("Replacements") != null)
+                    // Serialise all child if ResourceName is empty.
+                    if (string.IsNullOrEmpty(model.ResourceName))
                         return model.Children;
 
                     // Return a collection of child models that aren't from a resource.

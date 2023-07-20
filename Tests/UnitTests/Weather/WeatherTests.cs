@@ -2,6 +2,7 @@
 using Models;
 using Models.Core;
 using Models.Core.Run;
+using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
 using System;
@@ -10,6 +11,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Globalization;
 
 namespace UnitTests.Weather
 {
@@ -126,6 +128,64 @@ namespace UnitTests.Weather
                 File.Delete(metFile);
             }
         }
+        
+        [Test]
+        public void TestGetAnyDayMetData()
+        {
+
+            var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
+
+            Simulation baseSim = new Simulation()
+            {
+                Name = "Base",
+                Children = new List<IModel>()
+                    {
+                        new Models.Climate.Weather()
+                        {
+                            Name = "Weather",
+                            FullFileName = weatherFilePath,
+                            ExcelWorkSheetName = "Sheet1"
+                        },
+                        new Clock()
+                        {
+                            Name = "Clock",
+                        },
+                        new MockSummary()
+                    }
+            };
+
+            Models.Climate.Weather weather = baseSim.Children[0] as Models.Climate.Weather;
+            Clock clock = baseSim.Children[1] as Clock;
+            clock.StartDate = DateTime.ParseExact("1900-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            clock.EndDate = DateTime.ParseExact("1900-01-02", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+
+            baseSim.Prepare();
+            baseSim.Run();
+
+            DailyMetDataFromFile weather1900 = weather.GetMetData(DateTime.ParseExact("1900-01-03", "yyyy-MM-dd", CultureInfo.InvariantCulture));
+            DailyMetDataFromFile weather2000 = weather.GetMetData(DateTime.ParseExact("2000-01-01", "yyyy-MM-dd", CultureInfo.InvariantCulture));
+
+            Assert.AreEqual(31.9, weather1900.MaxT, 0.01);
+            Assert.AreEqual(16.6, weather1900.MinT, 0.01);
+            Assert.AreEqual(3.0, weather1900.Wind, 0.01);
+            Assert.AreEqual(25.0, weather1900.Radn, 0.01);
+            Assert.AreEqual(0.0, weather1900.Rain, 0.01);
+
+            Assert.AreEqual(30.5, weather2000.MaxT, 0.01);
+            Assert.AreEqual(13.5, weather2000.MinT, 0.01);
+            Assert.AreEqual(3.0, weather2000.Wind, 0.01);
+            Assert.AreEqual(28.0, weather2000.Radn, 0.01);
+            Assert.AreEqual(0.0, weather2000.Rain, 0.01);
+
+            //should get the 3/1/1900 weather data
+            Assert.AreEqual(weather1900.MaxT, weather.TomorrowsMetData.MaxT, 0.01);
+            Assert.AreEqual(weather1900.MinT, weather.TomorrowsMetData.MinT, 0.01);
+            Assert.AreEqual(weather1900.Wind, weather.TomorrowsMetData.Wind, 0.01);
+            Assert.AreEqual(weather1900.Radn, weather.TomorrowsMetData.Radn, 0.01);
+            Assert.AreEqual(weather1900.Rain, weather.TomorrowsMetData.Rain, 0.01);
+        }
+
         /*
          * This doesn't make sense to use anymore since weather sensibility tests no longer throw exceptions
          * Useful to keep for later though if we need to check all the example weather.

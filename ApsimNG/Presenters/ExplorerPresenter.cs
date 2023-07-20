@@ -80,8 +80,8 @@ namespace UserInterface.Presenters
         /// <value>The width of the tree.</value>
         public int TreeWidth
         {
-            get { return view.Tree.TreeWidth; }
-            set { this.view.Tree.TreeWidth = value; }
+            get { return view.DividerPosition; }
+            set { this.view.DividerPosition = value; }
         }
 
         /// <summary>Gets the presenter for the main window</summary>
@@ -365,7 +365,6 @@ namespace UserInterface.Presenters
         /// <param name="fileName">Path to which the file will be saved.</param>
         public void WriteSimulation(string fileName)
         {
-            ApsimXFile.ExplorerWidth = TreeWidth;
             ApsimXFile.Write(fileName);
             CommandHistory.Save();
         }
@@ -1131,6 +1130,8 @@ namespace UserInterface.Presenters
             description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name, resourceName);
 
             description.ToolTip = model.GetType().Name;
+            if (!string.IsNullOrEmpty(resourceName))
+                description.ToolTip += $" ({resourceName})";
 
             description.Children = new List<TreeViewNode>();
             foreach (IModel child in model.Children)
@@ -1139,6 +1140,11 @@ namespace UserInterface.Presenters
             description.Strikethrough = !model.Enabled;
             description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
+
+
+            if (model.ReadOnly)
+                description.Colour = System.Drawing.Color.DarkGray;
+
             return description;
         }
 
