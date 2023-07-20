@@ -6,11 +6,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office.Word;
+using DocumentFormat.OpenXml.Presentation;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 
@@ -23,7 +28,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 162; } }
+        public static int LatestVersion { get { return 165; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -131,6 +136,8 @@ namespace Models.Core.ApsimFile
                     if (sample == null)
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
+                    var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
+
                     bool res = false;
                     if (initWater == null)
                     {
@@ -143,7 +150,7 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(initWater);
                         res = true;
                     }
-                    if (sample == null)
+                    if (sample == null && soilNitrogenSample == null) //no solutes on Soil Nitrogen, don't add them
                     {
                         soilChildren.Add(new JObject
                         {
@@ -170,6 +177,46 @@ namespace Models.Core.ApsimFile
                         });
                         res = true;
                     }
+
+                    var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
+                    var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
+                    var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+                    if (soilNitrogenSample != null)
+                    {
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
+                                ["Name"] = "NO3",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 3 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
+                                ["Name"] = "NH4",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 1 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
+                                ["Name"] = "Urea",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 0.0 })
+                            });
+                        }
+                    }
+
+                    
+
                     return res;
                 }
             }
@@ -4857,6 +4904,221 @@ namespace Models.Core.ApsimFile
                         specificationString = specificationString.Replace(".SetEmergenceDate", ".Phenology.SetEmergenceDate");
                         specificationString = specificationString.Replace(".SetGerminationDate", ".Phenology.SetGerminationDate");
                         operation[i]["Action"] = specificationString;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rearrange the BiomassRemoval defaults in the plant models and manager scripts.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion163(JObject root, string fileName)
+        {
+            foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemoval"))
+            {
+                // Find a harvest OrganBiomassRemovalType child
+                JObject harvest = JsonUtilities.ChildWithName(biomassRemoval, "Harvest");
+                if (harvest != null)
+                {
+                    biomassRemoval["HarvestFractionLiveToRemove"] = harvest["FractionLiveToRemove"];
+                    biomassRemoval["HarvestFractionDeadToRemove"] = harvest["FractionDeadToRemove"];
+                    biomassRemoval["HarvestFractionLiveToResidue"] = harvest["FractionLiveToResidue"];
+                    biomassRemoval["HarvestFractionDeadToResidue"] = harvest["FractionDeadToResidue"];
+                }
+                biomassRemoval["Children"] = new JArray();
+            }
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root)
+                                                              .Where(man => !man.IsEmpty))
+            {
+                string managerName = manager.Name;
+
+                // Remove the 'RemoveFractions' declaration
+                string declarationPattern = @$".+RemovalFractions\s+(\w+).+";
+                Match declarationMatch = Regex.Match(manager.ToString(), declarationPattern);
+                if (declarationMatch.Success)
+                {
+                    // Remove the declaration
+                    string declarationInstanceName = declarationMatch.Groups[1].Value;
+                    manager.ReplaceRegex(declarationPattern, string.Empty);
+
+                    // Remove the 'RemovalFractions' instance creation.
+                    manager.ReplaceRegex(@$"{declarationInstanceName}\W*new.+;", string.Empty);
+
+                    // Find all biomass removal fractions.
+                    var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.,\(\)+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
+                                         .Where(man => !manager.PositionIsCommented(man.Index));
+                    List <OrganFractions> organs = new List<OrganFractions>();
+
+                    foreach (Match match in matches)
+                    {
+                        if (!manager.PositionIsCommented(match.Index))
+                        {
+                            bool remove = match.Groups[1].Value == "Remove";
+                            string organName = match.Groups[2].Value;
+                            string fractionObjectName = match.Groups[3].Value;
+                            bool isLive = true;
+                            if (match.Groups[5].Value == "Dead")
+                                isLive = false;
+                            var organ = organs.Find(o => o.Name == organName);
+                            if (organ == null)
+                            {
+                                organ = new OrganFractions(organName);
+                                organs.Add(organ);
+                            }
+                            if (isLive)
+                            {
+                                if (remove)
+                                    organ.FractionLiveToRemove = fractionObjectName;
+                                else
+                                    organ.FractionLiveToResidue = fractionObjectName;
+                            }
+                            else
+                            {
+                                if (remove)
+                                    organ.FractionDeadToRemove = fractionObjectName;
+                                else
+                                    organ.FractionDeadToResidue = fractionObjectName;
+                            }
+                        }
+                    }
+
+                    string code = manager.ToString();
+
+                    // Calculate the level of indentation based on the first match.
+                    int indent = 0;
+                    if (matches.Any())
+                    {
+                        int pos = matches.First().Index;
+                        indent = code.IndexOf(code.Substring(pos).First(ch => ch != ' '), pos) - pos;
+                    }
+
+                    // Delete the removal fraction matches lines. 
+                    // Do it in reverse order so that match.Index remains valid.
+                    foreach (Match match in matches.Reverse())
+                        code = code.Remove(match.Index, match.Length);
+
+                    // Find the RemoveBiomass method call.
+                    Match removeBiomassMatch = Regex.Match(code, @" +(\w+).RemoveBiomass\(.+\);");
+                    if (removeBiomassMatch.Success)
+                    {
+                        var modelName = removeBiomassMatch.Groups[1].Value;
+
+                        // Add in code to get each organ
+                        string codeToInsert = null;
+                        foreach (var organ in organs)
+                        {
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"var {organ.Name} = {modelName}.FindChild<IHasDamageableBiomass>(\"{organ.Name}\");" + Environment.NewLine;
+                        }
+
+                        // Add in code to remove biomass from organ.
+                        foreach (var organ in organs)
+                        {
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"{organ.Name}.RemoveBiomass(liveToRemove: {organ.FractionLiveToRemove}, deadToRemove: {organ.FractionDeadToRemove}, " +
+                                                                        $"liveToResidue: {organ.FractionLiveToResidue}, deadToResidue: {organ.FractionDeadToResidue});" + Environment.NewLine;
+                        }
+
+                        // Remove unwanted code and replace with new code.
+                        code = code.Remove(removeBiomassMatch.Index, removeBiomassMatch.Length);
+                        if (codeToInsert != null)
+                            code = code.Insert(removeBiomassMatch.Index, codeToInsert);
+
+                        // Replace 'SetThinningProportion'.
+                        Match thinningMatch = Regex.Match(code, $@" +\w+\.SetThinningProportion\s*=\s*(.+);");
+                        if (thinningMatch.Success)
+                        {
+                            string newThinningCode = new string(' ', indent) +
+                                                    $"{modelName}.structure?.DoThin({thinningMatch.Groups[1].Value});";
+                            code = code.Remove(thinningMatch.Index, thinningMatch.Length);
+                            code = code.Insert(thinningMatch.Index, newThinningCode);
+                        }
+
+
+                        // Replace 'SetPhenologyStage'.
+                        Match stageMatch = Regex.Match(code, $@" +\w+\.SetPhenologyStage\s*=\s*(.+);");
+                        if (stageMatch.Success)
+                        {
+                            string newStageCode = new string(' ', indent) +
+                                                    $"{modelName}.Phenology?.SetToStage({stageMatch.Groups[1].Value});";
+                            code = code.Remove(stageMatch.Index, stageMatch.Length);
+                            code = code.Insert(stageMatch.Index, newStageCode);
+                        }
+
+                        manager.Read(code);
+
+                        // Add in a using statement.
+                        var usings = manager.GetUsingStatements();
+                        usings = usings.Append("Models.PMF.Interfaces");
+                        manager.SetUsingStatements(usings);
+                    }
+
+                    // Save the manager.
+                    manager.Save();
+                }
+            }
+        }
+
+        private class OrganFractions
+        {
+            public OrganFractions(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public string FractionLiveToRemove { get; set; } = "0.0";
+            public string FractionDeadToRemove { get; set; } = "0.0";
+            public string FractionLiveToResidue { get; set; } = "0.0";
+            public string FractionDeadToResidue { get; set; } = "0.0";
+        }
+
+        /// <summary>
+        /// Change Manger Code from String into Array of Strings (each line is an element)
+        /// For better readability of apsim files.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion164(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                string[] code = manager.Token["Code"].ToString().Split('\n');
+                manager.Token["CodeArray"] = new JArray(code);
+                manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Adds a line property to the Operation object. This stores the input that is given, 
+        /// even if it is not able to be parsed as an Operation
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion165(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        bool enabled = false;
+                        if (operation[i]["Enabled"] != null)
+                            enabled = (bool)operation[i]["Enabled"];
+
+                        string commentChar = enabled ? "" : "//";
+
+                        string dateStr = "";
+                        if (enabled)
+                            if (operation[i]["Date"] != null)
+                                dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
+                        
+                        operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
                     }
                 }
             }

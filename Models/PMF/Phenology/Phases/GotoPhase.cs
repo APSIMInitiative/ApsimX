@@ -34,6 +34,8 @@ namespace Models.PMF.Phen
         {
             get
             {
+                if (phenology == null)
+                    phenology = FindInScope<Phenology>();
                 return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
