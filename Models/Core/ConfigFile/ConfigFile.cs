@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
 using static Models.Core.Overrides;
@@ -47,13 +48,30 @@ namespace Models.Core.ConfigFile
         {
             try
             {
+                Regex rxAddLocalCommand = new Regex(@"(add)\s(\[){1}(\w)*(\]){1}\s(\w)*");
+                Regex rxAddFromOtherFileCommand = new Regex(@"(add)\s(\[){1}(\w)+([\w\s])*(\]){1}\s([a-zA-Z0-9]){1}([\:\-\w\\\/])*(\.){1}(apsimx){1}(;){1}(\[){1}([\w\s])*(\]){1}");
+                Regex rxCopyCommand = new Regex(@"(copy)\s(\[){1}(\w)*(\]){1}\s(\[){1}(\w)*(\]){1}");
+                Regex rxDeleteCommand = new Regex(@"(delete)\s(\[){1}([\w\s])*(\]){1}(\.){1}([\w\.])*");
+                Regex rxSaveCommand = new Regex(@"(save)\s([\w\:\\])*(\.){1}(apsimx)");
+                Regex rxLoadCommand = new Regex(@"(load)\s([\w\:\\])*(\.){1}(apsimx)");
+                Regex rxRunCommand = new Regex(@"(run)");
+                Regex rxOverride = new Regex(@"(\[){1}([\w\s])+(\]){1}([\.\w])*([\=])+([\w])+");
+                Regex rxOverrideTargetNode = new Regex(@"(\[){1}([\w\s])+(\]){1}([\.\w])*");
+                Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
+                Regex rxNodeComplex = new Regex(@"(\[){1}([\w\s])+(\]){1}([\.\w])*");
+                Regex rxValidApsimxFilePath = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\w])*(\.){1}(apsimx)");
+                Regex rxValidPathToNodeInAnotherApsimxFile = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\-\w])*(\.){1}(apsimx)(;){1}(\[){1}([\w\s])+(\]){1}");
+
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false).NewModel as Simulations;
 
                 foreach (string command in configFileCommands)
                 {
-                    string[] splitCommands = command.Split(' ', '=');
+                    List<string> splitCommands = command.Split(' ', '=').ToList<string>();
+                    //string[] splitCommands = command.Split(' ', '=');
                     // If first index item is a string containing "[]" the command is an override...
-                    if (splitCommands[0].Contains('['))
+                    Match firstSplitResult = rxOverrideTargetNode.Match(splitCommands[0]);
+                    //if (splitCommands[0].Contains('['))
+                    if (firstSplitResult.Success)
                     {
                         string[] singleLineCommandArray = { command };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
@@ -79,13 +97,17 @@ namespace Models.Core.ConfigFile
                         else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
                         else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
 
-                        if (splitCommands.Length >= 2)
+                        //if (splitCommands.Length >= 2)
+                        if (splitCommands.Count >= 2)
                         {
                             // Determine if its a nodeToModify/SavePath/LoadPath
                             if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
                             {
+                                Match secondSplitResult = rxNode.Match(splitCommands[1]);
+                                Match secondSplitComplexResult = rxNodeComplex.Match(splitCommands[1]);
                                 // Check for required format
-                                if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
+                                //if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
+                                if (secondSplitResult.Success || secondSplitComplexResult.Success)
                                 {
                                     string modifiedNodeName = splitCommands[1];
                                     if (!string.IsNullOrEmpty(modifiedNodeName))
@@ -97,11 +119,16 @@ namespace Models.Core.ConfigFile
                                 {
                                     throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
                                 }
-                                if (splitCommands.Length > 2)
+                                if (splitCommands.Count > 2)
                                 {
+                                    Match thirdCommandMatchesApsimxFilePath = rxValidPathToNodeInAnotherApsimxFile.Match(splitCommands[2]);
+                                    Match thirdCommandMatchesNode = rxNode.Match(splitCommands[2]);
+                                    bool doRegexValuesMatch = false;
+                                    if (thirdCommandMatchesApsimxFilePath.Value.Equals(thirdCommandMatchesNode))
+                                        doRegexValuesMatch = true;
                                     // If third command split string is a file path...
-
-                                    if (splitCommands[2].Contains('\\') || splitCommands[2].Contains('/'))
+                                    //if (splitCommands[2].Contains('\\') || splitCommands[2].Contains('/'))
+                                    if (!doRegexValuesMatch && thirdCommandMatchesApsimxFilePath.Success)
                                     {
                                         string[] filePathAndNodeName = splitCommands[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
@@ -113,7 +140,8 @@ namespace Models.Core.ConfigFile
                                         else throw new Exception("Add command missing either file or node name.");
                                     }
                                     // If third command split string is a [NodeName]...
-                                    else if (splitCommands[2].Contains('[') && splitCommands[2].Contains(']'))
+                                    //else if (splitCommands[2].Contains('[') && splitCommands[2].Contains(']'))
+                                    else if (!doRegexValuesMatch && thirdCommandMatchesNode.Success)
                                     {
                                         nodeForAction = splitCommands[2];
                                     }

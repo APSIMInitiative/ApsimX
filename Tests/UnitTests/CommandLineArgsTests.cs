@@ -452,9 +452,10 @@ ExperimentY2
 
             Simulation simulationNode = file.FindInScope<Simulation>();
 
-            string newFileName = file.FileName.Insert(file.FileName.LastIndexOf("."), "2");
+            string newSaveFileName = file.FileName.Insert(file.FileName.LastIndexOf("."), "2").Split('/', '\\').ToList().Last();
+            string simpleFileName = file.FileName.Split('/', '\\').ToList().Last();
             // Get path string for the config file that changes the date.
-            string newFileString = $"load {file.FileName}\nsave {newFileName}\nadd [Zone] Report";
+            string newFileString = $"load {simpleFileName}\nadd [Zone] Report\nsave {newSaveFileName}";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config5.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -463,7 +464,7 @@ ExperimentY2
 
             Utilities.RunModels($"--apply {newTempConfigFile}");
 
-            string text = File.ReadAllText(newFileName);
+            string text = File.ReadAllText(Path.GetDirectoryName(newTempConfigFile) + Path.DirectorySeparatorChar + newSaveFileName);
             // Reload simulation from file text. Needed to see changes made.
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
@@ -473,6 +474,13 @@ ExperimentY2
             // See if the report shows up as a second child of Field with a specific name.
             Models.Report secondReportNodeThatShouldBePresent = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
             Assert.IsNotNull(secondReportNodeThatShouldBePresent);
+
+            // Make sure first sim was not modified.
+            string firstSimText = File.ReadAllText(Path.GetDirectoryName(newTempConfigFile) + Path.DirectorySeparatorChar + simpleFileName);
+            Simulations sim1 = FileFormat.ReadFromString<Simulations>(firstSimText, e => throw e, false).NewModel as Simulations;
+            Zone fieldNodeFromOriginalSim = sim1.FindInScope<Zone>();
+            Models.Report ReportNodeThatShouldNotBePresent = fieldNodeFromOriginalSim.FindChild<Models.Report>("Report1");
+            Assert.IsNull(ReportNodeThatShouldNotBePresent);
         }
 
         [Test]
@@ -482,7 +490,12 @@ ExperimentY2
 
             Simulation simulationNode = file.FindInScope<Simulation>();
 
-            string newFileString = $"load {file.FileName}\nadd [Zone] Report";
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            //File.Move(file.FileName, $"C:/unit-test-temp/{apsimxFileName}");
+
+            string newFileString = $"load {apsimxFileName}\nadd [Zone] Report\nsave {apsimxFileName}";
+            //string newTempConfigFile = Path.Combine("C:/unit-test-temp/", "config6.txt");
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config6.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -506,10 +519,11 @@ ExperimentY2
         [Test]
         public void TestApplySwitchCreateFromConfigFile()
         {
-            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), "newSim.apsimx");
+            string newApsimxFileName = "newSim.apsimx";
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), newApsimxFileName);
 
             string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile.txt");
-            string newCommandString = $"save {newApsimxFilePath}";
+            string newCommandString = $"save {newApsimxFileName}";
             File.WriteAllText(newConfigFilePath, newCommandString);
 
             bool fileExists = File.Exists(newConfigFilePath);
@@ -528,12 +542,12 @@ ExperimentY2
         [Test]
         public void TestApplySwitchRunFromConfigFile()
         {
-            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), "newSim1.apsimx");
-
+            string newSimName = "newSim1.apsimx";
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), newSimName);
             string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile1.txt");
 
-            string newCommands = $@"save {newApsimxFilePath}
-load {newApsimxFilePath}
+            string newCommands = $@"save {newSimName}
+load {newSimName}
 add [Simulations] Simulation
 add [Simulation] Summary
 add [Simulation] Clock
@@ -541,6 +555,7 @@ add [Simulation] Weather
 [Weather].FileName=Dalby.met
 [Clock].Start=1900/01/01
 [Clock].End=1900/01/02
+save {newSimName}
 run";
 
             File.WriteAllText(newConfigFilePath, newCommands);

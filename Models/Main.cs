@@ -90,6 +90,14 @@ namespace Models
             try
             {
                 string[] files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive)).ToArray();
+                // Required to warn user that file was not found even though --apply switch used.
+                if (options.Files.ToList().Count > 0
+                    && options.Files.ToList().First() != " "
+                    && !string.IsNullOrEmpty(options.Apply)
+                    && files.Length < 1)
+                {
+                    throw new ArgumentException($"One or more files included before the --apply switch where not found. The files are: {options.Files.ToList()}.");
+                }
                 if (files == null || files.Length < 1 && string.IsNullOrEmpty(options.Apply))
                     throw new ArgumentException($"No files were specified");
                 if (options.NumProcessors == 0)
@@ -166,6 +174,7 @@ namespace Models
                                                                 numberOfProcessors: options.NumProcessors,
                                                                 simulationNamePatternMatch: options.SimulationNameRegex);
                                     RunSimulations(runner, options);
+                                    isSimToBeRun = false;
                                 }
                             }
                         }
@@ -173,21 +182,40 @@ namespace Models
                     // If no apsimx file path included proceeding --apply switch...              
                     else if (files.Length < 1)
                     {
+                        string configFileAbsolutePath = Path.GetFullPath(options.Apply);
+                        string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                         savePath = "";
                         loadPath = "";
+                        string temporarySimLoadPath = "";
                         List<string> commandWrapper = new List<string>();
-
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
                             string[] splitCommand = commandsArray[i].Split(" ");
                             if (splitCommand[0] == "save")
                             {
-                                savePath = splitCommand[1];
+                                savePath = configFileDirectory + Path.DirectorySeparatorChar + splitCommand[1];
                             }
                             else if (splitCommand[0] == "load")
                             {
                                 loadPath = splitCommand[1];
+                                string fullLoadPath = configFileDirectory + Path.DirectorySeparatorChar + loadPath;
+                                List<string> filePathSplits = fullLoadPath.Split('.', '/', '\\').ToList();
+                                if (filePathSplits.Count >= 2)
+                                {
+                                    // Creates a path string to a temp copy of the loadPath
+                                    // apsimx file in the configFile's directory.
+                                    temporarySimLoadPath = configFileDirectory +
+                                                           Path.DirectorySeparatorChar +
+                                                           filePathSplits[filePathSplits.Count - 2] +
+                                                           "temp." +
+                                                           filePathSplits.Last<string>();
+                                    // Create the file if new, back it up and write over it if it isn't.
+                                    CreateApsimxFile(temporarySimLoadPath);
+                                    File.Copy(fullLoadPath, temporarySimLoadPath, true);
+                                }
+                                else
+                                    throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {loadPath}");
                             }
                             else if (splitCommand[0] == "run")
                             {
@@ -210,16 +238,18 @@ namespace Models
                             // As long as a file can be loaded any other command can be run.
                             if (!String.IsNullOrEmpty(loadPath))
                             {
-                                Simulations sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper) as Simulations;
+                                // Temporary sim for holding changes.
+                                Simulations sim;
+                                // Makes sure that loadPath file is not overwritten.
+                                if (!string.IsNullOrEmpty(temporarySimLoadPath))
+                                    sim = ConfigFile.RunConfigCommands(temporarySimLoadPath, commandWrapper) as Simulations;
+                                else
+                                    sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper) as Simulations;
 
                                 if (!String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
-                                {
-                                    sim.Write(loadPath);
-                                }
+                                    sim.Write(temporarySimLoadPath);
                                 else if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
-                                {
                                     sim.Write(savePath);
-                                }
 
                                 if (isSimToBeRun)
                                 {
@@ -231,6 +261,7 @@ namespace Models
                                                             numberOfProcessors: options.NumProcessors,
                                                             simulationNamePatternMatch: options.SimulationNameRegex);
                                     RunSimulations(runner, options);
+                                    isSimToBeRun = false;
                                 }
                             }
                             else if (!string.IsNullOrEmpty(savePath))
@@ -459,6 +490,21 @@ namespace Models
                 throw new Exception("An error occured when trying to create a new minimal simulation." + ex.Message);
             }
 
+        }
+
+        /// <summary>
+        /// Creates a backup of a file.
+        /// </summary>
+        /// <param name="existingFilePath">An apsimx file path string</param>
+        private static void CreateApsimxFile(string existingFilePath)
+        {
+            if (File.Exists(existingFilePath))
+            {
+                string backupFilePath = existingFilePath + ".bak";
+                File.Copy(existingFilePath, backupFilePath, true);
+            }
+            else
+                File.Create(existingFilePath)?.Close();
         }
 
     }
