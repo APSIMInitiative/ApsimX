@@ -7365,6 +7365,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247088996399892",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -7714,7 +7715,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 102.794916048683",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.192036818570067",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -7827,6 +7828,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.349562436956343",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].CAMP.FLNparams.MinLN = 8",
                     "[Phenology].CAMP.FLNparams.PpLN = 3",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0.5",
