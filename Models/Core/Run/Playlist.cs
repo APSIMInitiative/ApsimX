@@ -22,7 +22,7 @@ namespace Models
         [Link]
         private Simulations simulations = null;
 
-        /// <summary>Gets or sets the memo text.</summary>
+        /// <summary>Gets or sets the playlist text.</summary>
         [Description("Text of the playlist")]
         public string Text { get; set; }
 
@@ -37,53 +37,77 @@ namespace Models
 
             List<string> names = new List<string>();
 
-            string[] lines = Text.Split('\n');
-            if (Text.Length == 0)
+            if (Text == null || Text.Length == 0)
                 return null; // this will let the runner run normally
+
+            string[] lines = Text.Split('\n');
 
             List<Simulation> allSimulations = simulations.FindAllDescendants<Simulation>().ToList();
             List<Experiment> allExperiments = simulations.FindAllDescendants<Experiment>().ToList();
 
             foreach (string line in lines)
             {
-                //convert our wildcard to regex symbol
-                string expression = line.ToLower();
-                expression = expression.Replace("*", "[\\s\\S]*");
-                expression = expression.Replace("#", ".");
-                expression = "^" + expression + "$";
-                Regex regex = new Regex(expression);
-
-                foreach (Simulation sim in allSimulations)
+                List<string> parts = new List<string>();
+                if (line.Contains(','))
                 {
-                    if (regex.IsMatch(sim.Name.ToLower()))
-                        if (sim.FindAncestor<Experiment>() == null) //don't add if under experiment
-                            if (names.Contains(sim.Name.ToLower()) == false)
-                                names.Add(sim.Name);
+                    parts = line.Split(',').ToList();
+                } 
+                else
+                {
+                    parts.Add(line);
                 }
 
-                foreach (Experiment exp in allExperiments)
+                foreach (string part in parts)
                 {
-                    List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
-                    //match experiment name
-                    if (regex.IsMatch(exp.Name.ToLower()))
+                    string expression = part;
+                    //remove symbols [ ]
+                    expression = expression.Replace("[", "");
+                    expression = expression.Replace("]", "");
+
+                    //trim whitespace
+                    expression = expression.Trim();
+
+                    //convert to lower
+                    expression = expression.ToLower();
+
+                    //convert our wildcard to regex symbol
+                    expression = expression.Replace("*", "[\\s\\S]*");
+                    expression = expression.Replace("#", ".");
+                    expression = "^" + expression + "$";
+                    Regex regex = new Regex(expression);
+
+                    foreach (Simulation sim in allSimulations)
                     {
-                        if (names.Contains(exp.Name.ToLower()) == false)
-                            foreach (Core.Run.SimulationDescription expN in expNames)
-                                if (names.Contains(expN.Name.ToLower()) == false)
-                                    names.Add(expN.Name);
+                        if (regex.IsMatch(sim.Name.ToLower()))
+                            if (sim.FindAncestor<Experiment>() == null) //don't add if under experiment
+                                if (names.Contains(sim.Name.ToLower()) == false)
+                                    names.Add(sim.Name);
                     }
-                    else
+
+                    foreach (Experiment exp in allExperiments)
                     {
-                        //match against the experiment variations
-                        foreach (Core.Run.SimulationDescription expN in expNames)
-                            if (regex.IsMatch(expN.Name.ToLower()))
-                                if (names.Contains(expN.Name.ToLower()) == false)
-                                    names.Add(expN.Name);
+                        List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
+                        //match experiment name
+                        if (regex.IsMatch(exp.Name.ToLower()))
+                        {
+                            if (names.Contains(exp.Name.ToLower()) == false)
+                                foreach (Core.Run.SimulationDescription expN in expNames)
+                                    if (names.Contains(expN.Name.ToLower()) == false)
+                                        names.Add(expN.Name);
+                        }
+                        else
+                        {
+                            //match against the experiment variations
+                            foreach (Core.Run.SimulationDescription expN in expNames)
+                                if (regex.IsMatch(expN.Name.ToLower()))
+                                    if (names.Contains(expN.Name.ToLower()) == false)
+                                        names.Add(expN.Name);
+                        }
                     }
                 }
             }
             if (names.Count == 0)
-                throw new Exception("Playlist is enabled but no simulations or experiments match the contents of the list.");
+                return null;
             else
                 return names;
         }

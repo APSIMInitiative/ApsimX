@@ -56,6 +56,10 @@ namespace UnitTests.Core
             playlistText.Add("Sim\nSim2\nSim4");
             names = new string[3] { "Sim", "Sim2", "Sim4" };
             expectedSimulations.Add(names);
+            
+            //with commas and sqaure brackets
+            playlistText.Add("[Sim,Sim2,Sim4]");
+            expectedSimulations.Add(names);
 
             //Name with single wildcard, should pick up 3 of them
             playlistText.Add("Sim#");

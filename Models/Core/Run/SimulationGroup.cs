@@ -74,6 +74,8 @@ namespace Models.Core.Run
             if (relativeTo is Playlist) //check if node was a playlist
             {
                 this.simulationNamesToRun = (relativeTo as Playlist).GetListOfSimulations();
+                if (this.simulationNamesToRun == null)
+                    throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
                 //need to set the relative back to simulations so the runner can find all the simulations 
                 //when it comes time to run.
                 this.relativeTo = relativeTo.FindAncestor<Simulations>();

@@ -12,31 +12,51 @@
 				<property name="visible">True</property>
 				<property name="can_focus">False</property>
 				<child>
-					<object class="GtkVBox" id="vbox">
+					<object class="GtkVPaned" id="vpaned1">
 						<property name="visible">True</property>
 						<property name="can_focus">False</property>
-						<property name="spacing">10</property>
 						<child>
-							<object class="GtkLabel" id="label1">
+							<object class="GtkVPaned" id="vpaned2">
 								<property name="visible">True</property>
 								<property name="can_focus">False</property>
-								<property name="xalign">0</property>
-								<property name="xpad">2</property>
+								<child>
+									<object class="GtkLabel" id="label1">
+										<property name="visible">True</property>
+										<property name="can_focus">False</property>
+										<property name="xalign">0</property>
+										<property name="yalign">0</property>
+										<property name="xpad">2</property>
+										<property name="ypad">2</property>
+									</object>
+									<packing>
+										<property name="position">0</property>
+									</packing>
+								</child>
 							</object>
 							<packing>
-								<property name="expand">False</property>
-								<property name="fill">True</property>
 								<property name="position">0</property>
 							</packing>
 						</child>
 						<child>
-							<object class="GtkSeparator" id="separatorLine">
+							<object class="GtkScrolledWindow" id="scrolledwindow2">
+								<property name="visible">True</property>
+								<property name="can_focus">True</property>
+								<property name="hscrollbar_policy">automatic</property>
+								<property name="vscrollbar_policy">automatic</property>
+								<child>
+									<object class="GtkLabel" id="label2">
+										<property name="visible">True</property>
+										<property name="can_focus">False</property>
+										<property name="xalign">0</property>
+										<property name="yalign">0</property>
+										<property name="xpad">2</property>
+										<property name="ypad">2</property>
+									</object>
+									<packing>
+										<property name="position">1</property>
+									</packing>
+								</child>
 							</object>
-							<packing>
-								<property name="expand">False</property>
-								<property name="fill">True</property>
-								<property name="position">1</property>
-							</packing>
 						</child>
 					</object>
 				</child>

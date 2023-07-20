@@ -1,6 +1,7 @@
 ﻿using Models;
 using UserInterface.Views;
 using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 
 namespace UserInterface.Presenters
@@ -22,6 +23,8 @@ namespace UserInterface.Presenters
         /// The presenter
         /// </summary>
         private ExplorerPresenter explorerPresenter;
+
+        private List<string> simNameCache;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
@@ -47,6 +50,12 @@ namespace UserInterface.Presenters
             instructions += "\n";
             instructions += "This node can be disabled to restore the default simulation running behaviour.\n";
             playlistView.SetLabelText(instructions);
+
+
+            //load in all the simulation and experiment names
+            simNameCache = 
+
+            UpdateListOfSimulations();
         }
 
         private void HelpBtnClicked(object sender, EventArgs e)
@@ -73,6 +82,7 @@ namespace UserInterface.Presenters
                 explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(playlistModel, "Text", playlistView.editorView.Text));
                 explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+                UpdateListOfSimulations();
             }
             catch (Exception err)
             {
@@ -87,6 +97,26 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             //playlistView.Lines = model.Specifications.ToArray();
+        }
+
+        private void UpdateListOfSimulations()
+        {
+            List<string> names = playlistModel.GetListOfSimulations();
+            string output = "Matching Simulations:\n";
+            if (names != null)
+            {
+                for (int i = 0; i < names.Count; i++)
+                {
+                    output += names[i];
+                    if (i < names.Count - 1)
+                        output += ", ";
+                }
+            }
+            else
+            {
+                output += "[No Matches Found]";
+            }
+            playlistView.SetOutputText(output);
         }
 
         /// <summary>Detach the model from the view.</summary>
