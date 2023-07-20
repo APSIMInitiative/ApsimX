@@ -12,14 +12,14 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class ColdUpRegVrn1 : Model, IFunction, IIndexedFunction
+    public class ColdVrnResponse : Model, IFunction, IIndexedFunction
     {
 
         [Link(ByName = true, Type = LinkType.Ancestor)]
         CAMP camp = null;
 
         /// <summary> The k factor controls the shape of the exponential decline of vernalisation with temperature </summary>
-        [Description("The exponential shape function")]
+        [Description("The exponential shape factor")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction k = null;
 
@@ -29,7 +29,7 @@ namespace Models.PMF.Phen
         IFunction deVernalisationTemp = null;
 
         /// <summary> The rate (/d) that Vrn1 is down regulated when temp is over DVernalisationTemp </summary>
-        [Description("The temperature above which Vrn1 is down regulated")]
+        [Description("The rate (/d) that Vrn1 is down regulated when temp is over DVernalisationTemp")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction deVernalisationRate = null;
 
@@ -48,14 +48,12 @@ namespace Models.PMF.Phen
         {
             if (camp.Params != null)
             {
-                double dTt = camp.dHS / 24;  //divide by 24 to make hourly
-                double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k.Value() * dX);
+                double UdVrn1 = Math.Exp(k.Value() * dX);
                 if (dX < deVernalisationTemp.Value())
-                    return UdVrn1 * dTt;
+                    return UdVrn1/24;
                 else
                 {
-                    dTt = (dX - deVernalisationTemp.Value()) / 24;
-                    return deVernalisationRate.Value() * dTt;
+                    return deVernalisationRate.Value()/24;
                 }
             }
             else return 0.0;
