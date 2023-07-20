@@ -92,7 +92,7 @@ namespace Models.PMF.Phen
             {
                 Target = (DateUtilities.GetDate(EmergenceDate, clock.Today) - plant.SowingDate).TotalDays;
                 ProgressThroughPhase += 1;
-                if (DateUtilities.DatesEqual(EmergenceDate, clock.Today))
+                if (DateUtilities.DayMonthIsEqual(EmergenceDate, clock.Today))
                 {
                     proceedToNextPhase = true;
                 }

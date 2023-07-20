@@ -1,15 +1,16 @@
-﻿namespace UnitTests.Factorial
-{
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Core.Run;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Weather;
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
+﻿using Models.Core;
+using Models.Factorial;
+using Models.Core.Run;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Weather;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Models;
 
+namespace UnitTests.Factorial
+{
     /// <summary>This is a test class for the Experiment class</summary>
     [TestFixture]
     public class ExperimentTests
@@ -364,6 +365,81 @@
             Assert.AreEqual(clock.NumberOfTicks, 100);
 
             Assert.AreEqual(sims.Count, 2);
+        }
+
+        /// <summary>Ensure composite that has a memo as a child still works and the Memo should not overwrite an existing Memo in the simulation.</summary>
+        [Test]
+        public void EnsureCompositeWithMemoWorks()
+        {
+            var experiment = new Experiment()
+            {
+                Name = "Exp1",
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "BaseSimulation",
+                        Children = new List<IModel>()
+                        {
+                            new MockClock()
+                            {
+                                Name = "Clock",
+                                NumberOfTicks = 1,
+                                Today = DateTime.MinValue
+                            },
+                            new Memo()
+                            {
+                                Name = "Memo",
+                                Text = "Text that should not be replaced"
+                            },
+                            new MockSummary()
+                        }
+                    },
+                    new Factors()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Factor()
+                            {
+                                Name = "Site",
+                                Children = new List<IModel>()
+                                {
+                                    new CompositeFactor()
+                                    {
+                                        Name = "Place",
+                                        Specifications = new List<string>() {"[Clock]"},
+                                        Children = new List<IModel>()
+                                        {
+                                            new MockClock()
+                                            {
+                                                Name = "Clock",
+                                                NumberOfTicks = 10,
+                                                Today = DateTime.MinValue
+                                            },
+                                            new Memo()
+                                            {
+                                                Name = "Memo",
+                                                Text = "Text in the Factor"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            experiment.ParentAllDescendants();
+
+            var sims = experiment.GenerateSimulationDescriptions();
+            Assert.AreEqual(sims[0].Name, "Exp1SitePlace");
+            Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
+            Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Site").Value, "Place");
+            var sim = sims[0].ToSimulation();
+            var clock = sim.Children[0] as MockClock;
+            var memo = sim.Children[1] as Memo;
+            Assert.AreEqual(clock.NumberOfTicks, 10);
+            Assert.AreEqual(memo.Text, "Text that should not be replaced");
         }
 
         /// <summary>Ensure composite that has 2 model overrides works.</summary>

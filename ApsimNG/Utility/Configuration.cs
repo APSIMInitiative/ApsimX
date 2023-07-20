@@ -35,13 +35,18 @@ namespace Utility
         public int FilesInHistory { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
-        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        /// <remarks>Percentage 0-100</remarks>
         public int SplitScreenPosition { get; set; }
+
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Percentage 0-100</remarks>
+        public int TreeSplitScreenPosition { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
         /// <summary>The previous height of the status panel</summary>
+        /// <remarks>Percentage 0-100</remarks>
         public int StatusPanelHeight { get; set; }
 
         /// <summary>
