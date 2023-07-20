@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 342,
-  "Version": 163,
+  "Version": 165,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -41,7 +40,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -∞ to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n\r\n",
+              "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -âˆž to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n\r\n",
               "Name": "Note",
               "ResourceName": null,
               "Children": [],
@@ -1252,15 +1251,17 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-10-28",
                               "Action": "[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
+                              "Line": "2016-10-28 [Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-18",
                               "Action": "[Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
+                              "Line": "2017-01-18 [Fertiliser].Apply(25, Fertiliser.Types.UreaN, 10);"
                             }
                           ],
                           "Name": "50",
@@ -1290,21 +1291,24 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-10-28",
                               "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
+                              "Line": "2016-10-28 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-18",
                               "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
+                              "Line": "2017-01-18 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-02-15",
                               "Action": "[Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);",
-                              "Enabled": true
+                              "Line": "2017-02-15 [Fertiliser].Apply(100, Fertiliser.Types.UreaN, 10);"
                             }
                           ],
                           "Name": "300",
@@ -1344,135 +1348,157 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-11-23",
                               "Action": "[Irrigation].Apply(30.0)",
-                              "Enabled": true
+                              "Line": "2016-11-23 [Irrigation].Apply(30.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-11-30",
                               "Action": "[Irrigation].Apply(25.0)",
-                              "Enabled": true
+                              "Line": "2016-11-30 [Irrigation].Apply(25.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-12-07",
                               "Action": "[Irrigation].Apply(25.0)",
-                              "Enabled": true
+                              "Line": "2016-12-07 [Irrigation].Apply(25.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-12-21",
                               "Action": "[Irrigation].Apply(25.2)",
-                              "Enabled": true
+                              "Line": "2016-12-21 [Irrigation].Apply(25.2)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-12-29",
                               "Action": "[Irrigation].Apply(30.0)",
-                              "Enabled": true
+                              "Line": "2016-12-29 [Irrigation].Apply(30.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-04",
                               "Action": "[Irrigation].Apply(40.0)",
-                              "Enabled": true
+                              "Line": "2017-01-04 [Irrigation].Apply(40.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-11",
                               "Action": "[Irrigation].Apply(32.9)",
-                              "Enabled": true
+                              "Line": "2017-01-11 [Irrigation].Apply(32.9)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-18",
                               "Action": "[Irrigation].Apply(25.4)",
-                              "Enabled": true
+                              "Line": "2017-01-18 [Irrigation].Apply(25.4)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-01-25",
                               "Action": "[Irrigation].Apply(31.3)",
-                              "Enabled": true
+                              "Line": "2017-01-25 [Irrigation].Apply(31.3)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-02-08",
                               "Action": "[Irrigation].Apply(33.0)",
-                              "Enabled": true
+                              "Line": "2017-02-08 [Irrigation].Apply(33.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-02-15",
                               "Action": "[Irrigation].Apply(35.0)",
-                              "Enabled": true
+                              "Line": "2017-02-15 [Irrigation].Apply(35.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-02-22",
                               "Action": "[Irrigation].Apply(29.0)",
-                              "Enabled": true
+                              "Line": "2017-02-22 [Irrigation].Apply(29.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-03-08",
                               "Action": "[Irrigation].Apply(34.0)",
-                              "Enabled": true
+                              "Line": "2017-03-08 [Irrigation].Apply(34.0)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-03-22",
                               "Action": "[Irrigation].Apply(50.1)",
-                              "Enabled": true
+                              "Line": "2017-03-22 [Irrigation].Apply(50.1)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-04-12",
                               "Action": "[Irrigation].Apply(30.9)",
-                              "Enabled": true
+                              "Line": "2017-04-12 [Irrigation].Apply(30.9)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-04-27",
                               "Action": "[Irrigation].Apply(18.9)",
-                              "Enabled": true
+                              "Line": "2017-04-27 [Irrigation].Apply(18.9)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-09-11",
                               "Action": "[Irrigation].Apply(20.9)",
-                              "Enabled": true
+                              "Line": "2017-09-11 [Irrigation].Apply(20.9)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-09-12",
                               "Action": "[Irrigation].Apply(21.1)",
-                              "Enabled": true
+                              "Line": "2017-09-12 [Irrigation].Apply(21.1)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-09-13",
                               "Action": "[Irrigation].Apply(21.4)",
-                              "Enabled": true
+                              "Line": "2017-09-13 [Irrigation].Apply(21.4)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-10-10",
                               "Action": "[Irrigation].Apply(22.2)",
-                              "Enabled": true
+                              "Line": "2017-10-10 [Irrigation].Apply(22.2)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-10-11",
                               "Action": "[Irrigation].Apply(22.5)",
-                              "Enabled": true
+                              "Line": "2017-10-11 [Irrigation].Apply(22.5)"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2017-10-12",
                               "Action": "[Irrigation].Apply(22.5)",
-                              "Enabled": true
+                              "Line": "2017-10-12 [Irrigation].Apply(22.5)"
                             }
                           ],
                           "Name": "Full",
@@ -1607,69 +1633,80 @@
                       "Operation": [
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2016-09-02",
                           "Action": "[Irrigation].Apply(25.0)",
-                          "Enabled": true
+                          "Line": "2016-09-02 [Irrigation].Apply(25.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2016-10-25",
                           "Action": "[Irrigation].Apply(5.0)",
-                          "Enabled": true
+                          "Line": "2016-10-25 [Irrigation].Apply(5.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2016-10-28",
                           "Action": "[Irrigation].Apply(5.0)",
-                          "Enabled": true
+                          "Line": "2016-10-28 [Irrigation].Apply(5.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2016-11-17",
                           "Action": "[Irrigation].Apply(2.0)",
-                          "Enabled": true
+                          "Line": "2016-11-17 [Irrigation].Apply(2.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-01-18",
                           "Action": "[Irrigation].Apply(10.0)",
-                          "Enabled": true
+                          "Line": "2017-01-18 [Irrigation].Apply(10.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-02-15",
                           "Action": "[Irrigation].Apply(10.0)",
-                          "Enabled": true
+                          "Line": "2017-02-15 [Irrigation].Apply(10.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-11-06",
                           "Action": "[Irrigation].Apply(45.0)",
-                          "Enabled": true
+                          "Line": "2017-11-06 [Irrigation].Apply(45.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-11-15",
                           "Action": "[Irrigation].Apply(30.0)",
-                          "Enabled": true
+                          "Line": "2017-11-15 [Irrigation].Apply(30.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-11-22",
                           "Action": "[Irrigation].Apply(29.7)",
-                          "Enabled": true
+                          "Line": "2017-11-22 [Irrigation].Apply(29.7)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-11-29",
                           "Action": "[Irrigation].Apply(35.0)",
-                          "Enabled": true
+                          "Line": "2017-11-29 [Irrigation].Apply(35.0)"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2017-12-06",
                           "Action": "[Irrigation].Apply(46.7)",
-                          "Enabled": true
+                          "Line": "2017-12-06 [Irrigation].Apply(46.7)"
                         }
                       ],
                       "Name": "GeneralIrrigation",
@@ -1698,7 +1735,150 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\nusing Models.PMF.Interfaces;\r\nusing Models.Core;\r\nusing System;\r\nusing Newtonsoft.Json;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant FodderBeet;\r\n        [Link(ByName = true)] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"FodderBeet planting date: \")]\r\n        public DateTime FodderBeetPlantingDate { get; set; }\r\n        [Description(\"FodderBeet harvesting date: \")]\r\n        public DateTime FodderBeetHarvestingDate { get; set; }\r\n        [Description(\"Oats planting date: \")]\r\n        public DateTime OatsPlantingDate { get; set; }\r\n        [Description(\"Oats harvesting date 1: \")]\r\n        public DateTime OatsHarvestingDate1 { get; set; }\r\n        [Description(\"Oats harvesting date 2: \")]\r\n        public DateTime OatsHarvestingDate2 { get; set; }\r\n        \r\n        [JsonIgnore] public string CropSown { get; set; }\r\n        [JsonIgnore] public string CropAction { get; set; }\r\n\r\n        [JsonIgnore] public bool IrrgFactor { get; set; }\r\n        [JsonIgnore] public double FertFactor { get; set; }\r\n\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            CropSown = \"Fallow\";\r\n            CropAction = \"-\";\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CropAction = \"-\";\r\n\r\n            if (Clock.Today.Date == FodderBeetPlantingDate)\r\n            {\r\n                FodderBeet.Sow(population: 9, cultivar: \"Rivage\", depth: 5, rowSpacing: 500);\r\n                CropSown = \"FodderBeet\";\r\n                CropAction = \"Sowing\";\r\n            }\r\n            \r\n            if (Clock.Today.Date == OatsPlantingDate)\r\n            {\r\n                Oats.Sow(population: 400, cultivar: \"Milton\", depth: 45, rowSpacing: 45);\r\n                CropSown = \"Oats\";\r\n                CropAction = \"Sowing\";\r\n            }\r\n            \r\n            \r\n            if (Clock.Today.Date == FodderBeetHarvestingDate)\r\n            {\r\n                HarvestFodderBeet();\r\n                //FodderBeet.EndCrop();\r\n                //CropSown = \"Fallow\";\r\n                CropAction = \"Harvesting\";\r\n            }\r\n            if (Clock.Today.Date == FodderBeetHarvestingDate.AddDays(1))\r\n            {\r\n                //FodderBeet.Harvest(removalFractions);\r\n                FodderBeet.EndCrop();\r\n                CropSown = \"Fallow\";\r\n            }\r\n\r\n            if (Clock.Today.Date == OatsHarvestingDate1)\r\n            {\r\n               if((FertFactor == 0) || ((IrrgFactor == false) && (FertFactor == 50)))\r\n               {\r\n                   HarvestOats();\r\n                   CropAction = \"Harvesting\";\r\n               }\r\n            }\r\n\r\n            if (Clock.Today.Date == OatsHarvestingDate2)\r\n            {\r\n               if((FertFactor == 300) || ((IrrgFactor == true) && (FertFactor == 50)))\r\n               {\r\n                   HarvestOats();\r\n                   CropAction = \"Harvesting\";\r\n               }\r\n            }\r\n\r\n            if (Clock.Today.Date == OatsHarvestingDate1.AddDays(1))\r\n            {\r\n               if((FertFactor == 0) || ((IrrgFactor == false) && (FertFactor == 50)))\r\n               {\r\n                   Oats.EndCrop();\r\n                   CropSown = \"Fallow\";\r\n               }\r\n            }\r\n\r\n            if (Clock.Today.Date == OatsHarvestingDate2.AddDays(1))\r\n            {\r\n               if((FertFactor == 300) || ((IrrgFactor == true) && (FertFactor == 50)))\r\n               {\r\n                   Oats.EndCrop();\r\n                   CropSown = \"Fallow\";\r\n               }\r\n            }\r\n        }\n        \n        private void HarvestFodderBeet()\n        {\n        \tvar Leaf = FodderBeet.FindChild<IHasDamageableBiomass>(\"Leaf\");\n        \tvar Petiole = FodderBeet.FindChild<IHasDamageableBiomass>(\"Petiole\");\n        \tvar StorageRoot = FodderBeet.FindChild<IHasDamageableBiomass>(\"StorageRoot\");\n        \t\n        \tLeaf.RemoveBiomass(liveToRemove: 0.95, liveToResidue: 0.05, deadToRemove: 0.8, deadToResidue: 0.2);\n        \tPetiole.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 0.9, deadToResidue: 0.1);\n        \tStorageRoot.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 1.0, deadToResidue: 0.0);\n\t\t \tFodderBeet.Harvest(removeBiomassFromOrgans: false);\n        }\n        \n        private void HarvestOats()\n        {\n        \tvar Stem = Oats.FindChild<IHasDamageableBiomass>(\"Stem\");\n        \tvar Panicle = Oats.FindChild<IHasDamageableBiomass>(\"Panicle\");\n        \tvar Grain = Oats.FindChild<IHasDamageableBiomass>(\"Grain\");\n        \t\n        \tStem.RemoveBiomass(liveToRemove: 0.9, liveToResidue: 0.1, deadToRemove: 0.8, deadToResidue: 0.2);\n        \tPanicle.RemoveBiomass(liveToRemove: 0.9, liveToResidue: 0.1, deadToRemove: 0.8, deadToResidue: 0.2);\n        \tGrain.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 1.0, deadToResidue: 0.0);\n\t\t \tOats.Harvest(removeBiomassFromOrgans: false);\n        }  \r\n    }\r\n}\r\n",
+                      "CodeArray": [
+                        "",
+                        "using Models.Soils;",
+                        "using System.Xml.Serialization;",
+                        "using APSIM.Shared.Utilities;",
+                        "using Models.PMF;",
+                        "using Models.PMF.Interfaces;",
+                        "using Models.Core;",
+                        "using System;",
+                        "using Newtonsoft.Json;",
+                        "        ",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable] ",
+                        "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link(ByName = true)] Plant FodderBeet;",
+                        "        [Link(ByName = true)] Plant Oats;",
+                        "        [Link] Clock Clock;",
+                        "",
+                        "        [Description(\"FodderBeet planting date: \")]",
+                        "        public DateTime FodderBeetPlantingDate { get; set; }",
+                        "        [Description(\"FodderBeet harvesting date: \")]",
+                        "        public DateTime FodderBeetHarvestingDate { get; set; }",
+                        "        [Description(\"Oats planting date: \")]",
+                        "        public DateTime OatsPlantingDate { get; set; }",
+                        "        [Description(\"Oats harvesting date 1: \")]",
+                        "        public DateTime OatsHarvestingDate1 { get; set; }",
+                        "        [Description(\"Oats harvesting date 2: \")]",
+                        "        public DateTime OatsHarvestingDate2 { get; set; }",
+                        "        ",
+                        "        [JsonIgnore] public string CropSown { get; set; }",
+                        "        [JsonIgnore] public string CropAction { get; set; }",
+                        "",
+                        "        [JsonIgnore] public bool IrrgFactor { get; set; }",
+                        "        [JsonIgnore] public double FertFactor { get; set; }",
+                        "",
+                        "",
+                        "        ",
+                        "        [EventSubscribe(\"StartOfSimulation\")]",
+                        "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                        "        {",
+                        "            CropSown = \"Fallow\";",
+                        "            CropAction = \"-\";",
+                        "        }",
+                        "        ",
+                        "        [EventSubscribe(\"DoManagement\")]",
+                        "        private void OnDoManagement(object sender, EventArgs e)",
+                        "        {",
+                        "            CropAction = \"-\";",
+                        "",
+                        "            if (Clock.Today.Date == FodderBeetPlantingDate)",
+                        "            {",
+                        "                FodderBeet.Sow(population: 9, cultivar: \"Rivage\", depth: 5, rowSpacing: 500);",
+                        "                CropSown = \"FodderBeet\";",
+                        "                CropAction = \"Sowing\";",
+                        "            }",
+                        "            ",
+                        "            if (Clock.Today.Date == OatsPlantingDate)",
+                        "            {",
+                        "                Oats.Sow(population: 400, cultivar: \"Milton\", depth: 45, rowSpacing: 45);",
+                        "                CropSown = \"Oats\";",
+                        "                CropAction = \"Sowing\";",
+                        "            }",
+                        "            ",
+                        "            ",
+                        "            if (Clock.Today.Date == FodderBeetHarvestingDate)",
+                        "            {",
+                        "                HarvestFodderBeet();",
+                        "                //FodderBeet.EndCrop();",
+                        "                //CropSown = \"Fallow\";",
+                        "                CropAction = \"Harvesting\";",
+                        "            }",
+                        "            if (Clock.Today.Date == FodderBeetHarvestingDate.AddDays(1))",
+                        "            {",
+                        "                //FodderBeet.Harvest(removalFractions);",
+                        "                FodderBeet.EndCrop();",
+                        "                CropSown = \"Fallow\";",
+                        "            }",
+                        "",
+                        "            if (Clock.Today.Date == OatsHarvestingDate1)",
+                        "            {",
+                        "               if((FertFactor == 0) || ((IrrgFactor == false) && (FertFactor == 50)))",
+                        "               {",
+                        "                   HarvestOats();",
+                        "                   CropAction = \"Harvesting\";",
+                        "               }",
+                        "            }",
+                        "",
+                        "            if (Clock.Today.Date == OatsHarvestingDate2)",
+                        "            {",
+                        "               if((FertFactor == 300) || ((IrrgFactor == true) && (FertFactor == 50)))",
+                        "               {",
+                        "                   HarvestOats();",
+                        "                   CropAction = \"Harvesting\";",
+                        "               }",
+                        "            }",
+                        "",
+                        "            if (Clock.Today.Date == OatsHarvestingDate1.AddDays(1))",
+                        "            {",
+                        "               if((FertFactor == 0) || ((IrrgFactor == false) && (FertFactor == 50)))",
+                        "               {",
+                        "                   Oats.EndCrop();",
+                        "                   CropSown = \"Fallow\";",
+                        "               }",
+                        "            }",
+                        "",
+                        "            if (Clock.Today.Date == OatsHarvestingDate2.AddDays(1))",
+                        "            {",
+                        "               if((FertFactor == 300) || ((IrrgFactor == true) && (FertFactor == 50)))",
+                        "               {",
+                        "                   Oats.EndCrop();",
+                        "                   CropSown = \"Fallow\";",
+                        "               }",
+                        "            }",
+                        "        }",
+                        "        ",
+                        "        private void HarvestFodderBeet()",
+                        "        {",
+                        "            var Leaf = FodderBeet.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                        "            var Petiole = FodderBeet.FindChild<IHasDamageableBiomass>(\"Petiole\");",
+                        "            var StorageRoot = FodderBeet.FindChild<IHasDamageableBiomass>(\"StorageRoot\");",
+                        "            ",
+                        "            Leaf.RemoveBiomass(liveToRemove: 0.95, liveToResidue: 0.05, deadToRemove: 0.8, deadToResidue: 0.2);",
+                        "            Petiole.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 0.9, deadToResidue: 0.1);",
+                        "            StorageRoot.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 1.0, deadToResidue: 0.0);",
+                        "             FodderBeet.Harvest(removeBiomassFromOrgans: false);",
+                        "        }",
+                        "        ",
+                        "        private void HarvestOats()",
+                        "        {",
+                        "            var Stem = Oats.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                        "            var Panicle = Oats.FindChild<IHasDamageableBiomass>(\"Panicle\");",
+                        "            var Grain = Oats.FindChild<IHasDamageableBiomass>(\"Grain\");",
+                        "            ",
+                        "            Stem.RemoveBiomass(liveToRemove: 0.9, liveToResidue: 0.1, deadToRemove: 0.8, deadToResidue: 0.2);",
+                        "            Panicle.RemoveBiomass(liveToRemove: 0.9, liveToResidue: 0.1, deadToRemove: 0.8, deadToResidue: 0.2);",
+                        "            Grain.RemoveBiomass(liveToRemove: 1.0, liveToResidue: 0.0, deadToRemove: 1.0, deadToResidue: 0.0);",
+                        "             Oats.Harvest(removeBiomassFromOrgans: false);",
+                        "        }  ",
+                        "    }",
+                        "}"
+                      ],
                       "Parameters": [
                         {
                           "Key": "FodderBeetPlantingDate",
@@ -1729,7 +1909,100 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils;\r\nusing Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing System.Globalization;\r\nusing Newtonsoft.Json;\r\n\r\n// This script simulates a rainshelter, it controls the amount of rainfall (=0.0) and radiation (=95% of weather)\r\n// It does that for a period between two dates, as well as at sporadic dates\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start date: \")]\r\n        public DateTime StartDate { get; set; }\r\n        [Description(\"End date: \")]\r\n        public DateTime EndDate { get; set; }\r\n         [Description(\"Other dates: \")]\r\n         public string OtherDateString  { get; set; }\r\n         private const string dateFormat = \"dd/MM/yyyy\";\r\n         [NonSerialized]\r\n         private CultureInfo provider = CultureInfo.InvariantCulture;\r\n\r\n         [JsonIgnore] public string RainshelterCover  { get; set; }\r\n\r\n         private DateTime[] OtherDates;\r\n         private double todaysRain;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            provider = CultureInfo.InvariantCulture;\r\n            //gather the dates the variables will be controlled\r\n            string[] auxDates = OtherDateString.Split(new Char []{' ',','});\r\n            OtherDates = new DateTime[auxDates.Length];\r\n            for (int i = 0; i < auxDates.Length; i++)\r\n                OtherDates[i] = DateTime.ParseExact(auxDates[i], dateFormat, provider);\r\n\r\n            RainshelterCover = \"Off\";\r\n        }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            RainshelterCover = \"Off\";\r\n\r\n            if ((Clock.Today.Date >= StartDate.Date) && (Clock.Today.Date <= EndDate.Date))\r\n            {\r\n                todaysRain = Met.Rain;\r\n                changeMetData();\r\n            }\r\n            else\r\n            {\r\n                for (int i = 0; i < OtherDates.Length; i++)\r\n                    if (Clock.Today.Date == OtherDates[0].Date)\r\n                        changeMetData();\r\n            }\r\n\r\n            // rain shelter partial day cover\r\n            if (Clock.Today.Date == DateTime.ParseExact(\"01/09/2017\", dateFormat, provider).Date)\r\n                Met.Rain -= 2.0;\r\n            if (Clock.Today.Date == DateTime.ParseExact(\"08/11/2017\", dateFormat, provider).Date)\r\n                Met.Rain -= 0.3;\r\n\r\n            // rain shelter cover removed for weekend\r\n            if ((Clock.Today.Date == DateTime.ParseExact(\"03/06/2017\", dateFormat, provider).Date)||(Clock.Today.Date == DateTime.ParseExact(\"04/06/2017\", dateFormat, provider).Date))\r\n            {\r\n                Met.Rain = todaysRain;\r\n                //Met.Radn /= 0.95;\r\n                RainshelterCover = \"Off\";\r\n            }\r\n        }\r\n\r\n        private void changeMetData()\r\n        {\r\n            Met.Rain *= 0.0;\r\n            //Met.Radn *= 0.95;\r\n            RainshelterCover = \"On\";\r\n        }\r\n    }\r\n}\r\n",
+                      "CodeArray": [
+                        "using Models.Soils;",
+                        "using Models.Climate;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using APSIM.Shared.Utilities;",
+                        "using System.Collections.Generic;",
+                        "using System.Text;",
+                        "using Models.PMF;",
+                        "using Models;",
+                        "using System.Xml.Serialization;",
+                        "using System.Globalization;",
+                        "using Newtonsoft.Json;",
+                        "",
+                        "// This script simulates a rainshelter, it controls the amount of rainfall (=0.0) and radiation (=95% of weather)",
+                        "// It does that for a period between two dates, as well as at sporadic dates",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable] ",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Weather Met;",
+                        "        [Link] Clock Clock;",
+                        "    ",
+                        "        [Description(\"Start date: \")]",
+                        "        public DateTime StartDate { get; set; }",
+                        "        [Description(\"End date: \")]",
+                        "        public DateTime EndDate { get; set; }",
+                        "         [Description(\"Other dates: \")]",
+                        "         public string OtherDateString  { get; set; }",
+                        "         private const string dateFormat = \"dd/MM/yyyy\";",
+                        "         [NonSerialized]",
+                        "         private CultureInfo provider = CultureInfo.InvariantCulture;",
+                        "",
+                        "         [JsonIgnore] public string RainshelterCover  { get; set; }",
+                        "",
+                        "         private DateTime[] OtherDates;",
+                        "         private double todaysRain;",
+                        "",
+                        "        [EventSubscribe(\"StartOfSimulation\")]",
+                        "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                        "        {",
+                        "            provider = CultureInfo.InvariantCulture;",
+                        "            //gather the dates the variables will be controlled",
+                        "            string[] auxDates = OtherDateString.Split(new Char []{' ',','});",
+                        "            OtherDates = new DateTime[auxDates.Length];",
+                        "            for (int i = 0; i < auxDates.Length; i++)",
+                        "                OtherDates[i] = DateTime.ParseExact(auxDates[i], dateFormat, provider);",
+                        "",
+                        "            RainshelterCover = \"Off\";",
+                        "        }",
+                        "",
+                        "        [EventSubscribe(\"PreparingNewWeatherData\")]",
+                        "        private void OnPreparingNewWeatherData(object sender, EventArgs e)",
+                        "        {",
+                        "            RainshelterCover = \"Off\";",
+                        "",
+                        "            if ((Clock.Today.Date >= StartDate.Date) && (Clock.Today.Date <= EndDate.Date))",
+                        "            {",
+                        "                todaysRain = Met.Rain;",
+                        "                changeMetData();",
+                        "            }",
+                        "            else",
+                        "            {",
+                        "                for (int i = 0; i < OtherDates.Length; i++)",
+                        "                    if (Clock.Today.Date == OtherDates[0].Date)",
+                        "                        changeMetData();",
+                        "            }",
+                        "",
+                        "            // rain shelter partial day cover",
+                        "            if (Clock.Today.Date == DateTime.ParseExact(\"01/09/2017\", dateFormat, provider).Date)",
+                        "                Met.Rain -= 2.0;",
+                        "            if (Clock.Today.Date == DateTime.ParseExact(\"08/11/2017\", dateFormat, provider).Date)",
+                        "                Met.Rain -= 0.3;",
+                        "",
+                        "            // rain shelter cover removed for weekend",
+                        "            if ((Clock.Today.Date == DateTime.ParseExact(\"03/06/2017\", dateFormat, provider).Date)||(Clock.Today.Date == DateTime.ParseExact(\"04/06/2017\", dateFormat, provider).Date))",
+                        "            {",
+                        "                Met.Rain = todaysRain;",
+                        "                //Met.Radn /= 0.95;",
+                        "                RainshelterCover = \"Off\";",
+                        "            }",
+                        "        }",
+                        "",
+                        "        private void changeMetData()",
+                        "        {",
+                        "            Met.Rain *= 0.0;",
+                        "            //Met.Radn *= 0.95;",
+                        "            RainshelterCover = \"On\";",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -1756,7 +2029,95 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\n// This script performs management actions that are not common to all treatments\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Irrigation Irrigation;\n        [Link] Fertiliser Fert;\n        [Link] Soil ThisSoil;\n\n        [Description(\"Allow irrigation to be applied?\")]\n        public bool IrrFactor { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double NitFactor { get; set; }\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            //    SetSoilLayers();\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            // Fodderbeet - irrigation on high fert plots only\n            if ((IrrFactor == true) && (NitFactor == 300))\n            {\n                if (Clock.Today.Date == DateTime.Parse(\"01-Feb-2017\"))\n                    Irrigation.Apply(40.0);\n                if (Clock.Today.Date == DateTime.Parse(\"01-Mar-2017\"))\n                    Irrigation.Apply(32.6);\n            }\n        \n            // Oats - Irrigation on dryland plots only, after harvest\n            if (IrrFactor == false)\n            {\n                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))\n                    Irrigation.Apply(50.0);\n\n                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))\n                if (NitFactor == 300)\n                    Irrigation.Apply(64.0);\n\n                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))\n                {\n                    if (NitFactor == 0)\n                        Irrigation.Apply(30.3);\n                    if (NitFactor == 50)\n                        Irrigation.Apply(51.0);\n                }\n            }\n\n            // Oats - Irrigation on all 300N plots plus dryland 50N plots\n            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))\n            {\n                if (NitFactor == 300)\n                    Irrigation.Apply(50.0);\n                if ((NitFactor == 50) && (IrrFactor == false))\n                    Irrigation.Apply(50.0);\n            }\n\n            // Oats - Fertiliser for irrigated plots only, on sowing\n            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))\n            if (IrrFactor == true)\n            {\n                if (NitFactor == 0)\n                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);\n                if (NitFactor == 50)\n                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);\n                if (NitFactor == 300)\n                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);\n            }\n        }\n    }\n}\n",
+                      "CodeArray": [
+                        "using APSIM.Shared.Utilities;",
+                        "using System.Xml.Serialization;",
+                        "using Models;",
+                        "using Models.PMF;",
+                        "using Models.Soils;",
+                        "using System.Text;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using System;",
+                        "",
+                        "// This script performs management actions that are not common to all treatments",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable] ",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Clock Clock;",
+                        "        [Link] Irrigation Irrigation;",
+                        "        [Link] Fertiliser Fert;",
+                        "        [Link] Soil ThisSoil;",
+                        "",
+                        "        [Description(\"Allow irrigation to be applied?\")]",
+                        "        public bool IrrFactor { get; set; }",
+                        "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
+                        "        public double NitFactor { get; set; }",
+                        "",
+                        "        [EventSubscribe(\"StartOfSimulation\")]",
+                        "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                        "        {",
+                        "            //    SetSoilLayers();",
+                        "        }",
+                        "        ",
+                        "        [EventSubscribe(\"DoManagement\")]",
+                        "        private void OnDoManagement(object sender, EventArgs e)",
+                        "        {",
+                        "            // Fodderbeet - irrigation on high fert plots only",
+                        "            if ((IrrFactor == true) && (NitFactor == 300))",
+                        "            {",
+                        "                if (Clock.Today.Date == DateTime.Parse(\"01-Feb-2017\"))",
+                        "                    Irrigation.Apply(40.0);",
+                        "                if (Clock.Today.Date == DateTime.Parse(\"01-Mar-2017\"))",
+                        "                    Irrigation.Apply(32.6);",
+                        "            }",
+                        "        ",
+                        "            // Oats - Irrigation on dryland plots only, after harvest",
+                        "            if (IrrFactor == false)",
+                        "            {",
+                        "                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))",
+                        "                    Irrigation.Apply(50.0);",
+                        "",
+                        "                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))",
+                        "                if (NitFactor == 300)",
+                        "                    Irrigation.Apply(64.0);",
+                        "",
+                        "                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))",
+                        "                {",
+                        "                    if (NitFactor == 0)",
+                        "                        Irrigation.Apply(30.3);",
+                        "                    if (NitFactor == 50)",
+                        "                        Irrigation.Apply(51.0);",
+                        "                }",
+                        "            }",
+                        "",
+                        "            // Oats - Irrigation on all 300N plots plus dryland 50N plots",
+                        "            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))",
+                        "            {",
+                        "                if (NitFactor == 300)",
+                        "                    Irrigation.Apply(50.0);",
+                        "                if ((NitFactor == 50) && (IrrFactor == false))",
+                        "                    Irrigation.Apply(50.0);",
+                        "            }",
+                        "",
+                        "            // Oats - Fertiliser for irrigated plots only, on sowing",
+                        "            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))",
+                        "            if (IrrFactor == true)",
+                        "            {",
+                        "                if (NitFactor == 0)",
+                        "                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);",
+                        "                if (NitFactor == 50)",
+                        "                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);",
+                        "                if (NitFactor == 300)",
+                        "                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
                       "Parameters": [
                         {
                           "Key": "NitFactor",
@@ -2193,42 +2554,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogen, Models",
-                      "fom_types": [
-                        "default",
-                        "manure",
-                        "mucuna",
-                        "lablab",
-                        "shemp",
-                        "stable"
-                      ],
-                      "fract_carb": [
-                        0.2,
-                        0.3,
-                        0.54,
-                        0.57,
-                        0.45,
-                        0.0
-                      ],
-                      "fract_cell": [
-                        0.7,
-                        0.3,
-                        0.37,
-                        0.37,
-                        0.47,
-                        0.1
-                      ],
-                      "fract_lign": [
-                        0.1,
-                        0.4,
-                        0.09,
-                        0.06,
-                        0.08,
-                        0.9
-                      ],
-                      "NPartitionApproach": 0,
-                      "Name": "SoilNitrogen",
-                      "ResourceName": null,
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2375,7 +2703,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2416,7 +2744,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2457,7 +2785,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "$type": "Models.Soils.Solute, Models",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -2611,26 +2939,26 @@
                     "[Soil].Water.MM",
                     "",
                     "[Fertiliser].NitrogenApplied as FertiliserN",
-                    "sum([Soil].SoilNitrogen.dlt_n_min_res) as SurfOMMineralisedN",
-                    "sum([Soil].SoilNitrogen.MineralisedN) as MineralisedN",
-                    "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
+                    "sum([Soil].Nutrient.SurfaceResidue.Decomposition.MineralisedN) as SurfOMMineralisedN",
+                    "sum([Soil].Nutrient.MineralisedN) as MineralisedN",
+                    "sum([Soil].Nutrient.DenitrifiedN) as DenitrifiedN",
                     "(-[FodderBeet].Root.NUptake - [Oats].Root.NUptake) as UptakeN",
-                    "([Soil].SoilWater.LeachNO3+[Soil].SoilWater.LeachNH4) as Soil.SoilNitrogen.NLeached",
-                    "([Soil].SoilWater.FlowNO3[3] + [Soil].SoilWater.FlowNH4[3]) as Soil.SoilNitrogen.NLeach60cm",
+                    "([Soil].SoilWater.LeachNO3+[Soil].SoilWater.LeachNH4) as Soil.Nutrient.NLeached",
+                    "([Soil].SoilWater.FlowNO3[3] + [Soil].SoilWater.FlowNH4[3]) as Soil.Nutrient.NLeach60cm",
                     "[SurfaceOrganicMatter].N as TotalSurfOMN",
-                    "sum([Soil].SoilNitrogen.FOMN) as TotalFOMN",
-                    "sum([Soil].SoilNitrogen.MicrobialN) as TotalMicrobialN",
-                    "sum([Soil].SoilNitrogen.HumicN) as TotalHumicN",
+                    "sum([Soil].Nutrient.FOM.N) as TotalFOMN",
+                    "sum([Soil].Nutrient.Microbial.N) as TotalMicrobialN",
+                    "sum([Soil].Nutrient.Humic.N) as TotalHumicN",
                     "(sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as TotalSoilN",
                     "sum([Soil].Urea.kgha) as TotalUrea",
                     "sum([Soil].NH4.kgha) as TotalNH4",
                     "sum([Soil].NO3.kgha) as TotalNO3",
-                    "sum([Soil].NH4.kgha[1:6]) as Soil.SoilNitrogen.ProfileNH4",
-                    "sum([Soil].NO3.kgha[1:6]) as Soil.SoilNitrogen.ProfileNO3",
-                    "sum([Soil].NH4.kgha[1:6]+[Soil].NO3.kgha[1:6]) as Soil.SoilNitrogen.ProfileMineralN",
+                    "sum([Soil].NH4.kgha[1:6]) as Soil.Nutrient.ProfileNH4",
+                    "sum([Soil].NO3.kgha[1:6]) as Soil.Nutrient.ProfileNO3",
+                    "sum([Soil].NH4.kgha[1:6]+[Soil].NO3.kgha[1:6]) as Soil.Nutrient.ProfileMineralN",
                     "[Soil].NH4.kgha",
                     "[Soil].NO3.kgha",
-                    "([Soil].NH4.kgha+[Soil].NO3.kgha) as Soil.SoilNitrogen.mineral_n",
+                    "([Soil].NH4.kgha+[Soil].NO3.kgha) as Soil.Nutrient.MineralN",
                     "",
                     "[Soil].Physical.Thickness",
                     "[Soil].Temperature.Value",
