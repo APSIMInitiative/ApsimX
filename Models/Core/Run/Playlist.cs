@@ -41,7 +41,8 @@ namespace Models
             if (Text.Length == 0)
                 return null; // this will let the runner run normally
 
-            List<Model> children = simulations.FindAllChildren<Model>().ToList();
+            List<Simulation> allSimulations = simulations.FindAllDescendants<Simulation>().ToList();
+            List<Experiment> allExperiments = simulations.FindAllDescendants<Experiment>().ToList();
 
             foreach (string line in lines)
             {
@@ -51,33 +52,37 @@ namespace Models
                 expression = "^" + expression + "$";
                 Regex regex = new Regex(expression);
 
-                foreach (Model child in children)
+                foreach (Simulation sim in allSimulations)
                 {
-                    if (child is Simulation)
-                    {
-                        Simulation sim = child as Simulation;
-                        if (regex.IsMatch(sim.Name))
+                    if (regex.IsMatch(sim.Name))
+                        if (sim.FindAncestor<Experiment>() == null) //don't add if under experiment
                             if (names.Contains(sim.Name) == false)
                                 names.Add(sim.Name);
-                    }
-                    else if (child is Experiment)
+                }
+
+                foreach (Experiment exp in allExperiments)
+                {
+                    List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
+                    //match experiment name
+                    if (regex.IsMatch(exp.Name))
                     {
-                        Experiment exp = child as Experiment;
-                        if (regex.IsMatch(exp.Name))
-                        {
-                            if (names.Contains(exp.Name) == false)
-                            {
-                                List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
-                                foreach (Core.Run.SimulationDescription expN in expNames)
+                        if (names.Contains(exp.Name) == false)
+                            foreach (Core.Run.SimulationDescription expN in expNames)
+                                if (names.Contains(expN.Name) == false)
                                     names.Add(expN.Name);
-                            }
-                        }
                     }
-                    
+                    else
+                    {
+                        //match against the experiment variations
+                        foreach (Core.Run.SimulationDescription expN in expNames)
+                            if (regex.IsMatch(expN.Name))
+                                if (names.Contains(expN.Name) == false)
+                                    names.Add(expN.Name);
+                    }
                 }
             }
             if (names.Count == 0)
-                throw new Exception("Playlist is enabled but no simuations or experiments match the contents of the list.");
+                throw new Exception("Playlist is enabled but no simulations or experiments match the contents of the list.");
             else
                 return names;
         }
