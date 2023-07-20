@@ -22,6 +22,8 @@ using APSIM.Interop.Documentation;
 using System.Threading.Tasks;
 using System.Threading;
 using APSIM.Server.Sensibility;
+using Gtk;
+using Models.CLEM.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -163,6 +165,7 @@ namespace UserInterface.Presenters
                                               typeof(Folder),
                                               typeof(Morris),
                                               typeof(Sobol),
+                                              typeof(Playlist),
                                               typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
@@ -1103,6 +1106,61 @@ namespace UserInterface.Presenters
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        //This menu item is dynamically added by ExplorerPresented based on how many 
+        //Playlists exist within the file.
+        [ContextMenu(MenuName = "Playlist",
+                     ShortcutKey = "",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Simulation),
+                                         typeof(Simulations),
+                                         typeof(Experiment),
+                                         typeof(Folder) })]
+        public void OnAddToPlaylist(object sender, EventArgs e)
+        {
+            List<string> namesToAdd = new List<string>();
+            IModel model = explorerPresenter.CurrentNode;
+
+            if (model is Simulations || model is Folder)
+            {
+                IEnumerable<Simulation> sims = (model as Model).FindAllDescendants<Simulation>();
+                foreach (Simulation sim in sims)
+                    namesToAdd.Add(sim.Name);
+
+                IEnumerable<Experiment> exps = (model as Model).FindAllDescendants<Experiment>();
+                foreach (Experiment exp in exps)
+                    namesToAdd.Add(exp.Name);
+            }
+            else if (model is Simulation || model is Experiment)
+            {
+                namesToAdd.Add((model as Model).Name);
+            }
+
+            //This digs through the menu item that sends the event to see what the text was on the button
+            //This is not good code and will break if the GUI changes
+            MenuItem menuItem = sender as MenuItem;
+            HBox hBox = menuItem.Children[0] as HBox;
+            Label label = hBox.Children[1] as Label;
+            string itemText = label.Text;
+            string playlistName = itemText.Replace("Add to", "").Trim();
+
+            Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+            if (playlist != null)
+            {
+                if (playlist.Text.Last<char>() != '\n')//make sure we are adding this to an empty line
+                    playlist.Text += "\n";
+
+                foreach (string simName in namesToAdd)
+                    playlist.Text += simName + "\n";
+            }
+            else
+            {
+                string outputNames = "";
+                foreach (string simName in namesToAdd)
+                    outputNames += simName + ", ";
+                explorerPresenter.MainPresenter.ShowMessage($"Could not add {outputNames} to Playlist called '{playlistName}'", Simulation.MessageType.Warning);
             }
         }
 

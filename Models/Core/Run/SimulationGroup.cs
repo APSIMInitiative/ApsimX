@@ -71,14 +71,14 @@ namespace Models.Core.Run
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
-            if (simulationNamesToRun == null) //check if model has a playlist node
+            if (relativeTo is Playlist) //check if node was a playlist
             {
-                Playlist playlist = relativeTo.FindChild<Playlist>();
-                if (playlist != null)
-                    if (playlist.Enabled)
-                        this.simulationNamesToRun = playlist.GetListOfSimulations();
+                this.simulationNamesToRun = (relativeTo as Playlist).GetListOfSimulations();
+                //need to set the relative back to simulations so the runner can find all the simulations 
+                //when it comes time to run.
+                this.relativeTo = relativeTo.FindAncestor<Simulations>();
             }
-
+            
             if (simulationNamePatternMatch != null)
                 patternMatch = new Regex(simulationNamePatternMatch);
 

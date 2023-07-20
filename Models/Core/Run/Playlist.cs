@@ -47,16 +47,17 @@ namespace Models
             foreach (string line in lines)
             {
                 //convert our wildcard to regex symbol
-                string expression = line.Replace("*", "[\\s\\S]*");
+                string expression = line.ToLower();
+                expression = expression.Replace("*", "[\\s\\S]*");
                 expression = expression.Replace("#", ".");
                 expression = "^" + expression + "$";
                 Regex regex = new Regex(expression);
 
                 foreach (Simulation sim in allSimulations)
                 {
-                    if (regex.IsMatch(sim.Name))
+                    if (regex.IsMatch(sim.Name.ToLower()))
                         if (sim.FindAncestor<Experiment>() == null) //don't add if under experiment
-                            if (names.Contains(sim.Name) == false)
+                            if (names.Contains(sim.Name.ToLower()) == false)
                                 names.Add(sim.Name);
                 }
 
@@ -64,19 +65,19 @@ namespace Models
                 {
                     List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
                     //match experiment name
-                    if (regex.IsMatch(exp.Name))
+                    if (regex.IsMatch(exp.Name.ToLower()))
                     {
-                        if (names.Contains(exp.Name) == false)
+                        if (names.Contains(exp.Name.ToLower()) == false)
                             foreach (Core.Run.SimulationDescription expN in expNames)
-                                if (names.Contains(expN.Name) == false)
+                                if (names.Contains(expN.Name.ToLower()) == false)
                                     names.Add(expN.Name);
                     }
                     else
                     {
                         //match against the experiment variations
                         foreach (Core.Run.SimulationDescription expN in expNames)
-                            if (regex.IsMatch(expN.Name))
-                                if (names.Contains(expN.Name) == false)
+                            if (regex.IsMatch(expN.Name.ToLower()))
+                                if (names.Contains(expN.Name.ToLower()) == false)
                                     names.Add(expN.Name);
                     }
                 }
