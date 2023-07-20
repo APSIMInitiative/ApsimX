@@ -56,10 +56,10 @@
             "[Barley].Structure.Height",
             "[Barley].Structure.LeafTipsAppeared",
             "[Barley].Structure.MainStemPopn",
-            "[Soil].SoilNitrogen.mineral_n",
+            "[Soil].Nutrient.MineralN",
             "[Soil].Water.Volumetric",
             "[Soil].Water.MM",
-            "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
+            "sum([Soil].Nutrient.MineralN) as ProfileN",
             "sum([Soil].Water.MM) as ProfileWater"
           ],
           "EventNames": [
@@ -9897,42 +9897,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -10039,7 +10006,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -10072,7 +10039,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -10105,7 +10072,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -13689,42 +13656,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -13829,7 +13763,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -13862,7 +13796,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -13895,7 +13829,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -14132,64 +14066,6 @@
                                 }
                               ],
                               "Name": "FertiliserEvents",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            //SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };",
-                                "            //SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };",
-                                "            //SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };",
-                                "            //SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };",
-                                "            //SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };",
-                                "            //SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -16502,42 +16378,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -16642,7 +16485,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -16675,7 +16518,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -16708,7 +16551,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -17014,64 +16857,6 @@
                                 }
                               ],
                               "Name": "FertiliserEvents",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            //SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };",
-                                "            //SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };",
-                                "            //SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };",
-                                "            //SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };",
-                                "            //SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };",
-                                "            //SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -18869,7 +18654,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This was a field experiment established at the New Zealand Institute for Plant & Food Research Limited rain-out shelter in October 2014. Barley cultivars cv Dash and cv Omaka, differing canopy characteristics and water extraction capabilities were established with a range of irrigation treatments aimed at producing a range of soil moisture deficits.\r\n\r\n- High =Full replacement irrigation: replace weekly, measured crop water use;\r\n- Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of ½ measured crop water use;\r\n- Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.\r\n\r\nThe treatments were monitored for:\r\n\r\n- Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;\r\n- Canopy light interception;\r\n- Biomass - quantified four times during crop growth and at final harvest\r\n- Leaf area index\r\n\r\n\r\n\r\n\r\n",
+                  "Text": "This was a field experiment established at the New Zealand Institute for Plant & Food Research Limited rain-out shelter in October 2014. Barley cultivars cv Dash and cv Omaka, differing canopy characteristics and water extraction capabilities were established with a range of irrigation treatments aimed at producing a range of soil moisture deficits.\r\n\r\n- High =Full replacement irrigation: replace weekly, measured crop water use;\r\n- Mid =Intermediate replacement with reduced frequency and higher volume e.g. monthly application of Â½ measured crop water use;\r\n- Low =Nil (or near nil) irrigation, e.g.  irrigated once at anthesis.\r\n\r\nThe treatments were monitored for:\r\n\r\n- Soil water - this was measured continuously using auto logging TDR and weekly using a neutron probe;\r\n- Canopy light interception;\r\n- Biomass - quantified four times during crop growth and at final harvest\r\n- Leaf area index\r\n\r\n\r\n\r\n\r\n",
                   "Name": "Experimental details",
                   "ResourceName": null,
                   "Children": [],
@@ -19474,42 +19259,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -19624,7 +19376,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -19657,7 +19409,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -19690,7 +19442,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -19902,53 +19654,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Operations, Models",
                               "Operation": [
                                 {
@@ -20128,7 +19833,7 @@
                             "[Barley].Phenology.Stage",
                             "[Barley].Phenology.SoilTemperatureFunction",
                             "[Barley].Population",
-                            "[Soil].SoilNitrogen.TotalN"
+                            "[Soil].Nutrient.TotalN"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -21952,7 +21657,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 ± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:\r\n\r\n- Full irrigation – measured ET replaced weekly (06 October to 29 December) \r\n- Early Drought 1 – irrigated from 03 November to 05 January\r\n- Early Drought 2 – irrigated from 17 November to 19 January\r\n- Early Drought 3 – irrigated from 24 November to 19 January\r\n- Early Drought 3 – irrigated from 01 December to 09 February\r\n- Middle Drought 1 – irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)\r\n- Middle Drought 2 – irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)\r\n- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)\r\n- Middle Drought 3 – irrigated (06/10/1988 to 03/11/1988) \r\n- Late Drought 1 – irrigated (06/10/1988 to 17/11/1988)\r\n- Late Drought 2 – irrigated (06/10/1988 to 24/11/1988) \r\n- Late Drought 3 – irrigated (06/10/1988 to 01/12/1989)\r\n\r\n",
+                  "Text": "This experiment was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand. The objective was to evaluate the effect of drought on the yield of barley crops. The experiment is fully described by Jamieson et al. (1995).  Briefly, 'Triumph' barley was sown at 188kg/ha on 07 September 1988. This sowing rate resulted in a population of 291 Â± 6 plants/m2.  Plants were evaluated for their response to drought of varying duration. The treatments were:\r\n\r\n- Full irrigation â€“ measured ET replaced weekly (06 October to 29 December) \r\n- Early Drought 1 â€“ irrigated from 03 November to 05 January\r\n- Early Drought 2 â€“ irrigated from 17 November to 19 January\r\n- Early Drought 3 â€“ irrigated from 24 November to 19 January\r\n- Early Drought 3 â€“ irrigated from 01 December to 09 February\r\n- Middle Drought 1 â€“ irrigated (06/10/1988 to 03/11/1988) and (24/11/1988 to 29/12/1989)\r\n- Middle Drought 2 â€“ irrigated (06/10/1988 to 03/11/1988) and (01/12/1988 to 29/12/1989)\r\n- Middle Drought 3 â€“ irrigated (06/10/1988 to 03/11/1988) and (15/12/1988 to 29/12/1989)\r\n- Middle Drought 3 â€“ irrigated (06/10/1988 to 03/11/1988) \r\n- Late Drought 1 â€“ irrigated (06/10/1988 to 17/11/1988)\r\n- Late Drought 2 â€“ irrigated (06/10/1988 to 24/11/1988) \r\n- Late Drought 3 â€“ irrigated (06/10/1988 to 01/12/1989)\r\n\r\n",
                   "Name": "Trial details",
                   "ResourceName": null,
                   "Children": [],
@@ -23169,42 +22874,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -23321,7 +22993,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -23358,7 +23030,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -23395,7 +23067,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -23707,64 +23379,6 @@
                                 }
                               ],
                               "Name": "ClimateControl",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            //SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };",
-                                "            //SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };",
-                                "            //SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };",
-                                "            //SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };",
-                                "            //SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };",
-                                "            //SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -25412,7 +25026,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\r\nThis is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in De Ruiter et al (1999). Briefly, a vernalisation insensitive barley, variety \"Valetta\", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  \r\n\r\n- Full drought (in rain shelter) – was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;\r\n- Early drought (in rain shelter) – also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;\r\n- Late drought (in rain shelter) – fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; \r\n- Rain-fed (outside the rain shelter) – received all the rain but no irrigation;\r\n- Full irrigation (located outside the rain shelter) – received all the rain and irrigation to replace ET.\r\n\r\n\r\n",
+                  "Text": "\r\nThis is a water response trial conducted inside and outside the rain shelter at the New Zealand Institute for Plant & Food Research in Lincoln and described in De Ruiter et al (1999). Briefly, a vernalisation insensitive barley, variety \"Valetta\", was sown at 280 plant/m^2^ on 20 October 1995 and subjected to five water treatments as follows:  \r\n\r\n- Full drought (in rain shelter) â€“ was not irrigated except for 17 mm rainfall as a result of shelter failure 42 days after sowing;\r\n- Early drought (in rain shelter) â€“ also receive 17 mm rainfall and the drought was fully relieved at the onset stem elongation;\r\n- Late drought (in rain shelter) â€“ fully irrigated (i.e. net crop water use + soil water evaporation) up to stem elongation and nil irrigation thereafter; \r\n- Rain-fed (outside the rain shelter) â€“ received all the rain but no irrigation;\r\n- Full irrigation (located outside the rain shelter) â€“ received all the rain and irrigation to replace ET.\r\n\r\n\r\n",
                   "Name": "Trial details",
                   "ResourceName": null,
                   "Children": [],
@@ -26552,42 +26166,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -26708,7 +26289,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -26741,7 +26322,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -26774,7 +26355,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -27088,7 +26669,7 @@
                             "[Barley].Phenology.Stage",
                             "[Barley].Phenology.SoilTemperatureFunction",
                             "[Barley].Population",
-                            "[Soil].SoilNitrogen.TotalN",
+                            "[Soil].Nutrient.TotalN",
                             "sum([Soil].Water.MM) as sw_dep"
                           ],
                           "EventNames": [
@@ -29364,42 +28945,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -29500,7 +29048,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -29533,7 +29081,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -29566,7 +29114,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -29753,53 +29301,6 @@
                                 }
                               ],
                               "Name": "FertiliserEvents",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -31200,42 +30701,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -31340,7 +30808,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -31373,7 +30841,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -31406,7 +30874,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -31590,64 +31058,6 @@
                                 }
                               ],
                               "Name": "FertAndIrrig",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "using System;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System.Text;",
-                                "using Models.Soils;",
-                                "using Models.PMF;",
-                                "using Models;",
-                                "using System.Xml.Serialization;",
-                                "using APSIM.Shared.Utilities;",
-                                "using Models.Interfaces;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    public class Script : Model",
-                                "    {",
-                                "        [Link(ByName = true)]",
-                                "        private SoilNitrogen SoilNitrogen;",
-                                "        [Link] Soils.Soil Soil;",
-                                "",
-                                "        [EventSubscribe(\"DoInitialSummary\")]",
-                                "        private void OnDoInitialSummary(object sender, EventArgs e)",
-                                "        {",
-                                "            //SoilNitrogen.rd_hum = new double[] { 0.000363, 0.00007 };",
-                                "            //SoilNitrogen.rd_lign = new double[] { 0.001392, 0.003 };",
-                                "            //SoilNitrogen.rd_cell = new double[] { 0.05, 0.25 };",
-                                "            //SoilNitrogen.rd_carb = new double[] { 0.756438, 0.1 };",
-                                "            //SoilNitrogen.rd_biom = new double[] { 0.010295, 0.004 };",
-                                "            //SoilNitrogen.opt_temp = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.stfMiner_FctrZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.swfMiner_y = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "",
-                                "            SoilNitrogen.AHumusTurnOverRate = new double[] { 0.000363, 0.00007 };",
-                                "            SoilNitrogen.Pool3FOMTurnOverRate = new double[] { 0.001392, 0.003 };",
-                                "            SoilNitrogen.Pool2FOMTurnOverRate = new double[] { 0.05, 0.25 };",
-                                "            SoilNitrogen.Pool1FOMTurnOverRate = new double[] { 0.756438, 0.1 };",
-                                "            SoilNitrogen.MBiomassTurnOverRate = new double[] { 0.010295, 0.004 };",
-                                "            SoilNitrogen.FOMDecomp_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.SOMMiner_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            SoilNitrogen.Nitrification_TOptimum = new double[] { 26.5, 32.0 };",
-                                "            //SoilNitrogen.SOMMiner_FactorAtZero = new double[] { 0.05, 0.0 }; ",
-                                "            //SoilNitrogen.SOMMiner_MoistureFactors = new double[] { 0.0, 0.5, 0.9, 1.0, 1.0 };",
-                                "        }",
-                                "            ",
-                                "    }",
-                                "}",
-                                "    "
-                              ],
-                              "Parameters": null,
-                              "Name": "SetSoilParams",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -32832,42 +32242,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -32984,7 +32361,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -33017,7 +32394,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -33050,7 +32427,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -35189,42 +34566,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -35367,7 +34711,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -35402,7 +34746,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -35437,7 +34781,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -37115,42 +36459,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -37293,7 +36604,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     150.0,
@@ -37328,7 +36639,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     150.0,
@@ -37363,7 +36674,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     150.0,
@@ -38878,42 +38189,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -39036,7 +38314,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -39067,7 +38345,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -39098,7 +38376,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -40747,42 +40025,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -40955,7 +40200,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -40996,7 +40241,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -41037,7 +40282,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -43624,42 +42869,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -43802,7 +43014,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -43837,7 +43049,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -43872,7 +43084,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -44982,42 +44194,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -45190,7 +44369,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -45231,7 +44410,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -45272,7 +44451,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -46493,42 +45672,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -46701,7 +45847,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -46742,7 +45888,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -46783,7 +45929,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -47936,42 +47082,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -48114,7 +47227,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -48149,7 +47262,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -48184,7 +47297,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -49396,48 +48509,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -49472,7 +48552,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -49507,7 +48587,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -50430,48 +49510,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -50506,7 +49553,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -50541,7 +49588,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -51464,48 +50511,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -51540,7 +50554,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -51575,7 +50589,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -52498,48 +51512,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -52574,7 +51555,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -52609,7 +51590,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -53700,48 +52681,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -53776,7 +52724,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -53811,7 +52759,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -54784,48 +53732,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -54860,7 +53775,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -54895,7 +53810,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -55868,48 +54783,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -55944,7 +54826,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -55979,7 +54861,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -56952,48 +55834,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -57028,7 +55877,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -57063,7 +55912,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -58140,48 +56989,15 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -58216,7 +57032,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -58251,7 +57067,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     150.0,
                                     150.0,
@@ -59521,42 +58337,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogen, Models",
-                          "fom_types": [
-                            "default",
-                            "manure",
-                            "mucuna",
-                            "lablab",
-                            "shemp",
-                            "stable"
-                          ],
-                          "fract_carb": [
-                            0.2,
-                            0.3,
-                            0.54,
-                            0.57,
-                            0.45,
-                            0.0
-                          ],
-                          "fract_cell": [
-                            0.7,
-                            0.3,
-                            0.37,
-                            0.37,
-                            0.47,
-                            0.1
-                          ],
-                          "fract_lign": [
-                            0.1,
-                            0.4,
-                            0.09,
-                            0.06,
-                            0.08,
-                            0.9
-                          ],
-                          "NPartitionApproach": 0,
-                          "Name": "SoilNitrogen",
-                          "ResourceName": null,
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -59661,7 +58444,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             150.0,
                             150.0,
@@ -59694,7 +58477,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             150.0,
                             150.0,
@@ -59727,7 +58510,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             150.0,
                             150.0,
