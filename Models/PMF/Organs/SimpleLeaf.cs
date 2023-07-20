@@ -397,6 +397,12 @@ namespace Models.PMF.Organs
         public Biomass Allocated { get; private set; }
 
         /// <summary>
+        /// Gets the biomass Reallocated (from dying to new growth).
+        /// </summary>
+        [JsonIgnore]
+        public Biomass ReAllocated { get; private set; }
+
+        /// <summary>
         /// Gets the biomass senesced (transferred from live to dead material).
         /// </summary>
         [JsonIgnore]
@@ -756,6 +762,7 @@ namespace Models.PMF.Organs
         private void ClearBiomassFlows()
         {
             Allocated.Clear();
+            ReAllocated.Clear();
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
@@ -767,7 +774,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.ReAllocation = AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt);
+            DMSupply.ReAllocation = Senesced.Wt * dmReallocationFactor.Value();
             DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = photosynthesis.Value();
@@ -816,6 +823,8 @@ namespace Models.PMF.Organs
                 else
                     Width = wideness.Value();
                 LAIDead = laiDead.Value();
+
+                Senesced = Live * senescenceRate.Value();
             }
         }
 
@@ -890,6 +899,7 @@ namespace Models.PMF.Organs
             NSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
             Allocated = new Biomass();
+            ReAllocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
@@ -1024,25 +1034,9 @@ namespace Models.PMF.Organs
         /// </summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - AvailableDMReallocation(startLive.StorageWt)) * dmRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, startLive.StorageWt - Senesced.StorageWt);
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-            return availableDM;
-        }
-
-        /// <summary>
-        /// Computes the amount of Metabolic DM available for reallocation.
-        /// </summary>
-        public double AvailableDMReallocation(double source)
-        {
-            double availableDM = 0;
-            if (senescenceRate.Value() > 0)
-            {
-                availableDM = source * senescenceRate.Value() * dmReallocationFactor.Value();
-            }
-            if (MathUtilities.IsNegative(availableDM))
-                throw new Exception("Negative DM reallocation value computed for " + Name);
 
             return availableDM;
         }
@@ -1082,11 +1076,15 @@ namespace Models.PMF.Organs
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
+            ReAllocated.StorageWt = dryMatter.Retranslocation * MathUtilities.Divide(Senesced.StorageWt, Senesced.Wt, 0);
+            ReAllocated.MetabolicWt = dryMatter.Retranslocation * MathUtilities.Divide(Senesced.MetabolicWt, Senesced.Wt, 0);
+
+            Senesced -= ReAllocated;
+
             // allocate storage DM
             if (MathUtilities.IsGreaterThan(dryMatter.Storage * dmConversionEfficiency.Value(), DMDemand.Storage))
                 throw new Exception("Storage DM allocation to " + Name + " is in excess of its capacity");
-            double stoRetransFrac = MathUtilities.Divide(AvailableDMReallocation(startLive.StorageWt),AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt),0);
-            double diffWt = dryMatter.Storage - dryMatter.Retranslocation * stoRetransFrac;
+            double diffWt = dryMatter.Storage - ReAllocated.StorageWt;
             if (MathUtilities.IsPositive(diffWt))
             {
                 diffWt *= dmConversionEfficiency.Value();
@@ -1098,8 +1096,7 @@ namespace Models.PMF.Organs
             // allocate metabolic DM
             if (MathUtilities.IsGreaterThan(dryMatter.Metabolic * dmConversionEfficiency.Value(), DMDemand.Metabolic))
                 throw new Exception("Metabolic DM allocation to " + Name + " is in excess of its capacity");
-            double metRetransFrac = MathUtilities.Divide(AvailableDMReallocation(startLive.MetabolicWt),AvailableDMReallocation(startLive.StorageWt) + AvailableDMReallocation(startLive.MetabolicWt),0);
-            diffWt = dryMatter.Metabolic - dryMatter.Retranslocation * metRetransFrac;
+            diffWt = dryMatter.Metabolic - ReAllocated.MetabolicWt;
             if (MathUtilities.IsPositive(diffWt))
             {
                 diffWt *= dmConversionEfficiency.Value();
