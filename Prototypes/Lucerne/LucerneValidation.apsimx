@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 429,
+  "ExplorerWidth": 405,
   "Version": 162,
   "Name": "Simulations",
   "ResourceName": null,
@@ -6281,7 +6281,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 70.0,
-                          "Units": "g dm/g N remoboilized",
+                          "Units": "g dm/g N remobilized",
                           "Name": "Rate",
                           "ResourceName": null,
                           "Children": [],
@@ -21808,9 +21808,9 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
-                          "Minimum": -0.0031179118907920197,
-                          "Maximum": 0.31490910096999397,
-                          "Interval": null
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN"
                         }
                       ],
                       "LegendPosition": 0,
