@@ -2,6 +2,7 @@
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
+using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Soils;
@@ -321,9 +322,16 @@ namespace Models.PMF.Scrum
         private void OnDoManagement(object sender, EventArgs e)
         {
             if (weather.DaysSinceWinterSolstice == harvestDAWS)
-                strum.RemoveBiomass("Harvest");
+                strum.Harvest();
             if (weather.DaysSinceWinterSolstice == pruneDAWS)
-                strum.RemoveBiomass("Prune");
+            {
+                var leaf = strum.FindChild<IHasDamageableBiomass>("Leaf");
+                var trunk = strum.FindChild<IHasDamageableBiomass>("Trunk");
+                var fruit = strum.FindChild<IHasDamageableBiomass>("Fruit");
+                leaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
+                trunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);
+                fruit.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
+            }
         }
 
         [EventSubscribe("StartOfSimulation")]
