@@ -9142,9 +9142,21 @@
                                 {
                                   "$type": "Models.Manager, Models",
                                   "CodeArray": [
-                                    " "
+                                    " // This will be replaced by the \"ExtraVariables\" section in \"Replacements\"",
+                                    "",
+                                    "using Models.Soils;",
+                                    "using System;",
+                                    "using Models.Core;",
+                                    "",
+                                    "namespace Models",
+                                    "{",
+                                    "    [Serializable] ",
+                                    "    public class Script : Model",
+                                    "    {",
+                                    "    }",
+                                    "}"
                                   ],
-                                  "Parameters": null,
+                                  "Parameters": [],
                                   "Name": "ExtraVariables",
                                   "ResourceName": null,
                                   "Children": [],
