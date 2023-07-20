@@ -3,6 +3,9 @@ using UserInterface.Views;
 using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Factorial;
+using System.Linq;
 
 namespace UserInterface.Presenters
 {
@@ -24,7 +27,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        private List<string> simNameCache;
+        private List<Simulation> simNameCache;
+        private List<Experiment> expNameCache;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
@@ -53,7 +57,9 @@ namespace UserInterface.Presenters
 
 
             //load in all the simulation and experiment names
-            simNameCache = 
+            Simulations sims = playlistModel.FindAncestor<Simulations>();
+            simNameCache = sims.FindAllDescendants<Simulation>().ToList();
+            expNameCache = sims.FindAllDescendants<Experiment>().ToList();
 
             UpdateListOfSimulations();
         }
@@ -101,16 +107,11 @@ namespace UserInterface.Presenters
 
         private void UpdateListOfSimulations()
         {
-            List<string> names = playlistModel.GetListOfSimulations();
+            string[] names = playlistModel.GetListOfSimulations(simNameCache, expNameCache);
             string output = "Matching Simulations:\n";
             if (names != null)
             {
-                for (int i = 0; i < names.Count; i++)
-                {
-                    output += names[i];
-                    if (i < names.Count - 1)
-                        output += ", ";
-                }
+                output += string.Join(", ", names);
             }
             else
             {

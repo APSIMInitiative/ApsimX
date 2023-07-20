@@ -20,7 +20,7 @@ namespace Models
     {
         //// <summary>Link to simulations</summary>
         [Link]
-        private Simulations simulations = null;
+        private Simulations Simulations = null;
 
         /// <summary>Gets or sets the playlist text.</summary>
         [Description("Text of the playlist")]
@@ -31,9 +31,18 @@ namespace Models
         /// Returns null if empty
         /// Throws an exception if no valid simulations were found
         /// </summary>
-        public List<string> GetListOfSimulations()
+        public string[] GetListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
         {
-            simulations = this.Parent as Simulations;
+            if (Simulations == null)
+                Simulations = this.FindAncestor<Simulations>();
+
+            if (allSimulations == null)
+                allSimulations = Simulations.FindAllDescendants<Simulation>().ToList();
+
+            if (allExperiments == null)
+                allExperiments = Simulations.FindAllDescendants<Experiment>().ToList();
+
+            Simulations = this.Parent as Simulations;
 
             List<string> names = new List<string>();
 
@@ -41,9 +50,6 @@ namespace Models
                 return null; // this will let the runner run normally
 
             string[] lines = Text.Split('\n');
-
-            List<Simulation> allSimulations = simulations.FindAllDescendants<Simulation>().ToList();
-            List<Experiment> allExperiments = simulations.FindAllDescendants<Experiment>().ToList();
 
             foreach (string line in lines)
             {
@@ -109,7 +115,7 @@ namespace Models
             if (names.Count == 0)
                 return null;
             else
-                return names;
+                return names.ToArray();
         }
     }
 }

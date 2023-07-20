@@ -1,5 +1,4 @@
 ﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -8,9 +7,6 @@ using Models.Storage;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace UnitTests.Core
 {
@@ -81,11 +77,13 @@ namespace UnitTests.Core
             names = new string[3] { "Sim2", "Sim3", "Sim4" };
             expectedSimulations.Add(names);
 
-            //Tests that should fail as they find no matching sims
-            names = new string[0] { };
             //All caps
             playlistText.Add("SIM");
+            names = new string[1] { "Sim" };
             expectedSimulations.Add(names);
+
+            //Tests that should fail as they find no matching sims
+            names = new string[0] { };
 
             //The base experiement Sim
             playlistText.Add("ExpSim");
@@ -94,14 +92,14 @@ namespace UnitTests.Core
             for (int i = 0; i < expectedSimulations.Count; i++)
             {
                 Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+
                 Playlist playlist = sims.FindChild<Playlist>();
                 playlist.Text = playlistText[i];
 
                 if (expectedSimulations[i].Length > 0)
                 {
-                    Runner runner = new Runner(sims);
+                    Runner runner = new Runner(playlist);
                     List<Exception> errors = runner.Run();
-
                     // Check that no errors were thrown
                     Assert.AreEqual(0, errors.Count);
 
@@ -117,7 +115,7 @@ namespace UnitTests.Core
                 } 
                 else
                 {
-                    Assert.Throws<Exception>(() => new Runner(sims));
+                    Assert.Throws<Exception>(() => new Runner(playlist));
                 }
                 
             }           

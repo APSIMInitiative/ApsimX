@@ -276,17 +276,8 @@
     },
     {
       "$type": "Models.Playlist, Models",
-      "Text": "*2000-05-01*",
+      "Text": "",
       "Name": "Playlist1",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Playlist, Models",
-      "Text": "*",
-      "Name": "Playlist2",
       "ResourceName": null,
       "Children": [],
       "Enabled": true,
