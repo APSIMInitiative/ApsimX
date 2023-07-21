@@ -76,7 +76,7 @@ namespace Models.Core.Run
                 if ((relativeTo as Playlist).Text.Length > 0)
                 {
                     this.simulationNamesToRun = (relativeTo as Playlist).GetListOfSimulations();
-                    if (this.simulationNamesToRun == null)
+                    if (this.simulationNamesToRun == null || this.simulationNamesToRun.Count() == 0)
                         throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
                 }
                 //need to set the relative back to simulations so the runner can find all the simulations 

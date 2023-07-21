@@ -6,6 +6,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Factorial;
 using System.Linq;
+using System.Threading.Tasks;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -14,7 +16,7 @@ namespace UserInterface.Presenters
     /// </summary>
     public class PlaylistPresenter : IPresenter
     {
-        /// <summary>The memo model.</summary>
+        /// <summary>Reference to the playlist model</summary>
         private Playlist playlistModel;
 
         /// <summary>
@@ -27,8 +29,21 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>
+        /// A list of all simulations in this file that is saved in a cache to help search times
+        /// </summary>
         private List<Simulation> simNameCache;
+
+        /// <summary>
+        /// A list of all experiments in this file that is saved in a cache to help search times
+        /// </summary>
         private List<Experiment> expNameCache;
+
+        /// <summary>
+        /// Used to id search requests so that they cannot overwrite each other if returned out of order
+        /// Incremented once each time a name search is conducted
+        /// </summary>
+        private int searchCounter;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
@@ -47,33 +62,35 @@ namespace UserInterface.Presenters
             playlistView.editorView.Text = playlistModel.Text;
             playlistView.editorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
             
+            //This is the instructions at the top of the page.
             string instructions = "";
-            instructions += "Enter a list of names of simulations that you want to run. If this list is left empty, all active simulations will be run.\n";
+            instructions += "<b><big>Playlist</big></b>\n";
+            instructions += "Enter a list of names of simulations that you want to run. Case insensitive.\n";
             instructions += "A wildcard * can be used to represent any number of characters.\n";
             instructions += "A wildcard # can be used to represent any single character.\n";
             instructions += "\n";
-            instructions += "This node can be disabled to restore the default simulation running behaviour.\n";
+            instructions += "Simulations and Experiments can also be added to this playlist by right-clicking on them in the GUI.\n";
+            instructions += "\n";
+            instructions += "<b>Examples:</b>\n";
+            instructions += "Sim1, Sim2, Sim3   - <i>Runs simulations with exactly these names</i>\n";
+            instructions += "[Sim1, Sim2, Sim3] - <i>Also allows [ ] around the entry</i>\n";
+            instructions += "\nSim1  - <i>Entries can be entered over multiple lines</i>\nSim2\n\n";
+            instructions += "Sim#  - <i>Runs simulations like Sim1, SimA, Simm, but will not run Sim or Sim11</i>\n";
+            instructions += "Sim*  - <i>Runs simulations that start with Sim</i>\n";
+            instructions += "*Sim  - <i>Runs simulations that end with Sim</i>\n";
+            instructions += "*Sim* - <i>Runs simulations with Sim anywhere in the name</i>\n";
             playlistView.SetLabelText(instructions);
-
 
             //load in all the simulation and experiment names
             Simulations sims = playlistModel.FindAncestor<Simulations>();
             simNameCache = sims.FindAllDescendants<Simulation>().ToList();
             expNameCache = sims.FindAllDescendants<Experiment>().ToList();
 
-            UpdateListOfSimulations();
-        }
+            //search our search timer to 0
+            searchCounter = 0;
 
-        private void HelpBtnClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/memo/");
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
+            //update the output at the bottom based on what is in the playlist
+            UpdateListOfSimulations();
         }
 
         /// <summary>
@@ -102,22 +119,44 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            //playlistView.Lines = model.Specifications.ToArray();
+            playlistView.editorView.Text = playlistModel.Text;
+            UpdateListOfSimulations();
         }
 
-        private void UpdateListOfSimulations()
+        /// <summary>
+        /// Update the output text with a list of all simulations that match the entries in the playlist
+        /// Uses an async function to prevent the GUI from freezing.
+        /// </summary>
+        private async void UpdateListOfSimulations()
         {
-            string[] names = playlistModel.GetListOfSimulations(simNameCache, expNameCache);
-            string output = "Matching Simulations:\n";
-            if (names != null)
+            playlistView.SetOutputText("Matching Simulations:\nSearching...");
+
+            searchCounter += 1;
+            int id = searchCounter;
+
+            string[] names = (await GetSimNamesAsync());
+
+            //when the await returns, this will check against the search counter,
+            //and only allow the output field to update if this request is the latest.
+            if (id == searchCounter)
             {
-                output += string.Join(", ", names);
+                string output = "Matching Simulations:\n";
+                if (names != null)
+                {
+                    output += string.Join(", ", names);
+                }
+                else
+                {
+                    output += "[No Matches Found]";
+                }
+                playlistView.SetOutputText(output);
             }
-            else
-            {
-                output += "[No Matches Found]";
-            }
-            playlistView.SetOutputText(output);
+        }
+
+        /// <summary>Async wrapper around GetListOfSimulations</summary>
+        private async Task<string[]> GetSimNamesAsync()
+        {
+            return await Task.Run(() => playlistModel.GetListOfSimulations(simNameCache, expNameCache));
         }
 
         /// <summary>Detach the model from the view.</summary>

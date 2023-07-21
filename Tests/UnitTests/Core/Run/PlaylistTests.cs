@@ -14,7 +14,7 @@ namespace UnitTests.Core
     [TestFixture]
     public class PlaylistTests
     {
-        /// <summary>Ensure a single simulation runs.</summary>
+        /// <summary>Testing a number of variations of playlist text to make sure they run correctly.</summary>
         [Test]
         public void RunSimulationsWithPlaylist()
         {
@@ -77,6 +77,11 @@ namespace UnitTests.Core
             names = new string[3] { "Sim2", "Sim3", "Sim4" };
             expectedSimulations.Add(names);
 
+            //Getting the same simulation multiple times
+            playlistText.Add("Sim, Sim, Sim");
+            names = new string[1] { "Sim" };
+            expectedSimulations.Add(names);
+
             //All caps
             playlistText.Add("SIM");
             names = new string[1] { "Sim" };
@@ -87,6 +92,10 @@ namespace UnitTests.Core
 
             //The base experiement Sim
             playlistText.Add("ExpSim");
+            expectedSimulations.Add(names);
+
+            //symbols
+            playlistText.Add("~!@#$%^&*()_+{}[]:\";'<>?,./`' |\\");
             expectedSimulations.Add(names);
 
             for (int i = 0; i < expectedSimulations.Count; i++)
@@ -105,6 +114,9 @@ namespace UnitTests.Core
 
                     DataStore dataStore = sims.FindChild<DataStore>();
                     List<String> dataStoreNames = dataStore.Reader.SimulationNames;
+
+                    //check that the datastore and expected simulations have the same amount of entries
+                    Assert.AreEqual(dataStoreNames.Count, expectedSimulations[i].Length);
                     for (int j = 0; j < expectedSimulations[i].Length; j++)
                     {
                         if (!dataStoreNames.Contains(expectedSimulations[i][j]))

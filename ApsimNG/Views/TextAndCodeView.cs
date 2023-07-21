@@ -17,7 +17,7 @@ namespace UserInterface.Views
 
         private Gtk.VPaned box1;
 
-        private Gtk.VPaned box2;
+        private Gtk.HPaned box2;
 
         /// <summary>Constructor</summary>
         /// <param name="owner">The owner widget.</param>
@@ -34,19 +34,21 @@ namespace UserInterface.Views
             label1.LineWrap = true;
             label2.LineWrap = true;
 
+            ScrolledWindow sw = (ScrolledWindow)builder.GetObject("scrolledwindow2");
+            sw.Add((editorView as ViewBase).MainWidget);
+
             box1 = (VPaned)builder.GetObject("vpaned1");
             box1.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * 0.8);
 
-            box2 = (VPaned)builder.GetObject("vpaned2");
-            box2.Add2((editorView as ViewBase).MainWidget);
-            box2.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * 0.20);
+            box2 = (HPaned)builder.GetObject("hpaned2");
+            box2.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.5);
         }
 
         /// <summary></summary>
         /// <param name="text"></param>
         public void SetLabelText(string text)
         {
-            label1.Text = text;
+            label1.Markup = text;
         }
 
         /// <summary></summary>

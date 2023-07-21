@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 162,
+  "Version": 165,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -276,7 +275,7 @@
     },
     {
       "$type": "Models.Playlist, Models",
-      "Text": "",
+      "Text": "\n\nsdfgj\n\ns\nSIM",
       "Name": "Playlist1",
       "ResourceName": null,
       "Children": [],

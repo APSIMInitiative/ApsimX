@@ -16,21 +16,37 @@
 						<property name="visible">True</property>
 						<property name="can_focus">False</property>
 						<child>
-							<object class="GtkVPaned" id="vpaned2">
+							<object class="GtkHPaned" id="hpaned2">
 								<property name="visible">True</property>
 								<property name="can_focus">False</property>
 								<child>
-									<object class="GtkLabel" id="label1">
+									<object class="GtkScrolledWindow" id="scrolledwindow2">
 										<property name="visible">True</property>
-										<property name="can_focus">False</property>
-										<property name="xalign">0</property>
-										<property name="yalign">0</property>
-										<property name="xpad">2</property>
-										<property name="ypad">2</property>
+										<property name="can_focus">True</property>
+										<property name="hscrollbar_policy">automatic</property>
+										<property name="vscrollbar_policy">automatic</property>
 									</object>
-									<packing>
-										<property name="position">0</property>
-									</packing>
+								</child>
+								<child>
+									<object class="GtkScrolledWindow" id="scrolledwindow3">
+										<property name="visible">True</property>
+										<property name="can_focus">True</property>
+										<property name="hscrollbar_policy">automatic</property>
+										<property name="vscrollbar_policy">automatic</property>
+										<child>
+											<object class="GtkLabel" id="label1">
+												<property name="visible">True</property>
+												<property name="can_focus">False</property>
+												<property name="xalign">0</property>
+												<property name="yalign">0</property>
+												<property name="xpad">2</property>
+												<property name="ypad">2</property>
+											</object>
+											<packing>
+												<property name="position">0</property>
+											</packing>
+										</child>
+									</object>
 								</child>
 							</object>
 							<packing>
@@ -38,7 +54,7 @@
 							</packing>
 						</child>
 						<child>
-							<object class="GtkScrolledWindow" id="scrolledwindow2">
+							<object class="GtkScrolledWindow" id="scrolledwindow4">
 								<property name="visible">True</property>
 								<property name="can_focus">True</property>
 								<property name="hscrollbar_policy">automatic</property>
