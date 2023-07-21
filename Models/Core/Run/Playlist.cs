@@ -117,13 +117,28 @@ namespace Models
             else
                 return names.ToArray();
         }
+
+        /// <summary>
+        /// Adds an array of strings to the playlist.
+        /// Will make a newline if the last line of the playlist already has content
+        /// </summary>
+        /// <param name="lines">An array of strings that should be added</param>
+        public void AddSimulationNamesToList(string[] lines)
+        {
+            if (Text.Length > 0 && Text.Last<char>() != '\n')//make sure we are adding this to an empty line
+                Text += "\n";
+
+            foreach (string line in lines)
+                Text += line + "\n";
+        }
+
         private string cleanString(string input)
         {
             string output = "";
             output = output.Replace("\t", " ");
 
             foreach (char c in input)
-                if (char.IsLetter(c) || char.IsDigit(c) || c == '*' || c == '#' || c == ' ' || c == '_')
+                if (char.IsLetter(c) || char.IsNumber(c) || c == '*' || c == '#' || c == ' ' || c == '_' || c == '-')
                     output += c;
 
             //trim whitespace

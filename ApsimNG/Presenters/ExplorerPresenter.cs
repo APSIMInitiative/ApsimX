@@ -467,7 +467,7 @@ namespace UserInterface.Presenters
                 int i = 0;
                 while (valid && (i < str.Length))
                 {
-                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_') && (str[i] != ' '))
+                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_') && (str[i] != ' ') && (str[i] != '-'))
                     {
                         valid = false;
                     }

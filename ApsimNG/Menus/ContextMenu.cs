@@ -1101,11 +1101,7 @@ namespace UserInterface.Presenters
             Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
             if (playlist != null)
             {
-                if (playlist.Text.Length > 0 && playlist.Text.Last<char>() != '\n')//make sure we are adding this to an empty line
-                    playlist.Text += "\n";
-
-                foreach (string simName in namesToAdd)
-                    playlist.Text += simName + "\n";
+                playlist.AddSimulationNamesToList(namesToAdd.ToArray());
             }
             else
             {

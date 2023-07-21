@@ -77,6 +77,11 @@ namespace UnitTests.Core
             names = new string[3] { "Sim2", "Sim3", "Sim4" };
             expectedSimulations.Add(names);
 
+            //Experiment
+            playlistText.Add("Exp");
+            names = new string[5] { "ExpFactor2000-01-01", "ExpFactor2000-02-01", "ExpFactor2000-03-01", "ExpFactor2000-04-01", "ExpFactor2000-05-01" };
+            expectedSimulations.Add(names);
+
             //Getting the same simulation multiple times
             playlistText.Add("Sim, Sim, Sim");
             names = new string[1] { "Sim" };

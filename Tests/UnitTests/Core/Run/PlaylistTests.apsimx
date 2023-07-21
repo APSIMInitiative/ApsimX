@@ -275,7 +275,7 @@
     },
     {
       "$type": "Models.Playlist, Models",
-      "Text": "\n\nsdfgj\n\ns\nSIM",
+      "Text": "ExpFactor2000-02-01\nExpFactor2000-03-01\nExpFactor2000-04-01\n",
       "Name": "Playlist1",
       "ResourceName": null,
       "Children": [],

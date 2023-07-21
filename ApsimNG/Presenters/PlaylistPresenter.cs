@@ -119,7 +119,9 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            playlistView.editorView.Text = playlistModel.Text;
+            if (playlistView.editorView.Text != null)
+                playlistView.editorView.Text = playlistModel.Text;
+
             UpdateListOfSimulations();
         }
 
@@ -140,7 +142,7 @@ namespace UserInterface.Presenters
             //and only allow the output field to update if this request is the latest.
             if (id == searchCounter)
             {
-                string output = "Matching Simulations:\n";
+                string output = $"Matching Simulations: {names.Length}\n";
                 if (names != null)
                 {
                     output += string.Join(", ", names);
