@@ -59,6 +59,11 @@ namespace Models.Core.ApsimFile
             this.Token = manager;
             if (manager["Code"] != null)
                 Read(manager["Code"].ToString());
+            else if (manager["CodeArray"] != null)
+            {
+                var codeArray = manager["CodeArray"] as JArray;
+                lines = codeArray.Values<string>().ToList();
+            }
         }
 
         /// <summary>Load script</summary>
