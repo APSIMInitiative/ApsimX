@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
@@ -48,6 +49,7 @@ namespace Models.Core.ConfigFile
         {
             try
             {
+                // TODO: Important regex for nodes needs to be updated to include dashes.
                 Regex rxAddLocalCommand = new Regex(@"(add)\s(\[){1}(\w)*(\]){1}\s(\w)*");
                 Regex rxAddFromOtherFileCommand = new Regex(@"(add)\s(\[){1}(\w)+([\w\s])*(\]){1}\s([a-zA-Z0-9]){1}([\:\-\w\\\/])*(\.){1}(apsimx){1}(;){1}(\[){1}([\w\s])*(\]){1}");
                 Regex rxCopyCommand = new Regex(@"(copy)\s(\[){1}(\w)*(\]){1}\s(\[){1}(\w)*(\]){1}");
@@ -61,16 +63,20 @@ namespace Models.Core.ConfigFile
                 Regex rxNodeComplex = new Regex(@"(\[){1}([\w\s])+(\]){1}([\.\w])*");
                 Regex rxValidApsimxFilePath = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\w])*(\.){1}(apsimx)");
                 Regex rxValidPathToNodeInAnotherApsimxFile = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\-\w])*(\.){1}(apsimx)(;){1}(\[){1}([\w\s])+(\]){1}");
-
+                Regex rxBrokenNode = new Regex(@""); // TODO: Create new regex to recognise broken nodes
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false).NewModel as Simulations;
 
-                foreach (string command in configFileCommands)
+                List<string> newConfigFileCommands = EncodeSpacesInCommandList(configFileCommands.ToList());
+
+                foreach (string command in newConfigFileCommands)
                 {
-                    List<string> splitCommands = command.Split(' ', '=').ToList<string>();
-                    //string[] splitCommands = command.Split(' ', '=');
+                    // Gets command, splits it using space and = characters, then replaces any @ symbols with spaces so
+                    // nodes in the commands can be used normally.
+                    List<string> commandSplits = DecodeSpacesInCommandSplits(command.Split(' ', '=').ToList());
+
                     // If first index item is a string containing "[]" the command is an override...
-                    Match firstSplitResult = rxOverrideTargetNode.Match(splitCommands[0]);
-                    //if (splitCommands[0].Contains('['))
+                    Match firstSplitResult = rxOverrideTargetNode.Match(commandSplits[0]);
+                    //if (commandSplits[0].Contains('['))
                     if (firstSplitResult.Success)
                     {
                         string[] singleLineCommandArray = { command };
@@ -89,27 +95,28 @@ namespace Models.Core.ConfigFile
                         string loadPath = "";
 
                         // Determine instruction type.
-                        string keywordString = splitCommands[0].ToLower();
+                        string keywordString = commandSplits[0].ToLower();
                         if (keywordString.Contains("add")) { keyword = Keyword.Add; }
                         else if (keywordString.Contains("delete")) { keyword = Keyword.Delete; }
                         else if (keywordString.Contains("copy")) { keyword = Keyword.Copy; }
                         else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                         else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
                         else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
+                        else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
-                        //if (splitCommands.Length >= 2)
-                        if (splitCommands.Count >= 2)
+                        //if (commandSplits.Length >= 2)
+                        if (commandSplits.Count >= 2)
                         {
                             // Determine if its a nodeToModify/SavePath/LoadPath
                             if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
                             {
-                                Match secondSplitResult = rxNode.Match(splitCommands[1]);
-                                Match secondSplitComplexResult = rxNodeComplex.Match(splitCommands[1]);
+                                Match secondSplitResult = rxNode.Match(commandSplits[1]);
+                                Match secondSplitComplexResult = rxNodeComplex.Match(commandSplits[1]);
                                 // Check for required format
-                                //if (splitCommands[1].Contains('[') && splitCommands[1].Contains(']'))
+                                //if (commandSplits[1].Contains('[') && commandSplits[1].Contains(']'))
                                 if (secondSplitResult.Success || secondSplitComplexResult.Success)
                                 {
-                                    string modifiedNodeName = splitCommands[1];
+                                    string modifiedNodeName = commandSplits[1];
                                     if (!string.IsNullOrEmpty(modifiedNodeName))
                                     {
                                         nodeToModify = modifiedNodeName;
@@ -119,18 +126,18 @@ namespace Models.Core.ConfigFile
                                 {
                                     throw new Exception($"Format of parent model type does not match required format: [ModelName]. The command given was: {command}");
                                 }
-                                if (splitCommands.Count > 2)
+                                if (commandSplits.Count > 2)
                                 {
-                                    Match thirdCommandMatchesApsimxFilePath = rxValidPathToNodeInAnotherApsimxFile.Match(splitCommands[2]);
-                                    Match thirdCommandMatchesNode = rxNode.Match(splitCommands[2]);
+                                    Match thirdCommandMatchesApsimxFilePath = rxValidPathToNodeInAnotherApsimxFile.Match(commandSplits[2]);
+                                    Match thirdCommandMatchesNode = rxNode.Match(commandSplits[2]);
                                     bool doRegexValuesMatch = false;
                                     if (thirdCommandMatchesApsimxFilePath.Value.Equals(thirdCommandMatchesNode))
                                         doRegexValuesMatch = true;
                                     // If third command split string is a file path...
-                                    //if (splitCommands[2].Contains('\\') || splitCommands[2].Contains('/'))
+                                    //if (commandSplits[2].Contains('\\') || commandSplits[2].Contains('/'))
                                     if (!doRegexValuesMatch && thirdCommandMatchesApsimxFilePath.Success)
                                     {
-                                        string[] filePathAndNodeName = splitCommands[2].Split(';');
+                                        string[] filePathAndNodeName = commandSplits[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
                                         {
                                             fileContainingNode = filePathAndNodeName[0];
@@ -140,15 +147,15 @@ namespace Models.Core.ConfigFile
                                         else throw new Exception("Add command missing either file or node name.");
                                     }
                                     // If third command split string is a [NodeName]...
-                                    //else if (splitCommands[2].Contains('[') && splitCommands[2].Contains(']'))
+                                    //else if (commandSplits[2].Contains('[') && commandSplits[2].Contains(']'))
                                     else if (!doRegexValuesMatch && thirdCommandMatchesNode.Success)
                                     {
-                                        nodeForAction = splitCommands[2];
+                                        nodeForAction = commandSplits[2];
                                     }
                                     else
                                     {
-                                        //string reformattedNode = "{\"$type\": \"Models." + splitCommands[2] + ", Models\"}";
-                                        Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(splitCommands[2], Assembly.GetExecutingAssembly());
+                                        //string reformattedNode = "{\"$type\": \"Models." + commandSplits[2] + ", Models\"}";
+                                        Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(commandSplits[2], Assembly.GetExecutingAssembly());
                                         string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
                                         nodeForAction = reformattedNode;
                                     }
@@ -257,6 +264,127 @@ namespace Models.Core.ConfigFile
             }
         }
 
+        /// <summary>
+        /// Takes List of strings and removes spaces from broken nodes and reconstructs them.
+        /// </summary>
+        /// <param name="commandsList"></param>
+        /// <returns>A valid string List of commands and overrides.</returns>
+        private static List<string> EncodeSpacesInCommandList(List<string> commandsList)
+        {
+            Regex rxKeywordSubstring = new Regex(@"(add|copy|delete|save|load|run)");
+            Regex rxBrokenNodeStart = new Regex(@"(\[){1}([\w])+");
+            Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
+            Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
 
+            List<string> normalizedList = new();
+            //string firstBrokenNodeString = "";
+            //string secondBrokenNodeString = "";
+            StringBuilder correctedLineString = new();
+            //string commandKeyWordSubString = "";
+            //string firstValidNodeString = "";
+            //string secondValidNodeString = "";
+
+            foreach (string lineString in commandsList)
+            {
+                List<string> lineSections;
+                // if the line is an override...
+                if (lineString.Contains('='))
+                {
+                    string correctedLine = "";
+                    lineSections = lineString.Split('=').ToList();
+                    foreach (string section in lineSections)
+                    {
+                        string fixedSection;
+                        if (section.Contains(' '))
+                        {
+                            int indexOfSpace = section.IndexOf(' ');
+                            string tempSection = section.Insert(indexOfSpace - 1, "@");
+                            int newIndexOfSpace = tempSection.IndexOf(" ");
+                            fixedSection = tempSection.Remove(indexOfSpace, 1);
+                            correctedLine += fixedSection;
+                        }
+                    }
+                    normalizedList.Add(correctedLine);
+                }
+                // if the line is a command...
+                else
+                {
+                    lineSections = lineString.Split(' ').ToList();
+                    if (lineSections[0] != "load" && lineSections[0] != "save")
+                    {
+                        foreach (string section in lineSections)
+                        {
+                            if (rxKeywordSubstring.IsMatch(section))
+                            {
+                                if (section == "load" || section == "save")
+                                    break;
+                                //else commandKeyWordSubString = section;
+                                else correctedLineString.Append(section + " ");
+                            }
+                            else if (rxBrokenNodeStart.IsMatch(section) && !rxNode.IsMatch(section))
+                            {
+                                //// Make sure that if a broken node start has been encountered that it starts a new brokenNodeString.
+                                //if (string.IsNullOrEmpty(firstBrokenNodeString))
+                                //    firstBrokenNodeString = section;
+                                //else secondBrokenNodeString = section;
+                                correctedLineString.Append(section + '@');
+                            }
+                            else if (rxBrokenNodeEnd.IsMatch(section) && !rxNode.IsMatch(section))
+                            {
+                                //if (!string.IsNullOrEmpty(firstBrokenNodeString) && string.IsNullOrEmpty(secondBrokenNodeString))
+                                //    string.Concat(firstBrokenNodeString, section);
+                                //else if (!string.IsNullOrEmpty(firstBrokenNodeString) && !string.IsNullOrEmpty(secondBrokenNodeString))
+                                //    string.Concat(secondBrokenNodeString, section);
+                                correctedLineString.Append(section + " ");
+                            }
+                            else
+                            {
+                                //if (string.IsNullOrEmpty(firstValidNodeString))
+                                //    string.Concat(firstValidNodeString, section);
+                                //else string.Concat(secondValidNodeString, section);
+                                correctedLineString.Append(section + " ");
+                            }
+
+                        }
+
+                        //correctedLineString = string.Concat(commandKeyWordSubString, firstBrokenNodeString);
+                        normalizedList.Add(correctedLineString.ToString());
+                    }
+                    else
+                    {
+                        normalizedList.Add(lineString);
+                    }
+                }
+            }
+            return normalizedList;
+        }
+
+        /// <summary>
+        /// Takes <paramref name="commandSplitList"/> (a line from a configFile split into sections seperated by space) and removes the 
+        /// '@' symbols so Nodes with spaces can be located correctly. 
+        /// </summary>
+        /// <param name="commandSplitList"></param>
+        /// <returns>The list with splits that do not contain '@' characters.</returns>
+        private static List<string> DecodeSpacesInCommandSplits(List<string> commandSplitList)
+        {
+            try
+            {
+                List<string> decodedCommandList = new();
+                foreach (string split in commandSplitList)
+                {
+                    if (split.Contains('@'))
+                    {
+                        string modifiedSplit = split.Replace("@", "\u0020");
+                        decodedCommandList.Add(modifiedSplit);
+                    }
+                    else decodedCommandList.Add(split);
+                }
+                return decodedCommandList;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An error occured trying to replace '@' characters from commandSplit. {e}");
+            }
+        }
     }
 }
