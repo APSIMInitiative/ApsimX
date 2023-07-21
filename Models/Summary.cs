@@ -201,7 +201,7 @@ namespace Models
         #region Static summary report generation
 
         /// <summary>
-        /// Write a single sumary file for all simulations.
+        /// Write a single summary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
         /// <param name="fileName">The file name to write</param>
@@ -210,7 +210,11 @@ namespace Models
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
-                foreach (string simulationName in storage.Reader.SimulationNames)
+                //get list of simulations in alphabetical order
+                List<string> names = storage.Reader.SimulationNames;
+                names.Sort();
+
+                foreach (string simulationName in names)
                 {
                     Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme: darkTheme, true, true, true, true);
                     report.WriteLine();

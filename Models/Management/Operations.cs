@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
@@ -22,12 +23,32 @@ namespace Models
             Enabled = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public Operation(bool enabled, string date, string action, string line)
+        {
+            Enabled = enabled;
+            Date = date;
+            Action = action;
+            Line = line;
+        }
+
+        /// <summary>
+        /// Used to determine whether the operation is enabled or not.
+        /// </summary>
+        public bool Enabled { get; set; }
+
         /// <summary>Gets or sets the date.</summary>
         public string Date { get; set; }
 
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
         public string Action { get; set; }
+
+        /// <summary>Gets or sets the line shown in the view.</summary>
+        /// <value>A string</value>
+        public string Line { get; set; }
 
         /// <summary>Gets the action model.</summary>
         /// <returns></returns>
@@ -41,9 +62,56 @@ namespace Models
         }
 
         /// <summary>
-        /// Used to determine whether the operation is enabled or not.
+        /// Parses a string into an Operation
+        /// Format: // 2000-01-01 [NodeName].Function(1000)
         /// </summary>
-        public bool Enabled { get; set; }
+        /// <param name="line">The string to parse</param>
+        /// <returns>An Operation or null if there was an error parsing the string</returns>
+        public static Operation ParseOperationString(string line)
+        {
+            try
+            {
+                if (line == null)
+                    return null;
+
+                if (line.Length == 0)
+                    return null;
+
+                Regex parser = new Regex(@"^(\/?\/?)\s*(\S*)\s+(.+)$");
+                Match match = parser.Match(line.Trim());
+
+                if (match.Success)
+                {
+                    Operation operation = new Operation();
+                    operation.Line = line;
+
+                    if (match.Groups[1].Value.CompareTo("//") == 0)
+                        operation.Enabled = false;
+                    else
+                        operation.Enabled = true;
+
+                    string dateString = match.Groups[2].Value;
+                    operation.Date = DateUtilities.ValidateDateString(dateString);
+                    if (operation.Date == null)
+                        return null;
+
+                    if (match.Groups[3].Value.Length > 0)
+                        operation.Action = match.Groups[3].Value;
+                    else
+                        return null;
+
+                    return operation;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 
     /// <summary>This class encapsulates an operations schedule.</summary>
@@ -84,6 +152,9 @@ namespace Models
             DateTime operationDate;
             foreach (Operation operation in Operation.Where(o => o.Enabled))
             {
+                if (operation.Date == null || operation.Action == null)
+                    throw new Exception($"Error: Operation line '{operation.Line}' cannot be parsed.");
+
                 operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {

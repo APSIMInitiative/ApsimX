@@ -25,10 +25,6 @@ namespace Models.Core
         [NonSerialized]
         private Links links;
 
-        /// <summary>Gets or sets the width of the explorer.</summary>
-        /// <value>The width of the explorer.</value>
-        public Int32 ExplorerWidth { get; set; }
-
         /// <summary>Gets or sets the version.</summary>
         [System.Xml.Serialization.XmlAttribute("Version")]
         public int Version { get; set; }

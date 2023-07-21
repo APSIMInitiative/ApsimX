@@ -92,6 +92,10 @@ namespace Models.Functions.SupplyFunctions
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction GrossAssimilateModel = null;
 
+        /// <summary>Plant organs</summary>
+        [Link]
+        private readonly IOrgan[] organs = null;
+
         //------------------------------------------------------------------------------------------------
 
         /// <summary>The photosynthesis type (net/gross)</summary>
@@ -225,9 +229,9 @@ namespace Models.Functions.SupplyFunctions
                     double grossAssim = 0;
                     double respiration = 0;
 
-                    foreach (IOrgan o in Plant.Organs)
+                    foreach (IOrgan o in organs)
                         respiration += o.MaintenanceRespiration;
-                    foreach (IArbitration o in Plant.Organs)
+                    foreach (IArbitration o in organs)
                         grossAssim += o.DMSupply.Fixation;
 
                     double netAssim = Math.Max(0, grossAssim - respiration);

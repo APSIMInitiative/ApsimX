@@ -20,6 +20,7 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private VBox rightHandView;
+        private HPaned hpaned1;
         private Gtk.TreeView treeviewWidget;
         private MarkdownView descriptionView;
 
@@ -29,6 +30,8 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
+
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
@@ -47,6 +50,13 @@ namespace UserInterface.Views
 
         /// <summary>The toolstrip at the top of the explorer view</summary>
         public IToolStripView ToolStrip { get; private set; }
+
+        /// <summary>The tree on the left side of the explorer view</summary>
+        public int DividerPosition
+        {
+            get { return hpaned1.Position; }
+            set { hpaned1.Position = value; }
+        }
 
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
