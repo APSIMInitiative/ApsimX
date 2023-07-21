@@ -119,7 +119,7 @@
               "Longitude": 151.263748,
               "LocationAccuracy": "Regional Soil Type",
               "DataSource": "Generic soil. CSIRO Sustainable Ecosystems, Toowoomba",
-              "Comments": "Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.\n\n",
+              "Comments": "Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: \u00e2\u20ac\u02dcA rapid method for estimating the plant available water capacity of Vertosols\u00e2\u20ac\u2122, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.\n\n",
               "Name": "Vertosol_9_PAWC180",
               "Children": [
                 {
@@ -394,83 +394,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                    "Nodes": [],
+                    "Arcs": []
+                  },
+                  "SurfaceResidueDecomposition": 0,
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -498,7 +430,7 @@
                   "Carbon": [
                     1.2349999999999999,
                     0.9880000000000001,
-                    0.61749999999999994,
+                    0.6174999999999999,
                     0.30874999999999997,
                     0.18525,
                     0.12350000000000001,
@@ -532,12 +464,12 @@
                     1.0
                   ],
                   "FOM": [
-                    347.12903231275641,
+                    347.1290323127564,
                     270.3443621919937,
                     163.97214434990104,
-                    99.454132887040629,
-                    60.321980831124677,
-                    36.587130828674873,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
                     22.1912165985086
                   ],
                   "Name": "Organic",
