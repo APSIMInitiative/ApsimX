@@ -19,12 +19,9 @@ namespace Models.PMF.Phen
         /// <summary>Final Leaf Number when grown at > 20oC in 8h Pp</summary>
         [Description("Days exposure to vernalisting temperature")]
         public double VrnTreatDuration { get; set; }
-        /// <summary>The PTQ under long Pp</summary>
-        [Description("The PTQ under long Pp")]
-        public double TreatmentPTQ_L { get; set; }
-        /// <summary>The PTQ under short Pp</summary>
-        [Description("The PTQ under short Pp")]
-        public double TreatmentPTQ_S { get; set; }
+        /// <summary>The Pp under long Pp</summary>
+        [Description("The Pp under long PpTreat")]
+        public double TreatmentPp_L { get; set; }
         /// <summary>Observed Thermal time from sowing to emergence</summary>
         [Description("Observed Thermal time from sowing to emergence")]
         public double TtEmerge { get; set; }

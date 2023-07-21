@@ -94,9 +94,10 @@ def countNodes(node, counts):
                     counts['ScriptSoilNitrogen'] = counts['ScriptSoilNitrogen'] + 1
         elif node['$type'] == "Models.Report, Models":
             if 'VariableNames' in node:
-                for v in node['VariableNames']:
-                    if v.find('SoilNitrogen.') > -1:
-                        counts['ReportSoilNitrogen'] = counts['ReportSoilNitrogen'] + 1
+                if node['VariableNames'] != None:
+                    for v in node['VariableNames']:
+                        if v.find('SoilNitrogen.') > -1:
+                            counts['ReportSoilNitrogen'] = counts['ReportSoilNitrogen'] + 1
 
     if 'Children' in node:
         for child in node["Children"]:
@@ -139,7 +140,7 @@ def convertNodes(node):
                        node['Code'] = node['Code'].replace('SoilNitrogen ', 'Nutrient ')
 
         elif node['$type'] == "Models.Report, Models":
-            if 'VariableNames' in node:
+            if 'VariableNames' in node and node['VariableNames'] != None:
                 for i in range(len(node['VariableNames'])):
                     v = node['VariableNames'][i]
                     if v.find('SoilNitrogen.FOMN') > -1:
