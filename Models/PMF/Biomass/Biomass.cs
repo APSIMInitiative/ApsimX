@@ -38,7 +38,7 @@ namespace Models.PMF
             get { return _StorageN; }
             set
             {
-                _StorageN = Math.Max(0,MathUtilities.RoundToZero(value));
+                _StorageN = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -51,7 +51,7 @@ namespace Models.PMF
             get { return _StructuralN; }
             set
             {
-                _StructuralN = Math.Max(0, MathUtilities.RoundToZero(value));
+                _StructuralN = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Models.PMF
             get { return _StorageWt; }
             set
             {
-                _StorageWt = Math.Max(0, MathUtilities.RoundToZero(value));
+                _StorageWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -77,7 +77,7 @@ namespace Models.PMF
             get { return _StructuralWt; }
             set
             {
-                _StructuralWt = Math.Max(0, MathUtilities.RoundToZero(value));
+                _StructuralWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Models.PMF
             get { return _MetabolicWt; }
             set
             {
-                _MetabolicWt = Math.Max(0, MathUtilities.RoundToZero(value));
+                _MetabolicWt = MathUtilities.RoundToZero(value);
             }
         }
 
@@ -103,7 +103,7 @@ namespace Models.PMF
             get { return _MetabolicN; }
             set
             {
-                _MetabolicN = Math.Max(0, MathUtilities.RoundToZero(value));
+                _MetabolicN = MathUtilities.RoundToZero(value);
             }
         }
 
