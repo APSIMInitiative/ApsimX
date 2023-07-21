@@ -5154,6 +5154,29 @@ namespace Models.Core.ApsimFile
                 manager.Replace("using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
 
                 bool changeMade = false;
+
+                var declarations = manager.GetDeclarations();
+                foreach (var declaration in declarations)
+                {
+                    if (declaration.TypeName == "SoilNitrogenNO3" || declaration.TypeName == "SoilNitrogenNH4" || declaration.TypeName == "SoilNitrogenUrea")
+                    {
+                        declaration.TypeName = "Solute";
+                        var linkAttributeIndex= declaration.Attributes.IndexOf("[Link]");
+                        if (linkAttributeIndex != -1)
+                        {
+                            declaration.Attributes[linkAttributeIndex] = "[Link(Path=\"[NO3]\")]";
+                        }
+
+                        manager.SetDeclarations(declarations);
+
+                        changeMade = true;
+                    }
+                }
+
+                changeMade = manager.Replace("SoilNitrogenNO3 SoilNitrogenNO3;", "Solute SoilNitrogenNO3;") || changeMade;
+
+
+                changeMade = manager.Replace("SoilNitrogen nitrogen;", "Nutrient nitrogen;") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.FOMN", "Nutrient.FOM.N") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.FOMC", "Nutrient.FOM.C") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.HumicN", "Nutrient.Humic.N") || changeMade;
@@ -5173,9 +5196,8 @@ namespace Models.Core.ApsimFile
                     manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("Nutrient", "Nutrient", new string[] { "[Link]" });
                     manager.AddDeclaration("CarbonFlow", "ResidueDecomposition", new string[] { "[Link(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
+                    manager.Save();
                 }
-
-                manager.Save();
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
@@ -5186,6 +5208,13 @@ namespace Models.Core.ApsimFile
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NO3.kgha", "[NO3].kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NH4.kgha", "[NH4].kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].Urea.kgha", "[Urea].kgha");
+
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOM.N", ".Nutrient.FOM.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOM.C", ".Nutrient.FOM.C");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Humic.N", ".Nutrient.Humic.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Humic.C", ".Nutrient.Humic.C");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Microbial.N", ".Nutrient.Microbial.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Microbial.C", ".Nutrient.Microbial.C");
 
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMN", ".Nutrient.FOM.N");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMC", ".Nutrient.FOM.C");
