@@ -232,6 +232,24 @@ namespace Models.Surface
     }
 
     /// <summary>
+    /// CNPatchVariableType
+    /// </summary>
+    public class CNPatchVariableType
+    {
+        /// <summary>The Patch</summary>
+        public CNPatchVariablePatchType[] Patch;
+    }
+
+    /// <summary>
+    /// CNPatchVariablePatchType
+    /// </summary>
+    public class CNPatchVariablePatchType
+    {
+        /// <summary>The Value</summary>
+        public Double[] Value;
+    }
+
+    /// <summary>
     /// SoilOrganicMaterial
     /// </summary>
     /// <remarks>

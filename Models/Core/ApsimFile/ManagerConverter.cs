@@ -562,7 +562,7 @@ namespace Models.Core.ApsimFile
         /// <returns>The line after the classes curly bracket.</returns>
         private int FindStartOfClass()
         {
-            int lineNumberClass = FindString("public class Script");
+            int lineNumberClass = FindString("public class ");
             if (lineNumberClass != -1)
             {
                 while (!lines[lineNumberClass].Contains('{'))

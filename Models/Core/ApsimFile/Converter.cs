@@ -5200,7 +5200,6 @@ namespace Models.Core.ApsimFile
                 
                 if (changeMade)
                 {
-                    manager.RemoveDeclaration("SoilNitrogen");
                     manager.AddDeclaration("Nutrient", "Nutrient", new string[] { "[Link]" });
                     manager.AddDeclaration("CarbonFlow", "ResidueDecomposition", new string[] { "[Link(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
                     manager.Save();
