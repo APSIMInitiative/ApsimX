@@ -5168,11 +5168,17 @@ namespace Models.Core.ApsimFile
                         }
 
                         manager.SetDeclarations(declarations);
-
+                        changeMade = true;
+                    }
+                    else if (declaration.TypeName == "SoilNitrogen")
+                    {
+                        declaration.TypeName = "Nutrient";
+                        manager.SetDeclarations(declarations);
                         changeMade = true;
                     }
                 }
 
+                changeMade = manager.Replace(".FindInScope<SoilNitrogen>() as SoilNitrogen;", ".FindInScope<Nutrient>() as Nutrient;") || changeMade;
                 changeMade = manager.Replace("SoilNitrogenNO3 SoilNitrogenNO3;", "Solute SoilNitrogenNO3;") || changeMade;
 
 
@@ -5187,6 +5193,7 @@ namespace Models.Core.ApsimFile
                 changeMade = manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.mineral_n", "Nutrient.MineralN") || changeMade;
+                changeMade = manager.Replace(".mineral_n", ".MineralN") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN") || changeMade;
