@@ -70,8 +70,6 @@ namespace Models.PMF.Scrum
         [Description("Residue removal (0-1)")]
         public double ResidueRemoval { get; set; }
 
-        [JsonIgnore] private RemovalFractions Remove { get; set; }
-
         [Link(Type =LinkType.Scoped)]
         private Clock clock = null;
         

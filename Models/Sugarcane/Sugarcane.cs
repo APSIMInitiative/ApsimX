@@ -6,6 +6,7 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models
@@ -12055,7 +12056,7 @@ namespace Models
         public bool IsReadyForHarvesting { get { return false; } }
 
         /// <summary>Harvest the crop</summary>
-        public void Harvest() { HarvestCrop(); }
+        public void Harvest(bool removeBiomassFromOrgans = true) { HarvestCrop(); }
 
         /// <summary>
         /// Gets a list of cultivar names

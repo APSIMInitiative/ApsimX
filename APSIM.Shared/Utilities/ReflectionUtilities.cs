@@ -735,6 +735,17 @@
         }
 
         /// <summary>
+        /// Get a string from a resource file stored in the current assembly.
+        /// Returns the string as a string array where each line is an element of the array.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string[] GetResourceAsStringArray(string resourceName)
+        {
+            string fullString = GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+            return fullString.Split('\n'); ;
+        }
+
+        /// <summary>
         /// Copy the contents of a resource into a file on disk.
         /// </summary>
         /// <param name="assembly">Assembly to which the resource belongs.</param>

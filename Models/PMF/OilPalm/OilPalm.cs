@@ -8,6 +8,7 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models.PMF.OilPalm
@@ -815,7 +816,7 @@ namespace Models.PMF.OilPalm
         }
 
         /// <summary>Harvest the crop.</summary>
-        public void Harvest()
+        public void Harvest(bool removeBiomassFromOrgans = true)
         {
             // Invoke a harvesting event.
             if (Harvesting != null)

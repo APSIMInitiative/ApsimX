@@ -115,6 +115,11 @@
         private Widget hbox1 = null;
 
         /// <summary>
+        /// Gtk vpane which holds two main parts of the viuw
+        /// </summary>
+        private VPaned vpaned1 = null;
+
+        /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
 
@@ -140,6 +145,7 @@
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -320,11 +326,26 @@
         {
             get
             {
-                return hbox1.Allocation.Height;
+                return vpaned1.Position;
             }
             set
             {
-                hbox1.HeightRequest = value;
+                vpaned1.Position = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the width of the tree panel.
+        /// </summary>
+        public int TreePanelWidth
+        {
+            get
+            {
+                return vpaned1.Position;
+            }
+            set
+            {
+                vpaned1.Position = value;
             }
         }
 

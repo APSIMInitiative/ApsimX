@@ -14,9 +14,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Return true if plant is alive and in the ground.</summary>
         bool IsAlive { get; }
 
-        /// <summary>A list of organs that can be damaged.</summary>
-        List<IOrganDamage> Organs { get; }
-
         /// <summary>Total amount of above ground biomass.</summary>
         IBiomass AboveGround { get; }
 
@@ -31,14 +28,6 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         double AssimilateAvailable { get; }
-
-        /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
         /// <summary>
         /// Set the plant leaf area index.
