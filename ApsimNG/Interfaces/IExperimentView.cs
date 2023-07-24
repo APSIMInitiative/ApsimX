@@ -27,5 +27,9 @@
         
         /// <summary>Run APSIM menu item.</summary>
         IMenuItemView RunAPSIMAction { get; }
+
+        /// <summary>Add a menu item to the popup menu</summary>
+        /// <returns>Reference to the menuItemView to attach events</returns>
+        IMenuItemView AddMenuItem(string label);
     }
 }

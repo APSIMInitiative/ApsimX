@@ -52,7 +52,8 @@
                         info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
                     if (info != null)
                     {
-                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(description.Name, new Gtk.Image(null, description.ResourceNameForImage));
+                        //Add a space to the entries with icons so the text isn't up against the icon
+                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(" " + description.Name, new Gtk.Image(null, description.ResourceNameForImage));
                         item = imageItem;
                     }
                     else
