@@ -2,10 +2,12 @@
 using CommandLine;
 using Models.Climate;
 using Models.Core;
+using Models.Core.Run;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,12 @@ namespace Models.Management
         [Description("Crop to remove biomass from")]
         public IPlant Crop { get; set; }
 
+        /// <summary>
+        /// choose removal types
+        /// </summary>
+        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        public RemovalTypes removaltp { get; set; }
+
         /// <summary>Stage to reset phenology to</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction SetStage { get; set; }
@@ -45,6 +53,9 @@ namespace Models.Management
 
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
+
+        /// <summary>Occurs at end of each week.</summary>
+        public event EventHandler<BiomassRemovalArgs> BiomassRemovedFromManager;
 
         /// <summary>Method that applies specified removal fractions and rewind</summary>
         public void Do()
@@ -66,6 +77,7 @@ namespace Models.Management
                                 deadToResidue: deadToResidues);
                     }
                 }
+                BiomassRemovedFromManager.Invoke(this, new BiomassRemovalArgs() { RemovalType = removaltp.ToString() });
             }
 
             if (SetStage != null)
