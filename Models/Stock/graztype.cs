@@ -73,10 +73,10 @@ namespace Models.GrazPlan
         /// </summary>
         public const double Ungrazeable = 0.0;  // g/m^2 - setting this to zero because the forages have already removed the ungrazable portion.
 
-    /// <summary>
-    /// Maximum soil layers
-    /// </summary>
-    public const int MaxSoilLayers = 50;
+        /// <summary>
+        /// Maximum soil layers
+        /// </summary>
+        public const int MaxSoilLayers = 50;
 #pragma warning disable 1591 //missing xml comment
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Models.GrazPlan
         /// <param name="defValue"></param>
         public static void InitLayerArray(ref double[] values, double defValue)
         {
-            for (int i = 0; i < MaxSoilLayers; i++)
+            for (int i = 0; i < values.Length; i++)
             {
                 values[i] = defValue;
             }
@@ -667,16 +667,16 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary></summary>
+        /// <summary>Nutrient areas</summary>
         public const int MAXNUTRAREAS = 5;
 
         /// <summary>
-        ///
+        /// Soil nutrient distribution in each layer for each area.
         /// </summary>
         [Serializable]
         public class TSoilNutrientDistn
         {
-            /// <summary></summary>
+            /// <summary>Number of nutrient areas</summary>
             public int NoAreas;
 
             /// <summary></summary>
@@ -702,8 +702,6 @@ namespace Models.GrazPlan
                                           new double[GrazType.MaxSoilLayers+1]
             };
         }
-
-        //TSoilUptakeDistn =  array[0..MAXNUTRAREAS - 1] of LayerArray;
 
         // Various constants with biological meanings
         /// <summary>
