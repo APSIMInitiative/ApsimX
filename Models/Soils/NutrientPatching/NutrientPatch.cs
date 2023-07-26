@@ -5,6 +5,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Soils.Nutrients;
+using Models.Surface;
 
 namespace Models.Soils.NutrientPatching
 {

@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 159,
+  "Version": 165,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -128,10 +127,10 @@
             "[SurfaceOrganicMatter].Wt",
             "[Weather].MeanT",
             "[Weather].Rain",
-            "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
+            "sum([Soil].Nutrient.MineralN) as ProfileN",
             "sum([Soil].NO3.kgha) as TotalSoilNitrogen",
             "sum([Soil].Water.MM[1:7]) as ProfileWater",
-            "[Soil].SoilNitrogen.mineral_n",
+            "[Soil].Nutrient.MineralN",
             "[FodderBeet].StorageRoot.Live.C + [FodderBeet].StorageRoot.Dead.C + [FodderBeet].Leaf.Live.C + [FodderBeet].Leaf.Dead.C + [FodderBeet].Root.Live.C + [FodderBeet].Root.Dead.C + [FodderBeet].Petiole.Live.C + [FodderBeet].Petiole.Dead.C as SumPlantC"
           ],
           "EventNames": [
@@ -256,7 +255,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0ÃÂÃÂÃÂÃÂ°C ([Chakwizira_etal_2016a]).",
+                  "Text": "The fodder beet model is described for growth and dry matter production using solar radiation and temperature\r\nas driving functions. The effect of temperature is quantified using a thermal-time accumulation function.\r\nThermal-time is calculated in degree days for ambient temperature above a base temperature (Tbase). Tbase is \r\nassumed to be 0ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°C ([Chakwizira_etal_2016a]).",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -311,7 +310,7 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.HourlyInterpolation, Models",
+                              "$type": "Models.Functions.SubDailyInterpolation, Models",
                               "agregationMethod": 0,
                               "Name": "ThermalTime",
                               "ResourceName": null,
@@ -338,7 +337,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ThreeHourSin, Models",
+                                  "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                                   "TempRangeFactors": null,
                                   "Name": "InterpolationMethod",
                                   "ResourceName": null,
@@ -352,7 +351,7 @@
                             },
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂ30ÃÂÃÂÃÂÃÂ°C with a maximum of 45ÃÂÃÂÃÂÃÂ°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
+                              "Text": "Temperature is extrapolated to 3-hourly values from daily maximum and minimum using a sinusoidal function, and thermal-time accumulation is calculated for each period and combined to give daily values ([Jones_etal_1986]). The optimum temperature was set at 25ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â€ÃƒÂ‚Ã‚Âœ30ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°C with a maximum of 45ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°C, targets assumed similar to those of sugar beet reported by ([Ober_Rajabi_2010]) and ([Sanghera_etal_2016]).",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -448,6 +447,7 @@
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Sowing",
                   "End": "Germination",
+                  "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [],
@@ -458,6 +458,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
+                  "IsEmerged": true,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -473,7 +474,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is an empirical fit where 12.5ÃÂÃÂÃÂÃÂ°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
+                      "Text": "This is an empirical fit where 12.5ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd per mm sowing depth is assumed based on the 2014 sowing date trial results ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -535,6 +536,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
                   "End": "InitialReproductive",
+                  "IsEmerged": true,
                   "Name": "Vegetative",
                   "ResourceName": null,
                   "Children": [
@@ -599,7 +601,7 @@
                         },
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200ÃÂÃÂÃÂÃÂ°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
+                          "Text": "The effect of photoperiod on the vegetative phase is assumed neglible. The maximum TT of 3200ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd based on the 2014 October sowing date data([Khaembah_etal_2017]) is used here.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -618,6 +620,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "InitialReproductive",
                   "End": "StartBolting",
+                  "IsEmerged": true,
                   "Name": "EarlyReproductive",
                   "ResourceName": null,
                   "Children": [
@@ -633,7 +636,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This an empirical fit - 400ÃÂÃÂÃÂÃÂ°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "This an empirical fit - 400ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -683,6 +686,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "StartBolting",
                   "End": "EndBolting",
+                  "IsEmerged": true,
                   "Name": "Bolt",
                   "ResourceName": null,
                   "Children": [
@@ -707,7 +711,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The 800ÃÂÃÂÃÂÃÂ°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                      "Text": "The 800ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd is is an empirical fit based on the 2014 sowing date trial ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -722,6 +726,7 @@
                   "$type": "Models.PMF.Phen.EndPhase, Models",
                   "Start": "EndBolting",
                   "End": "Maturity",
+                  "IsEmerged": true,
                   "Name": "Maturity",
                   "ResourceName": null,
                   "Children": [
@@ -746,7 +751,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is estimated to be 3600ÃÂÃÂÃÂÃÂ°Cd\r\nA value of 3600ÃÂÃÂÃÂÃÂ°Cd (i.e. sum of ÃÂÃÂÃÂÃÂ°Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬Ã\u0085ÃÂMaturityÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ phase. Accumulated thermal time (TTsum) for each phase (plantedÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂvegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
+                      "Text": "This is estimated to be 3600ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd\r\nA value of 3600ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd (i.e. sum of ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd from crop emergence to the end of the vegetative phase) is assumed for the duration of the ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒ\u0085ÃƒÂ‚Ã‚Â“MaturityÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ phase. Accumulated thermal time (TTsum) for each phase (plantedÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â€ÃƒÂ‚Ã‚Âœvegetative) was empirically derived from the 2014 sowing date data ([Khaembah_etal_2017]).",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -1693,67 +1698,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.95,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.05,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.95,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.95,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].MinimumNConc",
-                      "Name": "CriticalNConc",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -3766,7 +3717,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "A two stage phyllochron (i.e. 100ÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂ¢ÃÂÃÂ50ÃÂÃÂÃÂÃÂ°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50ÃÂÃÂÃÂÃÂ°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
+                      "Text": "A two stage phyllochron (i.e. 100ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â€ÃƒÂ‚Ã‚Âœ50ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd) is an empirical fit to get faster leaf appearance of the first 3 leaves. The \r\n50ÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â‚ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â°Cd for the fourth and later-formed leaves is estimated from measured values of the 2014-2015 October sowing date treatment ([Khaembah_etal_2017]). ",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -3888,34 +3839,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4803,58 +4733,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.95,
-                      "FractionDeadToRemove": 0.95,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.05,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5912,58 +5797,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.95,
-                      "FractionDeadToRemove": 0.95,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.05,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -6525,7 +6365,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\nÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂÃÂ¢\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\nÃÂÃÂ¢ÃÂ¢ÃÂÃÂ¬ÃÂÃÂ¢\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
+              "Text": "This trial was conducted in the rainshelter at Plant and Food Research in Lincoln, New Zealand in 2016. The objective was to evaluate the effect of nitrogen and irrigation on the development and growth of fodder beet crops.  \r\nDetails:\r\n\r\nÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â¢\tThree nitrogen treatments:  0 kg N/ha, 50 kg N/ha & 300 kg N/ha applied as dissolved urea with fertigation  \r\nÃƒÂƒÃ‚ÂƒÃƒÂ‚Ã‚Â¢ÃƒÂƒÃ‚Â¢ÃƒÂ‚Ã‚Â‚ÃƒÂ‚Ã‚Â¬ÃƒÂƒÃ‚Â‚ÃƒÂ‚Ã‚Â¢\tTwo irrigation treatments: Nil and full irrigation\r\n\r\n\r\nFodder beet (cultivar \"Rivage\") was precision drilled on 18 October 2016. Sowing density was 11 plants/m2 and row spacing was 0.45m.\r\n    ",
               "Name": "Trial details",
               "ResourceName": null,
               "Children": [],
@@ -6564,93 +6404,108 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-11-23",
                                   "Action": "[Irrigation].Apply(30);",
-                                  "Enabled": true
+                                  "Line": "2016-11-23 [Irrigation].Apply(30);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-12-07",
                                   "Action": "[Irrigation].Apply(25);",
-                                  "Enabled": true
+                                  "Line": "2016-12-07 [Irrigation].Apply(25);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-12-21",
                                   "Action": "[Irrigation].Apply(25);",
-                                  "Enabled": true
+                                  "Line": "2016-12-21 [Irrigation].Apply(25);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-12-29",
                                   "Action": "[Irrigation].Apply(30);",
-                                  "Enabled": true
+                                  "Line": "2016-12-29 [Irrigation].Apply(30);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-04",
                                   "Action": "[Irrigation].Apply(40);",
-                                  "Enabled": true
+                                  "Line": "2017-01-04 [Irrigation].Apply(40);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-11",
                                   "Action": "[Irrigation].Apply(32.9);",
-                                  "Enabled": true
+                                  "Line": "2017-01-11 [Irrigation].Apply(32.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Irrigation].Apply(25.4);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Irrigation].Apply(25.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-25",
                                   "Action": "[Irrigation].Apply(31.3);",
-                                  "Enabled": true
+                                  "Line": "2017-01-25 [Irrigation].Apply(31.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-08",
                                   "Action": "[Irrigation].Apply(33);",
-                                  "Enabled": true
+                                  "Line": "2017-02-08 [Irrigation].Apply(33);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-15",
                                   "Action": "[Irrigation].Apply(35);",
-                                  "Enabled": true
+                                  "Line": "2017-02-15 [Irrigation].Apply(35);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-22",
                                   "Action": "[Irrigation].Apply(29);",
-                                  "Enabled": true
+                                  "Line": "2017-02-22 [Irrigation].Apply(29);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-03-08",
                                   "Action": "[Irrigation].Apply(34);",
-                                  "Enabled": true
+                                  "Line": "2017-03-08 [Irrigation].Apply(34);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-03-22",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
+                                  "Line": "2017-03-22 [Irrigation].Apply(50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-04-12",
                                   "Action": "[Irrigation].Apply(30.9);",
-                                  "Enabled": true
+                                  "Line": "2017-04-12 [Irrigation].Apply(30.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-04-27",
                                   "Action": "[Irrigation].Apply(18.9);",
-                                  "Enabled": true
+                                  "Line": "2017-04-27 [Irrigation].Apply(18.9);"
                                 }
                               ],
                               "Name": "Full",
@@ -6689,27 +6544,31 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-09-02",
                                   "Action": "[Irrigation].Apply(20)",
-                                  "Enabled": true
+                                  "Line": "2016-09-02 [Irrigation].Apply(20)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-25",
                                   "Action": "[Irrigation].Apply(5)",
-                                  "Enabled": true
+                                  "Line": "2016-10-25 [Irrigation].Apply(5)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Irrigation].Apply(5)",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Irrigation].Apply(5)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-05-21",
                                   "Action": "[Irrigation].Apply(50)",
-                                  "Enabled": true
+                                  "Line": "2017-05-21 [Irrigation].Apply(50)"
                                 }
                               ],
                               "Name": "Nil",
@@ -6758,39 +6617,45 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-25",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-25 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-15",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-15 [Irrigation].Apply(10);"
                                 }
                               ],
                               "Name": "0",
@@ -6829,39 +6694,45 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Fertiliser].Apply(25, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-25",
                                   "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-25 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-15",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-15 [Irrigation].Apply(10);"
                                 }
                               ],
                               "Name": "50",
@@ -6890,39 +6761,45 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-15",
                                   "Action": "[Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-15 [Fertiliser].Apply(100, Fertiliser.Types.NO3N, 10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2016-10-29",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2016-10-29 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-01-18",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-01-18 [Irrigation].Apply(10);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2017-02-15",
                                   "Action": "[Irrigation].Apply(10);",
-                                  "Enabled": true
+                                  "Line": "2017-02-15 [Irrigation].Apply(10);"
                                 }
                               ],
                               "Name": "300",
@@ -7020,21 +6897,24 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-09-02",
                               "Action": "[Irrigation].Apply(25.0);",
-                              "Enabled": true
+                              "Line": "2016-09-02 [Irrigation].Apply(25.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-10-25",
                               "Action": "[Irrigation].Apply(5.0);",
-                              "Enabled": true
+                              "Line": "2016-10-25 [Irrigation].Apply(5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2016-10-28",
                               "Action": "[Irrigation].Apply(5.0);",
-                              "Enabled": true
+                              "Line": "2016-10-28 [Irrigation].Apply(5.0);"
                             }
                           ],
                           "Name": "GeneralIrrigation",
@@ -7072,7 +6952,43 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start Date\")]\r\n        public DateTime StartDate { get; set; }\r\n        \r\n        [Description(\"End Date\")]\r\n        public DateTime EndDate { get; set; }\r\n \r\n    \r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\r\n                Met.Rain = 0;        \r\n        }\r\n    }\r\n}\r\n",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System.Xml.Serialization;",
+                            "using Models;",
+                            "using Models.PMF;",
+                            "using System.Text;",
+                            "using System.Collections.Generic;",
+                            "using APSIM.Shared.Utilities;",
+                            "using Models.Core;",
+                            "using System;",
+                            "using Models.Climate;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] Weather Met;",
+                            "        [Link] Clock Clock;",
+                            "    ",
+                            "        [Description(\"Start Date\")]",
+                            "        public DateTime StartDate { get; set; }",
+                            "        ",
+                            "        [Description(\"End Date\")]",
+                            "        public DateTime EndDate { get; set; }",
+                            " ",
+                            "    ",
+                            "        [EventSubscribe(\"PreparingNewWeatherData\")]",
+                            "        private void OnPreparingNewWeatherData(object sender, EventArgs e)",
+                            "        {",
+                            "            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))",
+                            "                Met.Rain = 0;        ",
+                            "        }",
+                            "    }",
+                            "}"
+                          ],
                           "Parameters": [
                             {
                               "Key": "StartDate",
@@ -7091,7 +7007,312 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link] private IPhysical soilPhysical;\r\n        [Link] private ISoilWater waterBalance;\n        [Link] private Water InitSW;\n        [Link] private SoilCrop fodderBeetSoil;\r\n        [Description(\"Amount of Irrgation be applied 0/1\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n        \r\n          \r\n        private void SetSoilLayers()\r\n        {\r\n            /*\r\n            Not used yrt use whenmore detailed info is known\r\n            */\r\n            int i = 0;\r\n            if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n                soilPhysical.LL15[0] = 0.10;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.12;\r\n                soilPhysical.LL15[3] = 0.12;\r\n                soilPhysical.LL15[4] = 0.18;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.14;\n                soilPhysical.LL15[7] = 0.14;\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \n                InitSW.InitialValues[0] = 0.21;\n                InitSW.InitialValues[1] = 0.24;\n                InitSW.InitialValues[2] = 0.245;\n                InitSW.InitialValues[3] = 0.24;\n                InitSW.InitialValues[4] = 0.27;\n                InitSW.InitialValues[5] = 0.28;\n                InitSW.InitialValues[6] = 0.19;\n                InitSW.InitialValues[7] = 0.19;\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n                soilPhysical.LL15[0] = 0.10;\r\n                soilPhysical.LL15[1] = 0.10;\r\n                soilPhysical.LL15[2] = 0.12;\r\n                soilPhysical.LL15[3] = 0.12;\r\n                soilPhysical.LL15[4] = 0.17;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n\r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \n                InitSW.InitialValues[0] = 0.21;\n                InitSW.InitialValues[1] = 0.23;\n                InitSW.InitialValues[2] = 0.25;\n                InitSW.InitialValues[3] = 0.27;\n                InitSW.InitialValues[4] = 0.26;\n                InitSW.InitialValues[5] = 0.25;\n                InitSW.InitialValues[6] = 0.12;\n                InitSW.InitialValues[7] = 0.12;\r\n            }   \r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n                soilPhysical.LL15[0] = 0.10;\r\n                soilPhysical.LL15[1] = 0.11;\r\n                soilPhysical.LL15[2] = 0.10;\r\n                soilPhysical.LL15[3] = 0.15;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.14;\n                soilPhysical.LL15[7] = 0.14;\n\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n\n                InitSW.InitialValues[0] = 0.21;\n                InitSW.InitialValues[1] = 0.27;\n                InitSW.InitialValues[2] = 0.245;\n                InitSW.InitialValues[3] = 0.28;\n                InitSW.InitialValues[4] = 0.28;\n                InitSW.InitialValues[5] = 0.28;\n                InitSW.InitialValues[6] = 0.20;\n                InitSW.InitialValues[7] = 0.20;\n                \r\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \n                InitSW.InitialValues[0] = 0.21;\n                InitSW.InitialValues[1] = 0.24;\n                InitSW.InitialValues[2] = 0.25;\n                InitSW.InitialValues[3] = 0.24;\n                InitSW.InitialValues[4] = 0.21;\n                InitSW.InitialValues[5] = 0.26;\n                InitSW.InitialValues[6] = 0.17;\n                InitSW.InitialValues[7] = 0.17;\n            }   \r\n            if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n                \n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \n                InitSW.InitialValues[0] = 0.23;\n                InitSW.InitialValues[1] = 0.24;\n                InitSW.InitialValues[2] = 0.25;\n                InitSW.InitialValues[3] = 0.30;\n                InitSW.InitialValues[4] = 0.27;\n                InitSW.InitialValues[5] = 0.24;\n                InitSW.InitialValues[6] = 0.14;\n                InitSW.InitialValues[7] = 0.14;\n                waterBalance.Reset();\n                \r\n            }\r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if (soilPhysical.Thickness.Length != 8)\r\n                {\r\n                    throw new Exception(\"Soil layer exception\");\r\n                }\r\n             \r\n                soilPhysical.LL15[0] = 0.13;\r\n                soilPhysical.LL15[1] = 0.15;\r\n                soilPhysical.LL15[2] = 0.16;\r\n                soilPhysical.LL15[3] = 0.16;\r\n                soilPhysical.LL15[4] = 0.16;\r\n                soilPhysical.LL15[5] = 0.16;\r\n                soilPhysical.LL15[6] = 0.10;\n                soilPhysical.LL15[7] = 0.10;\n                \r\n                soilPhysical.DUL[0] = 0.33;\r\n                soilPhysical.DUL[1] = 0.3;\r\n                soilPhysical.DUL[2] = 0.31;\r\n                soilPhysical.DUL[3] = 0.31;\r\n                soilPhysical.DUL[4] = 0.31;\r\n                soilPhysical.DUL[5] = 0.31;\r\n                soilPhysical.DUL[6] = 0.25;\n                soilPhysical.DUL[7] = 0.20;\n                \n                InitSW.InitialValues[0] = 0.225;\n                InitSW.InitialValues[1] = 0.23;\n                InitSW.InitialValues[2] = 0.27;\n                InitSW.InitialValues[3] = 0.315;\n                InitSW.InitialValues[4] = 0.28;\n                InitSW.InitialValues[5] = 0.21;\n                InitSW.InitialValues[6] = 0.14;\n                InitSW.InitialValues[7] = 0.145;\n            }\n            fodderBeetSoil.LL[0] = soilPhysical.LL15[0];\r\n            fodderBeetSoil.LL[1] = soilPhysical.LL15[1];\r\n            fodderBeetSoil.LL[2] = soilPhysical.LL15[2];\r\n            fodderBeetSoil.LL[3] = soilPhysical.LL15[3];\r\n            fodderBeetSoil.LL[4] = soilPhysical.LL15[4];\r\n            fodderBeetSoil.LL[5] = soilPhysical.LL15[5];\r            fodderBeetSoil.LL[6] = soilPhysical.LL15[6];\n            fodderBeetSoil.LL[7] = soilPhysical.LL15[7];\n            \n            soilPhysical.AirDry[0] = soilPhysical.LL15[0] * 0.5;\r\n            soilPhysical.AirDry[1] = soilPhysical.LL15[1];\r\n            soilPhysical.AirDry[2] = soilPhysical.LL15[2];\r\n            soilPhysical.AirDry[3] = soilPhysical.LL15[3];\r\n            soilPhysical.AirDry[4] = soilPhysical.LL15[4];\r\n            soilPhysical.AirDry[5] = soilPhysical.LL15[5];\r\n            soilPhysical.AirDry[6] = soilPhysical.LL15[6];\n            soilPhysical.AirDry[7] = soilPhysical.LL15[7];\n            \n            soilPhysical.SAT[0] = soilPhysical.DUL[0] * 1.2;\r\n            soilPhysical.SAT[1] = soilPhysical.DUL[1] * 1.2;\r\n            soilPhysical.SAT[2] = soilPhysical.DUL[2] * 1.2;\r\n            soilPhysical.SAT[3] = soilPhysical.DUL[3] * 1.2;\r\n            soilPhysical.SAT[4] = soilPhysical.DUL[4] * 1.2;\r\n            soilPhysical.SAT[5] = soilPhysical.DUL[5] * 1.2;\r\n            soilPhysical.SAT[6] = soilPhysical.DUL[6] * 1.2;\n            soilPhysical.SAT[7] = soilPhysical.DUL[7] * 1.2;\n            \n            waterBalance.Reset();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n                SetSoilLayers();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Specific irrgations\r\n            \r\n            if ((DateUtilities.CompareDates(\"16-Nov\", Clock.Today) == 0))\r\n                    SetSoilLayers();\r\n            \r\n            if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))\r\n                    Irrigation.Apply(40);\r\n                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))\r\n                    Irrigation.Apply(33);\r\n            }\r\n        \r\n          \r\n            \r\n            \r\n        }\r\n    }\r\n        \r\n        \r\n}\r\n    \r\n\r\n\r\n      \r\n",
+                          "CodeArray": [
+                            "using Models.Interfaces;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.Soils;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] private Clock Clock;",
+                            "        [Link] private Irrigation Irrigation;",
+                            "        [Link] private Fertiliser Fert;",
+                            "        [Link] private Soil ThisSoil;",
+                            "        [Link] private IPhysical soilPhysical;",
+                            "        [Link] private ISoilWater waterBalance;",
+                            "        [Link] private Water InitSW;",
+                            "        [Link] private SoilCrop fodderBeetSoil;",
+                            "        [Description(\"Amount of Irrgation be applied 0/1\")]",
+                            "        public bool IrrFactor { get; set; }",
+                            "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
+                            "        public double NitFactor { get; set; }",
+                            "        ",
+                            "          ",
+                            "        private void SetSoilLayers()",
+                            "        {",
+                            "            /*",
+                            "            Not used yrt use whenmore detailed info is known",
+                            "            */",
+                            "            int i = 0;",
+                            "            if ((IrrFactor == false) && (NitFactor == 0))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "                soilPhysical.LL15[0] = 0.10;",
+                            "                soilPhysical.LL15[1] = 0.11;",
+                            "                soilPhysical.LL15[2] = 0.12;",
+                            "                soilPhysical.LL15[3] = 0.12;",
+                            "                soilPhysical.LL15[4] = 0.18;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.14;",
+                            "                soilPhysical.LL15[7] = 0.14;",
+                            "                ",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "                ",
+                            "                InitSW.InitialValues[0] = 0.21;",
+                            "                InitSW.InitialValues[1] = 0.24;",
+                            "                InitSW.InitialValues[2] = 0.245;",
+                            "                InitSW.InitialValues[3] = 0.24;",
+                            "                InitSW.InitialValues[4] = 0.27;",
+                            "                InitSW.InitialValues[5] = 0.28;",
+                            "                InitSW.InitialValues[6] = 0.19;",
+                            "                InitSW.InitialValues[7] = 0.19;",
+                            "            }   ",
+                            "            if ((IrrFactor == false) && (NitFactor == 50))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "                soilPhysical.LL15[0] = 0.10;",
+                            "                soilPhysical.LL15[1] = 0.10;",
+                            "                soilPhysical.LL15[2] = 0.12;",
+                            "                soilPhysical.LL15[3] = 0.12;",
+                            "                soilPhysical.LL15[4] = 0.17;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.10;",
+                            "                soilPhysical.LL15[7] = 0.10;",
+                            "",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "                ",
+                            "                InitSW.InitialValues[0] = 0.21;",
+                            "                InitSW.InitialValues[1] = 0.23;",
+                            "                InitSW.InitialValues[2] = 0.25;",
+                            "                InitSW.InitialValues[3] = 0.27;",
+                            "                InitSW.InitialValues[4] = 0.26;",
+                            "                InitSW.InitialValues[5] = 0.25;",
+                            "                InitSW.InitialValues[6] = 0.12;",
+                            "                InitSW.InitialValues[7] = 0.12;",
+                            "            }   ",
+                            "            if ((IrrFactor == false) && (NitFactor == 300))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "                soilPhysical.LL15[0] = 0.10;",
+                            "                soilPhysical.LL15[1] = 0.11;",
+                            "                soilPhysical.LL15[2] = 0.10;",
+                            "                soilPhysical.LL15[3] = 0.15;",
+                            "                soilPhysical.LL15[4] = 0.16;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.14;",
+                            "                soilPhysical.LL15[7] = 0.14;",
+                            "",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "",
+                            "                InitSW.InitialValues[0] = 0.21;",
+                            "                InitSW.InitialValues[1] = 0.27;",
+                            "                InitSW.InitialValues[2] = 0.245;",
+                            "                InitSW.InitialValues[3] = 0.28;",
+                            "                InitSW.InitialValues[4] = 0.28;",
+                            "                InitSW.InitialValues[5] = 0.28;",
+                            "                InitSW.InitialValues[6] = 0.20;",
+                            "                InitSW.InitialValues[7] = 0.20;",
+                            "                ",
+                            "            }   ",
+                            "            if ((IrrFactor == true) && (NitFactor == 0))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "             ",
+                            "                soilPhysical.LL15[0] = 0.13;",
+                            "                soilPhysical.LL15[1] = 0.15;",
+                            "                soilPhysical.LL15[2] = 0.16;",
+                            "                soilPhysical.LL15[3] = 0.16;",
+                            "                soilPhysical.LL15[4] = 0.16;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.10;",
+                            "                soilPhysical.LL15[7] = 0.10;",
+                            "                ",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "                ",
+                            "                InitSW.InitialValues[0] = 0.21;",
+                            "                InitSW.InitialValues[1] = 0.24;",
+                            "                InitSW.InitialValues[2] = 0.25;",
+                            "                InitSW.InitialValues[3] = 0.24;",
+                            "                InitSW.InitialValues[4] = 0.21;",
+                            "                InitSW.InitialValues[5] = 0.26;",
+                            "                InitSW.InitialValues[6] = 0.17;",
+                            "                InitSW.InitialValues[7] = 0.17;",
+                            "            }   ",
+                            "            if ((IrrFactor == true) && (NitFactor == 50))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "             ",
+                            "                soilPhysical.LL15[0] = 0.13;",
+                            "                soilPhysical.LL15[1] = 0.15;",
+                            "                soilPhysical.LL15[2] = 0.16;",
+                            "                soilPhysical.LL15[3] = 0.16;",
+                            "                soilPhysical.LL15[4] = 0.16;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.10;",
+                            "                soilPhysical.LL15[7] = 0.10;",
+                            "                ",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "                ",
+                            "                InitSW.InitialValues[0] = 0.23;",
+                            "                InitSW.InitialValues[1] = 0.24;",
+                            "                InitSW.InitialValues[2] = 0.25;",
+                            "                InitSW.InitialValues[3] = 0.30;",
+                            "                InitSW.InitialValues[4] = 0.27;",
+                            "                InitSW.InitialValues[5] = 0.24;",
+                            "                InitSW.InitialValues[6] = 0.14;",
+                            "                InitSW.InitialValues[7] = 0.14;",
+                            "                waterBalance.Reset();",
+                            "                ",
+                            "            }",
+                            "            if ((IrrFactor == true) && (NitFactor == 300))",
+                            "            {",
+                            "                if (soilPhysical.Thickness.Length != 8)",
+                            "                {",
+                            "                    throw new Exception(\"Soil layer exception\");",
+                            "                }",
+                            "             ",
+                            "                soilPhysical.LL15[0] = 0.13;",
+                            "                soilPhysical.LL15[1] = 0.15;",
+                            "                soilPhysical.LL15[2] = 0.16;",
+                            "                soilPhysical.LL15[3] = 0.16;",
+                            "                soilPhysical.LL15[4] = 0.16;",
+                            "                soilPhysical.LL15[5] = 0.16;",
+                            "                soilPhysical.LL15[6] = 0.10;",
+                            "                soilPhysical.LL15[7] = 0.10;",
+                            "                ",
+                            "                soilPhysical.DUL[0] = 0.33;",
+                            "                soilPhysical.DUL[1] = 0.3;",
+                            "                soilPhysical.DUL[2] = 0.31;",
+                            "                soilPhysical.DUL[3] = 0.31;",
+                            "                soilPhysical.DUL[4] = 0.31;",
+                            "                soilPhysical.DUL[5] = 0.31;",
+                            "                soilPhysical.DUL[6] = 0.25;",
+                            "                soilPhysical.DUL[7] = 0.20;",
+                            "                ",
+                            "                InitSW.InitialValues[0] = 0.225;",
+                            "                InitSW.InitialValues[1] = 0.23;",
+                            "                InitSW.InitialValues[2] = 0.27;",
+                            "                InitSW.InitialValues[3] = 0.315;",
+                            "                InitSW.InitialValues[4] = 0.28;",
+                            "                InitSW.InitialValues[5] = 0.21;",
+                            "                InitSW.InitialValues[6] = 0.14;",
+                            "                InitSW.InitialValues[7] = 0.145;",
+                            "            }",
+                            "            fodderBeetSoil.LL[0] = soilPhysical.LL15[0];",
+                            "            fodderBeetSoil.LL[1] = soilPhysical.LL15[1];",
+                            "            fodderBeetSoil.LL[2] = soilPhysical.LL15[2];",
+                            "            fodderBeetSoil.LL[3] = soilPhysical.LL15[3];",
+                            "            fodderBeetSoil.LL[4] = soilPhysical.LL15[4];",
+                            "            fodderBeetSoil.LL[5] = soilPhysical.LL15[5];",
+                            "            fodderBeetSoil.LL[6] = soilPhysical.LL15[6];",
+                            "            fodderBeetSoil.LL[7] = soilPhysical.LL15[7];",
+                            "            ",
+                            "            soilPhysical.AirDry[0] = soilPhysical.LL15[0] * 0.5;",
+                            "            soilPhysical.AirDry[1] = soilPhysical.LL15[1];",
+                            "            soilPhysical.AirDry[2] = soilPhysical.LL15[2];",
+                            "            soilPhysical.AirDry[3] = soilPhysical.LL15[3];",
+                            "            soilPhysical.AirDry[4] = soilPhysical.LL15[4];",
+                            "            soilPhysical.AirDry[5] = soilPhysical.LL15[5];",
+                            "            soilPhysical.AirDry[6] = soilPhysical.LL15[6];",
+                            "            soilPhysical.AirDry[7] = soilPhysical.LL15[7];",
+                            "            ",
+                            "            soilPhysical.SAT[0] = soilPhysical.DUL[0] * 1.2;",
+                            "            soilPhysical.SAT[1] = soilPhysical.DUL[1] * 1.2;",
+                            "            soilPhysical.SAT[2] = soilPhysical.DUL[2] * 1.2;",
+                            "            soilPhysical.SAT[3] = soilPhysical.DUL[3] * 1.2;",
+                            "            soilPhysical.SAT[4] = soilPhysical.DUL[4] * 1.2;",
+                            "            soilPhysical.SAT[5] = soilPhysical.DUL[5] * 1.2;",
+                            "            soilPhysical.SAT[6] = soilPhysical.DUL[6] * 1.2;",
+                            "            soilPhysical.SAT[7] = soilPhysical.DUL[7] * 1.2;",
+                            "            ",
+                            "            waterBalance.Reset();",
+                            "        }",
+                            "",
+                            "        [EventSubscribe(\"StartOfSimulation\")]",
+                            "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                            "        {",
+                            "                SetSoilLayers();",
+                            "        }",
+                            "        ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "            //Specific irrgations",
+                            "            ",
+                            "            if ((DateUtilities.CompareDates(\"16-Nov\", Clock.Today) == 0))",
+                            "                    SetSoilLayers();",
+                            "            ",
+                            "            if ((IrrFactor == true) && (NitFactor == 300))",
+                            "            {",
+                            "                if ((DateUtilities.CompareDates(\"1-Feb\", Clock.Today) == 0))",
+                            "                    Irrigation.Apply(40);",
+                            "                if ((DateUtilities.CompareDates(\"1-Mar\", Clock.Today) == 0))",
+                            "                    Irrigation.Apply(33);",
+                            "            }",
+                            "        ",
+                            "          ",
+                            "            ",
+                            "            ",
+                            "        }",
+                            "    }",
+                            "        ",
+                            "        ",
+                            "}",
+                            "    ",
+                            "",
+                            "",
+                            "      "
+                          ],
                           "Parameters": [
                             {
                               "Key": "IrrFactor",
@@ -7110,7 +7331,75 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant FodderBeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sown Crop\")]\r\n        public string CropToSow { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        //[Description(\"Sowing Date2\")]\r\n        //public DateTime SowingDate2 { get; set; }\r\n        //[Description(\"Sowing Date3\")]\r\n        //public DateTime SowingDate3 { get; set; }\r\n        //[Description(\"Sowing Date4\")]\r\n        //public DateTime SowingDate4 { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n                \r\n            }\r\n            //else if (Clock.Today.Date == SowingDate2)\r\n            {\r\n                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n            }\r\n            //else if (Clock.Today.Date == SowingDate3)\r\n            {\r\n                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n            }\r\n            //else if (Clock.Today.Date == SowingDate4)\r\n            {\r\n                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n        \r\n            }\r\n            \r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Data;",
+                            "using Models.PMF.Interfaces;",
+                            "using Models.Surface;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    //[System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] Plant FodderBeet;",
+                            "        [Link] Clock Clock;",
+                            "        [Link] Zone zone;",
+                            "        [Link] Simulation Simulation;",
+                            "        [Link] SurfaceOrganicMatter SurfOM;",
+                            "        ",
+                            "                ",
+                            "        [Description(\"Initial Root Depth\")]",
+                            "        public double InitialRootDepth { get; set; }",
+                            "        [Description(\"Sown Crop\")]",
+                            "        public string CropToSow { get; set; }",
+                            "        [Description(\"Sowing Date\")]",
+                            "        public DateTime SowingDate { get; set; }",
+                            "        //[Description(\"Sowing Date2\")]",
+                            "        //public DateTime SowingDate2 { get; set; }",
+                            "        //[Description(\"Sowing Date3\")]",
+                            "        //public DateTime SowingDate3 { get; set; }",
+                            "        //[Description(\"Sowing Date4\")]",
+                            "        //public DateTime SowingDate4 { get; set; }",
+                            "        ",
+                            "        ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "            if (Clock.Today.Date == SowingDate)",
+                            "            {",
+                            "                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);",
+                            "                ",
+                            "            }",
+                            "            //else if (Clock.Today.Date == SowingDate2)",
+                            "            {",
+                            "                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);",
+                            "            }",
+                            "            //else if (Clock.Today.Date == SowingDate3)",
+                            "            {",
+                            "                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);",
+                            "            }",
+                            "            //else if (Clock.Today.Date == SowingDate4)",
+                            "            {",
+                            "                //    FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);",
+                            "        ",
+                            "            }",
+                            "            ",
+                            "            ",
+                            "        }",
+                            "    }",
+                            "}",
+                            "                "
+                          ],
                           "Parameters": [
                             {
                               "Key": "InitialRootDepth",
@@ -7227,6 +7516,7 @@
                           "PHUnits": 0,
                           "EC": null,
                           "ESP": null,
+                          "CEC": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
@@ -7427,42 +7717,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogen, Models",
-                          "fom_types": [
-                            "default",
-                            "manure",
-                            "mucuna",
-                            "lablab",
-                            "shemp",
-                            "stable"
-                          ],
-                          "fract_carb": [
-                            0.2,
-                            0.3,
-                            0.54,
-                            0.57,
-                            0.45,
-                            0.0
-                          ],
-                          "fract_cell": [
-                            0.7,
-                            0.3,
-                            0.37,
-                            0.37,
-                            0.47,
-                            0.1
-                          ],
-                          "fract_lign": [
-                            0.1,
-                            0.4,
-                            0.09,
-                            0.06,
-                            0.08,
-                            0.9
-                          ],
-                          "NPartitionApproach": 0,
-                          "Name": "SoilNitrogen",
-                          "ResourceName": null,
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -7543,7 +7800,8 @@
                             0.28,
                             0.22
                           ],
-                          "RelativeTo": null,
+                          "InitialPAWmm": 296.0,
+                          "RelativeTo": "LL15",
                           "FilledFromTop": false,
                           "Name": "Water",
                           "ResourceName": null,
@@ -7560,7 +7818,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -7593,7 +7851,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -7626,7 +7884,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -7721,7 +7979,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "",
+                      "CodeArray": [],
                       "Parameters": null,
                       "Name": "SetCropParameters",
                       "ResourceName": null,

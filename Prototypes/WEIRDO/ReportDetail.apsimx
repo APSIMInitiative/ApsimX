@@ -1,54 +1,52 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 277,
-  "Version": 119,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 165,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
+      "ResourceName": null,
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "IsRunning": false,
       "Descriptors": null,
       "Name": "DetailOutputs",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Clock, Models",
           "Start": "1999-01-01T00:00:00",
           "End": "1999-02-20T00:00:00",
           "Name": "Clock",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "SummaryFile",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "lincoln.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
+          "ResourceName": null,
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -59,6 +57,7 @@
           "AspectAngle": 0.0,
           "Altitude": 50.0,
           "Name": "Field",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Report, Models",
@@ -83,30 +82,32 @@
               ],
               "GroupByVariableName": null,
               "Name": "Report",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "SurfOM": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": true,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -116,28 +117,70 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Description(\"Date to irrigate\")]\r\n        public string IrrigateDate { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth of irrigation (mm)\")]\r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")]\r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")]\r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [Description(\"How may hours did it take to apply irrigation?\")]\r\n        public double Duration { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(IrrigateDate, Clock.Today, IrrigateDate))\r\n            {\r\n                Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff, duration: Duration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "CodeArray": [
+                "using Models.Soils;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using APSIM.Shared.Utilities;",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock;",
+                "        [Link] Irrigation Irrigation;",
+                "        ",
+                "        [Description(\"Date to irrigate\")]",
+                "        public string IrrigateDate { get; set; }",
+                "        ",
+                "        [Description(\"Amount of irrigation to be applied (mm)\")]",
+                "        public double Amount { get; set; }",
+                "        ",
+                "        [Description(\"Depth of irrigation (mm)\")]",
+                "        public double Depth { get; set; }",
+                "        ",
+                "        [Description(\"Efficiency of irrigation (0-1)\")]",
+                "        public double Efficiency { get; set; }",
+                "        ",
+                "        [Description(\"Will the irrigation runoff?\")]",
+                "        public bool WillRunoff { get; set; }",
+                "        ",
+                "        [Description(\"How may hours did it take to apply irrigation?\")]",
+                "        public double Duration { get; set; }",
+                "        ",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (DateUtilities.WithinDates(IrrigateDate, Clock.Today, IrrigateDate))",
+                "            {",
+                "                Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff, duration: Duration);",
+                "            }",
+                "        }",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "IrrigateDate",
@@ -165,7 +208,8 @@
                 }
               ],
               "Name": "Irrigate on a fixed date",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -181,14 +225,50 @@
               ],
               "GroupByVariableName": null,
               "Name": "Initial",
+              "ResourceName": null,
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start Date\")]\r\n        public DateTime StartDate { get; set; }\r\n        \r\n        [Description(\"End Date\")]\r\n        public DateTime EndDate { get; set; }\r\n \r\n    \r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\r\n                Met.Rain = 0;        \r\n        }\r\n    }\r\n}\r\n",
+              "CodeArray": [
+                "using Models.Soils;",
+                "using System.Xml.Serialization;",
+                "using Models;",
+                "using Models.PMF;",
+                "using System.Text;",
+                "using System.Collections.Generic;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Core;",
+                "using System;",
+                "using Models.Climate;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Weather Met;",
+                "        [Link] Clock Clock;",
+                "    ",
+                "        [Description(\"Start Date\")]",
+                "        public DateTime StartDate { get; set; }",
+                "        ",
+                "        [Description(\"End Date\")]",
+                "        public DateTime EndDate { get; set; }",
+                " ",
+                "    ",
+                "        [EventSubscribe(\"PreparingNewWeatherData\")]",
+                "        private void OnPreparingNewWeatherData(object sender, EventArgs e)",
+                "        {",
+                "            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))",
+                "                Met.Rain = 0;        ",
+                "        }",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -200,7 +280,8 @@
                 }
               ],
               "Name": "ClimateControl",
-              "IncludeInDocumentation": true,
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -225,6 +306,7 @@
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Soils.WEIRDO, Models",
@@ -232,6 +314,16 @@
                   "Hourly": null,
                   "SubHourly": null,
                   "PrecipitationInterception": 0.0,
+                  "Depth": [
+                    "0-30",
+                    "30-200",
+                    "200-400",
+                    "400-600",
+                    "600-800",
+                    "800-1000",
+                    "1000-1200",
+                    "1200-1400"
+                  ],
                   "Salb": 0.15,
                   "SWCON": null,
                   "Thickness": [
@@ -243,36 +335,6 @@
                     200.0,
                     200.0,
                     200.0
-                  ],
-                  "LL15": [
-                    0.16,
-                    0.15,
-                    0.14,
-                    0.14,
-                    0.14,
-                    0.14,
-                    0.14,
-                    0.14
-                  ],
-                  "DUL": [
-                    0.3,
-                    0.3,
-                    0.28,
-                    0.28,
-                    0.26,
-                    0.26,
-                    0.26,
-                    0.26
-                  ],
-                  "SAT": [
-                    0.44,
-                    0.44,
-                    0.46,
-                    0.46,
-                    0.36,
-                    0.36,
-                    0.36,
-                    0.36
                   ],
                   "CFlow": [
                     7E-11,
@@ -334,26 +396,6 @@
                     0.8,
                     0.8
                   ],
-                  "XF": [
-                    1.1,
-                    1.1,
-                    1.1,
-                    1.1,
-                    1.1,
-                    1.1,
-                    1.1,
-                    1.1
-                  ],
-                  "BD": [
-                    1.0,
-                    1.0,
-                    1.2,
-                    1.2,
-                    1.3,
-                    1.4,
-                    1.5,
-                    1.6
-                  ],
                   "SubProfileConductance": 20.0,
                   "WaterTableDepth": 10.0,
                   "CalculateInfiltration": true,
@@ -364,15 +406,6 @@
                   "CalculateDiffusion": true,
                   "DiffusivityMultiplier": 2.0,
                   "ExtractionMultiplier": 0.0,
-                  "MappedSAT": null,
-                  "MappedDUL": null,
-                  "MappedLL15": null,
-                  "MappedCFlow": null,
-                  "MappedXFlow": null,
-                  "MappedPsiBub": null,
-                  "MappedUpperRepellentWC": null,
-                  "MappedLowerRepellentWC": null,
-                  "MappedMinRepellancyFactor": null,
                   "ProfileWaterExtraction": 0.0,
                   "TotalCover": 0.0,
                   "ResidueWater": 0.0,
@@ -381,17 +414,12 @@
                   "Hour": 0,
                   "ReportLayer": 0,
                   "TimeStep": 0,
-                  "Capillarity": null,
-                  "HydraulicConductivityOut": null,
-                  "PsiUpper": null,
-                  "RelativePoreVolume": null,
-                  "Theta": null,
                   "Diffusion": null,
                   "SoluteFluxEfficiency": null,
                   "SoluteFlowEfficiency": null,
                   "Name": "WEIRDO",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -408,120 +436,37 @@
                     200.0
                   ],
                   "Name": "LayerStructure",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Evapotranspiration, Models",
                   "Name": "Evapotranspiration",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.MRSpline, Models",
                   "Name": "MRSpline",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                      "Name": "PlantAvailableNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                      "Name": "PlantAvailableNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140"
-                  ],
                   "FOMCNRatio": 40.0,
                   "Thickness": [
                     200.0,
@@ -541,6 +486,7 @@
                     0.2,
                     0.2
                   ],
+                  "CarbonUnits": 0,
                   "SoilCNRatio": [
                     11.0,
                     11.0,
@@ -569,33 +515,24 @@
                     1.0
                   ],
                   "FOM": [
-                    366.82403581925331,
+                    366.8240358192533,
                     238.9635041738326,
                     155.67015994332002,
                     101.40962227918506,
-                    66.062188762132649,
-                    43.035489985642393,
+                    66.06218876213265,
+                    43.03548998564239,
                     28.034999036634055
                   ],
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140"
-                  ],
                   "Thickness": [
                     200.0,
                     200.0,
@@ -604,24 +541,6 @@
                     200.0,
                     200.0,
                     200.0
-                  ],
-                  "NO3N": [
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                    10.0,
-                    1.0
-                  ],
-                  "NH4N": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
                   ],
                   "PH": [
                     6.0,
@@ -632,68 +551,22 @@
                     6.0,
                     6.0
                   ],
-                  "CL": null,
+                  "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-15",
-                    "15-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150",
-                    "150-180"
-                  ],
-                  "Thickness": [
-                    150.0,
-                    150.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0
-                  ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-5",
-                    "5-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140"
-                  ],
+                  "$type": "Models.Soils.Water, Models",
                   "Thickness": [
                     50.0,
                     150.0,
@@ -704,9 +577,7 @@
                     200.0,
                     200.0
                   ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": [
+                  "InitialValues": [
                     0.27,
                     0.27,
                     0.25,
@@ -716,17 +587,12 @@
                     0.25,
                     0.25
                   ],
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialWater",
+                  "InitialPAWmm": 145.7,
+                  "RelativeTo": "LL15",
+                  "FilledFromTop": false,
+                  "Name": "Water",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -735,33 +601,33 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Depth (mm)",
+                      "Position": 0,
                       "Inverted": true,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 1,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Volumetric water (mm/mm)",
+                      "Position": 1,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 3,
                   "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": null,
                   "LegendOutsideGraph": false,
                   "Name": "Graph",
+                  "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Series, Models",
@@ -787,8 +653,8 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "LL15",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -816,8 +682,8 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "LL151",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -845,8 +711,8 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "LL152",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -874,8 +740,8 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Air dry",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -903,8 +769,8 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "DUL",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -932,71 +798,251 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "SAT",
+                      "ResourceName": null,
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Thickness": [
+                    30.0,
+                    170.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.0,
+                    1.0,
+                    1.2,
+                    1.2,
+                    1.3,
+                    1.4,
+                    1.5,
+                    1.6
+                  ],
+                  "AirDry": null,
+                  "LL15": [
+                    0.16,
+                    0.15,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14
+                  ],
+                  "DUL": [
+                    0.3,
+                    0.3,
+                    0.28,
+                    0.28,
+                    0.26,
+                    0.26,
+                    0.26,
+                    0.26
+                  ],
+                  "SAT": [
+                    0.44,
+                    0.44,
+                    0.46,
+                    0.46,
+                    0.36,
+                    0.36,
+                    0.36,
+                    0.36
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                    10.0,
+                    1.0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NO3",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "NH4",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    200.0
+                  ],
+                  "InitialValues": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "InitialValuesUnits": 1,
+                  "WaterTableConcentration": 0.0,
+                  "D0": 0.0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0.0,
+                  "MaxDepthSoluteAccessible": 0.0,
+                  "RunoffEffectivenessAtMovingSolute": 0.0,
+                  "MaxEffectiveRunoff": 0.0,
+                  "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Graphs",
+          "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "WaterBalance",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1022,8 +1068,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Infiltration",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1051,8 +1097,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Irrigation",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1080,8 +1126,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Drainage",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1109,13 +1155,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "SurfaceWater",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1124,33 +1169,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "SoilWaterContentLayers",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1176,8 +1221,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L1",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1205,8 +1250,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L2",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1234,8 +1279,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L3",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1263,8 +1308,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L4",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1292,8 +1337,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L5",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1321,8 +1366,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L6",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1350,13 +1395,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L7",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1365,33 +1409,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "SoilWaterFracLayers",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1417,8 +1461,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L1",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1446,8 +1490,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L2",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1475,8 +1519,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L3",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1504,8 +1548,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L4",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1533,8 +1577,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L5",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1562,8 +1606,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L6",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1591,13 +1635,12 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "L7",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1606,33 +1649,33 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": null,
               "LegendOutsideGraph": false,
               "Name": "Infiltration",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Series, Models",
@@ -1658,8 +1701,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Infiltration",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1687,8 +1730,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Irrigation",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1716,8 +1759,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Rainfall",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1745,8 +1788,8 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Pond",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1774,28 +1817,24 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Drainage",
+                  "ResourceName": null,
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
