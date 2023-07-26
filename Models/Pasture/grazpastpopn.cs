@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.PostSimulationTools;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
@@ -51,20 +52,20 @@ namespace Models.GrazPlan
         /// <summary>Gets or sets the CO2 parts/million</summary>
         public double CO2_PPM { get; set; }
 
-        /// <summary>Soil water content               (mm/mm)</summary>
-        public double[] Theta = new double[GrazType.MaxSoilLayers + 1];
+        /// <summary>Soil water content (mm/mm)</summary>
+        public double[] Theta;
 
-        /// <summary>(SW-WP)/(DUL-WP)                 (-)</summary>
-        public double[] ASW = new double[GrazType.MaxSoilLayers + 1];
+        /// <summary>(SW-WP)/(DUL-WP)  (-)</summary>
+        public double[] ASW;
 
-        /// <summary>SW/SAT                           (-)</summary>
-        public double[] WFPS = new double[GrazType.MaxSoilLayers + 1];
+        /// <summary>SW/SAT  (-)</summary>
+        public double[] WFPS;
 
         /// <summary>Evaporation rate of free surface water (including water intercepted on herbage). Default value is 0.0. (mm)</summary>
         public double SurfaceEvap { get; set; } = 0;
 
-        /// <summary></summary>
-        public double[] pH = new double[GrazType.MaxSoilLayers + 1];
+        /// <summary>Soil pH</summary>
+        public double[] pH;
 
         /// <summary>Gets or sets the Proportion of precip intercepted (0-1)</summary>
         public double RainIntercept { get; set; }
@@ -88,6 +89,23 @@ namespace Models.GrazPlan
             {
                 this.Nutrients[i] = new TSoilNutrientDistn();
             }
+        }
+
+        /// <summary>
+        /// Initialise the soil arrays
+        /// </summary>
+        /// <param name="layercount"></param>
+        public void InitSoil(int layercount)
+        {
+            // [0] is surface
+            pH = new double[layercount + 1];
+            for (int Ldx = 1; Ldx <= layercount; Ldx++)
+            {
+                pH[Ldx] = 7.0;  // Default value for pH
+            }
+            WFPS = new double[layercount + 1];
+            ASW = new double[layercount + 1];
+            Theta = new double[layercount + 1];
         }
     }
 
@@ -187,22 +205,22 @@ namespace Models.GrazPlan
         public int FSoilLayerCount;
 
         /// <summary>Depth of each soil layer</summary>
-        public double[] FSoilLayers = new double[GrazType.MaxSoilLayers + 1];
+        public double[] FSoilLayers;
 
         /// <summary>Cumulative depth of each soil layer</summary>
-        public double[] FSoilDepths = new double[GrazType.MaxSoilLayers + 1];
+        public double[] FSoilDepths;
 
         /// <summary></summary>
-        private double[] FBulkDensity = new double[GrazType.MaxSoilLayers + 1];
+        private double[] FBulkDensity;
 
         /// <summary></summary>
-        private double[] FSandContent = new double[GrazType.MaxSoilLayers + 1];
+        private double[] FSandContent;
 
         /// <summary></summary>
-        private double[] FCampbellParam = new double[GrazType.MaxSoilLayers + 1];
+        private double[] FCampbellParam;
 
         /// <summary></summary>
-        public double[] FRootRestriction = new double[GrazType.MaxSoilLayers + 1];
+        public double[] FRootRestriction;
 
         /// <summary></summary>
         public double FFertScalar = 1.0;
@@ -336,10 +354,10 @@ namespace Models.GrazPlan
         public double[] fPhenoHorizon = new double[2];
 
         /// <summary></summary>
-        public double[] fWater_KL = new double[GrazType.MaxSoilLayers + 1]; // [1..
+        public double[] fWater_KL = null; // [1..
 
         /// <summary></summary>
-        public double[] fPlant_LL = new double[GrazType.MaxSoilLayers + 1]; // [1..
+        public double[] fPlant_LL = null; // [1..
 
         /// <summary>Gets the pasture parameter set</summary>
         public TPastureParamSet Params { get { return this.FParams; } }
@@ -474,8 +492,8 @@ namespace Models.GrazPlan
             // create the arrays required by this instance
             for (int i = 0; i <= stSENC; i++)
             {
-                this.FSoilFract[i] = new double[MaxSoilLayers + 1];      // [stSEEDL..stSENC] of LayerArray;
-                this.FTranspireRate[i] = new double[MaxSoilLayers + 1];    // [stSEEDL..stSENC] of LayerArray;
+                this.FSoilFract[i] = new double[MaxSoilLayers + 1];         // [stSEEDL..stSENC] of LayerArray;
+                this.FTranspireRate[i] = new double[MaxSoilLayers + 1];     // [stSEEDL..stSENC] of LayerArray;
             }
 
             // init seed pool storage
@@ -819,9 +837,7 @@ namespace Models.GrazPlan
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
         /// <param name="DMD"></param>
         /// <returns></returns>
-        private double RemovalGM2(int comp,
-                                   int part = TOTAL,
-                                   int DMD = TOTAL)
+        private double RemovalGM2(int comp, int part = TOTAL, int DMD = TOTAL)
         {
             double result;
             switch (comp)
@@ -1640,10 +1656,10 @@ namespace Models.GrazPlan
         {
             double[] fRLD; // LayerArray
             double fTotRoots;
-            double[] fRootPropn = new double[GrazType.MaxSoilLayers + 1];
+            double[] fRootPropn = new double[this.FSoilLayerCount + 1];
             double fTranspDeficit;
             double fTranspRatio;
-            double[] fDistribute = new double[GrazType.MaxSoilLayers + 1];
+            double[] fDistribute = new double[this.FSoilLayerCount + 1];
             double fTotDistr;
             double fExtraUptake;
             int iLayer;
@@ -1739,16 +1755,97 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Do the calculations to determine the maximum and critical demand
-        /// and this is then available as the nutrient demand estimate.
         /// </summary>
         /// <param name="elem">N, P, S</param>
-        /// <param name="maxDemand"></param>
-        /// <param name="critDemand"></param>
+        /// <param name="maxDemand">The maximum demand is the maximum amount of nutrient that can be acquired through uptake or fixation</param>
+        /// <param name="critDemand">The critical demand is the amount below which the plants' net primary production will be restricted</param>
         public void ComputeNutrientRatesEstimate(TPlantElement elem, ref double maxDemand, ref double critDemand)
         {
+            maxDemand = 0;
+            critDemand = 0;
+
+            double fMoistureChange;
+            double fDormTempFract;
+            bool bDormant;
+            int iCohort;
+
+            bDormant = (this.Phenology == TDevelopType.Dormant || this.Phenology == TDevelopType.DormantW);
+
+            if (this.LaggedMeanT >= -99.9)
+            {
+                this.LaggedMeanT = 0.1 * this.Inputs.MeanDayTemp + 0.9 * this.LaggedMeanT;
+                if (this.Params.DevelopK[30] < 1.0)
+                {
+                    fDormTempFract = 1.0;
+                }
+                else
+                {
+                    fDormTempFract = 1.0 / this.Params.DevelopK[30];
+                }
+
+                this.WDormMeanTemp = fDormTempFract * this.Inputs.MeanTemp + (1.0 - fDormTempFract) * this.WDormMeanTemp;
+            }
+            else
+            {
+                this.LaggedMeanT = this.Inputs.MeanTemp;
+                this.WDormMeanTemp = this.Inputs.MeanTemp;
+            }
+
+            if (DormMeanTemp < -99.9)
+            {
+                DormMeanTemp = Inputs.MeanTemp;
+            }
+
+            // Need extension rates in computing allocation within root pools
+            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, sgGREEN))
+                {
+                    this.FCohorts[iCohort].ComputeRootExtension(this.Inputs.MeanTemp, this.Inputs.ASW);
+                    this.FCohorts[iCohort].ComputeNewSpecificArea(TOTAL, this.Inputs.MeanTemp, this.Inputs.Radiation);
+                }
+            }
+
+            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, sgGREEN))
+                {
+                    this.FCohorts[iCohort].ComputeRespiration(this.Inputs.MeanTemp, bDormant);
+                    this.FCohorts[iCohort].ComputeAllocation();
+                }
+            }
+
+            this.ComputePotAssimilation();
+
+            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, sgGREEN))
+                {
+                    this.FCohorts[iCohort].ComputePotTranslocation(this.Inputs.MeanTemp);            // Need target R:S ratio to compute this
+                    this.FCohorts[iCohort].ComputePotNetGrowth();
+                }
+            }
+
+            fMoistureChange = this.Inputs.RainIntercept * this.Inputs.Precipitation - this.Inputs.SurfaceEvap;
+            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, stDEAD))
+                {
+                    this.FCohorts[iCohort].DeadMoistureBalance(fMoistureChange);
+                }
+
+                this.FCohorts[iCohort].ComputeFlowRates(this.Inputs.MinTemp, this.Inputs.MeanTemp,
+                                                    this.LaggedMeanT, this.Inputs.Precipitation,
+                                                    this.Inputs.TrampleRate, this.Inputs.ASW[1]);
+                this.FCohorts[iCohort].ComputeFrostHardening(this.Inputs.MinTemp);
+            }
+
+
+
+
             for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
-                for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+                for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
                 {
                     if (this.FCohorts[iCohort].Status == iComp)
                     {
@@ -1885,7 +1982,7 @@ namespace Models.GrazPlan
                 fSupply[i] = new double[MAXNUTRAREAS][];
                 for (int j = 0; j < MAXNUTRAREAS; j++)
                 {
-                    fSupply[i][j] = new double[MaxSoilLayers + 1];
+                    fSupply[i][j] = new double[this.FSoilLayerCount + 1];
                 }
             }
 
@@ -3162,11 +3259,13 @@ namespace Models.GrazPlan
 
             if (kl != null && kl.Length > 0)
             {
+                this.fWater_KL = new double[kl.Length + 1];
                 kl.CopyTo(this.fWater_KL, 1);
             }
 
             if (ll != null && ll.Length > 0)
             {
+                this.fPlant_LL = new double[ll.Length + 1];
                 ll.CopyTo(this.fPlant_LL, 1);
             }
         }
@@ -3989,10 +4088,8 @@ namespace Models.GrazPlan
             return result;
         }
 
-        // Exchange information with other models ..................................
-
         /// <summary>
-        /// Set the soil parameters
+        /// Set the soil parameters, layer count
         /// </summary>
         /// <param name="soilLayers">The layer profile</param>
         /// <param name="bulkDensity">Bulk densities</param>
@@ -4000,16 +4097,19 @@ namespace Models.GrazPlan
         /// <param name="campbellParam"></param>
         public void SetSoilParams(double[] soilLayers, double[] bulkDensity, double[] sandContent, double[] campbellParam)
         {
-            int iLayer;
-
-            this.FSoilLayerCount = 1;
-            while ((this.FSoilLayerCount < GrazType.MaxSoilLayers) && (soilLayers[this.FSoilLayerCount + 1] > 0))
+            // count the soil layers that have depths
+            int i = 0;
+            while ((i < GrazType.MaxSoilLayers) && (i < soilLayers.Length - 1) && (soilLayers[i+1] > 0))
             {
-                this.FSoilLayerCount++;
+                i++;
             }
 
+            this.FSoilLayerCount = i;
+
+            this.FRootRestriction = new double[this.FSoilLayerCount + 1];
+            this.FSoilDepths = new double[this.FSoilLayerCount + 1];
             this.FSoilDepths[0] = 0.0;
-            for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
+            for (int iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
             {
                 this.FSoilDepths[iLayer] = this.FSoilDepths[iLayer - 1] + soilLayers[iLayer];
             }
@@ -4062,7 +4162,7 @@ namespace Models.GrazPlan
         /// </summary>
         public void SetMonocultureSoil()
         {
-            double[] fVolume = new double[GrazType.MaxSoilLayers + 1];
+            double[] fVolume = new double[this.FSoilLayerCount + 1];
             int iLayer;
 
             for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
@@ -4104,7 +4204,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Assign soil proportion for this pasture
+        /// Assign soil proportion for the component of this pasture
         /// </summary>
         /// <param name="comp">Herbage component. seedling...senescent, total</param>
         /// <param name="values"></param>
@@ -4251,13 +4351,13 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute max water uptake
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <returns></returns>
         public double[] WaterMaxSupply(int comp)
         {
-            double[] result = new double[GrazType.MaxSoilLayers + 1];
+            double[] result = new double[this.FSoilLayerCount + 1];
             double fRootDepth_;
             double fExtractDepth;
             int iLayer;
@@ -4307,8 +4407,8 @@ namespace Models.GrazPlan
             }
             else
             {
-                result = new double[MaxSoilLayers + 1];
-                for (iLayer = 1; iLayer <= MaxSoilLayers; iLayer++)
+                result = new double[this.FSoilLayerCount + 1];
+                for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
                 {
                     if (comp == sgEST_SENC)
                     {
@@ -4336,7 +4436,7 @@ namespace Models.GrazPlan
         {
             int iLayer;
 
-            double[] result = new double[GrazType.MaxSoilLayers + 1];
+            double[] result = new double[this.FSoilLayerCount + 1];
             for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
             {
                 if (this.RootMassGM2(comp, EFFR, iLayer) > 0.0)
@@ -4360,7 +4460,7 @@ namespace Models.GrazPlan
         public double[] EffRootLengthD(int comp)
         {
             int iLayer;
-            double[] result = new double[GrazType.MaxSoilLayers + 1];
+            double[] result = new double[this.FSoilLayerCount + 1];
 
             for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
             {
@@ -4371,12 +4471,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute cation uptake
         /// </summary>
         /// <returns></returns>
         public double[] CationUptake()
         {
-            double[] result = new double[MaxSoilLayers + 1];
+            double[] result = new double[this.FSoilLayerCount + 1];
             double[] fCohortUptake;
             int iCohort;
             int iLayer;
@@ -4402,7 +4502,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the height profile
         /// </summary>
         /// <param name="comp">Herbage component</param>
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
@@ -4417,8 +4517,8 @@ namespace Models.GrazPlan
             int VARYINGLEVELS = 5;
 
             double fSwardHeight;
-            double[] fRelHeights = new double[MaxSoilLayers + 1];   // The SoilArray type has a zero layer...
-            double[] fMassPropnAbove = new double[MaxSoilLayers + 1];
+            double[] fRelHeights = new double[this.FSoilLayerCount + 1];    // The SoilArray type has a zero layer...
+            double[] fMassPropnAbove = new double[this.FSoilLayerCount + 1];
             double fLeafPropn = 0;
             double fIntcpt = 0;
             double fSlope = 0;
@@ -4616,10 +4716,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the nutrient uptake in each layer for each area
         /// </summary>
-        /// <param name="nutr"></param>
-        /// <returns></returns>
+        /// <param name="nutr">Plant nutrient</param>
+        /// <returns>Nutrient uptake in [area][layer]</returns>
         public double[][] GetNutrUptake(TPlantNutrient nutr)
         {
             double[][] result = new double[MAXNUTRAREAS][]; // array[0..MAXNUTRAREAS - 1] of LayerArray -> TSoilUptakeDistn
@@ -4628,7 +4728,7 @@ namespace Models.GrazPlan
 
             for (int i = 0; i <= MAXNUTRAREAS - 1; i++)
             {
-                result[i] = new double[MaxSoilLayers + 1];
+                result[i] = new double[this.FSoilLayerCount + 1];
             }
 
             for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
@@ -4661,7 +4761,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the leachate amount
         /// </summary>
         /// <returns></returns>
         public DM_Pool GetLeachate()
@@ -4676,7 +4776,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the gaseous losses for this element
         /// </summary>
         /// <param name="Elem"></param>
         /// <returns></returns>
@@ -4700,7 +4800,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Compute a default value for the MaxRootDepth property
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Max root depth</returns>
         public double DefaultMaxRootDepth()
         {
             double fRootsLeft;
@@ -4738,7 +4838,9 @@ namespace Models.GrazPlan
             return result;
         }
 
+        /// <summary>
         /// Zeros fields that denote the magnitudes of various DM and element flows
+        /// </summary>
         private void ZeroFlows()
         {
             for (int i = 0; i <= GrazType.stSENC; i++)
@@ -4764,7 +4866,7 @@ namespace Models.GrazPlan
                 ZeroDMPool(ref this.FTopResidue[i]);
             }
 
-            for (int i = 0; i <= MaxSoilLayers; i++)
+            for (int i = 0; i < this.FRootResidue.Length; i++)
             {
                 ZeroDMPool(ref this.FRootResidue[i]);
             }
@@ -4774,7 +4876,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Start of the timestep
         /// </summary>
         public void BeginTimeStep()
         {
@@ -4792,7 +4894,7 @@ namespace Models.GrazPlan
         public void ComputeWaterUptake()
         {
             double fDemand;
-            double[] fUptake = new double[MaxSoilLayers + 1];
+            double[] fUptake = new double[this.FSoilLayerCount + 1];
             int iComp;
 
             for (iComp = stSEEDL; iComp <= stSENC; iComp++)
@@ -4800,7 +4902,7 @@ namespace Models.GrazPlan
                 fDemand = this.WaterDemand(iComp);
                 if (fDemand <= 0.0)
                 {
-                    fUptake = new double[MaxSoilLayers + 1];
+                    fUptake = new double[this.FSoilLayerCount + 1];
                 }
                 else if (this.fWater_KL[1] == 0)
                 {
@@ -4816,8 +4918,8 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Essentially a control routine.  The vast majority of equations appear in
-        /// the methods which it calls
+        /// Essentially a control routine. The vast majority of equations appear in
+        /// the methods which it calls.
         /// </summary>
         public void ComputeRates()
         {
@@ -5701,10 +5803,6 @@ namespace Models.GrazPlan
         }
 
         // Reporting variables .....................................................}
-
-        /*
-        function bPhenologyEvent(       Event                : TDevelopEvent ) : Boolean;
-        */
 
         /// <summary>
         /// Herbage available for grazing, in user units

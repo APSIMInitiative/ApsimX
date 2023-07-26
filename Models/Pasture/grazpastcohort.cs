@@ -2,7 +2,6 @@
 using System.Linq;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
-//using static Models.GrazPlan.PastureUtil;
 
 namespace Models.GrazPlan
 {
@@ -20,8 +19,8 @@ namespace Models.GrazPlan
 
         // Temporary variables -----------------------------------------------------
 
-        /// <summary></summary>
-        private readonly double[] FNewSpecificArea = new double[GrazType.ptSTEM + 1];                           // ptLEAF..ptSTEM
+        /// <summary>New specific area. ptLEAF..ptSEED</summary>
+        private readonly double[] FNewSpecificArea = new double[GrazType.ptSTEM + 1];
 
         /// <summary></summary>
         private double FPotAssimilation;
@@ -41,14 +40,14 @@ namespace Models.GrazPlan
         /// <summary></summary>
         private double FPotStemTranslocSum;
 
-        /// <summary></summary>
-        private readonly double[] FPotPartNetGrowth = new double[GrazType.ptSEED + 1];                          // ptLEAF..ptSEED
+        /// <summary>Potential net growth of the plant part. ptLEAF..ptSEED</summary>
+        private readonly double[] FPotPartNetGrowth = new double[GrazType.ptSEED + 1];
 
         /// <summary></summary>
         public double[] FStemTransloc = new double[GrazType.HerbClassNo + 1];
 
-        /// <summary>Maintenance respiration rates   g/g/d </summary>
-        private readonly double[] FMaintRespRate = new double[GrazType.ptSEED + 1];                                 // ptLEAF..ptSEED
+        /// <summary>Maintenance respiration rates   g/g/d. ptLEAF..ptSEED</summary>
+        private readonly double[] FMaintRespRate = new double[GrazType.ptSEED + 1];
 
         /// <summary>Maintenance respiration rates g/m^2/ds</summary>
         private readonly double[,] FShootMaintResp = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];     // [ptLEAF..ptSTEM,1..HerbClassNo]
@@ -59,8 +58,8 @@ namespace Models.GrazPlan
         /// <summary>Growth respiration rate  g/g</summary>
         private double FGrowthRespRate;
 
-        /// <summary>Net growth incl.translocation,g/m^2/d</summary>
-        public double[] FPartNetGrowth = new double[GrazType.ptSEED + 1];                                       // ptLEAF..ptSEED
+        /// <summary>Net growth incl.translocation,g/m^2/d. ptLEAF..ptSEED</summary>
+        public double[] FPartNetGrowth = new double[GrazType.ptSEED + 1];
 
         /// <summary></summary>
         public GrazType.DM_Pool[,] FShootNetGrowth = new GrazType.DM_Pool[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];   // [ptLEAF..ptSTEM,1..HerbClassNo]
@@ -75,11 +74,11 @@ namespace Models.GrazPlan
         /// <summary></summary>
         public double[] FRootExtension = new double[GrazType.MaxSoilLayers + 1];
 
-        /// <summary></summary>
-        public int[] FHighestDMDClass = new int[GrazType.ptSTEM + 1];                                           // ptLEAF..ptSTEM
+        /// <summary>Highest digestibility class for plant part. ptLEAF..ptSEED</summary>
+        public int[] FHighestDMDClass = new int[GrazType.ptSTEM + 1];
 
-        /// <summary></summary>
-        public int[] FLowestDMDClass = new int[GrazType.ptSTEM + 1];                                            // ptLEAF..ptSTEM
+        /// <summary>Lowest digestibility class for plant part. ptLEAF..ptSTEM</summary>
+        public int[] FLowestDMDClass = new int[GrazType.ptSTEM + 1];
 
         /// <summary></summary>
         public double[,] FNewShootDistn = new double[GrazType.ptSTEM + 1, GrazType.HerbClassNo + 1];            // [ptLEAF..ptSTEM,1..HerbClassNo]
@@ -150,13 +149,11 @@ namespace Models.GrazPlan
         /// <summary>EI establishment index -</summary>
         public double EstabIndex;
 
-        /// <summary>
-        /// Moisture content of dead     mm water
-        /// </summary>
-        public double[] DeadMoisture = new double[GrazType.ptSTEM + 1];                                            // [ptLEAF..ptSTEM]
+        /// <summary>Moisture content of dead in mm water. ptLEAF..ptSTEM</summary>
+        public double[] DeadMoisture = new double[GrazType.ptSTEM + 1];
 
-        /// <summary>Average relative moisture content of dead</summary>
-        public double[] RelMoisture = new double[GrazType.ptSTEM + 1];                                             // [ptLEAF..ptSTEM]
+        /// <summary>Average relative moisture content of dead plant part. ptLEAF..ptSTEM</summary>
+        public double[] RelMoisture = new double[GrazType.ptSTEM + 1];
 
         // Reporting variables -----------------------------------------------------}
 
@@ -181,8 +178,8 @@ namespace Models.GrazPlan
         /// <summary></summary>
         public double fR2S_Target;
 
-        /// <summary>Allocation pattern g/g</summary>
-        public double[] Allocation = new double[GrazType.ptSEED + 1];               // ptLEAF..ptSEED
+        /// <summary>Allocation pattern g/g of plant part. ptLEAF..ptSEED</summary>
+        public double[] Allocation = new double[GrazType.ptSEED + 1];
 
         /// <summary>
         /// Constructor
@@ -1269,9 +1266,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute potential translocation
         /// </summary>
-        /// <param name="meanTemp"></param>
+        /// <param name="meanTemp">Mean temperature</param>
         public void ComputePotTranslocation(double meanTemp)
         {
             double limitFactor;
@@ -1423,7 +1420,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Compute potential net growth
+        /// Compute the potential net growth
         /// </summary>
         public void ComputePotNetGrowth()
         {
@@ -2124,7 +2121,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute the frost hardening
         /// </summary>
         /// <param name="minTemp"></param>
         public void ComputeFrostHardening(double minTemp)
@@ -2143,7 +2140,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Is establishment today
         /// </summary>
         /// <returns></returns>
         public bool EstablishesToday()
@@ -2152,7 +2149,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute the root extension
         /// </summary>
         /// <param name="meanTemp"></param>
         /// <param name="ASW"></param>
@@ -2182,7 +2179,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Calculate the relative root extension
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="ASW"></param>
@@ -2193,7 +2190,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Compute the root distribution
         /// </summary>
         /// <param name="depth"></param>
         /// <param name="ASW"></param>
