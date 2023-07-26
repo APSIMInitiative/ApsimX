@@ -422,6 +422,8 @@ namespace Models.Surface
             }
 
             residueDecompositionPool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
+            residueDecompositionPool.C[0] = 0;
+            residueDecompositionPool.N[0] = 0;
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
             {
                 residueDecompositionPool.C[0] += potentialDecomposition.Pool[i].FOM.C;
