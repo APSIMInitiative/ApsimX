@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using Models.Core;
+using Models.PMF.Library;
 using Models.PMF.Phen;
 
 namespace Models.Functions
@@ -132,6 +133,22 @@ namespace Models.Functions
             foreach (var child in Children)
                 foreach (var tag in child.Document())
                     yield return tag;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="_">The sender.</param>
+        /// <param name="ra">The <see cref="BiomassRemovalArgs"/> instance containing the event data.</param>
+        [EventSubscribe("BiomassRemovedFromManager")]
+        private void OnBiomassRemoved(object _, BiomassRemovalArgs ra)
+        {
+            if (ra.RemovalType == RemovalTypes.Cutting.ToString())
+                AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
+            if (ra.RemovalType == RemovalTypes.Grazing.ToString())
+                AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
+            if (ra.RemovalType == RemovalTypes.Harvesting.ToString())
+                AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
+            if (ra.RemovalType == RemovalTypes.Pruning.ToString())
+                AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
         }
 
         /// <summary>Called when [cut].</summary>
