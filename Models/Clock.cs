@@ -167,7 +167,7 @@ namespace Models
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
         /// <summary>Occurs each day to do nutrient allocations</summary>
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
-        /// <summary>Occurs each day to do nutrient allocations</summary>
+        /// <summary>Occurs each day to do nutrient allocations. Pasture growth</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
         /// <summary>Occurs each day to finish partitioning</summary>
         public event EventHandler PartitioningComplete;
@@ -390,11 +390,11 @@ namespace Models
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
-                if (DoNutrientArbitration != null)
-                    DoNutrientArbitration.Invoke(this, args);
-
                 if (DoPastureWater != null)
                     DoPastureWater.Invoke(this, args);
+
+                if (DoNutrientArbitration != null)
+                    DoNutrientArbitration.Invoke(this, args);
 
                 if (DoActualPlantPartioning != null)
                     DoActualPlantPartioning.Invoke(this, args);
