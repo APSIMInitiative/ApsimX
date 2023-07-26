@@ -1,6 +1,5 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
   "Version": 164,
   "Name": "Simulations",
   "ResourceName": null,
@@ -34,7 +33,7 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "Start": "1990-07-01T00:00:00",
+          "Start": "1990-08-01T00:00:00",
           "End": "1991-02-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
@@ -154,7 +153,7 @@
               "Name": "Sowing",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -807,8 +806,9 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "//[Barley].AboveGroundLive.Wt",
-                "//[Barley].Leaf.LAI",
+                "sum([Pasture].Uptake_NH4) as NH4Uptake",
+                "sum([Pasture].Uptake_NO3) as NO3Uptake",
+                "sum([Pasture].SWUptake)",
                 "[Pasture].Growth",
                 "[Pasture].GreenDM",
                 "[Pasture].AvailGreen",
@@ -817,9 +817,6 @@
                 "[Pasture].LitterDM",
                 "[Pasture].WaterDemand",
                 "[Pasture].WaterDemandSupply",
-                "sum([Pasture].SWUptake)",
-                "sum([Pasture].Uptake_NH4) as NH4Uptake",
-                "sum([Pasture].Uptake_NO3) as NO3Uptake",
                 "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha"
               ],
               "EventNames": [
@@ -905,6 +902,16 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "NH4Uptake",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": -0.509950495049505,
+                  "Maximum": 0.505,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
@@ -977,7 +984,7 @@
                   "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 0,
+                  "YAxis": 2,
                   "ColourArgb": -2793984,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
@@ -1006,7 +1013,7 @@
                   "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 0,
+                  "YAxis": 2,
                   "ColourArgb": -3376729,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
