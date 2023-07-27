@@ -350,7 +350,6 @@ namespace Models.GrazPlan
 
         #endregion
 
-        #region Readable properties ====================================================
 
         #region ICanopy implementation
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
@@ -367,13 +366,13 @@ namespace Models.GrazPlan
 
         /// <summary>Leaf Area Index of whole canopy, live + dead tissues (m^2/m^2).</summary>
         [Units("m^2/m^2")]
-        public double LAITotal { get; }
+        public double LAITotal { get { return LAIGreen + LAIDead; } }
 
-        /// <summary>Gets the canopy depth (mm)</summary>
+        /// <summary>Average canopy depth (mm)</summary>
         public double Depth { get { return Height; } }
 
-        /// <summary>Gets the canopy depth (mm)</summary>
-        public double Width { get; }
+        /// <summary>Average canopy width (mm)</summary>
+        public double Width { get { return 0; } }
 
         /// <summary>Potential evapotranspiration, as calculated by MicroClimate (mm).</summary>
         [JsonIgnore]
@@ -395,7 +394,7 @@ namespace Models.GrazPlan
             {
                 if (value != null)
                 {
-                    double fractionGreenCover;  // Estimated fraction of sward green cover that can be attributed to this species (0-1).
+                    double fractionGreenCover;  // Estimated fraction of sward green cover that can be attributed to this species (0-1). TODO: this needs to be calculated when competing species are probed
                     double swardGreenCover;     // Estimated green cover of all species combined, for computing photosynthesis (0-1).
                     double LightExtinctionCoefficient = 0.5;
 
@@ -406,7 +405,7 @@ namespace Models.GrazPlan
                         InterceptedRadn += canopyLayer.AmountOnGreen;
                     }
 
-                    // stuff required to calculate photosynthesis using Ecomod approach
+                    // stuff required to calculate photosynthesis (using Ecomod approach?)
                     RadiationTopOfCanopy = locWtr.Radn;
                     fractionGreenCover = 1.0;
                     swardGreenCover = 0.0;
@@ -440,7 +439,7 @@ namespace Models.GrazPlan
         public IReadOnlyList<double> WaterUptake => mySoilWaterUptakeAvail;
 
 
-        /// <summary>Canopy characteristics of a child APSIM-Plant module. The array has one member per sub-canopy</summary>
+        /// <summary>Canopy characteristics of the plants. The array has one member per sub-canopy</summary>
         [Units("-")]
         public Canopy[] Canopy
         {
@@ -458,10 +457,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the canopy description for a herbage component
         /// </summary>
-        /// <param name="Model"></param>
-        /// <param name="iComp"></param>
+        /// <param name="Model">Pasture model</param>
+        /// <param name="iComp">The herbage component</param>
         /// <returns>A canopy object</returns>
         private Canopy MakeCanopyElement(TPasturePopulation Model, int iComp)
         {
@@ -491,17 +490,15 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the canopy details for each herbage component in the pasture
         /// </summary>
-        /// <param name="Model"></param>
-        /// <returns></returns>
+        /// <param name="Model">The pasture model</param>
+        /// <returns>Array of herbage component canopy information</returns>
         private Canopy[] MakeCanopy(TPasturePopulation Model)
         {
-            int iCount;
             int iComp;
-            uint Jdx;
+            int iCount = 0;
 
-            iCount = 0;
             for (iComp = stSEEDL; iComp <= stDEAD; iComp++)
             {
                 if (Model.AreaIndex(iComp) > 0.0)
@@ -517,7 +514,7 @@ namespace Models.GrazPlan
 
             Canopy[] result = new Canopy[iCount];
 
-            Jdx = 0;
+            uint Jdx = 0;
             for (iComp = stSEEDL; iComp <= stDEAD; iComp++)
             {
                 if (Model.AreaIndex(iComp) > 0.0)
@@ -535,6 +532,8 @@ namespace Models.GrazPlan
 
             return result;
         }
+
+        #region Readable properties ====================================================
 
         /// <summary>
         /// Get the water supply information for this pasture
@@ -1708,6 +1707,32 @@ namespace Models.GrazPlan
             }
         }
 
+        /// <summary>Green leaf area index</summary>
+        [Units("m^2/m^2")]
+        public double LAIGreen
+        {
+            get { return LAI; }
+        }
+
+        /// <summary>Dead area index</summary>
+        [Units("m^2/m^2")]
+        public double LAIDead
+        {
+            get
+            {
+                double result = 0;
+                if (PastureModel != null)
+                {
+                    string sUnit = PastureModel.MassUnit;
+                    PastureModel.MassUnit = "kg/ha";
+                    result = PastureModel.AreaIndex(GrazType.sgDRY, GrazType.ptLEAF);
+                    PastureModel.MassUnit = sUnit;
+                }
+
+                return result;
+            }
+        }
+
         /// <summary>Light interception growth-limiting factor</summary>
         [Units("-")]
         public double GLF_GAI { get { return GetGLF(TGrowthLimit.glGAI); } }
@@ -2683,7 +2708,7 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>Pasture cohort component name</summary>
+        /// <summary>Pasture herbage cohort component name</summary>
         public static string[] sCOMPNAME = { "", "seedling", "established", "senescing", "dead", "litter" };    // [0, stSEEDL..stLITT1]  - [0, 1..5]
 
         /// <summary>
@@ -3003,7 +3028,7 @@ namespace Models.GrazPlan
 
         #endregion
 
-        #region Arbitration functions ==============================================
+                #region Arbitration functions ==============================================
 
         private double myWaterDemand; // Amount of water demanded by the plant(mm)
 
