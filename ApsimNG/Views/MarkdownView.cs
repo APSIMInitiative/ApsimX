@@ -38,10 +38,19 @@ namespace UserInterface.Views
 
         private TextView textView;
         private Cursor handCursor;
-		private Cursor regularCursor;
+        private Cursor regularCursor;
         private MarkdownFindView findView;
         private AccelGroup accelerators = new AccelGroup();
         private Menu popupMenu = new Menu();
+
+        /// <summary>Table of font sizes for ASCII characters. Set on attach and reset on attach whenver font has changed.</summary>
+        private static readonly int[] fontCharSizes = new int[128];
+
+        /// <summary>Table of font sizes for unicode symbols not in ascii. Dynamically filled, cleared on attach when font changed.</summary>
+        private static readonly Dictionary<Rune, int> nonASCIICharSizes = new();
+
+        /// <summary>The font name and point size. Used to determine whether or not the font has changed.</summary>
+        private static string fontName = "";
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -69,6 +78,21 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
+
+            if (fontName != Configuration.Settings.FontName)
+            {
+                fontName = Configuration.Settings.FontName;
+                Label helper = new();
+                helper.Layout.FontDescription = FontDescription.FromString(fontName);
+                for (int i = 32; i < 127; i++)
+                {
+                    helper.Layout.SetText(((char) i).ToString());
+                    helper.Layout.GetPixelSize(out var width, out _);
+                    fontCharSizes[i] = width;
+                }
+                nonASCIICharSizes.Clear();
+            }
+
             if (gtkControl is ScrolledWindow scroller)
             {
                 textView = new TextView();
@@ -513,14 +537,32 @@ namespace UserInterface.Views
         /// Measure the width of a string in pixels.
         /// </summary>
         /// <param name="text">The text to be measured.</param>
-        private int MeasureText(string text)
+        private static int MeasureText(string text)
         {
-            Label label = new Label();
+            return text.EnumerateRunes().Sum(MeasureRuneSize);
+        }
 
-            label.Layout.FontDescription = FontDescription.FromString(Utility.Configuration.Settings.FontName);
+        /// <summary>
+        /// Measures the size of a unicode rune in pixels.
+        /// </summary>
+        /// <param name="ch">The rune to measure.</param>
+        private static int MeasureRuneSize(Rune ch)
+        {
+            if (ch.IsAscii)
+                return fontCharSizes[ch.Value];
+            // Non-printing variation selector. Gets a pixel size for some reason.
+            if (0xFE00 <= ch.Value && ch.Value <= 0xFE0F)
+                return 0;
 
-            label.Layout.SetText(text);
-            label.Layout.GetPixelSize(out int width, out _);
+            int width;
+            if (!nonASCIICharSizes.TryGetValue(ch, out width))
+            {
+                Label helper = new();
+                helper.Layout.FontDescription = FontDescription.FromString(fontName);
+                helper.Layout.SetText(ch.ToString());
+                helper.Layout.GetPixelSize(out width, out _);
+                nonASCIICharSizes[ch] = width;
+            }
             return width;
         }
 
