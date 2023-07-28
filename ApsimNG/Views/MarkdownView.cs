@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using APSIM.Shared.Utilities;
 using Gdk;
 using Gtk;
@@ -13,7 +14,6 @@ using Markdig.Syntax.Inlines;
 using UserInterface.Extensions;
 using Utility;
 using Pango;
-using UserInterface.Classes;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
@@ -98,7 +98,7 @@ namespace UserInterface.Views
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
-            
+
             textView.KeyPressEvent += OnTextViewKeyPress;
         }
 
@@ -381,17 +381,35 @@ namespace UserInterface.Views
         /// <param name="indent"></param>
         private void DisplayTable(ref TextIter insertPos, Table table, int indent)
         {
-            int spaceWidth = MeasureText(" ");
+            int spaceWidth = fontCharSizes[' '];
             // Setup tab stops for the table.
-            TabArray tabs = new TabArray(table.ColumnDefinitions.Count(), true);
+            TabArray tabs = new TabArray(table.ColumnDefinitions.Count, true);
             int cumWidth = 0;
-            Dictionary<int, int> columnWidths = new Dictionary<int, int>();
-            for (int i = 0; i < table.ColumnDefinitions.Count(); i++)
+            Dictionary<int, List<int>> cellLengthsByRow = new();
+            for (int i = 0; i < table.Count; i++)
             {
-                // The i-th tab stop will be set to the cumulative column width
-                // of the first i columns (including padding).
-                columnWidths[i] = GetColumnWidth(table, i);
-                cumWidth += columnWidths[i];
+                var b = table[i];
+                if (b is TableRow tr)
+                {
+                    cellLengthsByRow[i] = tr
+                        .Select(b => GetCellRawText((TableCell) b))
+                        .Select(MeasureText)
+                        .ToList();
+                }
+                else
+                    throw new Exception($"Error when processing Markdown table: {b.GetType()} is not a table row.");
+            }
+
+            int[] columnWidths = new int[table.ColumnDefinitions.Count];
+            for (int i = 0; i < table.ColumnDefinitions.Count; i++)
+            {
+                var columnLength = cellLengthsByRow.Values
+                    .Where(l => l.Count > i)
+                    .Select(l => l[i] + tableColumnPadding)
+                    .DefaultIfEmpty(0)
+                    .Max();
+                columnWidths[i] = columnLength;
+                cumWidth += columnLength;
                 tabs.SetTab(i, TabAlign.Left, cumWidth);
             }
 
@@ -405,7 +423,7 @@ namespace UserInterface.Views
             for (int i = 0; i < table.Count; i++)
             {
                 TableRow row = (TableRow)table[i];
-                for (int j = 0; j < Math.Min(table.ColumnDefinitions.Count(), row.Count); j++)
+                for (int j = 0; j < Math.Min(table.ColumnDefinitions.Count, row.Count); j++)
                 {
                     if (row[j] is TableCell cell)
                     {
@@ -424,7 +442,7 @@ namespace UserInterface.Views
                         if (alignment == TableColumnAlign.Center || alignment == TableColumnAlign.Right)
                         {
                             // Calculate the width of the cell contents.
-                            int cellWidth = MeasureText(GetCellRawText(cell));
+                            int cellWidth = cellLengthsByRow[i][j];
 
                             // Number of whitespace characters we can fit will be the
                             // number of spare pixels in the cell (width of cell - width
@@ -459,45 +477,36 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Calculate the width (in pixels) of a column in a table.
-        /// This is the width of the widest cell in the column.
-        /// </summary>
-        /// <param name="table">The table.</param>
-        /// <param name="columnIndex">Index of a column in the table.</param>
-        private int GetColumnWidth(Table table, int columnIndex)
-        {
-            int width = 0;
-            for (int i = 0; i < table.Count; i++)
-            {
-                TableRow row = (TableRow)table[i];
-                if (columnIndex < row.Count)
-                {
-                    if (row[columnIndex] is TableCell cell)
-                    {
-                        string cellText = GetCellRawText(cell);
-                        int cellWidth = MeasureText(cellText);
-                        width = Math.Max(width, cellWidth + tableColumnPadding);
-                    }
-                    else
-                        throw new NotImplementedException($"Unknown cell type {row[columnIndex].GetType().Name}.");
-                }
-            }
-            return width;
-        }
-
-        /// <summary>
         /// Get the raw text in a cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        private string GetCellRawText(TableCell cell)
+        private static string GetCellRawText(TableCell cell)
         {
-            TextView tmpView = new TextView();
-            CreateStyles(tmpView);
-            TextIter iter = tmpView.Buffer.StartIter;
-            ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
-            string result = tmpView.Buffer.Text;
-            tmpView.Dispose();
-            return result;
+            StringBuilder sb = new();
+            foreach (var block in cell)
+                ExtractBlockText(block);
+            return sb.ToString();
+
+            void ExtractBlockText(Block block)
+            {
+                if (block is LeafBlock lb)
+                    foreach (var inline in lb.Inline)
+                        ExtractInlineText(inline);
+                else if (block is ContainerBlock cb)
+                    foreach (var innerBlock in cb)
+                        ExtractBlockText(innerBlock);
+                else
+                    throw new NotImplementedException($"Unknown block: {block.GetType()}.");
+            }
+
+            void ExtractInlineText(Inline inline)
+            {
+                if (inline is LiteralInline literal)
+                    sb.Append(literal.Content.AsSpan());
+                else if (inline is ContainerInline ci)
+                    foreach (var il in ci)
+                        ExtractInlineText(il);
+            }
         }
 
         /// <summary>
