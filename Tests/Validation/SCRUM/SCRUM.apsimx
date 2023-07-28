@@ -4296,12 +4296,12 @@
                   "Value": "10/14/2010 00:00:00"
                 },
                 {
-                  "Key": "EndCropDate",
-                  "Value": "05/14/2011 00:00:00"
-                },
-                {
                   "Key": "CutDates",
                   "Value": "12/10/2010 00:00:00"
+                },
+                {
+                  "Key": "EndCropDate",
+                  "Value": "05/14/2011 00:00:00"
                 }
               ],
               "Name": "SowingAndCutting",

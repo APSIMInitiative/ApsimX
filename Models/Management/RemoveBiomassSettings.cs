@@ -1,19 +1,11 @@
-﻿using APSIM.Shared.Utilities;
-using CommandLine;
-using Models.Climate;
+﻿
 using Models.Core;
-using Models.Core.Run;
 using Models.Functions;
-using Models.Interfaces;
-using Models.PMF;
 using Models.PMF.Interfaces;
-using Models.PMF.Library;
 using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using static Models.PMF.Scrum.ScrumCrop;
+
 
 namespace Models.Management
 {
@@ -30,6 +22,21 @@ namespace Models.Management
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RemoveBiomassSettings : Model
     {
+        /// <summary>
+        /// List of possible biomass removal types
+        /// </summary>
+        public enum RemovalTypes
+        {
+            /// <summary>Bioimass is cut</summary>
+            Cutting,
+            /// <summary>Bioimass is grazed</summary>
+            Grazing,
+            /// <summary>Bioimass is harvested</summary>
+            Harvesting,
+            /// <summary>Bioimass is pruned</summary>
+            Pruning
+        }
+
         /// <summary>Name of the crop to remove biomass from</summary>
         [Separator("Add children of type 'OrganBiomassRemoval' with names matching organs of plant to have biomass removed.  " +
             "\nAdd child of type 'IFunction' and name 'SetStage' to have phenology reset.  " +
@@ -54,8 +61,17 @@ namespace Models.Management
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
 
-        /// <summary>Occurs at end of each week.</summary>
-        public event EventHandler<BiomassRemovalArgs> BiomassRemovedFromManager;
+        /// <summary>Cutting Event</summary>
+        public event EventHandler<EventArgs> Cutting;
+
+        /// <summary>Grazing Event</summary>
+        public event EventHandler<EventArgs> Grazing;
+
+        /// <summary>Pruning Event</summary>
+        public event EventHandler<EventArgs> Pruning;
+
+        /// <summary>Harvesting Event</summary>
+        public event EventHandler<EventArgs> Harvesting;
 
         /// <summary>Method that applies specified removal fractions and rewind</summary>
         public void Do()
@@ -77,8 +93,16 @@ namespace Models.Management
                                 deadToResidue: deadToResidues);
                     }
                 }
-                BiomassRemovedFromManager.Invoke(this, new BiomassRemovalArgs() { RemovalType = removaltp.ToString() });
             }
+
+            if (removaltp.ToString() == RemovalTypes.Cutting.ToString())
+                Cutting?.Invoke(this, new EventArgs());
+            if (removaltp.ToString() == RemovalTypes.Grazing.ToString())
+                Grazing?.Invoke(this, new EventArgs());
+            if (removaltp.ToString() == RemovalTypes.Pruning.ToString())
+                Pruning?.Invoke(this, new EventArgs());
+            if (removaltp.ToString() == RemovalTypes.Harvesting.ToString())
+                Harvesting?.Invoke(this, new EventArgs());
 
             if (SetStage != null)
                 phenology.SetToStage(SetStage.Value());
