@@ -600,6 +600,213 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                    "Nodes": [
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "NO3",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "NH4",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Urea",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Atmosphere",
+                        "Location": "500, 50",
+                        "Colour": "Beige",
+                        "OutlineColour": "Black",
+                        "Transparent": true
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      }
+                    ]
+                  },
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
@@ -812,6 +1019,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
+              "FractionFaecesAdded": 1.0,
               "Name": "surface organic matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
@@ -836,6 +1044,9 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "PlantType": "SCRUM",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
               "Children": [],
@@ -852,6 +1063,200 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "Definitions": [
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteCA",
+                  "Description": "Ca as finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 1.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteFine",
+                  "Description": "finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.4
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Dolomite",
+                  "Description": "finely ground dolomite",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.22
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NO3N",
+                  "Description": "N as nitrate",
+                  "FractionNO3": 1.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4N",
+                  "Description": "N as ammonium",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4NO3N",
+                  "Description": "ammonium nitrate",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.5,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "DAP",
+                  "Description": "di-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.18,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "MAP",
+                  "Description": "mono-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.11,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UAN_N",
+                  "Description": "N as Urea-AmmoniumNitrate",
+                  "FractionNO3": 0.25,
+                  "FractionNH4": 0.25,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaN",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 1.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaNO3",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Urea",
+                  "Description": "Urea fertiliser",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.46,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4SO4N",
+                  "Description": "ammonium sulphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "RockP",
+                  "Description": "Rock phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.8,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.2,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BandedP",
+                  "Description": "Banded phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 1.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BroadcastP",
+                  "Description": "Broadcast phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 1.0,
+                  "FractionCa": 0.0
+                }
+              ],
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
@@ -3976,6 +4381,213 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                    "Nodes": [
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Inert",
+                        "Location": "656, 254",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "SurfaceResidue",
+                        "Location": "566, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMLignin",
+                        "Location": "261, 69",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMCellulose",
+                        "Location": "397, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "123, 70",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "NO3",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "NH4",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Urea",
+                        "Location": "0, 0",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                        "Name": "Atmosphere",
+                        "Location": "500, 50",
+                        "Colour": "Beige",
+                        "OutlineColour": "Black",
+                        "Transparent": true
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "415, 173",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "499, 172",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "255, 105",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "141, 131",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "335, 301",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "319, 278",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "334, 340",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      },
+                      {
+                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Name": null
+                      }
+                    ]
+                  },
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
@@ -4163,6 +4775,7 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
+              "FractionFaecesAdded": 1.0,
               "Name": "surface organic matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
@@ -4187,6 +4800,9 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
+              "PlantType": "SCRUM",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "Name": "SCRUM",
               "ResourceName": "SCRUM",
               "Children": [],
@@ -4203,6 +4819,200 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "Definitions": [
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteCA",
+                  "Description": "Ca as finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 1.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "CalciteFine",
+                  "Description": "finely ground Agricultural Lime",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.4
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Dolomite",
+                  "Description": "finely ground dolomite",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.22
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NO3N",
+                  "Description": "N as nitrate",
+                  "FractionNO3": 1.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4N",
+                  "Description": "N as ammonium",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4NO3N",
+                  "Description": "ammonium nitrate",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.5,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "DAP",
+                  "Description": "di-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.18,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "MAP",
+                  "Description": "mono-ammonium phosphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.11,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UAN_N",
+                  "Description": "N as Urea-AmmoniumNitrate",
+                  "FractionNO3": 0.25,
+                  "FractionNH4": 0.25,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaN",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 1.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "UreaNO3",
+                  "Description": "N as urea",
+                  "FractionNO3": 0.5,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.5,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "Urea",
+                  "Description": "Urea fertiliser",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.46,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "NH4SO4N",
+                  "Description": "ammonium sulphate",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 1.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "RockP",
+                  "Description": "Rock phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.8,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 0.2,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BandedP",
+                  "Description": "Banded phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 1.0,
+                  "FractionLabileP": 0.0,
+                  "FractionCa": 0.0
+                },
+                {
+                  "$type": "Models.FertiliserType, Models",
+                  "Name": "BroadcastP",
+                  "Description": "Broadcast phosphorus",
+                  "FractionNO3": 0.0,
+                  "FractionNH4": 0.0,
+                  "FractionUrea": 0.0,
+                  "FractionRockP": 0.0,
+                  "FractionBandedP": 0.0,
+                  "FractionLabileP": 1.0,
+                  "FractionCa": 0.0
+                }
+              ],
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
@@ -4222,6 +5032,7 @@
                 "using System.Xml.Serialization;",
                 "using Models.Management;",
                 "using System.Linq;",
+                "using System.Diagnostics;",
                 "",
                 "namespace Models",
                 "{",
@@ -4250,7 +5061,7 @@
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                 "        {",
-                "            CutDatesList = CutDates.ToList();",
+                "            CutDatesList = CutDates != null ? CutDates.ToList() : new List<DateTime>();",
                 "        }",
                 "        ",
                 "        [EventSubscribe(\"DoManagement\")]",
@@ -4269,10 +5080,11 @@
                 "                CropIn = false;",
                 "            }",
                 "            ",
-                "            foreach (DateTime d in CutDatesList)            {",
-                "            \tif (CropIn)",
+                "            foreach (DateTime d in CutDatesList)            ",
+                "            {",
+                "            \tif ((CropIn) && (d == Clock.Today))",
                 "            \t{",
-                "            \t\trbs.Do();",
+                "            \t    rbs.Do();",
                 "           \t\t}",
                 "            }",
                 "            ",
@@ -4297,7 +5109,7 @@
                 },
                 {
                   "Key": "CutDates",
-                  "Value": "12/10/2010 00:00:00"
+                  "Value": "12/15/2010 00:00:00, 02/15/2011 00:00:00"
                 },
                 {
                   "Key": "EndCropDate",
@@ -4569,6 +5381,9 @@
               "$type": "Models.Management.RemoveBiomassSettings, Models",
               "Crop": {
                 "$type": "Models.PMF.Plant, Models",
+                "PlantType": null,
+                "IsEnding": false,
+                "DaysAfterEnding": 0,
                 "Name": "SCRUM",
                 "ResourceName": "SCRUM",
                 "Children": [],
@@ -6867,6 +7682,213 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "DirectedGraphInfo": {
+                        "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                        "Nodes": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Inert",
+                            "Location": "656, 254",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "SurfaceResidue",
+                            "Location": "566, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMLignin",
+                            "Location": "261, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCellulose",
+                            "Location": "397, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCarbohydrate",
+                            "Location": "123, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Microbial",
+                            "Location": "218, 299",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Humic",
+                            "Location": "458, 293",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Urea",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Atmosphere",
+                            "Location": "500, 50",
+                            "Colour": "Beige",
+                            "OutlineColour": "Black",
+                            "Transparent": true
+                          }
+                        ],
+                        "Arcs": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Microbial",
+                            "Location": "415, 173",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Humic",
+                            "Location": "499, 172",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Microbial",
+                            "Location": "259, 221",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Humic",
+                            "Location": "255, 105",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Microbial",
+                            "Location": "370, 184",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Humic",
+                            "Location": "463, 224",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Microbial",
+                            "Location": "141, 131",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Humic",
+                            "Location": "204, 215",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Microbial",
+                            "Location": "335, 301",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Humic",
+                            "Location": "319, 278",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Humic",
+                            "DestinationName": "Microbial",
+                            "Location": "334, 340",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NO3",
+                            "DestinationName": "Atmosphere",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NH4",
+                            "DestinationName": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Urea",
+                            "DestinationName": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          }
+                        ]
+                      },
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
@@ -7070,6 +8092,200 @@
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
+                  "Definitions": [
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteCA",
+                      "Description": "Ca as finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 1.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteFine",
+                      "Description": "finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.4
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Dolomite",
+                      "Description": "finely ground dolomite",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.22
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NO3N",
+                      "Description": "N as nitrate",
+                      "FractionNO3": 1.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4N",
+                      "Description": "N as ammonium",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4NO3N",
+                      "Description": "ammonium nitrate",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.5,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "DAP",
+                      "Description": "di-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.18,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "MAP",
+                      "Description": "mono-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.11,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UAN_N",
+                      "Description": "N as Urea-AmmoniumNitrate",
+                      "FractionNO3": 0.25,
+                      "FractionNH4": 0.25,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaN",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 1.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaNO3",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Urea",
+                      "Description": "Urea fertiliser",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.46,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4SO4N",
+                      "Description": "ammonium sulphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "RockP",
+                      "Description": "Rock phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.8,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.2,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BandedP",
+                      "Description": "Banded phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 1.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BroadcastP",
+                      "Description": "Broadcast phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 1.0,
+                      "FractionCa": 0.0
+                    }
+                  ],
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
@@ -7317,6 +8533,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
+                  "FractionFaecesAdded": 1.0,
                   "Name": "surface organic matter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
@@ -7577,6 +8794,9 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": "SCRUM",
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
                   "Name": "SCRUM",
                   "ResourceName": "SCRUM",
                   "Children": [],
@@ -10679,6 +11899,213 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "DirectedGraphInfo": {
+                        "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                        "Nodes": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Inert",
+                            "Location": "656, 254",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "SurfaceResidue",
+                            "Location": "566, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMLignin",
+                            "Location": "261, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCellulose",
+                            "Location": "397, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCarbohydrate",
+                            "Location": "123, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Microbial",
+                            "Location": "218, 299",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Humic",
+                            "Location": "458, 293",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Urea",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Atmosphere",
+                            "Location": "500, 50",
+                            "Colour": "Beige",
+                            "OutlineColour": "Black",
+                            "Transparent": true
+                          }
+                        ],
+                        "Arcs": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Microbial",
+                            "Location": "415, 173",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Humic",
+                            "Location": "499, 172",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Microbial",
+                            "Location": "259, 221",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Humic",
+                            "Location": "255, 105",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Microbial",
+                            "Location": "370, 184",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Humic",
+                            "Location": "463, 224",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Microbial",
+                            "Location": "141, 131",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Humic",
+                            "Location": "204, 215",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Microbial",
+                            "Location": "335, 301",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Humic",
+                            "Location": "319, 278",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Humic",
+                            "DestinationName": "Microbial",
+                            "Location": "334, 340",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NO3",
+                            "DestinationName": "Atmosphere",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NH4",
+                            "DestinationName": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Urea",
+                            "DestinationName": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          }
+                        ]
+                      },
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
@@ -11044,6 +12471,9 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": "SCRUM",
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
                   "Name": "SCRUM",
                   "ResourceName": "SCRUM",
                   "Children": [],
@@ -11076,6 +12506,200 @@
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
+                  "Definitions": [
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteCA",
+                      "Description": "Ca as finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 1.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteFine",
+                      "Description": "finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.4
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Dolomite",
+                      "Description": "finely ground dolomite",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.22
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NO3N",
+                      "Description": "N as nitrate",
+                      "FractionNO3": 1.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4N",
+                      "Description": "N as ammonium",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4NO3N",
+                      "Description": "ammonium nitrate",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.5,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "DAP",
+                      "Description": "di-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.18,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "MAP",
+                      "Description": "mono-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.11,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UAN_N",
+                      "Description": "N as Urea-AmmoniumNitrate",
+                      "FractionNO3": 0.25,
+                      "FractionNH4": 0.25,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaN",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 1.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaNO3",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Urea",
+                      "Description": "Urea fertiliser",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.46,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4SO4N",
+                      "Description": "ammonium sulphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "RockP",
+                      "Description": "Rock phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.8,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.2,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BandedP",
+                      "Description": "Banded phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 1.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BroadcastP",
+                      "Description": "Broadcast phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 1.0,
+                      "FractionCa": 0.0
+                    }
+                  ],
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
@@ -11092,6 +12716,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
+                  "FractionFaecesAdded": 1.0,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
@@ -17061,6 +18686,9 @@
               "Children": [
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": "SCRUM",
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
                   "Name": "SCRUM",
                   "ResourceName": "SCRUM",
                   "Children": [],
@@ -17299,6 +18927,213 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "DirectedGraphInfo": {
+                        "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
+                        "Nodes": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Inert",
+                            "Location": "656, 254",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "SurfaceResidue",
+                            "Location": "566, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMLignin",
+                            "Location": "261, 69",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCellulose",
+                            "Location": "397, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "FOMCarbohydrate",
+                            "Location": "123, 70",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Microbial",
+                            "Location": "218, 299",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Humic",
+                            "Location": "458, 293",
+                            "Colour": "0, 158, 115",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Urea",
+                            "Location": "0, 0",
+                            "Colour": "86, 180, 233",
+                            "OutlineColour": "Black",
+                            "Transparent": false
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+                            "Name": "Atmosphere",
+                            "Location": "500, 50",
+                            "Colour": "Beige",
+                            "OutlineColour": "Black",
+                            "Transparent": true
+                          }
+                        ],
+                        "Arcs": [
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Microbial",
+                            "Location": "415, 173",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "SurfaceResidue",
+                            "DestinationName": "Humic",
+                            "Location": "499, 172",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Microbial",
+                            "Location": "259, 221",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMLignin",
+                            "DestinationName": "Humic",
+                            "Location": "255, 105",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Microbial",
+                            "Location": "370, 184",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCellulose",
+                            "DestinationName": "Humic",
+                            "Location": "463, 224",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Microbial",
+                            "Location": "141, 131",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "FOMCarbohydrate",
+                            "DestinationName": "Humic",
+                            "Location": "204, 215",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Microbial",
+                            "Location": "335, 301",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Microbial",
+                            "DestinationName": "Humic",
+                            "Location": "319, 278",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Humic",
+                            "DestinationName": "Microbial",
+                            "Location": "334, 340",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NO3",
+                            "DestinationName": "Atmosphere",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "NH4",
+                            "DestinationName": "NO3",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          },
+                          {
+                            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+                            "SourceName": "Urea",
+                            "DestinationName": "NH4",
+                            "Location": "0, 0",
+                            "Colour": "Black",
+                            "Name": null
+                          }
+                        ]
+                      },
                       "Name": "Nutrient",
                       "ResourceName": "Nutrient",
                       "Children": [],
@@ -17541,6 +19376,7 @@
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 15.0,
+                  "FractionFaecesAdded": 1.0,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
@@ -17573,6 +19409,200 @@
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
+                  "Definitions": [
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteCA",
+                      "Description": "Ca as finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 1.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "CalciteFine",
+                      "Description": "finely ground Agricultural Lime",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.4
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Dolomite",
+                      "Description": "finely ground dolomite",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.22
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NO3N",
+                      "Description": "N as nitrate",
+                      "FractionNO3": 1.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4N",
+                      "Description": "N as ammonium",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4NO3N",
+                      "Description": "ammonium nitrate",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.5,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "DAP",
+                      "Description": "di-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.18,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "MAP",
+                      "Description": "mono-ammonium phosphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.11,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UAN_N",
+                      "Description": "N as Urea-AmmoniumNitrate",
+                      "FractionNO3": 0.25,
+                      "FractionNH4": 0.25,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaN",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 1.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "UreaNO3",
+                      "Description": "N as urea",
+                      "FractionNO3": 0.5,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.5,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "Urea",
+                      "Description": "Urea fertiliser",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.46,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "NH4SO4N",
+                      "Description": "ammonium sulphate",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 1.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "RockP",
+                      "Description": "Rock phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.8,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 0.2,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BandedP",
+                      "Description": "Banded phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 1.0,
+                      "FractionLabileP": 0.0,
+                      "FractionCa": 0.0
+                    },
+                    {
+                      "$type": "Models.FertiliserType, Models",
+                      "Name": "BroadcastP",
+                      "Description": "Broadcast phosphorus",
+                      "FractionNO3": 0.0,
+                      "FractionNH4": 0.0,
+                      "FractionUrea": 0.0,
+                      "FractionRockP": 0.0,
+                      "FractionBandedP": 0.0,
+                      "FractionLabileP": 1.0,
+                      "FractionCa": 0.0
+                    }
+                  ],
                   "Name": "Fertiliser",
                   "ResourceName": "Fertiliser",
                   "Children": [],
