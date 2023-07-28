@@ -70,7 +70,7 @@
     <PackageReference Include="GtkSharp" Version="3.24.24.38" />
     <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
-    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.3-netcorebeta" />
+    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
