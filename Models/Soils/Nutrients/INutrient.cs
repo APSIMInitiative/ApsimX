@@ -1,4 +1,6 @@
-﻿namespace Models.Soils.Nutrients
+﻿using Models.Surface;
+
+namespace Models.Soils.Nutrients
 {
 
     /// <summary>
