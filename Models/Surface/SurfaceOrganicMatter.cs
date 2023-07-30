@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.CSharp;
 using Models.Core;
+using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -42,13 +44,13 @@ namespace Models.Surface
         /// <summary>Link to NH4 solute.</summary>
         private ISolute NH4Solute = null;
 
-        /// <summary>Link to the soil N model</summary>
-        [Link]
-        private INutrient SoilNitrogen = null;
-
         /// <summary>Gets or sets the residue types.</summary>
         [Link(Type = LinkType.Child)]
         private ResidueTypes ResidueTypes = null;
+
+        /// <summary>Residue decomposition.</summary>
+        [Link(Type = LinkType.Child)]
+        private CarbonFlow decomposition = null;
 
         /// <summary>The surf om</summary>
         public List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
@@ -67,6 +69,9 @@ namespace Models.Surface
 
         /// <summary>The potential decomposition</summary>
         private SurfaceOrganicMatterDecompType potentialDecomposition;
+
+        /// <summary>The potential residue decomposition pool that is given to nutrient.</summary>
+        private NutrientPool residueDecompositionPool;
 
         /// <summary>Has potential decomposition been calculated?</summary>
         private bool calculatedPotentialDecomposition;
@@ -369,7 +374,7 @@ namespace Models.Surface
             {
                 // This happens when user clicks on SurfaceOrganicMatter in tree.
                 // Links haven't been resolved yet
-                ResidueTypes = Children[0] as ResidueTypes;
+                ResidueTypes = FindChild<ResidueTypes>();
             }
             return ResidueTypes.Names;
         }
@@ -398,7 +403,7 @@ namespace Models.Surface
         }
 
         /// <summary>Return the potential residue decomposition for today.</summary>
-        public void PotentialDecomposition(NutrientPool residueDecompositionPool)
+        private void PotentialDecomposition()
         {
             // This method can be called multiple times when nutrient patching is running. Each
             // patch will call this method. Because of the cumeos accumulation below we only
@@ -429,6 +434,7 @@ namespace Models.Surface
                 residueDecompositionPool.C[0] += potentialDecomposition.Pool[i].FOM.C;
                 residueDecompositionPool.N[0] += potentialDecomposition.Pool[i].FOM.N;
             }
+            decomposition.DoFlow();
         }
 
         /// <summary>
@@ -519,6 +525,12 @@ namespace Models.Surface
             NO3Solute = this.FindInScope("NO3") as ISolute;
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
+            // messy few lines below - clean.
+            residueDecompositionPool = new NutrientPool(soilPhysical.Thickness.Length);
+            residueDecompositionPool.Children.Add(decomposition);
+            residueDecompositionPool.Parent = this;
+            decomposition.Parent = residueDecompositionPool;
+            decomposition.Initialise();
         }
 
         /// <summary>Called at start of each day.</summary>
@@ -572,6 +584,15 @@ namespace Models.Surface
         /// <summary>Do the daily residue decomposition for today.</summary>
         /// <param name="sender">The event sender</param>
         /// <param name="args">The event data</param>
+        [EventSubscribe("DoSurfaceOrganicMatterPotentialDecomposition")]
+        private void DoSurfaceOrganicMatterPotentialDecomposition(object sender, EventArgs args)
+        {
+            PotentialDecomposition();
+        }
+
+        /// <summary>Do the daily residue decomposition for today.</summary>
+        /// <param name="sender">The event sender</param>
+        /// <param name="args">The event data</param>
         [EventSubscribe("DoSurfaceOrganicMatterDecomposition")]
         private void OnDoSurfaceOrganicMatterDecomposition(object sender, EventArgs args)
         {
@@ -581,7 +602,7 @@ namespace Models.Surface
 
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
                 InitialResidueC += potentialDecomposition.Pool[i].FOM.C;
-            FinalResidueC = SoilNitrogen.SurfaceResidue.C[0];
+            FinalResidueC = residueDecompositionPool.C[0];
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
             if (FractionDecomposed < 1)
             { }

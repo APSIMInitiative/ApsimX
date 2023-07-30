@@ -83,9 +83,6 @@ namespace Models.Soils.NutrientPatching
         /// <summary>The fresh organic matter pool.</summary>
         public INutrientPool FOM { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOM)); } }
 
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        public INutrientPool SurfaceResidue { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.SurfaceResidue)); } }
-
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
         public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic, Inert }); } }
 
@@ -124,9 +121,6 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         public double[] MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        public double[] MineralisedNSurfaceResidue { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedNSurfaceResidue)); } }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         public double[] DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
@@ -347,18 +341,19 @@ namespace Models.Soils.NutrientPatching
             var areas = patches.Select(patch => patch.RelativeArea).ToList();
             var poolsAsList = pools.ToList();
 
-            var values = new NutrientPool();
-            values.C = new double[soilPhysical.Thickness.Length];
-            values.N = new double[soilPhysical.Thickness.Length];
-            for (int p = 0; p < poolsAsList.Count; p++)
+            double[] c = new double[soilPhysical.Thickness.Length];
+            double[] n = new double[soilPhysical.Thickness.Length];
+            double[] p = new double[soilPhysical.Thickness.Length];
+
+            for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
             {
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
-                    values.C[i] += poolsAsList[p].C[i] * areas[p];
-                    values.N[i] += poolsAsList[p].N[i] * areas[p];
+                    c[i] += poolsAsList[poolIndex].C[i] * areas[poolIndex];
+                    n[i] += poolsAsList[poolIndex].N[i] * areas[poolIndex];
                 }
             }
-            return values;
+            return new NutrientPool(c, n, p);
         }
 
         /// <summary>
@@ -422,18 +417,7 @@ namespace Models.Soils.NutrientPatching
         /// <param name="pools">The pools to sum.</param>
         private INutrientPool SumNutrientPoolsWithoutArea(INutrientPool[] pools)
         {
-            var values = new NutrientPool();
-            values.C = new double[soilPhysical.Thickness.Length];
-            values.N = new double[soilPhysical.Thickness.Length];
-            foreach (var pool in pools)
-            {
-                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                {
-                    values.C[i] += pool.C[i];
-                    values.N[i] += pool.N[i];
-                }
-            }
-            return values;
+            return new NutrientPool(pools);
         }
 
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>

@@ -51,5 +51,22 @@ namespace Models.Soils.Nutrients
                 return values;
             }
         }
+
+        /// <summary>Amount of phosphorus (kg/ha).</summary>
+        public double[] P
+        {
+            get
+            {
+                double[] values = null;
+                foreach (var pool in nutrientPools)
+                {
+                    if (values == null)
+                        values = new double[pool.N.Length];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] += pool.P[i];
+                }
+                return values;
+            }
+        }
     }
 }

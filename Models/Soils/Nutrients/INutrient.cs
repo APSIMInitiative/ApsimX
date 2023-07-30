@@ -30,9 +30,6 @@ namespace Models.Soils.Nutrients
         /// <summary>The fresh organic matter pool.</summary>
         INutrientPool FOM { get; }
 
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        INutrientPool SurfaceResidue { get; }
-
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
         INutrientPool Organic { get; }
 
@@ -59,9 +56,6 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         double[] MineralisedN { get; }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        double[] MineralisedNSurfaceResidue { get; }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         double[] DenitrifiedN { get; }

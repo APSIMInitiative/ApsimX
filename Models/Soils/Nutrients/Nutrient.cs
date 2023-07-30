@@ -48,10 +48,6 @@ namespace Models.Soils.Nutrients
         [Link]
         private ISummary Summary = null;
 
-        /// <summary>The surface organic matter</summary>
-        [Link]
-        private SurfaceOrganicMatter SurfaceOrganicMatter = null;
-
         /// <summary>Access the soil physical properties.</summary>
         [Link]
         private IPhysical soilPhysical = null;
@@ -83,10 +79,6 @@ namespace Models.Soils.Nutrients
         /// <summary>The fresh organic matter pool.</summary>
         public INutrientPool FOM { get { return fom; } }
 
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool SurfaceResidue { get; set; }
-
         /// <summary>The NO3 pool.</summary>
         [Link(ByName = true)]
         public ISolute NO3 { get; set; }
@@ -100,8 +92,7 @@ namespace Models.Soils.Nutrients
         public ISolute Urea { get; set; }
 
         /// <summary>Child carbon flows.</summary>
-        [Link]
-        private CarbonFlow[] CarbonFlows { get; set; }
+        private IEnumerable<CarbonFlow> CarbonFlows { get; set; }
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
@@ -118,16 +109,13 @@ namespace Models.Soils.Nutrients
             }
         }
 
-        /// <summary>Potential soil organic matter decomposition for today.</summary>
-        public NutrientPool SurfaceResidueDecomposition { get; private set; } = null;
-
         /// <summary>
         /// Reset all pools and solutes
         /// </summary> 
         public void Reset()
         {
             foreach (NutrientPool P in FindAllChildren<NutrientPool>())
-                P.Reset();
+                P.Initialise(soilPhysical.Thickness.Length);
 
             foreach (Solute S in FindAllInScope<ISolute>())
                 S.Reset();
@@ -147,7 +135,7 @@ namespace Models.Soils.Nutrients
                 else
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
-                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>().Where(pool => pool != SurfaceResidue);
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in pools)
                     for (int i = 0; i < numLayers; i++)
@@ -241,8 +229,7 @@ namespace Models.Soils.Nutrients
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
                 List<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>().ToList();
-                Flows.RemoveAll(flow => flow.Parent == SurfaceResidue);
-
+                
                 // Add all flows.
                 foreach (CarbonFlow f in Flows)
                 {
@@ -250,16 +237,6 @@ namespace Models.Soils.Nutrients
                         values[i] += f.MineralisedN[i];
                 }
                 return values;
-            }
-        }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        public double[] MineralisedNSurfaceResidue
-        {
-            get
-            {
-                var decomposition = (SurfaceResidue as IModel).FindChild<CarbonFlow>("Decomposition");
-                return decomposition.MineralisedN;
             }
         }
 
@@ -358,23 +335,10 @@ namespace Models.Soils.Nutrients
             get
             {
                 // Get the denitrification N flow under NO3.
-                var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
+                var pools = FindAllDescendants<NutrientPool>();
                 //pools.Remove(Inert); this should be included as without it is contrary to user expectations
-                pools.Remove(SurfaceResidue);
-
-                NutrientPool returnPool = new NutrientPool();
-                returnPool.C = new double[FOMLignin.C.Length];
-                returnPool.N = new double[FOMLignin.C.Length];
-                foreach (var pool in pools)
-                {
-                    for (int i = 0; i < pool.C.Length; i++)
-                    {
-                        returnPool.C[i] += pool.C[i];
-                        returnPool.N[i] += pool.N[i];
-                    }
-                }
-
-                return returnPool;
+                
+                return new NutrientPool(pools);
             }
         }
 
@@ -433,6 +397,10 @@ namespace Models.Soils.Nutrients
         {
             fom = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
             FOMCNRFactor = new double[soilPhysical.Thickness.Length];
+
+            CarbonFlows = FindAllDescendants<CarbonFlow>();
+            foreach (var carbonFlow in CarbonFlows)
+                carbonFlow.Initialise();
         }
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
@@ -512,8 +480,8 @@ namespace Models.Soils.Nutrients
                 FOMCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
                                                      FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
 
-            // Get potential residue decomposition from surface organic matter
-            SurfaceOrganicMatter.PotentialDecomposition(SurfaceResidue as NutrientPool);
+            foreach (var carbonFlow in CarbonFlows)
+                carbonFlow.DoFlow();
         }
 
         /// <summary>Calculate / create a directed graph from model</summary>
@@ -537,7 +505,7 @@ namespace Models.Soils.Nutrients
 
                 foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
                 {
-                    foreach (string destinationName in cFlow.destinationNames)
+                    foreach (string destinationName in cFlow.DestinationNames)
                     {
                         string destName = destinationName;
                         if (destName == null)

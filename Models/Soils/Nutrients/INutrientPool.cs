@@ -8,5 +8,8 @@
 
         /// <summary>Amount of nitrogen (kg/ha)</summary>
         double[] N { get; }
+
+        /// <summary>Amount of phosphorus (kg/ha)</summary>
+        double[] P { get; }
     }
 }
