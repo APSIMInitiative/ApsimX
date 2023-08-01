@@ -5042,7 +5042,7 @@
                 "    {",
                 "        [Link] Plant SCRUM;",
                 "        [Link] Clock Clock;",
-                "        [Link] RemoveBiomassSettings rbs;",
+                "        [Link] BiomassRemovalFractions rbs;",
                 "",
                 "        [Description(\"Cultivar\")]",
                 "        public string CultivarName { get; set; }",
@@ -5378,91 +5378,172 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Management.RemoveBiomassSettings, Models",
-              "Crop": {
-                "$type": "Models.PMF.Plant, Models",
-                "PlantType": null,
-                "IsEnding": false,
-                "DaysAfterEnding": 0,
-                "Name": "SCRUM",
-                "ResourceName": "SCRUM",
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "removaltp": 0,
-              "Name": "RemoveBiomass",
-              "ResourceName": null,
-              "Children": [
+              "$type": "Models.Management.BiomassRemovalFractions, Models",
+              "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.OrganBiomassRemoval, Models",
-                  "Name": "Stover",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.3,
-                      "Units": null,
-                      "Name": "LiveToRemove",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.7,
-                      "Units": null,
-                      "Name": "LiveToResidue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Product",
+                  "TypeString": "Cutting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
                 },
                 {
-                  "$type": "Models.Management.OrganBiomassRemoval, Models",
-                  "Name": "Product",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": null,
-                      "Name": "LiveToRemove",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.3,
-                      "Units": null,
-                      "Name": "LiveToResidue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Product",
+                  "TypeString": "Grazing",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3.5,
-                  "Units": null,
-                  "Name": "SetStage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Product",
+                  "TypeString": "Harvesting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Product",
+                  "TypeString": "Pruning",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Stover",
+                  "TypeString": "Cutting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Stover",
+                  "TypeString": "Grazing",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Stover",
+                  "TypeString": "Harvesting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Stover",
+                  "TypeString": "Pruning",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Root",
+                  "TypeString": "Cutting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Root",
+                  "TypeString": "Grazing",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Root",
+                  "TypeString": "Harvesting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Root",
+                  "TypeString": "Pruning",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Nodule",
+                  "TypeString": "Cutting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Nodule",
+                  "TypeString": "Grazing",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Nodule",
+                  "TypeString": "Harvesting",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
+                },
+                {
+                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "PlantName": "SCRUM",
+                  "OrganName": "Nodule",
+                  "TypeString": "Pruning",
+                  "LiveToRemoveString": null,
+                  "DeadToRemoveString": null,
+                  "LiveToResidueString": null,
+                  "DeadToResidueString": null
                 }
               ],
+              "Name": "BiomassRemovalFractions",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
