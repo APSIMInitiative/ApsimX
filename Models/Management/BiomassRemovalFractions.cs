@@ -1,15 +1,12 @@
 ﻿using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
-using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using Newtonsoft.Json;
 using System.Linq;
-using APSIM.Shared.Utilities;
-using Models.PMF;
+
 
 namespace Models.Management
 {
@@ -40,12 +37,6 @@ namespace Models.Management
             /// <summary>Biomass is pruned</summary>
             Pruning
         }
-
-        /// <summary>
-        /// The type of biomass removal event
-        /// </summary>
-        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
-        public BiomassRemovalType removaltype { get; set; }
 
         /// <summary>Stores a row of Biomass Removal Fractions</summary>
         [Serializable]
@@ -125,9 +116,6 @@ namespace Models.Management
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
 
         
-        //[Link(Type = LinkType.Scoped, ByName = true)]
-        //private Phenology phenology = null;
-
         /// <summary>Cutting Event</summary>
         public event EventHandler<EventArgs> Cutting;
 
@@ -192,11 +180,14 @@ namespace Models.Management
                 List<IOrgan> organs = plant.FindAllDescendants<IOrgan>().ToList();
                 foreach (IOrgan organ in organs)
                 {
-                    DataRow row = data.NewRow();
-                    row["Plant"] = plant.Name;
-                    row["Organ"] = organ.Name;
-                    row["Type"] = removaltype.ToString();
-                    data.Rows.Add(row);
+                    foreach (BiomassRemovalType type in Enum.GetValues(typeof(BiomassRemovalType)))
+                    {
+                        DataRow row = data.NewRow();
+                        row["Plant"] = plant.Name;
+                        row["Organ"] = organ.Name;
+                        row["Type"] = type;
+                        data.Rows.Add(row);
+                    }
                 }
             }
 
@@ -298,62 +289,65 @@ namespace Models.Management
         }
 
         /// <summary>Method that applies specified removal fractions and rewind</summary>
-        public void Do()
+        public void Do(BiomassRemovalType removaltype)
         {
 
             foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
             {
-                double liveToRemoved = 0;
-                try
+                if (removal.Type == removaltype)
                 {
-                    if (!String.IsNullOrEmpty(removal.LiveToRemoveString))
-                        liveToRemoved = removal.LiveToRemove;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error parsing Biomass Removal Variable 'LiveToRemove'. Value {removal.LiveToRemoveString} could not be parsed to number.", e);
-                }
+                    double liveToRemoved = 0;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(removal.LiveToRemoveString))
+                            liveToRemoved = removal.LiveToRemove;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Error parsing Biomass Removal Variable 'LiveToRemove'. Value {removal.LiveToRemoveString} could not be parsed to number.", e);
+                    }
 
-                double deadToRemoved = 0;
-                try
-                {
-                    if (!String.IsNullOrEmpty(removal.DeadToRemoveString))
-                        deadToRemoved = removal.DeadToRemove;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error parsing Biomass Removal variable 'DeadToRemove'. Value {removal.DeadToRemoveString} could not be parsed to number.", e);
-                }
+                    double deadToRemoved = 0;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(removal.DeadToRemoveString))
+                            deadToRemoved = removal.DeadToRemove;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Error parsing Biomass Removal variable 'DeadToRemove'. Value {removal.DeadToRemoveString} could not be parsed to number.", e);
+                    }
 
-                double liveToResidues = 0;
-                try
-                {
-                    if (!String.IsNullOrEmpty(removal.LiveToResidueString))
-                        liveToResidues = removal.LiveToResidue;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error parsing Biomass Removal variable 'LiveToResidue'. Value {removal.LiveToResidueString} could not be parsed to number.", e);
-                }
+                    double liveToResidues = 0;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(removal.LiveToResidueString))
+                            liveToResidues = removal.LiveToResidue;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Error parsing Biomass Removal variable 'LiveToResidue'. Value {removal.LiveToResidueString} could not be parsed to number.", e);
+                    }
 
-                double deadToResidues = 0;
-                try
-                {
-                    if (!String.IsNullOrEmpty(removal.DeadToResidueString))
-                        deadToResidues = removal.DeadToResidue;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error parsing Biomass Removal variable 'DeadToResidue'. Value {removal.DeadToResidueString} could not be parsed to number.", e);
-                }
+                    double deadToResidues = 0;
+                    try
+                    {
+                        if (!String.IsNullOrEmpty(removal.DeadToResidueString))
+                            deadToResidues = removal.DeadToResidue;
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"Error parsing Biomass Removal variable 'DeadToResidue'. Value {removal.DeadToResidueString} could not be parsed to number.", e);
+                    }
 
-                IPlant plant = this.FindSibling<IPlant>(removal.PlantName);
-                IOrgan organ = plant.FindDescendant<IOrgan>(removal.OrganName);
-                
-                (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: liveToRemoved,
-                                                                deadToRemove: deadToRemoved,
-                                                                liveToResidue: liveToResidues,
-                                                                deadToResidue: deadToResidues);
+                    IPlant plant = this.FindSibling<IPlant>(removal.PlantName);
+                    IOrgan organ = plant.FindDescendant<IOrgan>(removal.OrganName);
+
+                    (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: liveToRemoved,
+                                                                    deadToRemove: deadToRemoved,
+                                                                    liveToResidue: liveToResidues,
+                                                                    deadToResidue: deadToResidues);
+                }
             }
 
             if (removaltype.ToString() == BiomassRemovalType.Cutting.ToString())
@@ -364,11 +358,6 @@ namespace Models.Management
                 Pruning?.Invoke(this, new EventArgs());
             if (removaltype.ToString() == BiomassRemovalType.Harvesting.ToString())
                 Harvesting?.Invoke(this, new EventArgs());
-
-            /*
-            if (SetStage != null)
-                phenology.SetToStage(SetStage.Value());
-            */
         }
     }
 }
