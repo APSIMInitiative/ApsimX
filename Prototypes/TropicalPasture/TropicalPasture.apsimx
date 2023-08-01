@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 419,
-  "Version": 163,
+  "Version": 165,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -4316,42 +4315,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -4584,7 +4550,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -4637,7 +4603,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -4690,7 +4656,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -4810,129 +4776,150 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1994-12-08",
                               "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1994-12-08 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-01-01",
                               "Action": "[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);",
-                              "Enabled": true
+                              "Line": "1995-01-01 [TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-10-09",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1995-10-09 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-11-21",
                               "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1995-11-21 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1995-12-01",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1995-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1996-01-30",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1996-01-30 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1996-02-28",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1996-02-28 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1996-11-26",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1996-11-26 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1996-12-22",
                               "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1996-12-22 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1997-01-14",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1997-01-14 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1997-03-04",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1997-03-04 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1997-06-26",
                               "Action": "[Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1997-06-26 [Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1997-11-17",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1997-11-17 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1998-04-07",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1998-04-07 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1998-10-09",
                               "Action": "[Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1998-10-09 [Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1998-12-17",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1998-12-17 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1999-02-16",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1999-02-16 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1999-06-02",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1999-06-02 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1999-11-10",
                               "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1999-11-10 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1999-09-29",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "1999-09-29 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2000-02-02",
                               "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                              "Enabled": true
+                              "Line": "2000-02-02 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                             }
                           ],
                           "Name": "Operations",
@@ -5027,7 +5014,67 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Tropical pasture is null\");\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Cannot find tropical pasture model\");\r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                          "CodeArray": [
+                            "",
+                            "using Models.PMF.Interfaces;",
+                            "using Newtonsoft.Json;",
+                            "using System;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using Models.PMF;",
+                            "using Models.PMF.Interfaces;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Soils;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link(ByName = true)] Plant TropicalPasture;",
+                            "        [Link] Clock Clock;",
+                            "",
+                            "    ",
+                            "",
+                            "        ",
+                            "        [EventSubscribe(\"StartOfSimulation\")]",
+                            "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                            "        {",
+                            "            ",
+                            "        }",
+                            "",
+                            "        public void DoCut(double LeafResidue, double StemResidue)",
+                            "        {",
+                            "            if (TropicalPasture == null)",
+                            "                throw new Exception(\"Tropical pasture is null\");",
+                            "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;",
+                            "            double LeafRemovalFraction = 0;",
+                            "            if (L > 0)",
+                            "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                            "            if (LeafRemovalFraction < 0)",
+                            "                LeafRemovalFraction = 0;",
+                            "               ",
+                            "            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;",
+                            "            double StemRemovalFraction = 0;",
+                            "            if (S > 0)",
+                            "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                            "            if (StemRemovalFraction < 0)",
+                            "                StemRemovalFraction = 0;",
+                            "               ",
+                            "            if (TropicalPasture == null)",
+                            "                throw new Exception(\"Cannot find tropical pasture model\");",
+                            "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                            "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                            "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                            "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                            "",
+                            "        }",
+                            "        ",
+                            "    }",
+                            "}",
+                            "                "
+                          ],
                           "Parameters": [],
                           "Name": "CuttingManagement",
                           "ResourceName": null,
@@ -6299,7 +6346,70 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        Accumulator accumulatedPan;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Pan Fraction (0-1)\")]\r\n        public double PanFraction { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        private double DaysSinceIrrigation = 0;\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            accumulatedPan = new Accumulator(this, \"[Soil].SoilWater.Eo\", RainDays);\r\n            DaysSinceIrrigation = 0;\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            accumulatedPan.Update();\r\n            DaysSinceIrrigation += 1;\r\n            double RainDeficit = accumulatedPan.Sum * PanFraction - accumulatedRain.Sum;\r\n\r\n            if (DaysSinceIrrigation == RainDays)\r\n            {\r\n                DaysSinceIrrigation = 0;\r\n                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                    RainDeficit > 0)\r\n                {\r\n                    Irrigation.Apply(RainDeficit);\r\n                }\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "CodeArray": [
+                    "using Models.Climate;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        [Link] Summary Summary;",
+                    "        [Link] Irrigation Irrigation;",
+                    "        [Link] Soil Soil;",
+                    "        Accumulator accumulatedRain;",
+                    "        Accumulator accumulatedPan;",
+                    "        ",
+                    "        [Description(\"Start of sowing window (d-mmm)\")]",
+                    "        public string StartDate { get; set; }",
+                    "        [Description(\"End of sowing window (d-mmm)\")]",
+                    "        public string EndDate { get; set; }",
+                    "        [Description(\"Pan Fraction (0-1)\")]",
+                    "        public double PanFraction { get; set; }",
+                    "        [Description(\"Duration of rainfall accumulation (d)\")]",
+                    "        public int RainDays { get; set; }",
+                    "        private double DaysSinceIrrigation = 0;",
+                    "        ",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                    "        {",
+                    "            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);",
+                    "            accumulatedPan = new Accumulator(this, \"[Soil].SoilWater.Eo\", RainDays);",
+                    "            DaysSinceIrrigation = 0;",
+                    "        }",
+                    "        ",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            accumulatedRain.Update();",
+                    "            accumulatedPan.Update();",
+                    "            DaysSinceIrrigation += 1;",
+                    "            double RainDeficit = accumulatedPan.Sum * PanFraction - accumulatedRain.Sum;",
+                    "",
+                    "            if (DaysSinceIrrigation == RainDays)",
+                    "            {",
+                    "                DaysSinceIrrigation = 0;",
+                    "                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
+                    "                    RainDeficit > 0)",
+                    "                {",
+                    "                    Irrigation.Apply(RainDeficit);",
+                    "                }",
+                    "            }",
+                    "        }",
+                    "        ",
+                    "    }",
+                    "}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -6346,39 +6456,45 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-03-01",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
+                                  "Line": "1982-03-01 [Irrigation].Apply(50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-10-05",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
+                                  "Line": "1982-10-05 [Irrigation].Apply(50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-11-01",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
+                                  "Line": "1982-11-01 [Irrigation].Apply(50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1983-01-30",
                                   "Action": "[Irrigation].Apply(75);",
-                                  "Enabled": true
+                                  "Line": "1983-01-30 [Irrigation].Apply(75);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1983-02-18",
                                   "Action": "[Irrigation].Apply(75);",
-                                  "Enabled": true
+                                  "Line": "1983-02-18 [Irrigation].Apply(75);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1984-03-05",
                                   "Action": "[Irrigation].Apply(50);",
-                                  "Enabled": true
+                                  "Line": "1984-03-05 [Irrigation].Apply(50);"
                                 }
                               ],
                               "Name": "Wet",
@@ -6661,42 +6777,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -6865,7 +6948,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -6918,7 +7001,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -6971,7 +7054,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -7091,87 +7174,101 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-12",
                                   "Action": "[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);",
-                                  "Enabled": true
+                                  "Line": "1982-01-12 [TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-12",
                                   "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-12 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-12",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-12 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-15",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-15 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-18",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-18 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-21",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-21 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-24",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-24 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-27",
                                   "Action": "[Irrigation].Apply(5);",
-                                  "Enabled": true
+                                  "Line": "1982-01-27 [Irrigation].Apply(5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-08-01",
                                   "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Enabled": true
+                                  "Line": "1982-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-08-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1982-08-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1983-08-01",
                                   "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Enabled": true
+                                  "Line": "1983-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1983-08-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1983-08-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1984-08-01",
                                   "Action": "[Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);",
-                                  "Enabled": true
+                                  "Line": "1984-08-01 [Fertiliser].Apply(100.0, Fertiliser.Types.UreaN, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1984-08-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1984-08-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 }
                               ],
                               "Name": "Operations",
@@ -7267,9 +7364,10 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-12",
                                   "Action": "[Irrigation].Apply(20);",
-                                  "Enabled": true
+                                  "Line": "1982-01-12 [Irrigation].Apply(20);"
                                 }
                               ],
                               "Name": "IrrigationSchedule",
@@ -7280,7 +7378,67 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Tropical pasture is null\");\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Cannot find tropical pasture model\");\r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                              "CodeArray": [
+                                "",
+                                "using Models.PMF.Interfaces;",
+                                "using Newtonsoft.Json;",
+                                "using System;",
+                                "using System.Collections.Generic;",
+                                "using Models.Core;",
+                                "using Models.PMF;",
+                                "using Models.PMF.Interfaces;",
+                                "using System.Xml.Serialization;",
+                                "using Models.Soils;",
+                                "",
+                                "namespace Models",
+                                "{",
+                                "    [Serializable] ",
+                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                                "    public class Script : Model",
+                                "    {",
+                                "        [Link(ByName = true)] Plant TropicalPasture;",
+                                "        [Link] Clock Clock;",
+                                "",
+                                "    ",
+                                "",
+                                "        ",
+                                "        [EventSubscribe(\"StartOfSimulation\")]",
+                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                                "        {",
+                                "            ",
+                                "        }",
+                                "",
+                                "        public void DoCut(double LeafResidue, double StemResidue)",
+                                "        {",
+                                "            if (TropicalPasture == null)",
+                                "                throw new Exception(\"Tropical pasture is null\");",
+                                "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;",
+                                "            double LeafRemovalFraction = 0;",
+                                "            if (L > 0)",
+                                "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                                "            if (LeafRemovalFraction < 0)",
+                                "                LeafRemovalFraction = 0;",
+                                "               ",
+                                "            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;",
+                                "            double StemRemovalFraction = 0;",
+                                "            if (S > 0)",
+                                "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                                "            if (StemRemovalFraction < 0)",
+                                "                StemRemovalFraction = 0;",
+                                "               ",
+                                "            if (TropicalPasture == null)",
+                                "                throw new Exception(\"Cannot find tropical pasture model\");",
+                                "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                                "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                                "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "",
+                                "        }",
+                                "        ",
+                                "    }",
+                                "}",
+                                "                "
+                              ],
                               "Parameters": [],
                               "Name": "CuttingManagement",
                               "ResourceName": null,
@@ -9839,42 +9997,9 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogen, Models",
-                              "fom_types": [
-                                "default",
-                                "manure",
-                                "mucuna",
-                                "lablab",
-                                "shemp",
-                                "stable"
-                              ],
-                              "fract_carb": [
-                                0.2,
-                                0.3,
-                                0.54,
-                                0.57,
-                                0.45,
-                                0.0
-                              ],
-                              "fract_cell": [
-                                0.7,
-                                0.3,
-                                0.37,
-                                0.37,
-                                0.47,
-                                0.1
-                              ],
-                              "fract_lign": [
-                                0.1,
-                                0.4,
-                                0.09,
-                                0.06,
-                                0.08,
-                                0.9
-                              ],
-                              "NPartitionApproach": 0,
-                              "Name": "SoilNitrogen",
-                              "ResourceName": null,
+                              "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                              "Name": "Nutrient",
+                              "ResourceName": "Nutrient",
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
@@ -10107,7 +10232,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10160,7 +10285,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10213,7 +10338,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "$type": "Models.Soils.Solute, Models",
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10333,207 +10458,241 @@
                           "Operation": [
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1963-01-01",
                               "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                              "Enabled": true
+                              "Line": "1963-01-01 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1963-01-01",
                               "Action": "[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);",
-                              "Enabled": true
+                              "Line": "1963-01-01 [TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1999-09-29",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1999-09-29 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "2000-02-02",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "2000-02-02 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-01-30",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-01-30 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-02-26",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-02-26 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-03-27",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-03-27 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-04-23",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-04-23 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-05-23",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-05-23 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-06-19",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-06-19 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-11-19",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-11-19 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1964-12-15",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1964-12-15 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1965-01-14",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1965-01-14 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1965-02-11",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1965-02-11 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1965-03-13",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1965-03-13 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1965-04-09",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1965-04-09 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-01-10",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-01-10 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-02-07",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-02-07 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-03-08",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-03-08 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-04-04",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-04-04 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-05-04",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-05-04 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-05-31",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-05-31 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1966-12-06",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1966-12-06 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-01-03",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-01-03 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-01-31",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-01-31 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-02-27",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-02-27 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-03-30",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-03-30 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-11-22",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-11-22 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1967-12-21",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1967-12-21 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1968-01-17",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1968-01-17 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1968-02-14",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1968-02-14 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1968-03-15",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1968-03-15 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1968-04-11",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1968-04-11 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             },
                             {
                               "$type": "Models.Operation, Models",
+                              "Enabled": true,
                               "Date": "1968-05-10",
                               "Action": "[CuttingManagement].Script.DoCut(50.0, 75.0);",
-                              "Enabled": true
+                              "Line": "1968-05-10 [CuttingManagement].Script.DoCut(50.0, 75.0);"
                             }
                           ],
                           "Name": "Operations",
@@ -10617,7 +10776,64 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n               \r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                          "CodeArray": [
+                            "",
+                            "using Models.PMF.Interfaces;",
+                            "using Newtonsoft.Json;",
+                            "using System;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using Models.PMF;",
+                            "using Models.PMF.Interfaces;",
+                            "using System.Xml.Serialization;",
+                            "using Models.Soils;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link(ByName = true)] Plant TropicalPasture;",
+                            "        [Link] Clock Clock;",
+                            "",
+                            "    ",
+                            "",
+                            "        ",
+                            "        [EventSubscribe(\"StartOfSimulation\")]",
+                            "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                            "        {",
+                            "            ",
+                            "        }",
+                            "",
+                            "        public void DoCut(double LeafResidue, double StemResidue)",
+                            "        {",
+                            "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;",
+                            "            double LeafRemovalFraction = 0;",
+                            "            if (L > 0)",
+                            "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                            "            if (LeafRemovalFraction < 0)",
+                            "                LeafRemovalFraction = 0;",
+                            "               ",
+                            "            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;",
+                            "            double StemRemovalFraction = 0;",
+                            "            if (S > 0)",
+                            "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                            "            if (StemRemovalFraction < 0)",
+                            "                StemRemovalFraction = 0;",
+                            "               ",
+                            "               ",
+                            "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                            "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                            "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                            "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                            "",
+                            "        }",
+                            "        ",
+                            "    }",
+                            "}",
+                            "                "
+                          ],
                           "Parameters": [],
                           "Name": "CuttingManagement",
                           "ResourceName": null,
@@ -11210,42 +11426,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -11414,7 +11597,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -11467,7 +11650,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -11520,7 +11703,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     200.0,
@@ -11640,123 +11823,143 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1971-08-01",
                                   "Action": "[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);",
-                                  "Enabled": true
+                                  "Line": "1971-08-01 [TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1973-02-01",
                                   "Action": "[CuttingManagement].Script.Reset();",
-                                  "Enabled": true
+                                  "Line": "1973-02-01 [CuttingManagement].Script.Reset();"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1973-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1973-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1974-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1974-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1974-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1974-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1974-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1974-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1975-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1975-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1975-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1975-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1975-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1975-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1976-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1976-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1976-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1976-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1976-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1976-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1977-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1977-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1977-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1977-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1977-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1977-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1978-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1978-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1978-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1978-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1978-12-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1978-12-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1979-02-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1979-02-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1979-04-01",
                                   "Action": "[CuttingManagement].Script.DoCut(10.0, 5.0);",
-                                  "Enabled": true
+                                  "Line": "1979-04-01 [CuttingManagement].Script.DoCut(10.0, 5.0);"
                                 }
                               ],
                               "Name": "Operations",
@@ -11797,9 +12000,10 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1982-01-12",
                                   "Action": "[Irrigation].Apply(20);",
-                                  "Enabled": true
+                                  "Line": "1982-01-12 [Irrigation].Apply(20);"
                                 }
                               ],
                               "Name": "IrrigationSchedule",
@@ -11810,7 +12014,85 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n        [JsonIgnore] public double ForageRemoved { get; set; }\r\n        [JsonIgnore] public double ForageNRemoved { get; set; }\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n            ForageRemoved = 0;\r\n            ForageNRemoved = 0;\r\n        }\r\n\r\n        public void Reset()\r\n        {\r\n        ForageRemoved = 0.0;\r\n        ForageNRemoved = 0.0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Tropical pasture is null\");\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Wt\").Value;\r\n            double LN = (double)TropicalPasture.FindByPath(\"Leaf.N\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n            ForageRemoved += LeafRemovalFraction * L;\r\n            ForageNRemoved += LeafRemovalFraction * LN;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Wt\").Value;\r\n            double SN = (double)TropicalPasture.FindByPath(\"Stem.N\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n            ForageRemoved += StemRemovalFraction * S;\r\n            ForageNRemoved += StemRemovalFraction * SN;\r\n               \r\n            if (TropicalPasture == null)\r\n                throw new Exception(\"Cannot find tropical pasture model\");\r\n\r\n            \r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                              "CodeArray": [
+                                "",
+                                "using Models.PMF.Interfaces;",
+                                "using Newtonsoft.Json;",
+                                "using System;",
+                                "using System.Collections.Generic;",
+                                "using Models.Core;",
+                                "using Models.PMF;",
+                                "using Models.PMF.Interfaces;",
+                                "using System.Xml.Serialization;",
+                                "using Models.Soils;",
+                                "",
+                                "namespace Models",
+                                "{",
+                                "    [Serializable] ",
+                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                                "    public class Script : Model",
+                                "    {",
+                                "        [Link(ByName = true)] Plant TropicalPasture;",
+                                "        [Link] Clock Clock;",
+                                "",
+                                "        [JsonIgnore] public double ForageRemoved { get; set; }",
+                                "        [JsonIgnore] public double ForageNRemoved { get; set; }",
+                                "    ",
+                                "",
+                                "        ",
+                                "        [EventSubscribe(\"StartOfSimulation\")]",
+                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                                "        {",
+                                "            ",
+                                "            ForageRemoved = 0;",
+                                "            ForageNRemoved = 0;",
+                                "        }",
+                                "",
+                                "        public void Reset()",
+                                "        {",
+                                "        ForageRemoved = 0.0;",
+                                "        ForageNRemoved = 0.0;",
+                                "        }",
+                                "",
+                                "        public void DoCut(double LeafResidue, double StemResidue)",
+                                "        {",
+                                "            if (TropicalPasture == null)",
+                                "                throw new Exception(\"Tropical pasture is null\");",
+                                "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Wt\").Value;",
+                                "            double LN = (double)TropicalPasture.FindByPath(\"Leaf.N\").Value;",
+                                "            double LeafRemovalFraction = 0;",
+                                "            if (L > 0)",
+                                "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                                "            if (LeafRemovalFraction < 0)",
+                                "                LeafRemovalFraction = 0;",
+                                "            ForageRemoved += LeafRemovalFraction * L;",
+                                "            ForageNRemoved += LeafRemovalFraction * LN;",
+                                "               ",
+                                "            double S = (double)TropicalPasture.FindByPath(\"Stem.Wt\").Value;",
+                                "            double SN = (double)TropicalPasture.FindByPath(\"Stem.N\").Value;",
+                                "            double StemRemovalFraction = 0;",
+                                "            if (S > 0)",
+                                "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                                "            if (StemRemovalFraction < 0)",
+                                "                StemRemovalFraction = 0;",
+                                "            ForageRemoved += StemRemovalFraction * S;",
+                                "            ForageNRemoved += StemRemovalFraction * SN;",
+                                "               ",
+                                "            if (TropicalPasture == null)",
+                                "                throw new Exception(\"Cannot find tropical pasture model\");",
+                                "",
+                                "            ",
+                                "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                                "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                                "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "",
+                                "        }",
+                                "        ",
+                                "    }",
+                                "}",
+                                "                "
+                              ],
                               "Parameters": [],
                               "Name": "CuttingManagement",
                               "ResourceName": null,
@@ -11820,7 +12102,52 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.Soils;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n\r\n        [Description(\"Annual Fertiliser N Rate (kg N/ha)\")]\r\n        public double NRate { get; set;} \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            \r\n            if (DateUtilities.WithinDates(\"1-Oct\",Clock.Today,\"1-Oct\") ||\r\n                DateUtilities.WithinDates(\"1-Dec\",Clock.Today,\"1-Dec\") ||\r\n                DateUtilities.WithinDates(\"1-Feb\",Clock.Today,\"1-Feb\"))\r\n            {\r\n               double Amount = NRate / 3.0;\r\n               Fertiliser.Apply(Amount, Fertiliser.Types.NH4NO3N, 0);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                              "CodeArray": [
+                                "",
+                                "using Models.Soils;",
+                                "using System;",
+                                "using System.Collections.Generic;",
+                                "using Models.Core;",
+                                "using Models.PMF;",
+                                "using Models.PMF.Interfaces;",
+                                "using System.Xml.Serialization;",
+                                "using APSIM.Shared.Utilities;",
+                                "",
+                                "namespace Models",
+                                "{",
+                                "    [Serializable] ",
+                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                                "    public class Script : Model",
+                                "    {",
+                                "        [Link] Clock Clock;",
+                                "        [Link] Fertiliser Fertiliser;",
+                                "",
+                                "        [Description(\"Annual Fertiliser N Rate (kg N/ha)\")]",
+                                "        public double NRate { get; set;} ",
+                                "        ",
+                                "        [EventSubscribe(\"StartOfSimulation\")]",
+                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                                "        {",
+                                "        }",
+                                "",
+                                "        [EventSubscribe(\"DoManagement\")]",
+                                "        private void OnDoManagement(object sender, EventArgs e)",
+                                "        {",
+                                "            ",
+                                "            if (DateUtilities.WithinDates(\"1-Oct\",Clock.Today,\"1-Oct\") ||",
+                                "                DateUtilities.WithinDates(\"1-Dec\",Clock.Today,\"1-Dec\") ||",
+                                "                DateUtilities.WithinDates(\"1-Feb\",Clock.Today,\"1-Feb\"))",
+                                "            {",
+                                "               double Amount = NRate / 3.0;",
+                                "               Fertiliser.Apply(Amount, Fertiliser.Types.NH4NO3N, 0);",
+                                "            }",
+                                "        ",
+                                "        }",
+                                "        ",
+                                "    }",
+                                "}",
+                                "                "
+                              ],
                               "Parameters": [
                                 {
                                   "Key": "NRate",
@@ -12191,7 +12518,70 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        Accumulator accumulatedPan;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Pan Fraction (0-1)\")]\r\n        public double PanFraction { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        private double DaysSinceIrrigation = 0;\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            accumulatedPan = new Accumulator(this, \"[Soil].SoilWater.Eo\", RainDays);\r\n            DaysSinceIrrigation = 0;\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            accumulatedPan.Update();\r\n            DaysSinceIrrigation += 1;\r\n            double RainDeficit = accumulatedPan.Sum * PanFraction - accumulatedRain.Sum;\r\n\r\n            if (DaysSinceIrrigation == RainDays)\r\n            {\r\n                DaysSinceIrrigation = 0;\r\n                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                    RainDeficit > 0)\r\n                {\r\n                    Irrigation.Apply(RainDeficit);\r\n                }\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "CodeArray": [
+                    "using Models.Climate;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using Models.Utilities;",
+                    "using APSIM.Shared.Utilities;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        [Link] Summary Summary;",
+                    "        [Link] Irrigation Irrigation;",
+                    "        [Link] Soil Soil;",
+                    "        Accumulator accumulatedRain;",
+                    "        Accumulator accumulatedPan;",
+                    "        ",
+                    "        [Description(\"Start of sowing window (d-mmm)\")]",
+                    "        public string StartDate { get; set; }",
+                    "        [Description(\"End of sowing window (d-mmm)\")]",
+                    "        public string EndDate { get; set; }",
+                    "        [Description(\"Pan Fraction (0-1)\")]",
+                    "        public double PanFraction { get; set; }",
+                    "        [Description(\"Duration of rainfall accumulation (d)\")]",
+                    "        public int RainDays { get; set; }",
+                    "        private double DaysSinceIrrigation = 0;",
+                    "        ",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                    "        {",
+                    "            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);",
+                    "            accumulatedPan = new Accumulator(this, \"[Soil].SoilWater.Eo\", RainDays);",
+                    "            DaysSinceIrrigation = 0;",
+                    "        }",
+                    "        ",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            accumulatedRain.Update();",
+                    "            accumulatedPan.Update();",
+                    "            DaysSinceIrrigation += 1;",
+                    "            double RainDeficit = accumulatedPan.Sum * PanFraction - accumulatedRain.Sum;",
+                    "",
+                    "            if (DaysSinceIrrigation == RainDays)",
+                    "            {",
+                    "                DaysSinceIrrigation = 0;",
+                    "                if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&",
+                    "                    RainDeficit > 0)",
+                    "                {",
+                    "                    Irrigation.Apply(RainDeficit);",
+                    "                }",
+                    "            }",
+                    "        }",
+                    "        ",
+                    "    }",
+                    "}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -12238,459 +12628,535 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-10-06",
                                   "Action": "[Irrigation].Apply(12.5);",
-                                  "Enabled": true
+                                  "Line": "2011-10-06 [Irrigation].Apply(12.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-05-05",
                                   "Action": "[Irrigation].Apply(9.9);",
-                                  "Enabled": true
+                                  "Line": "2011-05-05 [Irrigation].Apply(9.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-05-11",
                                   "Action": "[Irrigation].Apply(22.1);",
-                                  "Enabled": true
+                                  "Line": "2011-05-11 [Irrigation].Apply(22.1);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-05-16",
                                   "Action": "[Irrigation].Apply(15.4);",
-                                  "Enabled": true
+                                  "Line": "2011-05-16 [Irrigation].Apply(15.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-05-26",
                                   "Action": "[Irrigation].Apply(20.7);",
-                                  "Enabled": true
+                                  "Line": "2011-05-26 [Irrigation].Apply(20.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-05-31",
                                   "Action": "[Irrigation].Apply(14.5);",
-                                  "Enabled": true
+                                  "Line": "2011-05-31 [Irrigation].Apply(14.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-18",
                                   "Action": "[Irrigation].Apply(18.6);",
-                                  "Enabled": true
+                                  "Line": "2011-06-18 [Irrigation].Apply(18.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-22",
                                   "Action": "[Irrigation].Apply(10.3);",
-                                  "Enabled": true
+                                  "Line": "2011-06-22 [Irrigation].Apply(10.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-27",
                                   "Action": "[Irrigation].Apply(11.2);",
-                                  "Enabled": true
+                                  "Line": "2011-06-27 [Irrigation].Apply(11.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-07-04",
                                   "Action": "[Irrigation].Apply(16.3);",
-                                  "Enabled": true
+                                  "Line": "2011-07-04 [Irrigation].Apply(16.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-07-12",
                                   "Action": "[Irrigation].Apply(17.2);",
-                                  "Enabled": true
+                                  "Line": "2011-07-12 [Irrigation].Apply(17.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-07-18",
                                   "Action": "[Irrigation].Apply(15.8);",
-                                  "Enabled": true
+                                  "Line": "2011-07-18 [Irrigation].Apply(15.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-07-25",
                                   "Action": "[Irrigation].Apply(16.5);",
-                                  "Enabled": true
+                                  "Line": "2011-07-25 [Irrigation].Apply(16.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-03",
                                   "Action": "[Irrigation].Apply(19.5);",
-                                  "Enabled": true
+                                  "Line": "2011-08-03 [Irrigation].Apply(19.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-09",
                                   "Action": "[Irrigation].Apply(14.5);",
-                                  "Enabled": true
+                                  "Line": "2011-08-09 [Irrigation].Apply(14.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-12",
                                   "Action": "[Irrigation].Apply(3.7);",
-                                  "Enabled": true
+                                  "Line": "2011-08-12 [Irrigation].Apply(3.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-16",
                                   "Action": "[Irrigation].Apply(11);",
-                                  "Enabled": true
+                                  "Line": "2011-08-16 [Irrigation].Apply(11);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-28",
                                   "Action": "[Irrigation].Apply(20.5);",
-                                  "Enabled": true
+                                  "Line": "2011-08-28 [Irrigation].Apply(20.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-05",
                                   "Action": "[Irrigation].Apply(18.5);",
-                                  "Enabled": true
+                                  "Line": "2011-09-05 [Irrigation].Apply(18.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-11",
                                   "Action": "[Irrigation].Apply(14.8);",
-                                  "Enabled": true
+                                  "Line": "2011-09-11 [Irrigation].Apply(14.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-12",
                                   "Action": "[Irrigation].Apply(11.2);",
-                                  "Enabled": true
+                                  "Line": "2011-09-12 [Irrigation].Apply(11.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-18",
                                   "Action": "[Irrigation].Apply(22.7);",
-                                  "Enabled": true
+                                  "Line": "2011-09-18 [Irrigation].Apply(22.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-25",
                                   "Action": "[Irrigation].Apply(25.3);",
-                                  "Enabled": true
+                                  "Line": "2011-09-25 [Irrigation].Apply(25.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-09-29",
                                   "Action": "[Irrigation].Apply(7.4);",
-                                  "Enabled": true
+                                  "Line": "2011-09-29 [Irrigation].Apply(7.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-10-20",
                                   "Action": "[Irrigation].Apply(5.5);",
-                                  "Enabled": true
+                                  "Line": "2011-10-20 [Irrigation].Apply(5.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-06",
                                   "Action": "[Irrigation].Apply(28.8);",
-                                  "Enabled": true
+                                  "Line": "2011-11-06 [Irrigation].Apply(28.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-10",
                                   "Action": "[Irrigation].Apply(7.4);",
-                                  "Enabled": true
+                                  "Line": "2011-11-10 [Irrigation].Apply(7.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-20",
                                   "Action": "[Irrigation].Apply(20.2);",
-                                  "Enabled": true
+                                  "Line": "2011-11-20 [Irrigation].Apply(20.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-23",
                                   "Action": "[Irrigation].Apply(4.7);",
-                                  "Enabled": true
+                                  "Line": "2011-11-23 [Irrigation].Apply(4.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-12-13",
                                   "Action": "[Irrigation].Apply(15.9);",
-                                  "Enabled": true
+                                  "Line": "2011-12-13 [Irrigation].Apply(15.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-12-21",
                                   "Action": "[Irrigation].Apply(16.3);",
-                                  "Enabled": true
+                                  "Line": "2011-12-21 [Irrigation].Apply(16.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-01",
                                   "Action": "[Irrigation].Apply(5.2);",
-                                  "Enabled": true
+                                  "Line": "2012-02-01 [Irrigation].Apply(5.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-05",
                                   "Action": "[Irrigation].Apply(22.2);",
-                                  "Enabled": true
+                                  "Line": "2012-02-05 [Irrigation].Apply(22.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-08",
                                   "Action": "[Irrigation].Apply(14.8);",
-                                  "Enabled": true
+                                  "Line": "2012-02-08 [Irrigation].Apply(14.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-14",
                                   "Action": "[Irrigation].Apply(5.8);",
-                                  "Enabled": true
+                                  "Line": "2012-02-14 [Irrigation].Apply(5.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-26",
                                   "Action": "[Irrigation].Apply(17.8);",
-                                  "Enabled": true
+                                  "Line": "2012-02-26 [Irrigation].Apply(17.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-08",
                                   "Action": "[Irrigation].Apply(7.4);",
-                                  "Enabled": true
+                                  "Line": "2012-03-08 [Irrigation].Apply(7.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-12",
                                   "Action": "[Irrigation].Apply(6.1);",
-                                  "Enabled": true
+                                  "Line": "2012-03-12 [Irrigation].Apply(6.1);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-15",
                                   "Action": "[Irrigation].Apply(11);",
-                                  "Enabled": true
+                                  "Line": "2012-03-15 [Irrigation].Apply(11);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-16",
                                   "Action": "[Irrigation].Apply(15.8);",
-                                  "Enabled": true
+                                  "Line": "2012-03-16 [Irrigation].Apply(15.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-20",
                                   "Action": "[Irrigation].Apply(14.8);",
-                                  "Enabled": true
+                                  "Line": "2012-03-20 [Irrigation].Apply(14.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-25",
                                   "Action": "[Irrigation].Apply(7.5);",
-                                  "Enabled": true
+                                  "Line": "2012-03-25 [Irrigation].Apply(7.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-04-02",
                                   "Action": "[Irrigation].Apply(13.6);",
-                                  "Enabled": true
+                                  "Line": "2012-04-02 [Irrigation].Apply(13.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-04-03",
                                   "Action": "[Irrigation].Apply(4);",
-                                  "Enabled": true
+                                  "Line": "2012-04-03 [Irrigation].Apply(4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-04-12",
                                   "Action": "[Irrigation].Apply(9.4);",
-                                  "Enabled": true
+                                  "Line": "2012-04-12 [Irrigation].Apply(9.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-04-17",
                                   "Action": "[Irrigation].Apply(11.7);",
-                                  "Enabled": true
+                                  "Line": "2012-04-17 [Irrigation].Apply(11.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-03",
                                   "Action": "[Irrigation].Apply(8.7);",
-                                  "Enabled": true
+                                  "Line": "2012-05-03 [Irrigation].Apply(8.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-08",
                                   "Action": "[Irrigation].Apply(14.4);",
-                                  "Enabled": true
+                                  "Line": "2012-05-08 [Irrigation].Apply(14.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-20",
                                   "Action": "[Irrigation].Apply(16.6);",
-                                  "Enabled": true
+                                  "Line": "2012-05-20 [Irrigation].Apply(16.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-06-17",
                                   "Action": "[Irrigation].Apply(21.2);",
-                                  "Enabled": true
+                                  "Line": "2012-06-17 [Irrigation].Apply(21.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-07-01",
                                   "Action": "[Irrigation].Apply(2.7);",
-                                  "Enabled": true
+                                  "Line": "2012-07-01 [Irrigation].Apply(2.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-07-09",
                                   "Action": "[Irrigation].Apply(18.6);",
-                                  "Enabled": true
+                                  "Line": "2012-07-09 [Irrigation].Apply(18.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-08-02",
                                   "Action": "[Irrigation].Apply(42.2);",
-                                  "Enabled": true
+                                  "Line": "2012-08-02 [Irrigation].Apply(42.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-08-08",
                                   "Action": "[Irrigation].Apply(14.6);",
-                                  "Enabled": true
+                                  "Line": "2012-08-08 [Irrigation].Apply(14.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-08-14",
                                   "Action": "[Irrigation].Apply(18.9);",
-                                  "Enabled": true
+                                  "Line": "2012-08-14 [Irrigation].Apply(18.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-08-19",
                                   "Action": "[Irrigation].Apply(15.1);",
-                                  "Enabled": true
+                                  "Line": "2012-08-19 [Irrigation].Apply(15.1);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-08-26",
                                   "Action": "[Irrigation].Apply(24);",
-                                  "Enabled": true
+                                  "Line": "2012-08-26 [Irrigation].Apply(24);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-03",
                                   "Action": "[Irrigation].Apply(23.8);",
-                                  "Enabled": true
+                                  "Line": "2012-09-03 [Irrigation].Apply(23.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-09",
                                   "Action": "[Irrigation].Apply(22);",
-                                  "Enabled": true
+                                  "Line": "2012-09-09 [Irrigation].Apply(22);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-19",
                                   "Action": "[Irrigation].Apply(35.5);",
-                                  "Enabled": true
+                                  "Line": "2012-09-19 [Irrigation].Apply(35.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-10-01",
                                   "Action": "[Irrigation].Apply(4.7);",
-                                  "Enabled": true
+                                  "Line": "2012-10-01 [Irrigation].Apply(4.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-10-08",
                                   "Action": "[Irrigation].Apply(30.8);",
-                                  "Enabled": true
+                                  "Line": "2012-10-08 [Irrigation].Apply(30.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-10-14",
                                   "Action": "[Irrigation].Apply(7.9);",
-                                  "Enabled": true
+                                  "Line": "2012-10-14 [Irrigation].Apply(7.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-11-04",
                                   "Action": "[Irrigation].Apply(4);",
-                                  "Enabled": true
+                                  "Line": "2012-11-04 [Irrigation].Apply(4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-11-13",
                                   "Action": "[Irrigation].Apply(9.2);",
-                                  "Enabled": true
+                                  "Line": "2012-11-13 [Irrigation].Apply(9.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-04-26",
                                   "Action": "[CuttingManagement].Script.DoCut(44.0, 17.6);",
-                                  "Enabled": true
+                                  "Line": "2011-04-26 [CuttingManagement].Script.DoCut(44.0, 17.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-22",
                                   "Action": "[CuttingManagement].Script.DoCut(59.9, 29.9);",
-                                  "Enabled": true
+                                  "Line": "2011-06-22 [CuttingManagement].Script.DoCut(59.9, 29.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-17",
                                   "Action": "[CuttingManagement].Script.DoCut(61.3, 38.5);",
-                                  "Enabled": true
+                                  "Line": "2011-08-17 [CuttingManagement].Script.DoCut(61.3, 38.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-10-18",
                                   "Action": "[CuttingManagement].Script.DoCut(65.0, 52.0);",
-                                  "Enabled": true
+                                  "Line": "2011-10-18 [CuttingManagement].Script.DoCut(65.0, 52.0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-23",
                                   "Action": "[CuttingManagement].Script.DoCut(66.9, 100.4);",
-                                  "Enabled": true
+                                  "Line": "2011-11-23 [CuttingManagement].Script.DoCut(66.9, 100.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-01-04",
                                   "Action": "[CuttingManagement].Script.DoCut(66.7, 170.6);",
-                                  "Enabled": true
+                                  "Line": "2012-01-04 [CuttingManagement].Script.DoCut(66.7, 170.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-15",
                                   "Action": "[CuttingManagement].Script.DoCut(62.9, 204.3);",
-                                  "Enabled": true
+                                  "Line": "2012-02-15 [CuttingManagement].Script.DoCut(62.9, 204.3);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-28",
                                   "Action": "[CuttingManagement].Script.DoCut(58.8, 183.7);",
-                                  "Enabled": true
+                                  "Line": "2012-03-28 [CuttingManagement].Script.DoCut(58.8, 183.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-23",
                                   "Action": "[CuttingManagement].Script.DoCut(62.1, 139.7);",
-                                  "Enabled": true
+                                  "Line": "2012-05-23 [CuttingManagement].Script.DoCut(62.1, 139.7);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-07-18",
                                   "Action": "[CuttingManagement].Script.DoCut(63, 126.1);",
-                                  "Enabled": true
+                                  "Line": "2012-07-18 [CuttingManagement].Script.DoCut(63, 126.1);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-12",
                                   "Action": "[CuttingManagement].Script.DoCut(67.6, 121.1);",
-                                  "Enabled": true
+                                  "Line": "2012-09-12 [CuttingManagement].Script.DoCut(67.6, 121.1);"
                                 }
                               ],
                               "Name": "Wet",
@@ -12704,69 +13170,80 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-04-26",
                                   "Action": "[CuttingManagement].Script.DoCut(39.0, 15.6);",
-                                  "Enabled": true
+                                  "Line": "2011-04-26 [CuttingManagement].Script.DoCut(39.0, 15.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-22",
                                   "Action": "[CuttingManagement].Script.DoCut(66.0, 21.6);",
-                                  "Enabled": true
+                                  "Line": "2011-06-22 [CuttingManagement].Script.DoCut(66.0, 21.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-17",
                                   "Action": "[CuttingManagement].Script.DoCut(62.5, 21.6);",
-                                  "Enabled": true
+                                  "Line": "2011-08-17 [CuttingManagement].Script.DoCut(62.5, 21.6);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-10-18",
                                   "Action": "[CuttingManagement].Script.DoCut(50, 15.9);",
-                                  "Enabled": true
+                                  "Line": "2011-10-18 [CuttingManagement].Script.DoCut(50, 15.9);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-23",
                                   "Action": "[CuttingManagement].Script.DoCut(60, 39);",
-                                  "Enabled": true
+                                  "Line": "2011-11-23 [CuttingManagement].Script.DoCut(60, 39);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-01-04",
                                   "Action": "[CuttingManagement].Script.DoCut(70, 56.4);",
-                                  "Enabled": true
+                                  "Line": "2012-01-04 [CuttingManagement].Script.DoCut(70, 56.4);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-15",
                                   "Action": "[CuttingManagement].Script.DoCut(75, 115);",
-                                  "Enabled": true
+                                  "Line": "2012-02-15 [CuttingManagement].Script.DoCut(75, 115);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-28",
                                   "Action": "[CuttingManagement].Script.DoCut(47, 110.5);",
-                                  "Enabled": true
+                                  "Line": "2012-03-28 [CuttingManagement].Script.DoCut(47, 110.5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-23",
                                   "Action": "[CuttingManagement].Script.DoCut(54.6, 88.2);",
-                                  "Enabled": true
+                                  "Line": "2012-05-23 [CuttingManagement].Script.DoCut(54.6, 88.2);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-07-18",
                                   "Action": "[CuttingManagement].Script.DoCut(53.2, 79.8);",
-                                  "Enabled": true
+                                  "Line": "2012-07-18 [CuttingManagement].Script.DoCut(53.2, 79.8);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-12",
                                   "Action": "[CuttingManagement].Script.DoCut(52.5, 73.5);",
-                                  "Enabled": true
+                                  "Line": "2012-09-12 [CuttingManagement].Script.DoCut(52.5, 73.5);"
                                 }
                               ],
                               "Name": "Rainfed",
@@ -12843,10 +13320,10 @@
                               "ASCSubOrder": null,
                               "SoilType": "Oxisol",
                               "LocalName": null,
-                              "Site": "Embrapa Pecuária Sudeste",
-                              "NearestTown": "São Carlos",
+                              "Site": "Embrapa PecuÃ¡ria Sudeste",
+                              "NearestTown": "SÃ£o Carlos",
                               "Region": "Central",
-                              "State": "São Paulo",
+                              "State": "SÃ£o Paulo",
                               "Country": "Brazil",
                               "NaturalVegetation": "Cerrado-Mata atlantica",
                               "ApsoilNumber": null,
@@ -13053,42 +13530,9 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogen, Models",
-                                  "fom_types": [
-                                    "default",
-                                    "manure",
-                                    "mucuna",
-                                    "lablab",
-                                    "shemp",
-                                    "stable"
-                                  ],
-                                  "fract_carb": [
-                                    0.2,
-                                    0.3,
-                                    0.54,
-                                    0.57,
-                                    0.45,
-                                    0.0
-                                  ],
-                                  "fract_cell": [
-                                    0.7,
-                                    0.3,
-                                    0.37,
-                                    0.37,
-                                    0.47,
-                                    0.1
-                                  ],
-                                  "fract_lign": [
-                                    0.1,
-                                    0.4,
-                                    0.09,
-                                    0.06,
-                                    0.08,
-                                    0.9
-                                  ],
-                                  "NPartitionApproach": 0,
-                                  "Name": "SoilNitrogen",
-                                  "ResourceName": null,
+                                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                                  "Name": "Nutrient",
+                                  "ResourceName": "Nutrient",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -13251,7 +13695,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -13288,7 +13732,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -13325,7 +13769,7 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                                  "$type": "Models.Soils.Solute, Models",
                                   "Thickness": [
                                     100.0,
                                     100.0,
@@ -13383,7 +13827,40 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.Soils.Nutrients;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISoilWater water;\r\n\r\n\r\n    \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            water.SoluteFluxEfficiency[0] = 0.05;\r\n        }\r\n\r\n                \r\n    }\r\n}\r\n                \r\n",
+                              "CodeArray": [
+                                "",
+                                "using Models.Soils.Nutrients;",
+                                "using System.Xml.Serialization;",
+                                "using Models.PMF.Interfaces;",
+                                "using Models.Soils;",
+                                "using Models.PMF;",
+                                "using Models.Core;",
+                                "using System.Collections.Generic;",
+                                "using System;",
+                                "using Models.Interfaces;",
+                                "",
+                                "namespace Models",
+                                "{",
+                                "    [Serializable] ",
+                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                                "    public class Script : Model",
+                                "    {",
+                                "        [Link] private ISoilWater water;",
+                                "",
+                                "",
+                                "    ",
+                                "        ",
+                                "        [EventSubscribe(\"StartOfSimulation\")]",
+                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                                "        {",
+                                "            water.SoluteFluxEfficiency[0] = 0.05;",
+                                "        }",
+                                "",
+                                "                ",
+                                "    }",
+                                "}",
+                                "                "
+                              ],
                               "Parameters": null,
                               "Name": "LeachingControl",
                               "ResourceName": null,
@@ -13439,87 +13916,101 @@
                               "Operation": [
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-02-18",
                                   "Action": "[TropicalPasture].Sow(population: 225, cultivar: Brachiaria, depth: 100, rowSpacing: 200);",
-                                  "Enabled": true
+                                  "Line": "2011-02-18 [TropicalPasture].Sow(population: 225, cultivar: Brachiaria, depth: 100, rowSpacing: 200);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-02-18",
                                   "Action": "[Fertiliser].Apply(10.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-02-18 [Fertiliser].Apply(10.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-03-22",
                                   "Action": "[Fertiliser].Apply(111.1, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-03-22 [Fertiliser].Apply(111.1, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-04-26",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-04-26 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-06-22",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-06-22 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-08-17",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-08-17 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-10-18",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-10-18 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2011-11-23",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2011-11-23 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-01-04",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-01-04 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-02-15",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-02-15 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-03-28",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-03-28 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-05-23",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-05-23 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-07-18",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-07-18 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "2012-09-12",
                                   "Action": "[Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);",
-                                  "Enabled": true
+                                  "Line": "2012-09-12 [Fertiliser].Apply(70.0, Fertiliser.Types.Urea, 5);"
                                 }
                               ],
                               "Name": "Operations",
@@ -13539,7 +14030,64 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n               \r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                              "CodeArray": [
+                                "",
+                                "using Models.PMF.Interfaces;",
+                                "using Newtonsoft.Json;",
+                                "using System;",
+                                "using System.Collections.Generic;",
+                                "using Models.Core;",
+                                "using Models.PMF;",
+                                "using Models.PMF.Interfaces;",
+                                "using System.Xml.Serialization;",
+                                "using Models.Soils;",
+                                "",
+                                "namespace Models",
+                                "{",
+                                "    [Serializable] ",
+                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                                "    public class Script : Model",
+                                "    {",
+                                "        [Link(ByName = true)] Plant TropicalPasture;",
+                                "        [Link] Clock Clock;",
+                                "",
+                                "    ",
+                                "",
+                                "        ",
+                                "        [EventSubscribe(\"StartOfSimulation\")]",
+                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                                "        {",
+                                "            ",
+                                "        }",
+                                "",
+                                "        public void DoCut(double LeafResidue, double StemResidue)",
+                                "        {",
+                                "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;",
+                                "            double LeafRemovalFraction = 0;",
+                                "            if (L > 0)",
+                                "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                                "            if (LeafRemovalFraction < 0)",
+                                "                LeafRemovalFraction = 0;",
+                                "               ",
+                                "            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;",
+                                "            double StemRemovalFraction = 0;",
+                                "            if (S > 0)",
+                                "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                                "            if (StemRemovalFraction < 0)",
+                                "                StemRemovalFraction = 0;",
+                                "               ",
+                                "               ",
+                                "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                                "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                                "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "",
+                                "        }",
+                                "        ",
+                                "    }",
+                                "}",
+                                "                "
+                              ],
                               "Parameters": [],
                               "Name": "CuttingManagement",
                               "ResourceName": null,
@@ -13576,16 +14124,16 @@
                                 "(sum([Soil].Water.MM[1:10]) - sum([Soil].Physical.LL15mm[1:10])) as ESW0_100cm",
                                 "sum([Soil].Water.MM[1:6]) as SW0_60cm",
                                 "sum([Soil].NO3.kgha[1:10]) as TotalNO3",
-                                "sum ([Soil].SoilNitrogen.TotalN) as TotalN",
+                                "sum ([Soil].Nutrient.TotalN) as TotalN",
                                 "[Soil].Water.MM",
-                                "sum ([Soil].SoilNitrogen.FOMN) as FOMN",
-                                "sum ([Soil].SoilNitrogen.HumicN) as HumicN",
-                                "sum ([Soil].SoilNitrogen.MicrobialN) as MicN",
-                                "sum ([soil].SoilNitrogen.MineralisedN) as MinN",
-                                "sum ([soil].SoilNitrogen.n2o_atm) as N2O",
-                                "sum ([soil].SoilNitrogen.NH4.kgha) as NH4",
-                                "sum ([soil].SoilNitrogen.Nitrification) as Nitrification",
-                                "sum ([soil].SoilNitrogen.Urea.kgha) as Urea",
+                                "sum ([Soil].Nutrient.FOM.N) as FOMN",
+                                "sum ([Soil].Nutrient.Humic.N) as HumicN",
+                                "sum ([Soil].Nutrient.Microbial.N) as MicN",
+                                "sum ([soil].Nutrient.MineralisedN) as MinN",
+                                "sum ([soil].Nutrient.N2Oatm) as N2O",
+                                "sum ([soil].Nutrient.NH4.kgha) as NH4",
+                                "sum ([soil].Nutrient.NitrifiedN) as Nitrification",
+                                "sum ([soil].Nutrient.Urea.kgha) as Urea",
                                 "sum ([soil].SoilWater.FlowNH4) as NH4flow",
                                 "[soil].SoilWater.FlowNO3[10] as NO3flow",
                                 "[TropicalPasture].AboveGround.Wt",
@@ -13647,7 +14195,7 @@
                                 "[TropicalPasture].Leaf.Height",
                                 "[Leaf].RadiationIntercepted",
                                 "[Soil].SoilWater.LeachNO3",
-                                "sum([Soil].SoilNitrogen.Denitrification) as Denitrification",
+                                "sum([Soil].Nutrient.DenitrifiedN) as Denitrification",
                                 "[Weather].Radn",
                                 "[Weather].Rain",
                                 "[SurfaceOrganicMatter].Wt",
@@ -19751,42 +20299,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogen, Models",
-                          "fom_types": [
-                            "default",
-                            "manure",
-                            "mucuna",
-                            "lablab",
-                            "shemp",
-                            "stable"
-                          ],
-                          "fract_carb": [
-                            0.2,
-                            0.3,
-                            0.54,
-                            0.57,
-                            0.45,
-                            0.0
-                          ],
-                          "fract_cell": [
-                            0.7,
-                            0.3,
-                            0.37,
-                            0.37,
-                            0.47,
-                            0.1
-                          ],
-                          "fract_lign": [
-                            0.1,
-                            0.4,
-                            0.09,
-                            0.06,
-                            0.08,
-                            0.9
-                          ],
-                          "NPartitionApproach": 0,
-                          "Name": "SoilNitrogen",
-                          "ResourceName": null,
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -20019,7 +20534,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -20072,7 +20587,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -20125,7 +20640,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                          "$type": "Models.Soils.Solute, Models",
                           "Thickness": [
                             100.0,
                             200.0,
@@ -20245,129 +20760,150 @@
                       "Operation": [
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1994-12-08",
                           "Action": "[Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1994-12-08 [Fertiliser].Apply(20.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1995-01-01",
                           "Action": "[TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);",
-                          "Enabled": true
+                          "Line": "1995-01-01 [TropicalPasture].Sow(population: 100, cultivar: Bambatsi, depth: 100, rowSpacing: 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1995-10-09",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1995-10-09 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1995-11-21",
                           "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1995-11-21 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1995-12-01",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1995-12-01 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1996-01-30",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1996-01-30 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1996-02-28",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1996-02-28 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1996-11-26",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1996-11-26 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1996-12-22",
                           "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1996-12-22 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1997-01-14",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1997-01-14 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1997-03-04",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1997-03-04 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1997-06-26",
                           "Action": "[Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1997-06-26 [Fertiliser].Apply(22.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1997-11-17",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1997-11-17 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1998-04-07",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1998-04-07 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1998-10-09",
                           "Action": "[Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1998-10-09 [Fertiliser].Apply(30.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1998-12-17",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1998-12-17 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1999-02-16",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1999-02-16 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1999-06-02",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1999-06-02 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1999-11-10",
                           "Action": "[Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);",
-                          "Enabled": true
+                          "Line": "1999-11-10 [Fertiliser].Apply(50.0, Fertiliser.Types.UreaN, 0);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "1999-09-29",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "1999-09-29 [CuttingManagement].Script.DoCut(100, 100);"
                         },
                         {
                           "$type": "Models.Operation, Models",
+                          "Enabled": true,
                           "Date": "2000-02-02",
                           "Action": "[CuttingManagement].Script.DoCut(100, 100);",
-                          "Enabled": true
+                          "Line": "2000-02-02 [CuttingManagement].Script.DoCut(100, 100);"
                         }
                       ],
                       "Name": "Operations",
@@ -20458,7 +20994,64 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing Models.PMF.Interfaces;\r\nusing Newtonsoft.Json;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant TropicalPasture;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;\r\n            double LeafRemovalFraction = 0;\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;\r\n            double StemRemovalFraction = 0;\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S;               \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n               \r\n            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");\r\n            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");\r\n            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "CodeArray": [
+                        "",
+                        "using Models.PMF.Interfaces;",
+                        "using Newtonsoft.Json;",
+                        "using System;",
+                        "using System.Collections.Generic;",
+                        "using Models.Core;",
+                        "using Models.PMF;",
+                        "using Models.PMF.Interfaces;",
+                        "using System.Xml.Serialization;",
+                        "using Models.Soils;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable] ",
+                        "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        [Link] Plant TropicalPasture;",
+                        "        [Link] Clock Clock;",
+                        "",
+                        "    ",
+                        "",
+                        "        ",
+                        "        [EventSubscribe(\"StartOfSimulation\")]",
+                        "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                        "        {",
+                        "            ",
+                        "        }",
+                        "",
+                        "        public void DoCut(double LeafResidue, double StemResidue)",
+                        "        {",
+                        "            double L = (double)TropicalPasture.FindByPath(\"Leaf.Live.Wt\").Value;",
+                        "            double LeafRemovalFraction = 0;",
+                        "            if (L > 0)",
+                        "                LeafRemovalFraction = (L - LeafResidue) / L;",
+                        "            if (LeafRemovalFraction < 0)",
+                        "                LeafRemovalFraction = 0;",
+                        "               ",
+                        "            double S = (double)TropicalPasture.FindByPath(\"Stem.Live.Wt\").Value;",
+                        "            double StemRemovalFraction = 0;",
+                        "            if (S > 0)",
+                        "                StemRemovalFraction = (S - StemResidue) / S;               ",
+                        "            if (StemRemovalFraction < 0)",
+                        "                StemRemovalFraction = 0;",
+                        "               ",
+                        "               ",
+                        "            var Leaf = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Leaf\");",
+                        "            var Stem = TropicalPasture.FindChild<IHasDamageableBiomass>(\"Stem\");",
+                        "            Leaf.RemoveBiomass(liveToRemove: LeafRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                        "            Stem.RemoveBiomass(liveToRemove: StemRemovalFraction, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                        "",
+                        "        }",
+                        "        ",
+                        "    }",
+                        "}",
+                        "                "
+                      ],
                       "Parameters": [],
                       "Name": "CuttingManagement",
                       "ResourceName": null,

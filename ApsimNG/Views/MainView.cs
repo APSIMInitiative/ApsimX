@@ -169,9 +169,6 @@
 
             hbox1.HeightRequest = 20;
 
-            int paneHeight = MainWidget.Screen.RootWindow.Height;
-            vpaned1.Position = (int)Math.Round(paneHeight * 0.8); //set the slider for the pane at about 80% down
-
             // Normally, one would specify the style class in the UI (.glade) file.
             // However, doing so breaks gtk2-compatibility, so for now, we will just
             // set the style class in code.
@@ -329,11 +326,26 @@
         {
             get
             {
-                return hbox1.Allocation.Height;
+                return vpaned1.Position;
             }
             set
             {
-                hbox1.HeightRequest = value;
+                vpaned1.Position = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the width of the tree panel.
+        /// </summary>
+        public int TreePanelWidth
+        {
+            get
+            {
+                return vpaned1.Position;
+            }
+            set
+            {
+                vpaned1.Position = value;
             }
         }
 
