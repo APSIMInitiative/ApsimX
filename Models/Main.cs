@@ -130,7 +130,7 @@ namespace Models
                 {
                     List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
                     bool isSimToBeRun = false;
-                    string[] commandsArray = commands.ToArray();
+                    string[] commandsArray = ConfigFile.RemoveConfigFileWhitespace(commands.ToList()).ToArray();
                     string savePath = "";
                     string loadPath = "";
 
@@ -191,7 +191,9 @@ namespace Models
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
-                            string[] splitCommand = commandsArray[i].Split(" ");
+                            string[] splitCommandSpacesPreserved = ConfigFile.EncodeSpacesInCommandList(commandsArray.ToList()).ToArray();
+                            List<string> tempCommandSplits = commandsArray[i].Split(' ', '=').ToList();
+                            string[] splitCommand = ConfigFile.DecodeSpacesInCommandSplits(tempCommandSplits).ToArray();
                             if (splitCommand[0] == "save")
                             {
                                 savePath = configFileDirectory + Path.DirectorySeparatorChar + splitCommand[1];
@@ -250,7 +252,6 @@ namespace Models
                                     sim.Write(temporarySimLoadPath);
                                 else if (!String.IsNullOrEmpty(loadPath) && !String.IsNullOrEmpty(savePath))
                                     sim.Write(savePath);
-
                                 if (isSimToBeRun)
                                 {
                                     Runner runner = new Runner(sim,
@@ -273,6 +274,9 @@ namespace Models
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
                         }
+                        // Clean up temp apsimx file.
+                        File.Replace(temporarySimLoadPath, temporarySimLoadPath + ".bak", null);
+                        File.Delete(temporarySimLoadPath);
                     }
                 }
                 else

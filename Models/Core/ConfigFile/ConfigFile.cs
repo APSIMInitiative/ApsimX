@@ -50,6 +50,7 @@ namespace Models.Core.ConfigFile
             try
             {
                 // TODO: Important regex for nodes needs to be updated to include dashes.
+                // TODO: Need to test if override nodes with spaces in names also work. Do 01/08/2023.
                 Regex rxAddLocalCommand = new Regex(@"(add)\s(\[){1}(\w)*(\]){1}\s(\w)*");
                 Regex rxAddFromOtherFileCommand = new Regex(@"(add)\s(\[){1}(\w)+([\w\s])*(\]){1}\s([a-zA-Z0-9]){1}([\:\-\w\\\/])*(\.){1}(apsimx){1}(;){1}(\[){1}([\w\s])*(\]){1}");
                 Regex rxCopyCommand = new Regex(@"(copy)\s(\[){1}(\w)*(\]){1}\s(\[){1}(\w)*(\]){1}");
@@ -63,7 +64,7 @@ namespace Models.Core.ConfigFile
                 Regex rxNodeComplex = new Regex(@"(\[){1}([\w\s])+(\]){1}([\.\w])*");
                 Regex rxValidApsimxFilePath = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\w])*(\.){1}(apsimx)");
                 Regex rxValidPathToNodeInAnotherApsimxFile = new Regex(@"([a-zA-Z0-9]){1}([\:\/\\\-\w])*(\.){1}(apsimx)(;){1}(\[){1}([\w\s])+(\]){1}");
-                Regex rxBrokenNode = new Regex(@""); // TODO: Create new regex to recognise broken nodes
+                Regex rxBrokenNode = new Regex(@"");
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false).NewModel as Simulations;
 
                 List<string> newConfigFileCommands = EncodeSpacesInCommandList(configFileCommands.ToList());
@@ -119,6 +120,12 @@ namespace Models.Core.ConfigFile
                                     string modifiedNodeName = commandSplits[1];
                                     if (!string.IsNullOrEmpty(modifiedNodeName))
                                     {
+                                        // Special check to see if the modifiedNodeName = [Simulations]
+                                        // Simulations node should never be deleted.
+                                        if (modifiedNodeName == "[Simulations]")
+                                        {
+                                            throw new InvalidOperationException($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
+                                        }
                                         nodeToModify = modifiedNodeName;
                                     }
                                 }
@@ -183,7 +190,7 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                throw new Exception("Error occured while running config file commands.", e);
+                throw new Exception("An error occurred while running config file commands.", e);
             }
 
         }
@@ -269,20 +276,16 @@ namespace Models.Core.ConfigFile
         /// </summary>
         /// <param name="commandsList"></param>
         /// <returns>A valid string List of commands and overrides.</returns>
-        private static List<string> EncodeSpacesInCommandList(List<string> commandsList)
+        public static List<string> EncodeSpacesInCommandList(List<string> commandsList)
         {
+            // TODO: Needs to encode nodes that have multiple spaces as well.
             Regex rxKeywordSubstring = new Regex(@"(add|copy|delete|save|load|run)");
             Regex rxBrokenNodeStart = new Regex(@"(\[){1}([\w])+");
             Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
             Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
 
             List<string> normalizedList = new();
-            //string firstBrokenNodeString = "";
-            //string secondBrokenNodeString = "";
             StringBuilder correctedLineString = new();
-            //string commandKeyWordSubString = "";
-            //string firstValidNodeString = "";
-            //string secondValidNodeString = "";
 
             foreach (string lineString in commandsList)
             {
@@ -318,36 +321,19 @@ namespace Models.Core.ConfigFile
                             {
                                 if (section == "load" || section == "save")
                                     break;
-                                //else commandKeyWordSubString = section;
                                 else correctedLineString.Append(section + " ");
                             }
                             else if (rxBrokenNodeStart.IsMatch(section) && !rxNode.IsMatch(section))
-                            {
-                                //// Make sure that if a broken node start has been encountered that it starts a new brokenNodeString.
-                                //if (string.IsNullOrEmpty(firstBrokenNodeString))
-                                //    firstBrokenNodeString = section;
-                                //else secondBrokenNodeString = section;
                                 correctedLineString.Append(section + '@');
-                            }
                             else if (rxBrokenNodeEnd.IsMatch(section) && !rxNode.IsMatch(section))
-                            {
-                                //if (!string.IsNullOrEmpty(firstBrokenNodeString) && string.IsNullOrEmpty(secondBrokenNodeString))
-                                //    string.Concat(firstBrokenNodeString, section);
-                                //else if (!string.IsNullOrEmpty(firstBrokenNodeString) && !string.IsNullOrEmpty(secondBrokenNodeString))
-                                //    string.Concat(secondBrokenNodeString, section);
                                 correctedLineString.Append(section + " ");
-                            }
+                            else if (rxNode.IsMatch(section))
+                                correctedLineString.Append(section + " ");
+                            else if (string.IsNullOrEmpty(section))
+                                continue;
                             else
-                            {
-                                //if (string.IsNullOrEmpty(firstValidNodeString))
-                                //    string.Concat(firstValidNodeString, section);
-                                //else string.Concat(secondValidNodeString, section);
-                                correctedLineString.Append(section + " ");
-                            }
-
+                                correctedLineString.Append(section + "@");
                         }
-
-                        //correctedLineString = string.Concat(commandKeyWordSubString, firstBrokenNodeString);
                         normalizedList.Add(correctedLineString.ToString());
                     }
                     else
@@ -360,12 +346,12 @@ namespace Models.Core.ConfigFile
         }
 
         /// <summary>
-        /// Takes <paramref name="commandSplitList"/> (a line from a configFile split into sections seperated by space) and removes the 
+        /// Takes <paramref name="commandSplitList"/> (a line from a configFile split into sections separated by space) and removes the 
         /// '@' symbols so Nodes with spaces can be located correctly. 
         /// </summary>
         /// <param name="commandSplitList"></param>
         /// <returns>The list with splits that do not contain '@' characters.</returns>
-        private static List<string> DecodeSpacesInCommandSplits(List<string> commandSplitList)
+        public static List<string> DecodeSpacesInCommandSplits(List<string> commandSplitList)
         {
             try
             {
@@ -383,8 +369,43 @@ namespace Models.Core.ConfigFile
             }
             catch (Exception e)
             {
-                throw new Exception($"An error occured trying to replace '@' characters from commandSplit. {e}");
+                throw new Exception($"An error occurred trying to replace '@' characters from commandSplit. {e}");
             }
+        }
+
+        /// <summary>
+        /// Takes a list of command strings and removes unnecessary whitespace trailing a command.
+        /// </summary>
+        /// <param name="commandSplitList"></param>
+        /// <returns>A List&lt;string&gt;with trailing whitespace removed.</returns>
+        public static List<string> RemoveConfigFileWhitespace(List<string> commandSplitList)
+        {
+            try
+            {
+                List<string> modifiedList = new List<string>();
+                List<string> encodedCommandList = EncodeSpacesInCommandList(commandSplitList);
+                foreach (string command in commandSplitList)
+                {
+                    List<string> splitCommands = command.Split(" ").ToList();
+                    splitCommands.RemoveAll(split => split == "");
+                    string trimmedCommand = "";
+                    foreach (string split in splitCommands)
+                    {
+                        trimmedCommand += split;
+                        if (split != splitCommands.Last<string>())
+                            trimmedCommand += " ";
+                    }
+                    modifiedList.Add(trimmedCommand);
+                }
+                List<string> decodedModifiedList = DecodeSpacesInCommandSplits(modifiedList);
+                modifiedList = decodedModifiedList;
+                return modifiedList;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An error occurred removing whitespace from a command list.\n {e}");
+            }
+
         }
     }
 }
