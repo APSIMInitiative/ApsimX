@@ -5033,6 +5033,7 @@
                 "using Models.Management;",
                 "using System.Linq;",
                 "using System.Diagnostics;",
+                "using Models.PMF.Phen;",
                 "",
                 "namespace Models",
                 "{",
@@ -5043,6 +5044,7 @@
                 "        [Link] Plant SCRUM;",
                 "        [Link] Clock Clock;",
                 "        [Link] BiomassRemovalFractions rbs;",
+                "\t\t[Link(Type = LinkType.Scoped, ByName = true)] Phenology phenology;",
                 "",
                 "        [Description(\"Cultivar\")]",
                 "        public string CultivarName { get; set; }",
@@ -5052,6 +5054,8 @@
                 "        public DateTime SowingDate { get; set; }",
                 "        [Description(\"Cut Dates (comma seperated dd/mm/yyyy\")]",
                 "        public DateTime[] CutDates { get; set; }",
+                "        [Description(\"Stage to rewind phenology to on cutting\")]",
+                "        public double phenStageSet {get; set;}",
                 "        [Description(\"EndCrop Date\")]",
                 "        public DateTime EndCropDate { get; set; }",
                 "        ",
@@ -5085,7 +5089,8 @@
                 "            \tif ((CropIn) && (d == Clock.Today))",
                 "            \t{",
                 "            \t    rbs.Do();",
-                "           \t\t}",
+                "            \t    phenology.SetToStage(phenStageSet);",
+                "            \t}",
                 "            }",
                 "            ",
                 "",
@@ -5110,6 +5115,10 @@
                 {
                   "Key": "CutDates",
                   "Value": "12/15/2010 00:00:00, 02/15/2011 00:00:00"
+                },
+                {
+                  "Key": "phenStageSet",
+                  "Value": "3.5"
                 },
                 {
                   "Key": "EndCropDate",
@@ -5379,13 +5388,14 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalFractions, Models",
+              "removaltype": 0,
               "BiomassRemovals": [
                 {
                   "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Product",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
+                  "LiveToRemoveString": "0.5",
                   "DeadToRemoveString": null,
                   "LiveToResidueString": null,
                   "DeadToResidueString": null
@@ -5395,7 +5405,7 @@
                   "PlantName": "SCRUM",
                   "OrganName": "Product",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
+                  "LiveToRemoveString": "0",
                   "DeadToRemoveString": null,
                   "LiveToResidueString": null,
                   "DeadToResidueString": null
@@ -5425,7 +5435,7 @@
                   "PlantName": "SCRUM",
                   "OrganName": "Stover",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
+                  "LiveToRemoveString": "0.5",
                   "DeadToRemoveString": null,
                   "LiveToResidueString": null,
                   "DeadToResidueString": null
