@@ -4553,7 +4553,7 @@
               "StageToSet": 3.5,
               "RemovalDates": [
                 "2010-12-15T00:00:00",
-                "2010-01-15T00:00:00"
+                "2011-01-15T00:00:00"
               ],
               "Name": "BiomassRemovalEvents",
               "ResourceName": null,

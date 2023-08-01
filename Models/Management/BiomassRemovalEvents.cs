@@ -55,7 +55,10 @@ namespace Models.Management
         public void remove ()
         {
             biomRemFra.Do(this.removaltype);
-            phenology.SetToStage(StageToSet);
+            if (StageToSet >= 1.0)
+            {
+                phenology?.SetToStage(StageToSet);
+            }
         }
 
         [EventSubscribe("DoManagement")]
