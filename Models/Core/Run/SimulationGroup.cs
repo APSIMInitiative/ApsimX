@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using APSIM.Shared.JobRunning;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
 using Models.Core.ApsimFile;
 using Models.PostSimulationTools;
 using Models.Storage;
@@ -69,6 +71,19 @@ namespace Models.Core.Run
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
+            if (relativeTo is Playlist) //check if node was a playlist
+            {
+                if ((relativeTo as Playlist).Text.Length > 0)
+                {
+                    this.simulationNamesToRun = (relativeTo as Playlist).GetListOfSimulations();
+                    if (this.simulationNamesToRun == null || this.simulationNamesToRun.Count() == 0)
+                        throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
+                }
+                //need to set the relative back to simulations so the runner can find all the simulations 
+                //when it comes time to run.
+                this.relativeTo = relativeTo.FindAncestor<Simulations>();
+            }
+            
             if (simulationNamePatternMatch != null)
                 patternMatch = new Regex(simulationNamePatternMatch);
 

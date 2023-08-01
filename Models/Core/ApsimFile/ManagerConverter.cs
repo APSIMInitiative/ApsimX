@@ -59,6 +59,11 @@ namespace Models.Core.ApsimFile
             this.Token = manager;
             if (manager["Code"] != null)
                 Read(manager["Code"].ToString());
+            else if (manager["CodeArray"] != null)
+            {
+                var codeArray = manager["CodeArray"] as JArray;
+                lines = codeArray.Values<string>().ToList();
+            }
         }
 
         /// <summary>Load script</summary>
@@ -557,7 +562,7 @@ namespace Models.Core.ApsimFile
         /// <returns>The line after the classes curly bracket.</returns>
         private int FindStartOfClass()
         {
-            int lineNumberClass = FindString("public class Script");
+            int lineNumberClass = FindString("public class ");
             if (lineNumberClass != -1)
             {
                 while (!lines[lineNumberClass].Contains('{'))
