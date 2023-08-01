@@ -41,6 +41,12 @@ namespace Models.Management
             Pruning
         }
 
+        /// <summary>
+        /// The type of biomass removal event
+        /// </summary>
+        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        public BiomassRemovalType removaltype { get; set; }
+
         /// <summary>Stores a row of Biomass Removal Fractions</summary>
         [Serializable]
         public class BiomassRemovalOfPlantOrganType {
@@ -118,9 +124,9 @@ namespace Models.Management
         /// <summary>Cutting Event</summary>
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
 
-        /*
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private Phenology phenology = null;
+        
+        //[Link(Type = LinkType.Scoped, ByName = true)]
+        //private Phenology phenology = null;
 
         /// <summary>Cutting Event</summary>
         public event EventHandler<EventArgs> Cutting;
@@ -133,7 +139,7 @@ namespace Models.Management
 
         /// <summary>Harvesting Event</summary>
         public event EventHandler<EventArgs> Harvesting;
-        */
+        
 
         /// <summary>Constructor</summary>
         public BiomassRemovalFractions() {
@@ -186,14 +192,11 @@ namespace Models.Management
                 List<IOrgan> organs = plant.FindAllDescendants<IOrgan>().ToList();
                 foreach (IOrgan organ in organs)
                 {
-                    foreach (BiomassRemovalType type in Enum.GetValues(typeof(BiomassRemovalType)))
-                    {
-                        DataRow row = data.NewRow();
-                        row["Plant"] = plant.Name;
-                        row["Organ"] = organ.Name;
-                        row["Type"] = type.ToString();
-                        data.Rows.Add(row);
-                    }
+                    DataRow row = data.NewRow();
+                    row["Plant"] = plant.Name;
+                    row["Organ"] = organ.Name;
+                    row["Type"] = removaltype.ToString();
+                    data.Rows.Add(row);
                 }
             }
 
@@ -353,16 +356,16 @@ namespace Models.Management
                                                                 deadToResidue: deadToResidues);
             }
 
-            /*
-            if (removaltp.ToString() == RemovalType.Cutting.ToString())
+            if (removaltype.ToString() == BiomassRemovalType.Cutting.ToString())
                 Cutting?.Invoke(this, new EventArgs());
-            if (removaltp.ToString() == RemovalType.Grazing.ToString())
+            if (removaltype.ToString() == BiomassRemovalType.Grazing.ToString())
                 Grazing?.Invoke(this, new EventArgs());
-            if (removaltp.ToString() == RemovalType.Pruning.ToString())
+            if (removaltype.ToString() == BiomassRemovalType.Pruning.ToString())
                 Pruning?.Invoke(this, new EventArgs());
-            if (removaltp.ToString() == RemovalType.Harvesting.ToString())
+            if (removaltype.ToString() == BiomassRemovalType.Harvesting.ToString())
                 Harvesting?.Invoke(this, new EventArgs());
 
+            /*
             if (SetStage != null)
                 phenology.SetToStage(SetStage.Value());
             */
