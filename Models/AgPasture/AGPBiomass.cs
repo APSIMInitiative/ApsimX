@@ -1,8 +1,9 @@
-﻿namespace Models.AgPasture
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using System;
+
+namespace Models.AgPasture
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
 
     /// <summary>AgPasture class for holding a biomass weight, N content and digestibility.</summary>
     [Serializable]
@@ -18,7 +19,7 @@
 
         /// <summary>N concentration.</summary>
         [Units("kg/ha")]
-        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
+        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0, 0.000000001); } }
 
         /// <summary>Digestibility of biomass.</summary>
         [Units("kg/kg")]

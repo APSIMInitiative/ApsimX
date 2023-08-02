@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
-using System.Linq;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// # [Name]
-    /// Accumulates [ChildFunctionList] between [Start] and [End]
+    /// <summary>Accumulates a child function between a start and end stage.
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
@@ -31,20 +28,22 @@ namespace Models.Functions
         private int startStageIndex;
 
         private int endStageIndex;
-       
+
         private double AccumulatedValue = 0;
 
         private IEnumerable<IFunction> ChildFunctions;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
 
         /// <summary>The end stage name</summary>
         [Description("Stage name to stop accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string EndStageName { get; set; }
 
         /// <summary>The reset stage name</summary>
@@ -123,6 +122,16 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             return AccumulatedValue;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"*{Name}* = Accumulated {ChildFunctionList} between {StartStageName.ToLower()} and {EndStageName.ToLower()}");
+
+            foreach (var child in Children)
+                foreach (var tag in child.Document())
+                    yield return tag;
         }
 
         /// <summary>Called when [cut].</summary>

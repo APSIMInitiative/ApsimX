@@ -1,10 +1,12 @@
-﻿namespace Models
+using System;
+using System.Linq;
+using Models.Core;
+using Models.Soils;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using System;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using Soils;
+
     /// <summary>
     /// This model controls irrigation events, which can be triggered using the Apply() method.
     /// </summary>
@@ -14,10 +16,10 @@
     {
         /// <summary>Access the summary model.</summary>
         [Link] private ISummary summary = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
         [Link] private IPhysical soilPhysical = null;
-        
+
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
         [JsonIgnore]
         public double IrrigationApplied { get; private set; }
@@ -61,25 +63,24 @@
                 if (depth > soilPhysical.Thickness.Sum())
                     throw new ApsimXException(this, "Check the depth for irrigation, it cannot be deeper than the soil depth");
                 Depth = depth;
- 
+
                 if (duration > 1440.0)
                     throw new ApsimXException(this, "Check the duration for the irrigation, it must be less than 1440 minutes");
                 Duration = duration;
 
                 if (efficiency > 1.0)
-                   throw new ApsimXException(this, "Check the value of irrigation efficiency, it must be between 0 and 1");
+                    throw new ApsimXException(this, "Check the value of irrigation efficiency, it must be between 0 and 1");
                 Efficiency = efficiency;
 
                 // Sub-surface irrigation cannot run off
                 if (Depth > 0.0)
                     willRunoff = false;
 
-                IrrigationApplied = amount * efficiency;
                 WillRunoff = willRunoff;
 
                 // Prepare the irrigation data
                 IrrigationApplicationType irrigData = new IrrigationApplicationType();
-                irrigData.Amount = IrrigationApplied;
+                irrigData.Amount = amount * efficiency;
                 irrigData.Depth = Depth;
                 irrigData.Duration = Duration;
                 irrigData.WillRunoff = WillRunoff;
@@ -89,10 +90,12 @@
                 // Raise event and write log
                 Irrigated.Invoke(this, irrigData);
                 if (doOutput)
-                    summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
+                    summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", irrigData.Amount, Depth), MessageType.Diagnostic);
+
+                IrrigationApplied += irrigData.Amount;
             }
             else if (doOutput && amount < 0)
-                summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative");
+                summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative", MessageType.Warning);
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

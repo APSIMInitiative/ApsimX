@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
 
@@ -8,20 +7,27 @@ namespace Models.Functions
     /// <summary>Fraction of NO3 which denitrifies today</summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval fraction of NO3 denitrified.
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [Serializable]
     [Description("Soil NO3 Denitrification model from CERES-Maize")]
-    public class CERESDenitrificationModel : Model, IFunction, ICustomDocumentation
+    public class CERESDenitrificationModel : Model, IFunction
     {
         [Link]
         Soils.IPhysical soilPhysical = null;
+
         [Link(ByName = true)]
         INutrientPool Humic = null;
+
         [Link(ByName = true)]
         INutrientPool Inert = null;
+
         [Link(ByName = true)]
         INutrientPool FOMCarbohydrate = null;
+
         [Link(ByName = true)]
         INutrientPool FOMCellulose = null;
+
         [Link(ByName = true)]
         INutrientPool FOMLignin = null;
 
@@ -32,18 +38,35 @@ namespace Models.Functions
         [Link(Type = LinkType.Child)]
         CERESDenitrificationWaterFactor CERESWF = null;
 
+        /// <summary>
+        /// Rate modifier on the CERES denitrification model. Default = 0.0006.
+        /// </summary>
+        [Description("Denitrification rate modifier")]
+        public double DenitrificationRateModifier { get; set; } = 0.0006;
+
+        /// <summary>
+        /// Kludge
+        /// </summary>
+        [Description("Is inert pool active?")]
+        public bool IsInertActive { get; set; } = true;
+
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Denitrification Model");
+            double ActiveC;
+            if (IsInertActive)
+                ActiveC = Humic.C[arrayIndex] + Inert.C[arrayIndex] + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
+            else
+                ActiveC = Humic.C[arrayIndex] + 0.0 + FOMCarbohydrate.C[arrayIndex] + FOMCellulose.C[arrayIndex] + FOMLignin.C[arrayIndex];
 
-            double ActiveC = Humic.C[arrayIndex] + Inert.C[arrayIndex]+FOMCarbohydrate.C[arrayIndex]+FOMCellulose.C[arrayIndex]+FOMLignin.C[arrayIndex];
-            double ActiveCppm = ActiveC/(soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
+            double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
-            double PotentialRate = 0.0006 * CarbonModifier;
-             
+            double PotentialRate = DenitrificationRateModifier * CarbonModifier;
+
             return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
         }
 
@@ -61,15 +84,6 @@ namespace Models.Functions
                     result[i] = Value(i);
                 return result;
             }
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
         }
     }
 }

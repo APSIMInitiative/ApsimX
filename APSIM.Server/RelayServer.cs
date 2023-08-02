@@ -15,6 +15,7 @@ using Models.Core.Run;
 using APSIM.Server.Extensions;
 using System.Data;
 using APSIM.Shared.Utilities;
+using System.Globalization;
 
 namespace APSIM.Server
 {
@@ -51,14 +52,25 @@ namespace APSIM.Server
         private const string workerInputsPath = "/inputs";
 
         /// <summary>
-        /// Port number used for socket connections to the worker pods.
+        /// A label with this name is added to all pods created by the bootstrapper.
         /// </summary>
-        private const uint portNo = 27746;
+        private const string podTypeLabelName = "k8s.apsim.info/pod-type";
+
+        /// <summary>
+        /// A label with this name is added to all pods created by the
+        /// bootstrapper. The value of this label indicates the TCP port on
+        /// which the server in the pod is listening for connections.
+        /// </summary>
+        private const string podPortNoLabelName = "k8s.apsim.info/port-no";
+
+        /// <summary>
+        /// All worker pods have their <see cref="podTypeLabelName"/> set to this value.
+        /// </summary>
+        private const string workerPodType = "worker";
 
         // State
         private readonly Kubernetes client;
         private readonly RelayServerOptions relayOptions;
-        private readonly string owner = "drew"; // todo: This should be specified in options.
         private readonly Guid jobID;
         private readonly string instanceName;
         private readonly string podNamespace;
@@ -100,6 +112,7 @@ namespace APSIM.Server
         public override void Run()
         {
             workers = FindWorkers();
+            WriteToLog($"Discovered {workers.Count()} worker pods");
 
             // tbi: go into relay mode
             WriteToLog("Starting relay server...");
@@ -112,7 +125,8 @@ namespace APSIM.Server
         private IEnumerable<string> FindWorkers()
         {
             List<string> podNames = new List<string>();
-            V1PodList pods = client.ListNamespacedPod(podNamespace);
+            string labelSelector = $"{podTypeLabelName}={workerPodType}";
+            V1PodList pods = client.ListNamespacedPod(podNamespace, labelSelector: labelSelector);
             foreach (V1Pod pod in pods.Items)
             {
                 string podName = pod.Name();
@@ -130,14 +144,42 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
-            // Relay the command to all workers.
-            if (command is ReadCommand readCommand)
+            Exception error = null;
+            try
             {
-                DoReadCommand(readCommand, connection);
-                return;
+                // Relay the command to all workers.
+                if (command is ReadCommand readCommand)
+                    // Read commands need to be handled slightly differently;
+                    // each pod will return a DataTable, which need to be merged.
+                    DoReadCommand(readCommand, connection);
+                else
+                    DoGenericCommand(command, connection);
+            }
+            catch (Exception err)
+            {
+                error = err;
+                WriteToLog(err.ToString());
             }
 
+            connection.OnCommandFinished(command, error);
+        }
+
+        private void DoGenericCommand(ICommand command, IConnectionManager connection)
+        {
+            List<Task> tasks = new List<Task>();
             foreach (string podName in workers)
+                tasks.Add(RelayCommand(podName, command, connection));
+            foreach (Task task in tasks)
+            {
+                task.Wait();
+                if (task.Status == TaskStatus.Faulted || task.Exception != null)
+                    throw new Exception($"{command} failed", task.Exception);
+            }
+        }
+
+        private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
+        {
+            return Task.Run(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
@@ -145,8 +187,9 @@ namespace APSIM.Server
 
                 // Create a new socket connection to the pod.
                 string ip = pod.Status.PodIP;
-                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
-                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                ushort port = GetPortNo(pod);
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{port}");
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, port, Protocol.Managed))
                 {
                     WriteToLog($"Connection to {podName} established. Sending command...");
 
@@ -155,14 +198,48 @@ namespace APSIM.Server
 
                     WriteToLog($"Closing connection to {podName}...");
                 }
-            }
-            connection.OnCommandFinished(command);
+            });
+        }
+
+        /// <summary>
+        /// Get the port number on which a pod is listening.
+        /// </summary>
+        /// <param name="pod">A worker pod.</param>
+        private ushort GetPortNo(V1Pod pod)
+        {
+            IDictionary<string, string> labels = pod.Metadata.Labels;
+            if (labels == null)
+                throw new InvalidOperationException($"Pod {pod.Name()} has no labels");
+            if (!labels.TryGetValue(podPortNoLabelName, out string portString))
+                throw new InvalidOperationException($"Pod {pod.Name()} has no {podPortNoLabelName} label");
+            if (!ushort.TryParse(portString, NumberStyles.Integer, CultureInfo.InvariantCulture, out ushort port))
+                throw new InvalidOperationException($"Unable to parse port number '{portString} for pod {pod.Name()}");
+            return port;
         }
 
         private void DoReadCommand(ReadCommand command, IConnectionManager connection)
         {
-            List<DataTable> tables = new List<DataTable>();
+            List<Task<DataTable>> tasks = new List<Task<DataTable>>();
             foreach (string podName in workers)
+                tasks.Add(RelayReadCommand(podName, command, connection));
+            List<DataTable> tables = new List<DataTable>();
+            foreach (Task<DataTable> task in tasks)
+            {
+                task.Wait();
+                if (task.Status == TaskStatus.Faulted || task.Exception != null)
+                    throw new Exception($"{command} failed", task.Exception);
+                if (task.Result != null)
+                    tables.Add(task.Result);
+            }
+            command.Result = DataTableUtilities.Merge(tables);
+            foreach (string param in command.Parameters)
+                if (command.Result.Columns[param] == null)
+                    throw new Exception($"Column {param} does not exist in table {command.TableName} (it appears to have disappeared in the merge)");
+        }
+
+        private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
+        {
+            return Task.Run<DataTable>(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
@@ -170,28 +247,23 @@ namespace APSIM.Server
 
                 // Create a new socket connection to the pod.
                 string ip = pod.Status.PodIP;
-                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
-                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                ushort port = GetPortNo(pod);
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{port}");
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, port, Protocol.Managed))
                 {
                     WriteToLog($"Connection to {podName} established. Sending command...");
 
                     // Relay the command to the pod.
                     try
                     {
-                        tables.Add(conn.ReadOutput(command));
+                        return conn.ReadOutput(command);
                     }
                     catch (Exception err)
                     {
-                        WriteToLog($"Unable to read output from pod {podName}:");
-                        WriteToLog(err.ToString());
+                        throw new Exception($"Unable to read output from pod {podName}", err);
                     }
-
-                    WriteToLog($"Closing connection to {podName}...");
                 }
-            }
-            WriteToLog($"Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
-            command.Result = DataTableUtilities.Merge(tables);
-            connection.OnCommandFinished(command);
+            });
         }
 
         /// <summary>
@@ -244,7 +316,7 @@ namespace APSIM.Server
         /// Dispose of the job manager by deleting the namespace and all pods
         /// therein.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             // RemoveWorkers();
             WriteToLog("Deleting namespace...");

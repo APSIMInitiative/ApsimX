@@ -1,27 +1,21 @@
-﻿namespace Models.Soils.Nutrients
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Functions;
+
+namespace Models.Soils.Nutrients
 {
-    using Models.Core;
-    using Functions;
-    using System;
+
     /// <summary>
-    /// # [Name]
-    /// [DocumentType Memo]
-    /// 
-    /// ## Initialisation
-    /// The initialisation of Carbon and Nutrient contents of this pool is described as follows:
-    /// 
-    /// [Document InitialCarbon]
-    /// [Document InitialNitrogen]
-    /// 
-    /// ## Organic Matter Flows
-    /// [DocumentType CarbonFlow]
+    /// A nutrient pool.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NutrientPool : Model, INutrientPool
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -85,7 +79,7 @@
         /// <param name="CAdded"></param>
         /// <param name="NAdded"></param>
         /// <param name="PAdded"></param>
-        public void Add (double[] CAdded, double[] NAdded, double[] PAdded)
+        public void Add(double[] CAdded, double[] NAdded, double[] PAdded)
         {
             if (CAdded.Length != NAdded.Length)
                 throw new Exception("Arrays for addition of soil organic matter and N must be of same length.");
@@ -102,5 +96,24 @@
             }
         }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            List<ITag> initialisationTags = new List<ITag>();
+            initialisationTags.Add(new Paragraph("The initialisation of Carbon and Nutrient contents of this pool is described as follows:"));
+            initialisationTags.AddRange(InitialCarbon.Document());
+            initialisationTags.AddRange(InitialNitrogen.Document());
+            // todo: include initial P in docs once soil P is released.
+            // initialisationTags.AddRange(InitialPhosphorus.Document());
+            yield return new Section("Initialisation", initialisationTags);
+
+            yield return new Section("Organic Matter Flows", DocumentChildren<CarbonFlow>(true));
+        }
     }
 }

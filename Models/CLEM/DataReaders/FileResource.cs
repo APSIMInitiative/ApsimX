@@ -9,8 +9,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM
 {
@@ -26,7 +24,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a resource input file for the CLEM simulation")]
+    [Description("Access to a resource input file")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/ResourceDataReader.htm")]
     public class FileResource : CLEMModel, IValidatableObject
@@ -232,28 +230,55 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Collect the 
+        /// </summary>
+        /// <returns>A list of column names</returns>
+        public IEnumerable<string> GetUniqueResourceTypes()
+        {
+            DataView dataView = new DataView(resourceFileAsTable);
+            return dataView.Table.AsEnumerable().Select(a => a.Field<string>(ResourceNameColumnName)).Distinct();
+        }
+
+        /// <summary>
         /// Searches the DataTable created from the Resource File using the specified parameters.
         /// <returns></returns>
         /// </summary>
-        /// <param name="month"></param>
-        /// <param name="year"></param>
-        /// <returns>A struct called CropDataType containing the crop data for this month.
-        /// This struct can be null. 
+        /// <param name="month">Month to consider</param>
+        /// <param name="year">Year to consider</param>
+        /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
+        /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
+        /// <returns>
+        /// A dataview with all data for the month.
         /// </returns>
-        public DataView GetCurrentResourceData(int month, int year)
+        public DataView GetCurrentResourceData(int month, int year, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
         {
-            string filter = "";
+            string filter = "(";
             switch (StyleOfDateEntry)
             {
                 case DateStyle.DateStamp:
                     throw new NotImplementedException();
-                    //filter = $"({YearColumnName} = {year})";
-                    //break;
                 case DateStyle.YearAndMonth:
-                    filter = $"( { YearColumnName} = " + year + $" AND { MonthColumnName} = " + month + ")";
+                    filter = $"{filter}({YearColumnName} = {year} AND {MonthColumnName} = {month})";
                     break;
             }
             DataView dataView = new DataView(resourceFileAsTable);
+            if(resourceNames.Any())
+            {
+                filter = $"{filter} AND (";
+                foreach (var resourceName in resourceNames)
+                {
+                    if(!filter.EndsWith("("))
+                        filter = $"{filter} OR ";
+                    filter = $"{filter} {ResourceNameColumnName} = '{resourceName.Trim()}'";
+                }
+                filter = $"{filter} )";
+            }
+            if(!includeZeroAmounts)
+            {
+                filter = $"{filter} AND ({AmountColumnName} <> 0)";
+            }
+            filter = $"{filter})";
+
             dataView.RowFilter = filter;
             dataView.Sort = $" {AmountColumnName} ASC";
             return dataView;
@@ -305,8 +330,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
 
                 return true;
             }
@@ -326,12 +353,8 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -340,15 +363,17 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
                 }
-                else if (!this.FileExists)
-                {
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                }
                 else
                 {
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    if (!this.FileExists)
+                    {
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    }
                 }
-
                 if (FileName != null && FileName.Contains(".xls"))
                 {
                     if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
@@ -414,11 +439,7 @@ namespace Models.CLEM
 
         #region validation
 
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

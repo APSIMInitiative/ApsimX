@@ -1,13 +1,11 @@
 ﻿using System;
 using Models.Core;
 using Models.Functions;
-using Models.LifeCycle;
-using Models.PMF;
 using Models.PMF.Interfaces;
+
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// For Pests/Diseases that take assimilate dirrect from the vessels. 
     /// for example aphids
     /// </summary>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -18,12 +17,12 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.LinearAfterThresholdView")]
     [PresenterName("UserInterface.Presenters.LinearAfterThresholdPresenter")]
     [Description("Use a linear function with a gradient after a trigger value is exceeded.")]
-    public class LinearAfterThresholdFunction : Model, IFunction, ICustomDocumentation
+    public class LinearAfterThresholdFunction : Model, IFunction
     {
         /// <summary>The x property</summary>
         [Description("XProperty")]
         public string XProperty { get; set; }
-        
+
         /// <summary>
         /// The trigger value on the X axis
         /// </summary>
@@ -81,26 +80,13 @@ namespace Models.Functions
                 return Math.Max(0.0, (x - XTrigger)) * Slope;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // get description and units.
-                string description = AutoDocumentation.GetDescription(Parent, Name);
-
-                if (description != string.Empty)
-                    tags.Add(new AutoDocumentation.Paragraph(description, indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>Trigger value" + XTrigger.ToString() + " Gradient " + Slope.ToString() + "</i>", indent));
-            }
+            yield return new Paragraph($"*{Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(XProperty, ".Value()")}*");
+            yield return new Paragraph($"*Trigger value {XTrigger} Gradient {Slope}*");
         }
     }
 }

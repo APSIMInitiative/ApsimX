@@ -15,62 +15,6 @@ namespace UserInterface.Presenters
     using Models;
     using Models.Core;
     using Views;
-    
-    /// <summary>
-    /// Class used to create the heirachy of the the categories and subcategories from the 
-    /// [Category] attribute added to the properties of a model.
-    /// </summary>
-    public class CategoryItem
-    {
-        public string Name;
-
-        /// <summary>
-        /// Subcategories of this category
-        /// </summary>
-        public List<string> SubcategoryNames;
-
-        /// <summary>
-        /// Constructor 
-        /// </summary>
-        public  CategoryItem(string name)
-        {
-            this.Name = name;
-            this.SubcategoryNames = new List<string>();
-        }
-
-        public void AddSubcategoryName(string name)
-        {
-            //is subcategory name already in the list
-            bool subcatExists = this.SubcategoryNames.Exists(subcatname => subcatname == name);
-            // if it isn't then add it.
-            if (!subcatExists)
-            {
-                this.SubcategoryNames.Add(name);
-            }
-        }
-    }
-
-    public class CategoryTree
-    {
-        public List<CategoryItem> CategoryItems;
-
-        public CategoryTree()
-        {
-            this.CategoryItems = new List<CategoryItem>();
-        }
-
-        public CategoryItem FindCategoryInTree(string catName)
-        {
-            return this.CategoryItems.Find(item => item.Name == catName);
-        }
-
-        public void AddCategoryToTree(String catName)
-        {
-            bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
-            if (!catExists)
-                this.CategoryItems.Add(new CategoryItem(catName));
-        }
-    }
 
     /// <summary>
     /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 
@@ -157,8 +101,6 @@ namespace UserInterface.Presenters
 
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyPresenter();
-            this.propertyView = new PropertyView(this.treeview as ViewBase);
-
             this.ShowRightHandView();
         }
 
@@ -168,7 +110,7 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            (treeview as ViewBase).MainWidget.Cleanup();
+            (treeview as ViewBase).Dispose();
         }
 
         /// <summary>
@@ -291,7 +233,6 @@ namespace UserInterface.Presenters
         private CategoryTree GetPropertyCategories()
         {
             CategoryTree categories = new CategoryTree();
-
             IModel modelToUse = ModelForProperties();
 
             if (modelToUse != null)
@@ -319,11 +260,27 @@ namespace UserInterface.Presenters
                         {
                             //get the attribute data
                             CategoryAttribute catAtt = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
-                            //add the category name to the list of category items
-                            categories.AddCategoryToTree(catAtt.Category);
-                            //add the subcategory name to the list of subcategories for the category
-                            CategoryItem catItem = categories.FindCategoryInTree(catAtt.Category);
-                            catItem.AddSubcategoryName(catAtt.Subcategory);
+                            // add the category name to the list of category items
+                            // allow : separated list for multiple categories
+                            int catIndex = 0;
+                            foreach (var catLabel in catAtt.Category.Split(':'))
+                            {
+                                if (catLabel != "*")
+                                {
+                                    categories.AddCategoryToTree(catLabel);
+                                    //add the subcategory name to the list of subcategories for the category
+                                    CategoryItem catItem = categories.FindCategoryInTree(catLabel);
+                                    var subLabels = catAtt.Subcategory.Split(':');
+                                    if (subLabels.Length >= catIndex + 1)
+                                        if (subLabels[catIndex] != "*")
+                                            catItem.AddSubcategoryName(subLabels[catIndex]);
+                                }
+                                catIndex++;
+                            }
+                            //categories.AddCategoryToTree(catAtt.Category);
+                            ////add the subcategory name to the list of subcategories for the category
+                            //CategoryItem catItem = categories.FindCategoryInTree(catAtt.Category);
+                            //catItem.AddSubcategoryName(catAtt.Subcategory);
                         }
                         else
                         {
@@ -350,35 +307,27 @@ namespace UserInterface.Presenters
             root.Name =  model.Name;
 
             // find namespace and image name needed to find image file in the Resources of UserInterface project
-            string nameSpace = model.GetType().FullName.Split('.')[1];
-            string imageName = model.GetType().Name;
-            root.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + nameSpace + "." + imageName + ".png";
+            string nameSpace = model.GetType().FullName;
+            nameSpace = nameSpace.Substring(7);
+            root.ResourceNameForImage = $"ApsimNG.Resources.TreeViewImages.{nameSpace}.svg";
 
             foreach (CategoryItem cat in categoryTree.CategoryItems)
             {
                 TreeViewNode description = new TreeViewNode();
                 description.Name = cat.Name;
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.ActivityFolder.png";
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.Category.svg";
                 description.Children = new List<TreeViewNode>();
                 foreach (string subcat in cat.SubcategoryNames)
                 {
                     TreeViewNode child = new TreeViewNode();
                     child.Name = subcat;
-                    if (subcat.ToLower().Contains("pasture"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.PastureTreeItem.png";
-                    else if (subcat.ToLower().Contains("unspecif"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
-                    else if (model.GetType().Name.ToLower().Contains("ruminant"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.RuminantGroup.png";
-                    else
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
+                    child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.CategoryItem.svg";
                     description.Children.Add(child);
                 }
                 root.Children.Add(description);
             }
             return root;
         }
-
 
         protected bool IsPropertySelected(PropertyInfo property)
         {
@@ -387,14 +336,14 @@ namespace UserInterface.Presenters
                 if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
                 {
                     CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
-                    if (catAtt.Category == this.selectedCategory)
+                    if (catAtt.Category.StartsWith("*") || Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
                     {
                         if ((selectedSubCategory ?? "") != "") // a sub category has been selected
                         {
                             // The catAtt.Subcategory is by default given a value of 
                             // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
                             // so this line below will also handle "Unspecified" subcategories.
-                            return (catAtt.Subcategory == this.selectedSubCategory);
+                            return (catAtt.Subcategory.StartsWith("*") || Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
                         }
                     }
                     else

@@ -1,13 +1,13 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Functions;
+using Newtonsoft.Json;
+
+namespace Models.LifeCycle
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using Models.Functions;
 
     /// <summary>
-    /// # [Name]
     /// A LifeCyclePhase represents a distinct period in the development or an organisum.
     /// Each LifeCyclePhase assembles an arbitary number of cohorts which represent individuals
     /// that entered this phase at the same time and will have the same PhysiologicalAge.
@@ -152,7 +152,7 @@
         public double DevelopmentRate { get; set; }
 
         /// <summary>The number of individules expiring (Summed across all cohorts)</summary>
-        public double Mortalities { get; set; } 
+        public double Mortalities { get; set; }
 
         /// <summary>The number of individuals moved to the next LifeCyclePhase (Summed across all graduating cohorts</summary>
         public double Graduates { get; set; }
@@ -206,7 +206,7 @@
                     Emigrants += c.Emigrants;
                     c.Population = Math.Max(0.0, c.Population - c.Emigrants);
                 }
-                
+
                 //Add Migrants into destination phase
                 if (Emigrants > 0)
                 {
@@ -255,7 +255,7 @@
                     if ((MtotalProportion > 1.001) && (Emigrants > 0))
                         throw new Exception("The sum of ProportionOfMigrants values in " + FullPath + " ProgenyDestinationPhases is greater than 1.0");
                 }
-                
+
                 // Add progeny into destination phases
                 if (Progeny > 0)
                 {
@@ -264,7 +264,7 @@
                     double PtotalProportion = 0;
                     foreach (ProgenyDestinationPhase pdest in ProgenyDestinations)
                     {
-                        double arrivals = Progeny  * pdest.ProportionOfProgeny;
+                        double arrivals = Progeny * pdest.ProportionOfProgeny;
 
                         if (arrivals > 0)
                         {
@@ -304,7 +304,7 @@
                     }
 
                     if (c.Population < 0.001)  //Remove cohort if all members dead
-                        Cohorts.Remove(c);  
+                        Cohorts.Remove(c);
                 }
 
                 if (Graduates > 0)  //Promote graduates to cohort in next LifeCyclePhase
@@ -322,7 +322,7 @@
         }
 
         /// <summary>Construct a new cohort and add it to Cohorts</summary>
-       public void NewCohort(SourceInfo sourceInfo)
+        public void NewCohort(SourceInfo sourceInfo)
         {
             if (Cohorts == null)
                 Cohorts = new List<Cohort>();
@@ -333,7 +333,7 @@
             a.sourceInfo = sourceInfo;
             this.Cohorts.Add(a);
         }
-        
+
         /// <summary>Zero all time step variables</summary>
         public void ZeorDeltas()
         {

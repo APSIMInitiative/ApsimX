@@ -1,12 +1,10 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Linq;
+using System.Xml;
+using Models.Core.Apsim710File;
+
+namespace Models.Core.ApsimFile
 {
-    using System;
-    using System.Collections.Generic;
-    using Models.Core.Apsim710File;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Xml;
 
     /// <summary>
     /// A collection of methods for manipulating the structure of an .apsimx file.
@@ -43,7 +41,7 @@
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.Services);
-                links.Resolve(modelToAdd, true);
+                links.Resolve(modelToAdd, true, throwOnFail: true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
 
@@ -67,7 +65,7 @@
             IModel modelToAdd = null;
             try
             {
-                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false);
+                modelToAdd = FileFormat.ReadFromString<IModel>(st, e => throw e, false).NewModel as IModel;
             }
             catch (Exception err)
             {
@@ -85,7 +83,7 @@
                 var convertedNode = importer.AddComponent(rootNode.ChildNodes[0], ref rootNode);
                 rootNode.RemoveAll();
                 rootNode.AppendChild(convertedNode);
-                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false);
+                var newSimulationModel = FileFormat.ReadFromString<IModel>(rootNode.OuterXml, e => throw e, false).NewModel as IModel;
                 if (newSimulationModel == null || newSimulationModel.Children.Count == 0)
                     throw new Exception("Cannot add model. Invalid model being added.");
                 modelToAdd = newSimulationModel.Children[0];
@@ -153,7 +151,7 @@
                 siblingWithSameName = modelToCheck.FindSibling(newName);
             }
 
-            if (counter == 1000)
+            if (counter == 10000)
             {
                 throw new Exception("Cannot create a unique name for model: " + originalName);
             }
@@ -167,6 +165,40 @@
         {
             Apsim.ClearCaches(model);
             return model.Parent.Children.Remove(model as Model);
+        }
+
+        /// <summary>Replace one model with another.</summary>
+        /// <param name="modelToReplace">The old model to replace.</param>
+        /// <param name="replacement">The new model.</param>
+        public static void Replace(IModel modelToReplace, IModel replacement)
+        {
+            IModel newModel = Apsim.Clone(replacement);
+            int index = modelToReplace.Parent.Children.IndexOf(modelToReplace as Model);
+            modelToReplace.Parent.Children[index] = newModel;
+            newModel.Parent = modelToReplace.Parent;
+            newModel.Name = modelToReplace.Name;
+            newModel.Enabled = modelToReplace.Enabled;
+
+            // Remove existing model from parent.
+            modelToReplace.Parent = null;
+
+            // If a resource model (e.g. maize) is copied into replacements, and its
+            // property values changed, these changed values will be overriden with the
+            // 'accepted' values from the official maize model when the simulation is
+            // run, because the model's resource name is not null. This can be manually
+            // rectified by editing the json, but such an intervention shouldn't be
+            // necessary.
+            newModel.ResourceName = null;
+
+            Apsim.ClearCaches(modelToReplace);
+
+            // Don't call newModel.Parent.OnCreated(), because if we're replacing
+            // a child of a resource model, the resource model's OnCreated event
+            // will make it reread the resource string and replace this child with
+            // the 'official' child from the resource.
+            newModel.OnCreated();
+            foreach (var model in newModel.FindAllDescendants().ToList())
+                model.OnCreated();
         }
     }
 }

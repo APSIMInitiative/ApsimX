@@ -1,18 +1,17 @@
-﻿namespace Models.Core.Apsim710File
-{
-    using APSIM.Shared.OldAPSIM;
-    using APSIM.Shared.Utilities;
-    using Microsoft.CSharp;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using System.Xml;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+using APSIM.Shared.OldAPSIM;
+using APSIM.Shared.Utilities;
+using Microsoft.CSharp;
+using Models.Core.ApsimFile;
 
+namespace Models.Core.Apsim710File
+{
     /// <summary>
     /// Manager script parameter
     /// </summary>
@@ -112,6 +111,7 @@
             this.fertilisers.Add("NH4NO3", "NH4NO3N");
             this.fertilisers.Add("DAP", "DAP");
             this.fertilisers.Add("MAP", "MAP");
+            this.fertilisers.Add("UAN_N", "UAN_N");
             this.fertilisers.Add("urea_N", "UreaN");
             this.fertilisers.Add("urea_no3", "UreaNO3");
             this.fertilisers.Add("urea", "Urea");
@@ -137,8 +137,8 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message + " " + e.InnerException.Message);
-                    throw new Exception(e.Message + " " + e.InnerException.Message);
+                    Console.WriteLine(e.ToString());
+                    throw new Exception(e.ToString());
                 }
             }
             else
@@ -162,7 +162,7 @@
         }
 
         /// <summary>
-        /// Interrogate the .apsim file XML and attempt to construct a 
+        /// Interrogate the .apsim file XML and attempt to construct a
         /// useful APSIMX Simulation object(s). Uses a temporary file
         /// location.
         /// </summary>
@@ -174,7 +174,7 @@
         }
 
         /// <summary>
-        /// Interrogate the .apsim file XML and attempt to construct a 
+        /// Interrogate the .apsim file XML and attempt to construct a
         /// useful APSIMX Simulation object(s). Uses a temporary file
         /// location.
         /// </summary>
@@ -197,7 +197,7 @@
             XmlNode xdocNode = xdoc.CreateElement("Simulations");
             xdoc.AppendChild(xdocNode);
             newNode = xdocNode.AppendChild(xdoc.CreateElement("Name"));
-            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString()); 
+            XmlUtilities.SetAttribute(xdoc.DocumentElement, "Version", XmlConverters.LastVersion.ToString());
             newNode.InnerText = "Simulations";
 
             XmlNode rootNode = doc.DocumentElement;     // get first folder
@@ -209,7 +209,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false).NewModel as Simulations;
             File.Delete(xfile);
             return newSimulations;
         }
@@ -231,6 +231,10 @@
                 {
                     XmlNode newFolder = this.AddCompNode(destParent, "Folder", XmlUtilities.NameAttr(child));
                     this.AddFoldersAndSimulations(child, newFolder);
+                }
+                else
+                {
+                    this.AddComponent(child, ref destParent);
                 }
                 child = child.NextSibling;
             }
@@ -325,6 +329,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name.ToLower() == "water")
                 {
@@ -337,19 +342,15 @@
                 else if (compNode.Name.ToLower() == "swim")
                 {
                     newNode = CopyNode(compNode, destParent, "Swim3");
-                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
-
-                    // may need to copy more details for SoilNitrogen
+                    AddNutrients(compNode, ref destParent);
                 }
                 else if (compNode.Name.ToLower() == "soilwater")
                 {
                     newNode = CopyNode(compNode, destParent, "SoilWater");
                     this.soilWaterExists = newNode != null;
-                    this.AddCompNode(destParent, "SoilNitrogen", "SoilNitrogen");
                     this.AddCompNode(destParent, "CERESSoilTemperature", "Temperature");
-
-                    // may need to copy more details for SoilNitrogen
+                    AddNutrients(compNode, ref destParent);
                 }
                 else if (compNode.Name == "InitialWater")
                 {
@@ -368,6 +369,7 @@
                     StripMissingValues(newNode, "PH");
                     StripMissingValues(newNode, "CL");
                     StripMissingValues(newNode, "ESP");
+                    StripMissingValues(newNode, "CEC");
                 }
                 else if (compNode.Name == "SoilCrop")
                 {
@@ -439,9 +441,55 @@
             }
             catch (Exception exp)
             {
-                throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
+                throw new Exception($"Cannot import {compNode.Name}.", exp);
             }
             return newNode;
+        }
+
+        /// <summary>
+        /// Add the Nutrient component and NO3, NH4, UREA
+        /// </summary>
+        /// <param name="compNode">The source component node in the .apsim file</param>
+        /// <param name="destParent">The parent of the new component in the .apsimx file</param>
+        private void AddNutrients(XmlNode compNode, ref XmlNode destParent)
+        {
+            this.AddCompNode(destParent, "Nutrient", "Nutrient");
+            XmlNode newNO3Node = this.AddCompNode(destParent, "Solute", "NO3");
+            XmlNode newNH4Node = this.AddCompNode(destParent, "Solute", "NH4");
+            XmlNode newUREANode = this.AddCompNode(destParent, "Solute", "UREA");
+
+            XmlNode srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+            if (srcNode != null)
+            {
+                XmlNode arrayNode;
+
+                // values are ppm
+                // find soil layers and values for NO3
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newNO3Node, "Thickness", "Thickness");
+                arrayNode = XmlUtilities.Find(srcNode, "NO3");
+                this.CopyNodeAndValueArray(arrayNode, newNO3Node, "NO3", "InitialValues");
+
+                // find soil layers and values for NH4
+                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newNH4Node, "Thickness", "Thickness");
+                arrayNode = XmlUtilities.Find(srcNode, "NH4");
+                this.CopyNodeAndValueArray(arrayNode, newNH4Node, "NH4", "InitialValues");
+
+                // find soil layers for UREA
+                srcNode = XmlUtilities.FindByType(compNode.ParentNode, "Sample");
+                arrayNode = XmlUtilities.Find(srcNode, "Thickness");
+                this.CopyNodeAndValueArray(arrayNode, newUREANode, "Thickness", "Thickness");
+
+                // initialise the UREA with some default values
+                InitNodeValueArray(newUREANode, "InitialValues", arrayNode.ChildNodes.Count, 0.0);
+                XmlNode childNode = newUREANode.AppendChild(newUREANode.OwnerDocument.CreateElement("InitialValuesUnits"));
+                if (childNode != null)
+                {
+                    childNode.InnerText = "1";  // ensure kg/ha units
+                }
+            }
         }
 
         private void StripMissingValues(XmlNode newNode, string arrayName)
@@ -555,7 +603,7 @@
         }
 
         /// <summary>
-        /// Import a graph object 
+        /// Import a graph object
         /// </summary>
         /// <param name="compNode">The node being imported from the apsim file xml</param>
         /// <param name="destParent">Destination parent node that the new child is added to</param>
@@ -659,7 +707,6 @@
             this.CopyNodeAndValue(compNode, newNode, "LocationAccuracy", "LocationAccuracy", false);
             this.CopyNodeAndValue(compNode, newNode, "DataSource", "DataSource", false);
             this.CopyNodeAndValue(compNode, newNode, "Comments", "Comments", false);
-
             this.AddChildComponents(compNode, newNode);
 
             return newNode;
@@ -738,7 +785,7 @@
                         param.ListValues = XmlUtilities.Attribute(init, "listvalues");
                         param.Description = XmlUtilities.Attribute(init, "description");
                         param.TypeName = typeName;
-                        // Convert any boolean values 
+                        // Convert any boolean values
                         if (String.Compare(param.TypeName, "yesno") == 0)
                         {
                             if (param.Value.Contains("o"))
@@ -846,7 +893,7 @@
             code.Append("\t[System.Xml.Serialization.XmlInclude(typeof(Model))]\n");
             code.Append("\tpublic class Script : Model\n");
             code.Append("\t{\n");
-            code.Append("\t\t[Link] Clock Clock;\n");
+            code.Append("\t\t[Link] IClock Clock;\n");
 
             List<string> startofdayScripts = new List<string>();
             List<string> endofdayScripts = new List<string>();
@@ -863,7 +910,7 @@
 
             code.Append(this.WriteManagerParams(scriptParams));
 
-            // Convert the <script> section 
+            // Convert the <script> section
             XmlUtilities.FindAllRecursivelyByType(compNode, "script", ref nodes);
             foreach (XmlNode script in nodes)
             {
@@ -951,12 +998,12 @@
 
             XmlNode codeNode = newNode.AppendChild(newNode.OwnerDocument.CreateElement("Code"));
             codeNode.AppendChild(newNode.OwnerDocument.CreateCDataSection(code.ToString()));
-            
+
             // some Manager components have Memo children. For ApsimX the import
             // will just put them as the next sibling of the Manager rather
             // than as a child of the Manager.
             destParent = this.ImportManagerMemos(compNode, destParent);
-            
+
             return newNode;
         }
 
@@ -1081,8 +1128,8 @@
 
             string startDate = this.GetInnerText(compNode, "start_date");
             string endDate = this.GetInnerText(compNode, "end_date");
-            XmlUtilities.SetValue(newNode, "StartDate", DateUtilities.DMYtoDate(startDate).ToString("yyyy-MM-ddT00:00:00"));
-            XmlUtilities.SetValue(newNode, "EndDate", DateUtilities.DMYtoDate(endDate).ToString("yyyy-MM-ddT00:00:00"));
+            XmlUtilities.SetValue(newNode, "StartDate", DateUtilities.GetDateISO(startDate));
+            XmlUtilities.SetValue(newNode, "EndDate", DateUtilities.GetDateISO(endDate));
 
             return newNode;
         }
@@ -1099,7 +1146,7 @@
             newNode = this.AddCompNode(destParent, "Operations", XmlUtilities.NameAttr(compNode));
 
             XmlNode childNode;
-            
+
             List<XmlNode> nodes = new List<XmlNode>();
             XmlUtilities.FindAllRecursively(compNode, "operation", ref nodes);
             foreach (XmlNode oper in nodes)
@@ -1114,7 +1161,7 @@
                     childText = when.ToString("yyyy-MM-dd");
                 else if (childNode != null && childNode.InnerText != string.Empty)
                 {
-                    childText = DateUtilities.DMYtoISO(childNode.InnerText);
+                    childText = DateUtilities.GetDateISO(childNode.InnerText);
                     if (childText == "0001-01-01")
                     {
                         childText = DateUtilities.GetDate(childNode.InnerText, this.startDate).ToString("yyyy-MM-dd");
@@ -1123,14 +1170,14 @@
                 else
                     childText = "0001-01-01";
                 dateNode.InnerText = childText;
-                
+
                 XmlNode actionNode = operationNode.AppendChild(destParent.OwnerDocument.CreateElement("Action"));
 
                 childText = " ";
                 childNode = XmlUtilities.Find(oper, "action");
                 if (childNode != null)
                 {
-                    childText = childNode.InnerText;    
+                    childText = childNode.InnerText;
 
                     // parse the operation and determine if this can be converted to an apsimx function call
                     // ** This code makes a BIG assumption that the fertiliser component has that name. Also the irrigation component!
@@ -1197,7 +1244,7 @@
                     i++;
 
                 // find =
-                while ((i < line.Length) && (line[i] != '='))   
+                while ((i < line.Length) && (line[i] != '='))
                     i++;
                 i++;
                 while ((i < line.Length) && (line[i] == ' '))
@@ -1279,6 +1326,25 @@
         }
 
         /// <summary>
+        /// Create an array of specified size and initialise all elements
+        /// to the specified value
+        /// </summary>
+        /// <param name="destParentNode">Parent xml node</param>
+        /// <param name="destName">Name of the new node</param>
+        /// <param name="count">Count of child values to add</param>
+        /// <param name="value">The init value</param>
+        private void InitNodeValueArray(XmlNode destParentNode, string destName, int count, double value)
+        {
+            XmlNode childNode = destParentNode.AppendChild(destParentNode.OwnerDocument.CreateElement(destName));
+
+            for (int i = 0; i < count; i++)
+            {
+                XmlNode valNode = childNode.AppendChild(destParentNode.OwnerDocument.CreateElement("double"));
+                valNode.InnerText = string.Format("{0:f}", value);
+            }
+        }
+
+        /// <summary>
         /// Do the mechanical adding of the xml node in the document
         /// </summary>
         /// <param name="parentNode">The parent of the new node</param>
@@ -1329,7 +1395,7 @@
                         values[i] = defValue;
                 }
             }
-                
+
             return values;
         }
 

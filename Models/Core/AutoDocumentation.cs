@@ -1,23 +1,33 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using APSIM.Shared.Utilities;
+using Models.Functions;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Functions;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.
     /// </summary>
     public class AutoDocumentation
     {
-        private static XmlDocument doc = null;
+        private static object lockObject = new object();
+
+        /// <summary>Table relating member and summary xml comments.</summary>
+        private static readonly Dictionary<string, string> summaries = new();
+
+        /// <summary>Table relating member and remarks xml comments.</summary>
+        private static readonly Dictionary<string, string> remarks = new();
+
+        /// <summary>Flag for whether or not documentation has been loaded.</summary>
+        private static bool initialized = false;
 
         /// <summary>Gets the units from a declaraion.</summary>
         /// <param name="model">The model containing the declaration field.</param>
@@ -76,19 +86,19 @@
         /// <param name="indent">The indentation level.</param>
         /// <param name="documentAllChildren">Document all children?</param>
         /// <param name="force">
-        /// Whether or not to force the generation of documentation, 
+        /// Whether or not to force the generation of documentation,
         /// regardless of the model's IncludeInDocumentation status.
         /// </param>
         public static void DocumentModel(IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren = true, bool force = false)
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled))
+            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
             {
-                if (model is ICustomDocumentation)
-                    (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                else
-                    DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
+                // if (model is ICustomDocumentation)
+                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
+                // else
+                DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
             }
         }
 
@@ -104,17 +114,13 @@
         {
             if (model == null)
                 return;
-            if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
 
-            string nameToFindInSummary = "members/T:" + model.GetType().FullName.Replace("+", ".") + "/summary";
-            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
-            if (summaryNode != null)
-                ParseTextForTags(summaryNode.InnerXml, model, tags, headingLevel, indent, documentAllChildren);
+            if (!initialized)
+                InitialiseDoc();
+
+            var summaryText = GetSummaryRaw(model.GetType().FullName.Replace("+", "."), 'T');
+            if (summaryText != null)
+                ParseTextForTags(summaryText, model, tags, headingLevel, indent, documentAllChildren);
         }
 
         /// <summary>
@@ -191,6 +197,35 @@
         }
 
         /// <summary>
+        /// Initialise the doc instance.
+        /// </summary>
+        private static void InitialiseDoc()
+        {
+            lock (lockObject)
+            {
+                if (!initialized)
+                {
+                    string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                    var doc = XDocument.Load(fileName);
+                    foreach (var elt in doc.Element("doc").Element("members").Elements())
+                    {
+                        var name = elt.Attribute("name")?.Value;
+                        if (name != null)
+                        {
+                            var summary = elt.Element("summary")?.Value.Trim();
+                            if (summary != null)
+                                summaries[name] = summary;
+                            var remark = elt.Element("remarks")?.Value.Trim();
+                            if (remark != null)
+                                remarks[name] = remark;
+                        }
+                    }
+                    initialized = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the summary of a member (class, field, property)
         /// </summary>
         /// <param name="path">The path to the member.</param>
@@ -201,7 +236,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", "\n");
+                return Regex.Replace(rawSummary, @"\n[ \t]+", "\n");
             }
             return null;
         }
@@ -216,19 +251,13 @@
             if (string.IsNullOrEmpty(path))
                 return path;
 
-            if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
+            if (!initialized)
+                InitialiseDoc();
 
             path = path.Replace("+", ".");
 
-            string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
-            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
-            if (summaryNode != null)
-                return summaryNode.InnerXml.Trim();
+            if (summaries.TryGetValue($"{typeLetter}:{path}", out var summary))
+                return summary;
             return null;
         }
 
@@ -243,22 +272,15 @@
             if (string.IsNullOrEmpty(path))
                 return path;
 
-            if (doc == null)
-            {
-                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
-                doc = new XmlDocument();
-                doc.Load(fileName);
-            }
+            if (!initialized)
+                InitialiseDoc();
 
             path = path.Replace("+", ".");
 
-            string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
-            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
-            if (summaryNode != null)
+            if (remarks.TryGetValue($"{typeLetter}:{path}", out var remark))
             {
                 // Need to fix multiline remarks - trim newlines and consecutive spaces.
-                string remarks = summaryNode.InnerXml.Trim();
-                return Regex.Replace(remarks, @"\n\s+", "\n");
+                return Regex.Replace(remark, @"\n\s+", "\n");
             }
             return null;
         }
@@ -469,7 +491,7 @@
                 else if (obj is IModel)
                 {
                     // Process a child or property of a model.
-                    obj = (obj as IModel).FindByPath(word, true)?.Value;
+                    obj = (obj as IModel).FindByPath(word, LocatorFlags.None)?.Value;
                 }
                 else
                 {
@@ -540,7 +562,7 @@
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation &&
+                if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
         }
@@ -583,7 +605,7 @@
         }
 
         /// <summary>
-        /// Return the name of the child or it's value if the name of the child is equal to 
+        /// Return the name of the child or it's value if the name of the child is equal to
         /// the written value of the child. i.e. if the value is 1 and the name is 'one' then
         /// return the value, instead of the name.
         /// </summary>

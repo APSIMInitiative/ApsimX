@@ -1,12 +1,14 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using static Models.Core.Overrides;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -46,14 +48,6 @@
                 Name = value.ToString();
         }
 
-        /// <summary>Constructor</summary>
-        public CompositeFactor(Factor parentFactor, List<string> paths, List<object> values)
-        {
-            Parent = parentFactor;
-            Paths = paths;
-            Values = values;
-        }
-
         /// <summary>Gets or sets the specification to create overides for a simulation.</summary>
         public List<string> Specifications { get; set; }
 
@@ -76,12 +70,7 @@
 
             // Add a simulation override for each path / value combination.
             for (int i = 0; i != allPaths.Count; i++)
-            {
-                if (allValues[i] is IModel)
-                    simulationDescription.AddOverride(new ModelReplacement(allPaths[i], allValues[i] as IModel));
-                else
-                    simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
-            }
+                simulationDescription.AddOverride(new Override(allPaths[i], allValues[i], Override.MatchTypeEnum.NameAndType));
 
             if (!(Parent is Factors))
             {
@@ -125,8 +114,9 @@
             // If there are any child models which aren't being used as
             // a factor value (e.g. as a model replacement), throw an exception.
             IEnumerable<IModel> extraModels = Children.Except(values.OfType<IModel>());
-            if (extraModels.Any())
-                throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
+            foreach (var model in extraModels)
+                if (!(model is Memo))
+                    throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
         }
 
         /// <summary>

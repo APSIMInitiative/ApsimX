@@ -1,15 +1,8 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+
+namespace UserInterface.Views
 {
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using System;
-
-    public interface IFactorView
-    {
-        /// <summary>Gets or sets the specification.</summary>
-        IEditView Specification { get; set; }
-    }
-
 
     public class FactorView : ViewBase, IFactorView
     {
@@ -35,7 +28,7 @@
         {
             try
             {
-                (Specification as EditView).MainWidget.Cleanup();
+                (Specification as EditView).Dispose();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;
@@ -45,5 +38,11 @@
                 ShowError(err);
             }
         }
+    }
+
+    public interface IFactorView
+    {
+        /// <summary>Gets or sets the specification.</summary>
+        IEditView Specification { get; set; }
     }
 }

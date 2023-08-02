@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.CLEM.Activities;
-using Models.CLEM.Groupings;
-using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using APSIM.Shared.Utilities;
-using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reflection;
 
 namespace Models.CLEM.Resources
@@ -27,14 +21,14 @@ namespace Models.CLEM.Resources
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
-    public class ResourcesHolder: CLEMModel, IValidatableObject, IReportPricingChange
+    public class ResourcesHolder : CLEMModel, IValidatableObject, IReportPricingChange
     {
         [JsonIgnore]
         private IEnumerable<IModel> ResourceGroupList;
 
         private void InitialiseResourceGroupList()
         {
-            if(ResourceGroupList == null)
+            if (ResourceGroupList == null)
                 ResourceGroupList = this.FindAllChildren<IModel>().Where(a => a.Enabled);
         }
 
@@ -79,13 +73,14 @@ namespace Models.CLEM.Resources
         public ResourceBaseWithTransactions FindResource(Type type)
         {
             if (type is null) throw new ArgumentNullException(nameof(type));
-            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { } );
+
+            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { });
             MethodInfo generic = method.MakeGenericMethod(type);
             return generic.Invoke(this, null) as ResourceBaseWithTransactions;
         }
 
         /// <summary>
-        /// Find a resource type from  type of resources and name of resource type component
+        /// Find a resource type from type of resources and name of resource type component
         /// </summary>
         /// <typeparam name="T">Type of ResourceType to return</typeparam>
         /// <typeparam name="R">Type of Resource group containing resource type</typeparam>
@@ -96,7 +91,11 @@ namespace Models.CLEM.Resources
         /// <returns>A resource type component</returns>
         public T FindResourceType<R, T>(IModel requestingModel, string resourceName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
-            string[] nameParts = new string[] { "", resourceName };
+            // if resourceName is null return empty T as this is from the UI and user has not supplied the resource name
+            if (resourceName is null)
+                missingResourceTypeAction = OnMissingResourceActionTypes.Ignore;
+
+            string[] nameParts = new string[] { "", resourceName ?? "" };
             if (nameParts.Last().Contains('.'))
             {
                 nameParts = nameParts.Last().Split('.');
@@ -149,31 +148,31 @@ namespace Models.CLEM.Resources
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        Warnings.CheckAndWrite(errorMsg, Summary, this);
+                        Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                         break;
                     default:
                         break;
                 }
-                    return default(T);
+                return default(T);
             }
             else
             {
                 if (!resGroupNameMatch)
                 {
                     errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
-                    Warnings.CheckAndWrite(errorMsg, Summary, this);
+                    Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                 }
             }
 
             if (resType as IModel is null)
             {
-                errorMsg = $"Unable to locate resource type [r={nameParts.Last()}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource type [r={((nameParts.Last() == "") ? "Unknown" : nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        Warnings.CheckAndWrite(errorMsg, Summary, this);
+                        Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                         break;
                     default:
                         break;
@@ -191,19 +190,19 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action if resource group missing</param>
         /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
         /// <returns>A resource type component</returns>
-        public T FindResourceType<R,T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
+        public T FindResourceType<R, T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
             if (request.Resource is T)
                 return (T)Convert.ChangeType(request.Resource, typeof(T));
 
-            return FindResourceType<R,T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
+            return FindResourceType<R, T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
         }
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
         /// </summary>
         /// <returns></returns>
-        public bool ResourceItemsExist<T>() 
+        public bool ResourceItemsExist<T>()
         {
             var resourceGroup = this.FindAllChildren<T>().FirstOrDefault() as IModel;
             if (resourceGroup != null)
@@ -247,8 +246,8 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
-                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
-                Warnings.CheckAndWrite(warn, Summary, this);
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the CLEM component will be traded.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 return null;
             }
 
@@ -265,7 +264,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market does not have the resource
                 string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
-                Warnings.CheckAndWrite(warn, Summary, this);
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 return null;
             }
 
@@ -281,7 +280,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if(!(this.Parent is Market))
+            if (!(this.Parent is Market))
             {
                 IModel parentSim = FindAncestor<Simulation>();
                 FoundMarket = parentSim.FindAllChildren<Market>().FirstOrDefault();
@@ -317,88 +316,105 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
                 // Check if transmutation would be successful 
-                if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
+                if ((request.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped)
                 {
-                    // get resource type if not already provided from request
-                    if (!(request.Resource is IResourceType resourceTypeInShortfall))
+                    if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                     {
-                        if (request.ResourceTypeName.Contains('.'))
+                        // get resource type if not already provided from request
+                        if (!(request.Resource is IResourceType resourceTypeInShortfall))
                         {
-                            resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                        }
-                        else
-                        {
-                            var resourceGroup = FindResource(request.ResourceType);
-                            if (resourceGroup != null)
-                                resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                            else
-                                resourceTypeInShortfall = null;
-                        }
-                    }
-
-                    if (resourceTypeInShortfall != null)
-                    {
-                        if (queryOnly)
-                            // clear any transmutations before checking
-                            request.SuccessfulTransmutation = null;
-
-                        // get all transmutations if query only otherwise only successful transmutations previously checked
-                        var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
-                        
-                        foreach (Transmutation transmutation in transmutationsAvailable)
-                        {
-                            var transmutesAvailable = transmutation.FindAllChildren<ITransmute>();
-
-                            // calculate the maximum amount of shortfall needed based on the transmute styles of all children
-                            double packetsNeeded = transmutesAvailable.Select(a => a.ShortfallPackets(request.Required - request.Available)).Max();
-
-                            bool allTransmutesSucceeed = true;
-                            foreach (ITransmute transmute in transmutesAvailable)
+                            if (request.ResourceTypeName.Contains('.'))
                             {
-                                if (transmute.TransmuteResourceType != null)
-                                {
-                                    // create new request for this transmutation cost
-                                    ResourceRequest transRequest = new ResourceRequest
-                                    {
-                                        Resource = transmute.TransmuteResourceType,
-                                        Required = packetsNeeded, // provide the amount of shortfall resource needed
-                                        RelatesToResource = request.ResourceTypeName,
-                                        ResourceType = transmute.ResourceGroup.GetType(),
-                                        ActivityModel = request.ActivityModel,
-                                        Category = transmutation.TransactionCategory,
-                                    };
+                                resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                            }
+                            else
+                            {
+                                var resourceGroup = FindResource(request.ResourceType);
+                                if (resourceGroup != null)
+                                    resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                else
+                                    resourceTypeInShortfall = null;
+                            }
+                        }
 
-                                    // amount left over after transmute. This will be amount of the resource if query is false as Required passed is 0
-                                    double activityCost = requests.Where(a => a.Resource == transmute.TransmuteResourceType).Sum(a => a.Required);
-                                    if (!transmute.DoTransmute(transRequest, packetsNeeded, activityCost, this, queryOnly))
+                        if (resourceTypeInShortfall != null)
+                        {
+                            if (queryOnly)
+                                // clear any transmutations before checking
+                                request.SuccessfulTransmutation = null;
+                            else
+                                request.ShortfallStatus = "Transmute failed";
+
+                            // get all transmutations if query only otherwise only successful transmutations previously checked
+                            var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
+
+                            foreach (Transmutation transmutation in transmutationsAvailable)
+                            {
+                                var transmutesAvailable = transmutation.FindAllChildren<ITransmute>();
+
+                                // calculate the maximum amount of shortfall needed based on the transmute styles of all children
+                                double packetsNeeded = transmutesAvailable.Select(a => a.ShortfallPackets(request.Required - request.Available)).Max();
+
+                                bool allTransmutesSucceeed = true;
+                                foreach (ITransmute transmute in transmutesAvailable)
+                                {
+                                    if (transmute.TransmuteResourceType != null)
                                     {
+                                        // create new request for this transmutation cost
+                                        ResourceRequest transRequest = new ResourceRequest
+                                        {
+                                            Resource = transmute.TransmuteResourceType,
+                                            Required = packetsNeeded, // provide the amount of shortfall resource needed
+                                            RelatesToResource = request.ResourceTypeName,
+                                            ResourceType = transmute.ResourceGroup.GetType(),
+                                            ActivityModel = request.ActivityModel,
+                                            Category = transmutation.TransactionCategory,
+                                            AdditionalDetails = transmutation
+                                        };
+
+                                        // amount left over after transmute. This will be amount of the resource if query is false as Required passed is 0
+                                        double activityCost = requests.Where(a => a.Resource == transmute.TransmuteResourceType).Sum(a => a.Required);
+                                        if (!transmute.DoTransmute(transRequest, request.Required - request.Available, activityCost, this, queryOnly))
+                                        {
+                                            allTransmutesSucceeed = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // the transmute resource (B) was not found so we cannot complete this transmutation
                                         allTransmutesSucceeed = false;
+                                        break;
+                                    }
+                                }
+
+                                if (queryOnly)
+                                {
+                                    if (allTransmutesSucceeed)
+                                    {
+                                        // set request success
+                                        request.SuccessfulTransmutation = transmutation;
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    // the transmute resource (B) was not found so we cannot complete this transmutation
-                                    allTransmutesSucceeed = false;
-                                    break;
+                                    // assumed successful transaction based on where clause in transaction selection
+                                    // Add resource: tops up resource from transmutation so available in CheckResources
+                                    // if pricing based 
+                                    resourceTypeInShortfall.Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
+                                    if (allTransmutesSucceeed)
+                                    {
+                                        request.ShortfallStatus = "Transmuted";
+                                        // TODO: report shortfall as transmuted in shortfall report
+                                    }
                                 }
                             }
-
-                            if (queryOnly)
-                            {
-                                if (allTransmutesSucceeed)
-                                {
-                                    // set request success
-                                    request.SuccessfulTransmutation = transmutation;
-                                    break;
-                                }
-                            }
-                            else // assumed successful transaction based on where clause in transaction selection
-                                // Add resource: tops up resource from transmutation so available in CheckResources
-                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0)?1: transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                         }
                     }
                 }
+                else
+                    request.ShortfallStatus = "Skipped";
             }
         }
 
@@ -461,19 +477,19 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "<h1>Resources summary</h1>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
         }

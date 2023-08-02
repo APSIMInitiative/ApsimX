@@ -1,27 +1,20 @@
-﻿using System.IO;
-using System.Xml;
-using Models.Core;
-using Newtonsoft.Json;
-using System;
-using System.Reflection;
+﻿using System;
 using System.Collections.Generic;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
+using System.IO;
 using System.Linq;
-using Models.Core.Interfaces;
-using Models.Storage;
-using Newtonsoft.Json.Serialization;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core.ApsimFile;
+using Models.Core.Interfaces;
 using Models.Core.Run;
-using System.Threading.Tasks;
+using Models.Storage;
+using Newtonsoft.Json;
 
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
-    /// Encapsulates a collection of simulations. It is responsible for creating this collection,
-    /// changing the structure of the components within the simulations, renaming components, adding
-    /// new ones, deleting components. The user interface talks to an instance of this class.
+    /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
     [ScopedModel]
@@ -31,10 +24,6 @@ namespace Models.Core
     {
         [NonSerialized]
         private Links links;
-
-        /// <summary>Gets or sets the width of the explorer.</summary>
-        /// <value>The width of the explorer.</value>
-        public Int32 ExplorerWidth { get; set; }
 
         /// <summary>Gets or sets the version.</summary>
         [System.Xml.Serialization.XmlAttribute("Version")]
@@ -103,7 +92,7 @@ namespace Models.Core
         /// <summary>
         /// Return the current APSIM version number.
         /// </summary>
-        public string ApsimVersion
+        public static string ApsimVersion
         {
             get
             {
@@ -157,7 +146,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -202,7 +191,7 @@ namespace Models.Core
         {
             links = null;
         }
-        
+
         /// <summary>
         /// Gets the services objects.
         /// </summary>
@@ -246,8 +235,17 @@ namespace Models.Core
             foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
-            
+
             return fileNames;
+        }
+
+        /// <summary>
+        /// Get a list of tags which describe the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in Children.SelectMany(c => c.Document()))
+                yield return tag;
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -294,10 +292,11 @@ namespace Models.Core
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
-                    modelToDocument.IncludeInDocumentation = true;
+                    // resolve all links in cloned simulation.
+                    Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
-                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren: true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation, true);

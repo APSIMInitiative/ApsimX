@@ -1,69 +1,20 @@
 ﻿# if NETCOREAPP
-using TreeModel = Gtk.ITreeModel;
 #endif
+using UserInterface.Presenters;
+using APSIM.Shared.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using Gtk;
+using Utility;
+using UserInterface.Interfaces;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.IO;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using Gtk;
-    using Interfaces;
-    using Extensions;
-
-    /// <summary>An interface for a list box</summary>
-    public interface IListBoxView
-    {
-        /// <summary>Invoked when the user changes the selection</summary>
-        event EventHandler Changed;
-
-        /// <summary>Invoked when the user double clicks the selection</summary>
-        event EventHandler DoubleClicked;
-
-        /// <summary>Get or sets the list of valid values.</summary>
-        string[] Values { get; set; }
-
-        /// <summary>Gets or sets the selected value.</summary>
-        string SelectedValue { get; set; }
-
-        /// <summary>Return true if dropdown is visible.</summary>
-        bool IsVisible { get; set; }
-
-        /// <summary>
-        /// If true, we are display a list of models
-        /// This will turn on display of images and drag-drop logic
-        /// </summary>
-        bool IsModelList { get; set; }
-
-        /// <summary>
-        /// Populates a context menu
-        /// </summary>
-        /// <param name="menuDescriptions"></param>
-        void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions);
-
-        /// <summary>
-        /// Invoked when a drag operation has commenced. Need to create a DragObject.
-        /// </summary>
-        event EventHandler<DragStartArgs> DragStarted;
-    }
-
-    public class IkonView : IconView
-    {
-        public IkonView(TreeModel model) : base(model) { }
-
-#if NETFRAMEWORK
-        // ItemPadding is included in the GtkSharp API but not in gtk-sharp (the gtk2 wrapper).
-        public int ItemPadding
-        {
-            get { return (int)GetProperty("item-padding"); }
-            set { SetProperty("item-padding", new GLib.Value(value)); }
-        }
-#endif
-    }
 
     /// <summary>A list view.</summary>
     public class ListBoxView : ViewBase, IListBoxView
@@ -94,7 +45,7 @@ namespace UserInterface.Views
         {
             Listview = new IkonView(listmodel);
             mainWidget = Listview;
-#if NETCOREAPP
+
             // It appears that the gtkiconview has changed considerably
             // between gtk2 and gtk3. In the gtk3 world, use of the 
             // set_text_column API is not recommended and in fact it appears
@@ -106,17 +57,12 @@ namespace UserInterface.Views
             CellRenderer cell = new CellRendererText(){ WrapMode = Pango.WrapMode.Word };
             Listview.PackStart(cell, true);
             Listview.AddAttribute(cell, "markup", 0);
-#else
-            Listview.MarkupColumn = 0;
-            Listview.PixbufColumn = 1;
-#endif
+
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
-#if NETFRAMEWORK
-            Listview.Orientation = Gtk.Orientation.Horizontal;
-#else
+
             Listview.ItemOrientation = Gtk.Orientation.Horizontal;
-#endif
+
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;
@@ -133,8 +79,8 @@ namespace UserInterface.Views
                 //listview.CursorChanged -= OnSelectionChanged;
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
-                ClearPopup();
-                popup.Cleanup();
+                popup.Clear();
+                popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -179,15 +125,14 @@ namespace UserInterface.Views
                     else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
-                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
-                        if (!MasterView.HasResource(resourceNameForImage))
-                        {
-                            resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
-                        }
-                        if (MasterView.HasResource(resourceNameForImage))
-                            image = new Gdk.Pixbuf(null, resourceNameForImage);
-                        else
-                            image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+                        (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists($"{addedModelDetails}{text}");
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists(text);
+                        
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists("Simulations");
+
+                        image = new Gdk.Pixbuf(null, resourceName);
                     }
                     string tooltip = isModels ? val : StringUtilities.PangoString(val);
                     listmodel.AppendValues(text, image, tooltip);
@@ -202,24 +147,36 @@ namespace UserInterface.Views
         /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
-            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-            List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
-            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            image = null;
             Listview.ItemPadding = 6; // Restore padding if we have images to display
 
-            image = null;
-            // Add an image index.
-            foreach (string largeImageName in largeImageNames)
+            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+            List<string> images = resourceNames.FindAll(r => r.EndsWith(".svg"));
+            images.AddRange(resourceNames.FindAll(r => r.Contains(".LargeImages.")));
+
+            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            string searchName = Path.GetFileNameWithoutExtension(fileName);
+            (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists(searchName);
+            if (exists)
+                image = new Gdk.Pixbuf(null, resourceName);
+            else
             {
-                string shortImageName = StringUtilities.GetAfter(largeImageName, ".LargeImages.").Replace(".png", "").ToLower();
-                if (result.ToLower().Contains(shortImageName))
+                // Add an image index.
+                foreach (string imageName in images)
                 {
-                    image = new Gdk.Pixbuf(null, largeImageName);
-                    break;
+                    string[] parts = imageName.Split('.');
+                    string shortImageName = parts.Length > 1 ? parts[parts.Length - 2] : StringUtilities.GetAfter(imageName, ".LargeImages.").Replace(".png", "");
+                    if (result.ToLower().Contains(shortImageName.ToLower()))
+                    {
+                        image = new Gdk.Pixbuf(null, imageName);
+                        break;
+                    }
                 }
             }
             if (image == null)
                 image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+
             return result;
         }
 
@@ -416,7 +373,7 @@ namespace UserInterface.Views
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearPopup();
+            popup.Clear();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -470,26 +427,41 @@ namespace UserInterface.Views
             popup.ShowAll();
         }
 
-        private void ClearPopup()
-        {
-            foreach (Widget w in popup)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-                popup.Remove(w);
-                w.Cleanup();
-            }
-        }
+    }
+
+    /// <summary>An interface for a list box</summary>
+    public interface IListBoxView
+    {
+        /// <summary>Invoked when the user changes the selection</summary>
+        event EventHandler Changed;
+
+        /// <summary>Invoked when the user double clicks the selection</summary>
+        event EventHandler DoubleClicked;
+
+        /// <summary>Get or sets the list of valid values.</summary>
+        string[] Values { get; set; }
+
+        /// <summary>Gets or sets the selected value.</summary>
+        string SelectedValue { get; set; }
+
+        /// <summary>Return true if dropdown is visible.</summary>
+        bool IsVisible { get; set; }
+
+        /// <summary>
+        /// If true, we are display a list of models
+        /// This will turn on display of images and drag-drop logic
+        /// </summary>
+        bool IsModelList { get; set; }
+
+        /// <summary>
+        /// Populates a context menu
+        /// </summary>
+        /// <param name="menuDescriptions"></param>
+        void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions);
+
+        /// <summary>
+        /// Invoked when a drag operation has commenced. Need to create a DragObject.
+        /// </summary>
+        event EventHandler<DragStartArgs> DragStarted;
     }
 }

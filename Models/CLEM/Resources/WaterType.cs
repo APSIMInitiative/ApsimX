@@ -1,9 +1,9 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WaterStore))]
-    [Description("This resource represents a water store type (e.g. dam, bore, tank).")]
+    [Description("This resource represents a water store (e.g. dam, bore, tank)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Water/WaterStoreType.htm")]
     public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (StartingAmount > 0)
-                Add(StartingAmount, this, "", "Starting value");
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         /// <summary>
@@ -61,26 +61,6 @@ namespace Models.CLEM.Resources
         #region transactions
 
         /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
-        /// <summary>
         /// Add water to water store
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
@@ -92,24 +72,12 @@ namespace Models.CLEM.Resources
             if (resourceAmount.GetType().ToString() != "System.Double")
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
-            double addAmount = (double)resourceAmount;
-            if (addAmount > 0)
+            double amountAdded = (double)resourceAmount;
+            if (amountAdded > 0)
             {
-                Amount += addAmount;
+                Amount += amountAdded;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = addAmount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                base.LastGain = addAmount;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
 
@@ -136,18 +104,8 @@ namespace Models.CLEM.Resources
                 (EquivalentMarketStore as WaterType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                TransactionType = TransactionType.Loss,
-                Amount = amountRemoved,
-                Activity = request.ActivityModel,
-                Category = request.Category,
-                RelatesToResource = request.RelatesToResource
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+
+            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <summary>

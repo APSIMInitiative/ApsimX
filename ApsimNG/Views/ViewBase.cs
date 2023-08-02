@@ -7,7 +7,7 @@
     using System.Reflection;
     using Utility;
 
-    public class ViewBase
+    public class ViewBase : IDisposable
     {
         /// <summary>A builder instance for extracting controls from resource.</summary>
         private Builder builder;
@@ -30,6 +30,12 @@
         /// The main widget in this view.
         /// </summary>
         protected Widget mainWidget = null;
+
+        /// <summary>
+        /// Used to detect redundant calls to Dispose
+        /// This is standard fare in IDisposable implementations
+        /// </summary>
+        private bool disposed = false;
 
         /// <summary>
         /// Displays an error message to the user.
@@ -183,6 +189,18 @@
         }
 
         /// <summary>
+        /// Get an object from the glade structure
+        /// </summary>
+        /// <typeparam name="T">The type of the object.</typeparam>
+        /// <param name="objectName">The name of the object.</param>
+        /// <returns>The object or null if not found.</returns>
+        public T GetGladeObject<T>(string objectName) where T : GLib.Object
+        {
+            T obj = (T)builder.GetObject(objectName);
+            return obj;
+        }
+
+        /// <summary>
         /// Invoke an event handler on the main application thread.
         /// </summary>
         /// <param name="handler">The handler to invoke.</param>
@@ -206,6 +224,56 @@
         protected virtual void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             owner = ownerView;
+        }
+
+        // Implement IDisposable.
+        // Do not make this method virtual.
+        // A derived class should not be able to override this method.
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        // Dispose(bool disposing) executes in two distinct scenarios.
+        // If disposing equals true, the method has been called directly
+        // or indirectly by a user's code. Managed and unmanaged resources
+        // can be disposed.
+        // If disposing equals false, the method has been called by the
+        // runtime from inside the finalizer and you should not reference
+        // other objects. Only unmanaged resources can be disposed.
+        protected virtual void Dispose(bool disposing)
+        {
+            // Check to see if Dispose has already been called.
+            if (!this.disposed)
+            {
+                // If disposing equals true, dispose all managed
+                // and unmanaged resources.
+                if (disposing && mainWidget != null)
+                {
+                    Utility.GtkUtilities.DetachAllHandlers(mainWidget);
+
+                    // Note: if mainWidget is a top-level widget, Dispose() will destroy the
+                    // widget automatically, which can have bad results. Therefore, we only
+                    // manually destroy the widget if it's not a top-level widget.
+                    if (!mainWidget.IsToplevel)
+                        mainWidget.Destroy();
+
+                    // I'm not sure whether this is necessary, but I was getting rather rare, unpredicatable
+                    // access violations as described in https://githubmemory.com/repo/GtkSharp/GtkSharp/issues/248
+                    // The suggestion there was to Dispose the Widget, at least if it's top-level
+                    // CAUTION: Behaviour is likely to change with new versions of Gtk#
+                     mainWidget.Dispose();
+                }
+
+                // Call the appropriate methods to clean up
+                // unmanaged resources here.
+                // If disposing is false,
+                // only the following code is executed.
+
+                // Note disposing has been done.
+                disposed = true;
+            }
         }
 
     }

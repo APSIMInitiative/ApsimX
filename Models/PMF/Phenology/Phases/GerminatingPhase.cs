@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Newtonsoft.Json;
-using System.IO;
-using Models.Soils;
-using Models.Functions;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and assumes
-    /// germination [End] will be reached on the day after sowing or the first day 
+    /// This phase goes from a start stage to an end stage and assumes
+    /// germination will be reached on the day after sowing or the first day
     /// thereafter when the extractable soil water at sowing depth is greater than zero."
     /// </summary>
     [Serializable]
@@ -39,11 +37,11 @@ namespace Models.PMF.Phen
         private Phenology phenology = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
@@ -61,6 +59,10 @@ namespace Models.PMF.Phen
         /// <summary>The phenological stage at the end of this phase.</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = false;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
@@ -83,7 +85,7 @@ namespace Models.PMF.Phen
 
             if (GerminationDate != null)
             {
-                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                if (DateUtilities.DayMonthIsEqual(GerminationDate, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }
@@ -116,6 +118,17 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowingParameters data)
         {
             SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph($"The phase goes from {Start.ToLower()} to {End.ToLower()} and assumes {End.ToLower()} will be reached on the day after sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
         }
     }
 }

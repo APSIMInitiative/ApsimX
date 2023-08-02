@@ -3,15 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
 using Models.Functions;
-using Models.PMF;
 using Models.PMF.Interfaces;
-using Models.PMF.Organs;
-using Newtonsoft.Json;
-using System.Data;
-using System.Globalization;
-using System.Text;
-using FirebirdSql.Data.FirebirdClient;
-using System.IO;
 
 namespace Models.PMF
 {
@@ -24,7 +16,7 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(BiomassArbitrator))]
-    public class PlantPartitionFractions : Model, ICustomDocumentation
+    public class PlantPartitionFractions : Model
     {
 
         [Link(Type = LinkType.Ancestor)]
@@ -35,10 +27,10 @@ namespace Models.PMF
 
         /// <summary> List of Child Functions to represent each organ</summary>
         /// 
-        public IEnumerable<IFunction> ChildFunctions;
+        public IEnumerable<IFunction> ChildFunctions { get; set; }
 
         /// <summary>Dictionary containing each organs partitioning fraction</summary>
-        public Dictionary<string, double> PartitionFractions = new Dictionary<string, double>();
+        public Dictionary<string, double> PartitionFractions { get; set; } = new Dictionary<string, double>();
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -48,7 +40,7 @@ namespace Models.PMF
         {
             foreach (Organ organ in plant.FindAllChildren<Organ>())
             {
-                organNames.Add(organ.Name+"Fraction");
+                organNames.Add(organ.Name + "Fraction");
             }
 
             ChildFunctions = FindAllChildren<IFunction>().ToList();
@@ -85,48 +77,47 @@ namespace Models.PMF
 
 
 
-            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-            /// <param name="tags">The list of tags to add to.</param>
-            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-            public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
+
+            // add a heading
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+            // get description of this class
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+
+            // write memos
+            foreach (IModel memo in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+            // find parent organ's name
+            if (Parent == null)
+                return;
+            string organName = "";
+            bool seekingParentOrgan = true;
+            IModel parentClass = this.Parent;
+            while (seekingParentOrgan)
             {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // find parent organ's name
-                if (Parent == null)
-                    return;
-                string organName = "";
-                bool seekingParentOrgan = true;
-                IModel parentClass = this.Parent;
-                while (seekingParentOrgan)
+                if (parentClass is IOrgan)
                 {
-                    if (parentClass is IOrgan)
-                    {
-                        seekingParentOrgan = false;
-                        organName = (parentClass as IOrgan).Name;
-                        if (parentClass is IPlant)
-                            throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
-                    }
-                    parentClass = parentClass.Parent;
+                    seekingParentOrgan = false;
+                    organName = (parentClass as IOrgan).Name;
+                    if (parentClass is IPlant)
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
                 }
-
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
-                    + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
-                    + organName + "].NitrogenDemandSwitch.", indent));
+                parentClass = parentClass.Parent;
             }
+
+            // add a description of the equation for this function
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
+                + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+                + organName + "].NitrogenDemandSwitch.", indent));
+
         }
     }
 }

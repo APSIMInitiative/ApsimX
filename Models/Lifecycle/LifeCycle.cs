@@ -1,16 +1,16 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+using static Models.LifeCycle.LifeCyclePhase;
+
+namespace Models.LifeCycle
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
-    /// # [Name]
     /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
     /// an arbitry number of LifeCyclePhases that cohorts of individuals (of the same developmental
     /// stage) pass through during their life.
@@ -79,12 +79,12 @@
             {
                 LifeCyclePhases.Add(stage);
             }
-            
-            int i= 0;
+
+            int i = 0;
             //Set phase for graduates for each stage
             foreach (LifeCyclePhase stage in LifeCyclePhases)
             {
-                if (i < LifeCyclePhases.Count -1)
+                if (i < LifeCyclePhases.Count - 1)
                     stage.LifeCyclePhaseForGraduates = LifeCyclePhases[i + 1];
                 else
                     stage.LifeCyclePhaseForGraduates = null; //Last life cycle has no destination phase for graduates.  Everyone dies!!!
@@ -114,7 +114,7 @@
         {
             LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
             InfestingPhase.NewCohort(InfestationInfo);
-            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)", MessageType.Diagnostic);
         }
     }
 }

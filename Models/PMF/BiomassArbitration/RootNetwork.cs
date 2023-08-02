@@ -1,19 +1,18 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Organs;
+using Models.Soils;
+using Models.Soils.Arbitrator;
+using Newtonsoft.Json;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
-    using Library;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Arbitrator;
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils.Nutrients;
-    using System.Linq;
-    using Models.PMF.Organs;
 
     ///<summary> This is a temporary class that will be refactored so the generic biomass/arbutration functionality can be seperatured 
     ///from the root specific functionality which will then be extracted so root can be represented with the Organ class
@@ -140,7 +139,6 @@
         public bool IsAboveGround { get { return false; } }
 
         /// <summary>A list of other zone names to grow roots in</summary>
-        [JsonIgnore]
         public List<string> ZoneNamesToGrowRootsIn { get; set; }
 
         /// <summary>The root depths for each addition zone.</summary>
@@ -193,11 +191,11 @@
         public double NTakenUp { get; set; }
 
         ///<Summary>The speed of root descent</Summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public double RootFrontVelocity { get; set; }
 
         ///<Summary>The deepest roots will get</Summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public double MaximumRootDepth { get; set; }
 
         /// <summary>Root depth.</summary>
@@ -338,7 +336,7 @@
                         foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             MeanWTF += l.Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
-                            i += 1; 
+                            i += 1;
                         }
                     }
                 return MeanWTF;
@@ -678,7 +676,7 @@
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            PlantZone.Initialize();
+            PlantZone.Initialize(parentPlant.SowingData.Depth);
             Zones.Add(PlantZone);
             if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
                 ZoneRootDepths.Count != ZoneInitialDM.Count)
@@ -693,7 +691,7 @@
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = new NetworkZoneState(parentPlant, soil);
-                    newZone.Initialize();
+                    newZone.Initialize(parentPlant.SowingData.Depth);
                     Zones.Add(newZone);
                 }
             }
@@ -713,4 +711,4 @@
 
 
 
-  
+

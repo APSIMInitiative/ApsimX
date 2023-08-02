@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
+using System;
 
 namespace Models.CLEM.Resources
 {
@@ -17,10 +11,10 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all animal food store types for the simulation.")]
+    [Description("Resource group for all animal food store types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStore.htm")]
-    public class AnimalFoodStore: ResourceBaseWithTransactions
+    public class AnimalFoodStore : ResourceBaseWithTransactions
     {
 
     }

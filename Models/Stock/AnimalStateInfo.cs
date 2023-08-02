@@ -1,6 +1,7 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+
+namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// AnimalStateInfo type. Information required to reset the state in the case of RDP insufficiency                                                                

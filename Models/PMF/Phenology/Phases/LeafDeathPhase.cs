@@ -1,18 +1,16 @@
 using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Organs;
-using Newtonsoft.Json;
 using Models.PMF.Struct;
-using System.IO;
-using Models.Functions;
-
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End] stage</i> 
-    /// which occurs when all leaves have fully senesced. 
+    /// This phase goes from the specified start stage to the specified end stage,
+    /// which occurs when all leaves have fully senesced.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -37,7 +35,7 @@ namespace Models.PMF.Phen
 
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
-  
+
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -45,6 +43,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
@@ -87,13 +89,20 @@ namespace Models.PMF.Phen
             DeadNodeNoAtStart = 0;
             First = true;
         }
-          
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        {
+            ResetPhase();
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"The *{Name}* phase goes from the *{Start}* stage to the *{End}* stage, which occurs when all leaves have fully senesced.");
+        }
     }
 }
-
-      
-      

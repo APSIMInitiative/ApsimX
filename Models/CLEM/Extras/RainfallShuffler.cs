@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -17,17 +15,17 @@ namespace Models.CLEM
     ///<remarks>
     ///</remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")] 
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(FileSQLitePasture))]
-    [Description("This component shuffles rainfall years for reading pasture data as proxy for randomised rainfall")]
+    [Description("Shuffle rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel
+    public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season
@@ -39,10 +37,25 @@ namespace Models.CLEM
         public MonthsOfYear StartSeasonMonth { get; set; }
 
         /// <summary>
+        /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute(-1)]
+        [Description("Iteration number where shuffle is ignored")]
+        public int DoNotShuffleIteration { get; set; }
+
+        /// <summary>
         /// List of shuffled years
         /// </summary>
         [JsonIgnore]
         public List<ShuffleYear> ShuffledYears { get; set; }
+
+        /// <summary>
+        /// List of shuffled years
+        /// </summary>
+        [JsonIgnore]
+        public DateTime[] ShuffledYearsArray { get; set; }
+
 
         /// <summary>
         /// Constructor
@@ -59,31 +72,56 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            ShuffledYears = new List<ShuffleYear>();
-
             // shuffle years for proxy stochastic rainfall simulation
-            int startYear = clock.StartDate.Year;
-            int endYear = clock.EndDate.Year;
 
-            for (int i = startYear; i <= endYear; i++)
-                ShuffledYears.Add(new ShuffleYear() { Year = i, RandomYear = i });
-
-            for (int i = 0; i < ShuffledYears.Count(); i++)
+            // create year month list
+            List<(int year, int month, int rndyear, int mthoffset)> storeYears = new List<(int, int, int, int)>();
+            DateTime currentDate = new DateTime(clock.StartDate.Year, clock.StartDate.Month, 1);
+            int startYear = (currentDate.Month >= (int)StartSeasonMonth)? clock.StartDate.Year - 1: clock.StartDate.Year;
+            int currentYear = 0;
+            List<int> yearOffset = new List<int>() { 0 };
+            List<int> monthOffset = new List<int>();
+            while (currentDate <= clock.EndDate)
             {
-                int randIndex = RandomNumberGenerator.Generator.Next(ShuffledYears.Count());
-                int keepValue = ShuffledYears[i].RandomYear;
-                ShuffledYears[i].RandomYear = ShuffledYears[randIndex].RandomYear;
-                ShuffledYears[randIndex].RandomYear = keepValue;
+                if (currentDate.Month == (int)StartSeasonMonth)
+                {
+                    currentYear++;
+                    yearOffset.Add(currentYear);
+                }
+                storeYears.Add( (currentDate.Year, currentDate.Month, currentYear, currentDate.Year - (startYear + currentYear)));
+                currentDate = currentDate.AddMonths(1);
             }
+
+            // shuffle years
+            yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
+            // create shuffled month/date
+            ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
+            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
         }
 
-        #region descriptive summary
+        #region validation
         /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// Validate model
         /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <param name="validationContext"></param>
         /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (FindInScope<RandomNumberGenerator>() is null)
+            {
+                string[] memberNames = new string[] { "Missing random number generator" };
+                results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -102,7 +140,7 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
                 htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -119,6 +157,10 @@ namespace Models.CLEM
         /// Actual year
         /// </summary>
         public int Year;
+        /// <summary>
+        /// Month
+        /// </summary>
+        public int Month;
         /// <summary>
         /// Shuffled year
         /// </summary>

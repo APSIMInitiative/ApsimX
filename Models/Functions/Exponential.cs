@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
 using System.Linq;
+using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// An exponential function
     /// </summary>
     [Serializable]

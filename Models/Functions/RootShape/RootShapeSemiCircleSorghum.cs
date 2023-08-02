@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
 
 namespace Models.Functions.RootShape
@@ -13,10 +14,10 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
-    public class RootShapeSemiCircleSorghum : Model, IRootShape, ICustomDocumentation
+    public class RootShapeSemiCircleSorghum : Model, IRootShape
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(IStuffForRootShapeThing zone)
+        public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
             zone.RootArea = 0;
@@ -30,7 +31,7 @@ namespace Models.Functions.RootShape
                 if (zone.Depth < top)
                 {
                     prop = 0;
-                } 
+                }
                 else
                 {
                     rootArea = CalcRootAreaSemiCircleSorghum(zone, top, bottom, zone.RightDist);    // Right side
@@ -44,12 +45,32 @@ namespace Models.Functions.RootShape
             }
         }
 
+        /// <summary>
+        /// Calculate proportion of soil volume occupied by root in each layer.
+        /// </summary>
+        /// <param name="zone">What is a ZoneState?</param>
+        public void CalcRootVolumeProportionInLayers(ZoneState zone)
+        {
+            zone.RootProportionVolume = zone.RootProportions;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         private double DegToRad(double degs)
         {
             return degs * Math.PI / 180.0;
         }
 
-        private double CalcRootAreaSemiCircleSorghum(IStuffForRootShapeThing zone, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiCircleSorghum(IRootGeometryData zone, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0)
             {
@@ -73,27 +94,6 @@ namespace Models.Functions.RootShape
             double xDist = zone.RootSpread * Math.Sqrt(1 - (Math.Pow(depth, 2) / Math.Pow(zone.RootFront, 2)));
 
             return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // add graph and table.
-                //tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                //tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

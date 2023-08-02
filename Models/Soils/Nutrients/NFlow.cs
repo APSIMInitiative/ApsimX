@@ -1,18 +1,15 @@
-﻿
+﻿using System;
+using Models.Core;
+using Models.Functions;
+
 namespace Models.Soils.Nutrients
 {
-    using Core;
-    using Models.Functions;
-    using System;
-    using System.Reflection;
-    using Interfaces;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(Solute))]
+    [ValidParent(ParentType = typeof(Nutrient))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model
@@ -39,7 +36,7 @@ namespace Models.Soils.Nutrients
         /// Value of total loss
         /// </summary>
         public double[] Natm { get; set; }
-        
+
         /// <summary>
         /// Value of N2O lost
         /// </summary>
@@ -62,18 +59,18 @@ namespace Models.Soils.Nutrients
         {
             if (sourceSolute == null)
             {
-                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                sourceSolute = FindInScope<ISolute>(sourceName);
                 destinationSolute = FindInScope<ISolute>(destinationName);
             }
 
-            double[] source = sourceSolute.kgha;
-            int numLayers = source.Length;
-            if (Value == null)
-                Value = new double[source.Length];
-            if (Natm == null)
-                Natm = new double[source.Length];
-            if (N2Oatm == null)
-                N2Oatm = new double[source.Length];
+            //double[] source = sourceSolute.kgha;
+            //int numLayers = source.Length;
+            //if (Value == null)
+            //    Value = new double[source.Length];
+            //if (Natm == null)
+            //    Natm = new double[source.Length];
+            //if (N2Oatm == null)
+            //    N2Oatm = new double[source.Length];
         }
 
         /// <summary>
@@ -84,12 +81,6 @@ namespace Models.Soils.Nutrients
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            if (sourceSolute == null)
-            {
-                sourceSolute = FindInScope<ISolute>(Parent.Name);
-                destinationSolute = FindInScope<ISolute>(destinationName);
-            }
-
             double[] source = sourceSolute.kgha;
             int numLayers = source.Length;
             if (Value == null)
@@ -101,13 +92,13 @@ namespace Models.Soils.Nutrients
 
 
             double[] destination = null;
-            if (destinationName !=null)
+            if (destinationName != null)
                 destination = destinationSolute.kgha;
 
-            for (int i= 0; i < numLayers; i++)
+            for (int i = 0; i < numLayers; i++)
             {
                 double nitrogenFlow = 0;
-                if (source[i]>0)
+                if (source[i] > 0)
                     nitrogenFlow = rate.Value(i) * source[i];
 
                 if (nitrogenFlow > 0)

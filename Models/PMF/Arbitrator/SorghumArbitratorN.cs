@@ -1,28 +1,37 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Models.PMF
 {
     /// <summary>
-    /// Relative allocation rules used to determine partitioning
+    /// Relative allocation rules used to determine partitioning.
+    /// 
+    /// Arbitration is performed in two passes for each of the supply sources.
+    /// On the first pass, biomass or nutrient supply is allocated to
+    /// structural and metabolic pools of each organ based on their demand
+    /// relative to the demand from all organs.  On the second pass any
+    /// remaining supply is allocated to non-structural pool based on the
+    /// organ's relative demand.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
-    public class SorghumArbitratorN : Model, IArbitrationMethod, ICustomDocumentation
+    public class SorghumArbitratorN : Model, IArbitrationMethod
     {
-        /// <summary>
-        /// Daily NSupply.
-        /// </summary>
+        private int grainIndex = 0;
+        private int rootIndex = 1;
+        private int leafIndex = 2;
+        private int rachisIndex = 3;
+        private int stemIndex = 4;
+
+        /// <summary>The method used to arbitrate N allocations</summary>
+        [Link(Type = LinkType.Ancestor, ByName = true)]
+        protected OrganArbitrator Arbitrator = null;
+
+        /// <summary>Daily NSupply.</summary>
         [JsonIgnore]
         public double NSupply { get; set; }
 
@@ -35,25 +44,21 @@ namespace Models.PMF
         {
             double NotAllocated = TotalSupply; // / 0.1; //g/m^2
             NSupply = TotalSupply; // reporting variable
-            //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
+            //allocate structural first - will be a different order to biomass so need to hard code the order for now
             //roots
             //stem
             //rachis
             //leaf
 
             //then allocate metabolic relative to demand
-            var grainIndex = 0;
-            var rootIndex = 1;
-            var leafIndex = 2;
-            var rachisIndex = 3;
-            var stemIndex = 4;
+            //var grainIndex = 0;
+            //var rootIndex = 1;
+            //var leafIndex = 2;
+            //var rachisIndex = 3;
+            //var stemIndex = 4;
 
             var grainDemand = BAT.StructuralDemand[grainIndex] + BAT.MetabolicDemand[grainIndex];
             var rootDemand = BAT.StructuralDemand[rootIndex] + BAT.MetabolicDemand[rootIndex];
-            //var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
-            //var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
-            //var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
-            //var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
 
             //calc leaf demand separately - old sorghum doesn't quite fit
             var leaf = Organs[leafIndex] as SorghumLeaf;
@@ -72,7 +77,7 @@ namespace Models.PMF
                 BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
                 // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
             }
-            
+
             // todo - what if root demand exceeds supply?
             double rootAllocation = BAT.SupplyDemandRatioN * BAT.StructuralDemand[rootIndex];
             rootAllocation = Math.Min(rootAllocation, NotAllocated);
@@ -111,7 +116,7 @@ namespace Models.PMF
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
             AllocateMetabolic(stemIndex, stemAlloc, BAT);
 
-            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated, 0.0001))
+            if (!MathUtilities.FloatsAreEqual(leafAlloc + rachisAlloc + stemAlloc, NotAllocated, 0.0001))
             {
                 //this is to check that nDemand is equal to old sorghum N demand calc
                 throw new Exception("Proportional allocation of Metabolic N doesn't balance");
@@ -173,10 +178,10 @@ namespace Models.PMF
         {
             double NotAllocated = N.TotalRetranslocationSupply;
             //var rootIndex = 1;
-            var leafIndex = 2;
-            var rachisIndex = 3;
-            var stemIndex = 4;
-            var grainIndex = 0;
+            //var leafIndex = 2;
+            //var rachisIndex = 3;
+            //var stemIndex = 4;
+            //var grainIndex = 0;
 
             var stemDemand = N.StructuralDemand[stemIndex];
             var rachisDemand = N.StructuralDemand[rachisIndex];
@@ -295,28 +300,25 @@ namespace Models.PMF
             return 0.0;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        virtual protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            var organNames = Arbitrator.OrganNames;
+            //private int grainIndex = 0;
+            //private int rootIndex = 1;
+            //private int leafIndex = 2;
+            //private int rachisIndex = 3;
+            //private int stemIndex = 4;
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                string RelativeDocString = "Arbitration is performed in two passes for each of the supply sources.  On the first pass, biomass or nutrient supply is allocated to structural and metabolic pools of each organ based on their demand relative to the demand from all organs.  On the second pass any remaining supply is allocated to non-structural pool based on the organ's relative demand.";
-
-                tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
-            }
+            grainIndex = organNames.IndexOf("Grain");
+            rootIndex = organNames.IndexOf("Root");
+            leafIndex = organNames.IndexOf("Leaf");
+            rachisIndex = organNames.IndexOf("Rachis");
+            stemIndex = organNames.IndexOf("Stem");
         }
+
     }
 }

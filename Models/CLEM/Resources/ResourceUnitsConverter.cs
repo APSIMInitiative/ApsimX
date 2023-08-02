@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/UnitsConverter.htm")]
 
-    public class ResourceUnitsConverter: CLEMModel
+    public class ResourceUnitsConverter : CLEMModel
     {
         /// <summary>
         /// Conversion factor
@@ -50,12 +50,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -80,7 +76,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

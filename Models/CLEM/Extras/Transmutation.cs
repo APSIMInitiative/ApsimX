@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IResourceType))]
-    [Description("This Transmutation will convert any other resource into the current resource where there is a shortfall. This is placed under any resource type where you need to provide a transmutation. For example to convert Finance Type (money) into a Animal Food Store Type (Lucerne) or effectively purchase fodder when low.")]
+    [Description("Define a Transmutation to automatically convert the current resource (A) from any other resource (B) when in deficit")]
     [Version(2, 0, 1, "Full reworking of transmute resource (B) to shortfall resource (A)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Transmutation/Transmutation.htm")]
@@ -50,7 +50,7 @@ namespace Models.CLEM
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Models.CLEM
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

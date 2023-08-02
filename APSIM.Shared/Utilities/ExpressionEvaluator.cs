@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace APSIM.Shared.Utilities
@@ -685,7 +686,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Cos(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Cos(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Cos).ToArray();
                     }
                     else
                     {
@@ -697,7 +701,14 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Sin(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                        {
+                            result.m_value = System.Math.Sin(((Symbol)args[0]).m_value);
+                        }
+                        else
+                        {
+                            result.m_values = args[0].m_values.Select(Math.Sin).ToArray();
+                        }
                     }
                     else
                     {
@@ -709,7 +720,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Tan(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Tan(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Tan).ToArray();
                     }
                     else
                     {
@@ -721,7 +735,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Cosh(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Cosh(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Cosh).ToArray();
                     }
                     else
                     {
@@ -733,7 +750,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Sinh(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Sinh(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Sinh).ToArray();
                     }
                     else
                     {
@@ -745,7 +765,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Tanh(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Tanh(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Tanh).ToArray();
                     }
                     else
                     {
@@ -753,11 +776,14 @@ namespace APSIM.Shared.Utilities
                         result.m_type = ExpressionType.Error;
                     }
                     break;
-                case "log":
+                case "log10":
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log10(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Log10(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Log10).ToArray();
                     }
                     else
                     {
@@ -769,7 +795,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Log(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(v => Math.Log(v)).ToArray();
                     }
                     else
                     {
@@ -780,8 +809,19 @@ namespace APSIM.Shared.Utilities
                 case "logn":
                     if (args.Length == 2)
                     {
-                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + "'" + ((Symbol)args[1]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value, ((Symbol)args[1]).m_value);
+                        if (args[1].m_values == null)
+                        {
+                            result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + "'" + ((Symbol)args[1]).m_value.ToString() + ")";
+                            if (args[0].m_values == null)
+                                result.m_value = System.Math.Log(((Symbol)args[0]).m_value, ((Symbol)args[1]).m_value);
+                            else
+                                result.m_values = args[0].m_values.Select(v => Math.Log(v, args[1].m_value)).ToArray();
+                        }
+                        else
+                        {
+                            result.m_name = "logn function does not support vector of bases";
+                            result.m_type = ExpressionType.Error;
+                        }
                     }
                     else
                     {
@@ -793,7 +833,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Sqrt(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Sqrt(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Sqrt).ToArray();
                     }
                     else
                     {
@@ -805,7 +848,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Abs(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Abs(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Abs).ToArray();
                     }
                     else
                     {
@@ -817,7 +863,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Acos(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Acos(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Acos).ToArray();
                     }
                     else
                     {
@@ -829,7 +878,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Asin(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Asin(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Asin).ToArray();
                     }
                     else
                     {
@@ -841,7 +893,10 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Atan(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = System.Math.Atan(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Atan).ToArray();
                     }
                     else
                     {
@@ -974,6 +1029,42 @@ namespace APSIM.Shared.Utilities
                         result.m_name = name;
                         result.m_values = null;
                     }
+                    else if (args.Length == 2)
+                    {
+                        if (args[0].m_values != null && args[1].m_values != null)
+                        {
+                            result.m_name = "Invalid parameters in: " + name + ". Cannot pass two arrays.";
+                            result.m_type = ExpressionType.Error;
+                        }
+                        else if (args[0].m_values != null || args[1].m_values != null)
+                        {
+                            double[] array;
+                            double value;
+                            if (args[0].m_values != null)
+                            {
+                                array = args[0].m_values;
+                                value = args[1].m_value;
+                            }
+                            else
+                            {
+                                array = args[1].m_values;
+                                value = args[0].m_value;
+                            }
+                            for (int i = 0; i < array.Length; i++)
+                            {
+                                array[i] = Math.Min(array[i], value);
+                            }
+                            result.m_value = 0;
+                            result.m_name = name;
+                            result.m_values = array;
+                        }
+                        else
+                        {
+                            result.m_value = Math.Min(args[0].m_value, args[1].m_value);
+                            result.m_name = name;
+                            result.m_values = null;
+                        }
+                    }
                     else
                     {
                         result.m_name = "Invalid number of parameters in: " + name + ".";
@@ -989,6 +1080,42 @@ namespace APSIM.Shared.Utilities
                         result.m_name = name;
                         result.m_values = null;
                     }
+                    else if (args.Length == 2)
+                    {
+                        if (args[0].m_values != null && args[1].m_values != null)
+                        {
+                            result.m_name = "Invalid parameters in: " + name + ". Cannot pass two arrays.";
+                            result.m_type = ExpressionType.Error;
+                        }
+                        else if (args[0].m_values != null || args[1].m_values != null)
+                        {
+                            double[] array;
+                            double value;
+                            if (args[0].m_values != null)
+                            {
+                                array = args[0].m_values;
+                                value = args[1].m_value;
+                            }
+                            else
+                            {
+                                array = args[1].m_values;
+                                value = args[0].m_value;
+                            }
+                            for(int i = 0; i < array.Length; i++)
+                            {
+                                array[i] = Math.Max(array[i], value);
+                            }
+                            result.m_value = 0;
+                            result.m_name = name;
+                            result.m_values = array;
+                        }
+                        else
+                        {
+                            result.m_value = Math.Max(args[0].m_value, args[1].m_value);
+                            result.m_name = name;
+                            result.m_values = null;
+                        }
+                    }
                     else
                     {
                         result.m_name = "Invalid number of parameters in: " + name + ".";
@@ -999,14 +1126,33 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                        if (args[0].m_values == null)
+                            result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Floor).ToArray();
                     }
                     else
                     {
                         result.m_name = "Invalid number of parameters in: " + name + ".";
                         result.m_type = ExpressionType.Error;
                     }
-                    break;				
+                    break;
+                case "ceil":
+                case "ceiling":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        if (args[0].m_values == null)
+                            result.m_value = Math.Ceiling(((Symbol)args[0]).m_value);
+                        else
+                            result.m_values = args[0].m_values.Select(Math.Ceiling).ToArray();
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
                 case "stddev":
                     if (args.Length == 1)
                     {

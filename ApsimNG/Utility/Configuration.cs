@@ -8,39 +8,6 @@ using Models.Core;
 
 namespace Utility
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    internal class InputAttribute : Attribute
-    {
-        public string Name { get; set; }
-        public string OnChanged { get; set; }
-        public InputAttribute(string name)
-        {
-            Name = name;
-        }
-    }
-
-    internal class FileInput : InputAttribute
-    {
-        /// <summary>
-        /// Recommended file extension.
-        /// </summary>
-        public string[] Extensions { get; set; }
-
-        /// <summary>
-        /// Constructor to provide recommended file extensions.
-        /// </summary>
-        /// <param name="name">Property name.</param>
-        /// <param name="extensions">Recommended file extensions.</param>
-        public FileInput(string name, params string[] extensions) : base(name)
-        {
-            Extensions = extensions;
-        }
-    }
-
-    internal class FontInput : InputAttribute
-    {
-        public FontInput(string name) : base(name) { }
-    }
 
     /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>
     public class Configuration
@@ -68,13 +35,18 @@ namespace Utility
         public int FilesInHistory { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
-        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        /// <remarks>Percentage 0-100</remarks>
         public int SplitScreenPosition { get; set; }
+
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Percentage 0-100</remarks>
+        public int TreeSplitScreenPosition { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
         /// <summary>The previous height of the status panel</summary>
+        /// <remarks>Percentage 0-100</remarks>
         public int StatusPanelHeight { get; set; }
 
         /// <summary>
@@ -94,7 +66,7 @@ namespace Utility
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
-        public bool Muted { get; set; }
+        public bool Muted { get; set; } = true;
 
         /// <summary>
         /// In theory, if there are any commands in the command history,
@@ -117,8 +89,8 @@ namespace Utility
                 {
                     try
                     {
-                        Bitmap b = ApsimNG.Properties.Resources.ResourceManager.GetObject("ApsimSummary") as Bitmap;
-                        b.Save(summaryJpg);
+                        Gdk.Pixbuf b = Gdk.Pixbuf.LoadFromResource("Apsim1.png");
+                        b.Save(summaryJpg, "jpeg");
                     }
                     catch
                     {
@@ -385,9 +357,9 @@ namespace Utility
         /// </summary>
         private void OnDarkThemeToggled()
         {
-#if NETCOREAPP
+
             EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
-#endif
+
         }
     }
 }

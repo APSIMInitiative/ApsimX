@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.InkML;
+using Gtk;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -6,15 +8,32 @@ using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 namespace UnitTests
 {
+    [SetUpFixture]
+    public class SetupTrace
+    {
+        [OneTimeSetUp]
+        public void StartTest()
+        {
+            System.Diagnostics.Trace.Listeners.Add(new ConsoleTraceListener());
+        }
+
+        [OneTimeTearDown]
+        public void EndTest()
+        {
+            System.Diagnostics.Trace.Flush();
+        }
+    }
+
     [TestFixture]
     public class CommandLineArgsTests
     {
+
         [Test]
         public void TestCsvSwitch()
         {
@@ -27,7 +46,7 @@ namespace UnitTests
             report.EventNames = new string[] { "[Clock].DoReport" };
             report.Name = reportName;
 
-            Clock clock = file.FindInScope<Clock>();
+            IClock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2019, 1, 1);
             clock.EndDate = new DateTime(2019, 1, 10);
 
@@ -38,17 +57,17 @@ namespace UnitTests
 
             // Verify that the .csv file contains correct data.
             string csvData = File.ReadAllText(csvFile);
-            string expected = @"SimulationName,SimulationID,    2n,CheckpointID,CheckpointName, n,Zone
-    Simulation,           1, 2.000,           1,       Current, 1,Zone
-    Simulation,           1, 4.000,           1,       Current, 2,Zone
-    Simulation,           1, 6.000,           1,       Current, 3,Zone
-    Simulation,           1, 8.000,           1,       Current, 4,Zone
-    Simulation,           1,10.000,           1,       Current, 5,Zone
-    Simulation,           1,12.000,           1,       Current, 6,Zone
-    Simulation,           1,14.000,           1,       Current, 7,Zone
-    Simulation,           1,16.000,           1,       Current, 8,Zone
-    Simulation,           1,18.000,           1,       Current, 9,Zone
-    Simulation,           1,20.000,           1,       Current,10,Zone
+            string expected = @"SimulationName,SimulationID,2n,CheckpointID,CheckpointName,n,Zone
+Simulation,1,2.000,1,Current,1,Zone
+Simulation,1,4.000,1,Current,2,Zone
+Simulation,1,6.000,1,Current,3,Zone
+Simulation,1,8.000,1,Current,4,Zone
+Simulation,1,10.000,1,Current,5,Zone
+Simulation,1,12.000,1,Current,6,Zone
+Simulation,1,14.000,1,Current,7,Zone
+Simulation,1,16.000,1,Current,8,Zone
+Simulation,1,18.000,1,Current,9,Zone
+Simulation,1,20.000,1,Current,10,Zone
 ";
             Assert.AreEqual(expected, csvData);
         }
@@ -75,9 +94,9 @@ namespace UnitTests
             string text = ReflectionUtilities.GetResourceAsString("UnitTests.BasicFile.apsimx");
 
             // Check property values at this point.
-            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false);
+            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
-            Clock clock = sims.FindInScope<Clock>();
+            IClock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();
             Simulation sim2 = sims.FindInScope("Sim2") as Simulation;
             IPhysical physical = sims.FindByPath(".Simulations.Sim1.Field.Soil.Physical")?.Value as IPhysical;
@@ -93,12 +112,12 @@ namespace UnitTests
             Assert.AreEqual(physical.Thickness[1], 150);
 
             // Run Models.exe with /Edit command.
-            sims.Write(apsimxFileName);
-            sims = EditFile.Do(apsimxFileName, configFileName);
+            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFileName));
+            Overrides.Apply(sims, overrides);
 
             // Get references to the changed models.
             clock = sims.FindInScope<Clock>();
-            Clock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock")?.Value as Clock;
+            IClock clock2 = sims.FindByPath(".Simulations.SimulationVariant35.Clock", LocatorFlags.PropertiesOnly | LocatorFlags.IncludeDisabled)?.Value as Clock;
 
             // Sims should have at least 3 children - data store and the 2 sims.
             Assert.That(sims.Children.Count > 2);
@@ -115,13 +134,11 @@ namespace UnitTests
             Assert.AreEqual(clock.EndDate.Year, end.Year);
             Assert.AreEqual(clock.EndDate.DayOfYear, end.DayOfYear);
 
-            // These changes should not affect the clock in simulation 2.
-            start = new DateTime(2003, 11, 15);
-            end = new DateTime(2003, 11, 15);
+            // Clock 2 should have been changed as well.
             Assert.AreEqual(clock2.StartDate.Year, start.Year);
             Assert.AreEqual(clock2.StartDate.DayOfYear, start.DayOfYear);
-            Assert.AreEqual(clock2.EndDate.Year, end.Year);
-            Assert.AreEqual(clock2.EndDate.DayOfYear, end.DayOfYear);
+            Assert.AreEqual(clock2.EndDate.Year, 2003);
+            Assert.AreEqual(clock2.EndDate.DayOfYear, 319);
 
             // Sim2 should have been renamed to SimulationVariant35
             Assert.AreEqual(sim2.Name, "SimulationVariant35");

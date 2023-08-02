@@ -1,7 +1,7 @@
 namespace UserInterface.EventArguments
 {
     using System;
-    using ApsimNG.Classes.DirectedGraph;
+    using APSIM.Interop.Visualisation;
 
     public class GraphObjectSelectedArgs : EventArgs
     {

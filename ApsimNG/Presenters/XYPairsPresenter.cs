@@ -11,11 +11,14 @@
     using Models;
     using Models.Functions;
     using Views;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
+	using System.Globalization;
 
-    /// <summary>
-    /// The presenter class for populating an InitialWater view with an InitialWater model.
-    /// </summary>
-    public class XYPairsPresenter : GridPresenter, IPresenter
+	/// <summary>
+	/// The presenter class for populating an InitialWater view with an InitialWater model.
+	/// </summary>
+	public class XYPairsPresenter : GridPresenter, IPresenter
     {
         /// <summary>
         /// The XYPairs model.
@@ -58,9 +61,9 @@
             // hand the table to the variables grid.
             this.FindAllProperties(this.xYPairs);
 
+            this.xYPairsView.VariablesGrid.CanGrow = true;
             this.PopulateView();
 
-            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
@@ -74,13 +77,13 @@
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);
@@ -92,7 +95,6 @@
         public override void Detach()
         {
             base.Detach();
-            this.presenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.DisconnectViewEvents();
             this.xYPairs.Children.Remove(this.graph);
         }
@@ -141,7 +143,7 @@
                 else
                     return "XValue";
             }
-            else if (xYPairs.Parent is HourlyInterpolation)
+            else if (xYPairs.Parent is SubDailyInterpolation)
             {
                 return "Air temperature (oC)";
             }
@@ -180,7 +182,6 @@
         {
             DataTable table = this.CreateTable();
             this.xYPairsView.VariablesGrid.DataSource = table;
-            this.xYPairsView.VariablesGrid.RowCount = 100;
             for (int i = 0; i < table.Columns.Count; i++)
             {
                 this.xYPairsView.VariablesGrid.GetColumn(i).Width = 100;
@@ -306,6 +307,10 @@
                 // Each cell in the grid is a number (of type double).
                 object newValue = ReflectionUtilities.StringToObject(typeof(double), cell.NewValue);
                 grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
+                // Ensure that the grid has an extra (empty) row at the bottom.
+                while (grid.RowCount <= cell.RowIndex + 1)
+                    grid.RowCount++;
             }
         }
 
@@ -346,7 +351,7 @@
                     Array values;
                     if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
                     {
-                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
+                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
                         if (!MathUtilities.ValuesInArray((double[])values))
                         {
                             values = null;
@@ -358,7 +363,7 @@
                     }
                     else
                     {
-                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
+                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
                         values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
                     }
 

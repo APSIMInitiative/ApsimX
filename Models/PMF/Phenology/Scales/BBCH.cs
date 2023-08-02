@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.PMF.Organs;
-using Newtonsoft.Json;
 using Models.PMF.Struct;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name]
     /// This model calculates a BBCH growth stage value based upon the current phenological growth stage within the model. 
     /// The model uses information regarding germination, emergence and leaf appearance for early growth stages (BBCH stages 0 to 39).
     /// 
@@ -46,7 +40,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class BBCH: Model
+    public class BBCH : Model
     {
         /// <summary>The phenology</summary>
         [Link]
@@ -57,7 +51,7 @@ namespace Models.PMF.Phen
         /// </summary>
         [Link]
         Leaf leaf = null;
-        
+
         /// <summary>
         /// The Structure class
         /// </summary>
@@ -68,24 +62,24 @@ namespace Models.PMF.Phen
         bool TasselVisiable = false;
         int ligulesAtStartStemExtension = 0;
         double FractionInPhaseAtBBCH50 = 0;
-        
+
         /// <summary>Gets the stage.</summary>
         /// <value>The stage.</value>
         [Description("BBCH phenoligical stages")]
-        
+
         public double Stage
         {
             get
             {
                 double fracInCurrent = Phenology.FractionInCurrentPhase;
                 double BBCH_stage = 0.0;
-                  if (Phenology.InPhase("Germinating"))
+                if (Phenology.InPhase("Germinating"))
                     BBCH_stage = 5.0f * fracInCurrent;
                 else if (Phenology.InPhase("Emerging"))
                     BBCH_stage = 5.0f + 5 * fracInCurrent;
                 else if (Phenology.InPhase("Juvenile") || Phenology.InPhase("PhotoSensitive"))
                 {
-                   BBCH_stage = Math.Min(19.0,10.0f + Math.Max(0,leaf.AppearedCohortNo -1));
+                    BBCH_stage = Math.Min(19.0, 10.0f + Math.Max(0, leaf.AppearedCohortNo - 1));
                 }
                 else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo <= structure.finalLeafNumber.Value()))
                 {
@@ -94,7 +88,7 @@ namespace Models.PMF.Phen
                         ligulesAtStartStemExtension = leaf.ExpandedCohortNo;
                         StemExtensionInitialised = true;
                     }
-                    BBCH_stage = 30.0f + Math.Min(9,leaf.ExpandedCohortNo - ligulesAtStartStemExtension);
+                    BBCH_stage = 30.0f + Math.Min(9, leaf.ExpandedCohortNo - ligulesAtStartStemExtension);
                 }
                 else if (Phenology.InPhase("LeafAppearance") && (leaf.AppearedCohortNo >= structure.finalLeafNumber.Value()))
                 {
@@ -105,13 +99,13 @@ namespace Models.PMF.Phen
                     }
                     if (fracInCurrent == 0.0)//Falt in FractionCurrent meaning it returns a zero when phase is complete rather than a one
                         fracInCurrent = 1.0;
-                    BBCH_stage = 50.0f + 5 * (fracInCurrent - FractionInPhaseAtBBCH50)/(1-FractionInPhaseAtBBCH50);
+                    BBCH_stage = 50.0f + 5 * (fracInCurrent - FractionInPhaseAtBBCH50) / (1 - FractionInPhaseAtBBCH50);
                 }
-                else 
+                else
                 {
 
-                    double[] BBCH_code_y = { 55,  65,   70,   87, 99.0};
-                    double[] PMF_Stage =   { 6.0, 7.0, 8.0, 9.0, 10.0};
+                    double[] BBCH_code_y = { 55, 65, 70, 87, 99.0 };
+                    double[] PMF_Stage = { 6.0, 7.0, 8.0, 9.0, 10.0 };
                     bool DidInterpolate;
                     BBCH_stage = MathUtilities.LinearInterpReal(Phenology.Stage,
                                                                PMF_Stage, BBCH_code_y,

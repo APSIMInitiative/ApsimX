@@ -34,19 +34,23 @@
             var graphPage = new GraphPage();
             graphPage.Graphs.AddRange(folder.FindAllChildren<Graph>().Where(g => g.Enabled));
 
-            foreach (var graphSeries in graphPage.GetAllSeriesDefinitions(folder, storage.Reader))
+            if (storage != null && graphPage.Graphs.Any())
             {
-                GraphView graphView = new GraphView();
-                GraphPresenter presenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                presenter.Attach(graphSeries.Graph, graphView, explorerPresenter, graphSeries.SeriesDefinitions);
-                presenters.Add(presenter);
-                views.Add(graphView);
-            }
+                foreach (var graphSeries in graphPage.GetAllSeriesDefinitions(folder, storage.Reader))
+                {
+                    GraphView graphView = new GraphView(null);
+                    graphView.DisableScrolling();
+                    GraphPresenter presenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                    presenter.Attach(graphSeries.Graph, graphView, explorerPresenter, graphSeries.SeriesDefinitions);
+                    presenters.Add(presenter);
+                    views.Add(graphView);
+                }
 
-            if (views.Count > 0)
-            {
-                (view as IFolderView).SetContols(views);
+                if (views.Count > 0)
+                {
+                    (view as IFolderView).SetContols(views);
+                }
             }
         }
 

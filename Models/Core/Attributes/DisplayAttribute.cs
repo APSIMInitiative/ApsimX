@@ -1,8 +1,6 @@
-﻿
-
+﻿using System;
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// An enumeration for display types.
@@ -31,6 +29,11 @@ namespace Models.Core
         /// A cultivar name editor.
         /// </summary>
         CultivarName,
+
+        /// <summary>
+        /// A phase name selector.
+        /// </summary>
+        CropStageName,
 
         /// <summary>
         /// A LifePhase name editor.
@@ -83,7 +86,23 @@ namespace Models.Core
         /// text editor. Each line of input is treated as an
         /// element in the array.
         /// </summary>
-        MultiLineText
+        MultiLineText,
+            
+        /// <summary>
+        /// This is a list of SCRUMcrop model parameterisations that 
+        /// may be established in a simulation.
+        /// </summary>
+        SCRUMcropName,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model establishment stages.
+        /// </summary>
+        ScrumEstablishStages,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model harvest stages.
+        /// </summary>
+        ScrumHarvestStages
     }
 
     /// <summary>
@@ -139,6 +158,11 @@ namespace Models.Core
         public string EnabledCallback { get; set; }
 
         /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is visible.
+        /// </summary>
+        public string VisibleCallback { get; set; }
+
+        /// <summary>
         /// Used in conjuction with <see cref="DisplayType.CultivarName"/>.
         /// Specifies the name of a plant whose cultivars should be displayed.
         /// </summary>
@@ -149,5 +173,11 @@ namespace Models.Core
         /// Specifies the name of a LifeCycle whose phases should be displayed.
         /// </summary>
         public string LifeCycleName { get; set; }
+
+        /// <summary>
+        /// Set the primary order of properties for display
+        /// Otherwise the line number of Description attribute is used for ordering
+        /// </summary>
+        public int Order { get; set; }
     }
 }

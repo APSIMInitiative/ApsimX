@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Win32;
-using System.IO;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.Net;
 using System.Diagnostics;
-using System.Threading;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
+using APSIM.Shared.Utilities;
+using Microsoft.Win32;
 
 namespace Models.Utilities
 {
@@ -57,7 +57,7 @@ namespace Models.Utilities
         /// On Linux, this is ~/.config/ApsimInitiative/ApsimX/rpackages.
         /// </summary>
         public static string PackagesDirectory { get; } = Path.Combine(
-                                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData, Environment.SpecialFolderOption.Create),
                                     "ApsimInitiative",
                                     "ApsimX",
                                     "rpackages").Replace("\\", "/");
@@ -133,8 +133,8 @@ namespace Models.Utilities
                 // If the file doesn't exist, we check the list of resources.
                 string script = string.Empty;
                 using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream(scriptName))
-                    using (StreamReader reader = new StreamReader(s))
-                        script = reader.ReadToEnd();
+                using (StreamReader reader = new StreamReader(s))
+                    script = reader.ReadToEnd();
                 scriptName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".r");
                 File.WriteAllText(scriptName, script);
             }
@@ -208,7 +208,7 @@ namespace Models.Utilities
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
-            
+
             File.WriteAllText(tempFile, result);
 
             DataTable table = null;
@@ -246,8 +246,8 @@ namespace Models.Utilities
         {
             string script;
             using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("Models.Resources.GetPackage.R"))
-                using (StreamReader reader = new StreamReader(s))
-                    script = reader.ReadToEnd();
+            using (StreamReader reader = new StreamReader(s))
+                script = reader.ReadToEnd();
             string tempFileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-getPackage.r");
             string rFileName = Path.ChangeExtension(tempFileName, ".R");
             File.WriteAllText(rFileName, script);
@@ -330,7 +330,11 @@ namespace Models.Utilities
         private string GetRExePath()
         {
             string rScriptPath;
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+#else
             if (ProcessUtilities.CurrentOS.IsWindows)
+#endif
             {
                 // On Windows we search the registry for the install path
                 string installDirectory = GetRInstallDirectoryFromRegistry();
@@ -368,6 +372,9 @@ namespace Models.Utilities
         /// <summary>
         /// Gets the directory that the latest version of R is installed to.
         /// </summary>
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         private string GetRInstallDirectoryFromRegistry()
         {
             string registryKey = @"SOFTWARE\R-core";
@@ -396,7 +403,7 @@ namespace Models.Utilities
                 // Ignore Microsoft R client.
                 // When there's multiple versions of R installed, use latest.
                 string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
-                string installDirectory = null; 
+                string installDirectory = null;
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {
                     if (latestVersionKey != null)
@@ -418,6 +425,9 @@ namespace Models.Utilities
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         private List<string> GetSubKeys(string keyName)
         {
             try
@@ -441,7 +451,7 @@ namespace Models.Utilities
             {
                 return null;
             }
-            
+
         }
 
         /// <summary>
@@ -461,74 +471,24 @@ namespace Models.Utilities
         {
             if (OnDownload != null && !OnDownload())
                 return;
+            string message = "The R statistical package is required for this simulation, but could not be located on this computer.\r\nYou can obtain R by going to ";
             if (ProcessUtilities.CurrentOS.IsWindows)
             {
-                string fileName = Path.Combine(Path.GetTempPath(), "RSetup.exe");
-
-                // Delete the installer if it already exists.
-                if (File.Exists(fileName))
-                    File.Delete(fileName);
-                WebClient web = new WebClient();
-                web.DownloadFileCompleted += (sender, e) =>
-                {
-                    try
-                    {
-                        OnDownloadCompleted?.Invoke();
-                        InstallR(fileName);
-                    }
-                    catch
-                    {
-                    }
-                };
-                web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
+                message += windowsDownloadUrl;
             }
             else if (ProcessUtilities.CurrentOS.IsMac)
             {
-                throw new NotImplementedException("R auto download not yet available on macOS.");
+                message += "https://cran.csiro.au/bin/macosx/";
             }
             else if (ProcessUtilities.CurrentOS.IsLinux)
             {
-                throw new Exception("R auto download not yet available on Linux.");
+                message += "https://cran.csiro.au/bin/linux/";
             }
             else
             {
-                throw new Exception("Target running unknown OS.");
+                message += "https://cran.csiro.au/";
             }
-        }
-
-        /// <summary>
-        /// Runs the R installer.
-        /// </summary>
-        /// <param name="installerPath">Path to the installer.</param>
-        private void InstallR(string installerPath)
-        {
-            if (installerPath == null)
-                return;
-
-            // Setup a working directory.
-            string workingDirectory = Path.Combine(Path.GetTempPath(), "RSetup");
-            if (!Directory.Exists(workingDirectory))
-                Directory.CreateDirectory(workingDirectory);
-
-            // Copy installer to working directory.
-            try
-            {
-                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileName(installerPath));
-                File.Copy(installerPath, newInstallerPath, true);
-                installerPath = newInstallerPath;
-            }
-            catch
-            {
-            }
-            // Check to see if installer is already running for whatever reason.
-            // Kill them if found.
-            foreach (var process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(installerPath)))
-                process.Kill();
-
-            // Run the installer.
-            var installer = new ProcessUtilities.ProcessWithRedirectedOutput();
-            installer.Start(installerPath, "", workingDirectory, false, cancelToken);
-            installer.WaitForExit();
+            throw new Exception(message);
         }
 
         /// <summary>

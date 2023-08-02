@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using APSIM.Shared.Documentation;
 using Models.Core;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// # [Name]
-    /// Calculate partitioning of daily growth based upon the allometric relationship: 
-    /// 
-    /// YValue = [Const] * XValue ^[Power]^
-    /// </summary>
+    /// <summary>This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).</summary>
     [Serializable]
-    [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AllometricDemandFunction : Model, IFunction
@@ -31,7 +24,7 @@ namespace Models.Functions.DemandFunctions
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction YValue = null;
 
-                /// <summary>Gets the value.</summary>
+        /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
         /// Cannot find variable:  + XProperty +  in function:  + this.Name
@@ -48,5 +41,18 @@ namespace Models.Functions.DemandFunctions
             return returnValue;
         }
 
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            yield return new Paragraph($"YValue = {Const} * XValue ^ {Power}");
+
+            foreach (var child in Children)
+                foreach (var tag in child.Document())
+                    yield return tag;
+        }
     }
 }

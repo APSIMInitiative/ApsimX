@@ -1,20 +1,15 @@
-﻿using Models.Soils;
-using Models.Core;
-using System;
-using Models.Functions;
+﻿using System;
 using System.Linq;
-using Models.Soils.Standardiser;
-using Models.Soils.Nutrients;
-using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
-using System.Collections.Generic;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState : Model, IStuffForRootShapeThing
+    public class NetworkZoneState : Model, IRootGeometryData
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -69,9 +64,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the layer dead.</summary>
         public OrganNutrientsState[] LayerDeadProportion { get; set; }
-
-        /// <summary>Gets or sets the length.</summary>
-        public double Length { get; set; }
 
         /// <summary>Gets or sets the depth.</summary>
         [Units("mm")]
@@ -153,7 +145,6 @@ namespace Models.PMF.Organs
         /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
         public void SetMaxDepthFromXF()
         {
-            Clear();
             var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
             if (soilCrop == null)
                 throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
@@ -170,10 +161,17 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Calculate starting states.</summary>
-        public void Initialize()
+        public void Initialize(double depth)
         {
+            Clear();
+            Depth = depth;
+            RootFront = depth;
             SetMaxDepthFromXF();
             CalculateRAw();
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
+            {
+                LLModifier[layer] = 1;
+            }
         }
 
 
@@ -233,7 +231,7 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
                     LayerLive[i] = new OrganNutrientsState();
-                    LayerDead[i]  = new OrganNutrientsState();
+                    LayerDead[i] = new OrganNutrientsState();
                     LayerLiveProportion[i] = new OrganNutrientsState();
                     LayerDeadProportion[i] = new OrganNutrientsState();
                 }

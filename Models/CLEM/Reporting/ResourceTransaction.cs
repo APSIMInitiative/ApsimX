@@ -1,11 +1,5 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Resources;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -24,7 +18,7 @@ namespace Models.CLEM
         /// </summary>
         public CLEMModel Activity { get; set; }
         /// <summary>
-        /// Cateogry for data analysis and summary
+        /// Category for data analysis and summary
         /// </summary>
         public string Category { get; set; }
         /// <summary>
@@ -42,7 +36,7 @@ namespace Models.CLEM
                 return (TransactionType == TransactionType.Gain) ? Amount : 0;
             }
         }
-            
+
         /// <summary>
         /// Amount removed
         /// </summary>
@@ -63,6 +57,28 @@ namespace Models.CLEM
         /// The amount of the transaction
         /// </summary>
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Method to return the specified substring of the category based on "." delimited levels
+        /// </summary>
+        /// <param name="level">The index of the level to return</param>
+        /// <returns>The sub string</returns>
+        public string CategoryByLevel(int level)
+        {
+            if (level == 0)
+                return Category;
+            else
+            {
+                string[] parts = Category.Split('.');
+                if (parts.Length >= level)
+                {
+                    if (parts[level - 1].Contains("@RelatesTo"))
+                        return parts[level - 1].Replace("@RelatesTo", RelatesToResource);
+                    return parts[level - 1];
+                }
+                return "";
+            }
+        }
 
         /// <summary>
         /// Allows inclusion of -ve in losses
@@ -93,7 +109,7 @@ namespace Models.CLEM
         /// <returns>Value to report</returns>
         public object ConvertTo(string converterName, string transactionType, bool reportLossesAsNegative)
         {
-            if(ResourceType!=null)
+            if (ResourceType != null)
             {
                 double amount = 0;
                 switch (transactionType.ToLower())
@@ -103,7 +119,7 @@ namespace Models.CLEM
                         break;
                     case "loss":
                         amount = this.Loss;
-                        if (reportLossesAsNegative)
+                        if (!reportLossesAsNegative)
                         {
                             amount *= -1;
                         }
@@ -127,7 +143,7 @@ namespace Models.CLEM
         {
             if (ResourceType != null)
             {
-                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?-1:1);
+                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss) ? 1 : -1);
                 return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
             }
             return null;
@@ -138,7 +154,7 @@ namespace Models.CLEM
     /// Class for reporting transaction details in OnTransactionEvents
     /// </summary>
     [Serializable]
-    public class TransactionEventArgs: EventArgs
+    public class TransactionEventArgs : EventArgs
     {
         /// <summary>
         /// Transaction details

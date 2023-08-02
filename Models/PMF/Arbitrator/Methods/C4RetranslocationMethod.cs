@@ -1,10 +1,8 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
-using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
-using System;
 
 namespace Models.PMF.Arbitrator
 {
@@ -15,7 +13,10 @@ namespace Models.PMF.Arbitrator
     {
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
-        protected IArbitrator Arbitrator = null;
+        protected OrganArbitrator Arbitrator = null;
+
+        private int leafIndex = 2;
+        private int stemIndex = 4;
 
         /// <summary>Does the fixation.</summary>
         /// <param name="Organs">The organs.</param>
@@ -25,10 +26,9 @@ namespace Models.PMF.Arbitrator
         {
             if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
             {
-                var nArbitrator = arbitrationMethod as SorghumArbitratorN;
-                if (nArbitrator != null)
+                if (arbitrationMethod is SorghumArbitratorN)
                 {
-                    nArbitrator.DoRetranslocation(Organs, BAT, Arbitrator.DM);
+                    (arbitrationMethod as SorghumArbitratorN).DoRetranslocation(Organs, BAT, Arbitrator.DM);
                 }
                 else
                 {
@@ -39,9 +39,6 @@ namespace Models.PMF.Arbitrator
                         if (phenology.Beyond("EndGrainFill"))
                             return;
                         arbitrationMethod.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-
-                        int leafIndex = 2;
-                        int stemIndex = 4;
 
                         double grainDifferential = BiomassRetranslocated;
 
@@ -61,6 +58,17 @@ namespace Models.PMF.Arbitrator
                     }
                 }
             }
+        }
+
+        /// <summary>Called when crop is sown</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("PlantSowing")]
+        virtual protected void OnPlantSowing(object sender, SowingParameters data)
+        {
+            var organNames = Arbitrator.OrganNames;
+            leafIndex = organNames.IndexOf("Leaf");
+            stemIndex = organNames.IndexOf("Stem");
         }
     }
 }

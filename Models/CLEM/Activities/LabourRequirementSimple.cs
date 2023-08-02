@@ -1,10 +1,5 @@
 ﻿using Models.Core;
-using Models.CLEM.Activities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 
@@ -32,12 +27,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public new double LabourPerUnit { get; set; }
-
-        /// <summary>
-        /// Labour unit type
-        /// </summary>
-        [JsonIgnore]
-        public new LabourUnitType UnitType { get; set; }
 
     }
 }

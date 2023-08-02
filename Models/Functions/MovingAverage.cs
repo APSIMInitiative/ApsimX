@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-using System.Linq;
 
 namespace Models.Functions
 {
@@ -16,7 +15,7 @@ namespace Models.Functions
     [Description("Maintains a moving average of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingAverageFunction : Model, IFunction, ICustomDocumentation
+    public class MovingAverageFunction : Model, IFunction
     {
         /// <summary>The number of days over which to calculate the moving average</summary>
         [Description("Number of Days")]
@@ -60,7 +59,7 @@ namespace Models.Functions
         {
             AccumulatedValues.Clear();
             Calculate = false;
-            
+
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -103,24 +102,13 @@ namespace Models.Functions
             return MathUtilities.Average(AccumulatedValues);
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                Name = this.Name;
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                if (this.FindAllChildren<IFunction>().Count() ==1)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving average of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            if (FindAllChildren<IFunction>().Count() == 1)
+                yield return new Paragraph($"{Name} is calculated from a moving average of {ChildFunction.Name} over a series of {NumberOfDays} days.");
         }
     }
 }

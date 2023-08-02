@@ -1,16 +1,16 @@
 // -----------------------------------------------------------------------
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.ForageDigestibility;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
 
     /*
      GRAZPLAN animal biology model for AusFarm - PaddockList && ForageList classes                                                                   
@@ -42,17 +42,17 @@ namespace Models.GrazPlan
         /// N in kg/ha
         /// </summary>
         public double NitrogenKgHa;
-        
+
         /// <summary>
         /// P in kg/ha
         /// </summary>
         public double PhosphorusKgHa;
-        
+
         /// <summary>
         /// S in kg/ha
         /// </summary>
         public double SulphurKgHa;
-        
+
         /// <summary>
         /// Ash alkalinity mol/ha
         /// </summary>
@@ -119,7 +119,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 0 = non-seed, UNRIPE or RIPE
         /// </summary>
-        private int seedType = 0;   
+        private int seedType = 0;
 
         /// <summary>
         /// The herbage bottom
@@ -140,7 +140,7 @@ namespace Models.GrazPlan
         /// Herbage dmd fraction
         /// </summary>
         private double[] herbageDMDFract = new double[GrazType.DigClassNo + 1]; // [1..DigClassNo]
-        
+
         /// <summary>
         /// See ripe fraction
         /// </summary>
@@ -331,7 +331,8 @@ namespace Models.GrazPlan
 
             switch (lowClass - highClass + 1)
             {
-                case 1: result[highClass] = 1.0;
+                case 1:
+                    result[highClass] = 1.0;
                     break;
                 case 2:
                     {
@@ -475,7 +476,7 @@ namespace Models.GrazPlan
                 grazingInput.LegumeTrop = 0.0;
             }
         }
-        
+
         /// <summary>
         /// The the forage data
         /// </summary>
@@ -493,9 +494,9 @@ namespace Models.GrazPlan
         public GrazType.GrazingInputs AvailForage()
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
-                        
+
             result.CopyFrom(this.forageData);
-            
+
             return result;
         }
 
@@ -532,7 +533,7 @@ namespace Models.GrazPlan
     }
 
     // ============================================================================
-    
+
     /// <summary>
     /// List of ForageInfo forages 
     /// </summary>
@@ -686,7 +687,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Ref to the paddock object in the model
         /// </summary>
-        private PaddockInfo owningPaddock;     
+        private PaddockInfo owningPaddock;
 
         /// <summary>
         /// Construct the forage provider
@@ -742,22 +743,22 @@ namespace Models.GrazPlan
             get { return this.hostID; }
             set { this.hostID = value; }
         }
-               
+
         /// <summary>
         /// Gets or sets the crop, pasture component
         /// </summary>
-        public IPlantDamage ForageObj { get; set; }
+        public ModelWithDigestibleBiomass ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
         /// </summary>
         /// <param name="forageObj">The crop/pasture object</param>
-        public void UpdateForages(IPlantDamage forageObj)
+        public void UpdateForages(ModelWithDigestibleBiomass forageObj)
         {
             // ensure this forage is in the list
             // the forage key in this case is component name
             ForageInfo forage = this.forages.ByName(this.ForageHostName);
-            if (forage == null)  
+            if (forage == null)
             {
                 // if this cohort doesn't exist in the forage list
                 forage = new ForageInfo();
@@ -765,7 +766,7 @@ namespace Models.GrazPlan
                 this.owningPaddock.AssignForage(forage);               // the paddock in the model can access this forage
                 this.forages.Add(forage);                               // create a new forage for this cohort
             }
-            
+
             // TODO: just assuming one forage cohort in this component (expand here?)
             this.PassGrazingInputs(forage, this.Crop2GrazingInputs(forageObj), "g/m^2"); // then update it's value
         }
@@ -819,11 +820,11 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.GrazingInputs Crop2GrazingInputs(IPlantDamage forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
-            
+
             result.TotalGreen = 0;
             result.TotalDead = 0;
 
@@ -835,7 +836,7 @@ namespace Models.GrazPlan
 
             // calculate the green available based on the total green in this paddock
             double greenPropn = 0;
-            
+
             // ** should really take into account the height ratio here e.g. Params.HeightRatio
             if (this.PastureGreenDM > GrazType.Ungrazeable)
             {
@@ -843,21 +844,23 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (IOrganDamage biomass in forageObj.Organs)
+            foreach (var live in forageObj.Material.Where(m => m.IsLive))
             {
-                if (biomass.IsAboveGround)
-                {
-                    if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
-                    {
-                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
-                        result.TotalDead += biomass.Dead.Wt;
+                // Find corresponding dead material
+                var dead = forageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+                if (dead == null)
+                    throw new Exception($"Cannot find dead material for {live.Name}.");
 
-                        // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-                        dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
-                        dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
-                        totalDMD += dmd;
-                        totalN += (greenPropn * biomass.Live.N) + (biomass.Dead.Wt > 0 ? biomass.Dead.N : 0);   // g/m^2
-                    }
+                if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
+                {
+                    result.TotalGreen += (greenPropn * live.Consumable.Wt);   // g/m^2
+                    result.TotalDead += dead.Consumable.Wt;
+
+                    // we can find the dmd of structural, assume storage and metabolic are 100% digestible
+                    dmd = (live.Digestibility * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                    dmd += ((dead.Digestibility * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt));
+                    totalDMD += dmd;
+                    totalN += (greenPropn * live.Consumable.N) + (dead.Consumable.Wt > 0 ? dead.Consumable.N : 0);   // g/m^2
                 }
             }
 
@@ -899,7 +902,7 @@ namespace Models.GrazPlan
                             break;
                     }
                 }
-                    
+
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
                 // TODO: Store any seed pools
@@ -929,35 +932,49 @@ namespace Models.GrazPlan
                 double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
-                double totalDM = 0;
-                foreach (IOrganDamage organ in ForageObj.Organs)
-                {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
-                    {
-                        totalDM += organ.Live.Wt + organ.Dead.Wt;
-                    }
-                }
+                double totalDM = ForageObj.Material.Sum(m => m.Total.Wt);
+                double consumableDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
+
                 double amountRemoved = 0;
-                double amountToRemove = propnRemoved * totalDM;
-                foreach (IOrganDamage organ in ForageObj.Organs)
+                double amountToRemove = propnRemoved * consumableDM;
+                var liveMaterial = ForageObj.Material.Where(m => m.IsLive).ToList();
+                foreach (var live in liveMaterial)
                 {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    // Find corresponding dead material
+                    var dead = ForageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+                    if (dead == null)
+                        throw new Exception($"Cannot find dead material for {live.Name}.");
+
+                    if (live.Total.Wt + dead.Total.Wt > 0)
                     {
-                        double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
+                        double propnOfPlantDM = (live.Total.Wt + dead.Total.Wt) / totalDM;
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
-                        double prpnOfOrganToRemove = amountOfOrganToRemove / (organ.Live.Wt + organ.Dead.Wt);
+                        double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Total.Wt + dead.Total.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
-                        removal.FractionLiveToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(organ.Name, "Graze", removal);
+                        ForageObj.RemoveBiomass(liveToRemove: prpnOfOrganToRemove, deadToRemove: prpnOfOrganToRemove);
 
                         amountRemoved += amountOfOrganToRemove;
                     }
                 }
+                if (liveMaterial.Count == 0)
+                {
+                    var deadMaterial = ForageObj.Material.Where(m => !m.IsLive).ToList();
+                    foreach (var dead in deadMaterial)
+                    {
+                        // This can happen for surface organic matter which only has dead material.
+                        double propnOfPlantDM = dead.Total.Wt / totalDM;
+                        double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
+                        double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Total.Wt, 0);
+                        prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
+                        ForageObj.RemoveBiomass(deadToRemove: prpnOfOrganToRemove);
+
+                        amountRemoved += amountOfOrganToRemove;
+                    }
+                }
+
                 if (!APSIM.Shared.Utilities.MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
                     throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
-                
+
                 forageIdx++;
                 forage = this.ForageByIndex(forageIdx);
             }
@@ -1072,7 +1089,7 @@ namespace Models.GrazPlan
         /// <param name="hostID">Component ID</param>
         /// <param name="driverID">Driver ID</param>
         /// <param name="forageObj">The forage object</param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, IPlantDamage forageObj)
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, ModelWithDigestibleBiomass forageObj)
         {
             ForageProvider forageProvider;
 

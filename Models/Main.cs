@@ -1,17 +1,17 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using CommandLine;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+
+namespace Models
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using CommandLine;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>Class to hold a static main entry point.</summary>
     public class Program
@@ -27,9 +27,9 @@
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
-#if NETCOREAPP
+
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-#endif
+
             ReplaceObsoleteArguments(ref args);
             new Parser(config =>
             {
@@ -48,7 +48,7 @@
         /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
-            if ( !(errors.IsHelp() || errors.IsVersion()) )
+            if (!(errors.IsHelp() || errors.IsVersion()))
                 exitCode = 1;
         }
 
@@ -99,7 +99,7 @@
                                             numberOfProcessors: options.NumProcessors,
                                             simulationNamePatternMatch: options.SimulationNameRegex);
                     else
-                        runner = new Runner(files.Select(f => EditFile.Do(f, options.EditFilePath)),
+                        runner = new Runner(files.Select(f => ApplyConfigToApsimFile(f, options.EditFilePath)),
                                             true,
                                             true,
                                             options.RunTests,
@@ -126,6 +126,14 @@
                 Console.WriteLine(err.ToString());
                 exitCode = 1;
             }
+        }
+
+        private static IModel ApplyConfigToApsimFile(string fileName, string configFilePath)
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
+            var overrides = Overrides.ParseStrings(File.ReadAllLines(configFilePath));
+            Overrides.Apply(file, overrides);
+            return file;
         }
 
         private static void ReplaceObsoleteArguments(ref string[] args)
@@ -176,7 +184,7 @@
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
             SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
             jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
@@ -185,7 +193,7 @@
 
         private static void ListReferencedFileNames(string fileName)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
             foreach (var referencedFileName in file.FindAllReferencedFiles())
                 Console.WriteLine(referencedFileName);

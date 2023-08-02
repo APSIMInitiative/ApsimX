@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Soils;
+using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.Functions
 {
@@ -12,7 +11,7 @@ namespace Models.Functions
     /// \retval Water effect on denitrification.
     [Serializable]
     [Description("Soil NO3 Denitrification water factor from CERES-Maize")]
-    public class CERESDenitrificationWaterFactor : Model, IFunction, ICustomDocumentation
+    public class CERESDenitrificationWaterFactor : Model, IFunction
     {
 
         [Link]
@@ -27,8 +26,8 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Nitrification Model");
 
-            double WF = MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);     
-            return MathUtilities.Bound(WF, 0, 1); 
+            double WF = MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);
+            return MathUtilities.Bound(WF, 0, 1);
         }
 
         /// <summary>
@@ -45,15 +44,6 @@ namespace Models.Functions
                     result[i] = Value(i);
                 return result;
             }
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
         }
     }
 }

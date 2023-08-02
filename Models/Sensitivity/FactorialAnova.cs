@@ -1,20 +1,19 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Interfaces;
+using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using Newtonsoft.Json;
-    using Utilities;
-    using Models.Storage;
-    using Models.Core.Run;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a factorial ANOVA parameter sensitivity analysis.
     /// </summary>
     [Serializable]
@@ -22,7 +21,7 @@
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class FactorialAnova : Model, ICustomDocumentation, IModelAsTable, IPostSimulationTool
+    public class FactorialAnova : Model, IModelAsTable, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -195,26 +194,6 @@
         private string GetTempFileName(string name, string extension)
         {
             return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
-        }
-
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                {
-                    if (!(child is Simulation) && !(child is Factors))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
         }
     }
 }

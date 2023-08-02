@@ -1,12 +1,7 @@
-﻿using Models.CLEM.Activities;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Models.CLEM
@@ -19,7 +14,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This component provides the random number sequence to be used for all stochastic processes in CLEM")]
+    [Description("Provide the random number sequence to be used for all stochastic processes in CLEM")]
     [Version(1, 0, 1, "Moved this functionality from the CLEM component to an individual component placed under the simulation to allow sharing between multiple farms in a simulation")]
     [HelpUri(@"Content/Features/Random numbers generator.htm")]
     public class RandomNumberGenerator: Model
@@ -52,7 +47,7 @@ namespace Models.CLEM
             get 
             { 
                 if(generator is null)
-                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+                    throw new Exception("Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
 
                 return generator; 
             } 

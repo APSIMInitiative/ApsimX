@@ -20,6 +20,15 @@
     using System.Globalization;
     using MathNet.Numerics.Statistics;
     using Extensions;
+    using APSIM.Shared.Graphing;
+    using APSIM.Interop.Graphing.Extensions;
+    using APSIM.Interop.Graphing.CustomSeries;
+    using Utility;
+
+    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+    using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -44,7 +53,7 @@
                 if (plot1 != null && plot1.Model != null)
                 {
                     plot1.Model.DefaultFontSize = value;
-                    plot1.Model.LegendFontSize = value;
+                    plot1.Model.SetLegendFontSize(value);
 
                     foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
                         if (annotation is OxyPlot.Annotations.TextAnnotation textAnnotation)
@@ -53,12 +62,12 @@
             }
         }
 
-        private MarkerSizeType markerSize;
+        private MarkerSize markerSize;
 
         /// <summary>
         /// Marker size.
         /// </summary>
-        public MarkerSizeType MarkerSize
+        public MarkerSize MarkerSize
         {
             get
             {
@@ -93,18 +102,21 @@
         private bool inRightClick = false;
 
         private OxyPlot.GtkSharp.PlotView plot1;
-        private VBox vbox1 = null;
+        private Box vbox1 = null;
         private Expander expander1 = null;
-        private VBox vbox2 = null;
+        private Box vbox2 = null;
         private Label captionLabel = null;
         private EventBox captionEventBox = null;
         private Label label2 = null;
         private Menu popup = new Menu();
 
+        /// <summary>Default constructor.</summary>
+        public GraphView() { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphView" /> class.
         /// </summary>
-        public GraphView(ViewBase owner = null) : base(owner)
+        public GraphView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GraphView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
@@ -113,35 +125,50 @@
             captionLabel = (Label)builder.GetObject("captionLabel");
             captionEventBox = (EventBox)builder.GetObject("captionEventBox");
             label2 = (Label)builder.GetObject("label2");
+            Initialise(owner, vbox1);
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            vbox1 = gtkControl as Box;
             mainWidget = vbox1;
 
             plot1 = new PlotView();
             plot1.Model = new PlotModel();
-            plot1.SetSizeRequest(-1, 100);
+            if (vbox1.Window != null)
+                plot1.SetSizeRequest(vbox1.Window.Width, vbox1.Window.Height);
+            if (vbox2 == null)
+                vbox2 = vbox1;
             vbox2.PackStart(plot1, true, true, 0);
 
             smallestDate = DateTime.MaxValue;
             largestDate = DateTime.MinValue;
             this.LeftRightPadding = 40;
-            expander1.Visible = false;
-            captionEventBox.Visible = true;
-
+            if (expander1 != null)
+            {
+                expander1.Visible = false;
+                captionEventBox.Visible = true;
+            }
+#pragma warning disable CS0618
+            // todo : need to refacto this to use PlotController,
+            // as the "old" way of doing things is now considered obsolete.
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
+#pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
-            captionLabel.Text = null;
-            captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
+            if (captionLabel != null)
+            {
+                captionLabel.Text = null;
+                captionEventBox.ButtonPressEvent += OnCaptionLabelDoubleClick;
+            }
             Color foreground = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
-            
-
-#if NETCOREAPP
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
             // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
             // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
@@ -149,42 +176,23 @@
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
             var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
-#endif
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
+#pragma warning disable CS0618
                 plot1.Model.MouseDown -= OnChartClick;
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
-                captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
-                // It's good practice to disconnect the event handlers, as it makes memory leaks
-                // less likely. However, we may not "own" the event handlers, so how do we 
-                // know what to disconnect?
-                // We can do this via reflection. Here's how it currently can be done in Gtk#.
-                // Windows.Forms would do it differently.
-                // This may break if Gtk# changes the way they implement event handlers.
-                foreach (Widget w in popup)
-                {
-                    if (w is MenuItem)
-                    {
-                        PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (pi != null)
-                        {
-                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                            if (handlers != null && handlers.ContainsKey("activate"))
-                            {
-                                EventHandler handler = (EventHandler)handlers["activate"];
-                                (w as MenuItem).Activated -= handler;
-                            }
-                        }
-                    }
-                }
+#pragma warning restore CS0618
+                if (captionEventBox != null)
+                    captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+                popup.Clear();
+                popup.Dispose();
                 Clear();
-                popup.Cleanup();
-                plot1.Cleanup();
+                plot1.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -238,6 +246,14 @@
         public int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Disable scrolling via mouse wheel on the graph.
+        /// </summary>
+        public void DisableScrolling()
+        {
+            plot1.ActualController.UnbindMouseWheel();
+        }
+
+        /// <summary>
         /// Controls the background colour of the graph.
         /// </summary>
         public OxyColor BackColor
@@ -277,11 +293,9 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredWidth = plot1.ChildRequisition.Width;
-#else
+
                 plot1.GetPreferredWidth(out int minWidth, out int preferredWidth);
-#endif
+
                 return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
             }
             set
@@ -294,17 +308,22 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredHeight = plot1.ChildRequisition.Height;
-#else
+
                 plot1.GetPreferredHeight(out int minHeight, out int preferredHeight);
-#endif
+
                 return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
             }
             set
             {
                 plot1.HeightRequest = value;
             }
+        }
+
+        /// <summary>Set the preferred width as a fraction of the parent window.</summary>
+        /// <param name="fraction">Fraction of the parent window for the graph to occupy.</param>
+        public void SetPreferredWidth(double fraction)
+        {
+            plot1?.SetSizeRequest(Convert.ToInt32(vbox1.Window.EffectiveParent.Width * fraction), 100);
         }
 
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
@@ -321,11 +340,11 @@
         {
             get
             {
-                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+                return plot1.Model.GetLegendPlacement() == LegendPlacement.Inside;
             }
             set
             {
-                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+                plot1.Model.SetLegendPlacement(value ? LegendPlacement.Inside : LegendPlacement.Outside);
             }
         }
 
@@ -361,8 +380,8 @@
         {
             this.plot1.Model.DefaultFontSize = FontSize;
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
-            this.plot1.Model.LegendBorder = OxyColors.Transparent;
-            this.plot1.Model.LegendBackground = OxyColors.Transparent;
+            this.plot1.Model.SetLegendBorder(OxyColors.Transparent);
+            this.plot1.Model.SetLegendBackground(OxyColors.Transparent);
 
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
@@ -370,7 +389,7 @@
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
          
-            this.plot1.Model.LegendFontSize = FontSize;
+            this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
             {
@@ -383,6 +402,7 @@
             }
 
             this.plot1.Model.InvalidatePlot(true);
+            plot1.ShowAll();
         }
 
         /// <summary>
@@ -413,13 +433,13 @@
              string yFieldName,
              IEnumerable xError,
              IEnumerable yError,
-             Models.Axis.AxisType xAxisType,
-             Models.Axis.AxisType yAxisType,
+             APSIM.Shared.Graphing.AxisPosition xAxisType,
+             APSIM.Shared.Graphing.AxisPosition yAxisType,
              Color colour,
-             Models.LineType lineType,
-             Models.MarkerType markerType,
-             Models.LineThicknessType lineThickness,
-             Models.MarkerSizeType markerSize,
+             LineType lineType,
+             APSIM.Shared.Graphing.MarkerType markerType,
+             APSIM.Shared.Graphing.LineThickness lineThickness,
+             APSIM.Shared.Graphing.MarkerSize markerSize,
              double markerModifier,
              bool showOnLegend)
         {
@@ -467,7 +487,7 @@
                 }
 
                 // Line thickness
-                if (lineThickness == LineThicknessType.Thin)
+                if (lineThickness == APSIM.Shared.Graphing.LineThickness.Thin)
                     series.StrokeThickness = 0.5;
 
                 // Marker type.
@@ -501,18 +521,18 @@
 
         }
 
-        private double GetMarkerSizeNumericValue(MarkerSizeType markerSize)
+        private double GetMarkerSizeNumericValue(MarkerSize markerSize)
         {
-            if (markerSize == MarkerSizeType.Large)
+            if (markerSize == MarkerSize.Large)
                 return 9.0;
 
-            if (markerSize == MarkerSizeType.Normal)
+            if (markerSize == MarkerSize.Normal)
                 return 7.0;
 
-            if (markerSize == MarkerSizeType.Small)
+            if (markerSize == MarkerSize.Small)
                 return 5.0;
 
-            if (markerSize == MarkerSizeType.VerySmall)
+            if (markerSize == MarkerSize.VerySmall)
                 return 3.0;
 
             throw new NotImplementedException($"No supported marker size translation for {markerSize}");
@@ -533,14 +553,14 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
             if (x != null && y != null)
             {
-                var series = new Utility.ColumnXYSeries();
+                var series = new ColumnXYSeries();
                 if (showOnLegend)
                     series.Title = title;
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
@@ -580,8 +600,8 @@
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -622,7 +642,7 @@
             {
                 double newDiff = x[i] - x[i - 1];
                 if (!MathUtilities.FloatsAreEqual(diff, newDiff))
-                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.Simulation.ErrorLevel.Warning, withButton: false);
+                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.MessageType.Warning, withButton: false);
             }
         }
 
@@ -642,8 +662,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -672,12 +692,12 @@
             string title,
             object[] x,
             double[] y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
-            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<LineSeries>().Count() < 1)
+            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<OxyPlot.Series.LineSeries>().Count() < 1)
             {
                 // This is the first series to be added to the chart. Just use
                 // a region series (colours area between two curves), and use
@@ -689,7 +709,7 @@
             }
 
             // Get x/y data from previous series
-            LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
+            var previous = plot1.Model.Series.OfType<OxyPlot.Series.LineSeries>().Last();
 
             // This will work if the previous series was an area series.
             double[] x1 = previous.Points.Select(p => p.X).ToArray();
@@ -770,13 +790,13 @@
             string title,
             object[] x,
             double[] y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend,
-            Models.LineType lineType,
-            Models.MarkerType markerType,
-            Models.LineThicknessType lineThickness)
+            LineType lineType,
+            APSIM.Shared.Graphing.MarkerType markerType,
+            APSIM.Shared.Graphing.LineThickness lineThickness)
         {
             if (x?.Length > 0 && y?.Length > 0)
             {
@@ -803,7 +823,7 @@
                     series.OutlierType = oxyMarkerType;
 
                 // Line thickness
-                if (lineThickness == LineThicknessType.Thin)
+                if (lineThickness == APSIM.Shared.Graphing.LineThickness.Thin)
                 {
                     double thickness = 0.5;
                     series.StrokeThickness = thickness;
@@ -838,8 +858,8 @@
         }
 
         private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
-                                                  Models.Axis.AxisType xAxisType,
-                                                  Models.Axis.AxisType yAxisType)
+                                                  APSIM.Shared.Graphing.AxisPosition xAxisType,
+                                                  APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
@@ -897,8 +917,8 @@
             bool leftAlign,
             bool topAlign,
             double textRotation,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour)
         {
             OxyPlot.Annotations.TextAnnotation annotation = new OxyPlot.Annotations.TextAnnotation();
@@ -961,8 +981,8 @@
             object y1,
             object x2,
             object y2,
-            Models.LineType type,
-            Models.LineThicknessType thickness,
+            LineType type,
+            APSIM.Shared.Graphing.LineThickness thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip)
@@ -974,9 +994,9 @@
                 x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
-                y1Position = AxisMinimum(Models.Axis.AxisType.Left);
+                y1Position = AxisMinimum(APSIM.Shared.Graphing.AxisPosition.Left);
             else if ((double)y1 == double.MaxValue)
-                y1Position = AxisMaximum(Models.Axis.AxisType.Left);
+                y1Position = AxisMaximum(APSIM.Shared.Graphing.AxisPosition.Left);
             else
                 y1Position = (double)y1;
             double x2Position = 0.0;
@@ -986,9 +1006,9 @@
                 x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
-                y2Position = AxisMinimum(Models.Axis.AxisType.Left);
+                y2Position = AxisMinimum(APSIM.Shared.Graphing.AxisPosition.Left);
             else if ((double)y2 == double.MaxValue)
-                y2Position = AxisMaximum(Models.Axis.AxisType.Left);
+                y2Position = AxisMaximum(APSIM.Shared.Graphing.AxisPosition.Left);
             else
                 y2Position = (double)y2;
 
@@ -1005,7 +1025,7 @@
                 lineAnnotation.MaximumY = y2Position;
                 lineAnnotation.Type = LineAnnotationType.Vertical;
                 lineAnnotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-                if (thickness == LineThicknessType.Thin)
+                if (thickness == APSIM.Shared.Graphing.LineThickness.Thin)
                     lineAnnotation.StrokeThickness = 0.5;
                 annotation = lineAnnotation;
             }
@@ -1038,7 +1058,7 @@
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
-            Models.Axis.AxisType axisType,
+            APSIM.Shared.Graphing.AxisPosition axisType,
             string title,
             bool inverted,
             double minimum,
@@ -1097,50 +1117,52 @@
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation)
+        public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
         {
-            LegendPosition oxyLegendPosition;
+            if (!plot1.Model.Legends.Any())
+                plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
+            OxyLegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
-                this.plot1.Model.LegendFont = Font;
-                this.plot1.Model.LegendFontSize = FontSize;
-                this.plot1.Model.LegendPosition = oxyLegendPosition;
-                if (Enum.TryParse(orientation.ToString(), out LegendOrientation legendOrientation))
-                    plot1.Model.LegendOrientation = legendOrientation;
+                this.plot1.Model.SetLegendFont(Font);
+                this.plot1.Model.SetLegendFontSize(FontSize);
+                this.plot1.Model.SetLegendPosition(oxyLegendPosition);
+                if (Enum.TryParse(orientation.ToString(), out OxyLegendOrientation legendOrientation))
+                    plot1.Model.SetLegendOrientation(legendOrientation);
             }
 
-            this.plot1.Model.LegendSymbolLength = 30;
+            this.plot1.Model.SetLegendSymbolLength(30);
 
             // If 2 series have the same title then remove their titles (this will
             // remove them from the legend) and create a new series solely for the
             // legend that has line type and marker type combined.
-            var newSeriesToAdd = new List<LineSeries>();
+            var newSeriesToAdd = new List<OxyPlot.Series.LineSeries>();
             foreach (var series in plot1.Model.Series)
             {
-                if (series is LineSeries && !string.IsNullOrEmpty(series.Title))
+                if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
                 {
                     var matchingSeries = FindMatchingSeries(series);
                     if (matchingSeries != null)
                     {
-                        var newFakeSeries = new LineSeries();
+                        var newFakeSeries = new OxyPlot.Series.LineSeries();
                         newFakeSeries.Title = series.Title;
-                        newFakeSeries.Color = (series as LineSeries).Color;
-                        newFakeSeries.LineStyle = (series as LineSeries).LineStyle;
+                        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
+                        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
                         if (newFakeSeries.LineStyle == LineStyle.None)
-                            (series as LineSeries).LineStyle = (matchingSeries as LineSeries).LineStyle;
-                        if ((series as LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
+                        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
                         {
-                            newFakeSeries.MarkerType = (matchingSeries as LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (matchingSeries as LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (matchingSeries as LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (matchingSeries as LineSeries).MarkerSize;
+                            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
                         }
                         else
                         {
-                            newFakeSeries.MarkerType = (series as LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (series as LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (series as LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (series as LineSeries).MarkerSize;
+                            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
                         }
 
                         newSeriesToAdd.Add(newFakeSeries);
@@ -1206,7 +1228,7 @@
                     if (widget != label2)
                     {
                         expander1.Remove(widget);
-                        widget.Cleanup();
+                        widget.Dispose();
                     }
                 });
                 expander1.Add(editor);
@@ -1222,18 +1244,14 @@
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="r">Desired image size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
+        public void Export(out Gdk.Pixbuf bitmap, Rectangle r, bool legendOutside)
         {
             MemoryStream stream = new MemoryStream();
             PngExporter pngExporter = new PngExporter();
             pngExporter.Width = r.Width;
             pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            using (Graphics gfx = Graphics.FromImage(bitmap))
-            {
-                Bitmap newBitmap = new Bitmap(stream);
-                gfx.DrawImage(newBitmap, r);
-            }
+            bitmap = new Gdk.Pixbuf(stream);
         }
 
         /// <summary>
@@ -1279,18 +1297,7 @@
                     if (itemText.Text == menuItemText)
                     {
                         item = oldItem;
-                        // Deactivate the "Activate" handler
-                        PropertyInfo pi = item.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (pi != null)
-                        {
-                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                            if (handlers != null && handlers.ContainsKey("activate"))
-                            {
-                                EventHandler handler = (EventHandler)handlers["activate"];
-                                item.Activated -= handler;
-                            }
-                        }
-                        break;
+                        item.DetachHandler("activate");
                     }
                 }
             }
@@ -1396,7 +1403,7 @@
                 }
 
                 if (axis.PlotModel.Series[0] is BoxPlotSeries && 
-                    axis.Position == AxisPosition.Bottom && 
+                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom && 
                     axis.PlotModel.Series?.Count > 0)
                 {
                     // Need to put a bit of extra space on the x axis.
@@ -1419,8 +1426,8 @@
         private List<DataPoint> PopulateDataPointSeries(
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType)
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1456,8 +1463,8 @@
             IEnumerable y,
             IEnumerable xError,
             IEnumerable yError,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType)
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
@@ -1506,7 +1513,7 @@
         /// <param name="enumerator">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, Models.Axis.AxisType axisType)
+        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Shared.Graphing.AxisPosition axisType)
         {
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
@@ -1516,6 +1523,8 @@
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
+                smallestDate = DateTime.MaxValue;
+                largestDate = DateTime.MinValue;
                 do
                 {
                     DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
@@ -1565,12 +1574,12 @@
         /// </summary>
         /// <param name="axisType">The axis type to check</param>
         /// <param name="dataType">The data type of the axis</param>
-        private void EnsureAxisExists(Models.Axis.AxisType axisType, Type dataType)
+        private void EnsureAxisExists(APSIM.Shared.Graphing.AxisPosition axisType, Type dataType)
         {
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
             {
-                AxisPosition position = this.AxisTypeToPosition(axisType);
+                OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
                 OxyPlot.Axes.Axis axisToAdd;
                 if (dataType == typeof(DateTime))
                 {
@@ -1596,7 +1605,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        public OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
+        public OxyPlot.Axes.Axis GetAxis(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1610,9 +1619,9 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private int GetAxisIndex(Models.Axis.AxisType axisType)
+        private int GetAxisIndex(APSIM.Shared.Graphing.AxisPosition axisType)
         {
-            AxisPosition position = this.AxisTypeToPosition(axisType);
+            OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
             {
                 if (this.plot1.Model.Axes[i].Position == position)
@@ -1629,22 +1638,22 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private AxisPosition AxisTypeToPosition(Models.Axis.AxisType type)
+        private OxyPlot.Axes.AxisPosition AxisTypeToPosition(APSIM.Shared.Graphing.AxisPosition type)
         {
-            if (type == Models.Axis.AxisType.Bottom)
+            if (type == APSIM.Shared.Graphing.AxisPosition.Bottom)
             {
-                return AxisPosition.Bottom;
+                return OxyPlot.Axes.AxisPosition.Bottom;
             }
-            else if (type == Models.Axis.AxisType.Left)
+            else if (type == APSIM.Shared.Graphing.AxisPosition.Left)
             {
-                return AxisPosition.Left;
+                return OxyPlot.Axes.AxisPosition.Left;
             }
-            else if (type == Models.Axis.AxisType.Top)
+            else if (type == APSIM.Shared.Graphing.AxisPosition.Top)
             {
-                return AxisPosition.Top;
+                return OxyPlot.Axes.AxisPosition.Top;
             }
 
-            return AxisPosition.Right;
+            return OxyPlot.Axes.AxisPosition.Right;
         }
 
         /// <summary>
@@ -1652,16 +1661,16 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private Models.Axis.AxisType AxisPositionToType(AxisPosition type)
+        private APSIM.Shared.Graphing.AxisPosition AxisPositionToType(OxyPlot.Axes.AxisPosition type)
         {
-            if (type == AxisPosition.Bottom)
-                return Models.Axis.AxisType.Bottom;
-            else if (type == AxisPosition.Left)
-                return Models.Axis.AxisType.Left;
-            else if (type == AxisPosition.Top)
-                return Models.Axis.AxisType.Top;
+            if (type == OxyPlot.Axes.AxisPosition.Bottom)
+                return APSIM.Shared.Graphing.AxisPosition.Bottom;
+            else if (type == OxyPlot.Axes.AxisPosition.Left)
+                return APSIM.Shared.Graphing.AxisPosition.Left;
+            else if (type == OxyPlot.Axes.AxisPosition.Top)
+                return APSIM.Shared.Graphing.AxisPosition.Top;
 
-            return Models.Axis.AxisType.Right;
+            return APSIM.Shared.Graphing.AxisPosition.Right;
         }
 
         /// <summary>
@@ -1673,26 +1682,38 @@
         {
             try
             {
+                OnPlotClick?.Invoke(this, EventArgs.Empty);
+                OnAxisClick?.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
+                OnLegendClick?.Invoke(this, new LegendClickArgs());
+                OnTitleClick?.Invoke(this, EventArgs.Empty);
+                OnAnnotationClick?.Invoke(this, EventArgs.Empty);
                 Point location = new Point((int)e.Position.X, (int)e.Position.Y);
                 Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
 
-                Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
-                Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                if (legendArea.Contains(location))
+                IEnumerable<Cairo.Rectangle> legends;
+
+                legends = plot1.Model.Legends.Select(l => l.LegendArea.ToRect(true));
+
+                foreach (Cairo.Rectangle legendRect in legends)
                 {
-                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
-                    int seriesIndex = y / itemHeight;
-                    if (this.OnLegendClick != null)
+                    Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
+                    if (legendArea.Contains(location))
                     {
-                        LegendClickArgs args = new LegendClickArgs();
-                        args.SeriesIndex = seriesIndex;
-                        args.ControlKeyPressed = e.IsControlDown;
-                        this.OnLegendClick.Invoke(sender, args);
+                        int y = Convert.ToInt32(location.Y - legendRect.Y, CultureInfo.InvariantCulture);
+                        int itemHeight = Convert.ToInt32(legendRect.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                        int seriesIndex = y / itemHeight;
+                        if (this.OnLegendClick != null)
+                        {
+                            LegendClickArgs args = new LegendClickArgs();
+                            args.SeriesIndex = seriesIndex;
+                            args.ControlKeyPressed = e.IsControlDown;
+                            this.OnLegendClick.Invoke(sender, args);
+                            return;
+                        }
                     }
                 }
-                else if (plotArea.Contains(location))
+                if (plotArea.Contains(location))
                 {
                     bool userClickedOnAnnotation = false;
                     foreach (var annotation in this.plot1.Model.Annotations)
@@ -1714,7 +1735,7 @@
                     Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
                     Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
 
-                    if (this.GetAxis(Models.Axis.AxisType.Top) != null)
+                    if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                     {
                         titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
                         topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
@@ -1732,21 +1753,21 @@
 
                     if (this.OnAxisClick != null)
                     {
-                        if (leftAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Left) != null)
+                        if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Left);
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
                         }
-                        else if (topAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Top) != null)
+                        else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Top);
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
                         }
-                        else if (rightAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Right) != null)
+                        else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Right);
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
                         }
-                        else if (bottomAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Bottom) != null)
+                        else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Bottom);
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                         }
                     }
                 }
@@ -1775,51 +1796,51 @@
             }
         }
 
-        public Models.Axis[] Axes
+        public IEnumerable<APSIM.Shared.Graphing.Axis> Axes
         {
             get
             {
-                List<Models.Axis> axes = new List<Models.Axis>();
-                foreach (var oxyAxis in plot1.Model.Axes)
-                {
-                    var axis = new Models.Axis();
-                    axis.CrossesAtZero = oxyAxis.PositionAtZeroCrossing;
-                    axis.DateTimeAxis = oxyAxis is DateTimeAxis;
-                    axis.Interval = oxyAxis.ActualMajorStep;
-                    axis.Inverted = MathUtilities.FloatsAreEqual(oxyAxis.StartPosition, 1);
-                    axis.Maximum = oxyAxis.ActualMaximum;
-                    axis.Minimum = oxyAxis.ActualMinimum;
-                    axis.Title = oxyAxis.Title;
-                    axis.Type = AxisPositionToType(oxyAxis.Position);
-
-                    axes.Add(axis);
-                }
-
-                return axes.ToArray();
+                return plot1.Model.Axes.Select(axis => new APSIM.Shared.Graphing.Axis(
+                    axis.Title,
+                    AxisPositionToType(axis.Position),
+                    MathUtilities.FloatsAreEqual(axis.StartPosition, 1),
+                    axis.PositionAtZeroCrossing,
+                    axis.ActualMinimum,
+                    axis.ActualMaximum,
+                    axis.ActualMajorStep
+                ));
             }
         }
+
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        public double AxisMaximum(Models.Axis.AxisType axisType)
+        public double AxisMaximum(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
             {
-                if (double.IsNaN(axis.Maximum))
-                    return axis.ActualMaximum;
-                else
-                    return axis.Maximum;
+                return AxisMaximum(axis);
             }
             else
                 return double.NaN;
         }
 
+        private double AxisMaximum(OxyPlot.Axes.Axis axis)
+        {
+            if (double.IsNaN(axis.Maximum))
+                return axis.ActualMaximum;
+            else
+                return axis.Maximum;
+        }
+
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        public double AxisMinimum(Models.Axis.AxisType axisType)
+        public double AxisMinimum(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1837,7 +1858,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public string AxisTitle(Models.Axis.AxisType axisType)
+        public string AxisTitle(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1850,7 +1871,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public double AxisMajorStep(Models.Axis.AxisType axisType)
+        public double AxisMajorStep(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 

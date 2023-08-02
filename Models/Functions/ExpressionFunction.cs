@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Reflection;
-
-using Models.Core;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -17,7 +13,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ExpressionFunction : Model, IFunction, ICustomDocumentation
+    public class ExpressionFunction : Model, IFunction
     {
         /// <summary>The expression.</summary>
         [Core.Description("Expression")]
@@ -102,13 +98,13 @@ namespace Models.Functions
                     Array arr = sometypeofobject as Array;
                     symFilled.m_values = new double[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i), 
+                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i),
                                                                  System.Globalization.CultureInfo.InvariantCulture);
                 }
                 else if (sometypeofobject is IFunction)
                     symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
                 else
-                    symFilled.m_value = Convert.ToDouble(sometypeofobject, 
+                    symFilled.m_value = Convert.ToDouble(sometypeofobject,
                                                          System.Globalization.CultureInfo.InvariantCulture);
                 varFilled.Add(symFilled);
             }
@@ -123,7 +119,7 @@ namespace Models.Functions
             fn.EvaluatePostfix();
             if (fn.Error)
             {
-               // throw new Exception(fn.ErrorDescription);
+                throw new Exception(fn.ErrorDescription);
             }
         }
 
@@ -158,32 +154,17 @@ namespace Models.Functions
                 return fn.Result;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            string st = Expression.Replace(".Value()", "");
+            st = st.Replace("*", "x");
+            yield return new Paragraph($"{Name} = {st}");
 
-
-                string st = Expression.Replace(".Value()", "");
-                st = st.Replace("*", "x");
-                tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
-
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-
-            }
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
         }
-
     }
 }
-
-

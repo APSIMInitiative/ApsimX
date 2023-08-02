@@ -1,7 +1,8 @@
-﻿namespace Models.Interfaces
+﻿using System;
+using Models.Core;
+
+namespace Models.Interfaces
 {
-    using Models.Core;
-    using System;
 
     /// <summary>A weather interface.</summary>
     public interface IWeather
@@ -38,7 +39,7 @@
 
         /// <summary> Gets or sets the CO2 level. If not specified in the weather file the default is 350.</summary>
         double CO2 { get; set; }
-        
+
         /// <summary>Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.</summary>
         double AirPressure { get; set; }
 
@@ -82,7 +83,7 @@
     /// Structure containing daily met data variables
     /// </summary>
     [Serializable]
-    public class DailyMetDataFromFile: Model
+    public class DailyMetDataFromFile : Model
     {
         /// <summary>Gets or sets the maximum temperature (oc)</summary>
         public double MaxT { get; set; }
@@ -119,5 +120,25 @@
 
         /// <summary>Daily co2 level.</summary>
         public double CO2 { get; set; }
+
+        /// <summary>
+        /// Raw data straight from the met file. This can be used to access
+        /// non-standard variables which aren't auto-mapped to properties.
+        /// </summary>
+        public object[] Raw { get; set; }
+    }
+
+    ///<summary>
+    /// Stores a weather data file with a datetime it was read from
+    ///</summary>
+    [Serializable]
+    public class WeatherRecordEntry
+    {
+        /// <summary>Date this weather was recorded on</summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>The weather data</summary>
+        public DailyMetDataFromFile MetData { get; set; }
+        
     }
 }

@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Models.Core;
+using StdUnits;
+using static Models.Core.Overrides;
+
 namespace Models.GrazPlan
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using StdUnits;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
 
     /// <summary>Encapsulates a parameter set for an animal.</summary>
     [Serializable]
@@ -149,7 +150,7 @@ namespace Models.GrazPlan
         /// <param name="name">Name of the animal parameter set.</param>
         /// <param name="animalTypeString">The animal type.</param>
         /// <param name="parameters">The parameter values to apply.</param>
-        public Genotype(string name, string animalTypeString, List<PropertyReplacement> parameters)
+        public Genotype(string name, string animalTypeString, List<Override> parameters)
         {
             for (int i = 0; i < ConceiveSigs.Length; i++)
                 ConceiveSigs[i] = new double[2];
@@ -158,7 +159,7 @@ namespace Models.GrazPlan
                 Animal = GrazType.AnimalType.Cattle;
             else if (animalTypeString == "sheep")
                 Animal = GrazType.AnimalType.Sheep;
-            parameters.ForEach(o => o.Replace(this));
+            Overrides.Apply(this, parameters);
             PotFleeceWt = FleeceRatio * BreedSRW;
             SetPeakMilk(IntakeC[11] * BreedSRW);
         }
@@ -417,9 +418,9 @@ namespace Models.GrazPlan
         public double FleeceYield { get { return WoolC[3]; } }
 
         /// <summary>Conception values</summary>
-        public double[] Conceptions 
-        { 
-            get 
+        public double[] Conceptions
+        {
+            get
             {
                 double[] result = new double[4];
                 double fCR1 = 0.0;
@@ -438,7 +439,7 @@ namespace Models.GrazPlan
                     result[N] = 0.0;
 
                 return result;
-            } 
+            }
         }
 
         /// <summary>Get gestation</summary>
@@ -483,13 +484,13 @@ namespace Models.GrazPlan
         /// <param name="conceptions">Conception values.</param>
         /// <param name="matureDeathRate">Mature animal death rate.</param>
         /// <param name="weanerDeathRate">Weaner death rate.</param>
-        public void InitialiseWithParams(double srw = double.NaN, 
+        public void InitialiseWithParams(double srw = double.NaN,
                                          double potentialFleeceWeight = double.NaN,
                                          double maxMicrons = double.NaN,
                                          double fleeceYield = double.NaN,
                                          double potMilkYield = double.NaN,
                                          double[] conceptions = null,
-                                         double matureDeathRate = double.NaN, 
+                                         double matureDeathRate = double.NaN,
                                          double weanerDeathRate = double.NaN)
         {
             if (!double.IsNaN(srw))

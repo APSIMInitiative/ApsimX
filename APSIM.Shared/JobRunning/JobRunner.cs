@@ -125,7 +125,7 @@
                     foreach (var (job, jobManager) in GetJobs())
                     {
                         if (cancelToken.IsCancellationRequested)
-                            return;
+                            break;
 
                         // Wait until we have a spare processor to run a job.
                         if (multiThreaded)
@@ -186,6 +186,7 @@
                     // Run job.
                     Prepare(job);
                     Run(job);
+                    Cleanup(job);
                 }
                 catch (Exception err)
                 {
@@ -195,7 +196,8 @@
                 if (!(job is JobRunnerSleepJob))
                 {
                     // Signal to JobManager the job has finished.
-                    InvokeJobCompleted(job, jobManager, startTime, error);
+                    if (jobManager.NotifyWhenJobComplete)
+                        InvokeJobCompleted(job, jobManager, startTime, error);
 
                     lock (runningLock)
                     {
@@ -221,6 +223,12 @@
         /// </summary>
         /// <param name="job">The job to be run.</param>
         protected virtual void Run(IRunnable job) => job.Run(cancelToken);
+
+        /// <summary>
+        /// Cleanup a job.
+        /// </summary>
+        /// <param name="job">The job to be cleaned up.</param>
+        protected virtual void Cleanup(IRunnable job) => job.Cleanup();
 
         /// <summary>
         /// Invoke the job completed event.

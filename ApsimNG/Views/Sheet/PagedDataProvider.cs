@@ -162,7 +162,7 @@ namespace UserInterface.Views
             Cleanup();
             string filter = GetFilter();
             string sql = "CREATE TEMPORARY TABLE keyset AS " +
-                         $"SELECT rowid FROM {tableName} ";
+                         $"SELECT rowid FROM \"{tableName}\" ";
             if (!string.IsNullOrEmpty(filter))
                 sql += $"WHERE {filter}";
 
@@ -178,6 +178,10 @@ namespace UserInterface.Views
             string filter = GetFilter();
 
             var data = dataStore.GetDataUsingSql($"SELECT rowid FROM keyset WHERE rowid >= {from+1} ORDER BY rowid LIMIT {count}");
+
+            if (data is null)
+                return "";
+
             var rowIds = DataTableUtilities.GetColumnAsIntegers(data, "rowid");
             var rowIdsCSV = StringUtilities.Build(rowIds, ",");
 
@@ -204,10 +208,12 @@ namespace UserInterface.Views
         private void GetRowCount()
         {
             string filter = GetFilter();
-            var sql = $"SELECT COUNT(*) FROM {tableName}";
+            var sql = $"SELECT COUNT(*) FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
-            var table = dataStore.GetDataUsingSql(sql);
+            
+            // Null conditional used to handle the edge case where data does not contain CheckpointID
+            var table = dataStore.GetDataUsingSql(sql) ?? dataStore.GetDataUsingSql($"SELECT COUNT(*) FROM {tableName}");
             RowCount = Convert.ToInt32(table.Rows[0][0]) + 1; // add a row for headings.
             NumHeadingRows = 1;
             if (units != null)
@@ -278,6 +284,14 @@ namespace UserInterface.Views
         }
 
 
+        /// <summary>Is the column readonly?</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public bool IsColumnReadonly(int colIndex)
+        {
+            return false;
+        }
+
+
         /// <summary>
         ///  Encapsulates a page of DataTable rows.
         /// </summary>
@@ -324,6 +338,6 @@ namespace UserInterface.Views
             {
                 return data.Rows[rowIndex - start][columnIndex];
             }
-}
+        }
     }
 }

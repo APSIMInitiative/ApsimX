@@ -1,14 +1,14 @@
-﻿using System;
+using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Globalization;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
 
 namespace Models
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
@@ -572,7 +572,7 @@ namespace Models
             public double[] indivPlantArea = new double[nFacets];
         }
 
-// #pragma warning disable 0649
+        // #pragma warning disable 0649
 
         [Serializable]
         private struct Globals
@@ -642,7 +642,7 @@ namespace Models
             double[] thickness = null;
             if (soilPhysical != null)
                 thickness = soilPhysical.Thickness;
-          
+
             if (SoilDataSource == SoilDataSourceEnum.APSIM || SoilDataSource == SoilDataSourceEnum.APSIMPhysical)
             {
                 nSoilLayers = thickness.Length;
@@ -702,11 +702,11 @@ namespace Models
                             sand[0] += soilPhysical.ParticleSizeSand[i] * weight;
                             silt[0] += soilPhysical.ParticleSizeSilt[i] * weight;
                             clay[0] += soilPhysical.ParticleSizeClay[i] * weight;
-                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0])); 
+                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0]));
                             //if (soilPhysical.Rocks != null)
                             //    gravel[0] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[0] += soilPhysical.BD[i] * weight;
-                            organicCarbon[0] += initial.OC[i] * weight; 
+                            organicCarbon[0] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += soilPhysical.DUL[i] * weight;
@@ -723,7 +723,7 @@ namespace Models
                             //if (soilPhysical.Rocks != null)
                             //    gravel[3] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[3] += soilPhysical.BD[i] * weight;
-                            organicCarbon[3] += initial.OC[i] * weight;
+                            organicCarbon[3] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += soilPhysical.DUL[i] * weight;
@@ -760,7 +760,7 @@ namespace Models
                             //if (soilPhysical.Rocks != null)
                             //    gravel[0] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[0] += soilPhysical.BD[i] * weight;
-                            organicCarbon[0] += initial.OC[i] * weight;
+                            organicCarbon[0] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += soilPhysical.DUL[i] * weight;
@@ -777,7 +777,7 @@ namespace Models
                             //if (soilPhysical.Rocks != null)
                             //    gravel[1] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[1] += soilPhysical.BD[i] * weight;
-                            organicCarbon[1] += initial.OC[i] * weight;
+                            organicCarbon[1] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[1] += soilPhysical.DUL[i] * weight;
@@ -794,7 +794,7 @@ namespace Models
                             //if (soilPhysical.Rocks != null)
                             //    gravel[2] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[2] += soilPhysical.BD[i] * weight;
-                            organicCarbon[2] += initial.OC[i] * weight;
+                            organicCarbon[2] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[2] += soilPhysical.DUL[i] * weight;
@@ -811,7 +811,7 @@ namespace Models
                             //if (soilPhysical.Rocks != null)
                             //    gravel[3] += soilPhysical.Rocks[i] * weight;
                             bulkDensity[3] += soilPhysical.BD[i] * weight;
-                            organicCarbon[3] += initial.OC[i] * weight;
+                            organicCarbon[3] += organic.Carbon[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += soilPhysical.DUL[i] * weight;
@@ -833,7 +833,7 @@ namespace Models
                     //if (soilPhysical.Rocks != null)
                     //    Array.Copy(soilPhysical.Rocks, gravel, nSoilLayers);
                     Array.Copy(soilPhysical.BD, bulkDensity, nSoilLayers);
-                    Array.Copy(initial.OC, organicCarbon, nSoilLayers);
+                    Array.Copy(organic.Carbon, organicCarbon, nSoilLayers);
                     if (useApsimHydraulics)
                     {
                         Array.Copy(soilPhysical.DUL, fieldCapacity, nSoilLayers);
@@ -888,7 +888,7 @@ namespace Models
             rangeType = globe.landscapeType;
             if (rangeType < 1)
             {
-                summary.WriteError(this, "A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString());
+                summary.WriteMessage(this, "A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString(), MessageType.Error);
                 rangeType = 1;
                 parms = parmArray[0];
             }
@@ -922,7 +922,7 @@ namespace Models
                     {
                         fieldCapacity[iLayer] = 0.03;
                         wiltingPoint[iLayer] = 0.01;
-                        summary.WriteWarning(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
+                        summary.WriteMessage(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString(), MessageType.Warning);
                         // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
                         // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
                     }
@@ -1006,7 +1006,8 @@ namespace Models
 
             // Standardize the three surfaces in case they sum to greater than 1.0(they are allowed to be less than 1.0, with the remainder being bare ground)
             double tempSum = globe.herbCover + globe.shrubCover + globe.decidTreeCover + globe.egreenTreeCover;
-            if (tempSum > 100.0) {
+            if (tempSum > 100.0)
+            {
                 globe.herbCover = globe.herbCover * (100.0 / tempSum);
                 globe.shrubCover = globe.shrubCover * (100.0 / tempSum);
                 globe.decidTreeCover = globe.decidTreeCover * (100.0 / tempSum);
@@ -1161,7 +1162,7 @@ namespace Models
             string allParmData;
             if (String.IsNullOrEmpty(ParameterFileName))
             {
-                allParmData =  ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt");
+                allParmData = ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt");
             }
             else
                 allParmData = File.ReadAllText(ParameterFileName);

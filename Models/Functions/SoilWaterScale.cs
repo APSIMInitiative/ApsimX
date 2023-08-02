@@ -1,13 +1,12 @@
 using System;
-using Models.Core;
-using Models.Soils;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// A simple scale to convert soil water content into a value between 0 and 2 where 0 = LL15, 1 = DUL and 2 = SAT
     /// </summary>
     [Serializable]

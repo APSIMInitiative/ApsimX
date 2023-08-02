@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml;
+using APSIM.Shared.Documentation;
 using Models.Core;
 
 namespace Models.Functions
 {
-    /// <summary>
-    ///[Name] is calculated as the minimum of [ChildFunctionList]
-    /// 
-    /// Where:
-    /// </summary>
-    /// \pre All children have to contain a public function "Value"
-    /// \retval Maximum value of all children of this node. Return -999999999 if no child.
+    /// <summary>This class calculates the minimum of all child functions.</summary>
     [Serializable]
     [Description("Returns the maximum value of all childern functions")]
     public class MaximumFunction : Model, IFunction
@@ -42,6 +35,13 @@ namespace Models.Functions
             {
                 return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
             }
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in MinimumFunction.DocumentMinMaxFunction("Max", Name, Children))
+                yield return tag;
         }
     }
 }

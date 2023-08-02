@@ -17,7 +17,7 @@
         private string jobName;
 
         /// <summary>The collection of jobs to run</summary>
-        private Runner jobRunner;
+        private IRunner jobRunner;
 
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -32,7 +32,7 @@
         /// <param name="name">Name of the job to be displayed in the UI..</param>
         /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        public RunCommand(string name, Runner runner, ExplorerPresenter presenter)
+        public RunCommand(string name, IRunner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;
             this.jobRunner = runner;
@@ -40,7 +40,12 @@
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
 
             // Ensure that errors are displayed in GUI live as they occur.
-            runner.ErrorHandler = e => explorerPresenter.MainPresenter.ShowError(e, false);
+            object errorMutex = new object();
+            runner.ErrorHandler = e =>
+            {
+                lock (errorMutex)
+                    explorerPresenter.MainPresenter.ShowError(e, false);
+            };
 
             jobRunner.AllSimulationsCompleted += OnAllJobsCompleted;
         }
@@ -88,7 +93,11 @@
                 explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
             // We don't need to display error messages now - they are displayed as they occur.
 
+#if NET6_0_OR_GREATER
+            if (!Configuration.Settings.Muted && OperatingSystem.IsWindows())
+#else
             if (!Configuration.Settings.Muted)
+#endif
             {
                 // Play a completion sound.
                 SoundPlayer player = new SoundPlayer();

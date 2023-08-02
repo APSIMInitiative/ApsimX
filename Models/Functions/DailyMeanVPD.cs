@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions
 {
@@ -14,7 +14,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class DailyMeanVPD : Model, IFunction, ICustomDocumentation
+    public class DailyMeanVPD : Model, IFunction
     {
         #region Class Data Members
 
@@ -25,7 +25,7 @@ namespace Models.Functions
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
-        
+
         #endregion
 
         /// <summary>Gets the value.</summary>
@@ -41,25 +41,13 @@ namespace Models.Functions
             return MaximumVPDWeight * VPDmaxt + (1 - MaximumVPDWeight) * VPDmint;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // add graph and table.
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
+            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.");
+            yield return new Paragraph($"*MaximumVPDWeight = {MaximumVPDWeight}*");
         }
     }
 }

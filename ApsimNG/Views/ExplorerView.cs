@@ -20,6 +20,7 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private VBox rightHandView;
+        private HPaned hpaned1;
         private Gtk.TreeView treeviewWidget;
         private MarkdownView descriptionView;
 
@@ -29,6 +30,8 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
+
+            hpaned1 = (HPaned)builder.GetObject("hpaned1");
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
@@ -48,21 +51,23 @@ namespace UserInterface.Views
         /// <summary>The toolstrip at the top of the explorer view</summary>
         public IToolStripView ToolStrip { get; private set; }
 
+        /// <summary>The tree on the left side of the explorer view</summary>
+        public int DividerPosition
+        {
+            get { return hpaned1.Position; }
+            set { hpaned1.Position = value; }
+        }
+
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
         public void AddRightHandView(object control)
         {
+
             // Remove existing right hand view.
-            foreach (var child in rightHandView.Children)
-            {
-                if (child != (descriptionView as ViewBase)?.MainWidget)
-                {
-                    rightHandView.Remove(child);
-                    child.Cleanup();
-                }
-            }
+            if (CurrentRightHandView != null)
+                CurrentRightHandView.Dispose();
 
             ViewBase view = control as ViewBase;
             if (view != null)
@@ -83,9 +88,10 @@ namespace UserInterface.Views
             {
                 if (descriptionView != null)
                 {
-                    Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
-                    rightHandView.Remove(descriptionWidget);
-                    descriptionWidget.Cleanup();
+                    descriptionView.Dispose();
+                    //Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
+                    //rightHandView.Remove(descriptionWidget);
+                    //descriptionWidget.Dispose();
                 }
                 descriptionView = null;
             }
@@ -94,7 +100,19 @@ namespace UserInterface.Views
                 if (descriptionView == null)
                 {
                     descriptionView = new MarkdownView(this);
+                    // Set PropagateNaturalHeight to true, to ensure that the
+                    // scrolled window requests enough space to not require a
+                    // scrollbar by default. We could change MarkdownView to
+                    // always do this, but it's used in lots of other places, so
+                    // that may have unintended consequences and would require
+                    // more extensive testing.
+                    if (descriptionView.MainWidget is ScrolledWindow scroller)
+                        scroller.PropagateNaturalHeight = true;
                     rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                    // Let Gtk catch up with things; otherwise too much space
+                    // is allocated to the new description view. Is there a better way?
+                    while (Gtk.Application.EventsPending())
+                        Gtk.Application.RunIteration();
                 }
                 descriptionView.Text = description;
             }
@@ -103,20 +121,9 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-#if NETFRAMEWORK
-            // Create a Bitmap and draw the panel
-            int width;
-            int height;
-            Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
-            panelWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            return bitmap;
-#else
+
             throw new NotImplementedException();
-#endif
+
         }
 
         /// <summary>
@@ -159,7 +166,7 @@ namespace UserInterface.Views
                     foreach (Widget child in rightHandView.Children)
                     {
                         rightHandView.Remove(child);
-                        child.Cleanup();
+                        child.Dispose();
                     }
                 }
                 ToolStrip.Destroy();

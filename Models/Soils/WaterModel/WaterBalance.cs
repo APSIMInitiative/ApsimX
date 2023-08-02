@@ -1,15 +1,15 @@
-﻿namespace Models.WaterModel
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models.Soils.Nutrients;
-    using Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The SoilWater module is a cascading water balance model that owes much to its precursors in 
@@ -41,21 +41,24 @@
     /// This contrasts with models such as SWIM that solve simultaneously a set of differential equations that describe the flow processes.
     /// </summary>
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.ProfileView")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : ModelCollectionFromResource, ISoilWater
+    public class WaterBalance : Model, ISoilWater, ITabularData
     {
+        private Physical physical;
+        private HyProps hyprops = new HyProps();
+
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link]
-        Sample initial = null;
+        Water water = null;
 
         [Link]
         private ISummary summary = null;
@@ -193,10 +196,18 @@
         [Description("Catchment area for lateral flow calculations")]
         public double CatchmentArea { get; set; } = 10;
 
-        /// <summary>Depth strings. Wrapper around Thickness.</summary>
-        [JsonIgnore]
-        [Description("Depth")]
+        /// <summary>
+        /// Gets the matric Potential at DUL (cm)
+        /// </summary>
+        [Description("Matric Potential at DUL (cm)")]
         [Units("cm")]
+        [Bounds(Lower = -1e3, Upper = 0.0)]
+        public double PSIDul { get; set; } = -100.0;
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Units("mm")]
+        [Summary]
+        [JsonIgnore]
         public string[] Depth
         {
             get
@@ -210,20 +221,21 @@
         }
 
         /// <summary>Soil layer thickness for each layer (mm).</summary>
-        [Units("mm")]
-        [Description("Soil layer thickness for each layer")]
         public double[] Thickness { get; set; }
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [JsonIgnore]
-        public double[] Water 
-        { 
-            get { return waterMM; } 
-            set 
-            { 
-                waterMM = value; 
-                waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
-            } 
+        public double[] Water
+        {
+            get { return waterMM; }
+            set
+            {
+                waterMM = value;
+                if (value == null)
+                    waterVolumetric = null;
+                else
+                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness);
+            }
         }
 
         /// <summary>Amount of water in the soil (mm/mm).</summary>
@@ -237,6 +249,10 @@
                 waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
         }
+
+        /// <summary>Water potential of layer</summary>
+        [Units("cm")]
+        public double[] PSI { get; private set; }
 
         /// <summary>Runon (mm).</summary>
         [JsonIgnore]
@@ -275,6 +291,10 @@
         /// <summary>Drainage (mm).</summary>
         [JsonIgnore]
         public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
+
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain => 0;
 
         /// <summary>Evaporation (mm).</summary>
         [JsonIgnore]
@@ -343,10 +363,10 @@
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.SWCON for SWCON in standard thickness
         /// </remarks>
+        [Summary]
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("/d")]
         [Caption("SWCON")]
-        [Description("Fractional amount of water above DUL that can drain under gravity per day (SWCON)")]
         public double[] SWCON { get; set; }
 
         /// <summary>Lateral saturated hydraulic conductivity (KLAT).</summary>
@@ -355,10 +375,10 @@
         /// At thicknesses specified in "SoilWater" node of GUI.
         /// Use Soil.KLAT for KLAT in standard thickness
         /// </remarks>
+        [Summary]
         [Bounds(Lower = 0, Upper = 1.0e3F)]
         [Units("mm/d")]
         [Caption("Klat")]
-        [Description("Lateral saturated hydraulic conductivity (KLAT)")]
         public double[] KLAT { get; set; }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
@@ -372,6 +392,10 @@
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        [JsonIgnore]
+        public double LeachCl => 0.0;
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -540,6 +564,12 @@
 
             // Now that we've finished moving water, calculate volumetric water
             waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
+
+            // Update the variable in the water model.
+            water.Volumetric = waterVolumetric;
+
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -770,7 +800,7 @@
         ///<summary>Perform a reset</summary>
         public void Reset()
         {
-            summary.WriteMessage(this, "Resetting Soil Water Balance");
+            summary.WriteMessage(this, "Resetting Soil Water Balance", MessageType.Diagnostic);
             Initialise();
         }
 
@@ -780,7 +810,7 @@
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-            Water = initial.SWmm;
+            Water = water.InitialValuesMM;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;
@@ -788,6 +818,11 @@
             Flow = null;
             evaporationModel.Initialise();
             irrigations = new List<IrrigationApplicationType>();
+
+            int n = soilPhysical.Thickness.Length;
+            hyprops.ResizePropfileArrays(n);
+            hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+            PSI = new double[n];
         }
 
         ///<summary>Perform tillage</summary>
@@ -806,15 +841,61 @@
             runoffModel.TillageCnRed = reduction;
             runoffModel.CumWaterSinceTillage = 0.0;
 
-            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
+            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}",
                                      reduction, Data.cn_rain);
-            summary.WriteMessage(this, line);
+            summary.WriteMessage(this, line, MessageType.Diagnostic);
         }
 
         ///<summary>Perform tillage</summary>
         public void Tillage(string tillageType)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        public TabularData GetTabularData()
+        {
+            return new TabularData(Name, new TabularData.Column[]
+            {
+                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
+                new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
+            });
+        }
+
+        /// <summary>Gets the model ready for running in a simulation.</summary>
+        /// <param name="targetThickness">Target thickness.</param>
+        public void Standardise(double[] targetThickness)
+        {
+            SetThickness(targetThickness);
+        }
+
+        /// <summary>Sets the soil water thickness.</summary>
+        /// <param name="thickness">Thickness to change soil water to.</param>
+        private void SetThickness(double[] thickness)
+        {
+            if (!MathUtilities.AreEqual(thickness, Thickness))
+            {
+                KLAT = SoilUtilities.MapConcentration(KLAT, Thickness, thickness, MathUtilities.LastValue(KLAT));
+                SWCON = SoilUtilities.MapConcentration(SWCON, Thickness, thickness, 0.0);
+
+                Thickness = thickness;
+            }
+            if (SWCON == null)
+                SWCON = MathUtilities.CreateArrayOfValues(0.3, Thickness.Length);
+            MathUtilities.ReplaceMissingValues(SWCON, 0.0);
+        }
+
+
+        /// <summary>The soil physical node.</summary>
+        private Physical Physical
+        {
+            get
+            {
+                if (physical == null)
+                    physical = FindInScope<Physical>();
+                return physical;
+            }
         }
     }
 }

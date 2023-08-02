@@ -1,23 +1,23 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Models.PMF
 {
     /// <summary>
-    /// Priority then Relative allocation rules used to determine partitioning
+    /// Priority then Relative allocation rules used to determine partitioning.
+    /// 
+    /// Arbitration is performed in two passes for each of the biomass supply sources.
+    /// On the first pass, structural and metabolic biomass is allocated to each organ
+    /// based on their order of priority with higher priority organs recieving their
+    /// full demand first. On the second pass any remaining biomass is allocated to
+    /// non-structural demands based on the relative demand from all organs.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     [ValidParent(ParentType = typeof(IArbitrator))]
-    public class PrioritythenRelativeAllocation : Model, IArbitrationMethod, ICustomDocumentation
+    public class PrioritythenRelativeAllocation : Model, IArbitrationMethod
     {
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
@@ -55,29 +55,6 @@ namespace Models.PMF
                     NotAllocated -= StorageAllocation;
                     TotalAllocated += StorageAllocation;
                 }
-            }
-        }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                string PriorityTheRelativeDocStirng = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first. On the second pass any remaining biomass is allocated to non-structural demands based on the relative demand from all organs.";
-
-                tags.Add(new AutoDocumentation.Paragraph(PriorityTheRelativeDocStirng, indent));
             }
         }
     }

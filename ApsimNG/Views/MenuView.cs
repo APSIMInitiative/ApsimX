@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Utility;
 
     /// <summary>
     /// Encapsulates a menu
@@ -26,15 +27,15 @@
         /// <summary>Destroy the menu</summary>
         public void Destroy()
         {
-            ClearMenu();
-            menu.Cleanup();
+            menu.Clear();
+            menu.Dispose();
         }
 
         /// <summary>Populate the main menu tool strip.</summary>
         /// <param name="menuDescriptions">Descriptions for each item.</param>
         public void Populate(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearMenu();
+            menu.Clear();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -46,10 +47,13 @@
                 }
                 else
                 {
-                    ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
+                    ManifestResourceInfo info = null;
+                    if (!string.IsNullOrEmpty(description.ResourceNameForImage))
+                        info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
                     if (info != null)
                     {
-                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(description.Name, new Gtk.Image(null, description.ResourceNameForImage));
+                        //Add a space to the entries with icons so the text isn't up against the icon
+                        MenuItem imageItem = WidgetExtensions.CreateImageMenuItem(" " + description.Name, new Gtk.Image(null, description.ResourceNameForImage));
                         item = imageItem;
                     }
                     else
@@ -85,7 +89,8 @@
                     {
                     }
                 }
-                item.Activated += description.OnClick;
+                if (description.OnClick != null)
+                    item.Activated += description.OnClick;
                 if (description.FollowsSeparator && (menu.Children.Length > 0))
                 {
                     menu.Append(new SeparatorMenuItem());
@@ -108,29 +113,6 @@
         public void Show()
         {
             menu.Popup();
-        }
-
-        /// <summary>Clear the menu</summary>
-        private void ClearMenu()
-        {
-            foreach (Widget w in menu)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-                menu.Remove(w);
-                w.Cleanup();
-            }
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// 
@@ -60,7 +61,7 @@
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
-                                                           allLinks:true))
+                                                           allLinks: true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 
@@ -144,7 +145,11 @@
                             {
                                 IModel ancestor = GetParent(model, fieldType);
                                 if (ancestor == null)
-                                    throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                {
+                                    if (throwOnFail)
+                                        throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                    continue;
+                                }
                                 matches.Add(ancestor);
                             }
                             else
@@ -152,8 +157,8 @@
                         }
                         else if (link.Type == LinkType.Path)
                         {
-                            var locater = new Locater();
-                            object match = locater.Get(link.Path, obj as Model);
+                            var locator = new Locator(obj as Model);
+                            object match = locator.Get(link.Path);
                             if (match != null)
                                 matches.Add(match);
                         }
@@ -181,9 +186,9 @@
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0 && !throwOnFail)
+                    else if (matches.Count == 0)
                     {
-                        if (!link.IsOptional)
+                        if (throwOnFail && !link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
                     else if (matches.Count >= 2 && link.Type != LinkType.Scoped)

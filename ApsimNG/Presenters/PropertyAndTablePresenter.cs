@@ -61,6 +61,7 @@
         {
             view.Grid2.CellsChanged -= OnCellValueChanged2;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            intellisense.Cleanup();
             view.Grid2.ContextItemsNeeded -= OnContextItemsNeeded;
             propertyPresenter.Detach();
             gridPresenter.Detach();

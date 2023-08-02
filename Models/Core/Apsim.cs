@@ -1,15 +1,13 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Factorial;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using APSIM.Shared.Utilities;
-    using Functions;
-    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -64,18 +62,9 @@
             }
             try
             {
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new MemoryStream();
-                using (stream)
-                {
-                    formatter.Serialize(stream, model);
-
-                    stream.Seek(0, SeekOrigin.Begin);
-                    T newModel = (T)formatter.Deserialize(stream);
-
-                    newModel.ParentAllDescendants();
-                    return newModel;
-                }
+                T newModel = (T)ReflectionUtilities.Clone(model);
+                newModel.ParentAllDescendants();
+                return newModel;
             }
             finally
             {
@@ -90,13 +79,15 @@
         /// <returns>True if child can be added.</returns>
         public static bool IsChildAllowable(object parent, Type childType)
         {
+            if (childType.IsInterface || childType.IsAbstract)
+                return false;
+
             if (childType == typeof(Simulations))
                 return false;
 
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
-                parent.GetType() == typeof(CompositeFactor) ||
-                parent.GetType() == typeof(Replacements))
+                parent.GetType() == typeof(CompositeFactor))
                 return true;
 
             // Functions are currently allowable anywhere
@@ -124,6 +115,9 @@
         public static IEnumerable<ModelDescription> GetAllowableChildModels(object parent)
         {
             var allowableModels = new SortedSet<ModelDescription>();
+
+            // Adding in replacements folder instance.
+            allowableModels.Add(new ModelDescription(typeof(Folder), "Replacements", null));
 
             // Add in all types that implement the IModel interface.
             foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel).Assembly, typeof(IModel)))
@@ -178,7 +172,7 @@
 
             // Remove models that cannot be added to parent.
             allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.ModelType));
-            
+
             //allowableModels.Sort(new ReflectionUtilities.TypeComparer());
             return allowableModels;
         }
@@ -187,21 +181,21 @@
         public class ModelDescription : IComparable<ModelDescription>
         {
             /// <summary>Name of resource.</summary>
-            public string ResourceString {get; set; }
+            public string ResourceString { get; set; }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t) 
-            { 
+            public ModelDescription(Type t)
+            {
                 ModelType = t;
                 ModelName = ModelType.Name;
             }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t, string name, string resourceName) 
-            { 
+            public ModelDescription(Type t, string name, string resourceName)
+            {
                 ModelType = t;
                 ModelName = name;
-                ResourceString = resourceName; 
+                ResourceString = resourceName;
             }
 
             /// <summary>Type of model.</summary>

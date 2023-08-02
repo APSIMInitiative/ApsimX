@@ -253,6 +253,7 @@
             sheet.NumberFrozenColumns = 1;
             sheet.Width = 80;
             sheet.Height = 80;
+            sheet.RowCount = sheet.DataProvider.RowCount;
             sheet.ColumnWidths = new int[] { 30, 40, 50, 60 };
 
             sheet.ScrollDown();

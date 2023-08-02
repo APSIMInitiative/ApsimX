@@ -18,10 +18,13 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
+            IDataStore storage = FindInScope<IDataStore>();
+            Links links = new Links(new object[1] { storage });
             foreach (IPostSimulationTool tool in FindAllChildren<IPostSimulationTool>())
             {
-                new Links(new object[1] { FindInScope<IDataStore>() }).Resolve(tool);
+                links.Resolve(tool);
                 tool.Run();
+                storage.Reader.Refresh();
             }
         }
     }

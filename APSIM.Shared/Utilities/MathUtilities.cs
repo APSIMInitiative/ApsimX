@@ -53,7 +53,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool IsGreaterThanOrEqual(double value1, double value2)
         {
-            return (value1 - value2) >= tolerance;
+            return (value1 - value2) >= tolerance || FloatsAreEqual(value1, value2);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool IsLessThanOrEqual(double value1, double value2)
         {
-            return (value2 - value1) >= tolerance;
+            return (value2 - value1) >= tolerance || FloatsAreEqual(value1, value2);
         }
 
         /// <summary>
@@ -320,6 +320,8 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Average(IEnumerable Values)
         {
+            if (Values == null)
+                return 0;
             double Sum = 0.0;
             int Count = 0;
             foreach (object Value in Values)
@@ -1741,12 +1743,15 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="items">List to search.</param>
         /// <param name="value">Item to search for.</param>
-        public static int SafeIndexOf(List<double> items, double value)
+        public static int SafeIndexOf(IEnumerable<double> items, double value)
         {
-            items.IndexOf(value);
-            for (int i = 0; i < items.Count; i++)
-                if (FloatsAreEqual(items[i], value))
+            int i = 0;
+            foreach (double item in items)
+            {
+                if (FloatsAreEqual(item, value))
                     return i;
+                i++;
+            }
             return -1;
         }
 
@@ -1782,5 +1787,50 @@ namespace APSIM.Shared.Utilities
             // add a space so that we always have something
             return returnStr;
         }
+
+        /// <summary>Changes all missing values in an array to a valid value.</summary>
+        /// <param name="values">The values to in fill.</param>
+        /// <param name="numValues">The number of values that should exist.</param>
+        /// <param name="defaultValue">The value to use if can't find any other value.</param>
+        public static double[] FillMissingValues(double[] values, int numValues, double defaultValue)
+        {
+            int numOriginalValues = 0;
+            if (values != null)
+                numOriginalValues = values.Length;
+            Array.Resize(ref values, numValues);
+            for (int i = 0; i < numValues; i++)
+            {
+                if (i >= numOriginalValues || double.IsNaN(values[i]))
+                {
+                    double validValue;
+                    if (i == 0)
+                        validValue = FindFirstValueInArray(values);
+                    else
+                        validValue = values[i - 1];
+
+                    if (double.IsNaN(validValue))
+                        values[i] = defaultValue;
+                    else
+                        values[i] = validValue;
+                }
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Find the first non NaN value in the array.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        private static double FindFirstValueInArray(double[] values)
+        {
+            for (int j = 0; j < values.Length; j++)
+                if (!double.IsNaN(values[j]))
+                    return values[j];
+
+            return double.NaN;
+        }
+
+
     }
 }

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
-    [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]
+    [Description("This resource represents a human food store (e.g. milk, eggs, wheat)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "", "Starting value");
+                Add(initialpPool, null, null, "Starting value");
             }
         }
 
@@ -144,24 +144,12 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 HumanFoodStorePool poolOfAge = Pools.Where(a => a.Age == pool.Age).FirstOrDefault();
-                if(poolOfAge is null)
+                if (poolOfAge is null)
                     Pools.Insert(0, pool);
                 else
                     poolOfAge.Add(pool.Amount);
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                base.LastGain = pool.Amount;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
             }
         }
 
@@ -175,7 +163,7 @@ namespace Models.CLEM.Resources
                 return;
 
             // if this request aims to trade with a market see if we need to set up details for the first time
-            if(request.MarketTransactionMultiplier > 0)
+            if (request.MarketTransactionMultiplier > 0)
                 FindEquivalentMarketStore();
 
             double amountRequired = request.Required;
@@ -189,8 +177,8 @@ namespace Models.CLEM.Resources
                 pool.Remove(amountToRemove, request.ActivityModel, "Consumed");
 
                 // send to market if needed
-                if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
+                if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove * request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
 
                 if (amountRequired <= 0)
                     break;
@@ -200,19 +188,7 @@ namespace Models.CLEM.Resources
             if (amountRemoved > 0)
             {
                 request.Provided = amountRemoved;
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = amountRemoved,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
         }
 
@@ -246,51 +222,17 @@ namespace Models.CLEM.Resources
                 {
                     Pools.RemoveAll(a => a.Age >= UseByAge);
                     // report spoiled loss
-                    ResourceTransaction details = new ResourceTransaction
-                    {
-                        ResourceType = this,
-                        TransactionType = TransactionType.Loss,
-                        Amount = spoiled,
-                        Activity = this,
-                        Category = "Spoiled"
-                    };
-                    LastTransaction = details;
-                    TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                    OnTransactionOccurred(te);
+                    ReportTransaction(TransactionType.Loss, spoiled, this, "", "Spoiled", this);
                 }
             }
         }
-
-        /// <summary>
-        /// Transaction occured event handler
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -305,8 +247,10 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("</span> kg");
                 }
                 else
+                {
                     if (ConvertToKg != 1)
                         htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
+                }
 
                 htmlWriter.Write("\r\n</div>");
                 if (StartingAmount > 0)
@@ -331,9 +275,9 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write(((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible");
                 htmlWriter.Write("\r\n</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

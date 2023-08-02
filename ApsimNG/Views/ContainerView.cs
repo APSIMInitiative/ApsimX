@@ -5,7 +5,7 @@ namespace UserInterface.Views
     /// <summary>A container view.</summary>
     public class ContainerView : ViewBase
     {
-        Box container;
+        Container container;
 
         /// <summary>Constructor</summary>
         public ContainerView() { }
@@ -24,14 +24,33 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            container = (Box)gtkControl;
+            container = (Container)gtkControl;
         }
 
         public void Add(Widget child)
         {
             if (container.Children.Length > 0)
                 container.Remove(container.Children[0]);
-            container.PackStart(child, true, true, 0);
+            if (container is Box box)
+                box.PackStart(child, true, true, 0);
+            else
+                container.Add(child);
+            container.ShowAll();
+        }
+
+        /// <summary>
+        /// Hide the container and all of its children.
+        /// </summary>
+        public void Hide()
+        {
+            container.Hide();
+        }
+
+        /// <summary>
+        /// Show the container and all of its children.
+        /// </summary>
+        public void Show()
+        {
             container.ShowAll();
         }
     }

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using Models.PMF;
-using Models.PMF.Interfaces;
-using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -17,7 +14,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientProportionFunctions))]
-    public class CalculateCarbonFractionFromNConc : Model, IFunction, ICustomDocumentation
+    public class CalculateCarbonFractionFromNConc : Model, IFunction
     {
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
@@ -76,12 +73,12 @@ namespace Models.PMF
 
         private double calcStructuralFraction()
         {
-            return MathUtilities.Divide(dNitrogen.ConcentrationOrFraction.Structural, dNitrogen.ConcentrationOrFraction.Storage,0);
+            return MathUtilities.Divide(dNitrogen.ConcentrationOrFraction.Structural, dNitrogen.ConcentrationOrFraction.Storage, 0);
         }
 
         private double calcMetabolicFraction()
         {
-            double critFrac = MathUtilities.Divide(dNitrogen.ConcentrationOrFraction.Metabolic, dNitrogen.ConcentrationOrFraction.Storage,0);
+            double critFrac = MathUtilities.Divide(dNitrogen.ConcentrationOrFraction.Metabolic, dNitrogen.ConcentrationOrFraction.Storage, 0);
             return critFrac - calcStructuralFraction();
         }
 
@@ -90,16 +87,16 @@ namespace Models.PMF
             return 1.0 - calcStructuralFraction() - calcMetabolicFraction();
         }
 
-        
+
 
 
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
             double fraction = CalcFraction();
-            
+
             if (Double.IsNaN(fraction))
-                    throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
+                throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
             return fraction;
         }
 
@@ -109,26 +106,24 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // add a heading
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // get description of this class
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                parentOrgan = FindParentOrgan(this.Parent);
+            // write memos
+            foreach (IModel memo in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
-                    + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
-                    + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
-            }
+            parentOrgan = FindParentOrgan(this.Parent);
+
+            // add a description of the equation for this function
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+                + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+                + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
         }
     }
 }

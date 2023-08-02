@@ -1,12 +1,11 @@
-﻿namespace Models.Storage
+﻿using System.Data;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Threading;
 
     /// <summary>Encapsulates a row to write to an SQL database.</summary>
     class WriteTableCommand : IRunnable
@@ -16,9 +15,9 @@
 
         /// <summary>The data to write to the database.</summary>
         private DataTable dataToWrite;
-        
-        /// <summary>The details of tables in the database.</summary>
-        private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>The details of the table to write to.</summary>
+        private DatabaseTableDetails tableDetails;
 
         /// <summary>Delete the existing rows first?</summary>
         private bool deleteExistingRows;
@@ -33,11 +32,13 @@
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database connection to write to.</param>
         /// <param name="dataToWrite">Data to write to table.</param>
+        /// <param name="tableDetails">The details of the table to write to.</param>
         /// <param name="deleteOldData">Delete the existing rows first?</param>
-        public WriteTableCommand(IDatabaseConnection databaseConnection, DataTable dataToWrite, bool deleteOldData)
+        public WriteTableCommand(IDatabaseConnection databaseConnection, DataTable dataToWrite, DatabaseTableDetails tableDetails, bool deleteOldData)
         {
             this.connection = databaseConnection;
             this.dataToWrite = dataToWrite;
+            this.tableDetails = tableDetails;
             this.deleteExistingRows = deleteOldData;
         }
 
@@ -55,16 +56,10 @@
         {
             if (dataToWrite.Rows.Count > 0)
             {
-                if (!tables.TryGetValue(dataToWrite.TableName, out var table))
-                {
-                    table = new DatabaseTableDetails(connection, dataToWrite.TableName);
-                    tables.Add(dataToWrite.TableName, table);
-                }
-
                 var query = new InsertQuery(dataToWrite);
 
                 // Make sure the table has the correct columns.
-                table.EnsureTableExistsAndHasRequiredColumns(dataToWrite);
+                tableDetails.EnsureTableExistsAndHasRequiredColumns(dataToWrite);
 
                 // Get a list of column names.
                 var columnNames = dataToWrite.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
@@ -91,6 +86,14 @@
                     query.Close(connection);
                 }
             }
+        }
+
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
         }
     }
 }

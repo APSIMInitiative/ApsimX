@@ -1,68 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
-using Models.Interfaces;
-using Models.PMF.Interfaces;
 
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// # Structure
-    /// 
     /// The structure model simulates morphological development of the plant to inform the Leaf class 
     /// when and how many leaves and branches appear and provides an estimate of height.
-    /// 
-    /// ## Plant and Main-Stem Population
-    /// 
-    /// The *Plant.Population* is set at sowing with information sent from a manager script 
-    /// in the Sow method.    
-    /// The *PrimaryBudNumber* is also sent with the Sow method and the main-stem 
-    /// population (*MainStemPopn*) for [Parent.Name] is calculated as:
-    /// 
-    /// *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
-    /// 
-    /// Primary bud number is > 1 for crops like potato and grape vine where there are more
-    /// than one main-stem per plant
-    /// ## Main-Stem leaf appearance
-    /// Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:
-    /// 
-    /// *LeafTipsAppeared* += *DeltaTips*
-    /// 
-    ///  Where *DeltaTips* is calculated as:
-    ///  
-    ///  *DeltaTips* = *ThermalTime*/*Phyllochron*
-    ///  
-    ///  Where *Phyllochron* is the thermal time duration between the appearance of leaf tips 
-    ///  given by:
-    /// [Document Phyllochron]
-    /// *ThermalTime* is given by:
-    /// [Document ThermalTime]
-    /// *LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where 
-    /// *FinalLeafNumber* is calculated as:
-    /// 
-    /// [Document FinalLeafNumber]
-    /// ##Branching and Branch Mortality
-    /// The total population of stems (*TotalStemPopn*) is calculated as:
-    /// 
-    /// *TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*   
-    /// 
-    /// Where *NewBranches* = *MainStemPopn* x *BranchingRate*  
-    /// 
-    /// and *BranchingRate* is given by:
-    /// 
-    /// [Document BranchingRate]
-    /// *NewlyDeadBranches* is calcualted as:
-    /// 
-    /// *NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*
-    /// 
-    /// where *BranchMortality* is given by:
-    /// 
-    /// [Document BranchMortality]
-    /// ##Height
-    ///  The Height of the crop is calculated by the *HeightModel*:
-    /// [Document HeightModel]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -298,7 +247,7 @@ namespace Models.PMF.Struct
                         // 0, because then GrowthDuration will be 0. However it can be close to 0 if final leaf #
                         // happens to have a very small fractional part (e.g. 14.00001).
                         // If your crop is never progressing to flag leaf, this might be why (try reducing epsilon).
-                        NextLeafProportion = Math.Max(1e-10,1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
+                        NextLeafProportion = Math.Max(1e-10, 1 - (leaf.InitialisedCohortNo - finalLeafNumber.Value()));
                     }
                     else
                     {
@@ -363,7 +312,7 @@ namespace Models.PMF.Struct
                         ProportionBranchMortality = PropnMortality;
 
                     }
-                    
+
                 }
             }
         }
@@ -507,8 +456,52 @@ namespace Models.PMF.Struct
                 DoLeafInitilisation();
             }
         }
-    }
-}   
 
-    
+
+        /// <summary>Document this model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph("The structure model simulates morphological development of the plant to inform the Leaf class when and how many leaves and branches appear and provides an estimate of height.");
+            yield return new Section("Plant and Main-Stem Population", new Paragraph(
+                $"The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method. " +
+                $"The *PrimaryBudNumber* is also sent with the Sow method. The main-stem population (*MainStemPopn*) for {Parent.Name} is calculated as:\n\n" +
+                $"*MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*\n\n" +
+                $"Primary bud number is > 1 for crops like potato and grape vine where there are more than one main-stem per plant"
+                ));
+
+            var tags = new List<ITag>();
+            tags.Add(new Paragraph("Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:"));
+            tags.Add(new Paragraph("*LeafTipsAppeared* += *DeltaTips*"));
+            tags.Add(new Paragraph("Where *DeltaTips* is calculated as:"));
+            tags.Add(new Paragraph("*DeltaTips* = *ThermalTime* / *Phyllochron*"));
+            tags.Add(new Paragraph("Where *Phyllochron* is the thermal time duration between the appearance of leaf tips given by:"));
+            tags.AddRange(phyllochron.Document());
+            tags.Add(new Paragraph("*ThermalTime* is given by"));
+            tags.AddRange(thermalTime.Document());
+            tags.Add(new Paragraph("*LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where *FinalLeafNumber* is calculated as:"));
+            tags.AddRange(finalLeafNumber.Document());
+            yield return new Section("Main-Stem leaf appearance", tags);
+
+            var branchingTags = new List<ITag>();
+            branchingTags.Add(new Paragraph("The total population of stems (*TotalStemPopn*) is calculated as:"));
+            branchingTags.Add(new Paragraph("*TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*"));
+            branchingTags.Add(new Paragraph("Where:"));
+            branchingTags.Add(new Paragraph("*NewBranches* = *MainStemPopn* x *BranchingRate*"));
+            branchingTags.Add(new Paragraph("*BranchingRate* is given by:"));
+            branchingTags.AddRange(branchingRate.Document());
+            branchingTags.Add(new Paragraph("*NewlyDeadBranches* is calcualted as:"));
+            branchingTags.Add(new Paragraph("*NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*"));
+            branchingTags.Add(new Paragraph("where *BranchMortality* is given by:"));
+            branchingTags.AddRange(branchMortality.Document());
+            yield return new Section("Branching and Branch Mortality", branchingTags);
+
+            var heightTags = new List<ITag>();
+            heightTags.Add(new Paragraph("The height of the crop is calculated by the *HeightModel*"));
+            heightTags.AddRange(heightModel.Document());
+            yield return new Section("Height", heightTags);
+        }
+    }
+}
+
+
 

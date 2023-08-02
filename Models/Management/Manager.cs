@@ -1,14 +1,15 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Reflection;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The manager model
@@ -24,14 +25,14 @@
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
+    public class Manager : Model
     {
         [NonSerialized]
         [Link]
         private ScriptCompiler scriptCompiler = null;
 
         /// <summary>The code to compile.</summary>
-        private string cSharpCode = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.BlankManager.cs");
+        private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
@@ -66,8 +67,8 @@
             return true;
         }
 
-        /// <summary>Gets or sets the code to compile.</summary>
-        public string Code
+        /// <summary>The array of code lines that gets stored in file</summary>
+        public string[] CodeArray
         {
             get
             {
@@ -76,6 +77,28 @@
             set
             {
                 cSharpCode = value;
+            }
+        }
+
+        /// <summary>Gets or sets the code to compile.</summary>
+        [JsonIgnore]
+        public string Code
+        {
+            get
+            {
+                string output = "";
+                for (int i = 0; i < cSharpCode.Length; i++)
+                {
+                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
+                    output += line;
+                    if (i < cSharpCode.Length-1)
+                        output += "\n";
+                }
+                return output;
+            }
+            set
+            {
+                cSharpCode = value.Split('\n');
                 RebuildScriptModel();
             }
         }
@@ -83,16 +106,13 @@
         /// <summary>The script Model that has been compiled</summary>
         public List<KeyValuePair<string, string>> Parameters { get; set; }
 
-        /// <summary>Allow children to be serialised?</summary>
-        public bool DoSerialiseChildren { get { return false; } }
-
         /// <summary>
         /// Stores column and line of caret, and scrolling position when editing in GUI
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
         /// way to store both the caret position and scrolling information.
         /// </summary>
         [JsonIgnore]
-        public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
+        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
@@ -102,11 +122,20 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
+        /// Stores the success of the last compile
+        /// Used to check if the binary is up to date before running simulations
+        /// Prevents an old binary brom being used if the last compile had errors
+        /// </summary>
+        [JsonIgnore]
+        private bool SuccessfullyCompiledLast { get; set; } = false;
+
+        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             afterCreation = true;
 
             // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
@@ -126,6 +155,10 @@
         {
             if (Children.Count != 0)
             {
+                //throw an expection to stop simulations from running with an old binary
+                if (SuccessfullyCompiledLast == false)
+                    throw new Exception("Errors found in manager model " + Name);
+
                 GetParametersFromScriptModel();
                 SetParametersInScriptModel();
             }
@@ -143,6 +176,7 @@
                 var results = Compiler().Compile(Code, this);
                 if (results.ErrorMessages == null)
                 {
+                    SuccessfullyCompiledLast = true;
                     if (Children.Count != 0)
                         Children.Clear();
                     var newModel = results.Instance as IModel;
@@ -153,7 +187,10 @@
                     }
                 }
                 else
+                {
+                    SuccessfullyCompiledLast = false;
                     throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{results.ErrorMessages}");
+                }
                 SetParametersInScriptModel();
             }
         }
@@ -175,7 +212,7 @@
                             if (property != null)
                             {
                                 object value;
-                                if ( (typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")) )
+                                if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = this.FindInScope(parameter.Value);
@@ -230,18 +267,19 @@
             }
         }
 
-        /// <summary>Ovewrite default auto-doc.</summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the script iff it overrides its Document() method.
+        /// Otherwise, return nothing.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            // Nasty!
+            IModel script = Children[0];
+
+            Type scriptType = script.GetType();
+            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                foreach (ITag tag in script.Document())
+                    yield return tag;
         }
     }
 }

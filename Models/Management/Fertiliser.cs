@@ -1,21 +1,20 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Soils;
-using Models.Soils.Nutrients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
 
 namespace Models
 {
     /// <summary>This model is responsible for applying fertiliser.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser :  ModelCollectionFromResource
+    public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
         [Link] private IPhysical soilPhysical = null;
-        
+
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
@@ -39,7 +38,7 @@ namespace Models
         public double NitrogenApplied { get; private set; } = 0;
 
         /// <summary>Types of fertiliser.</summary>
-        public enum Types 
+        public enum Types
         {
             /// <summary>The calcite ca</summary>
             CalciteCA,
@@ -57,6 +56,8 @@ namespace Models
             DAP,
             /// <summary>The map</summary>
             MAP,
+            /// <summary>The UAN n</summary>
+            UAN_N,
             /// <summary>The urea n</summary>
             UreaN,
             /// <summary>The urea n o3</summary>
@@ -70,7 +71,7 @@ namespace Models
             /// <summary>The banded p</summary>
             BandedP,
             /// <summary>The broadcast p</summary>
-            BroadcastP 
+            BroadcastP
         };
 
         /// <summary>Apply fertiliser.</summary>
@@ -85,9 +86,38 @@ namespace Models
                 // find the layer that the fertilizer is to be added to.
                 int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Depth);
 
-                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == Type.ToString());
+                ApplyToLayer(layer, Amount, Type, doOutput);
+                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
+            }
+        }
+
+        /// <summary>Apply fertiliser.</summary>
+        /// <param name="amount">The amount.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="depthTop">The upper depth (mm) to apply the fertiliser.</param>
+        /// <param name="depthBottom">The lower depth (mm) to apply the fertiliser.</param>
+        /// <param name="doOutput">If true, output will be written to the summary.</param>
+        public void Apply(double amount, Types type, double depthTop, double depthBottom, bool doOutput = true)
+        {
+            double topOfLayer = depthTop;
+            var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+            {
+                double bottomOfLayer = Math.Min(depthBottom, cumThickness[i]);
+                double soilInLayer = Math.Max(0, bottomOfLayer - topOfLayer);
+                double amountForLayer = soilInLayer / (depthBottom - depthTop) * amount;
+                ApplyToLayer(i, amountForLayer, type, doOutput);
+                topOfLayer = cumThickness[i];
+            }
+        }
+
+        private void ApplyToLayer(int layer, double amount, Types type, bool doOutput)
+        {
+            if (amount > 0)
+            {
+                FertiliserType fertiliserType = Definitions.FirstOrDefault(f => f.Name == type.ToString());
                 if (fertiliserType == null)
-                    throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
+                    throw new ApsimXException(this, "Cannot find fertiliser type '" + type + "'");
 
                 // We find the current amount of N in each form, add to it as needed, 
                 // then set the new value. An alternative approach could call AddKgHaDelta
@@ -95,28 +125,29 @@ namespace Models
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     var values = NO3.kgha;
-                    values[layer] += Amount * fertiliserType.FractionNO3;
+                    values[layer] += amount * fertiliserType.FractionNO3;
                     NO3.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += Amount * fertiliserType.FractionNO3;
+                    NitrogenApplied += amount * fertiliserType.FractionNO3;
                 }
                 if (fertiliserType.FractionNH4 != 0)
                 {
                     var values = NH4.kgha;
-                    values[layer] += Amount * fertiliserType.FractionNH4;
+                    values[layer] += amount * fertiliserType.FractionNH4;
                     NH4.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += Amount * fertiliserType.FractionNH4;
+                    NitrogenApplied += amount * fertiliserType.FractionNH4;
                 }
                 if (fertiliserType.FractionUrea != 0)
                 {
                     var values = Urea.kgha;
-                    values[layer] += Amount * fertiliserType.FractionUrea;
+                    values[layer] += amount * fertiliserType.FractionUrea;
                     Urea.SetKgHa(SoluteSetterType.Fertiliser, values);
-                    NitrogenApplied += Amount * fertiliserType.FractionUrea;
+                    NitrogenApplied += amount * fertiliserType.FractionUrea;
                 }
                 if (doOutput)
-                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
-
-                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
+                {
+                    var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
+                    Summary.WriteMessage(this, $"{amount:F1} kg/ha of {type} added at depth {cumThickness[layer]:F0} layer {layer + 1}", MessageType.Diagnostic);
+                }
             }
         }
 

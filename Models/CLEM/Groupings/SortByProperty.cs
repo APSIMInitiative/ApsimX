@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-
+using System.Linq;
 using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
@@ -17,14 +17,14 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Defines a sort rule using the value of a property or method of the individual")]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
+    [Description("Defines a sort order using the value of a property or method of the individual")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortByProperty.htm")]
     public class SortByProperty : CLEMModel, ISort
     {
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
+
         /// <inheritdoc/>
         [JsonIgnore]
         public new IFilterGroup Parent
@@ -40,7 +40,6 @@ namespace Models.CLEM.Groupings
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
         public string PropertyOfIndividual { get; set; }
-        private IEnumerable<string> GetParameters() => Parent.Parameters;
 
         /// <inheritdoc/>
         [Description("Sort direction")]
@@ -89,7 +88,7 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
@@ -98,7 +97,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
@@ -108,7 +107,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

@@ -25,6 +25,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private CLEMView clem;
 
+        private ReportView rv = null;
+
+        private DataStorePresenter dataStorePresenter = null;
+
         /// <summary>
         /// Attach the model and view to the presenter
         /// </summary>
@@ -50,10 +54,10 @@ namespace UserInterface.Presenters
                     parentOfReport = true;
                 }
 
-                ReportView rv = new ReportView(clemPresenter.View as ViewBase);
+                rv = new ReportView(clemPresenter.View as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
-                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.Model as IModel).Name:report.Name });
+                dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.Model as IModel).Name:report.Name });
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
@@ -92,7 +96,11 @@ namespace UserInterface.Presenters
 
         /// <inheritdoc/>
         public void Detach()
-        { }
+        {
+            dataStorePresenter?.Detach();
+            rv?.Dispose();
+            clem?.Dispose();
+        }
 
         /// <inheritdoc/>
         public void Refresh() { } 

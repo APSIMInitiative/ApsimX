@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Collections;
-using System.Reflection;
+using System.Globalization;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using System.Globalization;
 
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// This class encapsulates an array of biomass objects
     /// </summary>
     [Serializable]
@@ -184,14 +180,14 @@ namespace Models.PMF
                 {
                     foreach (object Value in Obj as IEnumerable)
                     {
-                        Values[i] = Convert.ToDouble(Value, 
+                        Values[i] = Convert.ToDouble(Value,
                                                      System.Globalization.CultureInfo.InvariantCulture);
                         i++;
                     }
                 }
                 else
                 {
-                    Values[i] = Convert.ToDouble(Obj, 
+                    Values[i] = Convert.ToDouble(Obj,
                                                  System.Globalization.CultureInfo.InvariantCulture);
                     i++;
                 }

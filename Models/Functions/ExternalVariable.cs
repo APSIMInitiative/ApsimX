@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-
-using Models.Core;
 using System.Globalization;
+using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the value of a nominated external APSIM numerical variable.
     /// Note: This should be merged with the variable function when naming convention
     /// to refer to internal and external variable is standardized. FIXME

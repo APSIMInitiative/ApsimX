@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and reaches [End] when
-    /// vernalisation saturation occurs
+    /// This phase goes from the specified start stage to the specified end stage
+    /// and reaches end when vernalisation saturation occurs.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -19,10 +18,10 @@ namespace Models.PMF.Phen
     public class VernalisationPhase : Model, IPhase, IPhaseWithTarget
     {
         [Link]
-        private IVrn1Expression CAMP = null;
+        private IVrnExpression CAMP = null;
 
-        [Link]
-        private Phenology phenology = null;
+        private bool firstDay = true;
+        private double relativeVernalisationAtEmergence { get; set; }
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -31,6 +30,10 @@ namespace Models.PMF.Phen
         /// <summary>The phenological stage at the end of this phase.</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
@@ -48,18 +51,24 @@ namespace Models.PMF.Phen
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-            Target = CAMP.VrnSatThreshold;
-            ProgressThroughPhase = CAMP.MethColdVrn1;
-            double HS = phenology.FindChild<IFunction>("HaunStage").Value();
-            double RelativeBasicVegetative = Math.Max(1, HS / 1.1);
-            double RelativeVrn1Expression = Math.Max(1, ProgressThroughPhase / Target);
-            FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
-            
+            Target = 1 + CAMP.Vrn2;
+            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
+            if (firstDay)
+            {
+                relativeVernalisationAtEmergence = RelativeVernalisation;
+                firstDay = false;
+            }
+            double ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
+            FractionComplete = ProgressThroughPhase;
             return CAMP.IsVernalised;
         }
 
         /// <summary>Resets the phase.</summary>
-        public void ResetPhase() { ProgressThroughPhase = 0.0; }
+        public void ResetPhase()
+        {
+            firstDay = true;
+            relativeVernalisationAtEmergence = 0.0;
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
@@ -67,8 +76,13 @@ namespace Models.PMF.Phen
         {
             ResetPhase();
         }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"The {Name} phase goes from the {Start} stage to the {End} stage and reaches {End} when vernalisation saturation occurs.");
+        }
     }
 }
-
-      
-      

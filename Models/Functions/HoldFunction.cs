@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -13,7 +13,7 @@ namespace Models.Functions
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class HoldFunction : Model, IFunction, ICustomDocumentation
+    public class HoldFunction : Model, IFunction
     {
         /// <summary>The _ value</summary>
         private double _Value = 0;
@@ -59,40 +59,24 @@ namespace Models.Functions
         {
             return _Value;
         }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
+            if (ValueToHold != null)
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                // Describe the function
-                if (ValueToHold != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
-                }
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                yield return new Paragraph($"*{Name}* = *{ValueToHold.Name}* until {WhenToHold} after which the value is fixed.");
+                foreach (var child in FindAllChildren<IModel>())
+                    foreach (var tag in child.Document())
+                        yield return tag;
             }
         }
 
         /// <summary>Get value</summary>
         private void GetValue()
         {
-            try
-            {
-                _Value = ValueToHold.Value();
-            }
-            catch (Exception)
-            {
-
-            }
+            _Value = ValueToHold.Value();
         }
-
     }
-
 }

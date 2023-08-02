@@ -1,9 +1,9 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
 using System.IO;
 
 namespace Models.CLEM.Resources
@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
-    [Description("This resource represents a finance type (e.g. General bank account).")]
+    [Description("This resource represents a finance store (e.g. general bank account)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -31,20 +31,22 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Opening balance")]
         [Required]
+        [Core.Display(Format = "N2")]
         public double OpeningBalance { get; set; }
 
         /// <summary>
         /// Enforce withdrawal limit
         /// </summary>
-        [Description("Enforce withdrawal limit. (false, no limit to spending)")]
+        [Description("Enforce withdrawal limit (false, no limit to spending)")]
         [Required]
         public bool EnforceWithdrawalLimit { get; set; }
 
         /// <summary>
         /// The amount this account can be withdrawn to (-ve)
         /// </summary>
-        [Description("The amount this account can be withdrawn to (<0 credit, 0 no credit)")]
-        [Required ]
+        [Description("Withdrawal limit (<0 credit, 0 no credit)")]
+        [Core.Display(EnabledCallback = "WithdrawalLimitEnabled")]
+        [Required]
         public double WithdrawalLimit { get; set; }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!EnforceWithdrawalLimit)
+                if (!EnforceWithdrawalLimit)
                     return double.PositiveInfinity;
                 else
                     return amount - WithdrawalLimit;
@@ -84,6 +86,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
+        [Core.Display(Format = "N2")]
         public double Amount
         {
             get
@@ -103,6 +106,15 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Determines whether the withdrawal limit has been set for enabling amount property
+        /// </summary>
+        /// <returns></returns>
+        public bool WithdrawalLimitEnabled()
+        {
+            return EnforceWithdrawalLimit;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -111,30 +123,10 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (OpeningBalance > 0)
-                Add(OpeningBalance, this, "", "Opening balance");
+                Add(OpeningBalance, null, null, "Opening balance");
         }
 
         #region Transactions
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-    
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
         /// Add money to account
@@ -146,38 +138,25 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double multiplier = 0;
-            double addAmount;
+            double amountAdded;
             switch (resourceAmount)
             {
                 case ResourceRequest _:
-                    addAmount = (resourceAmount as ResourceRequest).Required;
+                    amountAdded = (resourceAmount as ResourceRequest).Required;
                     multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                     break;
                 case double _:
-                    addAmount = (double)resourceAmount;
+                    amountAdded = (double)resourceAmount;
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
-            if (addAmount > 0)
+            if (amountAdded > 0)
             {
-                addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
-                amount += addAmount;
+                amount += amountAdded;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = addAmount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = addAmount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
 
                 // if this request aims to trade with a market see if we need to set up details for the first time
                 if (multiplier > 0)
@@ -208,10 +187,10 @@ namespace Models.CLEM.Resources
             if (request.MarketTransactionMultiplier > 0)
                 FindEquivalentMarketStore();
 
-            double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
-            
+            double amountRemoved = request.Required;
+
             // more than positive balance can be taken if withdrawal limit set to false
-            if(this.EnforceWithdrawalLimit)
+            if (this.EnforceWithdrawalLimit)
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
 
             if (amountRemoved == 0)
@@ -221,21 +200,11 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, (request.RelatesToResource != "" ? request.RelatesToResource : this.NameWithParent), "Household purchase");
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                TransactionType = TransactionType.Loss,
-                Amount = amountRemoved,
-                Activity = request.ActivityModel,
-                RelatesToResource = request.RelatesToResource,
-                Category = request.Category
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+
+            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <summary>
@@ -251,12 +220,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -289,9 +254,9 @@ namespace Models.CLEM.Resources
                     }
                 }
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

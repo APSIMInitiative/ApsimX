@@ -13,24 +13,6 @@ using UserInterface.Views;
 namespace UserInterface.Views
 {
     //duplicate of InputView because we want to place this at the top of our simulation not onto the Datastore
-    interface ICLEMView
-    {
-        /// <summary>
-        /// Adds a new tab view to the display
-        /// </summary>
-        /// <param name="tabName"></param>
-        /// <param name="control"></param>
-        void AddTabView(string tabName, object control);
-
-        /// <summary>
-        /// selects the tab view to the display
-        /// </summary>
-        /// <param name="tabName"></param>
-        void SelectTabView(string tabName);
-
-        /// <summary>Invoked when tab is selected</summary>
-        event EventHandler<EventArgs> TabSelected;
-    }
 
     public class CLEMView : ViewBase, Views.ICLEMView
     {
@@ -125,26 +107,13 @@ namespace UserInterface.Views
             foreach (Widget child in newViewport.Children)
             {
                 newViewport.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 EventBox frame = new EventBox();
-#if NETFRAMEWORK
-                frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-#endif
-                HBox hbox = new HBox();
-                uint border = 0;
-                if (tabName == "Properties")
-                {
-                    border = 5;
-                }
-                else if (tabName != "Display" & tabName != "Data")
-                {
-                    border = 10;
-                }
 
-                hbox.BorderWidth = border;
+                HBox hbox = new HBox();
 
                 ViewBase view = (ViewBase)control;
                 hbox.Add(view.MainWidget);
@@ -156,13 +125,22 @@ namespace UserInterface.Views
         }
     }
 
-    public class TabChangedEventArgs : EventArgs
+    interface ICLEMView
     {
-        public string TabName { get; set; }
+        /// <summary>
+        /// Adds a new tab view to the display
+        /// </summary>
+        /// <param name="tabName"></param>
+        /// <param name="control"></param>
+        void AddTabView(string tabName, object control);
 
-        public TabChangedEventArgs(string myString)
-        {
-            this.TabName = myString;
-        }
+        /// <summary>
+        /// selects the tab view to the display
+        /// </summary>
+        /// <param name="tabName"></param>
+        void SelectTabView(string tabName);
+
+        /// <summary>Invoked when tab is selected</summary>
+        event EventHandler<EventArgs> TabSelected;
     }
 }

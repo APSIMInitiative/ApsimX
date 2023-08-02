@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
-using System.ComponentModel.DataAnnotations;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -19,7 +19,8 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
-    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock)")]
+    [Version(1, 0, 3, "Fully automated version with user properties")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
@@ -28,10 +29,12 @@ namespace Models.CLEM.Resources
         [Link]
         private ZoneCLEM zoneCLEM = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+        private double biomassAddedThisYear;
+        private double biomassConsumed;
 
         /// <summary>
         /// Unit type
@@ -43,43 +46,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
-
-        /// <summary>
-        /// Return the specified pool 
-        /// </summary>
-        /// <param name="index">index to use</param>
-        /// <param name="getByAge">return where index is age</param>
-        /// <returns>GraxeFoodStore pool</returns>
-        public GrazeFoodStorePool Pool(int index, bool getByAge)
-        {
-            if(getByAge)
-            {
-                var res = Pools.Where(a => a.Age == index);
-                if (res.Count() > 1)
-                {
-                    // return an average pool for N and DMD
-                    GrazeFoodStorePool average = new GrazeFoodStorePool()
-                    {
-                        Age = index,
-                        Consumed = res.Sum(a => a.Consumed),
-                        Detached = res.Sum(a => a.Detached),
-                        Growth = res.Sum(a => a.Growth),
-                        DMD = res.Sum(a => a.DMD * a.Amount) / res.Sum(a => a.Amount),
-                        Nitrogen = res.Sum(a => a.Nitrogen * a.Amount) / res.Sum(a => a.Amount)
-                    };
-                    average.Set(res.Sum(a => a.Amount));
-                    return average;
-                }
-                else
-                    return res.FirstOrDefault();
-            }
-            else
-                if (index < Pools.Count())
-                    return Pools[index];
-                else
-                    return null;
-        }
+        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -209,12 +176,40 @@ namespace Models.CLEM.Resources
         public IPastureManager Manager
         {
             get
-            { return manager; }
+            {
+                return manager;
+            }
             set
             {
-                if(manager!=null)
-                    throw new ApsimXException(this, String.Format("Each [r=GrazeStoreType] can only be managed by a single activity./nTwo managing activities ([a={0}] and [a={1}]) are trying to manage [r={2}]", manager.Name, value.Name, this.Name));
+                if (manager != null && manager != value)
+                {
+                    if (manager is CropActivityManageCrop)
+                        Summary.WriteMessage(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure the [CropActivityManageProduct] children have timers that prevent them running in the same time-step", MessageType.Warning);
+                    else
+                        throw new ApsimXException(this, $"Each [r=GrazeStoreType] can only be managed by a single activity.{Environment.NewLine}Two managing activities (a=[{(manager as CLEMModel).NameWithParent}] and [a={(value as CLEMModel).NameWithParent}]) are trying to manage [r={this.NameWithParent}]. Ensure they hvae timers");
+                }
                 manager = value;
+            }
+        }
+
+        /// <summary>
+        /// Return the specified pool
+        /// </summary>
+        /// <param name="index">index to use</param>
+        /// <param name="getByAge">return where index is age</param>
+        /// <returns>GraxeFoodStore pool</returns>
+        public IEnumerable<GrazeFoodStorePool> Pool(int index, bool getByAge)
+        {
+            if (getByAge)
+            {
+                return Pools.Where(a => (index < 12) ? a.Age == index : a.Age >= 12);
+            }
+            else
+            {
+                if (index < Pools.Count())
+                    return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
+                else
+                    return null;
             }
         }
 
@@ -243,9 +238,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        private double biomassAddedThisYear;
-        private double biomassConsumed;
-
         /// <summary>
         /// Percent utilisation
         /// </summary>
@@ -254,9 +246,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (biomassAddedThisYear == 0)
-                    return (biomassConsumed > 0) ? 100: 0;
+                    return (biomassConsumed > 0) ? 100 : 0;
 
-                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100, 100);
             }
         }
 
@@ -298,7 +290,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (DetachRate+CarryoverDetachRate+DecayDMD+DecayNitrogen != 0);
+                return (DetachRate + CarryoverDetachRate + DecayDMD + DecayNitrogen != 0);
             }
         }
 
@@ -306,7 +298,8 @@ namespace Models.CLEM.Resources
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
-        public double Amount {
+        public double Amount
+        {
             get
             {
                 return Pools.Sum(a => a.Amount);
@@ -329,42 +322,79 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Constructor 
+        /// Method to provide conversion factor to tonnes and/or hectares
+        /// </summary>
+        public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
+        {
+            if ((hectares && Manager is null) | (age > 11))
+                return 0;
+
+            double convert = (tonnes ? 1000 : 1) * (hectares ? Manager.Area : 1);
+            double valueToUse = 0;
+            switch (grazeProperty)
+            {
+                case "Amount":
+                    if (age < 0)
+                        valueToUse = Pools.Sum(a => a.Amount);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Amount);
+                    break;
+                case "Growth":
+                    valueToUse = Pool(0, true).Sum(a => a.Growth);
+                    break;
+                case "Consumed":
+                    if (age < 0)
+                        valueToUse = Pools.Sum(a => a.Consumed);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Consumed);
+                    break;
+                case "Detached":
+                    if (age < 0)
+                        valueToUse = Pools.Sum(a => a.Detached);
+                    else
+                        valueToUse = Pool(age, true).Sum(a => a.Detached);
+                    break;
+                case "Nitrogen":
+                    if (age < 0)
+                        return Nitrogen;
+                    else
+                    {
+                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
+                        if(pools.Count() == 1)
+                            valueToUse = pools.FirstOrDefault().Nitrogen;
+                        else
+                            valueToUse = pools.Sum(a => a.Nitrogen * a.Amount) / pools.Sum(a => a.Amount);
+                    }
+                    return valueToUse;
+                case "DMD":
+                    if (age < 0)
+                        return DMD;
+                    else
+                    {
+                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
+                        if (pools.Count() == 1)
+                            valueToUse = pools.FirstOrDefault().DMD;
+                        else
+                            valueToUse = pools.Sum(a => a.DMD * a.Amount) / pools.Sum(a => a.Amount);
+                    }
+                    return valueToUse;
+                case "Age":
+                    if (age < 0)
+                        return Pools.Sum(a => a.Amount * a.Age) / this.Amount;
+                    return valueToUse;
+                default:
+                    throw new ApsimXException(this, $"Property [{grazeProperty}] not available for reporting pools");
+            }
+            // convert biomass to units specified kg,tonnes & farm,per/hectare
+            return valueToUse / convert;
+        }
+
+        /// <summary>
+        /// Constructor
         /// </summary>
         public GrazeFoodStoreType()
         {
             SetDefaults();
-        }
-
-        /// <summary>
-        /// Get a property of pools by pool age
-        /// </summary>
-        public double GetValueByPoolAge(int age, string property)
-        {
-            IEnumerable<GrazeFoodStorePool> pools;
-            // group all pools >12 months old.
-            if (age < 12)
-                pools = Pools.Where(a => a.Age == age);
-            else
-                pools = Pools.Where(a => a.Age >= 12);
-
-            switch (property)
-            {
-                case "Detached":
-                    return pools.Sum(a => a.Detached);
-                case "Growth":
-                    return pools.Sum(a => a.Growth);
-                case "Consumed":
-                    return pools.Sum(a => a.Consumed);
-                case "Amount":
-                    return pools.Sum(a => a.Amount);
-                case "DMD":
-                    return pools.Sum(a => a.Amount* a.DMD)/ pools.Sum(a => a.Amount);
-                case "Nitrogen":
-                    return pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount);
-                default:
-                    throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools");
-            }
         }
 
         /// <summary>
@@ -398,11 +428,11 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
-        private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs e)
         {
-            if(Manager == null)
-                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
+            if (Manager == null)
+                Summary.WriteMessage(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name), MessageType.Warning);
         }
 
         /// <summary>
@@ -442,9 +472,9 @@ namespace Models.CLEM.Resources
                     double detach = CarryoverDetachRate;
                     if (pool.Age < 12)
                         detach = DetachRate;
-                    double detachedAmount = pool.Amount * (1 - detach);
+                    double amountRemaining = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
-                    pool.Set(detachedAmount);
+                    pool.Set(amountRemaining);
                 }
             }
         }
@@ -491,7 +521,7 @@ namespace Models.CLEM.Resources
         private void ONCLEMPastureReady(object sender, EventArgs e)
         {
             // do not return zero as there is always something there and zero affects calculations.
-            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare,0.01);
+            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare, 0.01);
         }
 
         /// <summary>
@@ -500,7 +530,7 @@ namespace Models.CLEM.Resources
         public event EventHandler EcologicalIndicatorsCalculated;
 
         /// <summary>
-        /// Ecological indicators calculated 
+        /// Ecological indicators calculated
         /// </summary>
         /// <param name="e"></param>
         protected virtual void OnEcologicalIndicatorsCalculated(EventArgs e)
@@ -516,7 +546,7 @@ namespace Models.CLEM.Resources
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
         /// <summary>
-        /// A method to initialise initial pasture  biomass across pools 
+        /// A method to initialise initial pasture  biomass across pools
         /// </summary>
         /// <param name="area">Area of pasture (ha)</param>
         /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
@@ -547,7 +577,7 @@ namespace Models.CLEM.Resources
 
             List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
-            // number of previous growth months to consider. default should be 5 
+            // number of previous growth months to consider. default should be 5
             int growMonthHistory = NumberMonthsForInitialBiomass;
 
             while (includedMonthCount < growMonthHistory)
@@ -611,7 +641,7 @@ namespace Models.CLEM.Resources
                 if (newPools.Count() > 1)
                     reason = "Initialise pool " + pool.Age.ToString();
 
-                Add(pool, this, "", reason);
+                Add(pool, null, null, reason);
             }
         }
 
@@ -658,6 +688,11 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
+                if (pool.Age == 0)
+                {
+                    pool.Growth = pool.Amount;
+                }
+
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
                     Pools.Insert(0, pool);
@@ -669,24 +704,12 @@ namespace Models.CLEM.Resources
                     // do not update if this is ian initialisation pool
                     biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = pool.Amount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="removeAmount"></param>
         /// <param name="activityName"></param>
@@ -697,7 +720,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         public new void Remove(ResourceRequest request)
@@ -768,19 +791,9 @@ namespace Models.CLEM.Resources
                 //if graze activity
                 biomassConsumed += request.Provided;
 
-                // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                // report
+
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
             {
@@ -807,19 +820,8 @@ namespace Models.CLEM.Resources
                 dryMatterDigestibility /= request.Provided;
                 nitrogen /= request.Provided;
 
-                // report 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = request.Provided,
-                    Activity = request.ActivityModel,
-                    Category = request.Category,
-                    RelatesToResource = request.RelatesToResource
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                // report
+                ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             else
             {
@@ -829,33 +831,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
@@ -870,7 +852,7 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            bool noGrowSeason = false;
+            bool noGrowSeason;
             int first = (int)FirstMonthOfGrowSeason;
             int last = (int)LastMonthOfGrowSeason;
             if (first < last)
@@ -889,12 +871,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -933,18 +911,15 @@ namespace Models.CLEM.Resources
                         htmlWriter.Write("\r\n</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

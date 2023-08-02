@@ -1,17 +1,8 @@
 ﻿using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
-using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {
@@ -24,11 +15,20 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Description("This report automatically generates a ledger of all shortfalls in resource requests")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
-    public class ReportResourceShortfalls: Models.Report
+    public class ReportResourceShortfalls : Models.Report
     {
+        /// <summary>
+        /// The pasture shortfall as proportion of desired intake before reported
+        /// </summary>
+        [Summary]
+        [Description("Pasture shortfall as proportion of desired intake before reported")]
+        [Required, GreaterThanEqualValue(0), Proportion]
+        [System.ComponentModel.DefaultValueAttribute(0.03)]
+        public double PropPastureShortfallOfDesiredIntake { get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -41,8 +41,10 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
                 "[Activities].LastShortfallResourceRequest.Category as Category",
+                "[Activities].LastShortfallResourceRequest.Available as Available",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
-                "[Activities].LastShortfallResourceRequest.Available as Available"
+//                "[Activities].LastShortfallResourceRequest.Provided as Provided",
+                "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status"
             };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
@@ -51,5 +53,12 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ReportResourceShortfalls()
+        {
+            CLEMModel.SetPropertyDefaults(this);
+        }
     }
 }

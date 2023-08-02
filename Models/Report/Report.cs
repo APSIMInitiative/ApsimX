@@ -1,16 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.Core;
+using Models.Storage;
+using Newtonsoft.Json;
+
 namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.CLEM;
-    using Models.Core;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -25,6 +26,10 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
+        /// <summary>Link to script compiler.</summary>
+        [Link]
+        ScriptCompiler compiler = null;
+
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -32,9 +37,6 @@ namespace Models
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
-
-        /// <summary>List of strings representing dates to report on.</summary>
-        private List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -48,10 +50,6 @@ namespace Models
         [Link]
         private IDataStore storage = null;
 
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
-
         /// <summary>Link to an event service.</summary>
         [Link]
         [NonSerialized]
@@ -61,7 +59,7 @@ namespace Models
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [JsonIgnore] 
+        [JsonIgnore]
         public int ActiveTabIndex = 0;
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace Models
         public DateTime DayAfterLastOutput { get; set; }
 
         /// <summary>Group by variable name.</summary>
-        public string GroupByVariableName{ get; set; }
+        public string GroupByVariableName { get; set; }
 
         /// <summary>
         /// Connect event handlers.
@@ -107,19 +105,6 @@ namespace Models
             SubscribeToEvents();
         }
 
-        /// <summary>An event handler called at the end of each day.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("DoReport")]
-        protected void OnDoReport(object sender, EventArgs e)
-        {
-            foreach (var dateString in dateStringsToReportOn)
-            {
-                if (DateUtilities.DatesAreEqual(dateString, clock.Today))
-                    DoOutput();
-            }
-        }
-
         /// <summary>
         /// Subscribe to events provided
         /// </summary>
@@ -134,9 +119,14 @@ namespace Models
             // Locate reporting variables.
             FindVariableMembers();
 
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
+            // Parse the report frequency lines
+            foreach (string line in EventNames)
+            {
+                if (!DateReportFrequency.TryParse(line, this, events) &&
+                    !EventReportFrequency.TryParse(line, this, events) &&
+                    !ExpressionReportFrequency.TryParse(line, this, events, compiler))
+                    throw new Exception($"Invalid report frequency found: {line}");
+            }
         }
 
         /// <summary>
@@ -154,14 +144,9 @@ namespace Models
                 int commentIndex = eventName.IndexOf("//");
                 if (commentIndex >= 0)
                     eventName = eventName.Substring(0, commentIndex);
-
-                if (!string.IsNullOrWhiteSpace(eventName))
-                {
-                    if (DateUtilities.validateDateString(eventName) != null)
-                        dateStringsToReportOn.Add(eventName);                       
-                    else
-                        eventNames.Add(eventName.Trim());
-                }
+                eventName = eventName.Trim();
+                if (!string.IsNullOrEmpty(eventName))
+                    eventNames.Add(eventName);
             }
 
             return eventNames.ToArray();
@@ -324,7 +309,7 @@ namespace Models
             // columns. Find the first aggregated column so that we can, later, use its from and to
             // variables to create an agregated column that doesn't have them.
             string from = null;
-            string to =  null;
+            string to = null;
             if (!string.IsNullOrEmpty(GroupByVariableName))
                 FindFromTo(out from, out to);
 
@@ -333,7 +318,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, Locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {

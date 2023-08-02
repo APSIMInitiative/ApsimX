@@ -140,7 +140,7 @@ namespace UserInterface.Presenters
             credentialsButton.Clicked -= OnCredentialsClicked;
             showMyJobsOnlyCheckbox.Changed -= OnShowMyJobsChanged;
 
-            view.MainWidget.Cleanup();
+            view.Dispose();
         }
 
         /// <summary>Dispose of object.</summary>

@@ -1,13 +1,8 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core.Attributes;
-using System.ComponentModel.DataAnnotations;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Resources;
-using Newtonsoft.Json;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
 using System.IO;
 
 namespace Models.CLEM.Groupings
@@ -19,7 +14,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeed))]
-    [Description("Defines specific individuals from the labour pool including feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
+    [Description("Defines the feed value for specific individuals from the labour pool")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFeedGroup.htm")]
     public class LabourFeedGroup : FilterGroup<LabourType>
@@ -41,12 +36,8 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -62,7 +53,7 @@ namespace Models.CLEM.Groupings
                 {
                     case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
                     case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        htmlWriter.Write("<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "</span>");
+                        htmlWriter.Write($"<span class=\"{((Value <= 0) ? "errorlink" : "setvalue")}\">{Value}</span>");
                         break;
                     default:
                         break;
@@ -97,7 +88,7 @@ namespace Models.CLEM.Groupings
                 htmlWriter.Write(" that matches the following conditions:");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

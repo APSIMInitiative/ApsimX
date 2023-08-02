@@ -1,11 +1,13 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.WaterModel;
+
+namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
-    using Models.Soils;
-    using Models.WaterModel;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// A generic class for turning a DataTable of soil information into
@@ -106,7 +108,7 @@
                 organic.FInert = GetDoubleValues(table, "FINERT (0-1)", row, numLayers);
                 organic.Carbon = GetDoubleValues(table, "OC", row, numLayers);
                 organic.CarbonMetadata = GetCodeValues(table, "OCCode", row, numLayers);
-                 
+
                 var chemical = new Chemical();
                 soil.Children.Add(chemical);
                 chemical.Thickness = physical.Thickness;
@@ -114,10 +116,14 @@
                 chemical.ECMetadata = GetCodeValues(table, "ECCode", row, numLayers);
                 chemical.PH = GetDoubleValues(table, "PH", row, numLayers);
                 chemical.PHMetadata = GetCodeValues(table, "PHCode", row, numLayers);
-                chemical.CL = GetDoubleValues(table, "CL (mg/kg)", row, numLayers);
-                chemical.CLMetadata = GetCodeValues(table, "CLCode", row, numLayers);
                 chemical.ESP = GetDoubleValues(table, "ESP (%)", row, numLayers);
                 chemical.ESPMetadata = GetCodeValues(table, "ESPCode", row, numLayers);
+
+                var solute = new Solute();
+                solute.Thickness = physical.Thickness;
+                solute.InitialValues = GetDoubleValues(table, "CL (mg/kg)", row, numLayers);
+                solute.InitialValuesUnits = Solute.UnitsEnum.ppm;
+                soil.Children.Add(solute);
 
                 // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
@@ -126,7 +132,7 @@
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
                 soil.Children.Add(nutrient);
-                var initialWater = new InitialWater();
+                var initialWater = new Water();
                 soil.Children.Add(initialWater);
 
                 // crops
@@ -254,9 +260,12 @@
                 SetCodeValues(table, "ECCode", chemical.ECMetadata, startRow);
                 SetDoubleValues(table, "PH", chemical.PH, startRow);
                 SetCodeValues(table, "PHCode", chemical.PHMetadata, startRow);
-                SetDoubleValues(table, "CL (mg/kg)", chemical.CL, startRow);
-                SetCodeValues(table, "CLCode", chemical.CLMetadata, startRow);
 
+                var cl = soil.Children
+                             .Where(child => child.Name.Equals("CL", StringComparison.InvariantCultureIgnoreCase))
+                             .First() as Solute;
+                if (cl != null)
+                    SetDoubleValues(table, "CL (mg/kg)", cl.InitialValues, startRow);
                 SetDoubleValues(table, "Boron (Hot water mg/kg)", null, startRow);
                 SetCodeValues(table, "BoronCode", null, startRow);
                 SetDoubleValues(table, "CEC (cmol+/kg)", null, startRow);
@@ -332,7 +341,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row);
+                double[] Values = DataTableUtilities.GetColumnAsDoubles(table, variableName, numRows, row, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                 {
                     // Convert MissingValue for Nan
@@ -386,7 +395,7 @@
         {
             if (table.Columns.Contains(variableName))
             {
-                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow);
+                string[] Values = DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, startRow, CultureInfo.InvariantCulture);
                 if (MathUtilities.ValuesInArray(Values))
                     return Values;
             }
@@ -408,7 +417,7 @@
             if (!table.Columns.Contains(variableName))
                 return null;
 
-            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row);
+            return DataTableUtilities.GetColumnAsStrings(table, variableName, numRows, row, CultureInfo.InvariantCulture);
         }
 
         /// <summary>Set a column of metadata values for the specified column.</summary>

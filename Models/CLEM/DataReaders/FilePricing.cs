@@ -1,7 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -11,15 +10,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM
 {
     ///<summary>
     /// Reads in external pricing input data and adjusts resource pricing as specified through simulation.
     ///</summary>
-    ///    
+    ///
     ///<remarks>
     ///</remarks>
     [Serializable]
@@ -28,13 +25,13 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component uses a pricing input file to manage prices throughout the simulation")]
+    [Description("Access to a pricing input file to manage prices")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PriceDataReader.htm")]
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -69,7 +66,7 @@ namespace Models.CLEM
         private List<IResourcePricing> pricingComonentsFound;
 
         /// <summary>
-        /// Gets or sets the full file name (with path). 
+        /// Gets or sets the full file name (with path).
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
@@ -115,7 +112,7 @@ namespace Models.CLEM
                 throw new ApsimXException(this, errorMsg);
             }
 
-            // get all pricing component names 
+            // get all pricing component names
             // put in a list that provides a link to the object so we can use this to set values
             var resources = FindAllAncestors<Zone>().FirstOrDefault();
             if (resources != null)
@@ -126,7 +123,7 @@ namespace Models.CLEM
                 Sort = $"{DateColumnName} ASC"
             };
             priceFileAsRows = dataView.ToTable().Rows;
-            
+
             UpdatePricingToDate(clock.StartDate.Year, clock.StartDate.Month);
         }
 
@@ -150,7 +147,7 @@ namespace Models.CLEM
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             // update all pricing this timestep
-            // use last price provided for timestep 
+            // use last price provided for timestep
             UpdatePricingToDate(clock.Today.Year, clock.Today.Month);
         }
 
@@ -166,11 +163,11 @@ namespace Models.CLEM
                     if (!column.ToString().Equals(DateColumnName, StringComparison.OrdinalIgnoreCase) && double.TryParse(priceFileAsRows[0][cnt].ToString(), out double res))
                     {
                         // update
-                        var components = pricingComonentsFound.Where(a => (a as IModel).Name == column.ToString());
+                        var components = pricingComonentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
                             resourcePricing.SetPrice(res, this);
@@ -185,8 +182,8 @@ namespace Models.CLEM
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// Used by the UserInterface to give a warning of what is wrong
-        /// 
-        /// When the user selects a file using the browse button in the UserInterface 
+        ///
+        /// When the user selects a file using the browse button in the UserInterface
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
         [JsonIgnore]
@@ -264,8 +261,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
                 return true;
             }
             else
@@ -284,12 +283,8 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

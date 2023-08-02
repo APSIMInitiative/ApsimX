@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using Models.PMF.Struct;
-using System.IO;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and extends from the end 
-    /// of the previous phase until the CompletionNodeNumber is achieved.  
-    /// The duration of this phase is determined by leaf appearance rate and 
-    /// the CompletionNodeNumber target
+    /// This phase goes from the specified start stage to the specified end stage
+    /// and extends from the end of the previous phase until the CompletionNodeNumber
+    /// is achieved. The duration of this phase is determined by leaf appearance rate
+    /// and the CompletionNodeNumber target
     /// </summary>
     [Serializable]
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
@@ -41,7 +39,7 @@ namespace Models.PMF.Phen
         /// <summary>The fraction complete yesterday</summary>
         private double FractionCompleteYesterday = 0;
 
-        
+
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -52,6 +50,10 @@ namespace Models.PMF.Phen
         /// <summary>The end</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
@@ -72,7 +74,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            
+
             if (First)
             {
                 NodeNoAtStart = LeafTipNumber.Value();
@@ -98,14 +100,26 @@ namespace Models.PMF.Phen
             First = true;
         }
 
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved. The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target");
+
+            // Write children
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         //7. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)  { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ResetPhase();
+        }
     }
 }
-
-      
-      

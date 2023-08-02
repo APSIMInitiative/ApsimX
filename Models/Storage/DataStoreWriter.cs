@@ -1,15 +1,15 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using Models.Core.Run;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
 
     /// <summary>
     /// This class encapsulates all writing to a DataStore
@@ -24,7 +24,7 @@
         private List<IRunnable> commands = new List<IRunnable>();
 
         /// <summary>A sleep job to stop the job runner from exiting.</summary>
-        private IRunnable sleepJob = new EmptyJob();
+        private IRunnable sleepJob = new JobRunnerSleepJob(10);
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
         private JobRunner commandRunner;
@@ -52,6 +52,9 @@
 
         /// <summary>Are we stopping writing to the db?</summary>
         private bool stopping;
+
+        /// <summary>The details of tables that have been written to.</summary>
+        private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Default constructor.</summary>
         public DataStoreWriter()
@@ -105,6 +108,9 @@
         /// </summary>
         public int NumJobs { get { return 0; } }
 
+        /// <summary>Call JobHasCompleted when job is complete?</summary>
+        public bool NotifyWhenJobComplete => false;
+
         /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
@@ -124,7 +130,13 @@
 
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table, deleteOldData:false));
+                if (!tables.TryGetValue(table.TableName, out var tableDetails))
+                {
+                    tableDetails = new DatabaseTableDetails(Connection, table.TableName);
+                    tables.Add(table.TableName, tableDetails);
+                }
+
+                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteOldData: false));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -163,7 +175,12 @@
 
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table, deleteAllData));
+                if (!tables.TryGetValue(table.TableName, out var tableDetails))
+                {
+                    tableDetails = new DatabaseTableDetails(Connection, table.TableName);
+                    tables.Add(table.TableName, tableDetails);
+                }
+                commands.Add(new WriteTableCommand(Connection, table, tableDetails, deleteAllData));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -228,7 +245,8 @@
                     commandRunner?.Stop();
                     commandRunner = null;
                     commands.Clear();
-                    simulationIDs.Clear();
+                    lock (lockObject)
+                        simulationIDs.Clear();
                     checkpointIDs.Clear();
                     simulationNamesThatHaveBeenCleanedUp.Clear();
                     units.Clear();
@@ -423,7 +441,7 @@
                         checkpoint.ID = checkpointIDs.Select(c => c.Value.ID).Max() + 1;
                     else
                         checkpoint.ID = 1;
-                    checkpointIDs.Add(checkpointName, checkpoint); 
+                    checkpointIDs.Add(checkpointName, checkpoint);
                 }
                 return checkpoint.ID;
             }
@@ -438,7 +456,8 @@
             if (dbConnection == null)
                 return;
 
-            simulationIDs.Clear();
+            lock (lockObject)
+                simulationIDs.Clear();
             if (dbConnection.TableExists("_Simulations"))
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
@@ -448,7 +467,8 @@
                     string folderName = null;
                     if (data.Columns.Contains("FolderName"))
                         folderName = row["FolderName"].ToString();
-                    simulationIDs.Add(row["Name"].ToString(),
+                    lock (lockObject)
+                        simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
                 }
             }
@@ -461,7 +481,7 @@
                     checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
                     {
                         ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
-                        ShowOnGraphs = data.Columns["OnGraphs"] != null && 
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null &&
                                        !Convert.IsDBNull(row["OnGraphs"]) &&
                                        Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
                     });
@@ -508,10 +528,11 @@
                     if (commandRunner == null)
                     {
                         stopping = false;
-                        commandRunner = new JobRunner(numProcessors:1);
+                        commandRunner = new JobRunner(numProcessors: 1);
                         commandRunner.Add(this);
                         commandRunner.Run();
                         ReadExistingDatabase(Connection);
+                        tables.Clear();
                     }
                 }
             }
@@ -601,7 +622,7 @@
                         unitTable.Rows.Add(unitRow);
                     }
                 }
-                WriteTable(unitTable, deleteAllData:true);
+                WriteTable(unitTable, deleteAllData: true);
             }
         }
 

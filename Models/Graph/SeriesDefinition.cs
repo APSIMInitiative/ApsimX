@@ -1,16 +1,17 @@
-﻿namespace Models
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
@@ -117,9 +118,9 @@
                                 MarkerType marker = MarkerType.None,
                                 bool showInLegend = true,
                                 SeriesType type = SeriesType.Scatter,
-                                Axis.AxisType xAxis = Axis.AxisType.Bottom,
-                                Axis.AxisType yAxis = Axis.AxisType.Left)
-        { 
+                                AxisPosition xAxis = AxisPosition.Bottom,
+                                AxisPosition yAxis = AxisPosition.Left)
+        {
             this.Title = title;
             this.Colour = colour;
             this.Line = line;
@@ -148,34 +149,34 @@
         public SeriesType Type { get; }
 
         /// <summary>Gets the marker size.</summary>
-        public MarkerSizeType MarkerSize
+        public MarkerSize MarkerSize
         {
             get
             {
                 if (Series == null) // Can be null for regression lines or 1:1 lines
-                    return MarkerSizeType.Normal;
+                    return MarkerSize.Normal;
 
                 return Series.MarkerSize;
             }
         }
 
         /// <summary>Gets the line thickness.</summary>
-        public LineThicknessType LineThickness
+        public LineThickness LineThickness
         {
             get
             {
                 if (Series == null) // Can be null for regression lines or 1:1 lines
-                    return LineThicknessType.Normal;
+                    return LineThickness.Normal;
                 else
                     return Series.LineThickness;
             }
         }
 
         /// <summary>Gets the associated x axis.</summary>
-        public Axis.AxisType XAxis { get; }
+        public AxisPosition XAxis { get; }
 
         /// <summary>Gets the associated y axis.</summary>
-        public Axis.AxisType YAxis { get; }
+        public AxisPosition YAxis { get; }
 
         /// <summary>Gets the x field name.</summary>
         public string XFieldName { get; }
@@ -309,13 +310,26 @@
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
+                    if (string.IsNullOrEmpty(simulationIdsCSV))
+                        return;
                     if (fieldsThatExist.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
                 filter = filter?.Replace('\"', '\'');
+                filter = RemoveMiddleWildcards(filter);
+
                 View = new DataView(data);
-                View.RowFilter = filter;
+                try
+                {
+                    View.RowFilter = filter;
+                }
+                catch (Exception ex)
+                {
+                    //this will still cause a pause when running in debug mode, that is due to how visual studio
+                    //works when an exception thrown by external code but is not handled by that external code.
+                    throw new Exception("Filter cannot be parsed: " + ex.Message);
+                }
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(Series.TableName, XFieldName);
@@ -330,7 +344,7 @@
                     Y2 = GetDataFromView(View, Y2FieldName);
                     XError = GetErrorDataFromView(View, XFieldName);
                     YError = GetErrorDataFromView(View, YFieldName);
-                    if (Series.Cumulative)   
+                    if (Series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
@@ -509,6 +523,48 @@
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
+        }
+
+        /// <summary>Rewrites a filter that has a wildcard in the middle of a field
+        /// Wildcards in the middle are not supported by Row Filters, so it's broken into multiple filters</summary>
+        /// <param name="filter">The filter as a string</param>
+        /// <returns>The modified filter as a string</returns>
+        private string RemoveMiddleWildcards(string filter)
+        {
+            if (filter == null || filter == "")
+                return filter;
+
+            string newString = filter;
+            string likePattern = @"(.*\sLIKE\s['""])(.*?[^""'])([%*])([^""'][^%*]+)(.*)";
+            bool stillMatches = true;
+
+            //add a bit of protection to this loop so we can break it and return an error if it loops forever.
+            int maxTries = 10;
+            int loops = 0;
+            while (stillMatches && loops < maxTries)
+            {
+                loops += 1;
+                Match match = Regex.Match(newString, likePattern);
+                stillMatches = match.Success;
+                if (stillMatches)
+                {
+                    newString = "";
+                    newString += match.Groups[1];
+                    newString += match.Groups[2];
+                    newString += match.Groups[3];
+                    newString += "' AND ";
+                    newString += match.Groups[1];
+                    newString += match.Groups[3];
+                    newString += match.Groups[4];
+                    if (match.Groups.Count == 6)
+                        newString += match.Groups[5];
+                }
+            }
+
+            if (loops == maxTries)
+                throw new Exception($"Row Filter '{filter}' contains wildcard characters that cannot be parsed correctly.");
+
+            return newString;
         }
 
     }

@@ -1,13 +1,14 @@
 [weather.met.weather]
 !station number = 074000
 !station name =  ARDLETHAN POST OFFICE
-latitude = -34.3567  (DECIMAL DEGREES)
-longitude =  146.9032  (DECIMAL DEGREES)
+latitude = -0  (DECIMAL DEGREES)
+longitude =  0  (DECIMAL DEGREES)
 tav = 16.60 (oC) ! Annual average ambient temperature. Based on 1 Jan 1957 to current.
 amp = 17.22 (oC) ! Annual amplitude in mean monthly temperature. Based on 1 Jan 1957 to current.
 
 daylength = 17.0
 
+! Weather data after 2-apr simple duplication of last day to extend simulation length if required in parameter fitting
 
         Date          mint    maxt    rain    radn
         (dd/MM/yyyy)  (oC)    (oC)    (mm)    (MJ/m^2)
@@ -163,3 +164,23 @@ daylength = 17.0
         31/03/2019    21.3    21.3       0      8.0
         1/04/2019     21.4    21.4       0      8.0
         2/04/2019     21.5    21.5       0      8.0
+        3/04/2019     21.5    21.5       0      8.0
+        4/04/2019     21.5    21.5       0      8.0
+        5/04/2019     21.5    21.5       0      8.0
+        6/04/2019     21.5    21.5       0      8.0
+        7/04/2019     21.5    21.5       0      8.0
+        8/04/2019     21.5    21.5       0      8.0
+        9/04/2019     21.5    21.5       0      8.0
+        10/04/2019     21.5    21.5       0      8.0
+        11/04/2019     21.5    21.5       0      8.0
+        12/04/2019     21.5    21.5       0      8.0
+        13/04/2019     21.5    21.5       0      8.0
+        14/04/2019     21.5    21.5       0      8.0
+        15/04/2019     21.5    21.5       0      8.0
+        16/04/2019     21.5    21.5       0      8.0
+        17/04/2019     21.5    21.5       0      8.0
+        18/04/2019     21.5    21.5       0      8.0
+        19/04/2019     21.5    21.5       0      8.0
+        20/04/2019     21.5    21.5       0      8.0
+        21/04/2019     21.5    21.5       0      8.0
+        22/04/2019     21.5    21.5       0      8.0

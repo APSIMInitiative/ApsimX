@@ -1,74 +1,48 @@
-﻿namespace UnitTests.Stock
-{
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+﻿using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using System;
+using System.Collections.Generic;
 
-    public class MockForage : Model, IPlantDamage
+namespace UnitTests.Stock
+{
+    public class MockForage : Model, IHasDamageableBiomass
     {
+        
+        public MockForage() { }
         public MockForage(double liveWt)
         {
-            Organs.Add(new MockOrgan(liveWt));
+            var material = new List<DamageableBiomass>();
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = liveWt }, true));
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = 0 }, false));
+            Material = material;
         }
-        public List<IOrganDamage> Organs { get; set; } = new List<MockOrgan>().Cast<IOrganDamage>().ToList();
 
-        public IBiomass AboveGround => throw new NotImplementedException();
+        public IEnumerable<DamageableBiomass> Material { get; set; }
 
-        public IBiomass AboveGroundHarvestable => throw new NotImplementedException();
-
-        public double Population => throw new NotImplementedException();
-
-        public double LAI => throw new NotImplementedException();
-
-        public double AssimilateAvailable => throw new NotImplementedException();
-
-        public void ReduceCanopy(double deltaLAI)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             throw new NotImplementedException();
         }
 
-        public void ReducePopulation(double newPlantPopulation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReduceRootLengthDensity(double deltaRLD)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Biomass RemoveBiomass(double amount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsAlive { get; set; } = true;
     }
 
     public class MockOrgan : IOrganDamage
     {
-        public MockOrgan(double liveWt)
+        public MockOrgan(string name, double liveWt, double deadWt = 0)
         {
+            Name = name;
             Live = new Biomass() { StructuralWt = liveWt };
-            Dead = new Biomass();
+            Dead = new Biomass() { StructuralWt = deadWt };
         }
 
-        public string Name => throw new NotImplementedException();
+        public string Name { get; set; }
 
         public Biomass Live { get; set; }
 

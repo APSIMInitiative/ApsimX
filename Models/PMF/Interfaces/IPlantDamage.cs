@@ -1,6 +1,7 @@
-﻿namespace Models.PMF.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Models.PMF.Interfaces
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// Interface used by models (e.g. STOCK, pests and diseases) to damage a plant.
@@ -13,11 +14,8 @@
         /// <summary>Return true if plant is alive and in the ground.</summary>
         bool IsAlive { get; }
 
-        /// <summary>A list of organs that can be damaged.</summary>
-        List<IOrganDamage> Organs { get; }
-
         /// <summary>Total amount of above ground biomass.</summary>
-        IBiomass AboveGround { get;  }
+        IBiomass AboveGround { get; }
 
         /// <summary>Total amount of harvestable above ground biomass.</summary>
         IBiomass AboveGroundHarvestable { get; }
@@ -30,21 +28,6 @@
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         double AssimilateAvailable { get; }
-
-        /// <summary>
-        /// Remove biomass from a plant.
-        /// </summary>
-        /// <param name="amount">Amount of biomass to remove (kg/ha).</param>
-        /// <returns>Amount of biomass removed.</returns>
-        Biomass RemoveBiomass(double amount);
-
-        /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
         /// <summary>
         /// Set the plant leaf area index.

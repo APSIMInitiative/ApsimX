@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
-using System.IO;
-using APSIM.Shared.Utilities;
-using System.Linq;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] has a value between [Start] and [End] calculated as:
+    /// This function has a value between the specified start and end phases.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -31,10 +29,12 @@ namespace Models.Functions
 
         /// <summary>The start</summary>
         [Description("Start")]
+        [Display(Type = DisplayType.CropStageName)]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
         [Description("End")]
+        [Display(Type = DisplayType.CropStageName)]
         public string End { get; set; }
 
         /// <summary>Gets the value.</summary>
@@ -73,7 +73,23 @@ namespace Models.Functions
             }
         }
 
-       
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            yield return new Paragraph($"{Name} has a value between {Start} and {End} calculated as:");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -83,7 +99,5 @@ namespace Models.Functions
             startStageIndex = Phenology.StartStagePhaseIndex(Start);
             endStageIndex = Phenology.EndStagePhaseIndex(End);
         }
-
     }
-
 }

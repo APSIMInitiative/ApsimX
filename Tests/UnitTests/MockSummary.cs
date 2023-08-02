@@ -48,5 +48,24 @@ namespace UnitTests
         {
             messages.Add("ERROR: " + message);
         }
+
+        public void WriteMessage(IModel model, string message, MessageType messageType)
+        {
+            switch (messageType)
+            {
+                case MessageType.Error:
+                    WriteError(model, message);
+                    break;
+                case MessageType.Warning:
+                    WriteWarning(model, message);
+                    break;
+                case MessageType.Information:
+                    WriteMessage(model, message);
+                    break;
+                default:
+                    messages.Add(message);
+                    break;
+            }
+        }
     }
 }

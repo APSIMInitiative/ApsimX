@@ -1,14 +1,13 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for reading from a database connection.
@@ -38,7 +37,7 @@
             get
             {
                 var data = Connection.ExecuteQuery("select Name from [_Simulations]");
-                return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
+                return DataTableUtilities.GetColumnAsStrings(data, "Name", CultureInfo.InvariantCulture).ToList();
             }
         }
 
@@ -200,8 +199,8 @@
         /// <param name="orderByFieldNames">Optional column name to order by</param>
         /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
-        public DataTable GetData(string tableName, string checkpointName = "Current", 
-                                 IEnumerable<string> simulationNames = null, 
+        public DataTable GetData(string tableName, string checkpointName = "Current",
+                                 IEnumerable<string> simulationNames = null,
                                  IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,
@@ -278,7 +277,7 @@
 
             // Build SQL statement
             var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
-                      $" FROM {tableName}";
+                      $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
             if (orderByFields.Count > 0)
@@ -289,25 +288,34 @@
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);
 
-            // Add SimulationName and CheckpointName if necessary.
-            if (result.Rows.Count > 0 && fieldNamesInTable.Contains("SimulationID"))
+            if (result.Rows.Count > 0)
             {
-                result.Columns.Add("CheckpointName", typeof(string));
-                result.Columns.Add("SimulationName", typeof(string));
-                result.Columns["CheckpointName"].SetOrdinal(0);
-                result.Columns["SimulationName"].SetOrdinal(2);
-                foreach (DataRow row in result.Rows)
+                // Add SimulationName and CheckpointName if necessary.
+                if (!fieldNamesInTable.Contains("CheckpointName"))
                 {
-                    string simulationName = null;
-                    if (!Convert.IsDBNull(row["SimulationID"]) && Int32.TryParse(row["SimulationID"].ToString(), out int simulationID))
-                        simulationName = simulationIDs.FirstOrDefault(x => x.Value == simulationID).Key;
-                    else
+                    result.Columns.Add("CheckpointName", typeof(string));
+                    result.Columns["CheckpointName"].SetOrdinal(0);
+                }
+                if (!fieldNamesInTable.Contains("SimulationName"))
+                {
+                    result.Columns.Add("SimulationName", typeof(string));
+                    result.Columns["SimulationName"].SetOrdinal(2);
+                }
+                if (fieldNamesInTable.Contains("SimulationID"))
+                {
+                    foreach (DataRow row in result.Rows)
                     {
-                        throw new Exception($"In table {tableName}, SimulationID has a value of {row["SimulationID"].ToString()} which is not valid");
-                    }
+                        string simulationName = null;
+                        if (!Convert.IsDBNull(row["SimulationID"]) && Int32.TryParse(row["SimulationID"].ToString(), out int simulationID))
+                            simulationName = simulationIDs.FirstOrDefault(x => x.Value == simulationID).Key;
+                        else
+                        {
+                            throw new Exception($"In table {tableName}, SimulationID has a value of {row["SimulationID"].ToString()} which is not valid");
+                        }
 
-                    row["CheckpointName"] = checkpointName;
-                    row["SimulationName"] = simulationName;
+                        row["CheckpointName"] = checkpointName;
+                        row["SimulationName"] = simulationName;
+                    }
                 }
             }
 

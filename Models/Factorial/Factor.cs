@@ -1,11 +1,11 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
 
     /// <summary>
     /// A class representing a treatment of an experiment (e.g. fertiliser).
@@ -39,60 +39,40 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
-            if (string.IsNullOrEmpty(Specification))
+            try
             {
-                // Return each child CompositeFactor
-                return childCompositeFactors.ToList();
-            }
-            else
-            {
-                List<CompositeFactor> factorValues = new List<CompositeFactor>();
-
-                if (Specification.Contains(" to ") && Specification.Contains(" step "))
+                var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
+                if (string.IsNullOrEmpty(Specification))
                 {
-                    if (childCompositeFactors.Any())
-                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
-                    factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
-                }
-                else if (Specification.Contains('='))
-                {
-                    if (childCompositeFactors.Any())
-                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
-                    factorValues.AddRange(SetSpecificationToFactorValues(Specification));
+                    // Return each child CompositeFactor
+                    return childCompositeFactors.ToList();
                 }
                 else
-                    factorValues.AddRange(ModelReplacementToFactorValues(Specification));
-
-                return factorValues;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="compositeFactor"></param>
-        /// <returns></returns>
-        public IEnumerable<CompositeFactor> ExpandFactor(CompositeFactor compositeFactor)
-        {
-            var childCompositeFactors = compositeFactor.FindAllChildren<CompositeFactor>();
-            if (childCompositeFactors.Count() > 0)
-            {
-                var newFactorValues = new List<CompositeFactor>();
-                foreach (var child in childCompositeFactors)
                 {
-                    var newCompositeFactor = new CompositeFactor(this, compositeFactor.Paths, compositeFactor.Values)
+                    List<CompositeFactor> factorValues = new List<CompositeFactor>();
+
+                    if (Specification.Contains(" to ") && Specification.Contains(" step "))
                     {
-                        Name = compositeFactor.Name + child.Name,
-                        Specifications = child.Specifications
-                    };
-                    newCompositeFactor.Children.AddRange(child.Children);
-                    newFactorValues.Add(newCompositeFactor);
+                        if (childCompositeFactors.Any())
+                            throw new InvalidOperationException("Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                        factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
+                    }
+                    else if (Specification.Contains('='))
+                    {
+                        if (childCompositeFactors.Any())
+                            throw new InvalidProgramException($"Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                        factorValues.AddRange(SetSpecificationToFactorValues(Specification));
+                    }
+                    else
+                        factorValues.AddRange(ModelReplacementToFactorValues(Specification));
+
+                    return factorValues;
                 }
-                return newFactorValues;
             }
-            else
-                return new CompositeFactor[] { compositeFactor };
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Unable to parse factor {Name}", error);
+            }
         }
 
         /// <summary>
@@ -128,26 +108,37 @@
         /// <param name="specification">The specification to examine</param>
         private List<CompositeFactor> RangeSpecificationToFactorValues(string specification)
         {
-            List<CompositeFactor> values = new List<CompositeFactor>();
-
-            // Format of a range:
-            //    value1 to value2 step increment.
-            string path = specification;
-            string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
-            string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);
-            double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
-            double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
-
-            for (double value = from; value <= to; value += step)
+            try
             {
-                var newFactor = new CompositeFactor(this, path.Trim(), value.ToString());
-                newFactor.Children.AddRange(Children);
-                values.Add(newFactor);
-            }
+                List<CompositeFactor> values = new List<CompositeFactor>();
 
-            return values;
+                // Format of a range:
+                //    value1 to value2 step increment.
+                string path = specification;
+                string rangeString = StringUtilities.SplitOffAfterDelimiter(ref path, "=");
+                string[] rangeBits = rangeString.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                double from = StringUtilities.ParseDouble(rangeBits[0]);
+                double to = StringUtilities.ParseDouble(rangeBits[2]);
+                double step = StringUtilities.ParseDouble(rangeBits[4]);
+
+                if ((from < to && step < 0) ||
+                    (from > to && step > 0))
+                    throw new InvalidOperationException($"Unbounded factor specification: {specification}");
+
+                for (double value = from; value <= to; value += step)
+                {
+                    var newFactor = new CompositeFactor(this, path.Trim(), value.ToString());
+                    newFactor.Children.AddRange(Children);
+                    values.Add(newFactor);
+                }
+
+                return values;
+            }
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Invalid factor range specification: '{specification}'", error);
+            }
         }
 
         /// <summary>

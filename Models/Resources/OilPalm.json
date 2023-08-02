@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 166,
   "Name": "Simulations",
   "Children": [
     {
@@ -19,6 +19,15 @@
       "ResourceName": null,
       "Name": "OilPalm",
       "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "_Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_",
+          "Name": "Introduction",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.Memo, Models",
           "Text": "The base configuration of the oil palm model has been configured to match commercial dura x pisifera palms developed in Dami, West New Britain in Papua New Guinea.  Other varieties are specified in terms of how they differ from this base variety.",
@@ -158,7 +167,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.HourlyInterpolation, Models",
+          "$type": "Models.Functions.SubDailyInterpolation, Models",
           "Name": "RelativeDevelopmentalRate",
           "Children": [
             {
@@ -182,7 +191,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.ThreeHourSin, Models",
+              "$type": "Models.Functions.ThreeHourAirTemperature, Models",
               "Name": "InterpolationMethod",
               "Children": [],
               "IncludeInDocumentation": true,

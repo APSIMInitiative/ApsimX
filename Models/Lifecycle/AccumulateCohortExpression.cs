@@ -5,7 +5,6 @@ using Models.Functions;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// Iterates through each cohort and adds the value of the Expression: 
     /// </summary>
 
@@ -16,7 +15,7 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class AccumulateCohortExpression : Model, IFunction
     {
-        
+
         /// <summary>The parent LifeCycle phase from which cohorts are evaluated</summary>
         private LifeCyclePhase parent { get; set; }
 
@@ -34,7 +33,7 @@ namespace Models.LifeCycle
         {
             return AccumulatedCohortExpression;
         }
-        
+
         /// <summary>At the start of the simulation get the parent</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

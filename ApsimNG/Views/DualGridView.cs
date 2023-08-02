@@ -5,15 +5,6 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    /// <summary>An interface for a drop down</summary>
-    public interface IDualGridView
-    {
-        /// <summary>Top grid in view.</summary>
-        IGridView Grid1 { get; }
-
-        /// <summary>bottom grid in view.</summary>
-        IGridView Grid2 { get; }
-    }
 
     /// <summary>A drop down view.</summary>
     public class DualGridView : ViewBase, IDualGridView
@@ -37,14 +28,21 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        /// <summary>Show the 2nd grid?</summary>
+        public void ShowGrid2(bool show)
+        {
+            (Grid2 as GridView).MainWidget.Visible = show;
+        }
+
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
-                mainWidget.Cleanup();
-                //Grid1.Dispose();
-                //Grid2.Dispose();
+                //mainWidget.Dispose();
+                Grid1.Dispose();
+                Grid2.Dispose();
                 owner = null;
             }
             catch (Exception err)
@@ -52,5 +50,18 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>An interface for a drop down</summary>
+    public interface IDualGridView
+    {
+        /// <summary>Top grid in view.</summary>
+        IGridView Grid1 { get; }
+
+        /// <summary>bottom grid in view.</summary>
+        IGridView Grid2 { get; }
+
+        /// <summary>Show the 2nd grid?</summary>
+        void ShowGrid2(bool show);
     }
 }

@@ -1,21 +1,19 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore.
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -58,6 +56,11 @@ namespace Models.PostSimulationTools
         [Description("Third field name to use for matching predicted with observed data (optional)")]
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
         public string FieldName3UsedForMatch { get; set; }
+
+        /// <summary>Gets or sets the third field name used for match.</summary>
+        [Description("Fourth field name to use for matching predicted with observed data (optional)")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
+        public string FieldName4UsedForMatch { get; set; }
 
         /// <summary>
         /// Normally, the only columns added to the PredictedObserved table are
@@ -105,25 +108,24 @@ namespace Models.PostSimulationTools
                 // This should be all columns which exist in one table but not both.
                 IEnumerable<string> uncommonCols = predictedDataNames.Except(observedDataNames).Union(observedDataNames.Except(predictedDataNames));
 
-                IStorageReader reader = dataStore.Reader;
-                string match1ObsShort = reader.BriefColumnName(ObservedTableName, FieldNameUsedForMatch);
-                string match2ObsShort = reader.BriefColumnName(ObservedTableName, FieldName2UsedForMatch);
-                string match3ObsShort = reader.BriefColumnName(ObservedTableName, FieldName3UsedForMatch);
+                IEnumerable<string> fieldNamesToMatch = new string[] { FieldNameUsedForMatch, FieldName2UsedForMatch, FieldName3UsedForMatch, FieldName4UsedForMatch }
+                                                        .Where(f => !string.IsNullOrEmpty(f))
+                                                        .Select(f => f == "SimulationName" ? "SimulationID" : f);
 
-                string match1PredShort = reader.BriefColumnName(PredictedTableName, FieldNameUsedForMatch);
-                string match2PredShort = reader.BriefColumnName(PredictedTableName, FieldName2UsedForMatch);
-                string match3PredShort = reader.BriefColumnName(PredictedTableName, FieldName3UsedForMatch);
+                IEnumerable<string> shortObservedFieldNamesToMatch = fieldNamesToMatch.Select(f => dataStore.Reader.BriefColumnName(ObservedTableName, f));
+
+                bool useSimulationNameForMatch = fieldNamesToMatch.Contains("SimulationID");
 
                 StringBuilder query = new StringBuilder("SELECT ");
                 for (int i = 0; i < commonCols.Count; i++)
                 {
                     string s = commonCols[i];
-                    string obsColShort = reader.BriefColumnName(ObservedTableName, s);
-                    string predColShort = reader.BriefColumnName(PredictedTableName, s);
+                    string obsColShort = dataStore.Reader.BriefColumnName(ObservedTableName, s);
+                    string predColShort = dataStore.Reader.BriefColumnName(PredictedTableName, s);
                     if (i != 0)
                         query.Append(", ");
 
-                    if (s == FieldNameUsedForMatch || s == FieldName2UsedForMatch || s == FieldName3UsedForMatch)
+                    if (fieldNamesToMatch.Contains(s))
                         query.Append($"O.\"{obsColShort}\"");
                     else
                         query.Append($"O.\"{obsColShort}\" AS \"Observed.{obsColShort}\", P.\"{predColShort}\" AS \"Predicted.{predColShort}\"");
@@ -149,11 +151,10 @@ namespace Models.PostSimulationTools
                 query.AppendLine();
                 query.AppendLine($"FROM [{ObservedTableName}] O");
                 query.AppendLine($"INNER JOIN [{PredictedTableName}] P");
-                query.Append($"USING ([SimulationID], [CheckpointID], [{FieldNameUsedForMatch}]");
-                if (!string.IsNullOrEmpty(FieldName2UsedForMatch))
-                    query.Append($", \"{FieldName2UsedForMatch}\"");
-                if (!string.IsNullOrEmpty(FieldName3UsedForMatch))
-                    query.Append($", \"{FieldName3UsedForMatch}\"");
+                query.Append($"USING ([CheckpointID]");
+
+                foreach (var fieldName in fieldNamesToMatch)
+                    query.Append($", \"{fieldName}\"");
                 query.AppendLine(")");
 
                 int checkpointID = dataStore.Writer.GetCheckpointID("Current");
@@ -175,17 +176,20 @@ namespace Models.PostSimulationTools
                         if (!(simulation.Parent is Experiment))
                             simulationNames.Add(simulation.Name);
 
-                    query.Append(" AND O.[SimulationID] in (");
-                    foreach (string simulationName in simulationNames)
+                    if (useSimulationNameForMatch)
                     {
-                        if (simulationName != simulationNames[0])
-                            query.Append(',');
-                        query.Append(dataStore.Writer.GetSimulationID(simulationName, null));
+                        query.Append(" AND O.[SimulationID] in (");
+                        foreach (string simulationName in simulationNames)
+                        {
+                            if (simulationName != simulationNames[0])
+                                query.Append(',');
+                            query.Append(dataStore.Writer.GetSimulationID(simulationName, null));
+                        }
+                        query.Append(")");
                     }
-                    query.Append(")");
                 }
 
-                DataTable predictedObservedData = reader.GetDataUsingSql(query.ToString());
+                DataTable predictedObservedData = dataStore.Reader.GetDataUsingSql(query.ToString());
 
                 if (predictedObservedData != null)
                 {
@@ -194,16 +198,16 @@ namespace Models.PostSimulationTools
                         if (column.ColumnName.StartsWith("Predicted."))
                         {
                             string shortName = column.ColumnName.Substring("Predicted.".Length);
-                            column.ColumnName = "Predicted." + reader.FullColumnName(PredictedTableName, shortName);
+                            column.ColumnName = "Predicted." + dataStore.Reader.FullColumnName(PredictedTableName, shortName);
                         }
                         else if (column.ColumnName.StartsWith("Observed."))
                         {
                             string shortName = column.ColumnName.Substring("Observed.".Length);
-                            column.ColumnName = "Observed." + reader.FullColumnName(ObservedTableName, shortName);
+                            column.ColumnName = "Observed." + dataStore.Reader.FullColumnName(ObservedTableName, shortName);
                         }
-                        else if (column.ColumnName.Equals(match1ObsShort) || column.ColumnName.Equals(match2ObsShort) || column.ColumnName.Equals(match3ObsShort))
+                        else if (shortObservedFieldNamesToMatch.Contains(column.ColumnName))
                         {
-                            column.ColumnName = reader.FullColumnName(ObservedTableName, column.ColumnName);
+                            column.ColumnName = dataStore.Reader.FullColumnName(ObservedTableName, column.ColumnName);
                         }
                     }
 
@@ -213,8 +217,8 @@ namespace Models.PostSimulationTools
                         if (predictedObservedData.Columns.Contains("Predicted." + columnName) &&
                             predictedObservedData.Columns["Predicted." + columnName].DataType == typeof(double))
                         {
-                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName);
-                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName);
+                            var predicted = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Predicted." + columnName, CultureInfo.InvariantCulture);
+                            var observed = DataTableUtilities.GetColumnAsDoubles(predictedObservedData, "Observed." + columnName, CultureInfo.InvariantCulture);
                             if (predicted.Length > 0 && predicted.Length == observed.Length)
                             {
                                 var errorData = MathUtilities.Subtract(predicted, observed);
@@ -234,12 +238,9 @@ namespace Models.PostSimulationTools
                     List<string> unitFieldNames = new List<string>();
                     List<string> unitNames = new List<string>();
 
-                    // write units to table.
-                    reader.Refresh();
-
                     foreach (string fieldName in commonCols)
                     {
-                        string units = reader.Units(PredictedTableName, fieldName);
+                        string units = dataStore.Reader.Units(PredictedTableName, fieldName);
                         if (units != null && units != "()")
                         {
                             string unitsMinusBrackets = units.Replace("(", "").Replace(")", "");
@@ -255,7 +256,7 @@ namespace Models.PostSimulationTools
                         // The Writer replaces tables, rather than appends to them,
                         // so we actually need to re-write the existing units table values
                         // Is there a better way to do this?
-                        DataView allUnits = new DataView(reader.GetData("_Units"));
+                        DataView allUnits = new DataView(dataStore.Reader.GetData("_Units"));
                         allUnits.Sort = "TableName";
                         DataTable tableNames = allUnits.ToTable(true, "TableName");
                         foreach (DataRow row in tableNames.Rows)
@@ -276,8 +277,8 @@ namespace Models.PostSimulationTools
                 else
                 {
                     // Determine what went wrong.
-                    DataTable predictedData = reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
-                    DataTable observedData = reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
+                    DataTable predictedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + PredictedTableName + "]");
+                    DataTable observedData = dataStore.Reader.GetDataUsingSql("SELECT * FROM [" + ObservedTableName + "]");
                     if (predictedData == null || predictedData.Rows.Count == 0)
                         throw new Exception(Name + ": Cannot find any predicted data.");
                     else if (observedData == null || observedData.Rows.Count == 0)
@@ -307,7 +308,23 @@ namespace Models.PostSimulationTools
             IEnumerable<string> predictedColumns = storage.Reader.GetColumns(PredictedTableName).Select(c => c.Item1);
             IEnumerable<string> observedColumns = storage.Reader.GetColumns(ObservedTableName).Select(c => c.Item1);
 
-            return predictedColumns.Intersect(observedColumns).ToArray();
+            List<string> intersect = predictedColumns.Intersect(observedColumns).ToList();
+
+            //These columns will always exist, however may have been added when the table was loaded.
+            //We need to add them back in here for PredictObserve
+            if (!intersect.Contains("SimulationName"))
+            {
+                int pos = intersect.IndexOf("SimulationID");
+                intersect.Insert(pos+1, "SimulationName");
+            }
+
+            if (!intersect.Contains("CheckpointName"))
+            {
+                int pos = intersect.IndexOf("CheckpointID");
+                intersect.Insert(pos + 1, "CheckpointName");
+            }
+
+            return intersect.ToArray();
         }
     }
 }

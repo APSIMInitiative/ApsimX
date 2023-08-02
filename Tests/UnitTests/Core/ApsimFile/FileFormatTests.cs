@@ -76,7 +76,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
-            var simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
             Assert.IsNotNull(simulations);
             Assert.AreEqual(simulations.Children.Count, 1);
             var simulation = simulations.Children[0];
@@ -97,7 +97,7 @@
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
             List<Exception> creationExceptions = new List<Exception>();
-            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false);
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false).NewModel;
             Assert.AreEqual(creationExceptions.Count, 1);
             Assert.IsTrue(creationExceptions[0].Message.StartsWith("Errors found"));
 
@@ -115,25 +115,6 @@
             Assert.AreEqual(simulation.Children[1].Parent, simulation);
         }
 
-        /// <summary>Test that models that implement IDontSerialiseChildren don't have the children serialised.</summary>
-        [Test]
-        public void FileFormat_CheckIOptionallySerialiseChildrenWorks()
-        {
-            // Create some models.
-            Simulation sim = new Simulation();
-            sim.Children.Add(new ModelWithIDontSerialiseChildren()
-            {
-                Name = "ModelImplementingIDontSerialiseChildren",
-                Children = new List<IModel>() { new Clock() }
-            });
-
-            Simulations simulations = new Simulations();
-            simulations.Children.Add(sim);
-
-            string json = FileFormat.WriteToString(simulations);
-            Assert.IsFalse(json.Contains("Models.Clock"));
-        }
-
         /// <summary>
         /// This test ensures that exceptions thrown while opening a file cause
         /// the run to be flagged as failed.
@@ -141,6 +122,11 @@
         [Test]
         public void OnCreatedShouldFailRun()
         {
+            // Redirect console to stop the exception text (written by the call to Main below) from
+            // being sent to Jenkins console output.
+            StringWriter sw = new StringWriter();   
+            Console.SetOut(sw);
+
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, json);
@@ -148,13 +134,5 @@
             int result = Models.Program.Main(new[] { fileName });
             Assert.AreEqual(1, result);
         }
-
-        /// <summary>A class that implements IDontSerialiseChildren.</summary>
-        private class ModelWithIDontSerialiseChildren : Model, IOptionallySerialiseChildren
-        {
-            /// <summary>Allow children to be serialised?</summary>
-            public bool DoSerialiseChildren { get { return false; } }
-        }
-
     }
 }

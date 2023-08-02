@@ -2,9 +2,9 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
@@ -14,12 +14,10 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Shuffles (randomises) individuals in the list")]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
+    [Description("Shuffle (randomises) individuals in the fiter group")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortRandomise.htm")]
     public class SortRandom : CLEMModel, IValidatableObject, ISort
     {
         /// <inheritdoc/>
@@ -31,20 +29,20 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">Randomise order</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

@@ -1,8 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
 using Models.Core;
 using Models.Functions;
-using System;
-
 
 namespace Models.PMF.Phen
 {
@@ -32,15 +30,65 @@ namespace Models.PMF.Phen
         LARPTQmodel lARPTQmodel = null;
 
         /// <summary>
+        /// Apply leaf stage factors in calculating phyllochron
+        /// </summary>
+        [Description("Apply leaf stage factors in calculating phyllochron")]
+        public bool ApplyLeafStageFactors { get; set; }
+
+        private bool CropVernalised = false;
+        private bool Phase1complete = false;
+        private bool VernalisedInPhase1 = false;
+        private bool Phase2complete = false;
+
+        private double HSFactor = 1.0;
+
+        /// <summary>
+        /// Name of event to swith Vernalisation Factor
+        /// </summary>
+        [Description("Name of event to swith Vernalisation Factor")]
+        public string SetEvent { get; set; }
+
+        /// <summary>
         /// The value
         /// </summary>
         /// <param name="arrayIndex"></param>
         /// <returns></returns>
         public double Value(int arrayIndex = -1)
         {
+            if (ApplyLeafStageFactors)
+            {
+                double HS = phenology.FindChild<IFunction>("HaunStage").Value();
+
+                //Phase1 transition
+                if ((HS > 3.0) && (Phase1complete == false))
+                {
+                    Phase1complete = true;
+                    if (CropVernalised == true)
+                    {
+                        VernalisedInPhase1 = true;
+                    }
+                    else
+                    {
+                        HSFactor = 1.25;
+                    }
+                }
+                //Phase 2 transition
+                if ((HS > 7.0) && (Phase2complete == false))
+                {
+                    Phase2complete = true;
+                    if ((CropVernalised == true) && (VernalisedInPhase1 == false))
+                    {
+                    }
+                    else
+                    {
+                        HSFactor *= 1.35;
+                    }
+                }
+            }
+
             if (lARPTQmodel != null)
             {
-                double LAR = lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
+                double LAR = 1 / HSFactor * lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
                 if (LAR > 0)
                     return 1 / LAR;
                 else
@@ -50,11 +98,28 @@ namespace Models.PMF.Phen
                 return 0;
         }
 
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when crop is sown</summary>
         [EventSubscribe("Sowing")]
         private void OnSowing(object sender, EventArgs e)
         {
             lARPTQmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
+            CropVernalised = false;
+            Phase1complete = false;
+            VernalisedInPhase1 = false;
+            Phase2complete = false;
+            HSFactor = 1.0;
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == SetEvent)
+            {
+                CropVernalised = true;
+            }
         }
     }
 }

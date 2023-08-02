@@ -1,11 +1,11 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
-    [Description("This resource represents an other animal group (e.g. Chickens).")]
+    [Description("This resource represents an other animal type (e.g. chickens)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -84,7 +84,7 @@ namespace Models.CLEM.Resources
                 if (child is OtherAnimalsTypeCohort)
                 {
                     ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
-                    Add(child, this, "", "Setup");
+                    Add(child, null, null, "Initial numbers");
                 }
             }
         }
@@ -104,31 +104,10 @@ namespace Models.CLEM.Resources
         #region Transactions
 
         /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
-        /// <summary>
         /// Amount
         /// </summary>
         [JsonIgnore]
         public double Amount { get; set; }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected void OnTransactionOccurred(EventArgs e)
-        {
-            EventHandler invoker = TransactionOccurred;
-            if (invoker != null)
-                invoker(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public event EventHandler TransactionOccurred;
 
         /// <summary>
         /// Add individuals to type based on cohort
@@ -150,23 +129,8 @@ namespace Models.CLEM.Resources
                 cohortexists.Number += cohortToAdd.Number;
 
             LastCohortChanged = cohortToAdd;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Gain,
-                Amount = cohortToAdd.Number,
-                Activity = activity,
-                RelatesToResource = relatesToResource,
-                Category = category,
-                ResourceType = this,
-                ExtraInformation = cohortToAdd
-            };
-            LastTransaction = details;
-            LastGain = cohortToAdd.Number;
-            TransactionEventArgs eargs = new TransactionEventArgs
-            {
-                Transaction = LastTransaction
-            };
-            OnTransactionOccurred(eargs);
+
+            ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, cohortToAdd);
         }
 
         /// <summary>
@@ -183,7 +147,7 @@ namespace Models.CLEM.Resources
             if (cohortexists == null)
             {
                 // tried to remove individuals that do not exist
-                throw new Exception("Tried to remove individuals from "+this.Name+" that do not exist");
+                throw new Exception("Tried to remove individuals from " + this.Name + " that do not exist");
             }
             else
             {
@@ -192,21 +156,7 @@ namespace Models.CLEM.Resources
             }
 
             LastCohortChanged = cohortToRemove;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                TransactionType = TransactionType.Loss,
-                Amount = cohortToRemove.Number,
-                Activity = activity,
-                Category = reason,
-                ResourceType = this,
-                ExtraInformation = cohortToRemove
-            };
-            LastTransaction = details;
-            TransactionEventArgs eargs = new TransactionEventArgs
-            {
-                Transaction = LastTransaction
-            };
-            OnTransactionOccurred(eargs);
+            ReportTransaction(TransactionType.Loss, cohortToRemove.Number, activity, "", reason, this, cohortToRemove);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 166,
   "Name": "Simulations",
   "Children": [
     {
@@ -32,6 +32,16 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": true
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "SeedMortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         },
         {
           "$type": "Models.Functions.AccumulateFunction, Models",
@@ -144,8 +154,6 @@
             },
             {
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
-              "ShootLag": 1.0,
-              "ShootRate": 0.0,
               "Start": "Germination",
               "End": "Emergence",
               "TTForTimeStep": 0.0,
@@ -157,6 +165,48 @@
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Target",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "ShootLag",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DepthxRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Plant].SowingData.Depth",
+                          "Name": "SowingDepth",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "ShootRate",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -332,7 +382,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -358,7 +409,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -393,7 +445,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -419,7 +472,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -437,7 +491,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -738,7 +793,7 @@
               "Name": "FRGRFunction",
               "Children": [
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "SubDailyTemperatures": null,
                   "SubDailyResponse": null,
                   "agregationMethod": 0,
@@ -765,7 +820,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
                       "Children": [],
@@ -943,71 +998,14 @@
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.98,
-                  "FractionDeadToResidue": 1.0,
-                  "Name": "Harvest",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.98,
-                  "FractionDeadToResidue": 1.0,
-                  "Name": "Cut",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.46,
-                  "FractionDeadToResidue": 1.0,
-                  "Name": "Prune",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Graze",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Thin",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.98,
+              "HarvestFractionDeadToResidue": 1.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -1120,7 +1118,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -1214,7 +1212,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -1571,71 +1569,14 @@
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Harvest",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Cut",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Prune",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Graze",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Thin",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -1678,7 +1619,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+              "$type": "Models.PMF.NutrientDemandFunctions, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -1787,7 +1728,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+              "$type": "Models.PMF.NutrientDemandFunctions, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -1919,7 +1860,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "InitialWt",
               "Children": [
                 {
@@ -1956,11 +1897,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "Name": "RootDepthStressFactor",
-              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -2083,71 +2019,14 @@
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.7,
-                  "FractionDeadToResidue": 0.7,
-                  "Name": "Harvest",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.1,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Cut",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Prune",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Graze",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Thin",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.7,
+              "HarvestFractionDeadToResidue": 0.7
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -2209,7 +2088,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+              "$type": "Models.PMF.NutrientDemandFunctions, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -2328,7 +2207,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+              "$type": "Models.PMF.NutrientDemandFunctions, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -2459,7 +2338,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "InitialWt",
               "Children": [
                 {
@@ -2654,59 +2533,14 @@
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
               "Name": "BiomassRemovalDefaults",
-              "Children": [
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Harvest",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Cut",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Prune",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                  "FractionLiveToRemove": 0.0,
-                  "FractionDeadToRemove": 0.0,
-                  "FractionLiveToResidue": 0.0,
-                  "FractionDeadToResidue": 0.0,
-                  "Name": "Graze",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -2818,7 +2652,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -2922,7 +2756,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.NutrientPoolFunctions, Models",
               "Name": "NDemands",
               "Children": [
                 {

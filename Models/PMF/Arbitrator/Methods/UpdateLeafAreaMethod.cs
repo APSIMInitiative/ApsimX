@@ -1,7 +1,7 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
-using System;
 
 namespace Models.PMF.Arbitrator
 {

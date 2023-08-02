@@ -8,7 +8,6 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.PMF;
 using Models.Soils;
-using Models.Soils.Standardiser;
 using Models.Storage;
 using NUnit.Framework;
 using UnitTests.Storage;
@@ -24,7 +23,7 @@ namespace UnitTests.Core
     {
         private class Logger : Model
         {
-            [Link] private Clock clock = null;
+            [Link] private IClock clock = null;
             [Link(Type = LinkType.Ancestor)] private Simulation sim = null;
             public string Json { get; set; }
             public bool ExitAfterLogging { get; set; }
@@ -56,7 +55,7 @@ namespace UnitTests.Core
         [TestCase("Maize.apsimx")]
         [TestCase("Oats.apsimx")]
         [TestCase("OilPalm.apsimx")]
-        [TestCase("Plantain.apsimx")]
+        [TestCase("PlantainForage.apsimx")]
         [TestCase("Potato.apsimx")]
         [TestCase("RedClover.apsimx")]
         [TestCase("Rotation.apsimx")]
@@ -98,12 +97,12 @@ namespace UnitTests.Core
         private static Simulation CreateSimulation(string path)
         {
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false);
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false).NewModel as Simulations;
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
-                SoilStandardiser.Standardise(soil);
+                soil.Standardise();
             DataStore storage = sims.FindDescendant<DataStore>();
             storage.UseInMemoryDB = true;
-            Clock clock = sims.FindDescendant<Clock>();
+            IClock clock = sims.FindDescendant<Clock>();
             clock.EndDate = clock.StartDate.AddYears(1);
             return sims.FindDescendant<Simulation>();
         }

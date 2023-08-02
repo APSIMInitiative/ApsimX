@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 
 namespace Models.Functions
@@ -15,7 +12,7 @@ namespace Models.Functions
     [Description("Takes the value of the child (Ymax adnd Xvalue) and returns the y value from a beta growth function of the form y = Ymax * (1 + (te - XVaule)/(te-tm))* (XVaule/te)^(te/(te-tm))")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class BetaGrowthFunction : Model, IFunction, ICustomDocumentation
+    public class BetaGrowthFunction : Model, IFunction
     {
         /// <summary>Ymax, the maximum value for weight, length or others </summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -39,7 +36,7 @@ namespace Models.Functions
             try
             {
                 //Ymax* (1 + (te - t) / (te - tm)) * (t / te) ^ (te / (te - tm))
-                if(XValue.Value(arrayIndex) <= te)
+                if (XValue.Value(arrayIndex) <= te)
                 {
                     return Ymax.Value(arrayIndex) * (1 +
                     (te - XValue.Value(arrayIndex)) /
@@ -47,7 +44,7 @@ namespace Models.Functions
                     Math.Pow(XValue.Value(arrayIndex) / te,
                     te / (te - tm));
                 }
-                else 
+                else
                 {
                     return Ymax.Value(arrayIndex);
                 }
@@ -55,26 +52,6 @@ namespace Models.Functions
             catch (Exception)
             {
                 throw new Exception("Error with values to beta growth function");
-            }
-        }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                Name = this.Name;
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                tags.Add(new AutoDocumentation.Paragraph(" a beta growth function of the form " +
-                                                         "y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, 0, indent+1);
             }
         }
     }

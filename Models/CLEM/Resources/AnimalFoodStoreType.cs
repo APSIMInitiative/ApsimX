@@ -1,9 +1,9 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Models.CLEM.Resources
@@ -16,10 +16,10 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    [Description("This resource represents an animal food store (e.g. Lucerne).")]
+    [Description("This resource represents an animal food store (e.g. lucerne)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IFeedType, IResourceType
     {
         /// <summary>
         /// Unit type
@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-                Add(StartingAmount, this, NameWithParent, "Starting value");
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         #region Transactions
@@ -102,42 +102,30 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            double addAmount;
+            double amountAdded;
             double nAdded;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    addAmount = (double)resourceAmount;
+                    amountAdded = (double)resourceAmount;
                     nAdded = Nitrogen;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    addAmount = ((FoodResourcePacket)resourceAmount).Amount;
+                    amountAdded = ((FoodResourcePacket)resourceAmount).Amount;
                     nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
                     break;
                 default:
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
-            if (addAmount > 0)
+            if (amountAdded > 0)
             {
                 // update N based on new input added
-                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * addAmount)) / (Amount + addAmount);
+                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * amountAdded)) / (Amount + amountAdded);
 
-                this.amount += addAmount;
+                this.amount += amountAdded;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = addAmount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = addAmount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
 
@@ -178,19 +166,7 @@ namespace Models.CLEM.Resources
                     (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = amountRemoved,
-                    Activity = request.ActivityModel,
-                    RelatesToResource = request.RelatesToResource,
-                    Category = request.Category
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             return;
         }
@@ -204,36 +180,12 @@ namespace Models.CLEM.Resources
             this.amount = newValue;
         }
 
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
-
         #endregion
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -251,18 +203,15 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

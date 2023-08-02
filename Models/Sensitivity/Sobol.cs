@@ -1,25 +1,24 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using Models.Interfaces;
+using Models.Sensitivity;
+using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using Models.Interfaces;
-    using Models.Sensitivity;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Threading;
-    using Utilities;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a SOBOL parameter sensitivity analysis.
     /// </summary>
     [Serializable]
@@ -27,7 +26,7 @@
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, IModelAsTable, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -179,7 +178,7 @@
 
                 // Apply each composite factor of this combination to our simulation description.
                 combination.ForEach(c => c.ApplyToSimulation(simDescription));
-                
+
                 // Add simulation description to the return list of descriptions
                 simulationDescriptions.Add(simDescription);
 
@@ -351,7 +350,7 @@
 
                     // Write variables file
                     using (var writer = new StreamWriter(sobolVariableValuesFileName))
-                        DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",", true, writer, excelFriendly: false, decimalFormatString:"F6");
+                        DataTableUtilities.DataTableToText(variableValues.ToTable(), 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     // Write X1
                     using (var writer = new StreamWriter(sobolx1FileName))
@@ -406,9 +405,13 @@
                         foreach (DataColumn col in resultsForValue.Columns)
                         {
                             if (col.DataType == typeof(string))
-                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsStrings(resultsForValue, col.ColumnName));
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsStrings(resultsForValue, col.ColumnName, CultureInfo.InvariantCulture));
                             else
-                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsDoubles(resultsForValue, col.ColumnName));
+                                // Someone needs to test this on a non-Australian locale.
+                                // Does R print out numbers using the system locale, or
+                                // an international one? If the system locale, change this
+                                // to CultureInfo.CurrentCulture.
+                                results.SetValues(col.ColumnName, DataTableUtilities.GetColumnAsDoubles(resultsForValue, col.ColumnName, CultureInfo.InvariantCulture));
                         }
                     }
                     catch (Exception err)
@@ -497,7 +500,7 @@
                 script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
                                         "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
                                         ,
-                                        i+1, Parameters[i].LowerBound,
+                                        i + 1, Parameters[i].LowerBound,
                                         Parameters[i].UpperBound - Parameters[i].LowerBound);
             }
 
@@ -507,7 +510,7 @@
             script += string.Format("write.csv(X1, \"{0}\")" + Environment.NewLine +
                                     "write.csv(X2, \"{1}\")" + Environment.NewLine
                                     ,
-                                    sobolx1FileName.Replace("\\", "/"), 
+                                    sobolx1FileName.Replace("\\", "/"),
                                     sobolx2FileName.Replace("\\", "/"));
 
             //script += "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine;
@@ -523,25 +526,6 @@
         private string GetTempFileName(string name, string extension)
         {
             return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                {
-                    if (!(child is Simulation) && !(child is Factors))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
         }
     }
 }

@@ -1,0 +1,24 @@
+name: "\U0001f6d1 Error Report"
+description: An Error or Crash has occurred
+labels: ["bug", "crash"]
+body:
+  - type: markdown
+    attributes:
+      value: "To save some time, please upload a copy of your apsimx and weather file by combining them into a .ZIP file and dragging it into the text field below"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      placeholder: Write Message and Upload Picture and/or Files Here
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What Operating System are you on?
+      options:
+        - Windows
+        - MacOS
+        - Linux
+    validations:
+      required: true

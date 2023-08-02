@@ -167,14 +167,14 @@ namespace UnitTests
         /// <summary>
         /// Returns a lightweight skeleton simulation which can be run.
         /// </summary>
-        public static Simulations GetRunnableSim()
+        public static Simulations GetRunnableSim(bool useInMemoryDb = false)
         {
             Simulations sims = new Simulations()
             {
                 FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"),
                 Children = new List<IModel>()
                 {
-                    new DataStore(),
+                    new DataStore() { UseInMemoryDB = useInMemoryDb },
                     new Simulation()
                     {
                         Children = new List<IModel>()
@@ -220,7 +220,7 @@ namespace UnitTests
         public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return FileFormat.ReadFromString<T>(json, errorHandler, false);
+            return (T)FileFormat.ReadFromString<T>(json, errorHandler, false).NewModel;
         }
 
         /// <summary>

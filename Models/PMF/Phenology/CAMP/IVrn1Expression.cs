@@ -1,19 +1,26 @@
-
 namespace Models.PMF.Phen
 {
-    using System.IO;
-    
+
     /// <summary>Interface for a function</summary>
-    public interface IVrn1Expression
+    public interface IVrnExpression
     {
         /// <summary>The plases name</summary>
         string Name { get; }
         
-        /// <summary> Fraction of progress through the phase</summary>
-        double MethColdVrn1 { get;}
+        /// <summary> Vrn1 expression</summary>
+        double Vrn1 { get;}
 
-        /// <summary>The target for phase completion</summary>
-        double VrnSatThreshold { get; }
+        /// <summary> Vrn 2 expression</summary>
+        double Vrn2 { get; }
+
+        /// <summary> Vrn 3 expression</summary>
+        double Vrn3 { get; }
+        
+        /// <summary> base Vrn expression</summary>
+        double BaseVrn { get; }
+        
+        /// <summary> Maximum Vrn expression</summary>
+        double MaxVrn { get; }
 
         /// <summary>The target for phase completion</summary>
         bool IsVernalised { get; }

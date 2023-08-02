@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.PMF.Interfaces;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.PMF;
-using Models.PMF.Organs;
+using Models.PMF.Interfaces;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// The partitioning of daily growth to storage biomass is based on a storage fraction.
-    /// </summary>
+    /// <summary>The partitioning of daily growth to storage biomass is based on a storage fraction.</summary>
     [Serializable]
-    [Description("This function calculates...")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StorageDMDemandFunction : Model, IFunction, ICustomDocumentation
+    public class StorageDMDemandFunction : Model, IFunction
     {
         /// <summary>The Storage Fraction</summary>
         [Description("StorageFraction")]
@@ -27,7 +24,7 @@ namespace Models.Functions.DemandFunctions
         private Organ parentSimpleOrgan = null;
 
         private string parentOrganType = "";
- 
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -79,28 +76,15 @@ namespace Models.Functions.DemandFunctions
                 throw new Exception("Could not locate parent organ");
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
 
-                // get description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

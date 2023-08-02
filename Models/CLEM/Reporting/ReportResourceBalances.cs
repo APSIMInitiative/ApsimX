@@ -1,15 +1,14 @@
-﻿using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using APSIM.Shared.Utilities;
-using System.Data;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
-using Models.Storage;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -27,19 +26,19 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Includes value as reportable columns")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
-    public class ReportResourceBalances: Models.Report, ICLEMUI
+    public class ReportResourceBalances : Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;
         [Link]
         private Summary summary = null;
+
         private IEnumerable<IActivityTimer> timers;
 
         /// <summary>
         /// Gets or sets report groups for outputting
         /// </summary>
         [Description("Resource groups")]
-        //[Display(Type = DisplayType.MultiLineText)]
         [Category("General", "Resources")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "At least one Resource group must be provided for the Balances Report")]
         public string[] ResourceGroupsToReport { get; set; }
@@ -73,6 +72,13 @@ namespace Models.CLEM.Reporting
         public bool ReportAnimalWeight { get; set; }
 
         /// <summary>
+        /// Report combined values for herd when using categories
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Include herd totals")]
+        public bool ReportHerdTotals { get; set; }
+
+        /// <summary>
         /// Report available land as balance
         /// </summary>
         [Category("Report", "Land")]
@@ -103,9 +109,9 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any() )
-                return; 
-            
+            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any())
+                return;
+
             timers = FindAllChildren<IActivityTimer>();
 
             List<string> variableNames = new List<string>();
@@ -127,7 +133,7 @@ namespace Models.CLEM.Reporting
                             // check it is a ResourceGroup
                             CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(this.ResourceGroupsToReport[i]);
                             if (model == null)
-                                summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
+                                summary.WriteMessage(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored", MessageType.Warning);
                             else
                             {
                                 if (model is Labour)
@@ -139,7 +145,7 @@ namespace Models.CLEM.Reporting
                                     for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
                                         if (ReportAmount)
-                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
+                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name);
 
                                         //TODO: what economic metric is needed for labour
                                         //TODO: add ability to report labour value if required
@@ -174,15 +180,26 @@ namespace Models.CLEM.Reporting
                                                 if (ReportAnimalWeight)
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalWeight");
                                                 if (ReportValue)
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalPrice as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
+                                            }
+                                            if (ReportHerdTotals & ((item as RuminantType).Parent as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined)
+                                            {
+                                                if (ReportAmount)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").Count as {item.Name.Replace(" ", "_")}.All.Count");
+                                                if (ReportAnimalEquivalents)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalAdultEquivalent as {item.Name.Replace(" ", "_")}.All.TotalAdultEquivalent");
+                                                if (ReportAnimalWeight)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalWeight as {item.Name.Replace(" ", "_")}.All.TotalWeight");
+                                                if (ReportValue)
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"\").TotalPrice as {item.Name.Replace(" ", "_")}.All.TotalPrice");
                                             }
                                         }
                                         else
                                         {
                                             if (ReportAmount)
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.{amountStr} as {item.Name.Replace(" ", "_")}_Amount");
                                             if (ReportValue & item.GetType() != typeof(FinanceType))
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.Value as {item.Name.Replace(" ", "_")}_DollarValue");
                                         }
                                     }
                                 }

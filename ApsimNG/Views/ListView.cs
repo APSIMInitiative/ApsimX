@@ -1,61 +1,13 @@
 ﻿using Gtk;
-using Pango;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
-#if NETCOREAPP
 using TreeModel = Gtk.ITreeModel;
-#endif
+
 
 namespace UserInterface.Views
 {
-
-    /// <summary>An interface for a list view</summary>
-    public interface IListView
-    {
-        /// <summary>Invoked when the user changes the selection</summary>
-        event EventHandler Changed;
-
-        /// <summary>Get or sets the datasource for the view.</summary>
-        DataTable DataSource { get; set; }
-
-        /// <summary>Gets or sets the selected row in the data source.</summary>
-        int[] SelectedIndicies { get; set; }
-
-        /// <summary>Sets the render details for particular cells.</summary>
-        List<CellRendererDescription> CellRenderDetails { get; set; }
-
-        /// <summary>Add a column to the list view.</summary>
-        /// <param name="columnName">The column heading.</param>
-        void AddColumn(string columnName);
-
-        /// <summary>Clear all columns and data.</summary>
-        void Clear();
-
-        /// <summary>Clear all data.</summary>
-        void ClearRows();
-
-        /// <summary>Add a new row to list view.</summary>
-        /// <param name="itemArray">A list of items to add.</param>
-        void AddRow(object[] itemArray);
-
-        /// <summary>Add a new row to list view.</summary>
-        /// <param name="index">The index of the row to remove.</param>
-        void RemoveRow(int index);
-    }
-
-    /// <summary>Render details for a cell.</summary>
-    public class CellRendererDescription
-    {
-        public int RowIndex { get; set; }
-        public int ColumnIndex { get; set; }
-        public bool StrikeThrough { get; set; }
-        public bool Bold { get; set; }
-        public bool Italics { get; set; }
-        public System.Drawing.Color Colour { get; set; }
-    }
 
     /// <summary>A list view.</summary>
     public class ListView : ViewBase, IListView
@@ -177,9 +129,13 @@ namespace UserInterface.Views
 
         /// <summary>Add a column to the list view.</summary>
         /// <param name="columnName">The column heading.</param>
-        public void AddColumn(string columnName)
+        /// <param name="colType">The System.Type if other than string</param>
+        public void AddColumn(string columnName, System.Type colType = null)
         {
-            columnTypes.Add(typeof(string));
+            if (columnName == null)
+                columnTypes.Add(typeof(string));    // default is string
+            else 
+                columnTypes.Add(colType);
             var cell = new CellRendererText();
             cells.Add(cell);
             var colIndex = -1;
@@ -284,7 +240,10 @@ namespace UserInterface.Views
 
             // initialise column headers            
             for (int i = 0; i < table.Columns.Count; i++)
-                AddColumn(table.Columns[i].ColumnName);
+            {
+                DataColumn col = table.Columns[i];
+                AddColumn(col.ColumnName, col.DataType);
+            }
 
             // Populate with rows.
             foreach (DataRow row in table.Rows)
@@ -475,5 +434,40 @@ namespace UserInterface.Views
                 return string.Compare(o1.ToString(), o2.ToString());
             return 0;
         }
+    }
+
+    /// <summary>An interface for a list view</summary>
+    public interface IListView
+    {
+        /// <summary>Invoked when the user changes the selection</summary>
+        event EventHandler Changed;
+
+        /// <summary>Get or sets the datasource for the view.</summary>
+        DataTable DataSource { get; set; }
+
+        /// <summary>Gets or sets the selected row in the data source.</summary>
+        int[] SelectedIndicies { get; set; }
+
+        /// <summary>Sets the render details for particular cells.</summary>
+        List<CellRendererDescription> CellRenderDetails { get; set; }
+
+        /// <summary>Add a column to the list view.</summary>
+        /// <param name="columnName">The column heading.</param>
+        /// <param name="colType">The System.Type if other than string</param>
+        void AddColumn(string columnName, System.Type colType = null);
+
+        /// <summary>Clear all columns and data.</summary>
+        void Clear();
+
+        /// <summary>Clear all data.</summary>
+        void ClearRows();
+
+        /// <summary>Add a new row to list view.</summary>
+        /// <param name="itemArray">A list of items to add.</param>
+        void AddRow(object[] itemArray);
+
+        /// <summary>Add a new row to list view.</summary>
+        /// <param name="index">The index of the row to remove.</param>
+        void RemoveRow(int index);
     }
 }

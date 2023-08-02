@@ -1,13 +1,12 @@
-﻿namespace Models
+﻿using System.Collections.Generic;
+using System.Drawing;
+using APSIM.Shared.Graphing;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using Models.Storage;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using Models.Core.Run;
 
     /// <summary>
     /// An interface for a model that can graph itself.
@@ -18,8 +17,8 @@
         /// <param name="storage">Storage service</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
-        IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage, 
-                                                           List<SimulationDescription> simulationDescriptions, 
+        IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
+                                                           List<SimulationDescription> simulationDescriptions,
                                                            List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
@@ -32,7 +31,7 @@
     }
 
     /// <summary>An enumeration for the different types of graph series</summary>
-    public enum SeriesType 
+    public enum SeriesType
     {
         /// <summary>A bar series</summary>
         Bar,
@@ -59,92 +58,6 @@
         /// A box and whisker plot
         /// </summary>
         Box
-    }
-
-    /// <summary>An enumeration for the different types of markers</summary>
-    public enum MarkerType 
-    {
-        /// <summary>A filled circle marker</summary>
-        FilledCircle,
-
-        /// <summary>A filled diamond marker</summary>
-        FilledDiamond,
-
-        /// <summary>A filled square marker</summary>
-        FilledSquare,
-
-        /// <summary>A filled triangle marker</summary>
-        FilledTriangle,
-
-        /// <summary>A circle marker</summary>
-        Circle,
-
-        /// <summary>A diamond marker</summary>
-        Diamond,
-
-        /// <summary>A square marker</summary>
-        Square,
-
-        /// <summary>A triangle marker</summary>
-        Triangle,
-
-        /// <summary>A cross marker</summary>
-        Cross,
-
-        /// <summary>A plus marker</summary>
-        Plus,
-
-        /// <summary>A star marker</summary>
-        Star,
-
-        /// <summary>No marker should be display</summary>
-        None
-    }
-
-    /// <summary>An enumeration for the different sizes of markers</summary>
-    public enum MarkerSizeType
-    {
-        /// <summary>Normal size markers.</summary>
-        Normal,
-
-        /// <summary>Small markers</summary>
-        Small,
-
-        /// <summary>Very small markers</summary>
-        VerySmall,
-
-        /// <summary>Large size markers.</summary>
-        Large,
-
-    }
-
-    /// <summary>An enumeration representing the different types of lines</summary>
-    public enum LineType 
-    {
-        /// <summary>A solid line</summary>
-        Solid,
-
-        /// <summary>A dashed line</summary>
-        Dash,
-
-        /// <summary>A dotted line</summary>
-        Dot,
-
-        /// <summary>A dash dot line</summary>
-        DashDot,
-
-        /// <summary>No line</summary>
-        None 
-    }
-
-    /// <summary>An enumeration for the different thicknesses of lines.</summary>
-    public enum LineThicknessType
-    {
-        /// <summary>Normal line thickness</summary>
-        Normal,
-
-        /// <summary>Thin line thickess</summary>
-        Thin
     }
 
     /// <summary>Base interface for all annotations</summary>
@@ -206,7 +119,7 @@
         public LineType type;
 
         /// <summary>Gets the line thickness</summary>
-        public LineThicknessType thickness;
+        public LineThickness thickness;
 
         /// <summary>Draw the annotation in front of series?</summary>
         public bool InFrontOfSeries { get; set; } = true;

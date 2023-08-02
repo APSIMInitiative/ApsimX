@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Oil Palm Model\r\n \r\n_Neil I. Huth, Murom Banabas, Paul N. Nelson, Michael Webb_",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,

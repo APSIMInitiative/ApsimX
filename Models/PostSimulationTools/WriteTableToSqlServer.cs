@@ -1,15 +1,17 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// A post processing model that send one or more tables from the DataStore to 
@@ -17,7 +19,7 @@
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
@@ -118,8 +120,8 @@
                 {
                     var tableData = new DataTable();
                     tableData.Load(reader);
-                    var names = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_NAME");
-                    var types = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_TYPE");
+                    var names = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_NAME", CultureInfo.InvariantCulture);
+                    var types = DataTableUtilities.GetColumnAsStrings(tableData, "TABLE_TYPE", CultureInfo.InvariantCulture);
                     for (int i = 0; i < names.Length; i++)
                     {
                         if (types[i].Contains("TABLE"))

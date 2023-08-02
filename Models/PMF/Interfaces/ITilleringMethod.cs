@@ -1,9 +1,4 @@
 ﻿using Models.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.PMF.Interfaces
 {
@@ -14,17 +9,17 @@ namespace Models.PMF.Interfaces
     public interface ITilleringMethod : IModel
     {
         /// <summary> Update number of leaves for all culms </summary>
-        void UpdateLeafNumber();
+        double CalcLeafNumber();
+        /// <summary> Calculate the potential leaf area for the tillers</summary>
+        double CalcPotentialLeafArea();
 
-        /// <summary> 
-        /// Update potential number of tillers for all culms as well as the current number of active tillers.
-        /// </summary>
-        void UpdateTillerNumber();
+        /// <summary> Calculate the actual Area for the Culms</summary>
+        double CalcActualLeafArea(double dltStressedLAI);
 
-        /// <summary> Calculate the potential leaf area before inputs are updated</summary>
-        double CalculatePotentialLeafArea();
-        
-        /// <summary> Calculate the actual leaf area once inputs are known</summary>
-        double CalculateActualLeafArea();
+        /// <summary> Fertile tiller Number (at harvest) </summary>
+        double FertileTillerNumber { get; set; }
+        /// <summary>Current Number of Tillers</summary>
+        double CurrentTillerNumber { get; set; }
+
     }
 }

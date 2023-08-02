@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
@@ -25,11 +25,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
-        [Link]
-        private Clock clock = null;
-
-        private bool gotLandRequested = false; //was this crop able to get the land it requested ?
         private int currentCropIndex = 0;
+        private int numberOfCrops = 0;
 
         /// <summary>
         /// Land type where crop is to be grown
@@ -70,7 +67,6 @@ namespace Models.CLEM.Activities
         public CropActivityManageCrop()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-            TransactionCategory = "Crop";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -86,48 +82,33 @@ namespace Models.CLEM.Activities
 
                 if (UseAreaAvailable)
                     LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-
-                ResourceRequestList = new List<ResourceRequest>
-                {
-                new ResourceRequest()
-                {
-                    Resource = LinkedLandItem,
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandItemNameToUse,
-                    ActivityModel = this,
-                    Category = TransactionCategory,
-                    FilterDetails = null
-                }
-                };
-
-                CheckResources(ResourceRequestList, Guid.NewGuid());
-                gotLandRequested = TakeResources(ResourceRequestList, false);
-
-                //Now the Land has been allocated we have an Area 
-                if (gotLandRequested)
-                    //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                    Area = ResourceRequestList.FirstOrDefault().Provided;
             }
-            // set and enable first crop in the list for rotational cropping.
-            int i = 0;
-            foreach (var item in this.Children.OfType<CropActivityManageProduct>())
-            {
-                item.ActivityEnabled = (i == currentCropIndex);
-                item.FirstTimeStepOfRotation = clock.StartDate.Year*100 + clock.StartDate.Month;
-                i++;
-            }
+
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMFinalSetupBeforeSimulation")]
-        private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialiseForCrop(object sender, EventArgs e)
         {
+            // set and enable first crop in the list for rotational cropping.
+            int i = 0;
+            foreach (CropActivityManageProduct item in this.Children.OfType<CropActivityManageProduct>())
+            {
+                numberOfCrops = i+1;
+                item.CurrentlyManaged = (i == currentCropIndex);
+                if (item.CurrentlyManaged && LinkedLandItem != null)
+                {
+                    // get land for this crop (first crop in list)
+                    // this may include a multiplier to modify the crop area planted and needed
+                    AdjustLand(item);
+                }
+                i++;
+            }
+
             if (Area == 0 && UseAreaAvailable)
-                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
+                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={this.NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
         }
 
         /// <summary>
@@ -135,22 +116,73 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void RotateCrop()
         {
-            int numberCrops = this.Children.OfType<CropActivityManageProduct>().Count();
-            if (numberCrops>1)
+            if (numberOfCrops > 1)
             {
                 currentCropIndex++;
-                if (currentCropIndex >= numberCrops)
+                if (currentCropIndex >= numberOfCrops)
                     currentCropIndex = 0;
 
                 int i = 0;
-                foreach (var item in this.Children.OfType<CropActivityManageProduct>())
+                foreach (CropActivityManageProduct item in this.FindAllChildren<CropActivityManageProduct>())
                 {
-                    item.ActivityEnabled = (i == currentCropIndex);
-                    if (item.ActivityEnabled)
-                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = clock.Today.AddDays(1).Year * 100 + clock.Today.AddDays(1).Month;
-                    else
-                        item.FirstTimeStepOfRotation = 0;
+                    item.CurrentlyManaged = (i == currentCropIndex);
+                    if (item.CurrentlyManaged)
+                        AdjustLand(item);
                     i++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method to adjust area planted if crop has a area planted multiplier
+        /// </summary>
+        /// <param name="cropProduct">The crop product details to define final land area</param>
+        private void AdjustLand(CropActivityManageProduct cropProduct)
+        {
+            // is this using available land and not yet assigned, or not using available land
+            if (Area == 0 || !UseAreaAvailable)
+            {
+                // is the requested land different to land currently provided
+                double areaneeded = UseAreaAvailable ? LinkedLandItem.AreaAvailable : (AreaRequested * cropProduct.PlantedMultiplier) - Area;
+                if (areaneeded != 0)
+                {
+                    if(areaneeded > 0)
+                    {
+                        ResourceRequestList = new List<ResourceRequest> {
+                            new ResourceRequest() {
+                                Resource = LinkedLandItem,
+                                AllowTransmutation = false,
+                                Required = areaneeded,
+                                ResourceType = typeof(Land),
+                                ResourceTypeName = LandItemNameToUse,
+                                ActivityModel = this,
+                                Category = TransactionCategory,
+                                FilterDetails = null,
+                                RelatesToResource = cropProduct.LinkedResourceItem.Name
+                            }
+                        };
+
+                        if (!UseAreaAvailable & LinkedLandItem != null)
+                        {
+                            CheckResources(ResourceRequestList, Guid.NewGuid());
+                            TakeResources(ResourceRequestList, false);
+                            //Now the Land has been allocated we have an Area 
+                            //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                            Area += ResourceRequestList.FirstOrDefault().Provided;
+                        }
+                        else
+                            Area += areaneeded;
+                    }
+                    else
+                    {
+                        // excess land for planting can be reterned to land resource
+                        // careful that this doesn't get taken by a use all available elewhere if you want it back again.
+                        if (LinkedLandItem != null)
+                        {
+                            LinkedLandItem.Add(-areaneeded, this, cropProduct.LinkedResourceItem.Name, this.TransactionCategory);
+                            Area += areaneeded;
+                        }
+                    }
                 }
             }
         }
@@ -167,13 +199,14 @@ namespace Models.CLEM.Activities
 
         // Method to listen for land use transactions 
         // This allows this activity to dynamically respond when use available area is selected
+        // only listens when use available is set for parent
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
             Area = LinkedLandItem.AreaAvailable;
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NoTask;
             return;
@@ -190,10 +223,16 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that this activity contains at least one CollectProduct activity
-            if (this.Children.OfType<CropActivityManageProduct>().Count() == 0)
+            var cropProductChildren = this.Children.OfType<CropActivityManageProduct>();
+            if (!cropProductChildren.Any())
             {
                 string[] memberNames = new string[] { "Collect product activity" };
                 results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
+            }
+            if(cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
+            {
+                string[] memberNames = new string[] { "Multiple crop product activities" };
+                results.Add(new ValidationResult("More than one [a=CropActivityManageProduct] with the same [CropName] were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
             }
             return results;
         }
@@ -202,7 +241,18 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
+        {
+            string intro = (this.FindAllChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
+
+            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
+            };
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -218,52 +268,18 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("the unallocated portion of ");
                 else
                 {
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero:true)} of ");
+
                     if (parentLand == null)
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                        htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
                     else
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
+                        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
                 }
-                if (LandItemNameToUse == null || LandItemNameToUse == "")
-                    htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + LandItemNameToUse + "</span>");
+                htmlWriter.Write($"{ CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
         }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
-                    htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-                    htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
-                    if (rotation)
-                        htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
-                    htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
         #endregion
     }
 }

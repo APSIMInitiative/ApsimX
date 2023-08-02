@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using System.Globalization;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// [DocumentMathFunction -]
-    /// </summary>
+    /// <summary>A class that returns the difference of its child functions.</summary>
     [Serializable]
     [Description("From the value of the first child function, subtract the values of the subsequent children functions")]
     public class SubtractFunction : Model, IFunction
@@ -41,6 +36,13 @@ namespace Models.Functions
                 }
             }
             return returnValue;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in MultiplyFunction.DocumentMathFunction('-', Name, Children))
+                yield return tag;
         }
     }
 }

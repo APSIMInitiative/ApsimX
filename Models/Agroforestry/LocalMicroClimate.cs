@@ -1,15 +1,14 @@
 ﻿using System;
 using Models.Core;
 using Models.Climate;
-using Models.PMF;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using Newtonsoft.Json;
+using APSIM.Shared.Utilities;
+
 
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// # [Name]
     /// Class to calculate and communicate local microclimate in agroforestry systems
     /// </summary>
     [Serializable]
@@ -123,11 +122,11 @@ namespace Models.Agroforestry
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+        public DailyMetDataFromFile YesterdaysMetData { get { return weather.YesterdaysMetData; } }
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+        public DailyMetDataFromFile TomorrowsMetData { get { return weather.TomorrowsMetData; } }
 
         /// <summary>Gets the duration of the day in hours.</summary>
         public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }

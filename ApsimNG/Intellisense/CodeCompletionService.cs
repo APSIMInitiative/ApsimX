@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP
+﻿
 using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
@@ -21,6 +21,65 @@ namespace UserInterface.Intellisense
     /// </summary>
     internal class CodeCompletionService
     {
+        /// <summary>
+        /// Formatting options for parameter symbols' metadata.
+        /// </summary>
+        private static readonly SymbolDisplayParameterOptions parameterOptions = SymbolDisplayParameterOptions.IncludeDefaultValue
+                                                                               | SymbolDisplayParameterOptions.IncludeName
+                                                                               | SymbolDisplayParameterOptions.IncludeParamsRefOut
+                                                                               | SymbolDisplayParameterOptions.IncludeType;
+
+        /// <summary>
+        /// Formatting options for generic type parameter symbols' metadata.
+        /// </summary>
+        private static readonly SymbolDisplayGenericsOptions genericOptions = SymbolDisplayGenericsOptions.IncludeTypeConstraints
+                                                                            | SymbolDisplayGenericsOptions.IncludeTypeParameters
+                                                                            | SymbolDisplayGenericsOptions.IncludeVariance;
+
+        /// <summary>
+        /// Formatting options for member symbols' metadata.
+        /// </summary>
+        private static readonly SymbolDisplayMemberOptions memberOptions = SymbolDisplayMemberOptions.IncludeContainingType
+                                                                         | SymbolDisplayMemberOptions.IncludeConstantValue
+                                                                         | SymbolDisplayMemberOptions.IncludeModifiers
+                                                                         | SymbolDisplayMemberOptions.IncludeParameters
+                                                                         | SymbolDisplayMemberOptions.IncludeRef
+                                                                         | SymbolDisplayMemberOptions.IncludeType;
+
+        /// <summary>
+        /// Formatting options for local symbols' metadata.
+        /// </summary>
+        private static readonly SymbolDisplayLocalOptions localOptions = SymbolDisplayLocalOptions.IncludeConstantValue
+                                                                       | SymbolDisplayLocalOptions.IncludeRef
+                                                                       | SymbolDisplayLocalOptions.IncludeType;
+
+        /// <summary>
+        /// Formatting metadata for symbol "kind" metadata.
+        /// </summary>
+        private static readonly SymbolDisplayKindOptions kindOptions = SymbolDisplayKindOptions.IncludeNamespaceKeyword
+                                                                     | SymbolDisplayKindOptions.IncludeTypeKeyword;
+
+        /// <summary>
+        /// Miscellaneous formatting options for symbol metadata.
+        /// </summary>
+        private static readonly SymbolDisplayMiscellaneousOptions miscellaneousOptions = SymbolDisplayMiscellaneousOptions.UseSpecialTypes
+                                                                                       | SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers
+                                                                                       | SymbolDisplayMiscellaneousOptions.UseAsterisksInMultiDimensionalArrays
+                                                                                       | SymbolDisplayMiscellaneousOptions.AllowDefaultLiteral;
+
+        /// <summary>
+        /// Formatting options for metadata displayed in the "details" area of the GUI.
+        /// </summary>
+        private static readonly SymbolDisplayFormat format = new SymbolDisplayFormat(typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypes,
+                                                                                     genericsOptions: genericOptions,
+                                                                                     memberOptions: memberOptions,
+                                                                                     delegateStyle: SymbolDisplayDelegateStyle.NameAndSignature,
+                                                                                     parameterOptions: parameterOptions,
+                                                                                     propertyStyle: SymbolDisplayPropertyStyle.ShowReadWriteDescriptor,
+                                                                                     localOptions: localOptions,
+                                                                                     kindOptions: kindOptions,
+                                                                                     miscellaneousOptions: miscellaneousOptions);
+
         private MefHostServices host;
         private AdhocWorkspace workspace;
         private ProjectInfo projectInfo;
@@ -68,18 +127,17 @@ namespace UserInterface.Intellisense
 
             foreach (Document document in documents)
             {
-                SourceText source = await document.GetTextAsync();
                 CompletionService service = CompletionService.GetService(document);
-                CompletionList completionList = await service.GetCompletionsAsync(document, offset);
+                CompletionList completionList = await service.GetCompletionsAsync(document, offset).ConfigureAwait(false);
 
                 if (completionList != null)
                 {
                     // get recommended symbols to match them up later with SymbolCompletionProvider
                     SemanticModel semanticModel = await document.GetSemanticModelAsync();
-                    ISymbol[] recommendedSymbols = (await Recommender.GetRecommendedSymbolsAtPositionAsync(semanticModel, offset, workspace)).ToArray();
+                    ISymbol[] recommendedSymbols = (await Recommender.GetRecommendedSymbolsAtPositionAsync(document, offset)).ToArray();
 
                     bool isSuggestionMode = completionList.SuggestionModeItem != null;
-                    foreach (CompletionItem item in completionList.Items)
+                    foreach (CompletionItem item in completionList.ItemsList)
                     {
                         string completionText = item.DisplayText;
                         bool preselect = item.Rules.MatchPriority == MatchPriority.Preselect;
@@ -118,7 +176,7 @@ namespace UserInterface.Intellisense
                                             completions.Add(new NeedContextItemsArgs.ContextItem()
                                             {
                                                 Name = symbol.Name,
-                                                Descr = symbol.ToDisplayString(),
+                                                Descr = symbol.ToDisplayString(format),
                                                 IsMethod = symbol.Kind == SymbolKind.Method,
                                                 IsProperty = symbol.Kind == SymbolKind.Property,
                                                 IsEvent = symbol.Kind == SymbolKind.Event
@@ -227,4 +285,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-#endif

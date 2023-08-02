@@ -1,15 +1,16 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+
+namespace Models.PMF
 {
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    
+
     /// <summary>
     /// Daily state of flows into and out of each organ
     /// </summary>
     [Serializable]
     public class NutrientsStates : Model
-    { 
+    {
         /// <summary>Carbon</summary>
         public double C { get; private set; }
         /// <summary>Nitrogen</summary>
@@ -43,6 +44,9 @@
 
         /// <summary> The weight of the organ</summary>
         public double Wt { get; private set; }
+
+        /// <summary> The Carbon of the organ</summary>
+        public double C { get; private set; }
 
         /// <summary> The Nitrogen of the organ</summary>
         public double N { get; private set; }
@@ -81,8 +85,9 @@
         /// <summary> update variables derived from NutrientPoolsStates </summary>
         public void UpdateProperties()
         {
-            Weight = Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0,0,0);
+            Weight = Cconc > 0 ? Carbon / Cconc : new NutrientPoolsState(0, 0, 0);
             Wt = Weight.Total;
+            C = Carbon.Total;
             N = Nitrogen.Total;
             P = Phosphorus.Total;
             K = Potassium.Total;
@@ -144,7 +149,7 @@
         /// <summary>return pools divied by value</summary>
         public static OrganNutrientsState operator /(OrganNutrientsState a, double b)
         {
-            
+
             return new OrganNutrientsState()
             {
                 Carbon = a.Carbon / b,
@@ -221,7 +226,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientsState, ICustomDocumentation
+    public class CompositeStates : OrganNutrientsState
     {
         private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
@@ -271,20 +276,18 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            // write description of this class.
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
-            }
+            // write children.
+            foreach (IModel child in this.FindAllChildren<IModel>())
+                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+
+            tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
         }
     }
 }

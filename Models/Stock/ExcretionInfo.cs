@@ -1,6 +1,7 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+
+namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     /// ExcretionInfo type. Totalled amounts of excretion                           

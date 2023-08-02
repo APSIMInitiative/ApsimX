@@ -105,38 +105,35 @@ namespace ApsimNG.Cloud.Azure
             buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);
 
-#if NETFRAMEWORK
-            Table primaryContainer = new Table(10, 2, false);
-#else
+
             Grid primaryContainer = new Grid();
-#endif
 
-            primaryContainer.Attach(new Label("Batch Account:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(batchAccountInput, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Batch Account:") { Xalign = 0 }, 0, 0, 1, 1);
+            primaryContainer.Attach(batchAccountInput, 1, 0, 1, 1);
 
-            primaryContainer.Attach(new Label("Batch URL:") { Xalign = 0 }, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(batchUrlInput, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Batch URL:") { Xalign = 0 }, 0, 1, 1, 1);
+            primaryContainer.Attach(batchUrlInput, 1, 1, 1, 1);
 
-            primaryContainer.Attach(new Label("Batch Key:") { Xalign = 0 }, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(batchKeyInput, 1, 2, 2, 3, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Batch Key:") { Xalign = 0 }, 0, 2, 1, 1);
+            primaryContainer.Attach(batchKeyInput, 1, 2, 1, 1);
 
-            primaryContainer.Attach(new Label("Storage Account:") { Xalign = 0 }, 0, 1, 3, 4, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(storageAccountInput, 1, 2, 3, 4, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Storage Account:") { Xalign = 0 }, 0, 3, 1, 1);
+            primaryContainer.Attach(storageAccountInput, 1, 3, 1, 1);
 
-            primaryContainer.Attach(new Label("Storage Key:") { Xalign = 0 }, 0, 1, 4, 5, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(storageKeyInput, 1, 2, 4, 5, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Storage Key:") { Xalign = 0 }, 0, 4, 1, 1);
+            primaryContainer.Attach(storageKeyInput, 1, 4, 1, 1);
 
-            primaryContainer.Attach(new Label(""), 0, 2, 5, 6, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label(""), 0, 5, 2, 1);
 
-            primaryContainer.Attach(new Label("Email Address:") { Xalign = 0 }, 0, 1, 6, 7, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(emailSenderInput, 1, 2, 6, 7, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Email Address:") { Xalign = 0 }, 0, 6, 1, 1);
+            primaryContainer.Attach(emailSenderInput, 1, 6, 1, 1);
 
-            primaryContainer.Attach(new Label("Email Password:") { Xalign = 0 }, 0, 1, 7, 8, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            primaryContainer.Attach(emailPWInput, 1, 2, 7, 8, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label("Email Password:") { Xalign = 0 }, 0, 7, 1, 1);
+            primaryContainer.Attach(emailPWInput, 1, 7, 1, 1);
 
-            primaryContainer.Attach(new Label(""), 0, 2, 8, 9, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(new Label(""), 0, 8, 2, 1);
 
-            primaryContainer.Attach(buttonContainer, 0, 2, 9, 10, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
+            primaryContainer.Attach(buttonContainer, 0, 9, 2, 1);
 
             Alignment adj = new Alignment(0f, 0f, 1f, 0f); // 3rd argument is 1 to make the controls to scale (horizontally) with viewport size
             adj.LeftPadding = adj.RightPadding = adj.TopPadding = adj.BottomPadding = 15;
@@ -253,7 +250,7 @@ namespace ApsimNG.Cloud.Azure
             try
             {
                 Finished?.Invoke(this, e);
-                this.Cleanup();
+                Dispose();
             }
             catch// (Exception err) // fixme
             {
@@ -270,7 +267,7 @@ namespace ApsimNG.Cloud.Azure
         {
             try
             {
-                System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/") { UseShellExecute = true });
             }
             catch// (Exception err) // fixme
             {

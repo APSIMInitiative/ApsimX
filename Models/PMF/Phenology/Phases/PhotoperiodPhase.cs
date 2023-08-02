@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and reaches 
-    /// [End] when [PPType] photo period passes a critical value of [CriticalPhotoperiod] 
+    /// This phase goes from the specified start stage to the specified end stage and reaches
+    /// the end stage when the photo period passes a user-defined critical value.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class PhotoperiodPhase : Model, IPhase, ICustomDocumentation
+    public class PhotoperiodPhase : Model, IPhase
     {
         [Link(ByName = true)]
         IFunction Photoperiod = null;
@@ -28,9 +28,9 @@ namespace Models.PMF.Phen
         [Description("Critical photoperiod to move into next phase")]
         public double CricialPhotoperiod { get; set; }
 
-            /// <summary>
-            ///  Photoperiod Type
-            /// </summary>
+        /// <summary>
+        ///  Photoperiod Type
+        /// </summary>
         public enum PPType
         {
             /// <summary>
@@ -43,7 +43,7 @@ namespace Models.PMF.Phen
             Decreasing
         }
 
-            /// <summary>Flag to specify whether photoperiod should be increasing</summary>
+        /// <summary>Flag to specify whether photoperiod should be increasing</summary>
         [Description("Flag to specify whether photoperiod should be increasing")]
         public PPType PPDirection { get; set; }
 
@@ -55,10 +55,14 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
+
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
         public double FractionComplete { get; }
-        
+
         /// <summary>Units of progress through phase on this time step.</summary>
         [JsonIgnore]
         public double ProgressionForTimeStep { get; set; }
@@ -88,29 +92,16 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + 
-                    ". The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing).  "+
-                    "The base model uses a critical photoperiod of "+CricialPhotoperiod.ToString()+ " hours ("+PPDirection.ToString()+").", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
+            // Write description of this class.
+            StringBuilder text = new StringBuilder($"This phase goes from {Start} to {End}. ");
+            text.Append("The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing). ");
+            text.Append($"The base model uses a critical photoperiod of {CricialPhotoperiod} hours ({PPDirection}).");
+            yield return new Paragraph(text.ToString());
         }
     }
 }
-
-      
-      

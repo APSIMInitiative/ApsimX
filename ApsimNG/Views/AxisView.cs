@@ -1,12 +1,13 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using Gtk;
-    using Interfaces;
-    using OxyPlot.Axes;
+﻿using System;
+using System.Globalization;
+using Gtk;
+using UserInterface.Interfaces;
+using OxyPlot.Axes;
 
+namespace UserInterface.Views
+{
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// An implementation of an AxisView
     /// </summary>
     public class AxisView : ViewBase, IAxisView
     {
@@ -153,27 +154,22 @@
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the axis is a date time axis.
-        /// This is not editable by the user.
-        /// </summary>
-        public bool IsDateAxis { get; set; }
-
-        /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
         { 
             get
             {
-                DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
-                else if (IsDateAxis && DateTime.TryParse(entryMin.Text, out date))
+                else if (DateTime.TryParseExact(entryMin.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
                     return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMin.Text,
-                                            System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToDouble(entryMin.Text, CultureInfo.InvariantCulture);
             }
         }
 
@@ -184,15 +180,16 @@
         {
             get
             {
-                DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
-                else if (IsDateAxis && DateTime.TryParse(entryMax.Text, out date))
+                else if (DateTime.TryParseExact(entryMax.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
                     return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMax.Text,
-                                            System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToDouble(entryMax.Text, CultureInfo.InvariantCulture);
             }
             
             set

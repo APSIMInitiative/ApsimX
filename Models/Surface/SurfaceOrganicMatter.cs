@@ -1,33 +1,31 @@
-﻿namespace Models.Surface
-{
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using Models.Soils;
+using Models.Soils.Nutrients;
 
+namespace Models.Surface
+{
     /// <summary>
-    /// # [Name]
     /// The surface organic matter model.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
+    [ValidParent(ParentType = typeof(Zone))]
+    public class SurfaceOrganicMatter : Model, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass
     {
         /// <summary>The water balance model</summary>
         [Link]
         ISoilWater waterBalance = null;
 
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>Link to the summary component</summary>
@@ -145,6 +143,9 @@
         /// <summary>This event is invoked to signal soil nitrogen to incorporate FOM</summary>
         public event FOMPoolDelegate IncorpFOMPool;
 
+        /// <summary>This event is invoked when residues are incorperated</summary>
+        public event EventHandler<TilledType> Tilled;
+
         /// <summary>
         /// Number of pools into which carbon is grouped.
         /// Currently there are three, indexed as follows:
@@ -194,6 +195,15 @@
         /// <summary>Total mass of all surface organic materials</summary>
         [Units("kg/ha")]
         public double Wt { get { return SumSurfOMStandingLying(SurfOM, x => x.amount); } }
+
+        /// <summary>Total mass of all standing surface organic materials</summary>
+        [Units("kg/ha")]
+        public double StandingWt => SurfOM.Sum(om => om.Standing.Sum(organ => organ.amount));
+
+        /// <summary>Total mass of all lying surface organic materials</summary>
+        [Units("kg/ha")]
+        public double LyingWt => SurfOM.Sum(om => om.Lying.Sum(organ => organ.amount));
+
 
         /// <summary>Total carbon of all surface organic carbon</summary>
         [Summary]
@@ -259,65 +269,89 @@
             }
         }
 
-        /// <summary>Gets the live biomass for grazing</summary>
-        public Biomass Live
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
         {
             get
             {
-                return new Biomass();
-            }
-        }
-
-        /// <summary>Gets the dead biomass for grazing</summary>
-        public Biomass Dead
-        {
-            get
-            {
-                return new Biomass() // Should this be in live i.e. no live SOM
+                // Return an empty live material. Stock won't find the dead material unless there 
+                // is matching live material.
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
                 {
-                    StructuralWt = SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
-                                   SurfOM.Sum(som => som.Lying.Sum(om => om.amount)),
+                    StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
                     StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                  SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N)) / 10,   // kg/ha to g/m2
                     MetabolicWt = 0.0,
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
                     StorageN = 0.0,
-                    DMDOfStructural = 0.4  // ???????
-                };
+                }, isLive: false);
             }
         }
 
+        /// <summary>The amount of material incorporated into the soil.</summary>
+        public FOMPoolType Incorporated { get; private set; }
+
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
-        
-        /// <summary>
-        /// Biomass removal logic for this organ.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
+            double amountRemoved = 0;
             for (int i = 0; i < SurfOM.Count; i++)
             {
                 double totalMassRemoved = 0;
                 foreach (var standing in SurfOM[i].Standing)
                 {
-                    double amountToRemove = standing.amount * biomassToRemove.FractionLiveToRemove;
-                    standing.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
+                    if (standing.amount > 0)
+                    {
+                        double cFraction = standing.C / standing.amount;
+                        double nFraction = standing.N / standing.amount;
+                        double pFraction = standing.P / standing.amount;
+
+                        double amountToRemove = standing.amount * deadToRemove;
+                        standing.amount -= amountToRemove;
+                        totalMassRemoved += amountToRemove;
+
+                        standing.C = cFraction * standing.amount;
+                        standing.N = nFraction * standing.amount;
+                        standing.P = pFraction * standing.amount;
+
+                        amountRemoved += amountToRemove;
+                    }
                 }
                 foreach (var lying in SurfOM[i].Lying)
                 {
-                    double amountToRemove = lying.amount * biomassToRemove.FractionLiveToRemove;
-                    lying.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
+                    if (lying.amount > 0)
+                    {
+                        double cFraction = lying.C / lying.amount;
+                        double nFraction = lying.N / lying.amount;
+                        double pFraction = lying.P / lying.amount;
+
+                        double amountToRemove = lying.amount * deadToRemove;
+                        lying.amount -= amountToRemove;
+                        totalMassRemoved += amountToRemove;
+                        lying.C = cFraction * lying.amount;
+                        lying.N = nFraction * lying.amount;
+                        lying.P = pFraction * lying.amount;
+
+                        amountRemoved += amountToRemove;
+                    }
                 }
 
                 SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
                 SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
                 SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
             }
+            return amountRemoved;
         }
 
         /// <summary>Called when [reset].</summary>
@@ -347,14 +381,24 @@
         /// <summary>Incorporates the specified fraction.</summary>
         /// <param name="fraction">The fraction.</param>
         /// <param name="depth">The depth.</param>
-        public void Incorporate(double fraction, double depth)
+        /// <param name="doOutput">Echo the incoporation to the Summary file? Default is true.</param>
+        public void Incorporate(double fraction, double depth, bool doOutput = true)
         {
             Incorp(fraction, depth);
 
-            summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
+            if (Tilled != null)
+            {
+                TilledType tilled = new TilledType();
+                tilled.Fraction = fraction;
+                tilled.Depth = depth;
+                Tilled.Invoke(this, tilled);
+            }
+
+            if (doOutput)
+                summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
                                                       "Fraction Incorporated = {0:0.0##}" + Environment.NewLine +
                                                       "Incorporated Depth    = {1:0.0##}",
-                                                      fraction, depth));
+                                                      fraction, depth), MessageType.Diagnostic);
         }
 
         /// <summary>Return the potential residue decomposition for today.</summary>
@@ -480,6 +524,7 @@
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             calculatedPotentialDecomposition = false;
+            Incorporated = null;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -494,7 +539,7 @@
         /// <summary>Called when a plant drops biomass to the soil surface</summary>
         /// <param name="BiomassRemoved">The biomass removed.</param>
         [EventSubscribe("BiomassRemoved")]
-        private void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
+        public void OnBiomassRemoved(BiomassRemovedType BiomassRemoved)
         {
             double surfomAdded = 0;   // amount of residue added (kg/ha)
             double surfomNAdded = 0;  // amount of residue N added (kg/ha)
@@ -841,8 +886,8 @@
                 residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
 
                 if (MathUtilities.IsLessThan(totNDecomp, 0.0) || MathUtilities.IsGreaterThan(totNDecomp, nPotDecomp[residue_no]))
-                    summary.WriteWarning(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}", 
-                                                             0.0, totNDecomp, nPotDecomp[residue_no]));
+                    summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}",
+                                                             0.0, totNDecomp, nPotDecomp[residue_no]), MessageType.Warning);
 
                 SOMc = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
                 SOMn = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.N) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.N);
@@ -901,7 +946,7 @@
         /// <param name="fIncorp">The f incorp.</param>
         /// <param name="tillageDepth">The tillage depth.</param>
         private void Incorp(double fIncorp, double tillageDepth)
-        {            
+        {
             int deepestLayer;
             int nLayers = soilPhysical.Thickness.Length;
             double F_incorp_layer = 0;
@@ -914,7 +959,7 @@
             double[] no3 = new double[nLayers]; // total no3 to go into each soil layer (from all surfOM"s)
             double[] nh4 = new double[nLayers]; // total nh4 to go into each soil layer (from all surfOM"s)
             double[] po4 = new double[nLayers]; // total po4 to go into each soil layer (from all surfOM"s)
-            FOMPoolType FPoolProfile = new FOMPoolType();
+            Incorporated = new FOMPoolType();
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
@@ -942,12 +987,12 @@
                 cumDepth = cumDepth + soilPhysical.Thickness[layer];
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
-            
-            FPoolProfile.Layer = new FOMPoolLayerType[deepestLayer + 1];
+
+            Incorporated.Layer = new FOMPoolLayerType[deepestLayer + 1];
 
             for (int layer = 0; layer <= deepestLayer; layer++)
             {
-                FPoolProfile.Layer[layer] = new FOMPoolLayerType()
+                Incorporated.Layer[layer] = new FOMPoolLayerType()
                 {
                     thickness = soilPhysical.Thickness[layer],
                     no3 = no3[layer],
@@ -957,7 +1002,7 @@
                 };
 
                 for (int i = 0; i < maxFr; i++)
-                    FPoolProfile.Layer[layer].Pool[i] = new FOMType()
+                    Incorporated.Layer[layer].Pool[i] = new FOMType()
                     {
                         C = CPool[i, layer],
                         N = NPool[i, layer],
@@ -966,7 +1011,7 @@
                     };
             }
             if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(FPoolProfile);
+                IncorpFOMPool.Invoke(Incorporated);
 
             for (int pool = 0; pool < maxFr; pool++)
             {
@@ -1095,38 +1140,59 @@
 
         /// <summary>Adds material to the surface organic matter pool.</summary>
         /// <param name="mass">The amount of biomass added (kg/ha).</param>
-        /// <param name="N">The amount of N added (ppm).</param>
-        /// <param name="P">The amount of P added (ppm).</param>
+        /// <param name="N">The amount of N added (kg/ha).</param>
+        /// <param name="P">The amount of P added (kg/ha).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
         public void Add(double mass, double N, double P, string type, string name)
         {
-            // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
-            int SOMNo = GetResidueNumber(type);
-            if (SOMNo < 0)
-                SOMNo = AddNewSurfOM(type, type);
-
-            // convert the ppm figures into kg/ha;
-            SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
-            SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
-
-            // Assume all surfom added is in the LYING pool, ie No STANDING component;
-            for (int i = 0; i < maxFr; i++)
+            if (mass > 0 || N > 0 || P > 0)
             {
-                SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
-                SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
-            }            
+                // Assume the "cropType" is the unique name.  Now check whether this unique "name" already exists in the system.
+                int SOMNo = GetResidueNumber(type);
+                if (SOMNo < 0)
+                    SOMNo = AddNewSurfOM(type, type);
+
+                summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
+
+                // convert the ppm figures into kg/ha;
+                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
+
+                // Assume all surfom added is in the LYING pool, ie No STANDING component;
+                for (int i = 0; i < maxFr; i++)
+                {
+                    SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
+                }
+            }
+        }
+
+        /// <summary>Remove material from the surface organic matter pool.</summary>
+        /// <param name="mass">The amount of biomass to remove (kg/ha).</param>
+        public void Remove(double mass)
+        {
+            if (mass > 0 )
+            {
+                
+                double fractionToRemove = MathUtilities.Bound(MathUtilities.Divide(mass, Wt, 0), 0, 1);
+                if (fractionToRemove > 0)
+                {
+                    summary.WriteMessage(this, $"Removing {mass:F2} kg/ha of biomass from surface organic matter pool", MessageType.Diagnostic);
+                    RemoveBiomass(deadToRemove: fractionToRemove);
+                }
+            }
         }
 
         /// <summary>Resize2s the d array.</summary>
         /// <param name="original">The original.</param>
         /// <returns></returns>
-        private double[,] IncreasePoolArray (double[,] original)
+        private double[,] IncreasePoolArray(double[,] original)
         {
-            double[,] newArray = new double[original.GetLength(0), original.GetLength(1)+1];
+            double[,] newArray = new double[original.GetLength(0), original.GetLength(1) + 1];
 
             for (int x = 0; x < original.GetLength(0); x++)
                 for (int y = 0; y < original.GetLength(1); y++)

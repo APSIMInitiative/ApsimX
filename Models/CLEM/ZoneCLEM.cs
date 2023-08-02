@@ -1,15 +1,17 @@
-﻿using Models.CLEM.Activities;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Factorial;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Models.CLEM
 {
@@ -20,19 +22,20 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents all CLEM farm resources and activities")]
+    [Description("This manages all resources and activities for a farm")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\r\nChanges will be required to your setup")]
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
-    [Version(1,0,1,"")]
+    [Version(1, 0, 1, "")]
     [ScopedModel]
-    public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
+    public class ZoneCLEM : Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
         [Link]
-        private Clock clock = null;
+        private readonly IClock clock = null;
+        private string wholeSimulationSummaryFile = "";
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -43,7 +46,6 @@ namespace Models.CLEM
         /// <summary>
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
@@ -52,6 +54,7 @@ namespace Models.CLEM
         /// Index of the simulation Climate Region
         /// </summary>
         [Description("Region id")]
+        [Core.Display(Order = -9)]
         public int ClimateRegion { get; set; }
 
         /// <summary>
@@ -78,7 +81,21 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Build TransactionCategory from tree structure
+        /// </summary>
+        [Description("Build TransactionCategory from tree structure")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool BuildTransactionCategoryFromTree { get; set; }
+
+        /// <summary>
+        /// Use model name as TransactionCategory
+        /// </summary>
+        [Description("Use component name as TransactionCategory")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool UseModelNameAsTransactionCategory { get; set; }
+
+        /// <summary>
+        /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
@@ -106,13 +123,6 @@ namespace Models.CLEM
         public new double Altitude { get; set; } = 50;
 
         /// <summary>
-        /// Summary style to use for this component
-        /// </summary>
-        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
-
-        private string wholeSimulationSummaryFile = "";
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public ZoneCLEM()
@@ -127,11 +137,9 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            EcologicalIndicatorsCalculationInterval = 12;
-
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
-            wholeSimulationSummaryFile = filebits.First() + "." + "html";
+            wholeSimulationSummaryFile = $"{filebits.First()}.html";
             if (File.Exists(wholeSimulationSummaryFile))
                 File.Delete(wholeSimulationSummaryFile);
         }
@@ -139,10 +147,11 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            // if auto create summary 
-            if (AutoCreateDescriptiveSummary)
-            if (!File.Exists(wholeSimulationSummaryFile))
-                    System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
+            // if auto create summary
+            if (AutoCreateDescriptiveSummary && !FindAllAncestors<Experiment>().Any())
+            {
+                if (!File.Exists(wholeSimulationSummaryFile))
+                    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
@@ -154,10 +163,11 @@ namespace Models.CLEM
                             htmlWriter.Write(html.Substring(0, index - 1));
                             htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
                             htmlWriter.Write(html.Substring(index));
-                            System.IO.File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
+                            File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                         }
                     }
                 }
+            }
         }
 
 
@@ -167,7 +177,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool IsEcologicalIndicatorsCalculationMonth()
         {
-            return this.EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
+            return EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
         }
 
         /// <summary>Data stores to clear at start of month</summary>
@@ -177,7 +187,7 @@ namespace Models.CLEM
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (IsEcologicalIndicatorsCalculationMonth())
-                this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
+                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
         }
 
         #region validation
@@ -239,37 +249,72 @@ namespace Models.CLEM
         {
             // validation is performed here
             // this event fires after Activity and Resource initialisation so that resources are available to check in the validation.
-            // Commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
+            // Commencing event is too early as Summary has not been created for reporting.
+            // Some values assigned in commencing will not be checked before processing, but will be caught here
+            // Each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-            if (!Validate(this, "", this, summary))
-            {
-                string error = ""; //"@i:Invalid parameters in model";
 
-                // get all validations 
-                if(summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-                throw new ApsimXException(this, error.Replace("&shy;","."));
-            }
+            // not all errors will be reported in validation so perform in two steps
+            Validate(this, "", this, summary);
+            ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
-            if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
             {
-                DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
-                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
-                EcologicalIndicatorsNextDueDate = trackDate;
-            }
-            else
-            {
-                EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (clock.StartDate > EcologicalIndicatorsNextDueDate)
-                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
+                {
+                    DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    EcologicalIndicatorsNextDueDate = trackDate;
+                }
+                else
+                {
+                    EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (clock.StartDate > EcologicalIndicatorsNextDueDate)
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                }
             }
         }
+
+        /// <summary>
+        /// Reports any validation errors to exception
+        /// </summary>
+        /// <param name="model"></param>
+        /// <exception cref="ApsimXException"></exception>
+        public static void ReportInvalidParameters(IModel model)
+        {
+            IModel simulation = model.FindAncestor<Simulation>();
+            var summary = simulation.FindDescendant<Summary>();
+
+            // get all validations
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter ")));
+
+            // get all other errors
+            ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
+
+        }
+
+        /// <summary>
+        /// Check and throw error is error messages occur
+        /// </summary>
+        /// <param name="model">Model performing validation</param>
+        /// <param name="messages">List of messages</param>
+        /// <exception cref="ApsimXException"></exception>
+        public static void ReportErrors(IModel model, IEnumerable<Models.Logging.Message> messages)
+        {
+            // report error and stop
+            if (messages.Any())
+            {
+                // create combined inner exception
+                StringBuilder innerExceptionString = new StringBuilder();
+                foreach (var error in messages)
+                    innerExceptionString.Append($"{error.Text}{Environment.NewLine}");
+
+                Exception innerException = new Exception(innerExceptionString.ToString());
+                throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
+            }
+        }
+
 
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
@@ -282,7 +327,7 @@ namespace Models.CLEM
         public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary)
         {
             string starter = "[=";
-            if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
+            if (typeof(IResourceType).IsAssignableFrom(model.GetType()))
                 starter = "[r=";
             if (model.GetType() == typeof(ZoneCLEM))
                 starter = "[z=";
@@ -305,13 +350,12 @@ namespace Models.CLEM
 
             if (model is CLEMModel)
                 (model as CLEMModel).CLEMParentName = parentZone.Name;
-            modelPath += starter+model.Name+"]";
-            modelPath = modelPath.Replace("][", "]&shy;[");
+            modelPath += starter + model.Name + "]";
             bool valid = true;
             var validationContext = new ValidationContext(model, null, null);
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
-            if(model.Name.EndsWith(" "))
+            if (model.Name.EndsWith(" "))
                 validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
 
             if (validationResults.Count > 0)
@@ -337,7 +381,7 @@ namespace Models.CLEM
                     if (text != "")
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
-                    summary.WriteWarning(parentZone, error);
+                    summary.WriteMessage(parentZone, error, MessageType.Error);
                 }
             }
             foreach (var child in model.Children)
@@ -352,12 +396,31 @@ namespace Models.CLEM
 
         #region Descriptive summary
 
+        /// <summary>
+        /// Summary style to use for this component
+        /// </summary>
+        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
+
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
+
+                CurrentAncestorList = parentControls.ToList();
+                CurrentAncestorList.Add(model.GetType().Name);
 
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
@@ -367,14 +430,13 @@ namespace Models.CLEM
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
                 {
-                    bool formatForParentControl = true;
-                    htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryOpeningTags());
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
-                    htmlWriter.Write(this.ModelSummary(formatForParentControl));
-                    // TODO: May need to implament Adding Memos for some Models with reduced display
-                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummary());
+                    // TODO: May need to implement Adding Memos for some Models with reduced display
+                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags());
+                    htmlWriter.Write(this.ModelSummaryInnerClosingTags());
+                    htmlWriter.Write(this.ModelSummaryClosingTags());
                 }
 
                 // find random number generator
@@ -382,15 +444,15 @@ namespace Models.CLEM
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion with ");
                     if (rnd.Seed == 0)
-                        htmlWriter.Write("Every run of this simulation will be different.");
+                        htmlWriter.Write("every run using a different sequence.");
                     else
-                        htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
+                        htmlWriter.Write("each run identical by using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
@@ -402,17 +464,17 @@ namespace Models.CLEM
                 if (clk != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
-                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div>");
+                    htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div><br />");
                     htmlWriter.Write("<div class=\"typediv\">Clock</div>");
                     htmlWriter.Write("</div>");
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
-                    if (clk.StartDate == null)
+                    if (clk.Start == null)
                         htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
                     else
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
                     htmlWriter.Write(" to ");
-                    if (clk.EndDate == null)
+                    if (clk.End == null)
                         htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
                     else
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
@@ -425,13 +487,16 @@ namespace Models.CLEM
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
-                return htmlWriter.ToString(); 
+                    htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
+
+                CurrentAncestorList = null;
+
+                return htmlWriter.ToString();
             }
         }
 
         ///<inheritdoc/>
-        public string ModelSummary(bool formatForParentControl)
+        public string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -440,13 +505,15 @@ namespace Models.CLEM
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
                 ResourcesHolder resources = this.FindChild<ResourcesHolder>();
-                if(resources != null)
+                if (resources != null)
+                {
                     if (resources.FoundMarket != null)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("This farm represents ");
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
+                }
 
                 if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
                 {
@@ -469,13 +536,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryClosingTags(bool formatForParentControl)
+        public string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        public string ModelSummaryOpeningTags()
         {
             string overall = "default";
             string extra = "";
@@ -491,13 +558,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public string ModelSummaryInnerOpeningTags()
         {
             return "";
         }
@@ -520,7 +587,7 @@ namespace Models.CLEM
                     htmlWriter.Write(">");
                     htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write("<br /><div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
         }

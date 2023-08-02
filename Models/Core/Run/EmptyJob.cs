@@ -1,10 +1,5 @@
-﻿using APSIM.Shared.JobRunning;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System;
+using APSIM.Shared.JobRunning;
 
 namespace Models.Core.Run
 {
@@ -24,6 +19,14 @@ namespace Models.Core.Run
         public void Run(System.Threading.CancellationTokenSource cancelToken)
         {
             //do nothing
+        }
+
+        /// <summary>
+        /// Cleanup the job after running it.
+        /// </summary>
+        public void Cleanup()
+        {
+            // Do nothing.
         }
 
         /// <summary>

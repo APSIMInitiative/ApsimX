@@ -1,14 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.EventArguments;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using UserInterface.Views;
+using APSIM.Shared.Documentation.Extensions;
+
+namespace UserInterface.Presenters
 {
-    using EventArguments;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -16,14 +18,8 @@
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
 
-        /// <summary>The sheet.</summary>
-        private Sheet sheet;
-
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheetWidget;
-
-        /// <summary>The sheet cell selector.</summary>
-        SingleCellSelect cellSelector;
+        private SheetWidget grid;
 
         ///// <summary>The sheet scrollbars</summary>
         //SheetScrollBars scrollbars;
@@ -58,6 +54,8 @@
         /// <summary>Row filter edit box.</summary>
         private LabelView statusLabel;
 
+        private ViewBase view = null;
+
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
 
@@ -66,6 +64,16 @@
 
         /// <summary>When specified will only show data from a given zone.</summary>
         public Zone ZoneFilter { get; set; }
+
+        ///<summary>
+        /// The list of stored column filters.
+        /// </summary>
+        private string temporaryColumnFilters = "";
+
+        ///<summary>
+        /// The list of stored row filters.
+        /// </summary>
+        private string temporaryRowFilters = "";
 
         /// <summary>Default constructor</summary>
         public DataStorePresenter()
@@ -90,7 +98,7 @@
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
-            var view = v as ViewBase;
+            view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
             intellisense = new IntellisensePresenter(view as ViewBase);
@@ -124,6 +132,13 @@
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             rowFilterEditBox.Leave += OnColumnFilterChanged;
             checkpointDropDown.Changed += OnCheckpointDropDownChanged;
+
+            // Add the filter strings back in the text field.
+            if (explorerPresenter.GetFilters().Count() != 0)
+            {
+                columnFilterEditBox.Text = explorerPresenter.GetFilters()[0];
+                rowFilterEditBox.Text = explorerPresenter.GetFilters()[1];
+            }
             PopulateGrid();
         }
 
@@ -131,11 +146,15 @@
         public void Detach()
         {
             //base.Detach();
+            // Keep the column and row filters
+            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
+            temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
+            view.Dispose();
             CleanupSheet();
         }
 
@@ -180,22 +199,16 @@
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        sheet = new Sheet()
-                        {
-                            DataProvider = dataProvider,
-                            NumberFrozenRows = dataProvider.NumHeadingRows,
-                            NumberFrozenColumns = dataProvider.NumPriorityColumns
-                        };
-                        sheetWidget = new SheetWidget(sheet);
-#if NETFRAMEWORK
-                        sheet.RowHeight = 20;
-#endif
+                        grid = new SheetWidget();
+                        grid.Sheet = new Sheet();
+                        grid.Sheet.DataProvider = dataProvider;
+                        grid.Sheet.CellSelector = new SingleCellSelect(grid.Sheet, grid);
+                        grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+                        grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+                        grid.Sheet.NumberFrozenRows = dataProvider.NumHeadingRows;
+                        grid.Sheet.NumberFrozenColumns = dataProvider.NumPriorityColumns;
 
-                        cellSelector = new SingleCellSelect(sheet, sheetWidget);
-                        var scrollbars = new SheetScrollBars(sheet, sheetWidget);
-                        sheet.CellPainter = new DefaultCellPainter(sheet, sheetWidget, sheetSelection: cellSelector);
-
-                        sheetContainer.Add(scrollbars.MainWidget);
+                        sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
                         statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
                     catch (Exception err)
@@ -209,11 +222,11 @@
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
         {
-            if (cellSelector != null)
+            if (grid != null && grid.Sheet.CellSelector != null)
             {
                 dataProvider.Cleanup();
-                cellSelector.Cleanup();
-                //scrollbars.Cleanup();
+                (grid.Sheet.CellSelector as SingleCellSelect).Cleanup();
+                grid.Sheet.ScrollBars.Cleanup();
             }
         }
 
@@ -243,6 +256,9 @@
         /// <param name="e">Event arguments</param>
         private void OnColumnFilterChanged(object sender, EventArgs e)
         {
+            // Store the filters temporarily.
+            temporaryColumnFilters = columnFilterEditBox.Text;
+            temporaryRowFilters = rowFilterEditBox.Text;
             PopulateGrid();
         }
 

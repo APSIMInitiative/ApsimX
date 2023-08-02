@@ -1,14 +1,12 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
@@ -17,7 +15,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class OrganNutrientDelta : Model, ICustomDocumentation
+    public class OrganNutrientDelta : Model
     {
 
         ///1. Links
@@ -168,7 +166,7 @@
         {
             Supplies.Clear();
             SuppliesAllocated.Clear();
-            Demands = new NutrientPoolsState(0,0,0);
+            Demands = new NutrientPoolsState(0, 0, 0);
             PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
             DemandsAllocated = new NutrientPoolsState(0, 0, 0);
         }
@@ -200,19 +198,17 @@
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading, the name of this organ
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write the basic description of this class, given in the <summary>
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // add a heading, the name of this organ
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write the memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // write the basic description of this class, given in the <summary>
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-            }
+            // write the memos
+            foreach (IModel memo in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
         }
     }
 

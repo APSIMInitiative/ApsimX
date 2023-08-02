@@ -1,15 +1,13 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -20,7 +18,7 @@ namespace Models.CLEM.Reporting
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [Description("This component will generate a report of individual ruminant details. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Description("Provides individual ruminant details for reporting. This uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdReport.htm")]
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
@@ -72,7 +70,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("CLEMHerdSummary")]
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
-            if(TimingOK)
+            if (TimingOK)
                 ReportHerd();
         }
 
@@ -109,9 +107,9 @@ namespace Models.CLEM.Reporting
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMValidate")]
-        private void OncCLEMValidate(object sender, EventArgs e)
+        private void OnCLEMValidate(object sender, EventArgs e)
         {
-            if(ReportAtStart)
+            if (ReportAtStart)
                 ReportHerd();
         }
 
@@ -138,12 +136,8 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

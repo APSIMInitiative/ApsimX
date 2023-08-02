@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Models.Core;
 using Models.Core.Run;
@@ -23,7 +19,7 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
-            Parallel.ForEach(FindAllChildren<IPostSimulationTool>(), tool => 
+            Parallel.ForEach(FindAllChildren<IPostSimulationTool>(), tool =>
             {
                 new Links(new object[1] { FindInScope<IDataStore>() }).Resolve(tool);
                 tool.Run();

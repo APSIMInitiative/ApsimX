@@ -1,22 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
-    /// <summary>Fraction of NH4 which nitrifies today</summary>
-    /// \pre All children have to contain a public function "Value"
-    /// \retval fraction of NH4 nitrified.
+    /// <summary>Temperature function for soil processes except denitrification. Originally taken from CERES.
+    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
+
     [Serializable]
-    [Description("Mineralisation Temperature Factor from CERES-Maize")]
-    public class CERESMineralisationTemperatureFactor : Model, IFunction, ICustomDocumentation
+
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
+
+    public class CERESMineralisationTemperatureFactor : Model, IFunction
     {
 
         [Link]
         ISoilTemperature soiltemperature = null;
 
-   
+        /// <summary>
+        /// Base soil temperature for the temperature function in Nutrient. Default = 0.0 C.
+        /// </summary>
+        [Description("Soil temperature function base temperature (oC)")]
+        public double MineralisationSTBase { get; set; } = 0.0;
+
+        /// <summary>
+        /// Base soil temperature for the temperature function in Nutrient. Default = 32.0 C.
+        /// </summary>
+        [Description("Soil temperature function optimum (oC)")]
+        public double MineralisationSTOpt { get; set; } = 32.0;
+
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -27,29 +41,11 @@ namespace Models.Functions
             double TF = 0;
             double ST = soiltemperature.Value[arrayIndex];
 
-            if (ST > 0)
-                TF = (ST * ST) / (32 * 32);
+            if (ST > MineralisationSTBase)
+                TF = Math.Pow(ST - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
             if (TF > 1) TF = 1;
 
             return TF;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

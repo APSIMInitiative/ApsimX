@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the difference between today's and yesterday's photoperiods in hours.
     /// </summary>
     [Serializable]
@@ -24,7 +21,7 @@ namespace Models.Functions
 
         /// <summary>The clock</summary>
         [Link]
-        protected Clock Clock = null;
+        protected IClock Clock = null;
 
         /// <summary>The twilight</summary>
         [Description("Twilight")]

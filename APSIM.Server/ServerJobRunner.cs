@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Models.Core.Run;
 using System.Linq;
+using static Models.Core.Overrides;
 
 namespace APSIM.Server
 {
@@ -11,9 +12,9 @@ namespace APSIM.Server
     /// jobs in memory, in a state that is ready to be run and can be re-run
     /// multiple times without re-preparing the jobs each time.
     /// </summary>
-    public class ServerJobRunner : JobRunner
+    public class ServerJobRunner : JobRunner, IDisposable
     {
-        public IEnumerable<IReplacement> Replacements { get; set; }
+        public IEnumerable<Override> Replacements { get; set; } = Enumerable.Empty<Override>();
         private List<(IRunnable, IJobManager)> jobs = new List<(IRunnable, IJobManager)>();
 
         /// <summary>
@@ -53,6 +54,22 @@ namespace APSIM.Server
             {
                 base.Prepare(job);
                 base.Run(job);
+            }
+        }
+
+        protected override void Cleanup(IRunnable job)
+        {
+            // Don't cleanup any jobs until all have been run.
+        }
+
+        /// <summary>
+        /// Cleanup all jobs now.
+        /// </summary>
+        public void Dispose()
+        {
+            foreach ( (IRunnable job, _) in jobs)
+            {
+                job.Cleanup();
             }
         }
     }

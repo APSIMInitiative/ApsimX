@@ -1,6 +1,4 @@
 ﻿using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -9,8 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -22,9 +18,9 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
-    [Description("This component allows the details of a individual ruminant to be defined")]
+    [Description("Specify the details of a individual ruminant to be used by an activity")]
     [HelpUri(@"Content/Resources/Ruminanta/SpecifyRuminant.htm")]
     [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject
@@ -65,7 +61,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
-        public RuminantType BreedParams { get { return ruminantType;} }
+        public RuminantType BreedParams { get { return ruminantType; } }
 
         /// <summary>
         /// Records if a warning about set weight occurred
@@ -106,8 +102,8 @@ namespace Models.CLEM.Resources
             // check that this model contains children RuminantDestockGroups with filters
             var results = new List<ValidationResult>();
             // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-            
-            if(ruminantType is null)
+
+            if (ruminantType is null)
             {
                 string[] memberNames = new string[] { "Ruminant type" };
                 results.Add(new ValidationResult("An invalid [r=RuminantType] was specified", memberNames));
@@ -127,7 +123,7 @@ namespace Models.CLEM.Resources
         private bool cohortFound;
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

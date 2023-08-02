@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <ApplicationIcon>ApsimLogo.ico</ApplicationIcon>
@@ -13,139 +13,69 @@
     <WarningsAsErrors />
     <NoWarn>CS1591,CS1572</NoWarn>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <SelfContained>false</SelfContained>
   </PropertyGroup>
   
-  <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
-	  <LangVersion>8.0</LangVersion>
+  <PropertyGroup>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
     <EmbeddedResource Include="Resources\**" />
     <EmbeddedResource Include="../LICENSE.md" />
+
+    <!-- Scripts and other files used for 'run on azure' feature -->
+    <AzureFiles Include="../DeploymentSupport/global/**/*" />
 	
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\APSIM.Interop\APSIM.Interop.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\APSIM.Server\APSIM.Server.csproj" />
 	
     <!-- Shared package references -->
-    <PackageReference Include="ClosedXML" Version="0.95.3" />
-    <PackageReference Include="Microsoft.Azure.Batch" Version="13.0.0" />
-    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.1.3" />
-    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.1.3" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0-1.final" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="3.7.0-1.final" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0-1.final" />
-    <PackageReference Include="SharpMap" Version="1.2.0" />
-    <PackageReference Include="SharpMap.Layers.BruTile" Version="1.2.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0-preview.1.20120.5" />
-    <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
-    <PackageReference Include="ISO3166" Version="1.0.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
-    <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <PackageReference Include="Microsoft.Azure.Batch" Version="15.4.0" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.3" />
+    <PackageReference Include="Microsoft.Azure.Storage.Common" Version="11.2.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" />
+    <PackageReference Include="OxyPlot.SkiaSharp" Version="2.1.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.CodeDom" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
+    <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    <PackageReference Include="ISO3166" Version="1.0.4" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
-    <PackageReference Include="Markdig" Version="0.22.1" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
-    <AzureFiles Include="../DeploymentSupport/global/**/*" />
+    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="GtkSharp" Version="3.24.24.38" />
+    <PackageReference Include="GtkSourceSharp" Version="3.24.24.38" />
+    <PackageReference Include="OxyPlot.Core" Version="2.1.2" />
+    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.1.0-Preview1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
-  
-  <!-- .NET Core-specific references -->
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <PackageReference Include="GtkSharp" Version="3.22.*" />
-    <PackageReference Include="GtkSourceSharp" Version="3.22.*" />
-    <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.2-netcorebeta" />
-    <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
-    <PackageReference Include="PdfSharpCore" Version="1.2.11" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
-    <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
-    <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
-    <Compile Remove="Classes\Intellisense\*" />
-  </ItemGroup>
-  
-  <!-- .NET Framework-specific references -->
-  <ItemGroup Condition="'$(TargetFramework)'=='net472'">
-	  <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\atk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\gdk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\glib-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\gtk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtkdotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\gtkdotnet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin64\Mono.Cairo.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.9.6.0" />
-    <Reference Include="MonoMac, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\MonoMac.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.TextEditor, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\Mono.TextEditor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="webkit-sharp, Version=1.1.15.0, Culture=neutral, PublicKeyToken=eaa1d335d2e19745, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\webkit-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Web.Services" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
-    <PackageReference Include="ICSharpCode.NRefactory" Version="5.5.1" />
-    <PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable0956" />
-    <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-    <GtkFiles Include="..\DeploymentSupport\Windows\Bin64\*.dll" />
-    <WimpFiles Include="..\DeploymentSupport\Windows\Bin64\lib\**\*" />
-  </ItemGroup>
-  
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <!-- Copy gtk-sharp dependencies (only used in .net framework (gtk2) builds) -->
-    <Copy Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(GtkFiles)" DestinationFolder="$(OutputPath)" />
-    <Copy Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(WimpFiles)" DestinationFiles="@(WimpFiles->'..\lib\%(RecursiveDir)%(FileName)%(Extension)')" />
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Copy ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(AzureFiles)" DestinationFiles="@(AzureFiles->'$(OutputPath)%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
 </Project>

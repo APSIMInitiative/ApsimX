@@ -13,6 +13,9 @@
         /// <summary>The toolstrip at the top of the explorer view</summary>
         IToolStripView ToolStrip { get; }
 
+        /// <summary>Position of the divider between the tree and content</summary>
+        int DividerPosition { get; set; }
+
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>

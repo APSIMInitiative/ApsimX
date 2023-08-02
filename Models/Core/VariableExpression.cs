@@ -1,8 +1,10 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using Models.Functions;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// TODO: Update summary.
@@ -135,10 +137,10 @@
             List<Symbol> variablesToFill = fn.Variables;
             for (int i = 0; i < variablesToFill.Count; i++)
             {
-                Symbol sym = (Symbol) variablesToFill[i];
+                Symbol sym = (Symbol)variablesToFill[i];
                 sym.m_values = null;
                 sym.m_value = 0;
-                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim())?.Value;
+                object sometypeofobject = (Object as Model).FindByPath(sym.m_name.Trim(), LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError)?.Value;
                 if (sometypeofobject == null)
                     throw new Exception("Cannot find variable: " + sym.m_name + " while evaluating expression: " + expression);
                 if (sometypeofobject is double)
@@ -157,6 +159,19 @@
                         foreach (double value in dimension)
                             singleArrayOfValues.Add(value);
                     sym.m_values = (double[])singleArrayOfValues.ToArray();
+                }
+                else if (sometypeofobject is IFunction fun)
+                    sym.m_value = fun.Value();
+                else
+                {
+                    try
+                    {
+                        sym.m_value = Convert.ToDouble(sometypeofobject, System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        throw new Exception($"Don't know how to use type {sometypeofobject.GetType()} of variable {sym.m_name} in an expression!");
+                    }
                 }
                 variablesToFill[i] = sym;
             }

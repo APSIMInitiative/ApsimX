@@ -1,10 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core;
-using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -18,17 +15,19 @@ namespace Models.CLEM
         private static WarningLog instance;
 
         /// <summary>
-        /// Obtain a static single instance of thei object
+        /// Obtain a static single instance of the object
         /// </summary>
         /// <param name="maxEntries">Maximum number of entries permitted</param>
         /// <returns>A shared WarningLog</returns>
         public static WarningLog GetInstance(int maxEntries)
         {
-            if(instance == null)
+            if (instance == null)
                 instance = new WarningLog(maxEntries);
             else
-                if(maxEntries > instance.maxCount)
+            {
+                if (maxEntries > instance.maxCount)
                     instance.maxCount = maxEntries;
+            }
 
             return instance;
         }
@@ -52,12 +51,13 @@ namespace Models.CLEM
         /// <param name="checkMessage">The warning message to check if it exists</param>
         /// <param name="summary">The summary model to write to</param>
         /// <param name="sender">The activity sending the warning</param>
+        /// <param name="messageType">The type of message to write</param>
         /// <param name="fullMessage">A full message to report if check message does not exist, otherwise use check message</param>
-        public void CheckAndWrite(string checkMessage, ISummary summary, IModel sender, string fullMessage = "")
+        public void CheckAndWrite(string checkMessage, ISummary summary, IModel sender, MessageType messageType, string fullMessage = "")
         {
             if (!Exists(checkMessage) & summary != null)
             {
-                summary.WriteWarning(sender, (fullMessage.Any())?fullMessage:checkMessage);
+                summary.WriteMessage(sender, (fullMessage.Any())?fullMessage:checkMessage, messageType);
                 Add(checkMessage);
             }
         }

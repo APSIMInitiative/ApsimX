@@ -10,6 +10,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.Loader;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
@@ -308,10 +309,17 @@
             return null;
         }
 
+// Note that Microsoft considers use of BinaryFormatter to be "unsafe". 
+// However, we should be OK if we are reasonably sure that we deserialise only
+// objects that we have ourselves serialised. This pragma allow us to use it without
+// having the compiler generate a warning message.
+// (Also note that ApsimX is inherently unsafe in any case, as its Manager allows execution
+// of virtually anything.)
+#pragma warning disable SYSLIB0011
         /// <summary>
         /// Binary serialise the object and return the resulting stream.
         /// </summary>
-        public static Stream BinarySerialise(object source)
+        public static Stream BinarySerialise(object source, SerializationBinder binder = null)
         {
             if (source == null)
                 return null;
@@ -320,6 +328,7 @@
                 throw new ArgumentException("The type must be serializable.", "source");
 
             IFormatter formatter = new BinaryFormatter();
+            formatter.Binder = binder;
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, source);
             return stream;
@@ -328,27 +337,30 @@
         /// <summary>
         /// Binary deserialise the specified stream and return the resulting object
         /// </summary>
-        public static object BinaryDeserialise(Stream stream)
+        public static object BinaryDeserialise(Stream stream, SerializationBinder binder = null)
         {
             if (stream == null)
                 return null;
 
             IFormatter formatter = new BinaryFormatter();
+            formatter.Binder = binder;
             return formatter.Deserialize(stream);
         }
+#pragma warning restore SYSLIB0011
 
         /// <summary>
         /// Convert an object into a json string. 
         /// </summary>
         /// <param name="source">The source object.</param>
         /// <param name="includePrivates">Serialise private members as well as publics?</param>
+        /// <param name="includeChildren">Serialize child models as well?</param>
         /// <returns>The string representation of the object.</returns>
-        public static string JsonSerialise(object source, bool includePrivates)
+        public static string JsonSerialise(object source, bool includePrivates, bool includeChildren = true)
         {
             return JsonConvert.SerializeObject(source, Formatting.Indented,
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new DynamicContractResolver(includePrivates),
+                        ContractResolver = new DynamicContractResolver(includePrivates, includeChildren),
                         ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                     });
         }
@@ -357,19 +369,23 @@
         private class DynamicContractResolver : DefaultContractResolver
         {
             private BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            private readonly bool includeChildren;
 
-            public DynamicContractResolver(bool includePrivates)
+            public DynamicContractResolver(bool includePrivates, bool includeChildren)
             {
+                this.includeChildren = includeChildren;
                 if (includePrivates)
                     bindingFlags |= BindingFlags.NonPublic;
             }
 
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
-                var props = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            .Union(
-                            GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
-                            ).ToList();
+                IEnumerable<JsonProperty> fields = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                IEnumerable<JsonProperty> properties = GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization));
+                if (!includeChildren)
+                    properties = properties.Where(p => p.PropertyName != "Children");
+                List<JsonProperty> props = fields.Union(properties).ToList();
+
                 // If this type overrides a base class's property or field, then this list
                 // will contain multiple properties with the same name, which causes a
                 // serialization exception when we go to serialize these properties. The
@@ -380,7 +396,6 @@
                 return props.Where(p => p.PropertyName != "Parent" && p.Readable).ToList();
             }
         }
-
 
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'
@@ -476,6 +491,15 @@
             if (dataType.IsEnum)
                 return Enum.Parse(dataType, newValue, true);
 
+            // Bools as ints - special case
+            if (dataType == typeof(int))
+            {
+                if (newValue.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+                if (newValue.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+
             // Convert.ChangeType() doesn't seem to work properly on nullable types.
             Type underlyingType = Nullable.GetUnderlyingType(dataType);
             if (underlyingType != null)
@@ -534,9 +558,56 @@
         /// </summary>
         public static object Clone(object sourceObj)
         {
-            Stream stream = BinarySerialise(sourceObj);
+            CachingSerializationBinder binder = new CachingSerializationBinder();
+            Stream stream = BinarySerialise(sourceObj, binder);
             stream.Seek(0, SeekOrigin.Begin);
-            return BinaryDeserialise(stream);
+            return BinaryDeserialise(stream, binder);
+        }
+
+        /// <summary>
+        /// Custom SerializationBinder that records the assemblies seen during serialisation
+        /// and reuses them during deserialisation.
+        /// This is useful when working with assemblies from a non-default AssemblyLoadContext,
+        /// because BinaryFormatter cannot deserialise them otherwise.
+        /// </summary>
+        class CachingSerializationBinder : SerializationBinder
+        {
+            private Dictionary<string, Assembly> assemblyCache = new Dictionary<string, Assembly>();
+
+            public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
+            {
+                assemblyName = serializedType.Assembly.FullName;
+                typeName = serializedType.FullName;
+                if (!assemblyCache.ContainsKey(assemblyName))
+                {
+                    assemblyCache[assemblyName] = serializedType.Assembly;
+                }
+                else
+                {
+                    if (assemblyCache[assemblyName] != serializedType.Assembly)
+                    {
+                        throw new FileLoadException(String.Format("Assemblies with the same name from different load contexts are not supported: '{0}'.", assemblyName));
+                    }
+                }
+            }
+
+            public override Type BindToType(string assemblyName, string typeName)
+            {
+                string qualifiedTypeName = String.Format("{0}, {1}", typeName, assemblyName);
+                return Type.GetType(qualifiedTypeName, assemblyResolver: ResolveAssembly, typeResolver: null);
+            }
+
+            private Assembly ResolveAssembly(AssemblyName assemblyName)
+            {
+                if (assemblyCache.ContainsKey(assemblyName.FullName))
+                {
+                    return assemblyCache[assemblyName.FullName];
+                }
+                else
+                {
+                    return AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyName);
+                }
+            }
         }
 
         /// <summary>
@@ -661,6 +732,17 @@
                         return reader.ReadToEnd();
 
             return null;
+        }
+
+        /// <summary>
+        /// Get a string from a resource file stored in the current assembly.
+        /// Returns the string as a string array where each line is an element of the array.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string[] GetResourceAsStringArray(string resourceName)
+        {
+            string fullString = GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+            return fullString.Split('\n'); ;
         }
 
         /// <summary>

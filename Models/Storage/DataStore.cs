@@ -1,20 +1,15 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Newtonsoft.Json;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
-    /// # [Name]
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
@@ -201,6 +196,7 @@
         /// <summary>Object has been created.</summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             if (connection == null)
                 Open();
         }
@@ -278,11 +274,7 @@
             }
         }
 
-        /// <summary>
-        /// Add a select based view to the SQLite datastore
-        /// </summary>
-        /// <param name="name">name of the view</param>
-        /// <param name="selectSQL">select SQL statement</param>
+        /// <inheritdoc/>
         public void AddView(string name, string selectSQL)
         {
             if (connection is SQLite)
@@ -291,13 +283,40 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                dbReader.ExecuteSql(selectSQL);
                 connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else
             {
                 throw new NotImplementedException();
             }
+        }
+
+        /// <inheritdoc/>
+        public string GetViewSQL(string name)
+        {
+            if (connection is SQLite)
+            {
+                if (connection.ViewExists(name))
+                {
+                    var resultSql = dbReader.GetDataUsingSql($"SELECT sql FROM sqlite_master WHERE type='view' and name='{name}'");
+                    if (resultSql.Rows.Count > 0)
+                        return resultSql.Rows[0].ItemArray[0].ToString();
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// Override the Document() function but do nothing.
+        /// This model does not show any documentation.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield break;
         }
     }
 }

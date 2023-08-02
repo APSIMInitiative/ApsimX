@@ -273,7 +273,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static string RemoveAfter(string st, char openBracket)
         {
-            int Pos = st.IndexOf(openBracket);
+            int Pos = st.LastIndexOf(openBracket);
             if (Pos != -1)
                 return st.Substring(0, Pos);
             else
@@ -285,7 +285,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static string GetAfter(string st, string delimiter)
         {
-            int Pos = st.IndexOf(delimiter);
+            int Pos = st.LastIndexOf(delimiter);
             if (Pos != -1)
                 return st.Substring(Pos + delimiter.Length);
             else
@@ -332,6 +332,23 @@ namespace APSIM.Shared.Utilities
 
             string space = "\r\n" + new string(' ', numChars);
             return returnString.Replace(space, "\r\n");
+        }
+
+        /// <summary>
+        /// Convert the specified string to a double. Will throw a user-readable
+        /// message if conversion fails.
+        /// </summary>
+        /// <param name="str">The string to be converted to a number.</param>
+        public static double ParseDouble(string str)
+        {
+            try
+            {
+                return Convert.ToDouble(str, CultureInfo.InvariantCulture);
+            }
+            catch (Exception error)
+            {
+                throw new InvalidOperationException($"Cannot convert '{str}' to a number", error);
+            }
         }
 
         /// <summary>

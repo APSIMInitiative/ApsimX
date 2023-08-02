@@ -1,6 +1,6 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.PMF.Interfaces;
-using System;
 
 namespace Models.PMF.Arbitrator
 {
@@ -52,7 +52,7 @@ namespace Models.PMF.Arbitrator
             N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
             if (N.BalanceError > 0.001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
-            
+
         }
     }
 }

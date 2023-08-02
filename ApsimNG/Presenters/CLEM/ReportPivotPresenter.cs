@@ -12,9 +12,14 @@ namespace UserInterface.Presenters
     class ReportPivotPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
     {
         /// <summary>
-        /// The GridView
+        /// Displays the pivoted table
         /// </summary>
         private GridView gridView;
+
+        /// <summary>
+        /// Displays the SQL
+        /// </summary>
+        private TextInputView sqlView;
 
         /// <summary>
         /// The pivot model
@@ -47,14 +52,21 @@ namespace UserInterface.Presenters
                 gridView = new GridView(clemPresenter.View as ViewBase);
                 GridPresenter gridPresenter = new GridPresenter();
 
+                // Create the SQL display
+                sqlView = new TextInputView(clemPresenter.View as ViewBase);
+
                 // Generate the table using the model
                 pivot = clemPresenter.ClemModel as ReportPivot;
                 gridPresenter.Attach(null, gridView, clemPresenter.ExplorerPresenter);
 
-                // Attach the view to display data
+                // Attach the views to display data
                 clem = clemPresenter.View as CLEMView;
+
                 clem.AddTabView("Data", gridView);
                 clemPresenter.PresenterList.Add("Data", this);
+
+                clem.AddTabView("SQL", sqlView);
+                clemPresenter.PresenterList.Add("SQL", this);
             }
             catch (Exception err)
             {
@@ -67,6 +79,10 @@ namespace UserInterface.Presenters
         { }
 
         /// <inheritdoc/>
-        public void Refresh() => gridView.DataSource = pivot.GenerateTable();
+        public void Refresh()
+        {
+            gridView.DataSource = pivot.GenerateTable();
+            sqlView.Text = pivot.SQL;
+        }
     }
 }

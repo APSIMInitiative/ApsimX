@@ -1,12 +1,14 @@
-﻿namespace Models.Soils.NutrientPatching
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+using Models.Surface;
+
+namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Encapsulates a cohort of Nutrient models i.e. patching.
@@ -18,14 +20,11 @@
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
-        private Soil soil = null;
-        
-        [Link]
         private IPhysical soilPhysical = null;
-        
+
         [Link]
         private ISummary summary = null;
 
@@ -62,7 +61,7 @@
         /// <summary>Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).</summary>
         [Units("mm")]
         public double LayerForNPartition { get; set; } = -99;
-        
+
         /// <summary>The inert pool.</summary>
         public INutrientPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
 
@@ -87,8 +86,8 @@
         /// <summary>The fresh organic matter surface residue pool.</summary>
         public INutrientPool SurfaceResidue { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.SurfaceResidue)); } }
 
-        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic }); } }
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
+        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic, Inert }); } }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NO3)); } }
@@ -98,7 +97,7 @@
 
         /// <summary>The Urea pool.</summary>
         public ISolute Urea { get { return SumSolutes(patches.Select(patch => patch.Nutrient.Urea)); } }
-        
+
         /// <summary>The NO3 pool.</summary>
         public double[] NO3ForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.NO3)); } }
 
@@ -109,7 +108,7 @@
         public double[] UreaForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.Urea)); } }
 
         /// <summary>Total C in each soil layer</summary>
-        public double[] TotalC {  get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
+        public double[] TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
 
         /// <summary>Total N in each soil layer</summary>
         public double[] TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
@@ -142,13 +141,19 @@
         public double[] MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
-        public double FOMCNR(int i)
+        public double[] FOMCNRFactor
         {
-            return MathUtilities.Sum(patches.Select(patch => patch.Nutrient.FOMCNR(i)));
+            get
+            {
+                var FOMCNR = new double[soilPhysical.Thickness.Length];
+                foreach (var patch in patches)
+                    FOMCNR = MathUtilities.Add(FOMCNR, patch.Nutrient.FOMCNRFactor);
+                return FOMCNR;
+            }
         }
 
         /// <summary>The number of patches.</summary>
-        public int NumPatches {  get { return patches.Count; } }
+        public int NumPatches { get { return patches.Count; } }
 
         /// <summary>The amount of NO3 in each patch (kg/ha).</summary>
         public double[] NO3EachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()).ToArray(); } }
@@ -160,7 +165,19 @@
         public double[] UreaEachPatch { get { return patches.Select(patch => patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
         /// <summary>The amount of mineral N in each patch (kg/ha).</summary>
-        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()+ patch.Nutrient.NH4.kgha.Sum()+ patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
+        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum() + patch.Nutrient.NH4.kgha.Sum() + patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
+
+        /// <summary>Denitrified Nitrogen (N flow from NO3) for each patch.</summary>
+        public double[] DenitrifiedNEachPatch { get { return patches.Select(patch => patch.Nutrient.DenitrifiedN.Sum()).ToArray(); } }
+
+        /// <summary>Total N2O lost to the atmosphere for each patch.</summary>
+        public double[] DenitN2OEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
+
+        /// <summary>Total C for each patch</summary>
+        public double[] TotalCEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalC.Sum()).ToArray(); } }
+
+        /// <summary>Total N for each patch</summary>
+        public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
 
         /// <summary>Calculate actual decomposition</summary>
         public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
@@ -279,12 +296,12 @@
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
                 else if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -292,7 +309,7 @@
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -300,7 +317,7 @@
             {
                 if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    summary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -310,7 +327,7 @@
             }
             else
             {
-                summary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.");
+                summary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.", MessageType.Diagnostic);
                 isDataOK = false;
             }
 
@@ -384,7 +401,7 @@
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     values[i] += solutesAsList[s].kgha[i] * areas[s];
             }
-            return new Solute(soil, name, values);
+            return new Solute(name, values);
         }
 
         /// <summary>
@@ -406,7 +423,7 @@
         }
 
         /// <summary>
-        /// For each patch, sum all layers of a solute. 
+        /// For each patch, sum all layers of a solute.
         /// </summary>
         /// <param name="solutes">The list of solutes</param>
         /// <returns>A single total solute for each patch.</returns>
@@ -447,6 +464,13 @@
         [EventSubscribe("Commencing")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // Make sure the NutrientPatchManager is after the solutes so that scoping works.
+            // This is an ugly hack but I can't think of an easy way to get around the problem of
+            // the plant models and soil water finding the solutes under NutrientPatchManager
+            // instead of the solute directly under the soil. Scoping design problem.
+            if (Parent.Children.Last() != this)
+                throw new Exception("NutrientPatchManager must be the last child of soil");
+
             // Create a new nutrient patch.
             var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
             newPatch.CreationDate = clock.Today;
@@ -474,10 +498,6 @@
 
             try
             {
-                // 1.5 If the calling model is a plant and the solute is NO3 or NH4 then use the 'PlantAvailable' solutes instead.
-                if (callingModelType == SoluteSetterType.Plant && (soluteName == "NO3" || soluteName == "NH4"))
-                    soluteName = "PlantAvailable" + soluteName;
-
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[patches.Count][];
                 for (int k = 0; k < patches.Count; k++)
@@ -540,7 +560,7 @@
                             Result[k][layer] = (incomingDelta[layer] * partitionWeight[k]) / patches[k].RelativeArea;
                     }
                     else
-                    { 
+                    {
                         // there is no incoming solute for this layer
                         for (int k = 0; k < patches.Count; k++)
                             Result[k][layer] = 0.0;
@@ -619,9 +639,9 @@
                     else if (OldPatch_NewArea < minimumPatchArea)
                     {
                         // remaining area is too small or negative, patch will be created but old one will be deleted
-                        summary.WriteWarning(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
+                        summary.WriteMessage(this, " attempt to set the area of existing patch(" + idPatchesAffected[i].ToString()
                                           + ") to a value too small or negative (" + OldPatch_NewArea.ToString("#0.00#")
-                                          + "). The patch will be eliminated.");
+                                          + "). The patch will be eliminated.", MessageType.Warning);
 
                         // mark old patch for deletion
                         idPatchesToDelete.Add(idPatchesAffected[i]);
@@ -667,7 +687,7 @@
                             summary.WriteMessage(this, "create new patch, with area = " + NewPatch_NewArea.ToString("#0.00#") +
                                          ", based on existing patch(" + idPatchesAffected[i].ToString() +
                                          ") - Old area = " + OldPatch_OldArea.ToString("#0.00#") +
-                                         ", new area = " + OldPatch_NewArea.ToString("#0.00#"));
+                                         ", new area = " + OldPatch_NewArea.ToString("#0.00#"), MessageType.Diagnostic);
                         }
                     }
                 }
@@ -767,7 +787,7 @@
 
             if (SelectedIDs.Count == 0)
             { // no valid patch was found, notify user
-                summary.WriteMessage(this, " No valid patch was found to base the new patch being added - operation will be ignored");
+                summary.WriteMessage(this, " No valid patch was found to base the new patch being added - operation will be ignored", MessageType.Diagnostic);
             }
             return SelectedIDs;
         }

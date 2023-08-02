@@ -1,19 +1,16 @@
-using System;
-using NUnit.Framework;
-using APSIM.Server.IO;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Linq;
-using System.Text;
-using System.IO.Pipes;
-using APSIM.Shared.Utilities;
 using APSIM.Server.Commands;
-using Models.Core.Run;
-using System.Collections.Generic;
+using APSIM.Server.IO;
+using APSIM.Shared.Utilities;
 using Models.Core;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO.Pipes;
+using System.Threading.Tasks;
+using static Models.Core.Overrides;
 
-namespace APSIM.Tests
+namespace UnitTests
 {
     /// <summary>
     /// Unit tests for managed comms protocol.
@@ -78,10 +75,10 @@ namespace APSIM.Tests
         [Test]
         public void TestReadRunCommand()
         {
-            IEnumerable<IReplacement> replacements = new IReplacement[]
+            IEnumerable<Override> replacements = new Override[]
             {
-                new PropertyReplacement("path", "value"),
-                new ModelReplacement("x", new MockModel())
+                new Override("path", "value", Override.MatchTypeEnum.NameAndType),
+                new Override("x", new MockModel(), Override.MatchTypeEnum.NameAndType)
             };
             ICommand target = new RunCommand(true, true, 32, replacements, new[] { "sim1, sim2" });
             TestRead(target);
@@ -97,10 +94,10 @@ namespace APSIM.Tests
         [Test]
         public void TestWriteRunCommand()
         {
-            IEnumerable<IReplacement> replacements = new IReplacement[]
+            IEnumerable<Override> replacements = new Override[]
             {
-                new ModelReplacement("f", new MockModel()),
-                new PropertyReplacement("path to a model", "replacement value")
+                new Override("f", new MockModel(), Override.MatchTypeEnum.NameAndType),
+                new Override("path to a model", "replacement value", Override.MatchTypeEnum.NameAndType)
             };
             IEnumerable<string> sims = new[] { "one simulation" };
             ICommand command = new RunCommand(false, true, 65536, replacements, sims);
@@ -140,6 +137,7 @@ namespace APSIM.Tests
                 client.Connect();
                 PipeUtilities.SendObjectToPipe(client, expected);
             }
+            server.Wait();
         }
 
         private void TestRead(ICommand target)
@@ -147,7 +145,8 @@ namespace APSIM.Tests
             Task server = Task.Run(() =>
             {
                 pipe.WaitForConnection();
-                Assert.AreEqual(target, protocol.WaitForCommand());
+                var actual = protocol.WaitForCommand();
+                Assert.AreEqual(target, actual);
             });
 
             using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))

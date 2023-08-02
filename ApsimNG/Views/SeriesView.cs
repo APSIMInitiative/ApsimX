@@ -4,15 +4,14 @@
     using Gtk;
     using System;
     using Extensions;
+    using APSIM.Shared.Utilities;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
     {
-#if NETFRAMEWORK
-        private Table table1 = null;
-#else
+
         private Grid table1;
-#endif
+
         private VBox vbox1 = null;
         private Label label4 = null;
         private Label label5 = null;
@@ -43,9 +42,7 @@
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
-#if NETFRAMEWORK
-            table1 = (Table)builder.GetObject("table1");
-#else
+
             Widget table = (Widget)builder.GetObject("table1");
             vbox1.Remove(table);
             table1 = new Grid();
@@ -54,7 +51,7 @@
             // is allocated to the graph (aka plotview).
             vbox1.PackStart(table1, false, true, 0);
             vbox1.ReorderChild(table1, 0);
-#endif
+
             label4 = (Label)builder.GetObject("label4");
             label5 = (Label)builder.GetObject("label5");
             mainWidget = vbox1;
@@ -89,7 +86,7 @@
 
             editView1 = new EditView(this);
 
-            Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
+            Image helpImage = new Image(null, "ApsimNG.Resources.MenuImages.Help.svg");
             helpBox = new EventBox();
             helpBox.Add(helpImage);
             helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
@@ -97,46 +94,45 @@
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 
-#if NETCOREAPP
-            table1.Attach(new Label("Data Source:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("X:") { Xalign = 0 }, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Y:") { Xalign = 0 }, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            label4 = new Label("Y2:") { Xalign = 0 };
-            label5 = new Label("X2:") { Xalign = 0 };
-            table1.Attach(label4, 0, 1, 3, 4, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(label5, 0, 1, 4, 5, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Type:") { Xalign = 0 }, 0, 1, 5, 6, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Line type:") { Xalign = 0 }, 0, 1, 6, 7, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Marker type:") { Xalign = 0 }, 0, 1, 7, 8, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Colour:") { Xalign = 0 }, 0, 1, 8, 9, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-            table1.Attach(new Label("Filter:") { Xalign = 0 }, 0, 1, 9, 10, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-#endif
+            table1.Attach(new Label("Data Source:") { Xalign = 0 }, 0, 0, 1, 1);
+            table1.Attach(new Label("X:") { Xalign = 0 }, 0, 1, 1, 1);
+            table1.Attach(new Label("Y:") { Xalign = 0 }, 0, 2, 1, 1);
+            label4 = new Label("X2:") { Xalign = 0 };
+            label5 = new Label("Y2:") { Xalign = 0 };
+            table1.Attach(label4, 0, 3, 1, 1);
+            table1.Attach(label5, 0, 4, 1, 1);
+            table1.Attach(new Label("Type:") { Xalign = 0 }, 0, 5, 1, 1);
+            table1.Attach(new Label("Line type:") { Xalign = 0 }, 0, 6, 1, 1);
+            table1.Attach(new Label("Marker type:") { Xalign = 0 }, 0, 7, 1, 1);
+            table1.Attach(new Label("Colour:") { Xalign = 0 }, 0, 8, 1, 1);
+            table1.Attach(new Label("Filter:") { Xalign = 0 }, 0, 9, 1, 1);
 
-            table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(xDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(yDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(y2DropDown.MainWidget, 1, 2, 3, 4, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(x2DropDown.MainWidget, 1, 2, 4, 5, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(seriesDropDown.MainWidget, 1, 2, 5, 6, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(lineTypeDropDown.MainWidget, 1, 2, 6, 7, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(markerTypeDropDown.MainWidget, 1, 2, 7, 8, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(colourDropDown.MainWidget, 1, 2, 8, 9, AttachOptions.Fill, 0, 10, 2);
+            // fixme: these widgets used to have 10px horizontal padding and 2px vertical padding.
+            table1.Attach(dataSourceDropDown.MainWidget, 1, 0, 1, 1/*, 10, 2*/);
+            table1.Attach(xDropDown.MainWidget, 1, 1, 1, 1/*10, 2*/);
+            table1.Attach(yDropDown.MainWidget, 1, 2, 1, 1/*10, 2*/);
+            table1.Attach(x2DropDown.MainWidget, 1, 3, 1, 1/*10, 2*/);
+            table1.Attach(y2DropDown.MainWidget, 1, 4, 1, 1/*10, 2*/);
+            table1.Attach(seriesDropDown.MainWidget, 1, 5, 1, 1/*10, 2*/);
+            table1.Attach(lineTypeDropDown.MainWidget, 1, 6, 1, 1/*10, 2*/);
+            table1.Attach(markerTypeDropDown.MainWidget, 1, 7, 1, 1/*10, 2*/);
+            table1.Attach(colourDropDown.MainWidget, 1, 8, 1, 1/*10, 2*/);
 
-            //table1.Attach(editView1.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
-            table1.Attach(filterBox, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
+            table1.Attach(filterBox, 1, 9, 1, 1/*10, 2*/);
 
-            table1.Attach(checkBoxView1.MainWidget, 2, 3, 1, 2, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView2.MainWidget, 2, 3, 2, 3, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView3.MainWidget, 3, 4, 1, 2, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView4.MainWidget, 3, 4, 2, 3, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView1.MainWidget, 2, 1, 1, 1);
+            table1.Attach(checkBoxView2.MainWidget, 2, 2, 1, 1);
+            table1.Attach(checkBoxView3.MainWidget, 3, 1, 1, 1);
+            table1.Attach(checkBoxView4.MainWidget, 3, 2, 1, 1);
 
-            table1.Attach(checkBoxView5.MainWidget, 2, 4, 8, 9, AttachOptions.Fill, 0, 0, 0);
-            table1.Attach(checkBoxView6.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
+            table1.Attach(checkBoxView5.MainWidget, 2, 8, 2, 1);
+            table1.Attach(checkBoxView6.MainWidget, 2, 9, 2, 1);
 
-            table1.Attach(new Label("Line thickness:") { Xalign = 0 }, 2, 3, 6, 7, AttachOptions.Fill, 0, 0, 5);
-            table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 6, 7, AttachOptions.Fill, 0, 0, 5);
-            table1.Attach(new Label("Marker size:") { Xalign = 0 }, 2, 3, 7, 8, AttachOptions.Fill, 0, 0, 5);
-            table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
+            // fixme: These apparently used to have 5px vertical padding.
+            table1.Attach(new Label("Line thickness:") { Xalign = 0 }, 2, 6, 1, 1/*, 0, 5*/);
+            table1.Attach(lineThicknessDropDown.MainWidget, 3, 6, 1, 1/*, 0, 5*/);
+            table1.Attach(new Label("Marker size:") { Xalign = 0 }, 2, 7, 1, 1/*, 0, 5*/);
+            table1.Attach(markerSizeDropDown.MainWidget, 3, 7, 1, 1/*, 0, 5*/);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -146,25 +142,25 @@
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
-                dataSourceDropDown.MainWidget.Cleanup();
-                xDropDown.MainWidget.Cleanup();
-                yDropDown.MainWidget.Cleanup();
-                x2DropDown.MainWidget.Cleanup();
-                y2DropDown.MainWidget.Cleanup();
-                seriesDropDown.MainWidget.Cleanup();
-                lineTypeDropDown.MainWidget.Cleanup();
-                markerTypeDropDown.MainWidget.Cleanup();
-                colourDropDown.MainWidget.Cleanup();
-                lineThicknessDropDown.MainWidget.Cleanup();
-                markerSizeDropDown.MainWidget.Cleanup();
-                checkBoxView1.MainWidget.Cleanup();
-                checkBoxView2.MainWidget.Cleanup();
-                checkBoxView3.MainWidget.Cleanup();
-                checkBoxView4.MainWidget.Cleanup();
-                checkBoxView5.MainWidget.Cleanup();
-                checkBoxView6.MainWidget.Cleanup();
-                graphView1.MainWidget.Cleanup();
-                editView1.MainWidget.Cleanup();
+                dataSourceDropDown.Dispose();
+                xDropDown.Dispose();
+                yDropDown.Dispose();
+                x2DropDown.Dispose();
+                y2DropDown.Dispose();
+                seriesDropDown.Dispose();
+                lineTypeDropDown.Dispose();
+                markerTypeDropDown.Dispose();
+                colourDropDown.Dispose();
+                lineThicknessDropDown.Dispose();
+                markerSizeDropDown.Dispose();
+                checkBoxView1.Dispose();
+                checkBoxView2.Dispose();
+                checkBoxView3.Dispose();
+                checkBoxView4.Dispose();
+                checkBoxView5.Dispose();
+                checkBoxView6.Dispose();
+                graphView1.Dispose();
+                editView1.Dispose();
                 owner = null;
             }
             catch (Exception err)
@@ -248,7 +244,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
+                    ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
             }
             catch (Exception err)
             {

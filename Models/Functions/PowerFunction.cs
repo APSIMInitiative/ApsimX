@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
 using System.Linq;
+using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Raises the value of the child to the power of the exponent specified
     /// </summary>
     [Serializable]
@@ -47,7 +44,8 @@ namespace Models.Functions
                 IFunction P = ChildFunctions[1];
                 return Math.Pow(F.Value(arrayIndex), P.Value(arrayIndex));
             }
-            else {
+            else
+            {
 
                 throw new Exception("Invalid number of arguments for Power function");
             }

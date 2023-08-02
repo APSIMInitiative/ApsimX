@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
-using System.Linq;
 
 namespace Models.Functions
 {
@@ -15,11 +14,11 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation and reset to zero each time the specisified stage is passed")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateResetAtStage : Model, IFunction, ICustomDocumentation
-    {        
+    public class AccumulateResetAtStage : Model, IFunction
+    {
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-                   
+
         private double AccumulatedValue = 0;
 
         private IEnumerable<IFunction> ChildFunctions;
@@ -31,14 +30,14 @@ namespace Models.Functions
         [Description("(optional) Stage name to reset accumulation")]
         public string ResetStageName { get; set; }
 
-        
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            AccumulatedValue = 0;          
+            AccumulatedValue = 0;
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -50,13 +49,13 @@ namespace Models.Functions
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
 
-                double DailyIncrement = 0.0;
-                foreach (IFunction function in ChildFunctions)
-                {
-                    DailyIncrement += function.Value();
-                }
+            double DailyIncrement = 0.0;
+            foreach (IFunction function in ChildFunctions)
+            {
+                DailyIncrement += function.Value();
+            }
 
-                AccumulatedValue += DailyIncrement;           
+            AccumulatedValue += DailyIncrement;
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -85,23 +84,12 @@ namespace Models.Functions
             AccumulatedValue = 0;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below " +
-                    " and set to zero each time the "+ ResetStageName + " is passed.", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {ResetStageName} is passed.");
         }
     }
 }

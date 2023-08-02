@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
-using Newtonsoft.Json;
 using Models.Functions;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// # [Name]
     /// Height is used by the MicroClimate model to calculate the aerodynamic resistance used for calculation of potential transpiration.
     /// Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress).
     /// </summary>
@@ -24,7 +23,7 @@ namespace Models.PMF.Struct
 
         /// <summary>The height</summary>
         private double Height = 0;
-        
+
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
@@ -65,7 +64,7 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {
-                Clear();
+            Clear();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -74,8 +73,18 @@ namespace Models.PMF.Struct
         [EventSubscribe("PlantEnding")]
         private void OnPlantEnding(object sender, EventArgs e)
         {
-                Clear();
+            Clear();
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var child in FindAllChildren<Memo>())
+                foreach (var tag in child.Document())
+                    yield return tag;
+
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+        }
     }
 }

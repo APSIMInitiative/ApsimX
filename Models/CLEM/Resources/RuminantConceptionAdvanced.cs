@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Resources
 {
@@ -18,8 +15,8 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Ruminant/RuminantAdvancedConception.htm")]
-    public class RuminantConceptionAdvanced: CLEMModel, IConceptionModel
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantAdvancedConception.htm")]
+    public class RuminantConceptionAdvanced : CLEMModel, IConceptionModel
     {
 
         /// <summary>
@@ -35,9 +32,9 @@ namespace Models.CLEM.Resources
         [Required, ArrayItemCount(4)]
         public double[] ConceptionRateIntercept { get; set; }
         /// <summary>
-        /// Conception rate assymtote of breeder
+        /// Conception rate asymptote of breeder
         /// </summary>
-        [Description("Conception rate assymtote (<12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
+        [Description("Conception rate asymptote (<12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required, ArrayItemCount(4)]
         public double[] ConceptionRateAsymptote { get; set; }
 
@@ -100,12 +97,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             return "<div class=\"activityentry\">Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf. </div>";
         }

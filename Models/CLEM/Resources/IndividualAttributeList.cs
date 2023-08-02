@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -32,13 +30,22 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Check if the individual has any attributes added
+        /// </summary>
+        /// <returns></returns>
+        public bool AttributesPresent
+        {
+            get { return (attributes != null); }
+        }
+
+        /// <summary>
         /// Check if the selected attribute exists on this individual
         /// </summary>
         /// <param name="tag">Attribute label</param>
         /// <returns></returns>
         public bool Exists(string tag)
         {
-            return (attributes is null)?false:attributes.ContainsKey(tag);
+            return (attributes is null) ? false : attributes.ContainsKey(tag);
         }
 
         /// <summary>
@@ -76,7 +83,7 @@ namespace Models.CLEM.Resources
         /// <param name="tag">Attribute label</param>
         public void Remove(string tag)
         {
-            if (attributes is null || attributes.ContainsKey(tag))
+            if (attributes != null && attributes.ContainsKey(tag))
                 attributes.Remove(tag);
         }
 

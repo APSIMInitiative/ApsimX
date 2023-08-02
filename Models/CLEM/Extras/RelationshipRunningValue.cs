@@ -3,11 +3,9 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -18,7 +16,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Relationship))]
-    [Description("Tracks a bound running value based on a relationship where Y represents the change in this value for a given X")]
+    [Description("Track a bound running value based on a relationship where Y represents the change in this value for a given X")]
     [Version(1, 0, 1, "This component replaces the depreciated RelationshipTracker and is placed below a Relationship")]
     [HelpUri(@"Content/Features/Relationships/RelationshipRunningValue.htm")]
     public class RelationshipRunningValue: CLEMModel, IValidatableObject
@@ -47,7 +45,7 @@ namespace Models.CLEM
         /// Maximum value possible
         /// </summary>
         [Description("Maximum running value possible")]
-        [Required, GreaterThan("Minimum", ErrorMessage = "Maximum value must be greater than minimum value")]
+        [Required, GreaterThanEqual("Minimum", ErrorMessage = "Maximum value must be greater than or equal to minimum value")]
         public double Maximum { get; set; }
 
         /// <summary>
@@ -91,7 +89,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = new List<ValidationResult>();
-            if (Maximum < Minimum)
+            if (MathUtilities.IsLessThan(Maximum, Minimum))
             {
                 string[] memberNames = new string[] { "Maximum" };
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));
@@ -103,19 +101,15 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write($"A running value starting at <span class=\"setvalue\">{StartingValue}</span>");
                 htmlWriter.Write($" and ranging between <span class=\"setvalue\">{Minimum}</span> and ");
-                if (Maximum <= Minimum)
+                if (MathUtilities.IsLessThanOrEqual(Maximum, Minimum))
                     htmlWriter.Write("<span class=\"errorlink\">Invalid</span>");
                 else
                     htmlWriter.Write($"<span class=\"setvalue\">{Maximum}</span>");
