@@ -73,8 +73,21 @@
                 AddTreeNodeIfDoesntExist(modelThatCanBeAdded, rootNode);
 
             tree.Populate(rootNode);
-            if (models.Count() < 10)
+
+            //count how many non-function results are returned
+            int count = 0;
+            foreach (Apsim.ModelDescription description in models)
+            {
+                if (!description.ModelType.AssemblyQualifiedName.Contains("Models.Functions"))
+                    count += 1;
+            }
+
+            if (count < 10)
+            {
                 tree.ExpandChildren(".Models");
+                tree.CollapseChildren(".Models.Functions");
+            }
+                
         }
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
