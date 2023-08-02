@@ -10,6 +10,7 @@ namespace Models.WaterModel
 
     /// <summary>Implements the curve number reduction caused by cover.</summary>
     [Serializable]
+    [ValidParent(typeof(WaterBalance))]
     public class CNReductionForCover : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------
