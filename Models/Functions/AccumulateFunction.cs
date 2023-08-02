@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using Models.PMF.Library;
 using Models.PMF.Phen;
 using System.Linq;
 using APSIM.Shared.Documentation;
