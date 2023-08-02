@@ -4551,10 +4551,7 @@
               "$type": "Models.Management.BiomassRemovalEvents, Models",
               "removaltype": 0,
               "StageToSet": 3.5,
-              "RemovalDates": [
-                "2010-12-15T00:00:00",
-                "2011-01-15T00:00:00"
-              ],
+              "RemovalDatesInput": "15/12/2010, 15/01/2011",
               "Name": "BiomassRemovalEvents",
               "ResourceName": null,
               "Children": [],
