@@ -43,7 +43,28 @@ namespace Models.Management
         /// Dates to trigger biomass removal events
         /// </summary>
         [Description("Removal Event Dates (comma seperated dd/mm/yyyy")]
-        public DateTime[] RemovalDates { get; set; }
+        public string RemovalDatesInput { get; set; }
+
+        /// <summary>
+        /// Dates to trigger biomass removal events as dates
+        /// Will append a default year to dates that do not have a year
+        /// </summary>
+        [JsonIgnore]
+        public DateTime[] RemovalDates
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(RemovalDatesInput))
+                    return new List<DateTime>().ToArray();
+                List<DateTime> dates = new List<DateTime>();
+                string[] inputs = RemovalDatesInput.Split(',');
+                foreach (string input in inputs)
+                {
+                    dates.Add(DateUtilities.GetDate(input));
+                }
+                return dates.ToArray();
+            }
+        }
 
         [Link] private Clock Clock = null;
         [Link(Type = LinkType.Scoped)] private BiomassRemovalFractions biomRemFra = null;
@@ -64,13 +85,16 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            foreach (DateTime d in RemovalDates)
+            if (String.IsNullOrEmpty(RemovalDatesInput))
+                return;
+
+            string[] inputs = RemovalDatesInput.Split(',');            
+            foreach (string input in inputs)
             {
-                if (d == Clock.Today)
-                {
-                    remove();
-                }
+                if (DateUtilities.CompareDates(input, Clock.Today) == 0)
+                    remove();                
             }
+            return;
         }
 
     }
