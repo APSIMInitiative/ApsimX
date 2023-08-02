@@ -89,9 +89,9 @@ namespace Models.Management
                 return;
 
             string[] inputs = RemovalDatesInput.Split(',');            
-            foreach (string input in inputs)
+            foreach (DateTime d in RemovalDates)
             {
-                if (DateUtilities.CompareDates(input, Clock.Today) == 0)
+                if (d == Clock.Today)
                     remove();                
             }
             return;
