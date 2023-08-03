@@ -128,6 +128,8 @@ namespace Models
                 // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
+                    string configFileAbsolutePath = Path.GetFullPath(options.Apply);
+                    string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                     List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
                     bool isSimToBeRun = false;
                     string[] commandsArray = ConfigFile.RemoveConfigFileWhitespace(commands.ToList()).ToArray();
@@ -140,7 +142,7 @@ namespace Models
                         {
                             for (int i = 0; i < commandsArray.Length; i++)
                             {
-                                string[] splitCommand = commandsArray[i].Split(" ");
+                                string[] splitCommand = commandsArray[i].Split(' ', '=');
                                 if (splitCommand[0] == "save")
                                 {
                                     savePath = splitCommand[1];
@@ -160,7 +162,7 @@ namespace Models
                                     commandsArray[i]
                                 };
 
-                                Simulations sim = ConfigFile.RunConfigCommands(file, commands) as Simulations;
+                                Simulations sim = ConfigFile.RunConfigCommands(file, commands, configFileDirectory) as Simulations;
 
                                 sim.Write(file);
 
@@ -182,8 +184,6 @@ namespace Models
                     // If no apsimx file path included proceeding --apply switch...              
                     else if (files.Length < 1)
                     {
-                        string configFileAbsolutePath = Path.GetFullPath(options.Apply);
-                        string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                         savePath = "";
                         loadPath = "";
                         string temporarySimLoadPath = "";
@@ -191,9 +191,10 @@ namespace Models
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
-                            string[] splitCommandSpacesPreserved = ConfigFile.EncodeSpacesInCommandList(commandsArray.ToList()).ToArray();
-                            List<string> tempCommandSplits = commandsArray[i].Split(' ', '=').ToList();
-                            string[] splitCommand = ConfigFile.DecodeSpacesInCommandSplits(tempCommandSplits).ToArray();
+                            //string[] splitCommandSpacesPreserved = ConfigFile.EncodeSpacesInCommandList(commandsArray.ToList()).ToArray();
+                            //List<string> tempCommandSplits = splitCommandSpacesPreserved.ToArray()[i].Split(' ', '=').ToList();
+                            //string[] splitCommand = ConfigFile.DecodeSpacesInCommandSplits(tempCommandSplits).ToArray();
+                            string[] splitCommand = commandsArray[i].Split(' ', '=');
                             if (splitCommand[0] == "save")
                             {
                                 savePath = configFileDirectory + Path.DirectorySeparatorChar + splitCommand[1];
@@ -236,7 +237,6 @@ namespace Models
                                 commandsArray[i]
                             };
 
-
                             // As long as a file can be loaded any other command can be run.
                             if (!String.IsNullOrEmpty(loadPath))
                             {
@@ -244,9 +244,9 @@ namespace Models
                                 Simulations sim;
                                 // Makes sure that loadPath file is not overwritten.
                                 if (!string.IsNullOrEmpty(temporarySimLoadPath))
-                                    sim = ConfigFile.RunConfigCommands(temporarySimLoadPath, commandWrapper) as Simulations;
+                                    sim = ConfigFile.RunConfigCommands(temporarySimLoadPath, commandWrapper, configFileDirectory) as Simulations;
                                 else
-                                    sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper) as Simulations;
+                                    sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper, configFileDirectory) as Simulations;
 
                                 if (!String.IsNullOrEmpty(loadPath) && String.IsNullOrEmpty(savePath))
                                     sim.Write(temporarySimLoadPath);
@@ -275,8 +275,12 @@ namespace Models
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
                         }
                         // Clean up temp apsimx file.
-                        File.Replace(temporarySimLoadPath, temporarySimLoadPath + ".bak", null);
-                        File.Delete(temporarySimLoadPath);
+                        if (File.Exists(temporarySimLoadPath))
+                        {
+                            File.Replace(temporarySimLoadPath, temporarySimLoadPath + ".bak", null);
+                            File.Delete(temporarySimLoadPath);
+                        }
+
                     }
                 }
                 else

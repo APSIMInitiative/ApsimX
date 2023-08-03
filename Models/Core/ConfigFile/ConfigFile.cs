@@ -23,29 +23,40 @@ namespace Models.Core.ConfigFile
         /// <returns>A combined string List of override and instruction commands.</returns>
         public static List<string> GetConfigFileCommands(string configFilePath)
         {
-            // List for all the commands, whether they are override commands or instruction commands.
-            // Instructions = used for adding, creating, deleting, copying, saving, loading
-            // Overrides = used for modifying existing .apsimx node values.
-            List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
-            // Used to remove any comments from list.
-            List<string> commandsWithoutCommentLines = new List<string>();
-            foreach (string commandString in configFileCommands)
+            try
             {
-                char firstChar = commandString[0];
-                if (firstChar != '#' && firstChar != '\\')
+                // List for all the commands, whether they are override commands or instruction commands.
+                // Instructions = used for adding, creating, deleting, copying, saving, loading
+                // Overrides = used for modifying existing .apsimx node values.
+                List<string> configFileCommands = File.ReadAllLines(configFilePath).ToList();
+                // Used to remove any comments from list.
+                List<string> commandsWithoutCommentLines = new List<string>();
+                foreach (string commandString in configFileCommands)
                 {
-                    commandsWithoutCommentLines.Add(commandString);
+                    if (!string.IsNullOrEmpty(commandString))
+                    {
+                        char firstChar = commandString[0];
+                        if (firstChar != '#' && firstChar != '\\')
+                        {
+                            commandsWithoutCommentLines.Add(commandString);
+                        }
+                    }
                 }
+                return commandsWithoutCommentLines;
             }
-            return commandsWithoutCommentLines;
+            catch (Exception e)
+            {
+                throw new Exception($"An error occurred fetching commands from config file located at {configFilePath}. Check file contents.\n {e}");
+            }
         }
 
         /// <summary>
         /// Runs the commands depending on command type (override/instruction).
         /// </summary>
         /// <param name="configFileCommands">A list of override or instruction commands.</param>
+        /// <param name="configFileDirectory">A path to the config file's directory</param>
         /// <param name="apsimxFilePath">A file path to an .apsimx file.</param>
-        public static IModel RunConfigCommands(string apsimxFilePath, IEnumerable<string> configFileCommands)
+        public static IModel RunConfigCommands(string apsimxFilePath, IEnumerable<string> configFileCommands, string configFileDirectory)
         {
             try
             {
@@ -122,7 +133,7 @@ namespace Models.Core.ConfigFile
                                     {
                                         // Special check to see if the modifiedNodeName = [Simulations]
                                         // Simulations node should never be deleted.
-                                        if (modifiedNodeName == "[Simulations]")
+                                        if (modifiedNodeName == "[Simulations]" && keyword == Keyword.Delete)
                                         {
                                             throw new InvalidOperationException($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
                                         }
@@ -181,7 +192,7 @@ namespace Models.Core.ConfigFile
                         }
                         else
                         {
-                            sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction, instruction.FileContainingNode);
+                            sim = (Simulations)RunInstructionOnApsimxFile(sim, instruction, instruction.FileContainingNode, configFileDirectory);
                         }
 
                     }
@@ -219,6 +230,9 @@ namespace Models.Core.ConfigFile
                 {
                     case "Add":
                         IModel parentNode = locator.Get(instruction.NodeToModify) as IModel;
+                        //// Removes brackets if present.
+                        //if (instruction.NodeForAction.Contains('['))
+                        //    instruction.NodeForAction.Substring(1).Trim(']');
                         Structure.Add(instruction.NodeForAction, parentNode);
                         break;
                     case "Delete":
@@ -245,7 +259,7 @@ namespace Models.Core.ConfigFile
         /// <summary>
         /// Runs config file instruction on .apsimx file then returns the modified file.
         /// </summary>
-        private static IModel RunInstructionOnApsimxFile(IModel simulation, Instruction instruction, string pathOfSimWithNode)
+        private static IModel RunInstructionOnApsimxFile(IModel simulation, Instruction instruction, string pathOfSimWithNode, string configFileDirectory)
         {
             try
             {
@@ -255,7 +269,8 @@ namespace Models.Core.ConfigFile
                 {
                     // Process for adding an existing node from another file.
                     {
-                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNode, e => throw e, false).NewModel as Simulations;
+                        string pathOfSimWithNodeAbsoluteDirectory = configFileDirectory + Path.DirectorySeparatorChar + pathOfSimWithNode;
+                        Simulations simToCopyFrom = FileFormat.ReadFromFile<Simulations>(pathOfSimWithNodeAbsoluteDirectory, e => throw e, false).NewModel as Simulations;
                         Locator simToCopyFromLocator = new Locator(simToCopyFrom);
                         IModel nodeToCopy = simToCopyFromLocator.Get(instruction.NodeForAction) as IModel;
                         Locator simToCopyToLocator = new Locator(simulation);
@@ -300,11 +315,23 @@ namespace Models.Core.ConfigFile
                         string fixedSection;
                         if (section.Contains(' '))
                         {
-                            int indexOfSpace = section.IndexOf(' ');
-                            string tempSection = section.Insert(indexOfSpace - 1, "@");
-                            int newIndexOfSpace = tempSection.IndexOf(" ");
-                            fixedSection = tempSection.Remove(indexOfSpace, 1);
-                            correctedLine += fixedSection;
+                            string trimmedSection = section.TrimEnd();
+                            int indexOfSpace = trimmedSection.IndexOf(' ');
+                            if (indexOfSpace != -1)
+                            {
+                                string tempSection = trimmedSection.Insert(indexOfSpace - 1, "@");
+                                int newIndexOfSpace = tempSection.IndexOf(" ");
+                                fixedSection = tempSection.Remove(indexOfSpace, 1);
+                                correctedLine += fixedSection;
+                            }
+                            else correctedLine += trimmedSection;
+                        }
+                        else if (section == lineSections.Last())
+                            correctedLine += section;
+                        else
+                        {
+                            string nonEndSection = section + "=";
+                            correctedLine += nonEndSection;
                         }
                     }
                     normalizedList.Add(correctedLine);
@@ -312,7 +339,9 @@ namespace Models.Core.ConfigFile
                 // if the line is a command...
                 else
                 {
-                    lineSections = lineString.Split(' ').ToList();
+                    correctedLineString.Clear();
+                    string trimmedLineString = lineString.Trim();
+                    lineSections = trimmedLineString.Split(' ').ToList();
                     if (lineSections[0] != "load" && lineSections[0] != "save")
                     {
                         foreach (string section in lineSections)
@@ -321,6 +350,8 @@ namespace Models.Core.ConfigFile
                             {
                                 if (section == "load" || section == "save")
                                     break;
+                                else if (section == "run")
+                                    correctedLineString.Append(section);
                                 else correctedLineString.Append(section + " ");
                             }
                             else if (rxBrokenNodeStart.IsMatch(section) && !rxNode.IsMatch(section))
@@ -328,11 +359,20 @@ namespace Models.Core.ConfigFile
                             else if (rxBrokenNodeEnd.IsMatch(section) && !rxNode.IsMatch(section))
                                 correctedLineString.Append(section + " ");
                             else if (rxNode.IsMatch(section))
-                                correctedLineString.Append(section + " ");
+                            {
+                                if (section.Contains('.'))
+                                    correctedLineString.Append(section);
+                                else correctedLineString.Append(section + " ");
+                            }
                             else if (string.IsNullOrEmpty(section))
                                 continue;
                             else
-                                correctedLineString.Append(section + "@");
+                            {
+                                if (section != lineSections.Last())
+                                    correctedLineString.Append(section + "@");
+                                else
+                                    correctedLineString.Append(section);
+                            }
                         }
                         normalizedList.Add(correctedLineString.ToString());
                     }
@@ -383,8 +423,14 @@ namespace Models.Core.ConfigFile
             try
             {
                 List<string> modifiedList = new List<string>();
-                List<string> encodedCommandList = EncodeSpacesInCommandList(commandSplitList);
-                foreach (string command in commandSplitList)
+                List<string> tempModifiedList = new List<string>();
+                foreach (string commandString in commandSplitList)
+                {
+                    string fixedString = RemoveInternalOverrideCommandSpaces(commandString);
+                    tempModifiedList.Add(fixedString);
+                }
+                List<string> encodedCommandList = EncodeSpacesInCommandList(tempModifiedList);
+                foreach (string command in tempModifiedList)
                 {
                     List<string> splitCommands = command.Split(" ").ToList();
                     splitCommands.RemoveAll(split => split == "");
@@ -404,6 +450,46 @@ namespace Models.Core.ConfigFile
             catch (Exception e)
             {
                 throw new Exception($"An error occurred removing whitespace from a command list.\n {e}");
+            }
+
+        }
+
+        /// <summary>
+        /// Takes a command string from a config file and removes internal whitespace.
+        /// </summary>
+        /// <param name="commandString">A line from config file.</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static string RemoveInternalOverrideCommandSpaces(string commandString)
+        {
+            try
+            {
+                // Removes spaces before and after override '=' symbol.
+                if (commandString.Contains("="))
+                {
+                    // Need temp string for storing command if changed.
+                    string tempCommandString;
+                    // Get index of '=' and check index of char either side.
+                    int equalsIndex = commandString.IndexOf('=');
+                    if (commandString[equalsIndex - 1] == ' ')
+                    {
+                        tempCommandString = commandString.Remove(equalsIndex - 1, 1);
+                        commandString = tempCommandString;
+                    }
+                    // Reset equalsIndex.
+                    equalsIndex = commandString.IndexOf("=");
+                    if (commandString[equalsIndex + 1] == ' ')
+                    {
+                        tempCommandString = commandString.Remove(equalsIndex + 1, 1);
+                        commandString = tempCommandString;
+                    }
+                }
+                return commandString;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An occurred removing extra internal whitespace in a command. The command was: {commandString}.\n{e}");
             }
 
         }
