@@ -719,7 +719,7 @@
             "               TimeSincePlanting = 0;  ",
             "            }",
             "",
-            "            TimeSincePlanting += 1.0/365.0;",
+            "            TimeSincePlanting += 1.0/365.242199;",
             "        }",
             "    }",
             "}"

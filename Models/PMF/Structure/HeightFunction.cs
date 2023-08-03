@@ -12,6 +12,7 @@ namespace Models.PMF.Struct
     /// Calculates the potential height increment and then multiplies it by the smallest of any childern functions (Child functions represent stress).
     /// </summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(Structure))]
     public class HeightFunction : Model, IFunction
     {
         /// <summary>The potential height</summary>

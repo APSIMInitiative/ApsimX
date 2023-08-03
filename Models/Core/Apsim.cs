@@ -85,15 +85,16 @@ namespace Models.Core
             if (childType == typeof(Simulations))
                 return false;
 
-            if (parent.GetType() == typeof(Folder) ||
-                parent.GetType() == typeof(Factor) ||
-                parent.GetType() == typeof(CompositeFactor))
+            //get list of parents for the base model class
+            List<Type> modelTypes = new List<Type>();
+            foreach (ValidParentAttribute modelParent in ReflectionUtilities.GetAttributes(typeof(Model), typeof(ValidParentAttribute), true))
+                modelTypes.Add(modelParent.ParentType);
+
+            //check if the parent is one of the parents for all models
+            if (modelTypes.Contains(parent))
                 return true;
 
-            // Functions are currently allowable anywhere
-            if (childType.GetInterface("IFunction") != null)
-                return true;
-
+            bool hasParentType = false;
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
@@ -104,8 +105,17 @@ namespace Models.Core
 
                     if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;
+
+                    //check if parent is one of the parents provided by Model
+                    if (!modelTypes.Contains(validParent.ParentType))
+                        hasParentType = true;
                 }
             }
+
+            // If a type is an IFunction and doesn't have any non-default valid parents, show it everywhere
+            if (!hasParentType && childType.GetInterface("IFunction") != null)
+                return true;
+
             return false;
         }
 
