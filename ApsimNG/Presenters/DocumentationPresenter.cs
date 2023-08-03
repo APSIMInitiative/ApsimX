@@ -3,16 +3,12 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
-using UserInterface.Interfaces;
-using Utility;
+using Models.PMF.Phen;
 
 namespace UserInterface.Presenters
 {
@@ -36,9 +32,9 @@ namespace UserInterface.Presenters
             PopulateView();
         }
 
-        private void PopulateView()
+        private async void PopulateView()
         {
-            view.Text = DocumentModel(model).Replace("<", @"\<");
+            view.Text = await Task.Run(() => DocumentModel(model).Replace("<", @"\<"));
         }
 
         private string DocumentModel(IModel model)
@@ -57,6 +53,14 @@ namespace UserInterface.Presenters
                 markdown.AppendLine($"# Remarks");
                 markdown.AppendLine();
                 markdown.AppendLine(remarks);
+                markdown.AppendLine();
+            }
+
+            //This has been added so Phenology can show its phases inside of the GUI
+            if (model.GetType() == typeof(Phenology))
+            {
+                DataTable dataTable = (model as Phenology).GetPhaseTable();
+                markdown.AppendLine(DataTableUtilities.ToMarkdown(dataTable, true));
                 markdown.AppendLine();
             }
 

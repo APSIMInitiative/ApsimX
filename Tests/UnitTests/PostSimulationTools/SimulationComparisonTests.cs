@@ -1,21 +1,15 @@
-﻿namespace UnitTests
-{
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Storage;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using UnitTests.Soils;
+﻿using APSIM.Shared.Utilities;
+using Models.PostSimulationTools;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Reflection;
 
+namespace UnitTests
+{
     public class SimulationComparisonTests
     {
         private IDatabaseConnection database;
@@ -73,12 +67,12 @@
             dataStore.Reader.Refresh();
             var data = dataStore.Reader.GetData("SimulationComparison");
 
-            Assert.IsTrue(
-                Utilities.CreateTable(new string[] {  "CheckpointID", "Year", "Sim1.Col1", "Sim2.Col1", "Sim1.Col2", "Sim2.Col2" },
-                   new List<object[]> { new object[] {             1,   1970,          10,          14,          11,          15 },
-                                        new object[] {             1,   1971,          12,          16,          13,          17 }
-                   })
-               .IsSame(data));
+            DataTable table = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "Year", "Sim1.Col1", "Sim2.Col1", "Sim1.Col2", "Sim2.Col2" },
+                   new List<object[]> { new object[] {                         null,             1,              null,   1970,          10,          14,          11,          15 },
+                                        new object[] {                         null,             1,              null,   1971,          12,          16,          13,          17 }
+                   });
+
+            Assert.IsTrue(table.IsSame(data));
         }
 
         /// <summary>Create a table that we can test</summary>

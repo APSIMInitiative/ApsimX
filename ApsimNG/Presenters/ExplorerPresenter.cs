@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using UserInterface.Commands;
 using UserInterface.Interfaces;
+using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
@@ -466,7 +467,7 @@ namespace UserInterface.Presenters
                 int i = 0;
                 while (valid && (i < str.Length))
                 {
-                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_') && (str[i] != ' '))
+                    if (!char.IsLetter(str[i]) && !char.IsNumber(str[i]) && (str[i] != '_') && (str[i] != ' ') && (str[i] != '-'))
                     {
                         valid = false;
                     }
@@ -632,39 +633,62 @@ namespace UserInterface.Presenters
 
                     if (ok)
                     {
-                        MenuDescriptionArgs desc = new MenuDescriptionArgs();
-                        desc.Name = contextMenuAttr.MenuName;
-                        desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
-                        desc.ShortcutKey = contextMenuAttr.ShortcutKey;
-                        desc.ShowCheckbox = contextMenuAttr.IsToggle;
-                        desc.FollowsSeparator = contextMenuAttr.FollowsSeparator;
+                        if (contextMenuAttr.MenuName.CompareTo("Playlist") != 0)
+                        {
+                            MenuDescriptionArgs desc = new MenuDescriptionArgs();
+                            desc.Name = contextMenuAttr.MenuName;
+                            desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+                            desc.ShortcutKey = contextMenuAttr.ShortcutKey;
+                            desc.ShowCheckbox = contextMenuAttr.IsToggle;
+                            desc.FollowsSeparator = contextMenuAttr.FollowsSeparator;
 
-                        // Check for an enable method
-                        MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
-                        if (enableMethod != null)
-                        {
-                            desc.Enabled = (bool)enableMethod.Invoke(this.ContextMenu, null);
-                        }
-                        else
-                        {
-                            desc.Enabled = true;
-                        }
+                            // Check for an enable method
+                            MethodInfo enableMethod = typeof(ContextMenu).GetMethod(method.Name + "Enabled");
+                            if (enableMethod != null)
+                            {
+                                desc.Enabled = (bool)enableMethod.Invoke(this.ContextMenu, null);
+                            }
+                            else
+                            {
+                                desc.Enabled = true;
+                            }
 
-                        // Check for an checked method
-                        MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
-                        if (checkMethod != null)
-                        {
+                            // Check for an checked method
+                            MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
+                            if (checkMethod != null)
+                            {
                                 desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
+                            }
+                            else
+                            {
+                                desc.Checked = false;
+                            }
+
+                            EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.ContextMenu, method);
+                            desc.OnClick = handler;
+
+                            descriptions.Add(desc);
                         }
                         else
                         {
-                            desc.Checked = false;
+                            IEnumerable<Playlist> playlists = ApsimXFile.FindAllDescendants<Playlist>();
+                            bool firstTimeOnly = true;
+                            foreach (Playlist list in playlists)
+                            {
+                                MenuDescriptionArgs desc = new MenuDescriptionArgs();
+                                desc.Name = " Add to " + list.Name;
+                                desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages.Playlist.png";
+                                desc.ShortcutKey = null;
+                                desc.ShowCheckbox = false;
+                                desc.FollowsSeparator = firstTimeOnly;
+                                firstTimeOnly = false;
+
+                                EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.ContextMenu, method);
+                                desc.OnClick = handler;
+
+                                descriptions.Add(desc);
+                            }
                         }
-
-                        EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.ContextMenu, method);
-                        desc.OnClick = handler;
-
-                        descriptions.Add(desc);
                     }
                 }
             }

@@ -137,18 +137,21 @@
                 graphView.UpdateView();
 
                 // Format the axes.
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                    FormatAxis(axis);
+
+                //check if the axes are too small, update if so
                 const double tolerance = 0.00001;
-                foreach (var axis in graph.Axis)
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
                 {
-                    // Guard against null but don't reset if already set.
-                    axis.Minimum ??= graphView.AxisMinimum(axis.Position);
-                    axis.Maximum ??= graphView.AxisMaximum(axis.Position);
+                    double minimum = graphView.AxisMinimum(axis.Position);
+                    double maximum = graphView.AxisMaximum(axis.Position);
                     if (axis.Maximum - axis.Minimum < tolerance)
                     {
-                        axis.Minimum -= tolerance/2;
-                        axis.Maximum += tolerance/2;
+                        axis.Minimum -= tolerance / 2;
+                        axis.Maximum += tolerance / 2;
+                        FormatAxis(axis);
                     }
-                    FormatAxis(axis);
                 }
 
                 // Get a list of series annotations.

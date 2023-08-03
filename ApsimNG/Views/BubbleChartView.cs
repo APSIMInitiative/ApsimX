@@ -335,8 +335,8 @@ namespace UserInterface.Views
             else if (arc != null)
             {
                 ctxFrame.Label = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
-                RuleList.Text = String.Join(Environment.NewLine, rules[arc.Name].ToArray()) ;
-                ActionList.Text = String.Join(Environment.NewLine, actions[arc.Name].ToArray());
+                RuleList.Text = String.Join('\n', rules[arc.Name].ToArray()) ;
+                ActionList.Text = String.Join('\n', actions[arc.Name].ToArray());
                 ctxBox.PackStart(arcSelWdgt, true, true, 0);
             }
             else
