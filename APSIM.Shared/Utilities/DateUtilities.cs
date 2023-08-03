@@ -52,7 +52,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// List of all separators that can be used for date strings
         /// </summary>
-        static public readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
+        static public readonly char[] VALID_SEPERATORS = new char[] { '-', '/',  ',', '.', '_', ' ' };
         private const char SEPERATOR_REPLACEMENT = '-';
 
         /// <summary>
