@@ -28,6 +28,12 @@ namespace Models.Management
     public class BiomassRemovalEvents : Model
     {
         /// <summary>
+        /// Crop to remove biomass from
+        /// </summary>
+        [Description("Crop to remove biomass from")]
+        public IPlant Crop { get; set; }
+
+        /// <summary>
         /// The type of biomass removal event
         /// </summary>
         [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
@@ -68,16 +74,16 @@ namespace Models.Management
 
         [Link] private Clock Clock = null;
         [Link(Type = LinkType.Scoped)] private BiomassRemovalFractions biomRemFra = null;
-        [Link(Type = LinkType.Scoped, ByName = true)] private Phenology phenology =  null;
-
+        
         /// <summary>
         /// Method to initiate biomass removal from plant
         /// </summary>
-        public void remove ()
+        public void Remove ()
         {
             biomRemFra.Do(this.removaltype);
             if (StageToSet >= 1.0)
             {
+                Phenology phenology = Crop.FindChild<Phenology>();
                 phenology?.SetToStage(StageToSet);
             }
         }
@@ -92,7 +98,7 @@ namespace Models.Management
             foreach (DateTime d in RemovalDates)
             {
                 if (d == Clock.Today)
-                    remove();                
+                    Remove();                
             }
             return;
         }

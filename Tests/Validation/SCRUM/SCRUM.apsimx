@@ -4549,6 +4549,14 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
+              "Crop": {
+                "$type": "Models.PMF.Plant, Models",
+                "Name": "SCRUM",
+                "ResourceName": "SCRUM",
+                "Children": [],
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "removaltype": 0,
               "StageToSet": 3.5,
               "RemovalDatesInput": "15/12/2010, 15/01/2011",
