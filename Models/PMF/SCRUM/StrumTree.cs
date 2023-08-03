@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -155,8 +156,8 @@ namespace Models.PMF.Scrum
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Weather weather = null;
 
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private Physical physical = null;
+        [Link(Type = LinkType.Scoped)]
+        private Soil soil = null;
 
         [Link]
         private ISummary summary = null;
@@ -219,7 +220,25 @@ namespace Models.PMF.Scrum
         /// </summary>
         public void Establish()
         {
-            double rootDepth = Math.Min(MaxRD, MathUtilities.Sum(physical.Thickness));
+            double soilDepthMax = 0;
+            
+            var soilCrop = soil.FindDescendant<SoilCrop>(strum.Name + "Soil");
+            var physical = soil.FindDescendant<Physical>("Physical");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {strum.Name}Soil");
+
+            double[] xf = soilCrop.XF;
+
+            // Limit root depth for impeded layers
+            for (int i = 0; i < physical.Thickness.Length; i++)
+            {
+                if (xf[i] > 0)
+                    soilDepthMax += physical.Thickness[i];
+                else
+                    break;
+            }
+
+            double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
