@@ -610,24 +610,21 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
+            double dMCE = dmConversionEfficiency.Value();
+
+            if (dMCE > 0.0)
             {
-                double dMCE = dmConversionEfficiency.Value();
-
-                if (dMCE > 0.0)
-                {
-                    DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
-                    DMDemand.Metabolic = 0;
-                    DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
-                    DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
-                    DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
-                }
-                else
-                    throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
+                DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
+                DMDemand.Metabolic = 0;
+                DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
+                DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
             }
+            else
+                throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
         }
-
+        
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
