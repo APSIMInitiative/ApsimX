@@ -1,12 +1,15 @@
-﻿namespace UserInterface.Views
-{
-    using Extensions;
-    using Interfaces;
-    using Gtk;
-    using System;
+﻿using UserInterface.Interfaces;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace UserInterface.Views
+{
     public class ExperimentView : ViewBase, IExperimentView
     {
+        private Gtk.Menu menu;
+
         /// <summary>Constructor</summary>
         /// <param name="owner">The owner widget.</param>
         public ExperimentView(ViewBase owner) : base(owner)
@@ -15,9 +18,10 @@
             mainWidget = (VBox)builder.GetObject("vbox");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
+            menu = (Gtk.Menu)builder.GetObject("popupMenu");
             List = new ListView(owner, 
                                 (Gtk.TreeView) builder.GetObject("list"),
-                                (Gtk.Menu)builder.GetObject("popupMenu"));
+                                menu);
             MaximumNumSimulations = new EditView(owner, 
                                                  (Entry)builder.GetObject("maxNumSimulationsEdit"));
             NumberSimulationsLabel = new LabelView(owner, 
@@ -27,6 +31,7 @@
             DisableAction = new MenuItemView((Gtk.MenuItem)builder.GetObject("disableMenuItem"));
             ExportToCSVAction = new MenuItemView((Gtk.MenuItem)builder.GetObject("exportToCSVMenuItem"));
             ImportFromCSVAction = new MenuItemView((Gtk.MenuItem)builder.GetObject("importFromCSVMenuItem"));
+            PlaylistAction = new List<IMenuItemView>();
         }
 
         /// <summary>Grid for holding data.</summary>
@@ -52,6 +57,20 @@
 
         /// <summary>Import factors menu item.</summary>
         public IMenuItemView ImportFromCSVAction { get; }
+
+        /// <summary>Adds Simulations to Playlist</summary>
+        public List<IMenuItemView> PlaylistAction { get; }
+
+        /// <summary>Add a menu item to the popup menu</summary>
+        /// <returns>Reference to the menuItemView to attach events</returns>
+        public IMenuItemView AddMenuItem(string label)
+        {
+            Gtk.MenuItem item = new Gtk.MenuItem(label);
+            MenuItemView view = new MenuItemView(item);
+            PlaylistAction.Append(view);
+            menu.Add(item);
+            return view;
+        }
 
         /// <summary>Invoked when main widget has been destroyed.</summary>
         /// <param name="sender"></param>

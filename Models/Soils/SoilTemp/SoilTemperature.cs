@@ -446,16 +446,6 @@ namespace Models.Soils.SoilTemp
         } // getIniVariables
 
         /// <summary>
-        /// This will never be called.
-        /// </summary>
-        /// <param name="newProfile"></param>
-        [EventSubscribe("NewProfile")]
-        private void OnNewProfile(NewProfileType newProfile)
-        {
-            getProfileVariables();
-        }
-
-        /// <summary>
         /// Set global variables to new soil profile state
         /// </summary>
         /// <remarks></remarks>
