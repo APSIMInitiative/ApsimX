@@ -13,13 +13,13 @@ namespace UserInterface.Views
         public ViewBase PropertiesView { get; private set; }
 
         /// <summary>bottom grid in view.</summary>
-        public IGridView Grid2 { get; private set; }
+        public ContainerView Grid2 { get; private set; }
 
         /// <summary>Constructor</summary>
         public PropertyAndGridView(ViewBase owner) : base(owner)
         {
             PropertiesView = new PropertyView(owner);
-            Grid2 = new GridView(owner);
+            Grid2 = new ContainerView(owner);
 
             VPaned panel = new VPaned();
             mainWidget = panel;
@@ -49,6 +49,6 @@ namespace UserInterface.Views
         ViewBase PropertiesView { get; }
 
         /// <summary>bottom grid in view.</summary>
-        IGridView Grid2 { get; }
+        ContainerView Grid2 { get; }
     }
 }

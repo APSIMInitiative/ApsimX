@@ -1,29 +1,26 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Utility;
-    using Views;
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
     class PropertyAndTablePresenter : IPresenter
     {
         /// <summary>The underlying model</summary>
-        private IModelAsTable tableModel;
         private IntellisensePresenter intellisense;
         private IPropertyAndGridView view;
         private ExplorerPresenter explorerPresenter;
-        private DataTable table;
         private IPresenter propertyPresenter;
-        private GridPresenter gridPresenter;
+        private NewGridPresenter gridPresenter;
 
         /// <summary>
         /// Attach the model to the view.
@@ -37,21 +34,15 @@
             view = v as IPropertyAndGridView;
             intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
-            tableModel = model as IModelAsTable;
-            if (tableModel.Tables.Count != 1)
-                throw new Exception("PropertyAndTablePresenter must have a single data table.");
-            table = tableModel.Tables[0];
-            view.Grid2.DataSource = table;
-            view.Grid2.CellsChanged += OnCellValueChanged2;
-            view.Grid2.NumericFormat = null;
-            view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
-            parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
-            gridPresenter = new GridPresenter();
+            gridPresenter = new NewGridPresenter();
             gridPresenter.Attach(model, view.Grid2, parentPresenter);
+            gridPresenter.CellChanged += OnCellValueChanged;
+            //view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
+            parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
@@ -59,22 +50,22 @@
         /// </summary>
         public void Detach()
         {
-            view.Grid2.CellsChanged -= OnCellValueChanged2;
+            gridPresenter.CellChanged -= OnCellValueChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            view.Grid2.ContextItemsNeeded -= OnContextItemsNeeded;
+            //gridPresenter.ContextItemsNeeded -= OnContextItemsNeeded;
             propertyPresenter.Detach();
             gridPresenter.Detach();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
-        /// <summary>
-        /// User has changed the value of a cell.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
+        /// <summary>Invoked when a grid cell has changed.</summary>
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
+        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
+        private void OnCellValueChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
         {
+            /*
             // If all cells are being set to null, and the number of changed
             // cells is a multiple of the number of properties, we could be
             // deleting an entire row (or rows). In this case, we need
@@ -151,25 +142,7 @@
             // grid. Otherwise, only refresh read-only columns (PAWC).
             if (deletedRow)
                 view.Grid2.DataSource = table;
-        }
-
-        private void CheckRowCount(GridCellChangedArgs change)
-        {
-            while (change.RowIndex >= table.Rows.Count)
-                table.Rows.Add(table.NewRow());
-        }
-
-        private void DeleteRows(int from, int to)
-        {
-            if (from > to)
-            {
-                int tmp = to;
-                to = from;
-                from = tmp;
-            }
-
-            for (int i = from; i <= to; i++)
-                table.Rows.RemoveAt(i);
+            */
         }
 
         /// <summary>
@@ -178,11 +151,11 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == tableModel)
-            {
-                table = tableModel.Tables[0];
-                view.Grid2.DataSource = table;
-            }
+            //if (changedModel == tableModel)
+            //{
+            //    table = tableModel.Tables[0];
+            //    view.Grid2.DataSource = table;
+            //}
         }
 
         /// <summary>
@@ -193,7 +166,7 @@
         /// <param name="e">Event arguments.</param>
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs e)
         {
-            view.Grid2.InsertText(e.ItemSelected);
+            //view.Grid2.InsertText(e.ItemSelected);
         }
 
         /// <summary>
@@ -204,8 +177,8 @@
         /// <param name="e">Event data.</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (intellisense.GenerateGridCompletions(e.Code, e.Offset, tableModel as IModel, true, false, false, false, false))
-                intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+            //if (intellisense.GenerateGridCompletions(e.Code, e.Offset, tableModel as IModel, true, false, false, false, false))
+            //    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
         }
     }
 }

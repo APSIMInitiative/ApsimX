@@ -55,7 +55,7 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, IModelAsTable, IRunnable, IReportsStatus
+    public class CroptimizR : Model, IGridTable, IRunnable, IReportsStatus
     {
         /// <summary>
         /// File name of the generated csv file containing croptimizR
@@ -162,6 +162,38 @@ namespace Models.Optimisation
         [JsonIgnore]
         public string Status { get; private set; }
 
+        /// <summary>Gets the table of values.</summary>
+        public GridTable GetGridTable()
+        {
+
+            List<GridTable.Column> columns = new List<GridTable.Column>();
+
+            columns.Add(new GridTable.Column("Name", Parameters));
+            columns.Add(new GridTable.Column("Path", Parameters));
+            columns.Add(new GridTable.Column("LowerBound", Parameters));
+            columns.Add(new GridTable.Column("UpperBound", Parameters));
+
+            // Add a parameter table
+            DataTable table = new DataTable();
+            table.Columns.Add("Name", typeof(string));
+            table.Columns.Add("Path", typeof(string));
+            table.Columns.Add("LowerBound", typeof(double));
+            table.Columns.Add("UpperBound", typeof(double));
+
+            foreach (Parameter param in Parameters)
+            {
+                DataRow row = table.NewRow();
+                row["Name"] = param.Name;
+                row["Path"] = param.Path;
+                row["LowerBound"] = param.LowerBound;
+                row["UpperBound"] = param.UpperBound;
+                table.Rows.Add(row);
+            }
+
+            GridTable grid = new GridTable("Table", columns);
+            return grid;
+        }
+
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
@@ -171,25 +203,6 @@ namespace Models.Optimisation
             get
             {
                 List<DataTable> tables = new List<DataTable>();
-
-                // Add a parameter table
-                DataTable table = new DataTable();
-                table.Columns.Add("Name", typeof(string));
-                table.Columns.Add("Path", typeof(string));
-                table.Columns.Add("LowerBound", typeof(double));
-                table.Columns.Add("UpperBound", typeof(double));
-
-                foreach (Parameter param in Parameters)
-                {
-                    DataRow row = table.NewRow();
-                    row["Name"] = param.Name;
-                    row["Path"] = param.Path;
-                    row["LowerBound"] = param.LowerBound;
-                    row["UpperBound"] = param.UpperBound;
-                    table.Rows.Add(row);
-                }
-                tables.Add(table);
-
                 return tables;
             }
             set
