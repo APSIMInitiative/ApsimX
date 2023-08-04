@@ -5,6 +5,7 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -15,7 +16,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical, ITabularData
+    public class Physical : Model, IPhysical, IGridTable
     {
         // Water node.
         private Water waterNode = null;
@@ -199,35 +200,35 @@ namespace Models.Soils
         public string[] ParticleSizeClayMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
             bool waterNodePresent = FindInScope<Water>() != null;
-            var columns = new List<TabularData.Column>();
+            var columns = new List<GridTable.Column>();
 
-            columns.Add(new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-            columns.Add(new TabularData.Column("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
-            columns.Add(new TabularData.Column("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
-            columns.Add(new TabularData.Column("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
-            columns.Add(new TabularData.Column("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
-            columns.Add(new TabularData.Column("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
-            columns.Add(new TabularData.Column("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
-            columns.Add(new TabularData.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
-            columns.Add(new TabularData.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
-            columns.Add(new TabularData.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
+            columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+            columns.Add(new GridTable.Column("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
+            columns.Add(new GridTable.Column("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
+            columns.Add(new GridTable.Column("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
+            columns.Add(new GridTable.Column("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
+            columns.Add(new GridTable.Column("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
+            columns.Add(new GridTable.Column("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
+            columns.Add(new GridTable.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
+            columns.Add(new GridTable.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
+            columns.Add(new GridTable.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
             if (waterNodePresent)
-                columns.Add(new TabularData.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
-            columns.Add(new TabularData.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
+                columns.Add(new GridTable.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
+            columns.Add(new GridTable.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
 
             foreach (var soilCrop in FindAllChildren<SoilCrop>())
             {
                 var cropName = soilCrop.Name.Replace("Soil", "");
-                columns.Add(new TabularData.Column($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
-                columns.Add(new TabularData.Column($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
-                columns.Add(new TabularData.Column($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
-                columns.Add(new TabularData.Column($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
+                columns.Add(new GridTable.Column($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
+                columns.Add(new GridTable.Column($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
+                columns.Add(new GridTable.Column($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
+                columns.Add(new GridTable.Column($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
             }
 
-            return new TabularData(Name, columns);
+            return new GridTable(Name, columns);
         }
 
         private Water WaterNode

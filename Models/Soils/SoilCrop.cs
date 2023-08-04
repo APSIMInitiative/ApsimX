@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 
 namespace Models.Soils
 {
@@ -13,7 +14,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Physical))]
-    public class SoilCrop : Model, ITabularData
+    public class SoilCrop : Model, IGridTable
     {
         /// <summary>Depth strings (mm/mm)</summary>
         [Summary]
@@ -118,7 +119,7 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
             //Do validation on the soilCrop to make that sure has the same amount of layers as the physical node
             //If not, we remove layers to make it match, or add new layers with 0 values
@@ -156,13 +157,13 @@ namespace Models.Soils
                 XF = listXF.ToArray();
             }
 
-            TabularData tb = new TabularData(Name, new TabularData.Column[]
+            GridTable tb = new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
-                new TabularData.Column("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
-                new TabularData.Column("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
-                new TabularData.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
-                new TabularData.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
+                new GridTable.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
+                new GridTable.Column("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
+                new GridTable.Column("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
+                new GridTable.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
+                new GridTable.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
             });
 
             if (throwException)

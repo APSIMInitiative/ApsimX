@@ -1,22 +1,20 @@
-﻿namespace UserInterface.Presenters
-{
-    using DocumentFormat.OpenXml.Drawing.Charts;
-    using EventArguments;
-    using global::UserInterface.Interfaces;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Views;
+﻿using UserInterface.Interfaces;
+using Models.Interfaces;
+using Models.Utilities;
+using System;
+using System.Collections.Generic;
+using UserInterface.Views;
+using Gtk;
+using DocumentFormat.OpenXml.Drawing.Charts;
 
-    /// <summary>A generic grid presenter for displaying tabular data and allowing editing.</summary>
-    public class NewGridPresenter : IPresenter
+namespace UserInterface.Presenters
+{
+    /// <summary>A generic grid presenter for displaying a data table and allowing editing.
+    /// This is built to run within other presenters, so pass in a ContainerView in the attach method to have it drawn.</summary>
+    class NewGridPresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private TabularData tabularData;
+        private GridTable gridTable;
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
@@ -33,8 +31,6 @@
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        private ViewBase view = null;
-
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
         /// <param name="colIndex">The index of the column that was changed.</param>
@@ -44,38 +40,34 @@
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
 
-        /// <summary>Default constructor</summary>
-        public NewGridPresenter()
-        {
-        }
-        
-        /// <summary>Attach the model and view to this presenter and populate the view.</summary>
-        /// <param name="model">The data store model to work with.</param>
-        /// <param name="v">Data store view to work with.</param>
-        /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
+        /// <summary>
+        /// Attach the model to the view.
+        /// </summary>
+        /// <param name="model">The model to connect to.</param>
+        /// <param name="v">The view to connect to.</param>
+        /// <param name="parentPresenter">The parent explorer presenter.</param>
+        public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
             try
             {
-                tabularData = (model as ITabularData).GetTabularData();
+                gridTable = (model as IGridTable).GetGridTable();
             }
             catch (Exception ex)
             {
-                if (ex.Data["tableData"] != null)
-                {
-                    tabularData = ex.Data["tableData"] as TabularData;
-                    explorerPresenter.MainPresenter.ShowMsgDialog(ex.Message, "Warning", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
-                else
-                {
-                    throw new Exception(ex.Message, ex);
-                }
+                throw new Exception(ex.Message, ex);
             }
-           
-            view = v as ViewBase;
-            this.explorerPresenter = explorerPresenter;
 
-            sheetContainer = view.GetControl<ContainerView>("grid");
+            if (v as ContainerView != null)
+            {
+                sheetContainer = v as ContainerView;
+            }
+            else
+            {
+                sheetContainer = new ContainerView(v as ViewBase);
+            }
+            
+            this.explorerPresenter = parentPresenter;
+
             Populate();
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -96,7 +88,6 @@
             SaveGridToModel();
 
             //base.Detach();
-            view.Dispose();
             CleanupSheet();
         }
 
@@ -109,11 +100,11 @@
                 // Cleanup existing sheet instances before creating new ones.
                 CleanupSheet();
 
-                var dataProvider = new DataTableProvider(tabularData.Data);
+                var dataProvider = new DataTableProvider(gridTable.Data);
 
                 grid = new SheetWidget();
                 grid.Sheet = new Sheet();
-                grid.Sheet.NumberFrozenRows = 2;
+                
                 grid.Sheet.NumberFrozenColumns = 1;
                 grid.Sheet.RowCount = 50;
                 grid.Sheet.DataProvider = dataProvider;
@@ -121,6 +112,12 @@
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
                 grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
                 grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+
+                if (gridTable.HasUnits())
+                    grid.Sheet.NumberFrozenRows = 2;
+                else
+                    grid.Sheet.NumberFrozenRows = 1;
+
                 sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
 
                 dataProvider.CellChanged += OnCellChanged;
@@ -165,13 +162,13 @@
                 var menuItems = new List<MenuDescriptionArgs>();
                 if (rowIndex == 1)
                 {
-                    foreach (string units in tabularData.GetUnits(columnIndex))
+                    foreach (string units in gridTable.GetUnits(columnIndex))
                     {
                         var menuItem = new MenuDescriptionArgs()
                         {
                             Name = units,
                         };
-                        menuItem.OnClick += (s, e) => { tabularData.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                        menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
                         menuItems.Add(menuItem);
                     }
                 }
@@ -225,7 +222,7 @@
             if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
                 dataProvider.CellChanged -= OnCellChanged;
 
-            dataProvider = new DataTableProvider(tabularData.Data);
+            dataProvider = new DataTableProvider(gridTable.Data);
             grid.Sheet.DataProvider = dataProvider;
             grid.Sheet.Refresh();
 
@@ -263,7 +260,7 @@
         {
             var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
             if (dataTableProvider != null)
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(tabularData, "Data", dataTableProvider.Data));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", dataTableProvider.Data));
         }
     }
 }

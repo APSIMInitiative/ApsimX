@@ -6,6 +6,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.WaterModel
@@ -44,7 +45,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, ITabularData
+    public class WaterBalance : Model, ISoilWater, IGridTable
     {
         private Physical physical;
         private HyProps hyprops = new HyProps();
@@ -853,13 +854,13 @@ namespace Models.WaterModel
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            return new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
-                new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new GridTable.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
+                new GridTable.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
             });
         }
 

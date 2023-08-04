@@ -7,6 +7,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Surface;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -19,7 +20,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater, ITabularData
+    public class WEIRDO : Model, ISoilWater, IGridTable
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -1387,17 +1388,17 @@ namespace Models.Soils
         #endregion
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            return new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))),
-                new TabularData.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))),
-                new TabularData.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))),
-                new TabularData.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))),
-                new TabularData.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))),
-                new TabularData.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new GridTable.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))),
+                new GridTable.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))),
+                new GridTable.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))),
+                new GridTable.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))),
+                new GridTable.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))),
+                new GridTable.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC")))
             });
         }
     }

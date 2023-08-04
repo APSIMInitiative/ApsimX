@@ -5,6 +5,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -19,7 +20,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, ITabularData
+    public class Solute : Model, ISolute, IGridTable
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -208,20 +209,20 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
             bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-            var columns = new List<TabularData.Column>()
+            var columns = new List<GridTable.Column>()
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
             };
             if (swimPresent)
             {
-                columns.Add(new TabularData.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                columns.Add(new TabularData.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                columns.Add(new GridTable.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                columns.Add(new GridTable.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
             }
-            return new TabularData(Name, columns);
+            return new GridTable(Name, columns);
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

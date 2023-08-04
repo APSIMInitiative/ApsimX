@@ -3,6 +3,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils.Nutrients;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -16,7 +17,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class OutputLayers : Model, ITabularData
+    public class OutputLayers : Model, IGridTable
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -285,11 +286,11 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            return new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")))
             });
         }
     }

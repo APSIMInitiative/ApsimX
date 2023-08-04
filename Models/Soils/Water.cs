@@ -5,6 +5,7 @@ using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -17,7 +18,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, ITabularData
+    public class Water : Model, IGridTable
     {
         private double[] volumetric;
 
@@ -168,12 +169,12 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            return new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
             });
         }
 

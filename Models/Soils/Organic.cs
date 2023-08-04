@@ -2,6 +2,7 @@
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -12,7 +13,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Organic : Model, ITabularData
+    public class Organic : Model, IGridTable
     {
         /// <summary>
         /// An enumeration for specifying organic carbon units
@@ -104,16 +105,16 @@ namespace Models.Soils
         public string[] FOMMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        public GridTable GetGridTable()
         {
-            return new TabularData(Name, new TabularData.Column[]
+            return new GridTable(Name, new GridTable.Column[]
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))),
-                new TabularData.Column("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))),
-                new TabularData.Column("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))),
-                new TabularData.Column("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))),
-                new TabularData.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM")))
+                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                new GridTable.Column("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))),
+                new GridTable.Column("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))),
+                new GridTable.Column("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))),
+                new GridTable.Column("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))),
+                new GridTable.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM")))
             });
         }
 

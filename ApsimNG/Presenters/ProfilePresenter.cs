@@ -54,8 +54,10 @@
             this.model = model as IModel;
             view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
+
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, v, explorerPresenter);
+            gridPresenter.Attach(model, gridContainer, explorerPresenter);
 
             Soil soilNode = this.model.FindAncestor<Soil>();
             physical = soilNode.FindChild<Physical>();
