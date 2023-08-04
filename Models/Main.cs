@@ -128,32 +128,69 @@ namespace Models
                 // --apply switch functionality.
                 else if (!string.IsNullOrWhiteSpace(options.Apply))
                 {
+                    bool isSimToBeRun = false;
                     string configFileAbsolutePath = Path.GetFullPath(options.Apply);
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                     List<string> commands = ConfigFile.GetConfigFileCommands(options.Apply);
-                    bool isSimToBeRun = false;
-                    string[] commandsArray = ConfigFile.RemoveConfigFileWhitespace(commands.ToList()).ToArray();
+                    List<string> commandsWithoutNulls = ConfigFile.GetListWithoutNullCommands(commands);
+                    List<string> commandsWithSpacesRemoved = ConfigFile.RemoveConfigFileWhitespace(commandsWithoutNulls.ToList());
+                    string[] commandsArray = ConfigFile.EncodeSpacesInCommandList(commandsWithSpacesRemoved).ToArray();
                     string savePath = "";
                     string loadPath = "";
 
                     if (files.Length > 0)
                     {
+                        string temporarySimLoadPath = "";
                         foreach (string file in files)
                         {
+
                             for (int i = 0; i < commandsArray.Length; i++)
                             {
                                 string[] splitCommand = commandsArray[i].Split(' ', '=');
                                 if (splitCommand[0] == "save")
                                 {
-                                    savePath = splitCommand[1];
+                                    savePath = configFileDirectory + Path.DirectorySeparatorChar + splitCommand[1];
                                 }
                                 else if (splitCommand[0] == "load")
                                 {
                                     loadPath = splitCommand[1];
+                                    string fullLoadPath = configFileDirectory + Path.DirectorySeparatorChar + loadPath;
+                                    List<string> filePathSplits = fullLoadPath.Split('.', '/', '\\').ToList();
+                                    if (filePathSplits.Count >= 2)
+                                    {
+                                        // Creates a path string to a temp copy of the loadPath
+                                        // apsimx file in the configFile's directory.
+                                        temporarySimLoadPath = configFileDirectory +
+                                                               Path.DirectorySeparatorChar +
+                                                               filePathSplits[filePathSplits.Count - 2] +
+                                                               "temp." +
+                                                               filePathSplits.Last<string>();
+                                        // Create the file if new, back it up and write over it if it isn't.
+                                        CreateApsimxFile(temporarySimLoadPath);
+                                        File.Copy(fullLoadPath, temporarySimLoadPath, true);
+                                    }
+                                    else
+                                        throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {loadPath}");
                                 }
                                 else if (splitCommand[0] == "run")
                                 {
                                     isSimToBeRun = true;
+                                }
+                                // Set and create if not already a temporary sim to make changes to.
+                                // You should never make changes to the original unless specified in save command.
+                                else
+                                {
+                                    int indexOfLastDir = file.LastIndexOf(Path.DirectorySeparatorChar);
+                                    int differenceOfLastDirAndLastPeriod = file.LastIndexOf('.') - indexOfLastDir;
+                                    string fileName = file.Substring(indexOfLastDir + 1, differenceOfLastDirAndLastPeriod - 1);
+                                    temporarySimLoadPath = configFileDirectory +
+                                                           Path.DirectorySeparatorChar +
+                                                           fileName +
+                                                           "temp" +
+                                                           ".apsimx";
+                                    // Create the file if new, back it up and write over it if it isn't.
+                                    CreateApsimxFile(temporarySimLoadPath);
+                                    File.Copy(file, temporarySimLoadPath, true);
                                 }
 
                                 // Required as RunConfigCommands() requires list, not just a string.
@@ -162,9 +199,18 @@ namespace Models
                                     commandsArray[i]
                                 };
 
-                                Simulations sim = ConfigFile.RunConfigCommands(file, commands, configFileDirectory) as Simulations;
+                                Simulations sim;
+                                // If loadPath is set, file should no longer be used.
+                                if (!string.IsNullOrWhiteSpace(loadPath))
+                                    sim = ConfigFile.RunConfigCommands(loadPath, commandWrapper, configFileDirectory) as Simulations;
+                                else
+                                    sim = ConfigFile.RunConfigCommands(temporarySimLoadPath, commandWrapper, configFileDirectory) as Simulations;
 
-                                sim.Write(file);
+                                // Write to a specific file, if savePath is set use this instead of the file passed in through arguments.
+                                // Otherwise 
+                                if (!string.IsNullOrWhiteSpace(savePath))
+                                    sim.Write(savePath);
+                                else sim.Write(temporarySimLoadPath);
 
                                 if (isSimToBeRun)
                                 {
@@ -191,10 +237,8 @@ namespace Models
 
                         for (int i = 0; i < commandsArray.Length; i++)
                         {
-                            //string[] splitCommandSpacesPreserved = ConfigFile.EncodeSpacesInCommandList(commandsArray.ToList()).ToArray();
-                            //List<string> tempCommandSplits = splitCommandSpacesPreserved.ToArray()[i].Split(' ', '=').ToList();
-                            //string[] splitCommand = ConfigFile.DecodeSpacesInCommandSplits(tempCommandSplits).ToArray();
-                            string[] splitCommand = commandsArray[i].Split(' ', '=');
+                            List<string> tempCommandSplits = commandsArray.ToArray()[i].Split(' ', '=').ToList();
+                            string[] splitCommand = ConfigFile.DecodeSpacesInCommandSplits(tempCommandSplits).ToArray();
                             if (splitCommand[0] == "save")
                             {
                                 savePath = configFileDirectory + Path.DirectorySeparatorChar + splitCommand[1];

@@ -78,9 +78,9 @@ namespace Models.Core.ConfigFile
                 Regex rxBrokenNode = new Regex(@"");
                 Simulations sim = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false).NewModel as Simulations;
 
-                List<string> newConfigFileCommands = EncodeSpacesInCommandList(configFileCommands.ToList());
+                //List<string> newConfigFileCommands = EncodeSpacesInCommandList(configFileCommands.ToList());
 
-                foreach (string command in newConfigFileCommands)
+                foreach (string command in configFileCommands)
                 {
                     // Gets command, splits it using space and = characters, then replaces any @ symbols with spaces so
                     // nodes in the commands can be used normally.
@@ -158,7 +158,7 @@ namespace Models.Core.ConfigFile
                                         string[] filePathAndNodeName = commandSplits[2].Split(';');
                                         if (filePathAndNodeName.Length == 2)
                                         {
-                                            fileContainingNode = filePathAndNodeName[0];
+                                            fileContainingNode = filePathAndNodeName[0].Split('\\', '/').Last();
                                             string reformattedNode = filePathAndNodeName[1];
                                             nodeForAction = reformattedNode;
                                         }
@@ -357,10 +357,14 @@ namespace Models.Core.ConfigFile
                             else if (rxBrokenNodeStart.IsMatch(section) && !rxNode.IsMatch(section))
                                 correctedLineString.Append(section + '@');
                             else if (rxBrokenNodeEnd.IsMatch(section) && !rxNode.IsMatch(section))
-                                correctedLineString.Append(section + " ");
+                                if (section != lineSections.Last())
+                                    correctedLineString.Append(section + " ");
+                                else correctedLineString.Append(section);
                             else if (rxNode.IsMatch(section))
                             {
                                 if (section.Contains('.'))
+                                    correctedLineString.Append(section);
+                                else if (section == lineSections.Last())
                                     correctedLineString.Append(section);
                                 else correctedLineString.Append(section + " ");
                             }
@@ -492,6 +496,32 @@ namespace Models.Core.ConfigFile
                 throw new Exception($"An occurred removing extra internal whitespace in a command. The command was: {commandString}.\n{e}");
             }
 
+        }
+
+        /// <summary>
+        /// Takes a command list and returns new List with no null values.
+        /// </summary>
+        /// <param name="commandStrings">List of strings from a config file.</param>
+        /// <returns>A List of command strings without null values.</returns>
+        /// <exception cref="Exception"></exception>
+        public static List<string> GetListWithoutNullCommands(List<string> commandStrings)
+        {
+            try
+            {
+                List<string> results = new();
+                foreach (string line in commandStrings)
+                {
+                    if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        results.Add(line);
+                    }
+                }
+                return results;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An error occurred creating new list without null values.\n {e}");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -158,6 +159,7 @@ Simulation,1,20.000,1,Current,10,Zone
         /// technically. This isn't really ideal but it makes things simpler...).
         /// </summary>
         [Test]
+        [Order(2)]// If not ordered causes test failure when ran in conjunction with TestDeleteSimulationsCommandThrowsException().
         public void TestSimNameRegex()
         {
             string models = typeof(IModel).Assembly.Location;
@@ -165,7 +167,7 @@ Simulation,1,20.000,1,Current,10,Zone
             sim1.Name = "sim1";
 
             IModel sim2 = Utilities.GetRunnableSim().Children[1];
-            sim2.Name = "sim2";
+            sim2.Name = "originalSimAfterAdd";
 
             IModel sim3 = Utilities.GetRunnableSim().Children[1];
             sim3.Name = "simulation3";
@@ -186,7 +188,7 @@ Simulation,1,20.000,1,Current,10,Zone
             string stdout = Utilities.RunModels(sims, args);
 
             Assert.True(stdout.Contains("sim1"));
-            Assert.True(stdout.Contains("sim2"));
+            Assert.False(stdout.Contains("originalSimAfterAdd"));
             Assert.False(stdout.Contains("simulation3"));
             Assert.False(stdout.Contains("Base"));
 
@@ -194,7 +196,7 @@ Simulation,1,20.000,1,Current,10,Zone
             stdout = Utilities.RunModels(sims, args);
 
             Assert.True(stdout.Contains("sim1"));
-            Assert.False(stdout.Contains("sim2"));
+            Assert.False(stdout.Contains("originalSimAfterAdd"));
             Assert.False(stdout.Contains("simulation3"));
             Assert.False(stdout.Contains("Base"));
 
@@ -202,12 +204,13 @@ Simulation,1,20.000,1,Current,10,Zone
             stdout = Utilities.RunModels(sims, args);
 
             Assert.False(stdout.Contains("sim1"));
-            Assert.False(stdout.Contains("sim2"));
+            Assert.False(stdout.Contains("originalSimAfterAdd"));
             Assert.True(stdout.Contains("simulation3"));
             Assert.True(stdout.Contains("Base"));
         }
 
         [Test]
+        [Order(1)] // If not ordered causes test failure when ran in conjunction with TestDeleteSimulationsCommandThrowsException().
         public void TestListSimulationNames()
         {
             Simulations simpleExperiment = Utilities.GetSimpleExperiment();
@@ -235,98 +238,6 @@ ExperimentY2
             Assert.AreEqual(expected, output);
         }
 
-        //[Test]
-        //public void TestRunUseConfigSwitch()
-        //{
-        //    Simulations file = Utilities.GetRunnableSim();
-
-        //    IClock clock = file.FindInScope<Clock>();
-
-        //    // Get path string for the config file that changes the date.
-        //    string newFileString = "[Clock].StartDate = 2017-10-02";
-        //    string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
-        //    File.WriteAllText(newTempConfigFile, newFileString);
-
-        //    bool fileExists = File.Exists(newTempConfigFile);
-        //    Assert.True(File.Exists(newTempConfigFile));
-
-        //    Utilities.RunModels(file, $"--run-use-config {newTempConfigFile}");
-
-        //    string text = File.ReadAllText(file.FileName);
-        //    // Reload simulation from file text.
-        //    Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
-
-        //    // Get new values from changed simulation.
-        //    IClock clockAfter = sim2.FindInScope<Clock>();
-        //    DateTime startTimeAfterEdit = clockAfter.StartDate;
-        //    DateTime expectedTimeAfterEdit = new DateTime(2017, 10, 02);
-        //    Assert.AreNotEqual(startTimeAfterEdit, expectedTimeAfterEdit);
-        //}
-
-        //[Test]
-        //public void TestEditUseConfigSwitch()
-        //{
-        //    Simulations file = Utilities.GetRunnableSim();
-
-        //    IClock clock = file.FindInScope<Clock>();
-
-        //    // Get path string for the config file that changes the date.
-        //    string newFileString = "[Clock].StartDate = 2017-10-02";
-        //    string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
-        //    File.WriteAllText(newTempConfigFile, newFileString);
-
-        //    bool fileExists = File.Exists(newTempConfigFile);
-        //    Assert.True(File.Exists(newTempConfigFile));
-
-        //    Utilities.RunModels(file, $"--edit-use-config {newTempConfigFile}");
-
-
-        //    string text = File.ReadAllText(file.FileName);
-        //    // Reload simulation from file text.
-        //    Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
-
-        //    // Get new values from changed simulation.
-        //    IClock clockAfter = sim2.FindInScope<Clock>();
-        //    DateTime startTimeAfterEdit = clockAfter.StartDate;
-        //    DateTime expectedTimeAfterEdit = new DateTime(2017, 10, 02);
-        //    Assert.AreEqual(startTimeAfterEdit, expectedTimeAfterEdit);
-        //}
-
-        //[Test]
-        //public void TestEditUseConfigSwitchWithSaveFile()
-        //{
-        //    Simulations file = Utilities.GetRunnableSim();
-
-        //    IClock clock = file.FindInScope<Clock>();
-
-        //    // Get path string for the config file that changes the date.
-        //    string newFileString = "[Clock].StartDate = 2017-10-02";
-        //    string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config.txt");
-        //    File.WriteAllText(newTempConfigFile, newFileString);
-
-        //    bool fileExists = File.Exists(newTempConfigFile);
-        //    Assert.True(File.Exists(newTempConfigFile));
-
-        //    string newSaveFilePath = Path.Combine(Path.GetTempPath(), "newFile.apsimx");
-
-        //    Utilities.RunModels(file, $"--edit-use-config {newTempConfigFile},{newSaveFilePath}");
-
-        //    string newFileText = File.ReadAllText(newSaveFilePath);
-        //    // Reload simulation from file text.
-        //    Simulations sim2 = FileFormat.ReadFromString<Simulations>(newFileText, e => throw e, false).NewModel as Simulations;
-
-        //    // Get new values from changed simulation in new file.
-        //    IClock clockAfter = sim2.FindInScope<Clock>();
-        //    DateTime startTimeAfterEdit = clockAfter.StartDate;
-        //    DateTime expectedTimeAfterEdit = new DateTime(2017, 10, 02);
-        //    Assert.AreEqual(startTimeAfterEdit, expectedTimeAfterEdit);
-
-        //    string originalFileText = File.ReadAllText(file.FileName);
-        //    Simulations originalSim = FileFormat.ReadFromString<Simulations>(originalFileText, e => throw e, false).NewModel as Simulations;
-        //    // Need to assert that old file was not changed.
-        //    Assert.AreNotEqual(originalSim, sim2);
-        //}
-
         [Test]
         public void TestApplySwitchAddWithModelName()
         {
@@ -335,7 +246,8 @@ ExperimentY2
             Zone fieldNode = file.FindInScope<Zone>();
 
             // Get path string for the config file that changes the date.
-            string newFileString = "add [Zone] Report";
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
+            string newFileString = $"add [Zone] Report\nsave savingFile.apsimx";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config1.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -344,7 +256,7 @@ ExperimentY2
 
             Utilities.RunModels(file, $"--apply {newTempConfigFile}");
 
-            string text = File.ReadAllText(file.FileName);
+            string text = File.ReadAllText(savingFilePath);
             // Reload simulation from file text. Needed to see changes made.
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
@@ -360,13 +272,21 @@ ExperimentY2
         {
             Simulations file = Utilities.GetRunnableSim();
             Simulations file2 = Utilities.GetRunnableSim();
+            Simulations file3 = Utilities.GetRunnableSim();
+
+            // TODO: Save these files in a Path.GetTempPath() place.
+            // Then when its directory is used in RunInstructionOnApsimxFile it will be located correctly.
 
             Zone fieldNode = file.FindInScope<Zone>();
 
             // Get path string for the config file that changes the date.
             string newApsimFile = file2.FileName;
-            string newFileString = $"add [Zone] {newApsimFile};[Report]";
+            string savingApsimFileName = file3.FileName;
+            int indexOfNameStart = savingApsimFileName.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+            string savingApsimFileNameShort = savingApsimFileName.Substring(indexOfNameStart);
+            string newFileString = $"add [Zone] {newApsimFile};[Report]\nsave {savingApsimFileNameShort} ";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config2.txt");
+            //string newTempConfigFile = "config2.txt";
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -376,15 +296,16 @@ ExperimentY2
 
             Utilities.RunModels(file, $"--apply {newTempConfigFile}");
 
-            string text = File.ReadAllText(file.FileName);
+            string text = File.ReadAllText(savingApsimFileName);
             // Reload simulation from file text. Needed to see changes made.
-            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            Simulations originalSimAfterAdd = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
             // Get new values from changed simulation.
-            Zone fieldNodeAfterChange = sim2.FindInScope<Zone>();
+            Zone fieldNodeAfterChange = originalSimAfterAdd.FindInScope<Zone>();
             // See if the report shows up as a second child of Field with a specific name.
             Models.Report newReportNode = fieldNodeAfterChange.FindChild<Models.Report>("Report1");
             Assert.IsNotNull(newReportNode);
+
         }
 
         [Test]
@@ -395,7 +316,8 @@ ExperimentY2
             Zone fieldNode = file.FindInScope<Zone>();
 
             // Get path string for the config file that changes the date.
-            string newFileString = "delete [Zone].Report";
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
+            string newFileString = "delete [Zone].Report\nsave savingFile.apsimx";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config3.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -404,7 +326,7 @@ ExperimentY2
 
             Utilities.RunModels(file, $"--apply {newTempConfigFile}");
 
-            string text = File.ReadAllText(file.FileName);
+            string text = File.ReadAllText(savingFilePath);
             // Reload simulation from file text. Needed to see changes made.
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
@@ -423,7 +345,8 @@ ExperimentY2
             Simulation simulationNode = file.FindInScope<Simulation>();
 
             // Get path string for the config file that changes the date.
-            string newFileString = "copy [Simulation] [SimulationCopy]";
+            string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
+            string newFileString = "copy [Simulation] [SimulationCopy]\nsave savingFile.apsimx";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config4.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -432,7 +355,7 @@ ExperimentY2
 
             Utilities.RunModels(file, $"--apply {newTempConfigFile}");
 
-            string text = File.ReadAllText(file.FileName);
+            string text = File.ReadAllText(savingFilePath);
             // Reload simulation from file text. Needed to see changes made.
             Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
 
@@ -443,6 +366,30 @@ ExperimentY2
             Assert.AreNotEqual(simulationCopyNodeAfterChange.Name, originalSimulationAfterChange.Name);
             Assert.IsNotNull(simulationCopyNodeAfterChange);
             Assert.IsNotNull(originalSimulationAfterChange);
+        }
+
+        [Test]
+        public void TestApplySwitchWithFileDoesNotChangeOriginal()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Zone fieldNode = file.FindInScope<Zone>();
+
+            // Get path string for the config file that changes the date.
+            string newFileString = "add [Zone] Report\nsave modifiedSim.apsimx";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configFileDoesNotChangeOriginal.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels(file, $"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(file.FileName);
+            // Reload simulation from file text. Needed to see changes made.
+            Simulations sim2 = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            List<Models.Report> reportList = sim2.FindAllInScope<Models.Report>().ToList();
+            Assert.Less(reportList.Count, 2);
         }
 
         [Test]
@@ -603,6 +550,27 @@ year  day radn  maxt   mint  rain  pan    vp      code
             var summaryFileText = summaryNode.GetMessages(sim.Name);
             // Ensure that the sim was created.
             Assert.IsNotNull(summaryFileText);
+        }
+
+        [Test]
+        public void TestDeleteSimulationsCommandThrowsException()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Simulation simulationNode = file.FindInScope<Simulation>();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string newFileString = $"load {apsimxFileName}\ndelete [Simulations]";
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config6.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
+            Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
+
         }
     }
 }
