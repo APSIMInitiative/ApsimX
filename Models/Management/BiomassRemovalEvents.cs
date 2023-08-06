@@ -31,13 +31,13 @@ namespace Models.Management
         /// Crop to remove biomass from
         /// </summary>
         [Description("Crop to remove biomass from")]
-        public IPlant Crop { get; set; }
+        public IPlant PlantToRemoveFrom { get; set; }
 
         /// <summary>
         /// The type of biomass removal event
         /// </summary>
         [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
-        public BiomassRemovalType removaltype { get; set; }
+        public BiomassRemovalType Removaltype { get; set; }
 
         /// <summary>
         /// The stage to set phenology to on removal event
@@ -73,17 +73,17 @@ namespace Models.Management
         }
 
         [Link] private Clock Clock = null;
-        [Link(Type = LinkType.Scoped)] private BiomassRemovalFractions biomRemFra = null;
+        [Link(Type = LinkType.Child)] private BiomassRemovalFractions biomRemFra = null;
         
         /// <summary>
         /// Method to initiate biomass removal from plant
         /// </summary>
         public void Remove ()
         {
-            biomRemFra.Do(this.removaltype);
+            biomRemFra.Do(this.Removaltype);
             if (StageToSet >= 1.0)
             {
-                Phenology phenology = Crop.FindChild<Phenology>();
+                Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
                 phenology?.SetToStage(StageToSet);
             }
         }

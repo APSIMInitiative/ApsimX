@@ -16,13 +16,13 @@ namespace Models.Management
     /// Biomass will only be removed from organs that are specified with an OrganBiomassRemoval child on this class.  
     /// Add Child of name "StageSet" to specify a phenology rewind when ever the Do() method is called
     /// </summary>
-    [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(BiomassRemovalEvents))]
     [Serializable]
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     public class BiomassRemovalFractions : Model, IModelAsTable
     {
+        
         /// <summary>
         /// List of possible biomass removal types
         /// </summary>
@@ -36,6 +36,22 @@ namespace Models.Management
             Harvesting,
             /// <summary>Biomass is pruned</summary>
             Pruning
+        }
+
+        private BiomassRemovalType removaltype
+        {
+            get
+            {
+                return this.FindAncestor<BiomassRemovalEvents>().Removaltype;
+            }
+        }
+
+        private IPlant plantToRemoveFrom
+        {
+            get
+            {
+                return this.FindAncestor<BiomassRemovalEvents>().PlantToRemoveFrom; 
+            }
         }
 
         /// <summary>Stores a row of Biomass Removal Fractions</summary>
@@ -114,7 +130,6 @@ namespace Models.Management
 
         /// <summary>Cutting Event</summary>
         public List<BiomassRemovalOfPlantOrganType> BiomassRemovals { get; set; }
-
         
         /// <summary>Cutting Event</summary>
         public event EventHandler<EventArgs> Cutting;
@@ -130,7 +145,8 @@ namespace Models.Management
         
 
         /// <summary>Constructor</summary>
-        public BiomassRemovalFractions() {
+        public BiomassRemovalFractions() 
+        {
             BiomassRemovals = new List<BiomassRemovalOfPlantOrganType>();
         }
 
@@ -139,8 +155,8 @@ namespace Models.Management
         public string Description
         {
             get { 
-                return "List of all Plants and their Organs which share the same parent as this Biomass Removal Fractions\n" +
-                       "Each option has a line for the type of Biomass Removal, positive numbers will remove Biomass.\n" +
+                return "Organs for crop specified in parent BiomassRemovalEvent class\n" +
+                       "Each instance of this class represents the biomass removal type specified in the parent plant\n" +
                        "Call the Do() method on this class in a manager class to use the values stored to add/remove Biomass from the connected Organ"; 
             }
         }
@@ -165,30 +181,24 @@ namespace Models.Management
             //Add table headers
             var data = new DataTable();
             data.Columns.Add("Plant");
-            data.Columns.Add("Organ");
             data.Columns.Add("Type");
+            data.Columns.Add("Organ");
             data.Columns.Add("Live To Remove");
             data.Columns.Add("Dead To Remove");
             data.Columns.Add("Live To Residue");
             data.Columns.Add("Dead To Residue");
             data.Columns.Add(" "); // add an empty table so that the last column doesn't stretch across the screen
 
-            //Create the list of options based on the crops in this sim
-            List<IPlant> plants = this.FindAllSiblings<IPlant>().ToList();
-            foreach (IPlant plant in plants)
+            //Create the list of removal fractions for the crop specified in the parent BiomassRemovalEvents
+            List<IOrgan> organs = plantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
+            foreach (IOrgan organ in organs)
             {
-                List<IOrgan> organs = plant.FindAllDescendants<IOrgan>().ToList();
-                foreach (IOrgan organ in organs)
-                {
-                    foreach (BiomassRemovalType type in Enum.GetValues(typeof(BiomassRemovalType)))
-                    {
-                        DataRow row = data.NewRow();
-                        row["Plant"] = plant.Name;
-                        row["Organ"] = organ.Name;
-                        row["Type"] = type;
-                        data.Rows.Add(row);
-                    }
-                }
+                BiomassRemovalType type = this.FindAncestor<BiomassRemovalEvents>().Removaltype;
+                DataRow row = data.NewRow();
+                row["Plant"] = plantToRemoveFrom.Name;
+                row["Type"] = type;
+                row["Organ"] = organ.Name;
+                data.Rows.Add(row);
             }
 
             //add in stored values
@@ -211,8 +221,7 @@ namespace Models.Management
                     }
                 }
             }
-
-             return data;
+            return data;
         }
 
         /// <summary>
@@ -282,8 +291,10 @@ namespace Models.Management
                         deadToResidue = row["Dead To Residue"].ToString();
                     }
                 }
-
-                BiomassRemovals.Add(new BiomassRemovalOfPlantOrganType(plantName, organName, type, liveToRemove, deadToRemove, liveToResidue, deadToResidue));
+                if (plantName != "") // Dont add the blank row at the end as a removal.
+                {
+                    BiomassRemovals.Add(new BiomassRemovalOfPlantOrganType(plantName, organName, type, liveToRemove, deadToRemove, liveToResidue, deadToResidue));
+                }
             }
             return;
         }
@@ -340,8 +351,7 @@ namespace Models.Management
                         throw new Exception($"Error parsing Biomass Removal variable 'DeadToResidue'. Value {removal.DeadToResidueString} could not be parsed to number.", e);
                     }
 
-                    IPlant plant = this.FindSibling<IPlant>(removal.PlantName);
-                    IOrgan organ = plant.FindDescendant<IOrgan>(removal.OrganName);
+                    IOrgan organ = plantToRemoveFrom.FindDescendant<IOrgan>(removal.OrganName);
 
                     (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: liveToRemoved,
                                                                     deadToRemove: deadToRemoved,
