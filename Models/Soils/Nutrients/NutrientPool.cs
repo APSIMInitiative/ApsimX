@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Graphing;
+using Models.Core;
 using Models.Functions;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,17 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NutrientPool : Model, INutrientPool
     {
-        private IFunction initialCarbon;
-        private IFunction initialNitrogen;
-        private IFunction initialPhosphorus;
+        [Link(ByName = true, IsOptional = true)]
+        private readonly IFunction initialCarbon = null;
+
+        [Link(ByName = true, IsOptional = true)]
+        private readonly IFunction initialNitrogen = null;
+
+        [Link(ByName = true, IsOptional = true)]
+        private readonly IFunction initialPhosphorus = null;
+
+        [Link(Type=LinkType.Child)]
+        private readonly CarbonFlow[] flows = null;
 
         /// <summary>Amount of carbon (kg/ha)</summary>
         public double[] C { get; private set; }
@@ -74,13 +83,7 @@ namespace Models.Soils.Nutrients
         {
             IPhysical physical = FindInScope<IPhysical>();
             if (physical != null)
-            {
-                initialCarbon = FindChild<IFunction>("InitialCarbon");
-                initialNitrogen = FindChild<IFunction>("InitialNitrogen");
-                initialPhosphorus = FindChild<IFunction>("InitialPhosphorus");
-
                 Initialise(physical.Thickness.Length);
-            }
         }
 
         /// <summary>Performs the initial checks and setup</summary>
@@ -112,6 +115,18 @@ namespace Models.Soils.Nutrients
 
             // Set fraction of the layer undertaking this flow to default value of 1
             Array.Fill(LayerFraction, 1.0);
+
+            if (flows != null)
+                foreach (var flow in flows)
+                    flow.Initialise();
+        }
+
+        /// <summary>Perform all flows from the nutrient pool</summary>
+        public void DoFlow()
+        {
+            if (flows != null)
+                foreach (var flow in flows)
+                    flow.DoFlow();
         }
 
         /// <summary>Add C, N, P into nutrient pool</summary>

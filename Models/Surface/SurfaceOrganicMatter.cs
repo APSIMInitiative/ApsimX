@@ -48,9 +48,9 @@ namespace Models.Surface
         [Link(Type = LinkType.Child)]
         private ResidueTypes ResidueTypes = null;
 
-        /// <summary>Residue decomposition.</summary>
+        /// <summary>Surface residue nutrient pool.</summary>
         [Link(Type = LinkType.Child)]
-        private CarbonFlow decomposition = null;
+        private NutrientPool surfaceResidue = null;
 
         /// <summary>The surf om</summary>
         public List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
@@ -69,9 +69,6 @@ namespace Models.Surface
 
         /// <summary>The potential decomposition</summary>
         private SurfaceOrganicMatterDecompType potentialDecomposition;
-
-        /// <summary>The potential residue decomposition pool that is given to nutrient.</summary>
-        private NutrientPool residueDecompositionPool;
 
         /// <summary>Has potential decomposition been calculated?</summary>
         private bool calculatedPotentialDecomposition;
@@ -426,15 +423,15 @@ namespace Models.Surface
                 potentialDecomposition = GetPotentialDecomposition();
             }
 
-            residueDecompositionPool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
-            residueDecompositionPool.C[0] = 0;
-            residueDecompositionPool.N[0] = 0;
+            surfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
+            surfaceResidue.C[0] = 0;
+            surfaceResidue.N[0] = 0;
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
             {
-                residueDecompositionPool.C[0] += potentialDecomposition.Pool[i].FOM.C;
-                residueDecompositionPool.N[0] += potentialDecomposition.Pool[i].FOM.N;
+                surfaceResidue.C[0] += potentialDecomposition.Pool[i].FOM.C;
+                surfaceResidue.N[0] += potentialDecomposition.Pool[i].FOM.N;
             }
-            decomposition.DoFlow();
+            surfaceResidue.DoFlow();
         }
 
         /// <summary>
@@ -525,13 +522,7 @@ namespace Models.Surface
             NO3Solute = this.FindInScope("NO3") as ISolute;
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
-            // messy few lines below - clean.
-            residueDecompositionPool = new NutrientPool(1);
-            residueDecompositionPool.Children.Add(decomposition);
-            residueDecompositionPool.Parent = this;
-            residueDecompositionPool.Name = "SurfaceResidue";
-            decomposition.Parent = residueDecompositionPool;
-            decomposition.Initialise();
+            surfaceResidue.Initialise(1);
         }
 
         /// <summary>Called at start of each day.</summary>
@@ -603,7 +594,7 @@ namespace Models.Surface
 
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
                 InitialResidueC += potentialDecomposition.Pool[i].FOM.C;
-            FinalResidueC = residueDecompositionPool.C[0];
+            FinalResidueC = surfaceResidue.C[0];
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
             if (FractionDecomposed < 1)
             { }
