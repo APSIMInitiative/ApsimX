@@ -20,7 +20,7 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class CarbonFlow : Model
     {
-        private NutrientPool[] destinations;
+        private INutrientPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
@@ -60,11 +60,11 @@ namespace Models.Soils.Nutrients
         /// <summary>Performs the initial checks and setup</summary>
         public void Initialise()
         {
-            destinations = new NutrientPool[DestinationNames.Length];
+            destinations = new INutrientPool[DestinationNames.Length];
 
             for (int i = 0; i < DestinationNames.Length; i++)
             {
-                NutrientPool destination = FindInScope<NutrientPool>(DestinationNames[i]);
+                INutrientPool destination = FindInScope<INutrientPool>(DestinationNames[i]);
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                 destinations[i] = destination;
@@ -203,6 +203,15 @@ namespace Models.Soils.Nutrients
                     //    throw new Exception("Insufficient mineral P for immobilisation demand for C flow " + Name);
                 }
             }
+        }
+
+        /// <summary>Invoked at start of simulation.</summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
         }
     }
 }

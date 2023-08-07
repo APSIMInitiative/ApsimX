@@ -130,5 +130,16 @@ namespace Models.Soils.Nutrients
                 P[i] += p[i];
             }
         }
+
+        /// <summary>Invoked at start of simulation.</summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            IPhysical physical = FindInScope<IPhysical>();
+            if (physical != null)
+                Initialise(physical.Thickness.Length);
+        }
     }
 }

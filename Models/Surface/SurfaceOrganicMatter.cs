@@ -526,9 +526,10 @@ namespace Models.Surface
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
             // messy few lines below - clean.
-            residueDecompositionPool = new NutrientPool(soilPhysical.Thickness.Length);
+            residueDecompositionPool = new NutrientPool(1);
             residueDecompositionPool.Children.Add(decomposition);
             residueDecompositionPool.Parent = this;
+            residueDecompositionPool.Name = "SurfaceResidue";
             decomposition.Parent = residueDecompositionPool;
             decomposition.Initialise();
         }
