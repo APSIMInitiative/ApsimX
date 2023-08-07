@@ -21,9 +21,10 @@ namespace Models.Soils
         private double[] kdula;
         private double[] macroP;
         private double[] psid;
-        const double psi_ll15 = -15000.0;
-        const double psiad = -1e6;
-        const double psi0 = -0.6e7;
+        const double psi_ll15 = -15000.0;  // matric potential at 15 Bar
+        const double psiad = -1e6;         // matric potentiral at air dry
+        const double psi0 = -0.6e7;        // matric potential at oven dry
+        const double psiSat = -1.0;        // matric potential at saturation
 
         internal void ResizePropfileArrays(int newSize)
         {
@@ -116,7 +117,7 @@ namespace Models.Soils
             int i;
             double t;
 
-            if (psiValue >= -1.0)
+            if (psiValue >= psiSat)
             {
                 i = 0;
                 t = 0.0;
@@ -124,7 +125,7 @@ namespace Models.Soils
             else if (psiValue > psid[layer])
             {
                 i = 1;
-                t = (Math.Log10(-psiValue) - 0.0) / (Math.Log10(-psid[layer]) - 0.0);
+                t = (Math.Log10(-psiValue) - Math.Log10(-psiSat)) / (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
             }
             else if (psiValue > psi_ll15)
             {
@@ -219,6 +220,11 @@ namespace Models.Soils
 
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
+                    // m can be zero if psi goes less than 1cm suction - see simpletheta
+                    // ==================================================================
+                    if (Math.Abs(psiValue) < Math.Abs(psiSat))
+                        psiValue = psiSat;
+
                     double est = SimpleTheta(node, psiValue);
                     double pF = 0.000001;
                     if (psiValue < 0)
@@ -232,6 +238,7 @@ namespace Models.Soils
                     if (Math.Abs(est - theta) < tolerance)
                         break;
                     double pFnew = pF - (est - theta) / m;
+
                     if (pFnew > (Math.Log10(-psi0)))
                         pF += dpF;  // This is not really adequate - just saying...
                     else
