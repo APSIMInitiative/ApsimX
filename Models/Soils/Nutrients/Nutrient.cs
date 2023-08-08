@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Tags;
+using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -41,9 +42,6 @@ namespace Models.Soils.Nutrients
         // Carbon content of FOM
         private double CinFOM = 0.4;
 
-        [NonSerialized]
-        private INutrientPool fom;
-
         /// <summary>Summary file Link</summary>
         [Link]
         private ISummary Summary = null;
@@ -77,7 +75,7 @@ namespace Models.Soils.Nutrients
         public INutrientPool FOMLignin { get; set; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM { get { return fom; } }
+        public INutrientPool FOM => new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
 
         /// <summary>The NO3 pool.</summary>
         [Link(ByName = true)]
@@ -92,7 +90,12 @@ namespace Models.Soils.Nutrients
         public ISolute Urea { get; set; }
 
         /// <summary>Child carbon flows.</summary>
-        private IEnumerable<CarbonFlow> CarbonFlows { get; set; }
+        [Link(Type = LinkType.Child)]
+        private readonly NutrientPool[] nutrientPools = null;
+
+        /// <summary>Surface residue decomposition pool.</summary>
+        [Link(ByName = true)]
+        private readonly NutrientPool surfaceResidue = null;
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
@@ -148,24 +151,8 @@ namespace Models.Soils.Nutrients
         /// Total C lost to the atmosphere
         /// </summary>
         [Units("kg/ha")]
-        public double[] Catm
-        {
-            get
-            {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
-
-                foreach (CarbonFlow f in CarbonFlows)
-                    for (int i = 0; i < numLayers; i++)
-                        values[i] += f.Catm[i];
-                return values;
-            }
-        }
-
+        public double[] Catm => nutrientPools.Append(surfaceResidue).Select(p => p.Catm).Sum();
+       
         /// <summary>
         /// Total N lost to the atmosphere
         /// </summary>
@@ -389,18 +376,18 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public double[] FOMCNRFactor { get; private set; }
 
-        /// <summary>Invoked at start of simulation.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        /// <summary>
+        /// Standardise soil layer structure.
+        /// </summary>
+        /// <param name="targetThickness">The thickess values the simlation will use.</param>
+        public void Standardise(double[] targetThickness)
         {
-            fom = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
-            FOMCNRFactor = new double[soilPhysical.Thickness.Length];
+            // !!!! No links resolved at this point.
 
-            CarbonFlows = FindAllDescendants<CarbonFlow>();
-            foreach (var carbonFlow in CarbonFlows)
-                carbonFlow.Initialise();
+            FOMCNRFactor = new double[targetThickness.Length];
+
+            foreach (var pool in FindAllChildren<NutrientPool>())
+                pool.Initialise(targetThickness.Length);
         }
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
@@ -480,8 +467,8 @@ namespace Models.Soils.Nutrients
                 FOMCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
                                                      FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
 
-            foreach (var carbonFlow in CarbonFlows)
-                carbonFlow.DoFlow();
+            foreach (var pool in nutrientPools)
+                pool.DoFlow();
         }
 
         /// <summary>Calculate / create a directed graph from model</summary>

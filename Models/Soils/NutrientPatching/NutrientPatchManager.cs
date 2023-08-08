@@ -439,6 +439,7 @@ namespace Models.Soils.NutrientPatching
             newPatch.Name = "base";
             patches.Add(newPatch);
             Structure.Add(newPatch.Nutrient, this);
+            newPatch.Nutrient.Standardise(soilPhysical.Thickness);
         }
 
         /// <summary>
@@ -796,6 +797,13 @@ namespace Models.Soils.NutrientPatching
             }
         }
 
+        /// <summary>
+        /// Standardise soil data.
+        /// </summary>
+        /// <param name="layerStructure">Target layer structure.</param>
+        public void Standardise(double[] layerStructure)
+        {
 
+        }
     }
 }

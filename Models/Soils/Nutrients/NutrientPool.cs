@@ -1,6 +1,8 @@
-﻿using APSIM.Shared.Graphing;
+﻿using APSIM.Shared.Extensions.Collections;
+using APSIM.Shared.Graphing;
 using Models.Core;
 using Models.Functions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +14,13 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NutrientPool : Model, INutrientPool
     {
-        [Link(ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction initialCarbon = null;
 
-        [Link(ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction initialNitrogen = null;
 
-        [Link(ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction initialPhosphorus = null;
 
         [Link(Type=LinkType.Child)]
@@ -32,6 +34,10 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Amount of phosphorus (kg/ha)</summary>
         public double[] P { get; private set; }
+
+        /// <summary>Total C lost to the atmosphere (kg/ha)</summary>
+        [JsonIgnore]
+        public double[] Catm => flows.Select(f => f.Catm).Sum();
 
         /// <summary>Fraction of each layer occupied by this pool.</summary>
         public double[] LayerFraction { get; set; }
@@ -53,7 +59,7 @@ namespace Models.Soils.Nutrients
         /// <param name="pools">A collection of pools.</param>
         public NutrientPool(IEnumerable<INutrientPool> pools)
         {
-            Initialise(numLayers: pools.First().C.Length);
+            Initialise(numberLayers: pools.First().C.Length);
             foreach (var pool in pools)
             {
                 for (int i = 0; i < pool.C.Length; i++)
@@ -87,14 +93,13 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>Performs the initial checks and setup</summary>
-        public void Initialise(int numLayers)
+        /// <param name="numberLayers">Number of layers.</param>
+        public void Initialise(int numberLayers)
         {
-            IPhysical physical = FindInScope<IPhysical>();
-
-            C = new double[numLayers];
-            N = new double[numLayers];
-            P = new double[numLayers];
-            LayerFraction = new double[numLayers];
+            C = new double[numberLayers];
+            N = new double[numberLayers];
+            P = new double[numberLayers];
+            LayerFraction = new double[numberLayers];
             if (initialCarbon != null)
             {
                 for (int i = 0; i < C.Length; i++)
@@ -118,7 +123,7 @@ namespace Models.Soils.Nutrients
 
             if (flows != null)
                 foreach (var flow in flows)
-                    flow.Initialise();
+                    flow.Initialise(numberLayers);
         }
 
         /// <summary>Perform all flows from the nutrient pool</summary>

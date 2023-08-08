@@ -46,7 +46,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Amount of P Mineralised (kg/ha)</summary>
         public double[] MineralisedP { get; private set; }
 
-        /// <summary>CO2 lost to the atmosphere (kg/ha)</summary>
+        /// <summary>Total carbon lost to the atmosphere (kg/ha)</summary>
         public double[] Catm { get; private set; }
 
         /// <summary>Names of destination pools</summary>
@@ -58,7 +58,8 @@ namespace Models.Soils.Nutrients
         public double[] DestinationFraction { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
-        public void Initialise()
+        /// <param name="numberLayers">Number of layers.</param>
+        public void Initialise(int numberLayers)
         {
             destinations = new INutrientPool[DestinationNames.Length];
 
@@ -69,7 +70,6 @@ namespace Models.Soils.Nutrients
                     throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                 destinations[i] = destination;
             }
-            int numberLayers = (Parent as NutrientPool).C.Length;
             MineralisedN = new double[numberLayers];
             MineralisedP = new double[numberLayers];
             Catm = new double[numberLayers];
@@ -203,15 +203,6 @@ namespace Models.Soils.Nutrients
                     //    throw new Exception("Insufficient mineral P for immobilisation demand for C flow " + Name);
                 }
             }
-        }
-
-        /// <summary>Invoked at start of simulation.</summary>
-        /// <param name="sender">Sender of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Initialise();
         }
     }
 }

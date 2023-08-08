@@ -84,5 +84,11 @@ namespace Models.Soils.Nutrients
         /// </summary>
         void Reset();
 
+        /// <summary>
+        /// Standardise soil data.
+        /// </summary>
+        /// <param name="layerStructure">Target layer structure.</param>
+        void Standardise(double[] layerStructure);
+
     }
 }

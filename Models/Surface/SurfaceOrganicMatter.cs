@@ -522,7 +522,7 @@ namespace Models.Surface
             NO3Solute = this.FindInScope("NO3") as ISolute;
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
-            surfaceResidue.Initialise(1);
+            surfaceResidue.Initialise(soilPhysical.Thickness.Length);
         }
 
         /// <summary>Called at start of each day.</summary>
