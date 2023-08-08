@@ -146,7 +146,7 @@ namespace Models.Soils
             organic.Standardise(targetThickness);
             water.Standardise(targetThickness);
             waterBalance.Standardise(targetThickness);
-            nutrient.Standardise(targetThickness);
+            nutrient?.Standardise(targetThickness);
 
             foreach (var solute in FindAllChildren<Solute>())
                 solute.Standardise(targetThickness);

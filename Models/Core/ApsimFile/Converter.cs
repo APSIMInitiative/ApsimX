@@ -5275,6 +5275,8 @@ namespace Models.Core.ApsimFile
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
             }
         }
     }
