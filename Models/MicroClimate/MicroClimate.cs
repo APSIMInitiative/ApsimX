@@ -502,8 +502,8 @@ namespace Models
                 double CDt = vine.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
                 double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
                 double Ha = alley.DeltaZ.Sum();               // Height of alley canopy
-                if ((Ha > CBHt) & (vine.DeltaZ.Length > 1))
-                    throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
+                //if ((Ha > CBHt) & (vine.DeltaZ.Length > 1))
+                //    throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
 
                 double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
