@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 166,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -4379,6 +4379,26 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "InvertedRelativeMaturityAtHarvest",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -13849,7 +13869,7 @@
                     "using Models.Core;",
                     "using System.Collections.Generic;",
                     "using System.Text;",
-                    "using Models.Soils;",
+                    "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
                     "using Models.PMF;",
                     "using Models;",
                     "using System.Xml.Serialization;",
@@ -13884,6 +13904,8 @@
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
                     "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link]",
+                    "        private Nutrient Nutrient;",
                     "        ",
                     "        [JsonIgnore] public bool InitialDay { get; set; }",
                     "        ",
@@ -13960,7 +13982,7 @@
                     "            UreaN = MathUtilities.Sum(Urea.kgha);",
                     "            MineralN = NO3N + NH4N + UreaN; ",
                     "            DltNMinRes = MathUtilities.Sum(ResidueDecomposition.MineralisedN);",
-                    "            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);",
+                    "            DltNMinTot = MathUtilities.Sum(Nutrient.MineralisedN);",
                     "            int layers = soilPhysical.Thickness.Length;",
                     "            if (InitialDay == true)",
                     "            {",
@@ -13972,7 +13994,7 @@
                     "            AccumFert += Fert.NitrogenApplied;",
                     "            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;",
                     "            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails",
-                    "            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);",
+                    "            AccumMineralisation += MathUtilities.Sum(Nutrient.MineralisedN);",
                     "            AccumDenit -= MathUtilities.Sum(SoilNitrogen.DenitrifiedN);",
                     "            AccumPlantN -= (double)zone.Get(\"SCRUM.Root.NUptake\");",
                     "            DeltaSoilOMN = OrganicN - InitialSoilOMN;",
@@ -18377,7 +18399,7 @@
                     "using Models.Core;",
                     "using System.Collections.Generic;",
                     "using System.Text;",
-                    "using Models.Soils;",
+                    "using Models.Soils;\r\nusing Models.Soils.Nutrients;",
                     "using Models.PMF;",
                     "using Models;",
                     "using System.Xml.Serialization;",
@@ -18412,6 +18434,8 @@
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
                     "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link]",
+                    "        private Nutrient Nutrient;",
                     "        ",
                     "        [JsonIgnore] public bool InitialDay { get; set; }",
                     "        ",
@@ -18488,7 +18512,7 @@
                     "            UreaN = MathUtilities.Sum(Urea.kgha);",
                     "            MineralN = NO3N + NH4N + UreaN; ",
                     "            DltNMinRes = MathUtilities.Sum(ResidueDecomposition.MineralisedN);",
-                    "            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);",
+                    "            DltNMinTot = MathUtilities.Sum(Nutrient.MineralisedN);",
                     "            int layers = soilPhysical.Thickness.Length;",
                     "            if (InitialDay == true)",
                     "            {",
@@ -18500,7 +18524,7 @@
                     "            AccumFert += Fert.NitrogenApplied;",
                     "            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;",
                     "            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails",
-                    "            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);",
+                    "            AccumMineralisation += MathUtilities.Sum(Nutrient.MineralisedN);",
                     "            AccumDenit -= MathUtilities.Sum(SoilNitrogen.DenitrifiedN);",
                     "            AccumPlantN -= (double)zone.Get(\"SCRUM.Root.NUptake\");",
                     "            DeltaSoilOMN = OrganicN - InitialSoilOMN;",

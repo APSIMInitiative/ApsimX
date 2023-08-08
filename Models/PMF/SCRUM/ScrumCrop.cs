@@ -133,6 +133,7 @@ namespace Models.PMF.Scrum
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
+            {"InvertedRelativeMaturity","[SCRUM].TotalDMAtHarvest.InvertedRelativeMaturityAtHarvest.FixedValue = " },
             {"ExpectedYield","[Product].ExpectedYield.FixedValue = "},
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
@@ -209,6 +210,7 @@ namespace Models.PMF.Scrum
             else
                 cropParams["WaterStressSens"] += "1.0";
 
+            cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
             double dmc = (100 - this.MoisturePc) / 100;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
