@@ -192,6 +192,8 @@ namespace Models.Soils
             const double tolerance = 1e-9;
             const double dpF = 0.01;
             double psiValue;
+            bool solved = false;
+            double psiNearSat = psiSat;
 
             if (theta == sat[node])
             {
@@ -223,8 +225,10 @@ namespace Models.Soils
                     // m can be zero if psi goes less than 1cm suction - see simpletheta
                     // ==================================================================
                     if (Math.Abs(psiValue) < Math.Abs(psiSat))
-                        psiValue = psiSat;
-
+                    {
+                        psiValue = psiNearSat;
+                        psiNearSat = psiNearSat - 0.1; //an endless loop is created if we restart iterations at the same point so increment the reset point
+                    }
                     double est = SimpleTheta(node, psiValue);
                     double pF = 0.000001;
                     if (psiValue < 0)
@@ -236,7 +240,10 @@ namespace Models.Soils
                     double m = (est2 - est) / dpF;
 
                     if (Math.Abs(est - theta) < tolerance)
+                    {
+                        solved = true;
                         break;
+                    }
                     double pFnew = pF - (est - theta) / m;
 
                     if (pFnew > (Math.Log10(-psi0)))
@@ -245,6 +252,9 @@ namespace Models.Soils
                         pF = pFnew;
                     psiValue = -Math.Pow(10, pF);
                 }
+                if (!solved)
+                    throw (new Exception("SWIM3 failed to find value of suction for given theta"));
+
                 return psiValue;
             }
         }
