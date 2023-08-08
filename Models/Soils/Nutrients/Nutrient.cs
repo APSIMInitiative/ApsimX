@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Tags;
@@ -37,14 +36,12 @@ namespace Models.Soils.Nutrients
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
     public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
     {
-        private DirectedGraph directedGraphInfo;
-
         // Carbon content of FOM
         private double CinFOM = 0.4;
 
         /// <summary>Summary file Link</summary>
         [Link]
-        private ISummary Summary = null;
+        private ISummary summary = null;
 
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -98,19 +95,7 @@ namespace Models.Soils.Nutrients
         private readonly NutrientPool surfaceResidue = null;
 
         /// <summary>Get directed graph from model</summary>
-        public DirectedGraph DirectedGraphInfo
-        {
-            get
-            {
-                if (Children != null && Children.Count > 0)
-                    CalculateDirectedGraph();
-                return directedGraphInfo;
-            }
-            set
-            {
-                directedGraphInfo = value;
-            }
-        }
+        public DirectedGraph DirectedGraphInfo { get; set; }
 
         /// <summary>
         /// Reset all pools and solutes
@@ -120,7 +105,7 @@ namespace Models.Soils.Nutrients
             foreach (NutrientPool P in FindAllChildren<NutrientPool>())
                 P.Initialise(soilPhysical.Thickness.Length);
 
-            foreach (Solute S in FindAllInScope<ISolute>())
+            foreach (Solute S in FindAllInScope<Solute>())
                 S.Reset();
         }
 
@@ -392,14 +377,6 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
-        [EventSubscribe("IncorpFOM")]
-        private void IncorpFOM(FOMLayerType FOMdata)
-        {
-            DoIncorpFOM(FOMdata);
-        }
-
-        /// <summary>Incorporate the given FOM C and N into each layer</summary>
-        /// <param name="FOMdata">The in fo mdata.</param>
         public void DoIncorpFOM(FOMLayerType FOMdata)
         {
             bool nSpecified = false;
@@ -429,29 +406,8 @@ namespace Models.Soils.Nutrients
                         FOMLignin.N[layer] += FOMdata.Layer[layer].FOM.N * 0.1;
                     }
                     else
-                        Summary.WriteMessage(this, " Number of FOM values given is larger than the number of layers, extra values will be ignored", MessageType.Diagnostic);
+                        summary.WriteMessage(this, " Number of FOM values given is larger than the number of layers, extra values will be ignored", MessageType.Diagnostic);
                 }
-            }
-        }
-
-        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
-        /// <param name="FOMPoolData">The in fom pool data.</param>
-        [EventSubscribe("IncorpFOMPool")]
-        private void OnIncorpFOMPool(FOMPoolType FOMPoolData)
-        {
-            if (FOMPoolData.Layer.Length > FOMLignin.C.Length)
-                throw new Exception("Incorrect number of soil layers of IncorporatedFOM");
-
-            for (int layer = 0; layer < FOMPoolData.Layer.Length; layer++)
-            {
-                FOMCarbohydrate.C[layer] += FOMPoolData.Layer[layer].Pool[0].C;
-                FOMCarbohydrate.N[layer] += FOMPoolData.Layer[layer].Pool[0].N;
-
-                FOMCellulose.C[layer] += FOMPoolData.Layer[layer].Pool[1].C;
-                FOMCellulose.N[layer] += FOMPoolData.Layer[layer].Pool[1].N;
-
-                FOMLignin.C[layer] += FOMPoolData.Layer[layer].Pool[2].C;
-                FOMLignin.N[layer] += FOMPoolData.Layer[layer].Pool[2].N;
             }
         }
 
@@ -469,108 +425,6 @@ namespace Models.Soils.Nutrients
 
             foreach (var pool in nutrientPools)
                 pool.DoFlow();
-        }
-
-        /// <summary>Calculate / create a directed graph from model</summary>
-        public void CalculateDirectedGraph()
-        {
-            DirectedGraph oldGraph = directedGraphInfo;
-            if (directedGraphInfo == null)
-                directedGraphInfo = new DirectedGraph();
-
-            directedGraphInfo.Begin();
-
-            bool needAtmosphereNode = false;
-
-            foreach (NutrientPool pool in this.FindAllChildren<NutrientPool>())
-            {
-                Point location = default(Point);
-                Node oldNode;
-                if (oldGraph != null && pool.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == pool.Name)) != null)
-                    location = oldNode.Location;
-                directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
-
-                foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
-                {
-                    foreach (string destinationName in cFlow.DestinationNames)
-                    {
-                        string destName = destinationName;
-                        if (destName == null)
-                        {
-                            destName = "Atmosphere";
-                            needAtmosphereNode = true;
-                        }
-
-                        location = default(Point);
-                        Arc oldArc;
-                        if (oldGraph != null && pool.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == pool.Name && f.DestinationName == destName)) != null)
-                            location = oldArc.Location;
-
-                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black, location);
-
-                    }
-                }
-            }
-
-            foreach (Solute solute in FindAllInScope<ISolute>())
-            {
-                Point location = new Point(0, 0);
-                Node oldNode;
-                if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
-                    location = oldNode.Location;
-                directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
-                foreach (NFlow nitrogenFlow in FindAllChildren<NFlow>().Where(flow => flow.sourceName == solute.Name))
-                {
-                    string destName = nitrogenFlow.destinationName;
-                    if (destName == null)
-                    {
-                        destName = "Atmosphere";
-                        needAtmosphereNode = true;
-                    }
-                    directedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black);
-                }
-            }
-
-            if (needAtmosphereNode)
-                directedGraphInfo.AddTransparentNode("Atmosphere");
-
-
-            directedGraphInfo.End();
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> Document()
-        {
-            yield return new Section("The APSIM Nutrient Model", DocumentNutrient());
-        }
-
-        private IEnumerable<ITag> DocumentNutrient()
-        {
-            // Basic model description.
-            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
-
-            foreach (ITag tag in DocumentChildren<Memo>())
-                yield return tag;
-
-            // Document model structure.
-            List<ITag> structureTags = new List<ITag>();
-            structureTags.Add(new DirectedGraphTag(DirectedGraphInfo));
-            structureTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "structure")));
-            yield return new Section("Soil Nutrient Model Structure", structureTags);
-
-            // Document nutrient pools.
-            List<ITag> poolTags = new List<ITag>();
-            poolTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "pools")));
-            poolTags.AddRange(DocumentChildren<NutrientPool>(true));
-            yield return new Section("Pools", poolTags);
-
-            // Document solutes.
-            List<ITag> soluteTags = new List<ITag>();
-            soluteTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "solutes")));
-            soluteTags.AddRange(DocumentChildren<Solute>(true));
-            yield return new Section("Solutes", soluteTags);
         }
     }
 }
