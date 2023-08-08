@@ -73,6 +73,8 @@ namespace Models.Surface
         /// <summary>Has potential decomposition been calculated?</summary>
         private bool calculatedPotentialDecomposition;
 
+        private readonly double depthOfDecomposition = 100;  // 100mm 
+
         /// <summary>The determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)</summary>
         private int[] cf_contrib = new int[0];
 
@@ -423,13 +425,22 @@ namespace Models.Surface
                 potentialDecomposition = GetPotentialDecomposition();
             }
 
-            surfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
-            surfaceResidue.C[0] = 0;
-            surfaceResidue.N[0] = 0;
-            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
             {
-                surfaceResidue.C[0] += potentialDecomposition.Pool[i].FOM.C;
-                surfaceResidue.N[0] += potentialDecomposition.Pool[i].FOM.N;
+                surfaceResidue.LayerFraction[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
+            }
+
+            Array.Clear(surfaceResidue.C);
+            Array.Clear(surfaceResidue.N);
+
+            double totalLayerFraction = surfaceResidue.LayerFraction.Sum();
+            double totalC = potentialDecomposition.Pool.Select(p => p.FOM.C).Sum();
+            double totalN = potentialDecomposition.Pool.Select(p => p.FOM.N).Sum();
+
+            for (int i = 0; i < surfaceResidue.C.Length; i++)
+            {
+                surfaceResidue.C[i] = totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
+                surfaceResidue.N[i] = totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
             }
             surfaceResidue.DoFlow();
         }
