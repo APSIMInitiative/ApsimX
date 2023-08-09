@@ -83,7 +83,7 @@ namespace Models.Soils.Nutrients
         {
             NutrientPool source = Parent as NutrientPool;
 
-            int numLayers = source.C.Length;
+            int numLayers = source.C.Count;
 
             double[] no3 = this.no3.kgha;
             double[] nh4 = this.nh4.kgha;
@@ -151,17 +151,14 @@ namespace Models.Soils.Nutrients
 
                 }
 
-                source.C[i] -= carbonFlowFromSource;
-                source.N[i] -= nitrogenFlowFromSource;
-                source.P[i] -= phosphorusFlowFromSource;
+                // Remove from source
+                source.Add(i, -carbonFlowFromSource, -nitrogenFlowFromSource, -phosphorusFlowFromSource);
 
                 Catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
+
+                // Add to destination
                 for (int j = 0; j < numDestinations; j++)
-                {
-                    destinations[j].C[i] += carbonFlowToDestination[j];
-                    destinations[j].N[i] += nitrogenFlowToDestination[j];
-                    destinations[j].P[i] += phosphorusFlowToDestination[j];
-                }
+                    destinations[j].Add(i, carbonFlowToDestination[j], nitrogenFlowToDestination[j], phosphorusFlowToDestination[j]);
 
                 if (totalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {

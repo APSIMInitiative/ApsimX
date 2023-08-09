@@ -1,5 +1,4 @@
 ﻿using APSIM.Shared.Extensions.Collections;
-using APSIM.Shared.Graphing;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -26,14 +25,18 @@ namespace Models.Soils.Nutrients
         [Link(Type=LinkType.Child)]
         private readonly CarbonFlow[] flows = null;
 
+        private double[] c;
+        private double[] n;
+        private double[] p;
+
         /// <summary>Amount of carbon (kg/ha)</summary>
-        public double[] C { get; private set; }
+        public IReadOnlyList<double> C => c;
 
         /// <summary>Amount of nitrogen (kg/ha)</summary>
-        public double[] N { get; private set; }
+        public IReadOnlyList<double> N => n;
 
         /// <summary>Amount of phosphorus (kg/ha)</summary>
-        public double[] P { get; private set; }
+        public IReadOnlyList<double> P => p;
 
         /// <summary>Total C lost to the atmosphere (kg/ha)</summary>
         [JsonIgnore]
@@ -59,14 +62,14 @@ namespace Models.Soils.Nutrients
         /// <param name="pools">A collection of pools.</param>
         public NutrientPool(IEnumerable<INutrientPool> pools)
         {
-            Initialise(numberLayers: pools.First().C.Length);
+            Initialise(numberLayers: pools.First().C.Count);
             foreach (var pool in pools)
             {
-                for (int i = 0; i < pool.C.Length; i++)
+                for (int i = 0; i < pool.C.Count; i++)
                 {
-                    C[i] += pool.C[i];
-                    N[i] += pool.N[i];
-                    P[i] += pool.P[i];
+                    c[i] += pool.C[i];
+                    n[i] += pool.N[i];
+                    p[i] += pool.P[i];
                 }
             }
         }
@@ -77,9 +80,9 @@ namespace Models.Soils.Nutrients
         /// <param name="p">Amount of phosphorus (kg/ha).</param>
         public NutrientPool(double[] c, double[] n, double[] p)
         {
-            C = c;
-            N = n;
-            P = p;
+            this.c = c;
+            this.n = n;
+            this.p = p;
             LayerFraction = new double[c.Length];
             Array.Fill(LayerFraction, 1.0);
         }
@@ -96,26 +99,26 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            C = new double[numberLayers];
-            N = new double[numberLayers];
-            P = new double[numberLayers];
+            c = new double[numberLayers];
+            n = new double[numberLayers];
+            p = new double[numberLayers];
             LayerFraction = new double[numberLayers];
             if (initialCarbon != null)
             {
-                for (int i = 0; i < C.Length; i++)
-                    C[i] = initialCarbon.Value(i);
+                for (int i = 0; i < C.Count; i++)
+                    c[i] = initialCarbon.Value(i);
             }
 
             if (initialNitrogen != null)
             {
-                for (int i = 0; i < N.Length; i++)
-                    N[i] = initialNitrogen.Value(i);
+                for (int i = 0; i < N.Count; i++)
+                    n[i] = initialNitrogen.Value(i);
             }
 
             if (initialPhosphorus != null)
             {
-                for (int i = 0; i < P.Length; i++)
-                    P[i] = initialPhosphorus.Value(i);
+                for (int i = 0; i < P.Count; i++)
+                    p[i] = initialPhosphorus.Value(i);
             }
 
             // Set fraction of the layer undertaking this flow to default value of 1
@@ -134,21 +137,26 @@ namespace Models.Soils.Nutrients
                     flow.DoFlow();
         }
 
-        /// <summary>Add C, N, P into nutrient pool</summary>
-        /// <param name="c">Amount of carbon to add (kg/ha)</param>
-        /// <param name="n">Amount of nitrogen to add (kg/ha)</param>
-        /// <param name="p">Amount of phosphorus to add (kg/ha)</param>
-        public void Add(double[] c, double[] n, double[] p)
+        /// <summary>Clear the pool.</summary>
+        public void Clear()
         {
-            if (c.Length != n.Length || c.Length != p.Length || c.Length > C.Length)
-                throw new Exception("Arrays for C, N andP must be the same length.");
+            Array.Clear(c);
+            Array.Clear(n);
+            Array.Clear(p);
+        }
 
-            for (int i = 0; i < c.Length; i++)
-            {
-                C[i] += c[i];
-                N[i] += n[i];
-                P[i] += p[i];
-            }
+        /// <summary>
+        /// Add an amount of c, n, p (kg/ha) into a layer.
+        /// </summary>
+        /// <param name="index">Layer index</param>
+        /// <param name="c">Amount of carbon (kg/ha)</param>
+        /// <param name="n">Amount of nitrogen (kg/ha)</param>
+        /// <param name="p">Amount of phosphorus (kg/ha)</param>
+        public void Add(int index, double c, double n, double p)
+        {
+            this.c[index] += c;
+            this.n[index] += n;
+            this.p[index] += p;
         }
 
         /// <summary>Invoked at start of simulation.</summary>

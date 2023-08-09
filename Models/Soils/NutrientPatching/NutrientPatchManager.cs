@@ -108,7 +108,7 @@ namespace Models.Soils.NutrientPatching
         public double[] TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
 
         /// <summary>Total N in each soil layer</summary>
-        public double[] TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
+        public IReadOnlyList<double> TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
 
         /// <summary>Total C lost to the atmosphere</summary>
         public double[] Catm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Catm)); } }
@@ -132,10 +132,10 @@ namespace Models.Soils.NutrientPatching
         public double[] HydrolysedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.HydrolysedN)); } }
 
         /// <summary>Total Mineral N in each soil layer</summary>
-        public double[] MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
+        public IReadOnlyList<double> MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
-        public double[] FOMCNRFactor
+        public IReadOnlyList<double> FOMCNRFactor
         {
             get
             {
@@ -381,7 +381,7 @@ namespace Models.Soils.NutrientPatching
         /// Sum a list of double values, multiplying them by their respective areas.
         /// </summary>
         /// <param name="values">The list of solutes</param>
-        private double[] SumDoubles(IEnumerable<double[]> values)
+        private double[] SumDoubles(IEnumerable<IReadOnlyList<double>> values)
         {
             var areas = patches.Select(patch => patch.RelativeArea).ToArray();
             var valuesAsList = values.ToList();
@@ -439,7 +439,6 @@ namespace Models.Soils.NutrientPatching
             newPatch.Name = "base";
             patches.Add(newPatch);
             Structure.Add(newPatch.Nutrient, this);
-            newPatch.Nutrient.Standardise(soilPhysical.Thickness);
         }
 
         /// <summary>
@@ -795,15 +794,6 @@ namespace Models.Soils.NutrientPatching
             {
                 patches.RemoveAt(PatchesToDelete[i]);
             }
-        }
-
-        /// <summary>
-        /// Standardise soil data.
-        /// </summary>
-        /// <param name="layerStructure">Target layer structure.</param>
-        public void Standardise(double[] layerStructure)
-        {
-
         }
     }
 }

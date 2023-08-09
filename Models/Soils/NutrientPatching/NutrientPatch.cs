@@ -165,22 +165,25 @@ namespace Models.Soils.NutrientPatching
             {
                 if (StuffToAdd.FOM.Pool.Length != 3)
                     throw new Exception("Expected 3 pools of FOM to be added in PatchManager");
-                if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Length ||
-                    StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Length ||
-                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length ||
-                    StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Length ||
-                    StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Length ||
-                    StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Length)
+                if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Count ||
+                    StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Count ||
+                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Count ||
+                    StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Count ||
+                    StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Count ||
+                    StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Count)
                     throw new Exception("Mismatched number of layers of FOM being added in PatchManager");
 
-                for (int i = 0; i < lignin.C.Length; i++)
+                for (int i = 0; i < lignin.C.Count; i++)
                 {
-                    lignin.C[i] += StuffToAdd.FOM.Pool[0].C[i] * RelativeArea;
-                    lignin.N[i] += StuffToAdd.FOM.Pool[0].N[i] * RelativeArea;
-                    cellulose.C[i] += StuffToAdd.FOM.Pool[1].C[i] * RelativeArea;
-                    cellulose.N[i] += StuffToAdd.FOM.Pool[1].N[i] * RelativeArea;
-                    carbohydrate.C[i] += StuffToAdd.FOM.Pool[2].C[i] * RelativeArea;
-                    carbohydrate.N[i] += StuffToAdd.FOM.Pool[2].N[i] * RelativeArea;
+                    lignin.Add(i, c: StuffToAdd.FOM.Pool[0].C[i] * RelativeArea,
+                                  n: StuffToAdd.FOM.Pool[0].N[i] * RelativeArea,
+                                  p: StuffToAdd.FOM.Pool[0].P[i] * RelativeArea);
+                    cellulose.Add(i, c: StuffToAdd.FOM.Pool[1].C[i] * RelativeArea,
+                                     n: StuffToAdd.FOM.Pool[1].N[i] * RelativeArea,
+                                     p: StuffToAdd.FOM.Pool[1].P[i] * RelativeArea);
+                    carbohydrate.Add(i, c: StuffToAdd.FOM.Pool[2].C[i] * RelativeArea,
+                                        n: StuffToAdd.FOM.Pool[2].N[i] * RelativeArea,
+                                        p: StuffToAdd.FOM.Pool[2].P[i] * RelativeArea);
                 }
             }
         }

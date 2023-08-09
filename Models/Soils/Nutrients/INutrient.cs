@@ -1,4 +1,5 @@
 ﻿using Models.Surface;
+using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -67,13 +68,13 @@ namespace Models.Soils.Nutrients
         double[] HydrolysedN { get; }
 
         /// <summary>Total Mineral N in each soil layer</summary>
-        double[] MineralN { get; }
+        IReadOnlyList<double> MineralN { get; }
 
         /// <summary>Total N in each soil layer</summary>
-        double[] TotalN { get; }
+        IReadOnlyList<double> TotalN { get; }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer</summary>
-        double[] FOMCNRFactor { get; }
+        IReadOnlyList<double> FOMCNRFactor { get; }
 
         /// <summary>
         /// Incorporate FOM
@@ -83,12 +84,5 @@ namespace Models.Soils.Nutrients
         /// Reset all Pools
         /// </summary>
         void Reset();
-
-        /// <summary>
-        /// Standardise soil data.
-        /// </summary>
-        /// <param name="layerStructure">Target layer structure.</param>
-        void Standardise(double[] layerStructure);
-
     }
 }

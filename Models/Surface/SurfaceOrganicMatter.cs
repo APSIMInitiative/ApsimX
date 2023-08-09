@@ -424,13 +424,15 @@ namespace Models.Surface
             }
 
             surfaceResidue.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
-            surfaceResidue.C[0] = 0;
-            surfaceResidue.N[0] = 0;
+            double totalC = 0;
+            double totalN = 0;
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
             {
-                surfaceResidue.C[0] += potentialDecomposition.Pool[i].FOM.C;
-                surfaceResidue.N[0] += potentialDecomposition.Pool[i].FOM.N;
+                totalC += potentialDecomposition.Pool[i].FOM.C;
+                totalN += potentialDecomposition.Pool[i].FOM.N;
             }
+            surfaceResidue.Clear();
+            surfaceResidue.Add(0, totalC, totalN, 0);
             surfaceResidue.DoFlow();
         }
 
