@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Soils
 {
@@ -16,14 +17,29 @@ namespace Models.Soils
         private double[,] m1;
         private double[,] y0;
         private double[,] y1;
+        private double[] microporePowerTerm;
         private double[] microP;
-        private double[] microKs;
+        private double[] microporeKs;
         private double[] kdula;
-        private double[] macroP;
+        private double[] macroporePowerTerm;
         private double[] psid;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
         const double psi0 = -0.6e7;
+
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        public double[] PoreInteractionIndex { 
+            get 
+            { 
+                return microP; 
+            } 
+            set 
+            { 
+                microP = value; 
+
+            } 
+        }
 
         internal void ResizePropfileArrays(int newSize)
         {
@@ -33,10 +49,13 @@ namespace Models.Soils
             m1 = new double[newSize, 5];
             y0 = new double[newSize, 5];
             y1 = new double[newSize, 5];
+            
+            Array.Resize(ref microporePowerTerm, newSize);
             Array.Resize(ref microP, newSize);
-            Array.Resize(ref microKs, newSize);
+            Array.Fill(microP, 1.0);  // give array default value of 1
+            Array.Resize(ref microporeKs, newSize);
             Array.Resize(ref kdula, newSize);
-            Array.Resize(ref macroP, newSize);
+            Array.Resize(ref macroporePowerTerm, newSize);
             Array.Resize(ref psid, newSize);
         }
 
@@ -100,12 +119,12 @@ namespace Models.Soils
             for (int layer = 0; layer <= n; layer++)
             {
                 double b = -Math.Log(psiDul / psi_ll15) / Math.Log(dul[layer] / ll15[layer]);
-                microP[layer] = b * 2.0 + 3.0;
+                microporePowerTerm[layer] = b * 2.0 + 2.0 + microP[layer];
                 kdula[layer] = Math.Min(0.99 * kdul, ks[layer]);
-                microKs[layer] = kdula[layer] / Math.Pow(dul[layer] / sat[layer], microP[layer]);
+                microporeKs[layer] = kdula[layer] / Math.Pow(dul[layer] / sat[layer], microporePowerTerm[layer]);
 
                 double sdul = dul[layer] / sat[layer];
-                macroP[layer] = Math.Log10(kdula[layer] / 99.0 / (ks[layer] - microKs[layer])) / Math.Log10(sdul);
+                macroporePowerTerm[layer] = Math.Log10(kdula[layer] / 99.0 / (ks[layer] - microporeKs[layer])) / Math.Log10(sdul);
             }
         }
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -162,13 +181,13 @@ namespace Models.Soils
                 simpleK = 1e-100;
             else
             {
-                double microK = microKs[layer] * Math.Pow(s, microP[layer]);
+                double microK = microporeKs[layer] * Math.Pow(s, microporePowerTerm[layer]);
 
-                if (microKs[layer] >= ks[layer])
+                if (microporeKs[layer] >= ks[layer])
                     simpleK = microK;
                 else
                 {
-                    double macroK = (ks[layer] - microKs[layer]) * Math.Pow(s, macroP[layer]);
+                    double macroK = (ks[layer] - microporeKs[layer]) * Math.Pow(s, macroporePowerTerm[layer]);
                     simpleK = microK + macroK;
                 }
             }

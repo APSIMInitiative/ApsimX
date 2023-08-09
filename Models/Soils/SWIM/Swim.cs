@@ -469,6 +469,22 @@ namespace Models.Soils
             }
         }
 
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex 
+        { 
+            get 
+            { 
+                return HP.PoreInteractionIndex; 
+            } 
+            set 
+            { 
+                HP.PoreInteractionIndex = value;
+                HP.SetupKCurve(n, physical.LL15, physical.DUL, physical.SAT, physical.KS, KDul, PSIDul);
+            } 
+        }
+
         /// <summary>
         /// Soil water potential including solute concentration effects. Not currently active.
         /// Maybe useful in the future for salinity effects on plant water uptake.
