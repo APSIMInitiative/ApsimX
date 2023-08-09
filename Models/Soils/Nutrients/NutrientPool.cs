@@ -28,6 +28,7 @@ namespace Models.Soils.Nutrients
         private double[] c;
         private double[] n;
         private double[] p;
+        private double[] catm;
 
         /// <summary>Amount of carbon (kg/ha)</summary>
         public IReadOnlyList<double> C => c;
@@ -40,7 +41,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Total C lost to the atmosphere (kg/ha)</summary>
         [JsonIgnore]
-        public double[] Catm => flows.Select(f => f.Catm).Sum();
+        public IReadOnlyList<double> Catm => catm;
 
         /// <summary>Fraction of each layer occupied by this pool.</summary>
         public double[] LayerFraction { get; set; }
@@ -100,6 +101,7 @@ namespace Models.Soils.Nutrients
         public void Initialise(int numberLayers)
         {
             c = new double[numberLayers];
+            catm = new double[numberLayers];
             n = new double[numberLayers];
             p = new double[numberLayers];
             LayerFraction = new double[numberLayers];
@@ -135,6 +137,13 @@ namespace Models.Soils.Nutrients
             if (flows != null)
                 foreach (var flow in flows)
                     flow.DoFlow();
+
+            Array.Clear(catm);
+            foreach (var flow in flows)
+                for (int i = 0; i < C.Count; i++)
+                {
+                    catm[i] += flow.Catm[i];
+                }
         }
 
         /// <summary>Clear the pool.</summary>
@@ -157,6 +166,18 @@ namespace Models.Soils.Nutrients
             this.c[index] += c;
             this.n[index] += n;
             this.p[index] += p;
+        }
+
+        /// <summary>
+        /// Add an amount of c, n, p (kg/ha).
+        /// </summary>
+        /// <param name="c">Amount of carbon (kg/ha)</param>
+        /// <param name="n">Amount of nitrogen (kg/ha)</param>
+        /// <param name="p">Amount of phosphorus (kg/ha)</param>
+        public void Add(double[] c, double[] n, double[] p)
+        {
+            for (int i = 0; i < c.Length; i++)
+                Add(i, c[i], n[i], p[i]);
         }
 
         /// <summary>Invoked at start of simulation.</summary>

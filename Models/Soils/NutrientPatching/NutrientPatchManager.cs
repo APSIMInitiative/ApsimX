@@ -105,31 +105,31 @@ namespace Models.Soils.NutrientPatching
         public double[] UreaForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.Urea)); } }
 
         /// <summary>Total C in each soil layer</summary>
-        public double[] TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
+        public IReadOnlyList<double> TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
 
         /// <summary>Total N in each soil layer</summary>
         public IReadOnlyList<double> TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
 
         /// <summary>Total C lost to the atmosphere</summary>
-        public double[] Catm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Catm)); } }
+        public IReadOnlyList<double> Catm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Catm)); } }
 
         /// <summary>Total N lost to the atmosphere</summary>
-        public double[] Natm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Natm)); } }
+        public IReadOnlyList<double> Natm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Natm)); } }
 
         /// <summary>Total N2O lost to the atmosphere</summary>
-        public double[] N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
+        public IReadOnlyList<double> N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         public double[] MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
-        public double[] DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
+        public IReadOnlyList<double> DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
 
         /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
-        public double[] NitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.NitrifiedN)); } }
+        public IReadOnlyList<double> NitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.NitrifiedN)); } }
 
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
-        public double[] HydrolysedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.HydrolysedN)); } }
+        public IReadOnlyList<double> HydrolysedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.HydrolysedN)); } }
 
         /// <summary>Total Mineral N in each soil layer</summary>
         public IReadOnlyList<double> MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }

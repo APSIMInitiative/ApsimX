@@ -6,6 +6,7 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Soils.Nutrients;
 using Models.Surface;
 using Newtonsoft.Json;
 
@@ -479,6 +480,11 @@ namespace Models
         /// <summary>Link to NH4 solute.</summary>
         [Link(ByName = true)]
         private ISolute NH4 = null;
+
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        private Nutrient nutrient = null;
 
         #endregion
 
@@ -14458,7 +14464,7 @@ namespace Models
                     fomInSoil.Type = c_crop_type;
                     fomInSoil.Layer = allLayers;
 
-                    IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
+                    nutrient.DoIncorpFOM(fomInSoil);
                 }
                 else
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 
@@ -28,19 +29,18 @@ namespace Models.Soils.Nutrients
         [NonSerialized]
         private ISolute destinationSolute = null;
 
-        /// <summary>
-        /// Value of total N flow into destination
-        /// </summary>
-        public double[] Value { get; set; }
-        /// <summary>
-        /// Value of total loss
-        /// </summary>
-        public double[] Natm { get; set; }
+        private double[] natm;
+        private double[] n2oatm;
+        private double[] value;
 
-        /// <summary>
-        /// Value of N2O lost
-        /// </summary>
-        public double[] N2Oatm { get; set; }
+        /// <summary>Value of total N flow into destination.</summary>
+        public IReadOnlyList<double> Value => value;
+
+        /// <summary>Value of total loss.</summary>
+        public IReadOnlyList<double> Natm => natm;
+
+        /// <summary>N2O lost (kg/ha)</summary>
+        public IReadOnlyList<double> N2Oatm => n2oatm;
 
         /// <summary>
         /// Name of source pool
@@ -54,8 +54,9 @@ namespace Models.Soils.Nutrients
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
 
-        [EventSubscribe("StartOfSimulation")]
-        private void OnCommencing(object sender, EventArgs args)
+        /// <summary>Performs the initial checks and setup</summary>
+        /// <param name="numberLayers">Number of layers.</param>
+        public void Initialise(int numberLayers)
         {
             if (sourceSolute == null)
             {
@@ -65,12 +66,9 @@ namespace Models.Soils.Nutrients
 
             //double[] source = sourceSolute.kgha;
             //int numLayers = source.Length;
-            //if (Value == null)
-            //    Value = new double[source.Length];
-            //if (Natm == null)
-            //    Natm = new double[source.Length];
-            //if (N2Oatm == null)
-            //    N2Oatm = new double[source.Length];
+             value = new double[numberLayers];
+             natm = new double[numberLayers];
+             n2oatm = new double[numberLayers];
         }
 
         /// <summary>
@@ -83,13 +81,6 @@ namespace Models.Soils.Nutrients
         {
             double[] source = sourceSolute.kgha;
             int numLayers = source.Length;
-            if (Value == null)
-                Value = new double[source.Length];
-            if (Natm == null)
-                Natm = new double[source.Length];
-            if (N2Oatm == null)
-                N2Oatm = new double[source.Length];
-
 
             double[] destination = null;
             if (destinationName != null)
@@ -102,14 +93,14 @@ namespace Models.Soils.Nutrients
                     nitrogenFlow = rate.Value(i) * source[i];
 
                 if (nitrogenFlow > 0)
-                    Natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                    natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
                 else
-                    Natm[i] = 0;
+                    natm[i] = 0;
 
-                if (Natm[i] > 0)
-                    N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
+                if (natm[i] > 0)
+                    n2oatm[i] = natm[i] * N2OFraction.Value(i);
                 else
-                    N2Oatm[i] = 0;
+                    n2oatm[i] = 0;
 
                 double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
 
@@ -117,7 +108,7 @@ namespace Models.Soils.Nutrients
                     throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
 
                 source[i] -= nitrogenFlow;
-                Value[i] = nitrogenFlowToDestination;  // keep value of flow for use in output
+                value[i] = nitrogenFlowToDestination;  // keep value of flow for use in output
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }

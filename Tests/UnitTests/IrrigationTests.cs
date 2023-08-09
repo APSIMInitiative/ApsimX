@@ -1,17 +1,17 @@
-﻿namespace UnitTests
-{
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Soils;
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Surface;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Soils;
 
+namespace UnitTests
+{
     public class IrrigationTests
     {
         [Test]
@@ -139,13 +139,13 @@
                             {
                                 Children = new List<IModel>()
                                 {
-                                    new MockNutrientPool() { Name = "Inert" },
-                                    new MockNutrientPool() { Name = "Microbial" },
-                                    new MockNutrientPool() { Name = "Humic" },
-                                    new MockNutrientPool() { Name = "FOMCellulose" },
-                                    new MockNutrientPool() { Name = "FOMCarbohydrate" },
-                                    new MockNutrientPool() { Name = "FOMLignin" },
-                                    new MockNutrientPool() { Name = "SurfaceResidue" }
+                                    new NutrientPool() { Name = "Inert" },
+                                    new NutrientPool() { Name = "Microbial" },
+                                    new NutrientPool() { Name = "Humic" },
+                                    new NutrientPool() { Name = "FOMCellulose" },
+                                    new NutrientPool() { Name = "FOMCarbohydrate" },
+                                    new NutrientPool() { Name = "FOMLignin" },
+                                    new NutrientPool() { Name = "SurfaceResidue" }
                                 }
                             },
                             new MockSoilTemperature(),
