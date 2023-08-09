@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
-using APSIM.Shared.Documentation.Tags;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Surface;
+using Newtonsoft.Json;
 
 namespace Models.Soils.Nutrients
 {
@@ -91,11 +90,16 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true)]
         private readonly NutrientPool surfaceResidue = null;
 
+        /// <summary>Hydrolysis flow.</summary>
+        [Link(ByName = true)]
+        private readonly NFlow hydrolysis = null;
+
         // Carbon content of FOM
         private double CinFOM = 0.4;
 
         private double[] totalOrganicN;
         private double[] fomCNRFactor;
+        [NonSerialized]
         private CompositeNutrientPool organic;
 
         /// <summary>Get directed graph from model</summary>
@@ -267,16 +271,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
         [Units("kg/ha")]
-        public double[] HydrolysedN
-        {
-            get
-            {
-                // Get the denitrification N flow under NO3.
-                var hydrolysis = FindChild<NFlow>("Hydrolysis");
-
-                return hydrolysis.Value;
-            }
-        }
+        public double[] HydrolysedN => hydrolysis.Value;
 
         /// <summary>Total Mineral N in each soil layer</summary>
         [Units("kg/ha")]
@@ -379,10 +374,11 @@ namespace Models.Soils.Nutrients
 
             fomCNRFactor = new double[soilPhysical.Thickness.Length];
             totalOrganicN = new double[soilPhysical.Thickness.Length];
-            organic = new CompositeNutrientPool(nutrientPools);
 
             foreach (var pool in nutrientPools)
                 pool.Initialise(soilPhysical.Thickness.Length);
+
+            organic = new CompositeNutrientPool(nutrientPools);
         }
 
         /// <summary>
