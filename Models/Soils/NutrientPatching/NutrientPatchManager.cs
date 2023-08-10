@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -120,7 +121,7 @@ namespace Models.Soils.NutrientPatching
         public IReadOnlyList<double> N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
-        public double[] MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
+        public IReadOnlyList<double> MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         public IReadOnlyList<double> DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
@@ -426,7 +427,10 @@ namespace Models.Soils.NutrientPatching
         /// <param name="pools">The pools to sum.</param>
         private INutrientPool SumNutrientPoolsWithoutArea(INutrientPool[] pools)
         {
-            return new NutrientPool(pools);
+            double[] c = pools.Select(p => p.C).Sum();
+            double[] n = pools.Select(p => p.N).Sum();
+            double[] p = pools.Select(p => p.P).Sum();
+            return new NutrientPool(c, n, p);
         }
 
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>

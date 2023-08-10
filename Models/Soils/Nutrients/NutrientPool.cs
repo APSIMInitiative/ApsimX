@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Extensions.Collections;
+using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
 using System;
@@ -16,6 +17,7 @@ namespace Models.Soils.Nutrients
         private double[] n;
         private double[] p;
         private double[] catm;
+        private double[] layerFraction;
 
 
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -30,34 +32,11 @@ namespace Models.Soils.Nutrients
         [Link(Type=LinkType.Child)]
         private readonly CarbonFlow[] flows = null;
 
+
         /// <summary>
         /// Constructor for json serialisation.
         /// </summary>
         public NutrientPool() { }
-
-        /// <summary>
-        /// Constructor for injecting dependencies directly rather than via links.
-        /// </summary>
-        public NutrientPool(int numberLayers)
-        {
-            Initialise(numberLayers);
-        }
-
-        /// <summary>Constructor for creating a pool from a collection of other pools by adding their C,N,P components.</summary>
-        /// <param name="pools">A collection of pools.</param>
-        public NutrientPool(IEnumerable<INutrientPool> pools)
-        {
-            Initialise(numberLayers: pools.First().C.Count);
-            foreach (var pool in pools)
-            {
-                for (int i = 0; i < pool.C.Count; i++)
-                {
-                    c[i] += pool.C[i];
-                    n[i] += pool.N[i];
-                    p[i] += pool.P[i];
-                }
-            }
-        }
 
         /// <summary>Constructor for creating a pool from amounts of carbon, nitrogen and phosphorus.</summary>
         /// <param name="c">Amount of carbon (kg/ha).</param>
@@ -68,8 +47,6 @@ namespace Models.Soils.Nutrients
             this.c = c;
             this.n = n;
             this.p = p;
-            LayerFraction = new double[c.Length];
-            Array.Fill(LayerFraction, 1.0);
         }
 
 
@@ -86,16 +63,8 @@ namespace Models.Soils.Nutrients
         public IReadOnlyList<double> Catm => catm;
 
         /// <summary>Fraction of each layer occupied by this pool.</summary>
-        public double[] LayerFraction { get; set; }
+        public IReadOnlyList<double> LayerFraction => layerFraction;
 
-
-        /// <summary>Called after instance has been created via deserialisation.</summary>
-        public override void OnCreated()
-        {
-            IPhysical physical = FindInScope<IPhysical>();
-            if (physical != null)
-                Initialise(physical.Thickness.Length);
-        }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="numberLayers">Number of layers.</param>
@@ -105,7 +74,7 @@ namespace Models.Soils.Nutrients
             catm = new double[numberLayers];
             n = new double[numberLayers];
             p = new double[numberLayers];
-            LayerFraction = new double[numberLayers];
+            layerFraction = new double[numberLayers];
             if (initialCarbon != null)
             {
                 for (int i = 0; i < C.Count; i++)
@@ -125,26 +94,11 @@ namespace Models.Soils.Nutrients
             }
 
             // Set fraction of the layer undertaking this flow to default value of 1
-            Array.Fill(LayerFraction, 1.0);
+            Array.Fill(layerFraction, 1.0);
 
             if (flows != null)
                 foreach (var flow in flows)
                     flow.Initialise(numberLayers);
-        }
-
-        /// <summary>Perform all flows from the nutrient pool</summary>
-        public void DoFlow()
-        {
-            if (flows != null)
-                foreach (var flow in flows)
-                    flow.DoFlow();
-
-            Array.Clear(catm);
-            foreach (var flow in flows)
-                for (int i = 0; i < C.Count; i++)
-                {
-                    catm[i] += flow.Catm[i];
-                }
         }
 
         /// <summary>Clear the pool.</summary>
@@ -179,6 +133,30 @@ namespace Models.Soils.Nutrients
         {
             for (int i = 0; i < c.Length; i++)
                 Add(i, c[i], n[i], p[i]);
+        }
+
+        /// <summary>Set the layer fraction.</summary>
+        /// <param name="values">The new values.</param>
+        public void SetLayerFraction(IReadOnlyList<double> values)
+        {
+            if (values.Count != layerFraction.Length)
+                throw new Exception("Incorrect number of values passed to NutrientPool.SetLayerFraction");
+            values.CopyTo(layerFraction);
+        }
+
+        /// <summary>Perform all flows from the nutrient pool</summary>
+        public void DoFlow()
+        {
+            if (flows != null)
+                foreach (var flow in flows)
+                    flow.DoFlow();
+
+            Array.Clear(catm);
+            foreach (var flow in flows)
+                for (int i = 0; i < C.Count; i++)
+                {
+                    catm[i] += flow.Catm[i];
+                }
         }
     }
 }

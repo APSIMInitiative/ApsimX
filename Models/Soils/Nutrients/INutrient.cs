@@ -56,7 +56,7 @@ namespace Models.Soils.Nutrients
         IReadOnlyList<double> N2Oatm { get; }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
-        double[] MineralisedN { get; }
+        IReadOnlyList<double> MineralisedN { get; }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         IReadOnlyList<double> DenitrifiedN { get; }

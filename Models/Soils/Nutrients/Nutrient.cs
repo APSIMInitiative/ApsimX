@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Surface;
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.Soils.Nutrients
 {
@@ -35,56 +33,33 @@ namespace Models.Soils.Nutrients
     [PresenterName("UserInterface.Presenters.DirectedGraphPresenter")]
     public class Nutrient : Model, INutrient, IVisualiseAsDirectedGraph
     {
+        private readonly double CinFOM = 0.4;      // Carbon content of FOM
+        private double[] totalOrganicN;
+        private double[] fomCNRFactor;
+        private double[] catm;
+        private double[] natm;
+        private double[] n2oatm;
+        private double[] totalC;
+        private double[] denitrifiedN;
+        private double[] nitrifiedN;
+        private double[] mineralisedN;
+        private CompositeNutrientPool organic;
+        private NFlow hydrolysis = null;
+        private NFlow denitrification = null;
+        private NFlow nitrification = null;
+
+
         /// <summary>Summary file Link</summary>
         [Link]
-        private ISummary summary = null;
+        private readonly ISummary summary = null;
 
         /// <summary>Access the soil physical properties.</summary>
         [Link]
-        private IPhysical soilPhysical = null;
-
-        /// <summary>The inert pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool Inert { get; set; }
-
-        /// <summary>The microbial pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool Microbial { get; set; }
-
-        /// <summary>The humic pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool Humic { get; set; }
-
-        /// <summary>The fresh organic matter cellulose pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool FOMCellulose { get; set; }
-
-        /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool FOMCarbohydrate { get; set; }
-
-        /// <summary>The fresh organic matter lignin pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool FOMLignin { get; set; }
-
-        /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM => new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
-
-        /// <summary>The NO3 pool.</summary>
-        [Link(ByName = true)]
-        public ISolute NO3 { get; set; }
-
-        /// <summary>The NH4 pool.</summary>
-        [Link(ByName = true)]
-        public ISolute NH4 { get; set; }
-
-        /// <summary>The Urea pool.</summary>
-        [Link(ByName = true)]
-        public ISolute Urea { get; set; }
+        private readonly IPhysical soilPhysical = null;
 
         /// <summary>The Urea pool.</summary>
         [Link]
-        private Solute[] solutes { get; set; }
+        private readonly Solute[] solutes = null;
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
@@ -94,92 +69,63 @@ namespace Models.Soils.Nutrients
         [Link(Type = LinkType.Child)]
         private readonly NFlow[] nutrientFlows = null;
 
+        /// <summary>Child carbon flows.</summary>
+        [Link(Type = LinkType.Child)]
+        private readonly CarbonFlow[] carbonFlows = null;
+
         /// <summary>Surface residue decomposition pool.</summary>
         [Link(ByName = true)]
         private readonly NutrientPool surfaceResidue = null;
 
-        /// <summary>Hydrolysis flow.</summary>
-        [Link(ByName = true)]
-        private readonly NFlow hydrolysis = null;
 
-        /// <summary>Denitrification N flow.</summary>
-        [Link(ByName = true)]
-        private readonly NFlow denitrification = null;
+        /// <summary>The inert pool.</summary>
+        public INutrientPool Inert { get; private set; }
 
-        /// <summary>Nitrification N flow.</summary>
-        [Link(ByName = true)]
-        private readonly NFlow nitrification = null;
+        /// <summary>The microbial pool.</summary>
+        public INutrientPool Microbial { get; private set; }
 
-        // Carbon content of FOM
-        private double CinFOM = 0.4;
+        /// <summary>The humic pool.</summary>
+        public INutrientPool Humic { get; private set; }
 
-        private double[] totalOrganicN;
-        private double[] fomCNRFactor;
-        private double[] catm;
-        private double[] natm;
-        private double[] n2oatm;
-        private double[] totalC;
-        private double[] denitrifiedN;
-        private double[] nitrifiedN;
+        /// <summary>The fresh organic matter cellulose pool.</summary>
+        public INutrientPool FOMCellulose { get; private set; }
 
-        [NonSerialized]
-        private CompositeNutrientPool organic;
+        /// <summary>The fresh organic matter carbohydrate pool.</summary>
+        public INutrientPool FOMCarbohydrate { get; private set; }
+
+        /// <summary>The fresh organic matter lignin pool.</summary>
+        public INutrientPool FOMLignin { get; private set; }
+
+        /// <summary>The NO3 pool.</summary>
+        public ISolute NO3 { get; private set; }
+
+        /// <summary>The NH4 pool.</summary>
+        public ISolute NH4 { get; private set; }
+
+        /// <summary>The Urea pool.</summary>
+        public ISolute Urea { get; private set; }
+
+        /// <summary>The fresh organic matter pool.</summary>
+        public INutrientPool FOM { get; private set; }
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo { get; set; }
 
-        /// <summary>
-        /// Total C in each soil layer
-        /// </summary>
+        /// <summary>Total C in each soil layer</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> TotalC => totalC;
 
-        /// <summary>
-        /// Total C lost to the atmosphere
-        /// </summary>
+        /// <summary>Total C lost to the atmosphere</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> Catm => catm;
        
-        /// <summary>
-        /// Total N lost to the atmosphere
-        /// </summary>
+        /// <summary>Total N lost to the atmosphere</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> Natm => natm;
 
-        /// <summary>
-        /// Total N2O lost to the atmosphere
-        /// </summary>
+        /// <summary>Total N2O lost to the atmosphere</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> N2Oatm => n2oatm;
-
-        /// <summary>
-        /// Total Net N Mineralisation in each soil layer
-        /// </summary>
-        [Units("kg/ha")]
-        public double[] MineralisedN
-        {
-            get
-            {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Count;
-                double[] values = new double[numLayers];
-
-                // Get a list of N flows that make up mineralisation.
-                // All flows except the surface residue N flow.
-                List<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>().ToList();
-                
-                // Add all flows.
-                foreach (CarbonFlow f in Flows)
-                {
-                    for (int i = 0; i < values.Length; i++)
-                        values[i] += f.MineralisedN[i];
-                }
-                return values;
-            }
-        }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         [Units("kg/ha")]
@@ -192,6 +138,20 @@ namespace Models.Soils.Nutrients
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> HydrolysedN => hydrolysis.Value;
+
+        /// <summary>Total Net N Mineralisation in each soil layer</summary>
+        [Units("kg/ha")]
+        public IReadOnlyList<double> MineralisedN => mineralisedN;
+
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
+        public INutrientPool Organic => organic;
+
+        /// <summary>Total organic N in each soil layer, organic and mineral (kg/ha).</summary>
+        [Units("kg/ha")]
+        public IReadOnlyList<double> TotalOrganicN => totalOrganicN;
+
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter used by low level functions.</summary>
+        public IReadOnlyList<double> FOMCNRFactor => fomCNRFactor;
 
         /// <summary>Total Mineral N in each soil layer</summary>
         [Units("kg/ha")]
@@ -218,13 +178,6 @@ namespace Models.Soils.Nutrients
             }
         }
 
-        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
-        public INutrientPool Organic => organic;
-
-        /// <summary>Total organic N in each soil layer, organic and mineral (kg/ha).</summary>
-        [Units("kg/ha")]
-        public IReadOnlyList<double> TotalOrganicN => totalOrganicN;
-
         /// <summary>Total N in each soil layer, organic, mineral and nitrogen solutes (kg/ha).</summary>
         [Units("kg/ha")]
         public IReadOnlyList<double> TotalN
@@ -242,8 +195,6 @@ namespace Models.Soils.Nutrients
             }
         }
 
-        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter used by low level functions.</summary>
-        public IReadOnlyList<double> FOMCNRFactor => fomCNRFactor;
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
         /// <param name="FOMdata">The in fo mdata.</param>
@@ -335,9 +286,23 @@ namespace Models.Soils.Nutrients
             n2oatm = new double[soilPhysical.Thickness.Length];
             denitrifiedN = new double[soilPhysical.Thickness.Length];
             nitrifiedN = new double[soilPhysical.Thickness.Length];
+            mineralisedN = new double[soilPhysical.Thickness.Length];
+
+            Inert = nutrientPools.First(pool => pool.Name == "Inert");
+            Microbial = nutrientPools.First(pool => pool.Name == "Microbial");
+            Humic = nutrientPools.First(pool => pool.Name == "Humic");
+            FOMCellulose = nutrientPools.First(pool => pool.Name == "FOMCellulose");
+            FOMCarbohydrate = nutrientPools.First(pool => pool.Name == "FOMCarbohydrate");
+            FOMLignin = nutrientPools.First(pool => pool.Name == "FOMLignin");
+            NO3 = solutes.First(solute => solute.Name == "NO3");
+            NH4 = solutes.First(solute => solute.Name == "NH4");
+            Urea = solutes.First(solute => solute.Name == "Urea");
+            hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
+            denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
+            nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
 
             Reset();
-
+            FOM = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
             organic = new CompositeNutrientPool(nutrientPools);
         }
 
@@ -365,6 +330,7 @@ namespace Models.Soils.Nutrients
             Array.Clear(totalC);
             Array.Clear(natm);
             Array.Clear(n2oatm);
+            Array.Clear(mineralisedN);
 
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 catm[i] = surfaceResidue.Catm[i];
@@ -386,6 +352,12 @@ namespace Models.Soils.Nutrients
                     natm[i] += flow.Natm[i];
                     n2oatm[i] += flow.N2Oatm[i];
                 }
+            }
+
+            foreach (CarbonFlow flow in carbonFlows)
+            {
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                    mineralisedN[i] += flow.MineralisedN[i];
             }
 
             Array.Clear(denitrifiedN);

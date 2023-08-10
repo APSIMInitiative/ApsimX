@@ -2,6 +2,7 @@
 using Models.Core;
 using Models.Functions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Models.Soils.Nutrients
@@ -21,6 +22,9 @@ namespace Models.Soils.Nutrients
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
+        private double[] mineralisedN;
+        private double[] mineralisedP;
+        private double[] catm;
 
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -49,13 +53,13 @@ namespace Models.Soils.Nutrients
 
 
         /// <summary>Amount of N Mineralised (kg/ha)</summary>
-        public double[] MineralisedN { get; private set; }
+        public IReadOnlyList<double> MineralisedN => mineralisedN;
 
         /// <summary>Amount of P Mineralised (kg/ha)</summary>
-        public double[] MineralisedP { get; private set; }
+        public IReadOnlyList<double> MineralisedP => mineralisedP;
 
         /// <summary>Total carbon lost to the atmosphere (kg/ha)</summary>
-        public double[] Catm { get; private set; }
+        public IReadOnlyList<double> Catm => catm;
 
 
         /// <summary>Performs the initial checks and setup</summary>
@@ -71,9 +75,9 @@ namespace Models.Soils.Nutrients
                     throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                 destinations[i] = destination;
             }
-            MineralisedN = new double[numberLayers];
-            MineralisedP = new double[numberLayers];
-            Catm = new double[numberLayers];
+            mineralisedN = new double[numberLayers];
+            mineralisedP = new double[numberLayers];
+            catm = new double[numberLayers];
             carbonFlowToDestination = new double[destinations.Length];
             nitrogenFlowToDestination = new double[destinations.Length];
             phosphorusFlowToDestination = new double[destinations.Length];
@@ -155,7 +159,7 @@ namespace Models.Soils.Nutrients
                 // Remove from source
                 source.Add(i, -carbonFlowFromSource, -nitrogenFlowFromSource, -phosphorusFlowFromSource);
 
-                Catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
+                catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
 
                 // Add to destination
                 for (int j = 0; j < numDestinations; j++)
@@ -163,7 +167,7 @@ namespace Models.Soils.Nutrients
 
                 if (totalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {
-                    MineralisedN[i] = nitrogenFlowFromSource - totalNitrogenFlowToDestinations;
+                    mineralisedN[i] = nitrogenFlowFromSource - totalNitrogenFlowToDestinations;
                     nh4[i] += MineralisedN[i];
                 }
                 else
@@ -177,7 +181,7 @@ namespace Models.Soils.Nutrients
                     no3[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
 
-                    MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
+                    mineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
 
                     if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
                         throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
@@ -185,7 +189,7 @@ namespace Models.Soils.Nutrients
 
                 if (totalPhosphorusFlowToDestinations <= phosphorusFlowFromSource)
                 {
-                    MineralisedP[i] = phosphorusFlowFromSource - totalPhosphorusFlowToDestinations;
+                    mineralisedP[i] = phosphorusFlowFromSource - totalPhosphorusFlowToDestinations;
                     labileP[i] += MineralisedP[i];
                 }
                 else
@@ -194,7 +198,7 @@ namespace Models.Soils.Nutrients
                     double PImmobilisation = Math.Min(labileP[i], PDeficit);
                     labileP[i] -= PImmobilisation;
                     PDeficit -= PImmobilisation;
-                    MineralisedP[i] = -PImmobilisation;
+                    mineralisedP[i] = -PImmobilisation;
 
                     // ALERT
                     //if (MathUtilities.IsGreaterThan(PDeficit, 0.0))

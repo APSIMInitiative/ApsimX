@@ -5,6 +5,7 @@ using System.Linq;
 namespace Models.Soils.Nutrients
 {
     /// <summary>Encapsulates a collection of nutrient pools and aggregates them as a INutrientPool</summary>
+    [Serializable]
     public class CompositeNutrientPool : INutrientPool
     {
         private readonly IEnumerable<INutrientPool> nutrientPools;

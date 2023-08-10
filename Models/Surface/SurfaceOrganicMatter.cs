@@ -422,11 +422,6 @@ namespace Models.Surface
                 potentialDecomposition = GetPotentialDecomposition();
             }
 
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                surfaceResidue.LayerFraction[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
-            }
-
             surfaceResidue.Clear();
 
             double totalLayerFraction = surfaceResidue.LayerFraction.Sum();
@@ -531,6 +526,10 @@ namespace Models.Surface
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
             surfaceResidue.Initialise(soilPhysical.Thickness.Length);
+            double[] layerFractions = new double[soilPhysical.Thickness.Length];
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                layerFractions[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
+            surfaceResidue.SetLayerFraction(layerFractions);
         }
 
         /// <summary>Called at start of each day.</summary>
