@@ -25,7 +25,7 @@ namespace UnitTests
             events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -47,7 +47,7 @@ namespace UnitTests
             events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -110,6 +110,13 @@ namespace UnitTests
                             },
                             new Solute
                             {
+                                Name = "NH4",
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                                InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
+                                InitialValuesUnits = Solute.UnitsEnum.kgha
+                            },
+                            new Solute
+                            {
                                 Name = "Urea",
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 InitialValues = new double[] { 0, 0, 0, 0, 0, 0 },
@@ -145,7 +152,10 @@ namespace UnitTests
                                     new NutrientPool() { Name = "FOMCellulose" },
                                     new NutrientPool() { Name = "FOMCarbohydrate" },
                                     new NutrientPool() { Name = "FOMLignin" },
-                                    new NutrientPool() { Name = "SurfaceResidue" }
+                                    new NutrientPool() { Name = "SurfaceResidue" },
+                                    new NFlow() { Name = "Hydrolysis" },
+                                    new NFlow() { Name = "Denitrification" },
+                                    new NFlow() { Name = "Nitrification" },
                                 }
                             },
                             new MockSoilTemperature(),

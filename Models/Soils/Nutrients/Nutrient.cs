@@ -296,7 +296,7 @@ namespace Models.Soils.Nutrients
             FOMLignin = nutrientPools.First(pool => pool.Name == "FOMLignin");
             NO3 = solutes.First(solute => solute.Name == "NO3");
             NH4 = solutes.First(solute => solute.Name == "NH4");
-            Urea = solutes.First(solute => solute.Name == "Urea");
+            Urea = solutes.FirstOrDefault(solute => solute.Name == "Urea");
             hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
