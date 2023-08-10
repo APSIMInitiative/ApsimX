@@ -1,6 +1,7 @@
 ﻿using System;
 using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Models.PMF;
 
 namespace Models.Soils
 {
@@ -203,6 +204,8 @@ namespace Models.Soils
             {
                 double est1 = 0;
                 double est2 = 0;
+                double bestest = 0;
+                double besterr = 0;
 
                 if (theta > dul[node])
                 {
@@ -214,7 +217,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    est1 = Math.Log10(-psi0); est2 = Math.Log10(-psi_ll15);
+                    est1 = Math.Log10(-psi_ll15); est2 = Math.Log10(-psi0);
                 }
 
                 // Use secant method to solve for suction
@@ -224,14 +227,25 @@ namespace Models.Soils
                     double Y2 = SimpleTheta(node, -Math.Pow(10, est2))-theta;
 
                     double est3 = est2 - Y2 * (est2 - est1)/(Y2 - Y1);
+                    double Y3 = SimpleTheta(node, -Math.Pow(10, est3)) - theta;
+
+
+                    if (Math.Abs(Y3) < tolerance)
+                        return -Math.Pow(10, est3);
+
+                    if (Math.Abs(Y3) < besterr)
+                    {
+                        besterr = Math.Abs(Y3);
+                        bestest = est3;
+                    }
 
                     est1 = est2;
                     est2 = est3;
-                    double Y3= SimpleTheta(node, -Math.Pow(10, est3)) - theta;
-                    if (Math.Abs(Y3) < tolerance)
-                        return -Math.Pow(10, est3);
+
+
                 }
-                throw (new Exception("SWIM3 failed to find value of suction for given theta"));
+                return -Math.Pow(10, bestest);
+                //throw (new Exception("Soil hydraulic properties model failed to find value of suction for given theta"));
 
             }
         }
