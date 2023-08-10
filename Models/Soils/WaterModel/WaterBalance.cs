@@ -846,6 +846,7 @@ namespace Models.WaterModel
             hyprops.ResizePropfileArrays(n);
             hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
             PSI = new double[n];
+            K = new double[n];
         }
 
         ///<summary>Perform tillage</summary>
