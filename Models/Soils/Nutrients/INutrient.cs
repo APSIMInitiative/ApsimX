@@ -80,6 +80,11 @@ namespace Models.Soils.Nutrients
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
+
+        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
+        /// <param name="FOMPoolData">The in fom pool data.</param>
+        void IncorpFOMPool(FOMPoolType FOMPoolData);
+
         /// <summary>
         /// Reset all Pools
         /// </summary>

@@ -39,7 +39,7 @@ namespace Models.Surface
         private IWeather weather = null;
 
         [Link]
-        private Nutrient nutrient = null;
+        private INutrient nutrient = null;
 
         /// <summary>Link to NO3 solute.</summary>
         private ISolute NO3Solute = null;

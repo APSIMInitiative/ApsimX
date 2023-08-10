@@ -238,6 +238,15 @@ namespace Models.Soils.NutrientPatching
                 patch.Nutrient.DoIncorpFOM(FOMdata);
         }
 
+        /// <summary>
+        /// Incorporate FOM
+        /// </summary>
+        public void IncorpFOMPool(FOMPoolType FOMPoolData)
+        {
+            foreach (var patch in patches)
+                patch.Nutrient.IncorpFOMPool(FOMPoolData);
+        }
+
         /// <summary>Reset all pools.</summary>
         public void Reset()
         {
