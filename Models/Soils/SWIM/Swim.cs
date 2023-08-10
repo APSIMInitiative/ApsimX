@@ -469,6 +469,22 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Water potential of layer</summary>
+        [JsonIgnore]
+        [Units("cm/h")]
+        public double[] K
+        {
+            get
+            {
+                double[] k = new double[n+1];
+
+                for (int i = 0; i <= n; i++)
+                    k[i] = HP.SimpleK(i, _psi[i], physical.SAT, physical.KS);
+                return k;
+            }
+        }
+
+
         ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
         [JsonIgnore]
         [Units("-")]
