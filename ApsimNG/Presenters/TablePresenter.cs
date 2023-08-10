@@ -1,15 +1,15 @@
-﻿namespace UserInterface.Presenters
-{
-    using Commands;
-    using EventArguments;
-    using Interfaces;
-    using Models.Interfaces;
-    using System;
-    using Views;
-    using Models.Core;
-    using System.Collections.Generic;
-    using System.Data;
+﻿using UserInterface.Commands;
+using UserInterface.EventArguments;
+using Models.Interfaces;
+using System;
+using UserInterface.Views;
+using Models.Core;
+using System.Collections.Generic;
+using System.Data;
+using Models.Management;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// Presenter for any <see cref="IModelAsTable"/>.
     /// </summary>
@@ -67,6 +67,17 @@
             intellisense = new IntellisensePresenter(view.Grid2 as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
             view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
+
+            if (model is BiomassRemovalFractions)
+            {
+                view.SetLabelText((model as BiomassRemovalFractions).Description);
+                view.SetLabelHeight(0.1f);
+            } 
+            else
+            {
+                view.SetLabelText("");
+                view.SetLabelHeight(0.0f);
+            }
         }
 
         /// <summary>

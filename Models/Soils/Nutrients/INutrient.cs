@@ -30,9 +30,6 @@ namespace Models.Soils.Nutrients
         /// <summary>The fresh organic matter pool.</summary>
         INutrientPool FOM { get; }
 
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        INutrientPool SurfaceResidue { get; }
-
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
         INutrientPool Organic { get; }
 
@@ -60,9 +57,6 @@ namespace Models.Soils.Nutrients
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
         double[] MineralisedN { get; }
 
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        double[] MineralisedNSurfaceResidue { get; }
-
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
         double[] DenitrifiedN { get; }
 
@@ -82,10 +76,6 @@ namespace Models.Soils.Nutrients
         double[] FOMCNRFactor { get; }
 
         /// <summary>
-        /// Calculate actual decomposition
-        /// </summary>
-        SurfaceOrganicMatterDecompType CalculateActualSOMDecomp();
-        /// <summary>
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
@@ -93,6 +83,12 @@ namespace Models.Soils.Nutrients
         /// Reset all Pools
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Standardise soil data.
+        /// </summary>
+        /// <param name="layerStructure">Target layer structure.</param>
+        void Standardise(double[] layerStructure);
 
     }
 }

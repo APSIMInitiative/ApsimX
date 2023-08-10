@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Documentation.Tags;
+using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -41,16 +42,9 @@ namespace Models.Soils.Nutrients
         // Carbon content of FOM
         private double CinFOM = 0.4;
 
-        [NonSerialized]
-        private INutrientPool fom;
-
         /// <summary>Summary file Link</summary>
         [Link]
         private ISummary Summary = null;
-
-        /// <summary>The surface organic matter</summary>
-        [Link]
-        private SurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Access the soil physical properties.</summary>
         [Link]
@@ -81,11 +75,7 @@ namespace Models.Soils.Nutrients
         public INutrientPool FOMLignin { get; set; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM { get { return fom; } }
-
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public INutrientPool SurfaceResidue { get; set; }
+        public INutrientPool FOM => new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
 
         /// <summary>The NO3 pool.</summary>
         [Link(ByName = true)]
@@ -100,8 +90,12 @@ namespace Models.Soils.Nutrients
         public ISolute Urea { get; set; }
 
         /// <summary>Child carbon flows.</summary>
-        [Link]
-        private CarbonFlow[] CarbonFlows { get; set; }
+        [Link(Type = LinkType.Child)]
+        private readonly NutrientPool[] nutrientPools = null;
+
+        /// <summary>Surface residue decomposition pool.</summary>
+        [Link(ByName = true)]
+        private readonly NutrientPool surfaceResidue = null;
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo
@@ -118,16 +112,13 @@ namespace Models.Soils.Nutrients
             }
         }
 
-        /// <summary>Potential soil organic matter decomposition for today.</summary>
-        public SurfaceOrganicMatterDecompType SurfaceResidueDecomposition { get; private set; } = null;
-
         /// <summary>
         /// Reset all pools and solutes
         /// </summary> 
         public void Reset()
         {
             foreach (NutrientPool P in FindAllChildren<NutrientPool>())
-                P.Reset();
+                P.Initialise(soilPhysical.Thickness.Length);
 
             foreach (Solute S in FindAllInScope<ISolute>())
                 S.Reset();
@@ -147,7 +138,7 @@ namespace Models.Soils.Nutrients
                 else
                     numLayers = FOMLignin.C.Length;
                 double[] values = new double[numLayers];
-                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>().Where(pool => pool != SurfaceResidue);
+                IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in pools)
                     for (int i = 0; i < numLayers; i++)
@@ -160,24 +151,8 @@ namespace Models.Soils.Nutrients
         /// Total C lost to the atmosphere
         /// </summary>
         [Units("kg/ha")]
-        public double[] Catm
-        {
-            get
-            {
-                int numLayers;
-                if (FOMLignin.C == null)
-                    numLayers = 0;
-                else
-                    numLayers = FOMLignin.C.Length;
-                double[] values = new double[numLayers];
-
-                foreach (CarbonFlow f in CarbonFlows)
-                    for (int i = 0; i < numLayers; i++)
-                        values[i] += f.Catm[i];
-                return values;
-            }
-        }
-
+        public double[] Catm => nutrientPools.Append(surfaceResidue).Select(p => p.Catm).Sum();
+       
         /// <summary>
         /// Total N lost to the atmosphere
         /// </summary>
@@ -241,8 +216,7 @@ namespace Models.Soils.Nutrients
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
                 List<CarbonFlow> Flows = FindAllDescendants<CarbonFlow>().ToList();
-                Flows.RemoveAll(flow => flow.Parent == SurfaceResidue);
-
+                
                 // Add all flows.
                 foreach (CarbonFlow f in Flows)
                 {
@@ -250,16 +224,6 @@ namespace Models.Soils.Nutrients
                         values[i] += f.MineralisedN[i];
                 }
                 return values;
-            }
-        }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        public double[] MineralisedNSurfaceResidue
-        {
-            get
-            {
-                var decomposition = (SurfaceResidue as IModel).FindChild<CarbonFlow>("Decomposition");
-                return decomposition.MineralisedN;
             }
         }
 
@@ -358,23 +322,10 @@ namespace Models.Soils.Nutrients
             get
             {
                 // Get the denitrification N flow under NO3.
-                var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
+                var pools = FindAllDescendants<NutrientPool>();
                 //pools.Remove(Inert); this should be included as without it is contrary to user expectations
-                pools.Remove(SurfaceResidue);
-
-                NutrientPool returnPool = new NutrientPool();
-                returnPool.C = new double[FOMLignin.C.Length];
-                returnPool.N = new double[FOMLignin.C.Length];
-                foreach (var pool in pools)
-                {
-                    for (int i = 0; i < pool.C.Length; i++)
-                    {
-                        returnPool.C[i] += pool.C[i];
-                        returnPool.N[i] += pool.N[i];
-                    }
-                }
-
-                return returnPool;
+                
+                return new NutrientPool(pools);
             }
         }
 
@@ -425,14 +376,18 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public double[] FOMCNRFactor { get; private set; }
 
-        /// <summary>Invoked at start of simulation.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+        /// <summary>
+        /// Standardise soil layer structure.
+        /// </summary>
+        /// <param name="targetThickness">The thickess values the simlation will use.</param>
+        public void Standardise(double[] targetThickness)
         {
-            fom = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
-            FOMCNRFactor = new double[soilPhysical.Thickness.Length];
+            // !!!! No links resolved at this point.
+
+            FOMCNRFactor = new double[targetThickness.Length];
+
+            foreach (var pool in FindAllChildren<NutrientPool>())
+                pool.Initialise(targetThickness.Length);
         }
 
         /// <summary>Incorporate the given FOM C and N into each layer</summary>
@@ -501,40 +456,6 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Calculate actual decomposition
-        /// </summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            SurfaceOrganicMatterDecompType actualSOMDecomp = new SurfaceOrganicMatterDecompType();
-            actualSOMDecomp.Pool = new SurfaceOrganicMatterDecompPoolType[SurfaceResidueDecomposition.Pool.Length];
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                actualSOMDecomp.Pool[i] = new SurfaceOrganicMatterDecompPoolType();
-                actualSOMDecomp.Pool[i].Name = SurfaceResidueDecomposition.Pool[i].Name;
-                actualSOMDecomp.Pool[i].OrganicMatterType = SurfaceResidueDecomposition.Pool[i].OrganicMatterType;
-                actualSOMDecomp.Pool[i].FOM = new FOMType();
-                actualSOMDecomp.Pool[i].FOM.amount = SurfaceResidueDecomposition.Pool[i].FOM.amount;
-            }
-
-            double InitialResidueC = 0;  // Potential residue decomposition provided by surfaceorganicmatter model
-            double FinalResidueC = 0;    // How much is left after decomposition
-            double FractionDecomposed;
-
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-                InitialResidueC += SurfaceResidueDecomposition.Pool[i].FOM.C;
-            FinalResidueC = SurfaceResidue.C[0];
-            FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
-            if (FractionDecomposed < 1)
-            { }
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                actualSOMDecomp.Pool[i].FOM.C = SurfaceResidueDecomposition.Pool[i].FOM.C * FractionDecomposed;
-                actualSOMDecomp.Pool[i].FOM.N = SurfaceResidueDecomposition.Pool[i].FOM.N * FractionDecomposed;
-            }
-            return actualSOMDecomp;
-        }
-
-        /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -546,20 +467,8 @@ namespace Models.Soils.Nutrients
                 FOMCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
                                                      FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
 
-            // Get potential residue decomposition from surfaceom.
-            SurfaceResidueDecomposition = SurfaceOrganicMatter.PotentialDecomposition();
-
-            var surfaceResiduePool = (NutrientPool)SurfaceResidue;
-
-            surfaceResiduePool.C[0] = 0;
-            surfaceResiduePool.N[0] = 0;
-            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]), 0.0);
-
-            for (int i = 0; i < SurfaceResidueDecomposition.Pool.Length; i++)
-            {
-                surfaceResiduePool.C[0] += SurfaceResidueDecomposition.Pool[i].FOM.C;
-                surfaceResiduePool.N[0] += SurfaceResidueDecomposition.Pool[i].FOM.N;
-            }
+            foreach (var pool in nutrientPools)
+                pool.DoFlow();
         }
 
         /// <summary>Calculate / create a directed graph from model</summary>
@@ -583,7 +492,7 @@ namespace Models.Soils.Nutrients
 
                 foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
                 {
-                    foreach (string destinationName in cFlow.destinationNames)
+                    foreach (string destinationName in cFlow.DestinationNames)
                     {
                         string destName = destinationName;
                         if (destName == null)

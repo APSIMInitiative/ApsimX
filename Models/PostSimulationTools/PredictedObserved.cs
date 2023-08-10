@@ -308,7 +308,23 @@ namespace Models.PostSimulationTools
             IEnumerable<string> predictedColumns = storage.Reader.GetColumns(PredictedTableName).Select(c => c.Item1);
             IEnumerable<string> observedColumns = storage.Reader.GetColumns(ObservedTableName).Select(c => c.Item1);
 
-            return predictedColumns.Intersect(observedColumns).ToArray();
+            List<string> intersect = predictedColumns.Intersect(observedColumns).ToList();
+
+            //These columns will always exist, however may have been added when the table was loaded.
+            //We need to add them back in here for PredictObserve
+            if (!intersect.Contains("SimulationName"))
+            {
+                int pos = intersect.IndexOf("SimulationID");
+                intersect.Insert(pos+1, "SimulationName");
+            }
+
+            if (!intersect.Contains("CheckpointName"))
+            {
+                int pos = intersect.IndexOf("CheckpointID");
+                intersect.Insert(pos + 1, "CheckpointName");
+            }
+
+            return intersect.ToArray();
         }
     }
 }
