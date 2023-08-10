@@ -214,7 +214,7 @@ namespace Models.Soils
                 }
                 else
                 {
-                    est1 = 0; est2 = ll15[node];
+                    est1 = Math.Log10(-psi0); est2 = Math.Log10(-psi_ll15);
                 }
 
                 // Use secant method to solve for suction
