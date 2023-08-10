@@ -117,9 +117,9 @@ namespace UserInterface.Presenters
                 if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
                     location = oldNode.Location;
                 model.DirectedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
-                foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.sourceName == solute.Name))
+                foreach (NFlow nitrogenFlow in nutrient.FindAllChildren<NFlow>().Where(flow => flow.SourceName == solute.Name))
                 {
-                    string destName = nitrogenFlow.destinationName;
+                    string destName = nitrogenFlow.DestinationName;
                     if (destName == null)
                     {
                         destName = "Atmosphere";
@@ -130,7 +130,7 @@ namespace UserInterface.Presenters
                     if (oldGraph != null && solute.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == solute.Name && f.DestinationName == destName)) != null)
                         location = oldArc.Location;
 
-                    model.DirectedGraphInfo.AddArc(null, nitrogenFlow.sourceName, destName, Color.Black, location);
+                    model.DirectedGraphInfo.AddArc(null, nitrogenFlow.SourceName, destName, Color.Black, location);
                 }
             }
 

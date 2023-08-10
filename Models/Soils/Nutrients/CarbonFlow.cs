@@ -1,10 +1,7 @@
-﻿using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Models.Soils.Nutrients
@@ -25,6 +22,7 @@ namespace Models.Soils.Nutrients
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
 
+
         [Link(Type = LinkType.Child, ByName = true)]
         private readonly IFunction rate = null;
 
@@ -40,6 +38,16 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true, IsOptional = true)]
         private readonly ISolute labileP = null;
 
+
+        /// <summary>Names of destination pools</summary>
+        [Description("Names of destination pools (comma separated)")]
+        public string[] DestinationNames { get; set; }
+
+        /// <summary>Fractions for each destination pool</summary>
+        [Description("Fractions of flow to each pool (comma separated)")]
+        public double[] DestinationFraction { get; set; }
+
+
         /// <summary>Amount of N Mineralised (kg/ha)</summary>
         public double[] MineralisedN { get; private set; }
 
@@ -49,13 +57,6 @@ namespace Models.Soils.Nutrients
         /// <summary>Total carbon lost to the atmosphere (kg/ha)</summary>
         public double[] Catm { get; private set; }
 
-        /// <summary>Names of destination pools</summary>
-        [Description("Names of destination pools (comma separated)")]
-        public string[] DestinationNames { get; set; }
-
-        /// <summary>Fractions for each destination pool</summary>
-        [Description("Fractions of flow to each pool (comma separated)")]
-        public double[] DestinationFraction { get; set; }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="numberLayers">Number of layers.</param>

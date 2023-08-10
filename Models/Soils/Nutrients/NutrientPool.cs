@@ -1,5 +1,4 @@
-﻿using APSIM.Shared.Extensions.Collections;
-using Models.Core;
+﻿using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
 using System;
@@ -13,6 +12,12 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NutrientPool : Model, INutrientPool
     {
+        private double[] c;
+        private double[] n;
+        private double[] p;
+        private double[] catm;
+
+
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction initialCarbon = null;
 
@@ -24,27 +29,6 @@ namespace Models.Soils.Nutrients
 
         [Link(Type=LinkType.Child)]
         private readonly CarbonFlow[] flows = null;
-
-        private double[] c;
-        private double[] n;
-        private double[] p;
-        private double[] catm;
-
-        /// <summary>Amount of carbon (kg/ha)</summary>
-        public IReadOnlyList<double> C => c;
-
-        /// <summary>Amount of nitrogen (kg/ha)</summary>
-        public IReadOnlyList<double> N => n;
-
-        /// <summary>Amount of phosphorus (kg/ha)</summary>
-        public IReadOnlyList<double> P => p;
-
-        /// <summary>Total C lost to the atmosphere (kg/ha)</summary>
-        [JsonIgnore]
-        public IReadOnlyList<double> Catm => catm;
-
-        /// <summary>Fraction of each layer occupied by this pool.</summary>
-        public double[] LayerFraction { get; set; }
 
         /// <summary>
         /// Constructor for json serialisation.
@@ -87,6 +71,23 @@ namespace Models.Soils.Nutrients
             LayerFraction = new double[c.Length];
             Array.Fill(LayerFraction, 1.0);
         }
+
+
+        /// <summary>Amount of carbon (kg/ha)</summary>
+        public IReadOnlyList<double> C => c;
+
+        /// <summary>Amount of nitrogen (kg/ha)</summary>
+        public IReadOnlyList<double> N => n;
+
+        /// <summary>Amount of phosphorus (kg/ha)</summary>
+        public IReadOnlyList<double> P => p;
+
+        /// <summary>Total C lost to the atmosphere (kg/ha)</summary>
+        public IReadOnlyList<double> Catm => catm;
+
+        /// <summary>Fraction of each layer occupied by this pool.</summary>
+        public double[] LayerFraction { get; set; }
+
 
         /// <summary>Called after instance has been created via deserialisation.</summary>
         public override void OnCreated()
@@ -178,17 +179,6 @@ namespace Models.Soils.Nutrients
         {
             for (int i = 0; i < c.Length; i++)
                 Add(i, c[i], n[i], p[i]);
-        }
-
-        /// <summary>Invoked at start of simulation.</summary>
-        /// <param name="sender">Sender of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            IPhysical physical = FindInScope<IPhysical>();
-            if (physical != null)
-                Initialise(physical.Thickness.Length);
         }
     }
 }

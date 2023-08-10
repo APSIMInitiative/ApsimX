@@ -14152,11 +14152,6 @@ namespace Models
         /// </summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        /// <summary>
-        /// Occurs when [incorp fom].
-        /// </summary>
-        public event FOMLayerDelegate IncorpFOM;
-
 
         //ToFloatArray is needed because some of these Events pass Float Arrays rather then Double Arrays as Parameters.
         /// <summary>
@@ -14543,9 +14538,7 @@ namespace Models
                 fomInSoil.Type = crop_type;
                 fomInSoil.Layer = allLayers;
 
-                IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
-
-
+                nutrient.DoIncorpFOM(fomInSoil);
 
                 //Change Global Variables
 

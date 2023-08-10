@@ -334,6 +334,8 @@ namespace Models.Soils.Nutrients
             // Perform all flows.
             foreach (var pool in nutrientPools)
                 pool.DoFlow();
+            foreach (var flow in nutrientFlows)
+                flow.DoFlow();
 
             // Calculate variables.
             Array.Clear(totalOrganicN);
