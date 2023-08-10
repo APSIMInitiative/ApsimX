@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 167,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -5611,22 +5611,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "SurfOM": [],
-                  "Canopies": [],
-                  "InitialResidueName": "grass",
-                  "InitialResidueType": "grass",
-                  "InitialResidueMass": 500.0,
-                  "InitialStandingFraction": 0.0,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 15.0,
-                  "Name": "SurfaceOrganicMatter",
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 0,
                   "ASCOrder": null,
@@ -6379,6 +6363,22 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "grass",
+                  "InitialResidueType": "grass",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 15.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },

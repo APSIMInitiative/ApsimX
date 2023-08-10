@@ -143,7 +143,8 @@ namespace Models
         public event EventHandler DoSoilTemperature;
         /// <summary>Occurs each day</summary>
         public event EventHandler DoSolute;
-        //DoSoilNutrientDynamics will be here
+        /// <summary>Occurs each day to perform daily calculations of organic soil matter</summary>
+        public event EventHandler DoSurfaceOrganicMatterPotentialDecomposition;
         /// <summary>Occurs each day to perform daily calculations of organic soil matter</summary>
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
         /// <summary>Occurs each day to do the daily residue decomposition</summary>
@@ -359,6 +360,9 @@ namespace Models
 
                 if (DoSolute != null)
                     DoSolute.Invoke(this, args);
+
+                if (DoSurfaceOrganicMatterPotentialDecomposition != null)
+                    DoSurfaceOrganicMatterPotentialDecomposition.Invoke(this, args);
 
                 if (DoSoilOrganicMatter != null)
                     DoSoilOrganicMatter.Invoke(this, args);
