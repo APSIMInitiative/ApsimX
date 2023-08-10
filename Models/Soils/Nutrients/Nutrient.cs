@@ -283,6 +283,28 @@ namespace Models.Soils.Nutrients
             }
         }
 
+        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
+        /// <param name="FOMPoolData">The in fom pool data.</param>
+        public void IncorpFOMPool(FOMPoolType FOMPoolData)
+        {
+            if (FOMPoolData.Layer.Length > FOMLignin.C.Count)
+                throw new Exception("Incorrect number of soil layers of IncorporatedFOM");
+
+            for (int layer = 0; layer < FOMPoolData.Layer.Length; layer++)
+            {
+                FOMCarbohydrate.Add(layer, c:FOMPoolData.Layer[layer].Pool[0].C,
+                                           n:FOMPoolData.Layer[layer].Pool[0].N,
+                                           p: 0);
+
+                FOMCellulose.Add(layer, c: FOMPoolData.Layer[layer].Pool[1].C,
+                                        n: FOMPoolData.Layer[layer].Pool[1].N,
+                                        p: 0);
+
+                FOMLignin.Add(layer, c: FOMPoolData.Layer[layer].Pool[2].C,
+                                     n: FOMPoolData.Layer[layer].Pool[2].N,
+                                     p: 0);
+            }
+        }
 
         /// <summary>Reset all pools, flows and solutes</summary> 
         public void Reset()
@@ -342,6 +364,7 @@ namespace Models.Soils.Nutrients
             Array.Clear(catm);
             Array.Clear(totalC);
             Array.Clear(natm);
+            Array.Clear(n2oatm);
 
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 catm[i] = surfaceResidue.Catm[i];

@@ -38,6 +38,9 @@ namespace Models.Surface
         [Link]
         private IWeather weather = null;
 
+        [Link]
+        private Nutrient nutrient = null;
+
         /// <summary>Link to NO3 solute.</summary>
         private ISolute NO3Solute = null;
 
@@ -136,12 +139,6 @@ namespace Models.Surface
 
         /// <summary>fraction of incoming faeces to add</summary>
         private double fractionFaecesAdded = 1.0;
-
-        /// <summary>Delegate for a IncorpFOMPool</summary>
-        public delegate void FOMPoolDelegate(FOMPoolType Data);
-
-        /// <summary>This event is invoked to signal soil nitrogen to incorporate FOM</summary>
-        public event FOMPoolDelegate IncorpFOMPool;
 
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
@@ -1052,8 +1049,8 @@ namespace Models.Surface
                         AshAlk = AshAlkPool[i, layer]
                     };
             }
-            if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(Incorporated);
+
+            nutrient.IncorpFOMPool(Incorporated);
 
             for (int pool = 0; pool < maxFr; pool++)
             {
