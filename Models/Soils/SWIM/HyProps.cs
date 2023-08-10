@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace Models.Soils
 {
@@ -190,10 +191,6 @@ namespace Models.Soils
             //   Calculate the suction for a given water content for a given node.
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
-            const double dpF = 0.01;
-            double psiValue;
-            bool solved = false;
-            double psiNearSat = psiSat;
 
             if (theta == sat[node])
             {
@@ -204,58 +201,38 @@ namespace Models.Soils
             }
             else
             {
-                if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
-                    if (theta > dul[node])
-                        psiValue = psiDul; // Initial estimate
-                    else if (theta < ll15[node])
-                        psiValue = psi_ll15;
-                    else
-                    {
-                        double pFll15 = Math.Log10(-psi_ll15);
-                        double pFdul = Math.Log10(-psiDul);
-                        double frac = (theta - ll15[node]) / (dul[node] - ll15[node]);
-                        double pFinit = pFll15 + frac * (pFdul - pFll15);
-                        psiValue = -Math.Pow(10, pFinit);
-                    }
-                else
-                    psiValue = _psi[node]; // Initial estimate
+                double est1 = 0;
+                double est2 = 0;
 
+                if (theta > dul[node])
+                {
+                    est1 = Math.Log10(-psiSat); est2 = Math.Log10(-psiDul);
+                }
+                else if (theta > ll15[node])
+                {
+                    est1 = Math.Log10(-psiDul); est2 = Math.Log10(-psi_ll15);
+                }
+                else
+                {
+                    est1 = 0; est2 = ll15[node];
+                }
+
+                // Use secant method to solve for suction
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
-                    // m can be zero if psi goes less than 1cm suction - see simpletheta
-                    // ==================================================================
-                    if (Math.Abs(psiValue) < Math.Abs(psiSat))
-                    {
-                        psiValue = psiNearSat;
-                        psiNearSat = psiNearSat - 0.1; //an endless loop is created if we restart iterations at the same point so increment the reset point
-                    }
-                    double est = SimpleTheta(node, psiValue);
-                    double pF = 0.000001;
-                    if (psiValue < 0)
-                        pF = Math.Log10(-psiValue);
-                    double pF2 = pF + dpF;
-                    double psiValue2 = -Math.Pow(10, pF2);
-                    double est2 = SimpleTheta(node, psiValue2);
+                    double Y1 = SimpleTheta(node, -Math.Pow(10, est1))-theta;
+                    double Y2 = SimpleTheta(node, -Math.Pow(10, est2))-theta;
 
-                    double m = (est2 - est) / dpF;
+                    double est3 = est2 - Y2 * (est2 - est1)/(Y2 - Y1);
 
-                    if (Math.Abs(est - theta) < tolerance)
-                    {
-                        solved = true;
-                        break;
-                    }
-                    double pFnew = pF - (est - theta) / m;
-
-                    if (pFnew > (Math.Log10(-psi0)))
-                        pF += dpF;  // This is not really adequate - just saying...
-                    else
-                        pF = pFnew;
-                    psiValue = -Math.Pow(10, pF);
+                    est1 = est2;
+                    est2 = est3;
+                    double Y3= SimpleTheta(node, -Math.Pow(10, est3)) - theta;
+                    if (Math.Abs(Y3) < tolerance)
+                        return -Math.Pow(10, est3);
                 }
-                if (!solved)
-                    throw (new Exception("SWIM3 failed to find value of suction for given theta"));
+                throw (new Exception("SWIM3 failed to find value of suction for given theta"));
 
-                return psiValue;
             }
         }
     }
