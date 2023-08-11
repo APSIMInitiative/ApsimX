@@ -1182,7 +1182,8 @@ namespace Models.Surface
         /// <param name="P">The amount of P added (kg/ha).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
-        public void Add(double mass, double N, double P, string type, string name)
+        /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0)
         {
             if (mass > 0 || N > 0 || P > 0)
             {
@@ -1198,13 +1199,18 @@ namespace Models.Surface
                 SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
                 SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
-                // Assume all surfom added is in the LYING pool, ie No STANDING component;
                 for (int i = 0; i < maxFr; i++)
                 {
-                    SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].amount += fractionStanding * mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].C += fractionStanding * mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].N += fractionStanding * N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].P += fractionStanding * P * frPoolP[i, SOMNo];
+
+                    double fractionLying = 1 - fractionStanding;
+                    SurfOM[SOMNo].Lying[i].amount += fractionLying * mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].C += fractionLying * mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].N += fractionLying * N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].P += fractionLying * P * frPoolP[i, SOMNo];
                 }
             }
         }
