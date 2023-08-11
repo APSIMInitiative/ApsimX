@@ -5295,7 +5295,8 @@ namespace Models.Core.ApsimFile
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 bool changeMade = manager.Replace("NutrientPool", "OrganicPool");
-                changeMade = manager.Replace("CarbonFlow", "CarbonFlow") || changeMade;
+                changeMade = manager.Replace("CarbonFlow", "OrganicFlow") || changeMade;
+                changeMade = manager.Replace("OrganicPoolFunctions", "NutrientPoolFunctions") || changeMade;
 
                 if (changeMade)
                     manager.Save();
