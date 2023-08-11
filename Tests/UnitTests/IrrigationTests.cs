@@ -146,13 +146,13 @@ namespace UnitTests
                             {
                                 Children = new List<IModel>()
                                 {
-                                    new NutrientPool() { Name = "Inert" },
-                                    new NutrientPool() { Name = "Microbial" },
-                                    new NutrientPool() { Name = "Humic" },
-                                    new NutrientPool() { Name = "FOMCellulose" },
-                                    new NutrientPool() { Name = "FOMCarbohydrate" },
-                                    new NutrientPool() { Name = "FOMLignin" },
-                                    new NutrientPool() { Name = "SurfaceResidue" },
+                                    new OrganicPool() { Name = "Inert" },
+                                    new OrganicPool() { Name = "Microbial" },
+                                    new OrganicPool() { Name = "Humic" },
+                                    new OrganicPool() { Name = "FOMCellulose" },
+                                    new OrganicPool() { Name = "FOMCarbohydrate" },
+                                    new OrganicPool() { Name = "FOMLignin" },
+                                    new OrganicPool() { Name = "SurfaceResidue" },
                                     new NFlow() { Name = "Hydrolysis" },
                                     new NFlow() { Name = "Denitrification" },
                                     new NFlow() { Name = "Nitrification" },
