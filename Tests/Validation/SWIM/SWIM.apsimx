@@ -36328,7 +36328,7 @@
                             "        {",
                             "            // Called once ",
                             "            double[] p = new double[19];",
-                            "            Array.Fill(p,2.0);",
+                            "            Array.Fill(p,5.0);",
                             "            swim3.PoreInteractionIndex = p;",
                             "            ",
                             "        }",
@@ -36337,7 +36337,7 @@
                             ""
                           ],
                           "Parameters": [],
-                          "Name": "Two",
+                          "Name": "Five",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
