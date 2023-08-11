@@ -11,7 +11,7 @@ namespace Models.Soils.Nutrients
     /// <summary>A nutrient pool.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
-    public class NutrientPool : Model, INutrientPool
+    public class OrganicPool : Model, IOrganicPool
     {
         private double[] c;
         private double[] n;
@@ -30,19 +30,19 @@ namespace Models.Soils.Nutrients
         private readonly IFunction initialPhosphorus = null;
 
         [Link(Type=LinkType.Child)]
-        private readonly CarbonFlow[] flows = null;
+        private readonly OrganicFlow[] flows = null;
 
 
         /// <summary>
         /// Constructor for json serialisation.
         /// </summary>
-        public NutrientPool() { }
+        public OrganicPool() { }
 
         /// <summary>Constructor for creating a pool from amounts of carbon, nitrogen and phosphorus.</summary>
         /// <param name="c">Amount of carbon (kg/ha).</param>
         /// <param name="n">Amount of nitrogen (kg/ha).</param>
         /// <param name="p">Amount of phosphorus (kg/ha).</param>
-        public NutrientPool(double[] c, double[] n, double[] p)
+        public OrganicPool(double[] c, double[] n, double[] p)
         {
             this.c = c;
             this.n = n;

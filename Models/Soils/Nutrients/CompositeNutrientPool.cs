@@ -6,16 +6,16 @@ namespace Models.Soils.Nutrients
 {
     /// <summary>Encapsulates a collection of nutrient pools and aggregates them as a INutrientPool</summary>
     [Serializable]
-    public class CompositeNutrientPool : INutrientPool
+    public class CompositeNutrientPool : IOrganicPool
     {
-        private readonly IEnumerable<INutrientPool> nutrientPools;
+        private readonly IEnumerable<IOrganicPool> nutrientPools;
         private readonly double[] c;
         private readonly double[] n;
         private readonly double[] p;
 
         /// <summary>Constructor.</summary>
         /// <param name="pools">The enumeration of pools to aggregate.</param>
-        public CompositeNutrientPool(IEnumerable<INutrientPool> pools)
+        public CompositeNutrientPool(IEnumerable<IOrganicPool> pools)
         {
             nutrientPools = pools;
             int numberLayers = nutrientPools.First().C.Count;

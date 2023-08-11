@@ -80,7 +80,7 @@ namespace UserInterface.Presenters
             bool needAtmosphereNode = false;
 
             IModel nutrient = model as IModel;
-            foreach (NutrientPool pool in nutrient.FindAllInScope<NutrientPool>())
+            foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
             {
                 Point location = default(Point);
                 Node oldNode;
@@ -88,7 +88,7 @@ namespace UserInterface.Presenters
                     location = oldNode.Location;
                 model.DirectedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
 
-                foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
+                foreach (OrganicFlow cFlow in pool.FindAllChildren<OrganicFlow>())
                 {
                     foreach (string destinationName in cFlow.DestinationNames)
                     {

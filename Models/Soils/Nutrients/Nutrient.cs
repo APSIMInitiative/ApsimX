@@ -63,7 +63,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
-        private readonly NutrientPool[] nutrientPools = null;
+        private readonly OrganicPool[] nutrientPools = null;
 
         /// <summary>Child nutrient flows.</summary>
         [Link(Type = LinkType.Child)]
@@ -71,30 +71,30 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Child carbon flows.</summary>
         [Link(Type = LinkType.Child)]
-        private readonly CarbonFlow[] carbonFlows = null;
+        private readonly OrganicFlow[] carbonFlows = null;
 
         /// <summary>Surface residue decomposition pool.</summary>
         [Link(ByName = true)]
-        private readonly NutrientPool surfaceResidue = null;
+        private readonly OrganicPool surfaceResidue = null;
 
 
         /// <summary>The inert pool.</summary>
-        public INutrientPool Inert { get; private set; }
+        public IOrganicPool Inert { get; private set; }
 
         /// <summary>The microbial pool.</summary>
-        public INutrientPool Microbial { get; private set; }
+        public IOrganicPool Microbial { get; private set; }
 
         /// <summary>The humic pool.</summary>
-        public INutrientPool Humic { get; private set; }
+        public IOrganicPool Humic { get; private set; }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
-        public INutrientPool FOMCellulose { get; private set; }
+        public IOrganicPool FOMCellulose { get; private set; }
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        public INutrientPool FOMCarbohydrate { get; private set; }
+        public IOrganicPool FOMCarbohydrate { get; private set; }
 
         /// <summary>The fresh organic matter lignin pool.</summary>
-        public INutrientPool FOMLignin { get; private set; }
+        public IOrganicPool FOMLignin { get; private set; }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get; private set; }
@@ -106,7 +106,7 @@ namespace Models.Soils.Nutrients
         public ISolute Urea { get; private set; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM { get; private set; }
+        public IOrganicPool FOM { get; private set; }
 
         /// <summary>Get directed graph from model</summary>
         public DirectedGraph DirectedGraphInfo { get; set; }
@@ -144,7 +144,7 @@ namespace Models.Soils.Nutrients
         public IReadOnlyList<double> MineralisedN => mineralisedN;
 
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
-        public INutrientPool Organic => organic;
+        public IOrganicPool Organic => organic;
 
         /// <summary>Total organic N in each soil layer, organic and mineral (kg/ha).</summary>
         [Units("kg/ha")]
@@ -260,7 +260,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Reset all pools, flows and solutes</summary> 
         public void Reset()
         {
-            foreach (NutrientPool pool in nutrientPools)
+            foreach (OrganicPool pool in nutrientPools)
                 pool.Initialise(soilPhysical.Thickness.Length);
 
             foreach (NFlow flow in nutrientFlows)
@@ -302,7 +302,7 @@ namespace Models.Soils.Nutrients
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
 
             Reset();
-            FOM = new CompositeNutrientPool(new INutrientPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
+            FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
             organic = new CompositeNutrientPool(nutrientPools);
         }
 
@@ -335,7 +335,7 @@ namespace Models.Soils.Nutrients
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 catm[i] = surfaceResidue.Catm[i];
 
-            foreach (NutrientPool pool in nutrientPools)
+            foreach (OrganicPool pool in nutrientPools)
             {
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
@@ -354,7 +354,7 @@ namespace Models.Soils.Nutrients
                 }
             }
 
-            foreach (CarbonFlow flow in carbonFlows)
+            foreach (OrganicFlow flow in carbonFlows)
             {
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     mineralisedN[i] += flow.MineralisedN[i];

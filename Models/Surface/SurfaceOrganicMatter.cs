@@ -53,7 +53,7 @@ namespace Models.Surface
 
         /// <summary>Surface residue nutrient pool.</summary>
         [Link(Type = LinkType.Child)]
-        private NutrientPool surfaceResidue = null;
+        private OrganicPool surfaceResidue = null;
 
         /// <summary>The surf om</summary>
         public List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();

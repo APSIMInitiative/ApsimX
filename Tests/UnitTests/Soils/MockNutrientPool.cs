@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace UnitTests.Soils
 {
-    internal class MockNutrientPool : Model, INutrientPool
+    internal class MockNutrientPool : Model, IOrganicPool
     {
         public double[] C { get; set; }
 
@@ -15,11 +15,11 @@ namespace UnitTests.Soils
 
         public double[] P { get; set; }
 
-        IReadOnlyList<double> INutrientPool.C => C;
+        IReadOnlyList<double> IOrganicPool.C => C;
 
-        IReadOnlyList<double> INutrientPool.N => N;
+        IReadOnlyList<double> IOrganicPool.N => N;
 
-        IReadOnlyList<double> INutrientPool.P => P;
+        IReadOnlyList<double> IOrganicPool.P => P;
 
         public void Add(double[] CAdded, double[] NAdded)
         {
