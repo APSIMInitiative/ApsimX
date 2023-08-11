@@ -1,5 +1,4 @@
 ﻿using Models.Surface;
-using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -44,50 +43,52 @@ namespace Models.Soils.Nutrients
         ISolute Urea { get; }
 
         /// <summary>Total C in each soil layer</summary>
-        IReadOnlyList<double> TotalC { get; }
+        double[] TotalC { get; }
 
         /// <summary>Total C lost to the atmosphere</summary>
-        IReadOnlyList<double> Catm { get; }
+        double[] Catm { get; }
 
         /// <summary>Total N lost to the atmosphere</summary>
-        IReadOnlyList<double> Natm { get; }
+        double[] Natm { get; }
 
         /// <summary>Total N2O lost to the atmosphere</summary>
-        IReadOnlyList<double> N2Oatm { get; }
+        double[] N2Oatm { get; }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
-        IReadOnlyList<double> MineralisedN { get; }
+        double[] MineralisedN { get; }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
-        IReadOnlyList<double> DenitrifiedN { get; }
+        double[] DenitrifiedN { get; }
 
         /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
-        IReadOnlyList<double> NitrifiedN { get; }
+        double[] NitrifiedN { get; }
 
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
-        IReadOnlyList<double> HydrolysedN { get; }
+        double[] HydrolysedN { get; }
 
         /// <summary>Total Mineral N in each soil layer</summary>
-        IReadOnlyList<double> MineralN { get; }
+        double[] MineralN { get; }
 
         /// <summary>Total N in each soil layer</summary>
-        IReadOnlyList<double> TotalN { get; }
+        double[] TotalN { get; }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer</summary>
-        IReadOnlyList<double> FOMCNRFactor { get; }
+        double[] FOMCNRFactor { get; }
 
         /// <summary>
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
-
-        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
-        /// <param name="FOMPoolData">The in fom pool data.</param>
-        void IncorpFOMPool(FOMPoolType FOMPoolData);
-
         /// <summary>
         /// Reset all Pools
         /// </summary>
         void Reset();
+
+        /// <summary>
+        /// Standardise soil data.
+        /// </summary>
+        /// <param name="layerStructure">Target layer structure.</param>
+        void Standardise(double[] layerStructure);
+
     }
 }

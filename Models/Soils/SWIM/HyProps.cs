@@ -23,10 +23,9 @@ namespace Models.Soils
         private double[] kdula;
         private double[] macroporePowerTerm;
         private double[] psid;
-        const double psi_ll15 = -15000.0;  // matric potential at 15 Bar
-        const double psiad = -1e6;         // matric potentiral at air dry
-        const double psi0 = -0.6e7;        // matric potential at oven dry
-        const double psiSat = -1.0;        // matric potential at saturation
+        const double psi_ll15 = -15000.0;
+        const double psiad = -1e6;
+        const double psi0 = -0.6e7;
 
 
         ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
@@ -136,7 +135,7 @@ namespace Models.Soils
             int i;
             double t;
 
-            if (psiValue >= psiSat)
+            if (psiValue >= -1.0)
             {
                 i = 0;
                 t = 0.0;
@@ -144,7 +143,7 @@ namespace Models.Soils
             else if (psiValue > psid[layer])
             {
                 i = 1;
-                t = (Math.Log10(-psiValue) - Math.Log10(-psiSat)) / (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
+                t = (Math.Log10(-psiValue) - 0.0) / (Math.Log10(-psid[layer]) - 0.0);
             }
             else if (psiValue > psi_ll15)
             {
@@ -209,6 +208,8 @@ namespace Models.Soils
             //   Calculate the suction for a given water content for a given node.
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
+            const double dpF = 0.01;
+            double psiValue;
 
             if (theta == sat[node])
             {
@@ -219,51 +220,44 @@ namespace Models.Soils
             }
             else
             {
-                double est1 = 0;
-                double est2 = 0;
-                double bestest = 0;
-                double besterr = 0;
-
-                if (theta > dul[node])
-                {
-                    est1 = Math.Log10(-psiSat); est2 = Math.Log10(-psiDul);
-                }
-                else if (theta > ll15[node])
-                {
-                    est1 = Math.Log10(-psiDul); est2 = Math.Log10(-psi_ll15);
-                }
+                if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
+                    if (theta > dul[node])
+                        psiValue = psiDul; // Initial estimate
+                    else if (theta < ll15[node])
+                        psiValue = psi_ll15;
+                    else
+                    {
+                        double pFll15 = Math.Log10(-psi_ll15);
+                        double pFdul = Math.Log10(-psiDul);
+                        double frac = (theta - ll15[node]) / (dul[node] - ll15[node]);
+                        double pFinit = pFll15 + frac * (pFdul - pFll15);
+                        psiValue = -Math.Pow(10, pFinit);
+                    }
                 else
-                {
-                    est1 = Math.Log10(-psi_ll15); est2 = Math.Log10(-psi0);
-                }
+                    psiValue = _psi[node]; // Initial estimate
 
-                // Use secant method to solve for suction
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
-                    double Y1 = SimpleTheta(node, -Math.Pow(10, est1))-theta;
-                    double Y2 = SimpleTheta(node, -Math.Pow(10, est2))-theta;
+                    double est = SimpleTheta(node, psiValue);
+                    double pF = 0.000001;
+                    if (psiValue < 0)
+                        pF = Math.Log10(-psiValue);
+                    double pF2 = pF + dpF;
+                    double psiValue2 = -Math.Pow(10, pF2);
+                    double est2 = SimpleTheta(node, psiValue2);
 
-                    double est3 = est2 - Y2 * (est2 - est1)/(Y2 - Y1);
-                    double Y3 = SimpleTheta(node, -Math.Pow(10, est3)) - theta;
+                    double m = (est2 - est) / dpF;
 
-
-                    if (Math.Abs(Y3) < tolerance)
-                        return -Math.Pow(10, est3);
-
-                    if (Math.Abs(Y3) < besterr)
-                    {
-                        besterr = Math.Abs(Y3);
-                        bestest = est3;
-                    }
-
-                    est1 = est2;
-                    est2 = est3;
-
-
+                    if (Math.Abs(est - theta) < tolerance)
+                        break;
+                    double pFnew = pF - (est - theta) / m;
+                    if (pFnew > (Math.Log10(-psi0)))
+                        pF += dpF;  // This is not really adequate - just saying...
+                    else
+                        pF = pFnew;
+                    psiValue = -Math.Pow(10, pF);
                 }
-                return -Math.Pow(10, bestest);
-                //throw (new Exception("Soil hydraulic properties model failed to find value of suction for given theta"));
-
+                return psiValue;
             }
         }
     }

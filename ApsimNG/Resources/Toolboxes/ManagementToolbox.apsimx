@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 167,
+  "Version": 166,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -2628,8 +2628,8 @@
             "            // Crit1   Crit2",
             "            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",
             "    ",
-            "            var dlt_urea_hydrol = hydrolysis.Value;",
-            "            var dlt_rntrf = nitrification.Value;",
+            "            double[] dlt_urea_hydrol = hydrolysis.Value;",
+            "            double[] dlt_rntrf = nitrification.Value;",
             "            double[] conc_water_nh4 = swim.ConcWaterNH4;",
             "            for (int z = 0; z < waterBalance.Thickness.Length; z++)",
             "            {",

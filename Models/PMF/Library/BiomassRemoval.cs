@@ -6,7 +6,6 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils;
-using Models.Soils.Nutrients;
 using Models.Surface;
 
 namespace Models.PMF.Library
@@ -37,9 +36,6 @@ namespace Models.PMF.Library
         [Link]
         Summary summary = null;
 
-        [Link]
-        INutrient nutrient = null;
-
         /// <summary>Fraction of live biomass to remove from plant at harvest (remove from the system)</summary>
         [Description("Fraction of live biomass to remove from plant at harvest (remove from the system)")]
         public double HarvestFractionLiveToRemove { get; set; }
@@ -55,6 +51,9 @@ namespace Models.PMF.Library
         /// <summary>Fraction of dead biomass to remove from plant at harvest (send to surface organic matter</summary>
         [Description("Fraction of dead biomass to remove from plant at harvest (send to surface organic matter")]
         public double HarvestFractionDeadToResidue { get; set; }
+
+        /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>
+        public event FOMLayerDelegate IncorpFOM;
 
         /// <summary>Removes biomass from live and dead biomass pools, may send to surface organic matter</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
@@ -165,7 +164,7 @@ namespace Models.PMF.Library
                 FOMLayerType FomLayer = new FOMLayerType();
                 FomLayer.Type = plant.PlantType;
                 FomLayer.Layer = FOMLayers;
-                nutrient.DoIncorpFOM(FomLayer);
+                IncorpFOM.Invoke(FomLayer);
 
                 return removing.Wt + detaching.Wt;
             }

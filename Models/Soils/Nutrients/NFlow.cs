@@ -1,7 +1,6 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.Functions;
-using System;
-using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -15,62 +14,85 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model
     {
-        private double[] natm;
-        private double[] n2oatm;
-        private double[] value;
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction rate = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction NLoss = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction N2OFraction = null;
+
+        [NonSerialized]
         private ISolute sourceSolute = null;
+        [NonSerialized]
         private ISolute destinationSolute = null;
 
+        /// <summary>
+        /// Value of total N flow into destination
+        /// </summary>
+        public double[] Value { get; set; }
+        /// <summary>
+        /// Value of total loss
+        /// </summary>
+        public double[] Natm { get; set; }
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private readonly IFunction rate = null;
+        /// <summary>
+        /// Value of N2O lost
+        /// </summary>
+        public double[] N2Oatm { get; set; }
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private readonly IFunction NLoss = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private readonly IFunction N2OFraction = null;
-
-
-        /// <summary>Name of source pool.</summary>
+        /// <summary>
+        /// Name of source pool
+        /// </summary>
         [Description("Name of source pool")]
-        public string SourceName { get; set; }
+        public string sourceName { get; set; }
 
-        /// <summary>Name of destination pool.</summary>
+        /// <summary>
+        /// Name of destination pool
+        /// </summary>
         [Description("Name of destination pool")]
-        public string DestinationName { get; set; }
+        public string destinationName { get; set; }
 
-
-        /// <summary>Value of total N flow into destination.</summary>
-        public IReadOnlyList<double> Value => value;
-
-        /// <summary>Value of total loss.</summary>
-        public IReadOnlyList<double> Natm => natm;
-
-        /// <summary>N2O lost (kg/ha)</summary>
-        public IReadOnlyList<double> N2Oatm => n2oatm;
-
-
-        /// <summary>Performs the initial checks and setup</summary>
-        /// <param name="numberLayers">Number of layers.</param>
-        public void Initialise(int numberLayers)
+        [EventSubscribe("StartOfSimulation")]
+        private void OnCommencing(object sender, EventArgs args)
         {
-            sourceSolute = FindInScope<ISolute>(SourceName);
-            destinationSolute = FindInScope<ISolute>(DestinationName);
+            if (sourceSolute == null)
+            {
+                sourceSolute = FindInScope<ISolute>(sourceName);
+                destinationSolute = FindInScope<ISolute>(destinationName);
+            }
 
-            value = new double[numberLayers];
-            natm = new double[numberLayers];
-            n2oatm = new double[numberLayers];
+            //double[] source = sourceSolute.kgha;
+            //int numLayers = source.Length;
+            //if (Value == null)
+            //    Value = new double[source.Length];
+            //if (Natm == null)
+            //    Natm = new double[source.Length];
+            //if (N2Oatm == null)
+            //    N2Oatm = new double[source.Length];
         }
 
-        /// <summary>Perform nutrient flow from a source solute to a destination solute.</summary>
-        public void DoFlow()
+        /// <summary>
+        /// Get the information on potential residue decomposition - perform daily calculations as part of this.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoSoilOrganicMatter")]
+        private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             double[] source = sourceSolute.kgha;
             int numLayers = source.Length;
+            if (Value == null)
+                Value = new double[source.Length];
+            if (Natm == null)
+                Natm = new double[source.Length];
+            if (N2Oatm == null)
+                N2Oatm = new double[source.Length];
+
 
             double[] destination = null;
-            if (DestinationName != null)
+            if (destinationName != null)
                 destination = destinationSolute.kgha;
 
             for (int i = 0; i < numLayers; i++)
@@ -80,14 +102,14 @@ namespace Models.Soils.Nutrients
                     nitrogenFlow = rate.Value(i) * source[i];
 
                 if (nitrogenFlow > 0)
-                    natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
+                    Natm[i] = nitrogenFlow * NLoss.Value(i);  // keep value of loss for use in output
                 else
-                    natm[i] = 0;
+                    Natm[i] = 0;
 
-                if (natm[i] > 0)
-                    n2oatm[i] = natm[i] * N2OFraction.Value(i);
+                if (Natm[i] > 0)
+                    N2Oatm[i] = Natm[i] * N2OFraction.Value(i);
                 else
-                    n2oatm[i] = 0;
+                    N2Oatm[i] = 0;
 
                 double nitrogenFlowToDestination = nitrogenFlow - Natm[i];
 
@@ -95,7 +117,7 @@ namespace Models.Soils.Nutrients
                     throw new Exception("N loss fraction for N flow must be 1 if no destination is specified.");
 
                 source[i] -= nitrogenFlow;
-                value[i] = nitrogenFlowToDestination;  // keep value of flow for use in output
+                Value[i] = nitrogenFlowToDestination;  // keep value of flow for use in output
                 if (destination != null)
                     destination[i] += nitrogenFlowToDestination;
             }
@@ -103,5 +125,7 @@ namespace Models.Soils.Nutrients
             if (destination != null)
                 destinationSolute.SetKgHa(SoluteSetterType.Soil, destination);
         }
+
+
     }
 }

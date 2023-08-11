@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>Various soil utilities.</summary>
     public class SoilUtilities
     {
@@ -325,14 +326,14 @@ namespace APSIM.Shared.Utilities
         /// <param name="toThickness">To thickness.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
         /// <returns>The from values mapped to the specified thickness</returns>
-        public static double[] MapMass(IReadOnlyList<double> fromValues, double[] fromThickness, double[] toThickness,
+        public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
                                        bool allowMissingValues = false)
         {
             if (fromValues == null || fromThickness == null || toThickness == null)
                 return null;
 
             double[] FromThickness = MathUtilities.RemoveMissingValuesFromBottom((double[])fromThickness.Clone());
-            double[] FromValues = fromValues.ToArray();
+            double[] FromValues = (double[])fromValues.Clone();
 
             if (FromValues == null)
                 return null;

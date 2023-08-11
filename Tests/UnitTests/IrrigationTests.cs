@@ -1,17 +1,17 @@
-﻿using APSIM.Shared.Utilities;
-using Models;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Soils;
-using Models.Soils.Nutrients;
-using Models.Surface;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using UnitTests.Soils;
-
-namespace UnitTests
+﻿namespace UnitTests
 {
+    using APSIM.Shared.Utilities;
+    using Models;
+    using Models.Core;
+    using Models.Core.ApsimFile;
+    using Models.Soils;
+    using Models.Soils.Nutrients;
+    using Models.Surface;
+    using NUnit.Framework;
+    using System;
+    using System.Collections.Generic;
+    using UnitTests.Soils;
+
     public class IrrigationTests
     {
         [Test]
@@ -25,7 +25,7 @@ namespace UnitTests
             events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -47,7 +47,7 @@ namespace UnitTests
             events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -110,13 +110,6 @@ namespace UnitTests
                             },
                             new Solute
                             {
-                                Name = "NH4",
-                                Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-                                InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
-                                InitialValuesUnits = Solute.UnitsEnum.kgha
-                            },
-                            new Solute
-                            {
                                 Name = "Urea",
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 InitialValues = new double[] { 0, 0, 0, 0, 0, 0 },
@@ -146,16 +139,13 @@ namespace UnitTests
                             {
                                 Children = new List<IModel>()
                                 {
-                                    new NutrientPool() { Name = "Inert" },
-                                    new NutrientPool() { Name = "Microbial" },
-                                    new NutrientPool() { Name = "Humic" },
-                                    new NutrientPool() { Name = "FOMCellulose" },
-                                    new NutrientPool() { Name = "FOMCarbohydrate" },
-                                    new NutrientPool() { Name = "FOMLignin" },
-                                    new NutrientPool() { Name = "SurfaceResidue" },
-                                    new NFlow() { Name = "Hydrolysis" },
-                                    new NFlow() { Name = "Denitrification" },
-                                    new NFlow() { Name = "Nitrification" },
+                                    new MockNutrientPool() { Name = "Inert" },
+                                    new MockNutrientPool() { Name = "Microbial" },
+                                    new MockNutrientPool() { Name = "Humic" },
+                                    new MockNutrientPool() { Name = "FOMCellulose" },
+                                    new MockNutrientPool() { Name = "FOMCarbohydrate" },
+                                    new MockNutrientPool() { Name = "FOMLignin" },
+                                    new MockNutrientPool() { Name = "SurfaceResidue" }
                                 }
                             },
                             new MockSoilTemperature(),

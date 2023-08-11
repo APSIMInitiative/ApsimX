@@ -1,10 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 namespace APSIM.Shared.Utilities
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Globalization;
+    using System.Linq;
+
     /// <summary>
     /// Various math utilities.
     /// </summary>
@@ -218,13 +220,13 @@ namespace APSIM.Shared.Utilities
         /// Perform a stepwise addition of the values in value 1 with the values in value2.
         /// Returns an array of the same size as value 1 and value 2
         /// </summary>
-        public static double[] Add(IReadOnlyList<double> value1, IReadOnlyList<double> value2)
+        public static double[] Add(double[] value1, double[] value2)
         {
             double[] results = null;
-            if (value1.Count == value2.Count)
+            if (value1.Length == value2.Length)
             {
-                results = new double[value1.Count];
-                for (int iIndex = 0; iIndex < value1.Count; iIndex++)
+                results = new double[value1.Length];
+                for (int iIndex = 0; iIndex < value1.Length; iIndex++)
                 {
                     if (value1[iIndex] == MissingValue || value2[iIndex] == MissingValue)
                         results[iIndex] = MissingValue;

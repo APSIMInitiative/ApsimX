@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -55,7 +56,7 @@ namespace APSIM.Shared.Extensions.Collections
         /// </summary>
         /// <param name="array">The array to sum.</param>
         /// <returns>Always returns a double[].</returns>
-        public static double[] Sum(this IEnumerable<IReadOnlyList<double>> array)
+        public static double[] Sum(this IEnumerable<double[]> array)
         {
             if (!array.Any())
                 return Array.Empty<double>();
@@ -69,17 +70,6 @@ namespace APSIM.Shared.Extensions.Collections
                     values[i] += vals[i];
             }
             return values;
-        }
-
-        /// <summary>
-        /// Copy the elements of a read only list to an array.
-        /// </summary>
-        /// <param name="list">The list to copy from.</param>
-        /// <param name="array">The array to copy to.</param>
-        public static void CopyTo<T>(this IReadOnlyList<T> list, T[] array)
-        {
-            for (int i = 0; i < list.Count; i++)
-                array[i] = list[i];
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Models.Core;
 using Models.Soils.Nutrients;
-using System.Collections.Generic;
 
 namespace UnitTests.Soils
 {
@@ -15,18 +14,7 @@ namespace UnitTests.Soils
 
         public double[] P { get; set; }
 
-        IReadOnlyList<double> INutrientPool.C => C;
-
-        IReadOnlyList<double> INutrientPool.N => N;
-
-        IReadOnlyList<double> INutrientPool.P => P;
-
         public void Add(double[] CAdded, double[] NAdded)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Add(int index, double c, double n, double p)
         {
             throw new System.NotImplementedException();
         }

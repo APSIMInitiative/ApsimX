@@ -1,65 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
-    /// <summary>Encapsulates a collection of nutrient pools and aggregates them as a INutrientPool</summary>
-    [Serializable]
+
+    /// <summary>
+    /// Encapsulates a collection of nutrient pools and aggregates them
+    /// as a INutrientPool
+    /// </summary>
     public class CompositeNutrientPool : INutrientPool
     {
-        private readonly IEnumerable<INutrientPool> nutrientPools;
-        private readonly double[] c;
-        private readonly double[] n;
-        private readonly double[] p;
+        private IEnumerable<INutrientPool> nutrientPools;
 
         /// <summary>Constructor.</summary>
         /// <param name="pools">The enumeration of pools to aggregate.</param>
         public CompositeNutrientPool(IEnumerable<INutrientPool> pools)
         {
             nutrientPools = pools;
-            int numberLayers = nutrientPools.First().C.Count;
-            c = new double[numberLayers];
-            n = new double[numberLayers];
-            p = new double[numberLayers];
         }
 
         /// <summary>Amount of carbon (kg/ha).</summary>
-        public IReadOnlyList<double> C => c;
-
-        /// <summary>Amount of nitrogen (kg/ha).</summary>
-        public IReadOnlyList<double> N => n;
-
-        /// <summary>Amount of nitrogen (kg/ha).</summary>
-        public IReadOnlyList<double> P => p;
-
-        /// <summary>Calculate C, N, P.</summary>
-        public void Calculate()
+        public double[] C
         {
-            Array.Clear(c);
-            Array.Clear(n);
-            Array.Clear(p);
-            foreach (var pool in nutrientPools)
+            get
             {
-                for (int i = 0; i < pool.C.Count; i++)
+                double[] values = null;
+                foreach (var pool in nutrientPools)
                 {
-                    c[i] += pool.C[i];
-                    n[i] += pool.N[i];
-                    p[i] += pool.P[i];
+                    if (values == null)
+                        values = new double[pool.C.Length];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] += pool.C[i];
                 }
+                return values;
             }
         }
 
-        /// <summary>
-        /// Add an amount of c, n, p (kg/ha) into a layer.
-        /// </summary>
-        /// <param name="index">Layer index</param>
-        /// <param name="c">Amount of carbon (kg/ha)</param>
-        /// <param name="n">Amount of nitrogen (kg/ha)</param>
-        /// <param name="p">Amount of phosphorus (kg/ha)</param>
-        public void Add(int index, double c, double n, double p)
+        /// <summary>Amount of nitrogen (kg/ha).</summary>
+        public double[] N
         {
-            throw new InvalidOperationException("Cannot add to a composition nutrient pool");
+            get
+            {
+                double[] values = null;
+                foreach (var pool in nutrientPools)
+                {
+                    if (values == null)
+                        values = new double[pool.N.Length];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] += pool.N[i];
+                }
+                return values;
+            }
+        }
+
+        /// <summary>Amount of phosphorus (kg/ha).</summary>
+        public double[] P
+        {
+            get
+            {
+                double[] values = null;
+                foreach (var pool in nutrientPools)
+                {
+                    if (values == null)
+                        values = new double[pool.N.Length];
+                    for (int i = 0; i < values.Length; i++)
+                        values[i] += pool.P[i];
+                }
+                return values;
+            }
         }
     }
 }

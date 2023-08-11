@@ -6,7 +6,6 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.Soils;
 using Models.Soils.Arbitrator;
-using Models.Soils.Nutrients;
 using Models.Surface;
 using Newtonsoft.Json;
 
@@ -480,11 +479,6 @@ namespace Models
         /// <summary>Link to NH4 solute.</summary>
         [Link(ByName = true)]
         private ISolute NH4 = null;
-
-
-        /// <summary>Access the soil physical properties.</summary>
-        [Link]
-        private Nutrient nutrient = null;
 
         #endregion
 
@@ -14152,6 +14146,11 @@ namespace Models
         /// </summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
+        /// <summary>
+        /// Occurs when [incorp fom].
+        /// </summary>
+        public event FOMLayerDelegate IncorpFOM;
+
 
         //ToFloatArray is needed because some of these Events pass Float Arrays rather then Double Arrays as Parameters.
         /// <summary>
@@ -14459,7 +14458,7 @@ namespace Models
                     fomInSoil.Type = c_crop_type;
                     fomInSoil.Layer = allLayers;
 
-                    nutrient.DoIncorpFOM(fomInSoil);
+                    IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
                 }
                 else
                 {
@@ -14538,7 +14537,9 @@ namespace Models
                 fomInSoil.Type = crop_type;
                 fomInSoil.Layer = allLayers;
 
-                nutrient.DoIncorpFOM(fomInSoil);
+                IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
+
+
 
                 //Change Global Variables
 
