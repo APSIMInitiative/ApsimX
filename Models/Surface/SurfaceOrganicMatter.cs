@@ -38,6 +38,9 @@ namespace Models.Surface
         [Link]
         private IWeather weather = null;
 
+        [Link]
+        private INutrient nutrient = null;
+
         /// <summary>Link to NO3 solute.</summary>
         private ISolute NO3Solute = null;
 
@@ -136,12 +139,6 @@ namespace Models.Surface
 
         /// <summary>fraction of incoming faeces to add</summary>
         private double fractionFaecesAdded = 1.0;
-
-        /// <summary>Delegate for a IncorpFOMPool</summary>
-        public delegate void FOMPoolDelegate(FOMPoolType Data);
-
-        /// <summary>This event is invoked to signal soil nitrogen to incorporate FOM</summary>
-        public event FOMPoolDelegate IncorpFOMPool;
 
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
@@ -425,22 +422,17 @@ namespace Models.Surface
                 potentialDecomposition = GetPotentialDecomposition();
             }
 
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                surfaceResidue.LayerFraction[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
-            }
-
-            Array.Clear(surfaceResidue.C);
-            Array.Clear(surfaceResidue.N);
+            surfaceResidue.Clear();
 
             double totalLayerFraction = surfaceResidue.LayerFraction.Sum();
             double totalC = potentialDecomposition.Pool.Select(p => p.FOM.C).Sum();
             double totalN = potentialDecomposition.Pool.Select(p => p.FOM.N).Sum();
 
-            for (int i = 0; i < surfaceResidue.C.Length; i++)
+            for (int i = 0; i < surfaceResidue.C.Count; i++)
             {
-                surfaceResidue.C[i] = totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
-                surfaceResidue.N[i] = totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
+                surfaceResidue.Add(i, c: totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
+                                      n: totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
+                                      p: 0);
             }
             surfaceResidue.DoFlow();
         }
@@ -534,6 +526,10 @@ namespace Models.Surface
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
             surfaceResidue.Initialise(soilPhysical.Thickness.Length);
+            double[] layerFractions = new double[soilPhysical.Thickness.Length];
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                layerFractions[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
+            surfaceResidue.SetLayerFraction(layerFractions);
         }
 
         /// <summary>Called at start of each day.</summary>
@@ -1052,8 +1048,8 @@ namespace Models.Surface
                         AshAlk = AshAlkPool[i, layer]
                     };
             }
-            if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(Incorporated);
+
+            nutrient.IncorpFOMPool(Incorporated);
 
             for (int pool = 0; pool < maxFr; pool++)
             {
