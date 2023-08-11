@@ -270,8 +270,7 @@ namespace Models.WaterModel
             set
             {
                 hyprops.PoreInteractionIndex = value;
-                if (physical.KS != null)
-                    hyprops.SetupKCurve(physical.Thickness.Length, physical.LL15, physical.DUL, physical.SAT, physical.KS, 0.1, PSIDul);
+                hyprops.SetupKCurve(physical.Thickness.Length, physical.LL15, physical.DUL, physical.SAT, physical.KS, 0.1, PSIDul);
             }
         }
 
