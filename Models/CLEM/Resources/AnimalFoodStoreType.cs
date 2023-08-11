@@ -75,7 +75,7 @@ namespace Models.CLEM.Resources
         public double Amount { get { return amount; } set { return; } }
 
         /// <summary>
-        /// A packet to pass the current food quality to activities. Allws for mixing of feed into store
+        /// A packet to pass the current food quality to activities. Allows for mixing of feed into store
         /// </summary>
         public FoodResourcePacket CurrentStoreDetails { get; set; }
 
