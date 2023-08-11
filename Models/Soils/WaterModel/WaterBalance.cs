@@ -592,7 +592,8 @@ namespace Models.WaterModel
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
             {
                 PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
-                K[i] = hyprops.SimpleK(i, PSI[i], soilPhysical.SAT, soilPhysical.KS);
+                if (soilPhysical.KS != null)
+                   K[i] = hyprops.SimpleK(i, PSI[i], soilPhysical.SAT, soilPhysical.KS);
             }
         }
 
