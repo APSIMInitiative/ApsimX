@@ -38,6 +38,9 @@ namespace Models.Surface
         [Link]
         private IWeather weather = null;
 
+        [Link]
+        private INutrient nutrient = null;
+
         /// <summary>Link to NO3 solute.</summary>
         private ISolute NO3Solute = null;
 
@@ -50,7 +53,7 @@ namespace Models.Surface
 
         /// <summary>Surface residue nutrient pool.</summary>
         [Link(Type = LinkType.Child)]
-        private NutrientPool surfaceResidue = null;
+        private OrganicPool surfaceResidue = null;
 
         /// <summary>The surf om</summary>
         public List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
@@ -136,12 +139,6 @@ namespace Models.Surface
 
         /// <summary>fraction of incoming faeces to add</summary>
         private double fractionFaecesAdded = 1.0;
-
-        /// <summary>Delegate for a IncorpFOMPool</summary>
-        public delegate void FOMPoolDelegate(FOMPoolType Data);
-
-        /// <summary>This event is invoked to signal soil nitrogen to incorporate FOM</summary>
-        public event FOMPoolDelegate IncorpFOMPool;
 
         /// <summary>This event is invoked when residues are incorperated</summary>
         public event EventHandler<TilledType> Tilled;
@@ -425,22 +422,17 @@ namespace Models.Surface
                 potentialDecomposition = GetPotentialDecomposition();
             }
 
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                surfaceResidue.LayerFraction[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
-            }
-
-            Array.Clear(surfaceResidue.C);
-            Array.Clear(surfaceResidue.N);
+            surfaceResidue.Clear();
 
             double totalLayerFraction = surfaceResidue.LayerFraction.Sum();
             double totalC = potentialDecomposition.Pool.Select(p => p.FOM.C).Sum();
             double totalN = potentialDecomposition.Pool.Select(p => p.FOM.N).Sum();
 
-            for (int i = 0; i < surfaceResidue.C.Length; i++)
+            for (int i = 0; i < surfaceResidue.C.Count; i++)
             {
-                surfaceResidue.C[i] = totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
-                surfaceResidue.N[i] = totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction);
+                surfaceResidue.Add(i, c: totalC * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
+                                      n: totalN * (surfaceResidue.LayerFraction[i] / totalLayerFraction),
+                                      p: 0);
             }
             surfaceResidue.DoFlow();
         }
@@ -534,6 +526,10 @@ namespace Models.Surface
             NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
             surfaceResidue.Initialise(soilPhysical.Thickness.Length);
+            double[] layerFractions = new double[soilPhysical.Thickness.Length];
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                layerFractions[i] = SoilUtilities.ProportionThroughLayer(soilPhysical.Thickness, i, depthOfDecomposition);
+            surfaceResidue.SetLayerFraction(layerFractions);
         }
 
         /// <summary>Called at start of each day.</summary>
@@ -1052,8 +1048,8 @@ namespace Models.Surface
                         AshAlk = AshAlkPool[i, layer]
                     };
             }
-            if (IncorpFOMPool != null)
-                IncorpFOMPool.Invoke(Incorporated);
+
+            nutrient.IncorpFOMPool(Incorporated);
 
             for (int pool = 0; pool < maxFr; pool++)
             {
@@ -1186,7 +1182,8 @@ namespace Models.Surface
         /// <param name="P">The amount of P added (kg/ha).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
-        public void Add(double mass, double N, double P, string type, string name)
+        /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0)
         {
             if (mass > 0 || N > 0 || P > 0)
             {
@@ -1202,13 +1199,18 @@ namespace Models.Surface
                 SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
                 SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
-                // Assume all surfom added is in the LYING pool, ie No STANDING component;
                 for (int i = 0; i < maxFr; i++)
                 {
-                    SurfOM[SOMNo].Lying[i].amount += mass * frPoolC[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].C += mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].N += N * frPoolN[i, SOMNo];
-                    SurfOM[SOMNo].Lying[i].P += P * frPoolP[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].amount += fractionStanding * mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].C += fractionStanding * mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].N += fractionStanding * N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Standing[i].P += fractionStanding * P * frPoolP[i, SOMNo];
+
+                    double fractionLying = 1 - fractionStanding;
+                    SurfOM[SOMNo].Lying[i].amount += fractionLying * mass * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].C += fractionLying * mass * C_fract[SOMNo] * frPoolC[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].N += fractionLying * N * frPoolN[i, SOMNo];
+                    SurfOM[SOMNo].Lying[i].P += fractionLying * P * frPoolP[i, SOMNo];
                 }
             }
         }
