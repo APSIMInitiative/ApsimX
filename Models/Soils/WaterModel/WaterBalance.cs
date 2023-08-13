@@ -254,6 +254,27 @@ namespace Models.WaterModel
         [Units("cm")]
         public double[] PSI { get; private set; }
 
+        /// <summary>Hydraulic Conductivity of layer</summary>
+        [Units("cm/h")]
+        public double[] K { get; private set; }
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex
+        {
+            get
+            {
+                return hyprops.PoreInteractionIndex;
+            }
+            set
+            {
+                hyprops.PoreInteractionIndex = value;
+                if (physical.KS != null)
+                    hyprops.SetupKCurve(physical.Thickness.Length, physical.LL15, physical.DUL, physical.SAT, physical.KS, 0.1, PSIDul);
+            }
+        }
+
         /// <summary>Runon (mm).</summary>
         [JsonIgnore]
         public double Runon { get; set; }
@@ -569,7 +590,11 @@ namespace Models.WaterModel
             water.Volumetric = waterVolumetric;
 
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+            {
                 PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+                if (soilPhysical.KS != null)
+                   K[i] = hyprops.SimpleK(i, PSI[i], soilPhysical.SAT, soilPhysical.KS);
+            }
         }
 
         /// <summary>Move water down the profile</summary>
@@ -823,6 +848,7 @@ namespace Models.WaterModel
             hyprops.ResizePropfileArrays(n);
             hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
             PSI = new double[n];
+            K = new double[n];
         }
 
         ///<summary>Perform tillage</summary>
