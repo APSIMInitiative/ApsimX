@@ -64,28 +64,28 @@ namespace Models.Soils.NutrientPatching
         public double LayerForNPartition { get; set; } = -99;
 
         /// <summary>The inert pool.</summary>
-        public INutrientPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
+        public IOrganicPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
 
         /// <summary>The microbial pool.</summary>
-        public INutrientPool Microbial { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Microbial)); } }
+        public IOrganicPool Microbial { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Microbial)); } }
 
         /// <summary>The humic pool.</summary>
-        public INutrientPool Humic { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Humic)); } }
+        public IOrganicPool Humic { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Humic)); } }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
-        public INutrientPool FOMCellulose { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCellulose)); } }
+        public IOrganicPool FOMCellulose { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCellulose)); } }
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        public INutrientPool FOMCarbohydrate { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCarbohydrate)); } }
+        public IOrganicPool FOMCarbohydrate { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCarbohydrate)); } }
 
         /// <summary>The fresh organic matter lignin pool.</summary>
-        public INutrientPool FOMLignin { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMLignin)); } }
+        public IOrganicPool FOMLignin { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMLignin)); } }
 
         /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOM)); } }
+        public IOrganicPool FOM { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOM)); } }
 
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
-        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic, Inert }); } }
+        public IOrganicPool Organic { get { return SumNutrientPoolsWithoutArea(new IOrganicPool[] { FOM, Microbial, Humic, Inert }); } }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NO3)); } }
@@ -346,7 +346,7 @@ namespace Models.Soils.NutrientPatching
         /// Sum a list of pools, multiplying them by their respective areas.
         /// </summary>
         /// <param name="pools">The list of pools</param>
-        private INutrientPool SumNutrientPools(IEnumerable<INutrientPool> pools)
+        private IOrganicPool SumNutrientPools(IEnumerable<IOrganicPool> pools)
         {
             var areas = patches.Select(patch => patch.RelativeArea).ToList();
             var poolsAsList = pools.ToList();
@@ -363,7 +363,7 @@ namespace Models.Soils.NutrientPatching
                     n[i] += poolsAsList[poolIndex].N[i] * areas[poolIndex];
                 }
             }
-            return new NutrientPool(c, n, p);
+            return new OrganicPool(c, n, p);
         }
 
         /// <summary>
@@ -425,12 +425,12 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>Sum nutrient pools without using relative areas.</summary>
         /// <param name="pools">The pools to sum.</param>
-        private INutrientPool SumNutrientPoolsWithoutArea(INutrientPool[] pools)
+        private IOrganicPool SumNutrientPoolsWithoutArea(IOrganicPool[] pools)
         {
             double[] c = pools.Select(p => p.C).Sum();
             double[] n = pools.Select(p => p.N).Sum();
             double[] p = pools.Select(p => p.P).Sum();
-            return new NutrientPool(c, n, p);
+            return new OrganicPool(c, n, p);
         }
 
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>

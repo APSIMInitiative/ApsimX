@@ -3,7 +3,7 @@
 namespace Models.Soils.Nutrients
 {
     /// <summary>Interface for a nutrient pool.</summary>
-    public interface INutrientPool
+    public interface IOrganicPool
     {
         /// <summary>Amount of carbon (kg/ha)</summary>
         IReadOnlyList<double> C { get; }

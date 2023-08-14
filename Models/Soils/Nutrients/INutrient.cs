@@ -11,28 +11,28 @@ namespace Models.Soils.Nutrients
     public interface INutrient
     {
         /// <summary>The inert pool.</summary>
-        INutrientPool Inert { get; }
+        IOrganicPool Inert { get; }
 
         /// <summary>The microbial pool.</summary>
-        INutrientPool Microbial { get; }
+        IOrganicPool Microbial { get; }
 
         /// <summary>The humic pool.</summary>
-        INutrientPool Humic { get; }
+        IOrganicPool Humic { get; }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
-        INutrientPool FOMCellulose { get; }
+        IOrganicPool FOMCellulose { get; }
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        INutrientPool FOMCarbohydrate { get; }
+        IOrganicPool FOMCarbohydrate { get; }
 
         /// <summary>The fresh organic matter lignin pool.</summary>
-        INutrientPool FOMLignin { get; }
+        IOrganicPool FOMLignin { get; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        INutrientPool FOM { get; }
+        IOrganicPool FOM { get; }
 
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        INutrientPool Organic { get; }
+        IOrganicPool Organic { get; }
 
         /// <summary>The NO3 pool.</summary>
         ISolute NO3 { get; }

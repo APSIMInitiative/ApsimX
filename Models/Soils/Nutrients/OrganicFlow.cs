@@ -13,12 +13,12 @@ namespace Models.Soils.Nutrients
     /// Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(NutrientPool))]
+    [ValidParent(ParentType = typeof(OrganicPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class CarbonFlow : Model
+    public class OrganicFlow : Model
     {
-        private INutrientPool[] destinations;
+        private IOrganicPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
@@ -66,11 +66,11 @@ namespace Models.Soils.Nutrients
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            destinations = new INutrientPool[DestinationNames.Length];
+            destinations = new IOrganicPool[DestinationNames.Length];
 
             for (int i = 0; i < DestinationNames.Length; i++)
             {
-                INutrientPool destination = FindInScope<INutrientPool>(DestinationNames[i]);
+                IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                 destinations[i] = destination;
@@ -86,7 +86,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Perform daily flow calculations.</summary>
         public void DoFlow()
         {
-            NutrientPool source = Parent as NutrientPool;
+            OrganicPool source = Parent as OrganicPool;
 
             int numLayers = source.C.Count;
 
