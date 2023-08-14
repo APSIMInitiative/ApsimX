@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace UnitTests
 {
@@ -499,7 +499,7 @@ add [Simulations] Simulation
 add [Simulation] Summary
 add [Simulation] Clock
 add [Simulation] Weather
-[Weather].FileName=Dalby.met
+[Weather].FileName=dalby.met
 [Clock].Start=1900/01/01
 [Clock].End=1900/01/02
 save {newSimName}
