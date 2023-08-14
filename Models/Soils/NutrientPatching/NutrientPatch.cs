@@ -26,13 +26,13 @@ namespace Models.Soils.NutrientPatching
         private NutrientPatchManager patchManager;
 
         /// <summary>The lignin pool from the Nutrient model.</summary>
-        private NutrientPool lignin;
+        private OrganicPool lignin;
 
         /// <summary>The cellulose pool from the Nutrient model.</summary>
-        private NutrientPool cellulose;
+        private OrganicPool cellulose;
 
         /// <summary>The carbohydrate pool from the Nutrient model.</summary>
-        private NutrientPool carbohydrate;
+        private OrganicPool carbohydrate;
 
         /// <summary>Constructor.</summary>
         /// <param name="soilThicknesses">Soil thicknesses (mm).</param>
@@ -52,13 +52,13 @@ namespace Models.Soils.NutrientPatching
             // Find all solutes.
             foreach (ISolute solute in Nutrient.FindAllChildren<ISolute>())
                 solutes.Add(solute.Name, solute);
-            lignin = Nutrient.FindInScope<NutrientPool>("FOMLignin");
+            lignin = Nutrient.FindInScope<OrganicPool>("FOMLignin");
             if (lignin == null)
                 throw new Exception("Cannot find lignin pool in the nutrient model.");
-            cellulose = Nutrient.FindInScope<NutrientPool>("FOMCellulose");
+            cellulose = Nutrient.FindInScope<OrganicPool>("FOMCellulose");
             if (cellulose == null)
                 throw new Exception("Cannot find cellulose pool in the nutrient model.");
-            carbohydrate = Nutrient.FindInScope<NutrientPool>("FOMCarbohydrate");
+            carbohydrate = Nutrient.FindInScope<OrganicPool>("FOMCarbohydrate");
             if (carbohydrate == null)
                 throw new Exception("Cannot find carbohydrate pool in the nutrient model.");
         }
@@ -148,14 +148,6 @@ namespace Models.Soils.NutrientPatching
             GetSoluteObject(name).AddKgHaDelta(callingModelType, value);
         }
 
-        /// <summary>Calculate actual decomposition</summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            var somDecomp = Nutrient.CalculateActualSOMDecomp();
-            somDecomp.Multiply(RelativeArea);
-            return somDecomp;
-        }
-
         /// <summary>
         /// Add a solutes and FOM.
         /// </summary>
@@ -173,22 +165,25 @@ namespace Models.Soils.NutrientPatching
             {
                 if (StuffToAdd.FOM.Pool.Length != 3)
                     throw new Exception("Expected 3 pools of FOM to be added in PatchManager");
-                if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Length ||
-                    StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Length ||
-                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Length ||
-                    StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Length ||
-                    StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Length ||
-                    StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Length)
+                if (StuffToAdd.FOM.Pool[0].C.Length != lignin.C.Count ||
+                    StuffToAdd.FOM.Pool[0].N.Length != lignin.N.Count ||
+                    StuffToAdd.FOM.Pool[1].C.Length != cellulose.C.Count ||
+                    StuffToAdd.FOM.Pool[1].N.Length != cellulose.N.Count ||
+                    StuffToAdd.FOM.Pool[2].C.Length != carbohydrate.C.Count ||
+                    StuffToAdd.FOM.Pool[2].N.Length != carbohydrate.N.Count)
                     throw new Exception("Mismatched number of layers of FOM being added in PatchManager");
 
-                for (int i = 0; i < lignin.C.Length; i++)
+                for (int i = 0; i < lignin.C.Count; i++)
                 {
-                    lignin.C[i] += StuffToAdd.FOM.Pool[0].C[i] * RelativeArea;
-                    lignin.N[i] += StuffToAdd.FOM.Pool[0].N[i] * RelativeArea;
-                    cellulose.C[i] += StuffToAdd.FOM.Pool[1].C[i] * RelativeArea;
-                    cellulose.N[i] += StuffToAdd.FOM.Pool[1].N[i] * RelativeArea;
-                    carbohydrate.C[i] += StuffToAdd.FOM.Pool[2].C[i] * RelativeArea;
-                    carbohydrate.N[i] += StuffToAdd.FOM.Pool[2].N[i] * RelativeArea;
+                    lignin.Add(i, c: StuffToAdd.FOM.Pool[0].C[i] * RelativeArea,
+                                  n: StuffToAdd.FOM.Pool[0].N[i] * RelativeArea,
+                                  p: StuffToAdd.FOM.Pool[0].P[i] * RelativeArea);
+                    cellulose.Add(i, c: StuffToAdd.FOM.Pool[1].C[i] * RelativeArea,
+                                     n: StuffToAdd.FOM.Pool[1].N[i] * RelativeArea,
+                                     p: StuffToAdd.FOM.Pool[1].P[i] * RelativeArea);
+                    carbohydrate.Add(i, c: StuffToAdd.FOM.Pool[2].C[i] * RelativeArea,
+                                        n: StuffToAdd.FOM.Pool[2].N[i] * RelativeArea,
+                                        p: StuffToAdd.FOM.Pool[2].P[i] * RelativeArea);
                 }
             }
         }

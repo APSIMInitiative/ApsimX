@@ -8,6 +8,7 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Soils.Nutrients;
 using Models.Surface;
 using Newtonsoft.Json;
 
@@ -160,6 +161,9 @@ namespace Models.PMF.OilPalm
         [Link(ByName = true)]
         private ISolute NO3 = null;
 
+        /// <summary>Nutrient model.</summary>
+        [Link]
+        Nutrient nutrient = null;
 
         /// <summary>Aboveground mass</summary>
         public IBiomass AboveGround { get { return new Biomass(); } }
@@ -829,9 +833,6 @@ namespace Models.PMF.OilPalm
         /// <summary>Occurs when [harvesting].</summary>
         public event EventHandler Harvesting;
 
-        /// <summary>Occurs when [incorp fom].</summary>
-        public event FOMLayerDelegate IncorpFOM;
-
         /// <summary>Occurs when [biomass removed].</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
@@ -1011,7 +1012,7 @@ namespace Models.PMF.OilPalm
             FOMLayerType FomLayer = new FOMLayerType();
             FomLayer.Type = CanopyType;
             FomLayer.Layer = FOMLayers;
-            IncorpFOM.Invoke(FomLayer);
+            nutrient.DoIncorpFOM(FomLayer);
 
 
         }
