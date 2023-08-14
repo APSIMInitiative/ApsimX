@@ -97,8 +97,7 @@ namespace Models.Soils
             columns.Add(new GridTable.Column("Depth", depthColumns));
 
             foreach (var solute in solutes)
-                columns.Add(new GridTable.Column(solute.Name,
-                                                   new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
+                columns.Add(new GridTable.Column(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
 
             columns.Add(new GridTable.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
             columns.Add(new GridTable.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));

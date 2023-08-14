@@ -4,11 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentFormat.OpenXml;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.Core;
 using System;
+using System.Collections;
+using System.Xml.Linq;
 
 namespace Models.Utilities
 {
@@ -92,6 +91,26 @@ namespace Models.Utilities
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
             }
 
+            //clear all rows that only have null, blank strings and 0s
+            for(int i = data.Rows.Count-1; i >= 0; i--)
+            {
+                DataRow row = data.Rows[i];
+                bool hasValues = false;
+                foreach (var item in row.ItemArray) {
+                    string value = item.ToString();
+                    if (!String.IsNullOrEmpty(value) && value != "0")
+                    {
+                        hasValues = true;
+                    }
+                }
+                if (!hasValues)
+                {
+                    data.Rows.RemoveAt(i);
+                    //foreach (var column in columns)
+                    columns.First().Remove(i);
+                }
+            }
+
             foreach (var column in columns)
                 column.Set(data);
         }
@@ -138,9 +157,6 @@ namespace Models.Utilities
             /// <summary>Column units.</summary>
             private string units;
 
-            /// <summary>Column Vales</summary>
-            private IEnumerable<object> list;
-
             /// <summary>A collection of properties that need to be kept in sync i.e. when one changes they all get changed. e.g. 'Depth'</summary>
             private IEnumerable<VariableProperty> properties { get; }
 
@@ -148,7 +164,7 @@ namespace Models.Utilities
             /// Constructor.
             /// </summary>
             /// <param name="name">Name of the column. Used for property name in Lists</param>
-            /// <param name="property">The PropertyInfo instance or a List of Objects</param>
+            /// <param name="property">The PropertyInfo instance</param>
             /// <param name="readOnly">Is the column readonly?</param>
             /// <param name="units">The units of the column.</param>
             public Column(string name, object property, bool readOnly = false, string units = null)
@@ -159,13 +175,9 @@ namespace Models.Utilities
                 //If an property array is provided, it uses the VariableProperty system
                 //If a list is provided, it stores the list for use.
 
-                if (property is VariableProperty)
+                if (property is VariableProperty props)
                 {
                     properties = new VariableProperty[] { property as VariableProperty };
-                }
-                else if (property is IEnumerable<object>)
-                {
-                    list = property as IEnumerable<object>;
                 }
 
                 IsReadOnly = readOnly;
@@ -223,75 +235,23 @@ namespace Models.Utilities
                     var propertyValue = property.Value;
                     if (propertyValue != null)
                     {
-                        string[] values = null;
-                        if (property.DataType == typeof(string[]))
-                            values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
-                        else if (property.DataType == typeof(double[]))
-                            values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
-                        
-                        DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Length);
-                    }
-                } 
-                else if (list != null)
-                {
-                    List<string> values = new List<string>();
-
-                    PropertyInfo propInfo = null;
-                    FieldInfo fieldInfo = null;
-                    foreach (object obj in list)
-                    {
-                        if (propInfo == null)
-                            propInfo = obj.GetType().GetProperty(Name);
-                        if (fieldInfo == null)
-                            fieldInfo = obj.GetType().GetField(Name);
-
-                        if (propInfo != null)
-                            values.Add(propInfo.GetValue(obj).ToString());
-                        else if (fieldInfo != null)
-                            values.Add(fieldInfo.GetValue(obj).ToString());
-                    }
-                    DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Count);
-                }
-                
-            }
-
-            /// <summary>Setting model data. Called by GUI.</summary>
-            /// <param name="data"></param>
-            public void Set(DataTable data)
-            {
-                int numRows = data.Rows.Count - 1;
-
-                if (properties != null)
-                {
-                    foreach (var property in properties)
-                    {
-                        if (!property.IsReadOnly)
+                        if (propertyValue is Array)
                         {
-                            if (numRows == -1)
-                                property.Value = null;
-                            else
-                            {
-                                if (property.DataType == typeof(string[]))
-                                    property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, 1, CultureInfo.CurrentCulture);
-                                else if (property.DataType == typeof(double[]))
-                                {
-                                    var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, 1, CultureInfo.CurrentCulture);
-                                    property.Value = values;
-                                }
-                            }
+                            string[] values = null;
+                            if (property.DataType == typeof(string[]))
+                                values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
+                            else if (property.DataType == typeof(double[]))
+                                values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
+
+                            DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Length);
                         }
-                    }
-                }
-                else if (list != null)
-                {
-                    PropertyInfo propInfo = null;
-                    FieldInfo fieldInfo = null;
-                    for (int i = 0; i < data.Rows.Count; i++) {
-                        string value = data.Rows[i][Name].ToString();
-                        int count = 0;
-                        foreach (object obj in list)
+                        else if (propertyValue is IEnumerable<object> list)
                         {
-                            if (i == count)
+                            List<string> values = new List<string>();
+
+                            PropertyInfo propInfo = null;
+                            FieldInfo fieldInfo = null;
+                            foreach (object obj in list)
                             {
                                 if (propInfo == null)
                                     propInfo = obj.GetType().GetProperty(Name);
@@ -299,20 +259,162 @@ namespace Models.Utilities
                                     fieldInfo = obj.GetType().GetField(Name);
 
                                 if (propInfo != null)
-                                    if (propInfo.PropertyType == typeof(double))
-                                        propInfo.SetValue(obj, Convert.ToDouble(value));
-                                    else
-                                        propInfo.SetValue(obj, value);
+                                    values.Add(propInfo.GetValue(obj).ToString());
                                 else if (fieldInfo != null)
-                                    if (fieldInfo.FieldType == typeof(double))
-                                        fieldInfo.SetValue(obj, Convert.ToDouble(value));
-                                    else
-                                        fieldInfo.SetValue(obj, value);
+                                    values.Add(fieldInfo.GetValue(obj).ToString());
                             }
-                            count += 1;
+                            DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Count);
                         }
                     }
                 }
+            }
+
+            /// <summary>Setting model data. Called by GUI.</summary>
+            /// <param name="data"></param>
+            public void Set(DataTable data)
+            {
+                if (properties != null)
+                {
+                    var propertyValue = properties.First().Value;
+                    if (propertyValue is Array)
+                    {
+                        int numRows = data.Rows.Count;
+                        foreach (var property in properties)
+                        {
+                            if (!property.IsReadOnly)
+                            {
+                                if (numRows == -1)
+                                    property.Value = null;
+                                else
+                                {
+                                    if (property.DataType == typeof(string[]))
+                                        property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, 1, CultureInfo.CurrentCulture);
+                                    else if (property.DataType == typeof(double[]))
+                                    {
+                                        var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, 1, CultureInfo.CurrentCulture);
+                                        property.Value = values;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (propertyValue is IEnumerable<object>)
+                    {
+                        Model model = properties.First().Object as Model;
+                        PropertyInfo fieldInfo = model.GetType().GetProperty("Parameters");
+                        IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
+                        while (data.Rows.Count > list.Count())
+                        {
+                            //make a new list
+                            Type elementType = list.GetType().GetGenericArguments()[0];
+                            Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
+                            IList newList = (IList)Activator.CreateInstance(listType);
+                            //copy in the existing values
+                            foreach (object element in list)
+                            {
+                                newList.Add(element);
+                            }
+                            //make a new instance of an element
+                            object obj = Activator.CreateInstance(elementType);
+                            //add it to the list
+                            newList.Add(obj);
+
+                            //Set the Model to use our modified list
+                            fieldInfo.SetValue(model, newList);
+                            list = newList as IEnumerable<object>;
+                        }
+                        for (int i = 0; i < data.Rows.Count; i++)
+                        {
+                            string value = data.Rows[i][Name].ToString();
+                            int count = 0;
+                            if (i < list.Count())
+                            {
+                                foreach (object obj in list)
+                                {
+                                    if (i == count)
+                                    {
+                                        ApplyChangesToListData(obj, Name, value);
+                                    }
+                                    count += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            /// <summary>Removes a row from a </summary>
+            /// <param name="index"></param>
+            public void Remove(int index)
+            {
+                if (properties != null)
+                {
+                    var propertyValue = properties.First().Value;
+                    if (propertyValue is Array)
+                    {
+                    } 
+                    else if (propertyValue is IEnumerable<object>)
+                    {
+                        Model model = properties.First().Object as Model;
+                        PropertyInfo fieldInfo = model.GetType().GetProperty("Parameters");
+                        IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
+                        //make a new list
+                        Type elementType = list.GetType().GetGenericArguments()[0];
+                        Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
+                        IList newList = (IList)Activator.CreateInstance(listType);
+
+                        //copy in the existing values
+                        int i = 0;
+                        foreach (object element in list)
+                        {
+                            if (i != index)
+                                newList.Add(element);
+                            i += 1;
+                        }
+
+                        //Set the Model to use our modified list
+                        fieldInfo.SetValue(model, newList);
+                    }
+                }
+            }
+
+            private static void ApplyChangesToListData(object obj, string name, string value)
+            {
+                PropertyInfo propInfo = obj.GetType().GetProperty(name);
+                FieldInfo fieldInfo = obj.GetType().GetField(name);
+
+                if (propInfo != null)
+                {
+                    if (propInfo.PropertyType == typeof(double))
+                    {
+                        double valueAsDouble = 0;
+                        if (!String.IsNullOrEmpty(value))
+                            valueAsDouble = Convert.ToDouble(value);
+
+                        propInfo.SetValue(obj, valueAsDouble);
+                    }
+                    else
+                    {
+                        propInfo.SetValue(obj, value);
+                    }
+                }
+                    
+                else if (fieldInfo != null)
+                {
+                    if (fieldInfo.FieldType == typeof(double))
+                    {
+                        double valueAsDouble = 0;
+                        if (!String.IsNullOrEmpty(value))
+                            valueAsDouble = Convert.ToDouble(value);
+
+                        fieldInfo.SetValue(obj, valueAsDouble);
+                    }
+                    else
+                    {
+                        fieldInfo.SetValue(obj, value);
+                    }
+                }
+                    
             }
         }
 

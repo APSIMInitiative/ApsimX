@@ -4,8 +4,6 @@ using Models.Utilities;
 using System;
 using System.Collections.Generic;
 using UserInterface.Views;
-using Gtk;
-using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace UserInterface.Presenters
 {
