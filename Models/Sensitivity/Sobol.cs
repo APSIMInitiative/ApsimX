@@ -441,10 +441,10 @@ namespace Models
 
             List<GridTable.Column> columns = new List<GridTable.Column>();
 
-            columns.Add(new GridTable.Column("Name", Parameters));
-            columns.Add(new GridTable.Column("Path", Parameters));
-            columns.Add(new GridTable.Column("LowerBound", Parameters));
-            columns.Add(new GridTable.Column("UpperBound", Parameters));
+            columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+            columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+            columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+            columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
             // Add a parameter table
             DataTable table = new DataTable();

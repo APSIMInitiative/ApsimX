@@ -240,10 +240,16 @@ namespace Models.Utilities
                                 if (fieldInfo == null)
                                     fieldInfo = obj.GetType().GetField(Name);
 
+                                object val = null;
                                 if (propInfo != null)
-                                    values.Add(propInfo.GetValue(obj).ToString());
+                                    val = propInfo.GetValue(obj);
                                 else if (fieldInfo != null)
-                                    values.Add(fieldInfo.GetValue(obj).ToString());
+                                    val = fieldInfo.GetValue(obj);
+
+                                if (val is double && double.IsNaN((double)val))
+                                    values.Add(string.Empty);
+                                else
+                                    values.Add(val.ToString());
                             }
                             DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Count);
                         }
@@ -260,7 +266,7 @@ namespace Models.Utilities
                     var propertyValue = properties.First().Value;
                     if (propertyValue is Array)
                     {
-                        int numRows = data.Rows.Count;
+                        int numRows = data.Rows.Count-1;
                         foreach (var property in properties)
                         {
                             if (!property.IsReadOnly)
@@ -335,7 +341,7 @@ namespace Models.Utilities
                 {
                     if (propInfo.PropertyType == typeof(double))
                     {
-                        double valueAsDouble = 0;
+                        double valueAsDouble = double.NaN;
                         if (!String.IsNullOrEmpty(value))
                             valueAsDouble = Convert.ToDouble(value);
 
@@ -351,7 +357,7 @@ namespace Models.Utilities
                 {
                     if (fieldInfo.FieldType == typeof(double))
                     {
-                        double valueAsDouble = 0;
+                        double valueAsDouble = double.NaN;
                         if (!String.IsNullOrEmpty(value))
                             valueAsDouble = Convert.ToDouble(value);
 

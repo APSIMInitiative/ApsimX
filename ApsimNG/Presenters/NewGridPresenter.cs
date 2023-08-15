@@ -156,7 +156,7 @@ namespace UserInterface.Presenters
                             foreach (var item in row.ItemArray)
                             {
                                 string value = item.ToString();
-                                if (!String.IsNullOrEmpty(value) && value != "0")
+                                if (!String.IsNullOrEmpty(value))
                                 {
                                     hasValues = true;
                                 }
