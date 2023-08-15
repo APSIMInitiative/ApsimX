@@ -157,5 +157,14 @@ namespace UserInterface.Views
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                     sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
         }
+
+        /// <summary>Delete contents of cells.</summary>
+        public int GetNumberOfCellsSelected()
+        {
+            int width = selectedColumnIndexRight - selectedColumnIndex + 1;
+            int height = selectedRowIndexBottom - selectedRowIndex + 1;
+
+            return width * height;
+        }
     }
 }

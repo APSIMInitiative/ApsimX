@@ -8,6 +8,8 @@ using Models.Core;
 using System;
 using System.Collections;
 using System.Xml.Linq;
+using static Models.Core.ScriptCompiler;
+using Models.Interfaces;
 
 namespace Models.Utilities
 {
@@ -89,26 +91,6 @@ namespace Models.Utilities
                 var numLayers = depths.TrimEnd().Count;
                 while (data.Rows.Count > numLayers)
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
-            }
-
-            //clear all rows that only have null, blank strings and 0s
-            for(int i = data.Rows.Count-1; i >= 0; i--)
-            {
-                DataRow row = data.Rows[i];
-                bool hasValues = false;
-                foreach (var item in row.ItemArray) {
-                    string value = item.ToString();
-                    if (!String.IsNullOrEmpty(value) && value != "0")
-                    {
-                        hasValues = true;
-                    }
-                }
-                if (!hasValues)
-                {
-                    data.Rows.RemoveAt(i);
-                    //foreach (var column in columns)
-                    columns.First().Remove(i);
-                }
             }
 
             foreach (var column in columns)
@@ -303,26 +285,27 @@ namespace Models.Utilities
                         Model model = properties.First().Object as Model;
                         PropertyInfo fieldInfo = model.GetType().GetProperty("Parameters");
                         IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
-                        while (data.Rows.Count > list.Count())
+                        //rebuild the list
+                        if (data.Rows.Count != list.Count())
                         {
                             //make a new list
                             Type elementType = list.GetType().GetGenericArguments()[0];
                             Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
                             IList newList = (IList)Activator.CreateInstance(listType);
-                            //copy in the existing values
-                            foreach (object element in list)
+
+                            for (int i = 0; i < data.Rows.Count; i++)
                             {
-                                newList.Add(element);
+                                //make a new instance of an element
+                                object obj = Activator.CreateInstance(elementType);
+                                //add it to the list
+                                newList.Add(obj);
                             }
-                            //make a new instance of an element
-                            object obj = Activator.CreateInstance(elementType);
-                            //add it to the list
-                            newList.Add(obj);
 
                             //Set the Model to use our modified list
                             fieldInfo.SetValue(model, newList);
                             list = newList as IEnumerable<object>;
                         }
+
                         for (int i = 0; i < data.Rows.Count; i++)
                         {
                             string value = data.Rows[i][Name].ToString();
@@ -339,41 +322,6 @@ namespace Models.Utilities
                                 }
                             }
                         }
-                    }
-                }
-            }
-
-            /// <summary>Removes a row from a </summary>
-            /// <param name="index"></param>
-            public void Remove(int index)
-            {
-                if (properties != null)
-                {
-                    var propertyValue = properties.First().Value;
-                    if (propertyValue is Array)
-                    {
-                    } 
-                    else if (propertyValue is IEnumerable<object>)
-                    {
-                        Model model = properties.First().Object as Model;
-                        PropertyInfo fieldInfo = model.GetType().GetProperty("Parameters");
-                        IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
-                        //make a new list
-                        Type elementType = list.GetType().GetGenericArguments()[0];
-                        Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
-                        IList newList = (IList)Activator.CreateInstance(listType);
-
-                        //copy in the existing values
-                        int i = 0;
-                        foreach (object element in list)
-                        {
-                            if (i != index)
-                                newList.Add(element);
-                            i += 1;
-                        }
-
-                        //Set the Model to use our modified list
-                        fieldInfo.SetValue(model, newList);
                     }
                 }
             }

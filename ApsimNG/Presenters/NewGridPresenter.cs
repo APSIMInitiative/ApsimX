@@ -4,6 +4,7 @@ using Models.Utilities;
 using System;
 using System.Collections.Generic;
 using UserInterface.Views;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
@@ -16,6 +17,9 @@ namespace UserInterface.Presenters
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
+
+        /// <summary>A counter to track cell changed events in a queue</summary>
+        private int cellChangedCounter;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -68,6 +72,7 @@ namespace UserInterface.Presenters
 
             Populate();
 
+            cellChangedCounter = 0;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             contextMenuHelper = new ContextMenuHelper(grid);
             contextMenu = new MenuView();
@@ -138,6 +143,32 @@ namespace UserInterface.Presenters
             {
                 try
                 {
+                    cellChangedCounter += 1;
+                    int count = (grid.Sheet.CellSelector as MultiCellSelect).GetNumberOfCellsSelected();
+                    if (cellChangedCounter >= count)
+                    {
+                        DataTable dt = (grid.Sheet.DataProvider as DataTableProvider).Data;
+                        //check if a row should be deleted
+                        for (int i = dt.Rows.Count - 1; i >= 0; i--)
+                        {
+                            DataRow row = dt.Rows[i];
+                            bool hasValues = false;
+                            foreach (var item in row.ItemArray)
+                            {
+                                string value = item.ToString();
+                                if (!String.IsNullOrEmpty(value) && value != "0")
+                                {
+                                    hasValues = true;
+                                }
+                            }
+                            if (!hasValues)
+                            {
+                                dt.Rows.RemoveAt(i);
+                            }
+                        }
+                        grid.Sheet.DataProvider = new DataTableProvider(dt);
+                        cellChangedCounter = 0;
+                    }
                     SaveGridToModel();
                     CellChanged.Invoke(sender, colIndex, rowIndex);
                 }
