@@ -184,9 +184,7 @@ namespace Models.Management
         {
             get
             {
-                //check if our plant is currently linked, link if not
-                if (PlantToRemoveFrom.Parent == null)
-                    PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+                LinkCrop();
 
                 List<DataTable> tables = new List<DataTable>();
 
@@ -213,27 +211,30 @@ namespace Models.Management
                     data.Rows.Add(row);
                 }
 
-                //add in stored values
-                foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
+                if (BiomassRemovals != null)
                 {
-                    //find which line of the data table matches the organ.
-                    //We don't check Plant Name or Cut Type anymore so that they aren't cleared when properties are changed
-                    foreach (DataRow row in data.Rows)
+                    //add in stored values
+                    foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
                     {
-                        if (row["Organ"].ToString().Equals(removal.OrganName))
+                        //find which line of the data table matches the organ.
+                        //We don't check Plant Name or Cut Type anymore so that they aren't cleared when properties are changed
+                        foreach (DataRow row in data.Rows)
                         {
-                            //matching row, fill in fractions
-                            if (removal.LiveToRemoveString != null)
-                                row["Live To Remove"] = removal.LiveToRemoveString;
-                            if (removal.DeadToRemoveString != null)
-                                row["Dead To Remove"] = removal.DeadToRemoveString;
-                            if (removal.LiveToResidueString != null)
-                                row["Live To Residue"] = removal.LiveToResidueString;
-                            if (removal.DeadToResidueString != null)
-                                row["Dead To Residue"] = removal.DeadToResidueString;
+                            if (row["Organ"].ToString().Equals(removal.OrganName))
+                            {
+                                //matching row, fill in fractions
+                                if (removal.LiveToRemoveString != null)
+                                    row["Live To Remove"] = removal.LiveToRemoveString;
+                                if (removal.DeadToRemoveString != null)
+                                    row["Dead To Remove"] = removal.DeadToRemoveString;
+                                if (removal.LiveToResidueString != null)
+                                    row["Live To Residue"] = removal.LiveToResidueString;
+                                if (removal.DeadToResidueString != null)
+                                    row["Dead To Residue"] = removal.DeadToResidueString;
+                            }
                         }
                     }
-                }               
+                }
 
                 tables.Add(data);
                 //pass this generated table back to be stored
@@ -242,7 +243,7 @@ namespace Models.Management
             }
             set
             {
-                BiomassRemovals.Clear();
+                BiomassRemovals = new List<BiomassRemovalOfPlantOrganType>();
                 DataTable data = value[0];
                 foreach (DataRow row in data.Rows)
                 {
@@ -312,15 +313,13 @@ namespace Models.Management
                 return;
             }
         }
-        
+
         /// <summary>
         /// Method to initiate biomass removal from plant
         /// </summary>
         public void Remove()
         {
-            //check if our plant is currently linked, link if not
-            if (PlantToRemoveFrom.Parent == null)
-                PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+            LinkCrop();
 
             foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
             {
@@ -407,6 +406,20 @@ namespace Models.Management
                     Remove();                
             }
             return;
+        }
+
+        private void LinkCrop()
+        {
+            //check if our plant is currently linked, link if not
+            if (PlantToRemoveFrom == null)
+                PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>();
+
+            if (PlantToRemoveFrom != null)
+                if (PlantToRemoveFrom.Parent == null)
+                    PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+
+            if (PlantToRemoveFrom == null)
+                throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
         }
 
     }
