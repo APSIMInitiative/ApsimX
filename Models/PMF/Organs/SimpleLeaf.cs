@@ -403,7 +403,13 @@ namespace Models.PMF.Organs
         public Biomass ReAllocated { get; private set; }
 
         /// <summary>
-        /// Gets the biomass senesced (transferred from live to dead material).
+        /// Gets the daily biomass senesced (transferred from live to dead material).
+        /// </summary>
+        [JsonIgnore]
+        public Biomass Senescing { get; private set; }
+
+        /// <summary>
+        /// Gets the total biomass senesced (transferred from live to dead material).
         /// </summary>
         [JsonIgnore]
         public Biomass Senesced { get; private set; }
@@ -954,10 +960,10 @@ namespace Models.PMF.Organs
                 double senescedFrac = senescenceRate.Value();
                 if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
+                Senescing = Live * senescedFrac;
+                Live.Subtract(Senescing);
+                Dead.Add(Senescing);
+                Senesced.Add(Senescing);
 
                 // Do detachment
                 double detachedFrac = detachmentRate.Value();
