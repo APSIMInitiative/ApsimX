@@ -1,14 +1,16 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
+
 
     /// <summary>
     /// Some utilities for manipulating a data table.
@@ -53,7 +55,7 @@ namespace APSIM.Shared.Utilities
 
             if (values == null)
                 return;
-		
+
             // Make sure there are enough values in the table.
             while (table.Rows.Count < values.Length + startRow)
                 table.Rows.Add(table.NewRow());
@@ -101,7 +103,7 @@ namespace APSIM.Shared.Utilities
 
             if (values == null)
                 return;
-			
+
             int row = startRow;
             foreach (var value in values)
             {
@@ -153,7 +155,7 @@ namespace APSIM.Shared.Utilities
                     // If the value is a double.NaN then don't put into table.
                     // All other values do get inserted.
                     bool insertValue = true;
-                    if (value is double && (double.IsNaN((double) value) || (double) value == MathUtilities.MissingValue))
+                    if (value is double && (double.IsNaN((double)value) || (double)value == MathUtilities.MissingValue))
                     {
                         insertValue = false;
                     }
@@ -232,7 +234,7 @@ namespace APSIM.Shared.Utilities
             int[] values = new int[table.Rows.Count];
             for (int Row = 0; Row != table.Rows.Count; Row++)
                 values[Row] = Convert.ToInt32(table.Rows[Row][columnName], CultureInfo.InvariantCulture);
-            
+
             return values;
         }
 
@@ -324,7 +326,7 @@ namespace APSIM.Shared.Utilities
         {
             return GetColumnAsStrings(table, columnName, table.Rows.Count, culture);
         }
-        
+
         /// <summary>
         /// Get a column as strings
         /// </summary>
@@ -340,7 +342,7 @@ namespace APSIM.Shared.Utilities
                 values[row] = Convert.ToString(table.Rows[row][columnName], culture);
             return values;
         }
-        
+
         /// <summary>
         /// Get a column as strings.
         /// </summary>
@@ -373,7 +375,7 @@ namespace APSIM.Shared.Utilities
             string[] values = new string[view.Count];
             for (int row = 0; row != view.Count; row++)
                 values[row] = view[row][columnName].ToString();
-                
+
             return values;
         }
 
@@ -447,13 +449,13 @@ namespace APSIM.Shared.Utilities
         {
             //where row.Field<DateTime>(colName) >= firstDate
             var result = (from row in table.AsEnumerable()
-                         where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                         orderby DataTableUtilities.GetDateFromRow(row)
-                         select new
-                         {
-                             Month = DataTableUtilities.GetDateFromRow(row).Month
-                         }).Distinct();
+                          where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
+                                 DataTableUtilities.GetDateFromRow(row) <= lastDate)
+                          orderby DataTableUtilities.GetDateFromRow(row)
+                          select new
+                          {
+                              Month = DataTableUtilities.GetDateFromRow(row).Month
+                          }).Distinct();
 
             List<string> rValues = new List<string>();
             foreach (var row in result)
@@ -644,7 +646,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Write the specified DataTable to a CSV string, excluding the specified column names.
         /// </summary>
-        static public void DataTableToText(DataTable data, int startColumnIndex, string delimiter, bool showHeadings, TextWriter writer, bool excelFriendly = false, string decimalFormatString="F3")
+        static public void DataTableToText(DataTable data, int startColumnIndex, string delimiter, bool showHeadings, TextWriter writer, bool excelFriendly = false, string decimalFormatString = "F3")
         {
             // Convert the data table to a table of strings. This will make it easier for
             // calculating widths.
@@ -684,7 +686,7 @@ namespace APSIM.Shared.Utilities
             {
                 for (int i = startColumnIndex; i < stringTable.Columns.Count; i++)
                 {
-                    if (i > startColumnIndex) 
+                    if (i > startColumnIndex)
                         writer.Write(delimiter);
                     if (excelFriendly)
                         writer.Write(stringTable.Columns[i].ColumnName);
@@ -863,7 +865,7 @@ namespace APSIM.Shared.Utilities
             int[] columnWidths = new int[table.Columns.Count];
             for (int i = 0; i < table.Columns.Count; i++)
                 columnWidths[i] = table.Columns[i].ColumnName.Length;
-            
+
             foreach (DataRow row in table.Rows)
                 for (int i = 0; i < table.Columns.Count; i++)
                     if (row[i] != null && row[i].ToString().Length > columnWidths[i])

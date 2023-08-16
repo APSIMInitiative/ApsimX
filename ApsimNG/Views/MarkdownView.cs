@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Gdk;
 using Gtk;
 using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using Pango;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using UserInterface.Extensions;
 using Utility;
-using Pango;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
@@ -86,7 +86,7 @@ namespace UserInterface.Views
                 helper.Layout.FontDescription = FontDescription.FromString(fontName);
                 for (int i = 32; i < 127; i++)
                 {
-                    helper.Layout.SetText(((char) i).ToString());
+                    helper.Layout.SetText(((char)i).ToString());
                     helper.Layout.GetPixelSize(out var width, out _);
                     fontCharSizes[i] = width;
                 }
@@ -195,7 +195,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if ( (args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
+                if ((args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
                     findView.ShowFor(this);
             }
             catch (Exception err)
@@ -416,7 +416,7 @@ namespace UserInterface.Views
                 if (b is TableRow tr)
                 {
                     cellLengthsByRow[i] = tr
-                        .Select(b => GetCellRawText((TableCell) b))
+                        .Select(b => GetCellRawText((TableCell)b))
                         .Select(MeasureText)
                         .ToList();
                 }

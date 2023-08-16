@@ -1,0 +1,10 @@
+﻿{
+    "variables": [
+        {
+            "Today": "[Clock].Today"
+        },
+        {
+            "Harvest":  "Plant.Harvest"
+        }
+    ]
+}

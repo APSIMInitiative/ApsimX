@@ -17,7 +17,7 @@ namespace Models
     /// A report class for writing output to the data store.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.ReportView")]
+    [ViewName("UserInterface.Views.NewReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
@@ -82,6 +82,8 @@ namespace Models
 
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
+
+
 
         /// <summary>
         /// Connect event handlers.

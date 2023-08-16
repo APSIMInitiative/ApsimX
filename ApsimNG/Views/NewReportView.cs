@@ -7,19 +7,23 @@ namespace UserInterface.Views
 {
 
     /// <summary>
-    /// View for a report component.
+    /// View for a report component that includes new report variable and report frequency UI sections.
     /// </summary>
-    public class ReportView : ViewBase, IReportView
+    public class NewReportView : ViewBase, IReportView
     {
         private Notebook notebook1 = null;
-        private VBox vbox1 = null;
-        private VBox vbox2 = null;
+        private Paned reportVariablesBox = null;
+        private Paned reportFrequencyBox = null;
+        private Box variablesBox = null;
+        private Box commonVariablesBox = null;
+        private Box frequencyBox = null;
+        private Box commonFrequencyBox = null;
         private Alignment alignment1 = null;
 
         private IEditorView variableEditor;
         private IEditorView frequencyEditor;
-        private IListView commonReportVariablesList;
-        private IListView commonReportFrequencyVariablesList;
+        private IListView commonReportVariableList;
+        private IListView commonReportFrequencyVariableList;
         private ViewBase dataStoreView1;
         private VPaned panel;
         private EditView groupByEdit;
@@ -36,12 +40,16 @@ namespace UserInterface.Views
         public event EventHandler TabChanged;
 
         /// <summary>Constructor</summary>
-        public ReportView(ViewBase owner) : base(owner)
+        public NewReportView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.NewReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
-            vbox1 = (VBox)builder.GetObject("vbox1");
-            vbox2 = (VBox)builder.GetObject("vbox2");
+            reportVariablesBox = (Paned)builder.GetObject("reportVariablesBox");
+            variablesBox = (Box)builder.GetObject("variablesBox");
+            commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
+            reportFrequencyBox = (Paned)builder.GetObject("reportFrequencyBox");
+            frequencyBox = (Box)builder.GetObject("frequencyBox");
+            commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
             alignment1 = (Alignment)builder.GetObject("alignment1");
 
             panel = (VPaned)builder.GetObject("vpaned1");
@@ -56,15 +64,26 @@ namespace UserInterface.Views
 
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
-            vbox1.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
+            variablesBox.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
 
             frequencyEditor = new EditorView(this);
             frequencyEditor.StyleChanged += OnStyleChanged;
-            vbox2.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
+            frequencyBox.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
 
+            commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
+            // TODO: make it so above has a size roughly 20% of screen size.
+            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
+            // TODO: make it so above has a size roughly 20% of screen size.
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void OnVariableListDragStarted(object sender, EventArgs args)
+        {
+
         }
 
         /// <summary>
@@ -126,6 +145,7 @@ namespace UserInterface.Views
             {
                 variableEditor?.Refresh();
                 frequencyEditor?.Refresh();
+
             }
             catch (Exception err)
             {
@@ -166,11 +186,12 @@ namespace UserInterface.Views
         /// <summary>Provides access to the group by edit.</summary>
         public IEditView GroupByEdit { get { return groupByEdit; } }
 
+        public IListView CommonReportVariablesList { get { return commonReportVariableList; } set { commonReportVariableList = value; } }
+
+        public IListView CommonReportFrequencyVariablesList { get { return commonReportFrequencyVariableList; } set { commonReportFrequencyVariableList = value; } }
+
         /// <summary>Provides access to the DataGrid.</summary>
         public ViewBase DataStoreView { get { return dataStoreView1; } }
-
-        public IListView CommonReportVariablesList { get { return commonReportVariablesList; } set { commonReportVariablesList = value; } }
-        public IListView CommonReportFrequencyVariablesList { get { return commonReportFrequencyVariablesList; } set { commonReportFrequencyVariablesList = value; } }
 
         /// <summary>
         /// Indicates the index of the currently active tab
@@ -201,3 +222,4 @@ namespace UserInterface.Views
     }
 
 }
+

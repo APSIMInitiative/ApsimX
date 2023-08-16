@@ -1,16 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Data;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using EventArguments;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using Utility;
-    using Views;
-    using Models;
-    using Interfaces;
-    using System.Collections;
-    using System.Collections.Generic;
 
     /// <summary>
     /// The Report presenter class
@@ -54,6 +54,11 @@
         /// </summary>
         private IntellisensePresenter intellisense;
 
+        ///// <summary>
+        ///// DataTable used for storing common reporting frequency variables from a resource.
+        ///// </summary>
+        //private DataTable commonReportingFrequencyVariables;
+
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
         /// </summary>
@@ -71,6 +76,8 @@
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
+            this.view.CommonReportVariablesList.DataSource = SetCommonReportVariables();
+            this.view.CommonReportFrequencyVariablesList.DataSource = SetCommonReportFrequencyVariables();
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
@@ -87,7 +94,7 @@
             {
                 dataStore = simulations.FindChild<IDataStore>();
             }
-            
+
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter(new string[] { report.Name });
@@ -120,7 +127,7 @@
             this.report.ActiveTabIndex = this.view.TabIndex;
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
-            this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames; 
+            this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames;
             this.view.SplitterChanged -= OnSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
@@ -129,6 +136,57 @@
             dataStorePresenter?.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
+        }
+
+        public DataTable SetCommonReportVariables()
+        {
+            //JObject reportingVariablesJSON = null;
+            //string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+            //string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "Models\\Resources\\CommonReportingVariables.json");
+
+            //// Get the resource file contents into a JSON Object.
+            //reportingVariablesJSON = JObject.Parse(File.ReadAllText(commonReportingVariablesFilePath));
+
+            //JArray reportingVariableArray = (JArray)reportingVariablesJSON["variables"];
+            //// Expecting to get a Dictionary<string, string> 
+            //IList reportingVariableList = reportingVariableArray.ToObject<Dictionary<string, string>>();
+
+            // Build a DataTable to replace the private variable
+            DataTable dt = new DataTable();
+
+            DataColumn reportingVariableNameColumn = new DataColumn("Variable name");
+            DataColumn reportingVariableCodeColumn = new DataColumn("Variable code");
+            dt.Columns.Add(reportingVariableNameColumn);
+            dt.Columns.Add(reportingVariableCodeColumn);
+
+            DataRow row1 = dt.NewRow();
+            DataRow row2 = dt.NewRow();
+            row1["Variable name"] = "MineralN";
+            row1["Variable code"] = "NO3.kgha + NH4.kgha + Urea.kgha as MineralN";
+            row2["Variable name"] = "Yield";
+            row2["Variable code"] = "Something";
+            dt.Rows.Add(row1);
+            dt.Rows.Add(row2);
+            return dt;
+        }
+
+        public DataTable SetCommonReportFrequencyVariables()
+        {
+            // Build a DataTable to replace the private variable
+            DataTable dt = new DataTable();
+
+            DataColumn reportingVariableNameColumn = new DataColumn("Variable name");
+            DataColumn reportingVariableCodeColumn = new DataColumn("Variable code");
+            dt.Columns.Add(reportingVariableNameColumn);
+            dt.Columns.Add(reportingVariableCodeColumn);
+
+            DataRow row1 = dt.NewRow();
+            row1["Variable name"] = "Today";
+            row1["Variable code"] = "[Clock].Today";
+
+            dt.Rows.Add(row1);
+
+            return dt;
         }
 
         /// <summary>

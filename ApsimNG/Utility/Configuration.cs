@@ -1,10 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Linq;
-using System.IO;
-using System.Drawing;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
-using Models.Core;
+using System.Drawing;
+using System.IO;
 
 namespace Utility
 {
@@ -62,7 +60,7 @@ namespace Utility
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
         [Input("Autosave on run")]
         [Tooltip("Should the file be automatically saved to disk before running simulations?")]
-        public bool AutoSave { get; set;} = true;
+        public bool AutoSave { get; set; } = true;
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
@@ -350,7 +348,7 @@ namespace Utility
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
         }
-    
+
         /// <summary>
         /// This will be called whenever the 'dark mode' option is toggled.
         /// It will change the default editor style to something.
