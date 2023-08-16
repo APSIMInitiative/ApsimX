@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 166,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -967,7 +967,7 @@
                 "        private IPhysical soilPhysical;",
                 "        [Link]",
                 "        private ISoilWater waterBalance;",
-                "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                 "        [Link]",
                 "        private Nutrient Nutrient;",
                 "                    ",
@@ -4233,8 +4233,7 @@
                 "    {",
                 "        [Link] Plant SCRUM;",
                 "        [Link] Clock Clock;",
-                "        [Link] BiomassRemovalFractions rbs;",
-                "\t\t[Link(Type = LinkType.Scoped, ByName = true)] Phenology phenology;",
+                "        [Link(Type = LinkType.Scoped, ByName = true)] Phenology phenology;",
                 "",
                 "        [Description(\"Cultivar\")]",
                 "        public string CultivarName { get; set; }",
@@ -4338,7 +4337,7 @@
                 "        private IPhysical soilPhysical;",
                 "        [Link]",
                 "        private ISoilWater waterBalance;",
-                "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                 "        [Link]",
                 "        private Nutrient Nutrient;",
                 "                    ",
@@ -4549,7 +4548,7 @@
             },
             {
               "$type": "Models.Management.BiomassRemovalEvents, Models",
-              "Crop": {
+              "PlantToRemoveFrom": {
                 "$type": "Models.PMF.Plant, Models",
                 "Name": "SCRUM",
                 "ResourceName": "SCRUM",
@@ -4557,20 +4556,12 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
-              "removaltype": 0,
+              "RemovalType": 0,
               "StageToSet": 3.5,
               "RemovalDatesInput": "15/12/2010, 15/01/2011",
-              "Name": "BiomassRemovalEvents",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Management.BiomassRemovalFractions, Models",
               "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Product",
                   "TypeString": "Cutting",
@@ -4580,37 +4571,7 @@
                   "DeadToResidueString": null
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Product",
-                  "TypeString": "Grazing",
-                  "LiveToRemoveString": "0",
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Product",
-                  "TypeString": "Harvesting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Product",
-                  "TypeString": "Pruning",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Stover",
                   "TypeString": "Cutting",
@@ -4620,37 +4581,7 @@
                   "DeadToResidueString": null
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Stover",
-                  "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Stover",
-                  "TypeString": "Harvesting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Stover",
-                  "TypeString": "Pruning",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Root",
                   "TypeString": "Cutting",
@@ -4660,77 +4591,17 @@
                   "DeadToResidueString": null
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Root",
-                  "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Root",
-                  "TypeString": "Harvesting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Root",
-                  "TypeString": "Pruning",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Nodule",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Nodule",
-                  "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Nodule",
-                  "TypeString": "Harvesting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
-                },
-                {
-                  "$type": "Models.Management.BiomassRemovalFractions+BiomassRemovalOfPlantOrganType, Models",
-                  "PlantName": "SCRUM",
-                  "OrganName": "Nodule",
-                  "TypeString": "Pruning",
                   "LiveToRemoveString": null,
                   "DeadToRemoveString": null,
                   "LiveToResidueString": null,
                   "DeadToResidueString": null
                 }
               ],
-              "Name": "BiomassRemovalFractions",
+              "Name": "BiomassRemovalEvents",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -7269,7 +7140,7 @@
                     "        private IPhysical soilPhysical;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
-                    "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                     "        [Link]",
                     "        private Nutrient Nutrient;",
                     "                    ",
@@ -11475,7 +11346,7 @@
                     "        private IPhysical soilPhysical;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
-                    "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                     "        [Link]",
                     "        private Nutrient Nutrient;",
                     "                    ",
@@ -18475,7 +18346,7 @@
                     "        private IPhysical soilPhysical;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
-                    "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                     "        [Link]",
                     "        private Nutrient Nutrient;",
                     "                    ",
