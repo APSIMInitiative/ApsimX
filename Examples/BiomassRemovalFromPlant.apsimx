@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 166,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2319,58 +2319,58 @@
                 "ReadOnly": false
               },
               "RemovalType": 0,
-              "StageToSet": 4.1,
+              "StageToSet": "4.1",
               "RemovalDatesInput": "17/05/2004",
               "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Grain",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Root",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Leaf",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.7",
-                  "DeadToRemoveString": "0.5",
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.7,
+                  "DeadToRemove": 0.5,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Spike",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Stem",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.4",
-                  "DeadToRemoveString": "0.2",
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.4,
+                  "DeadToRemove": 0.2,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 }
               ],
               "Name": "CutWheat",
@@ -2390,68 +2390,68 @@
                 "ReadOnly": false
               },
               "RemovalType": 1,
-              "StageToSet": "NaN",
+              "StageToSet": "",
               "RemovalDatesInput": "15/11/2004, 10/12/2004",
               "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Grain",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Root",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Leaf",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": "0.55",
-                  "DeadToRemoveString": "0.3",
-                  "LiveToResidueString": "0.1",
-                  "DeadToResidueString": "0.4"
+                  "LiveToRemove": 0.55,
+                  "DeadToRemove": 0.3,
+                  "LiveToResidue": 0.1,
+                  "DeadToResidue": 0.4
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Husk",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Rachis",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Maize",
                   "OrganName": "Stem",
                   "TypeString": "Grazing",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 }
               ],
               "Name": "GrazeMaize",
@@ -5178,58 +5178,58 @@
                 "ReadOnly": false
               },
               "RemovalType": 0,
-              "StageToSet": "NaN",
+              "StageToSet": "",
               "RemovalDatesInput": "",
               "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Grain",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Root",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Leaf",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.7",
-                  "DeadToRemoveString": "0.2",
-                  "LiveToResidueString": "0.3",
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.7,
+                  "DeadToRemove": 0.2,
+                  "LiveToResidue": 0.3,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Spike",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "Wheat",
                   "OrganName": "Stem",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.3",
-                  "DeadToRemoveString": "0.05",
-                  "LiveToResidueString": "0.2",
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.3,
+                  "DeadToRemove": 0.05,
+                  "LiveToResidue": 0.2,
+                  "DeadToResidue": 0.0
                 }
               ],
               "Name": "CutWheat",

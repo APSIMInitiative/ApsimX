@@ -5,17 +5,17 @@ using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Newtonsoft.Json;
 using System.Linq;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 
 namespace Models.Management
 {
     /// <summary>
-    /// Steps through each OrganBiomassRemoval child when Do() method is called and removes the specified fractions of biomass from each.  
-    /// Organ names must match the name of an organ in the specified crop.  
-    /// Biomass will only be removed from organs that are specified with an OrganBiomassRemoval child on this class.  
-    /// Add Child of name "StageSet" to specify a phenology rewind when ever the Do() method is called
+    /// This is used to create Biomass Removal actions on a crop without requiring a manager script.
+    /// It has a linked crop plant, a type of removal, a list of dates to do the action on and a setting for changing the phenology.
+    /// It has an array of removal values for each organ of the linked plant.
+    /// The removal can be manually called from a manager script with the Remove() function.
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Folder))]
@@ -23,97 +23,7 @@ namespace Models.Management
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     public class BiomassRemovalEvents : Model, IModelAsTable
-    {
-        /// <summary>
-        /// List of possible biomass removal types
-        /// </summary>
-        public enum BiomassRemovalType
-        {
-            /// <summary>Biomass is cut</summary>
-            Cutting,
-            /// <summary>Biomass is grazed</summary>
-            Grazing,
-            /// <summary>Biomass is harvested</summary>
-            Harvesting,
-            /// <summary>Biomass is pruned</summary>
-            Pruning
-        }
-
-        /// <summary>Stores a row of Biomass Removal Fractions</summary>
-        [Serializable]
-        public class BiomassRemovalOfPlantOrganType
-        {
-
-            /// <summary>Name of the Crop this removal applies to</summary>
-            public string PlantName { get; set; }
-
-            /// <summary>Name of the Organ in the given crop that this removal applies to</summary>
-            public string OrganName { get; set; }
-
-            /// <summary>The type of removal this is</summary>
-            [JsonIgnore]
-            public BiomassRemovalType Type { get { return Enum.Parse<BiomassRemovalType>(TypeString); } }
-
-            /// <summary></summary>
-            public string TypeString { get; set; }
-
-            /// <summary>Fraction of live biomass to remove from organ (0-1) </summary>
-            [Units("g/m2")]
-            [JsonIgnore]
-            public double LiveToRemove { get { return Convert.ToDouble(LiveToRemoveString); } }
-
-            /// <summary>Fraction of dea biomass to remove from organ (0-1) </summary>
-            [Units("g/m2")]
-            [JsonIgnore]
-            public double DeadToRemove { get { return Convert.ToDouble(DeadToRemoveString); } }
-
-            /// <summary>Fraction of live biomass to remove from organ and send to residues (0-1) </summary>
-            [Units("g/m2")]
-            [JsonIgnore]
-            public double LiveToResidue { get { return Convert.ToDouble(LiveToResidueString); } }
-
-            /// <summary>Fraction of live biomass to remove from organ and send to residue pool (0-1) </summary>
-            [Units("g/m2")]
-            [JsonIgnore]
-            public double DeadToResidue { get { return Convert.ToDouble(DeadToResidueString); } }
-
-            /// <summary></summary>
-            public string LiveToRemoveString { get; set; }
-
-            /// <summary></summary>
-            public string DeadToRemoveString { get; set; }
-
-            /// <summary></summary>
-            public string LiveToResidueString { get; set; }
-
-            /// <summary></summary>
-            public string DeadToResidueString { get; set; }
-
-            /// <summary>Default Constructor</summary>
-            public BiomassRemovalOfPlantOrganType()
-            {
-                this.PlantName = null;
-                this.OrganName = null;
-                this.TypeString = null;
-                this.LiveToRemoveString = null;
-                this.DeadToRemoveString = null;
-                this.LiveToResidueString = null;
-                this.DeadToResidueString = null;
-            }
-
-            /// <summary></summary>
-            public BiomassRemovalOfPlantOrganType(string plantName, string organName, string type, string liveToRemoveString, string deadToRemoveString, string liveToResidueString, string deadToResidueString)
-            {
-                this.PlantName = plantName;
-                this.OrganName = organName;
-                this.TypeString = type;
-                this.LiveToRemoveString = liveToRemoveString;
-                this.DeadToRemoveString = deadToRemoveString;
-                this.LiveToResidueString = liveToResidueString;
-                this.DeadToResidueString = deadToResidueString;
-            }
-        }
-        
+    {        
         /// <summary>
         /// Crop to remove biomass from
         /// </summary>
@@ -130,7 +40,7 @@ namespace Models.Management
         /// The stage to set phenology to on removal event
         /// </summary>
         [Description("Stage to set phenology to on removal.  Leave blank if phenology not changed")]
-        public double StageToSet { get; set; }
+        public string StageToSet { get; set; }
 
         /// <summary>
         /// Dates to trigger biomass removal events
@@ -153,7 +63,8 @@ namespace Models.Management
         /// <summary>Harvesting Event</summary>
         public event EventHandler<EventArgs> Harvesting;
 
-        [Link] private Clock Clock = null;
+        [Link] 
+        private Clock Clock = null;
 
         /// <summary>
         /// Dates to trigger biomass removal events as dates
@@ -169,9 +80,8 @@ namespace Models.Management
                 List<DateTime> dates = new List<DateTime>();
                 string[] inputs = RemovalDatesInput.Split(',');
                 foreach (string input in inputs)
-                {
                     dates.Add(DateUtilities.GetDate(input));
-                }
+
                 return dates.ToArray();
             }
         }
@@ -223,14 +133,10 @@ namespace Models.Management
                             if (row["Organ"].ToString().Equals(removal.OrganName))
                             {
                                 //matching row, fill in fractions
-                                if (removal.LiveToRemoveString != null)
-                                    row["Live To Remove"] = removal.LiveToRemoveString;
-                                if (removal.DeadToRemoveString != null)
-                                    row["Dead To Remove"] = removal.DeadToRemoveString;
-                                if (removal.LiveToResidueString != null)
-                                    row["Live To Residue"] = removal.LiveToResidueString;
-                                if (removal.DeadToResidueString != null)
-                                    row["Dead To Residue"] = removal.DeadToResidueString;
+                                row["Live To Remove"] = removal.LiveToRemove;
+                                row["Dead To Remove"] = removal.DeadToRemove;
+                                row["Live To Residue"] = removal.LiveToResidue;
+                                row["Dead To Residue"] = removal.DeadToResidue;
                             }
                         }
                     }
@@ -250,65 +156,15 @@ namespace Models.Management
                     string plantName = row["Plant"].ToString();
                     string organName = row["Organ"].ToString();
                     string type = row["Type"].ToString();
-                    string liveToRemove = null;
-                    if (!String.IsNullOrEmpty(row["Live To Remove"].ToString()))
-                    {
-                        try
-                        {
-                            string input = Convert.ToDouble(row["Live To Remove"]).ToString();
-                            liveToRemove = input;
-                        }
-                        catch
-                        {
-                            liveToRemove = row["Live To Remove"].ToString();
-                        }
-                    }
+                    double liveToRemove, deadToRemove, liveToResidue, deadToResidue;
 
-                    string deadToRemove = null;
-                    if (!String.IsNullOrEmpty(row["Dead To Remove"].ToString()))
-                    {
-                        try
-                        {
-                            string input = Convert.ToDouble(row["Dead To Remove"]).ToString();
-                            deadToRemove = input;
-                        }
-                        catch
-                        {
-                            deadToRemove = row["Dead To Remove"].ToString();
-                        }
-                    }
+                    double.TryParse(row["Live To Remove"].ToString(), out liveToRemove);
+                    double.TryParse(row["Dead To Remove"].ToString(), out deadToRemove);
+                    double.TryParse(row["Live To Residue"].ToString(), out liveToResidue);
+                    double.TryParse(row["Dead To Residue"].ToString(), out deadToResidue);
 
-                    string liveToResidue = null;
-                    if (!String.IsNullOrEmpty(row["Live To Residue"].ToString()))
-                    {
-                        try
-                        {
-                            string input = Convert.ToDouble(row["Live To Residue"]).ToString();
-                            liveToResidue = input;
-                        }
-                        catch
-                        {
-                            liveToResidue = row["Live To Residue"].ToString();
-                        }
-                    }
-
-                    string deadToResidue = null;
-                    if (!String.IsNullOrEmpty(row["Dead To Residue"].ToString()))
-                    {
-                        try
-                        {
-                            string input = Convert.ToDouble(row["Dead To Residue"]).ToString();
-                            deadToResidue = input;
-                        }
-                        catch
-                        {
-                            deadToResidue = row["Dead To Residue"].ToString();
-                        }
-                    }
-                    if (plantName != "") // Dont add the blank row at the end as a removal.
-                    {
+                    if (!String.IsNullOrEmpty(plantName)) // Dont add the blank row at the end as a removal.
                         BiomassRemovals.Add(new BiomassRemovalOfPlantOrganType(plantName, organName, type, liveToRemove, deadToRemove, liveToResidue, deadToResidue));
-                    }
                 }
                 return;
             }
@@ -325,55 +181,11 @@ namespace Models.Management
             {
                 if (removal.Type == RemovalType)
                 {
-                    double liveToRemoved = 0;
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(removal.LiveToRemoveString))
-                            liveToRemoved = removal.LiveToRemove;
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception($"Error parsing Biomass Removal Variable 'LiveToRemove'. Value {removal.LiveToRemoveString} could not be parsed to number.", e);
-                    }
-
-                    double deadToRemoved = 0;
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(removal.DeadToRemoveString))
-                            deadToRemoved = removal.DeadToRemove;
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception($"Error parsing Biomass Removal variable 'DeadToRemove'. Value {removal.DeadToRemoveString} could not be parsed to number.", e);
-                    }
-
-                    double liveToResidues = 0;
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(removal.LiveToResidueString))
-                            liveToResidues = removal.LiveToResidue;
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception($"Error parsing Biomass Removal variable 'LiveToResidue'. Value {removal.LiveToResidueString} could not be parsed to number.", e);
-                    }
-
-                    double deadToResidues = 0;
-                    try
-                    {
-                        if (!String.IsNullOrEmpty(removal.DeadToResidueString))
-                            deadToResidues = removal.DeadToResidue;
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception($"Error parsing Biomass Removal variable 'DeadToResidue'. Value {removal.DeadToResidueString} could not be parsed to number.", e);
-                    }
-
                     IOrgan organ = PlantToRemoveFrom.FindDescendant<IOrgan>(removal.OrganName);
-                    (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: liveToRemoved,
-                                                                    deadToRemove: deadToRemoved,
-                                                                    liveToResidue: liveToResidues,
-                                                                    deadToResidue: deadToResidues);
+                    (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: removal.LiveToRemove,
+                                                                   deadToRemove: removal.DeadToRemove,
+                                                                   liveToResidue: removal.LiveToResidue,
+                                                                   deadToResidue: removal.DeadToResidue);
                 }
             }
 
@@ -386,10 +198,15 @@ namespace Models.Management
             if (PlantToRemoveFrom.ToString() == BiomassRemovalType.Harvesting.ToString())
                 Harvesting?.Invoke(this, new EventArgs());
 
-            if (StageToSet >= 1.0)
+            double stage;
+            Double.TryParse(StageToSet, out stage);
+            if (!double.IsNaN(stage) && stage >= 1.0)
             {
                 Phenology phenology = PlantToRemoveFrom.FindChild<Phenology>();
-                phenology?.SetToStage(StageToSet);
+                if (phenology != null)
+                    phenology?.SetToStage(stage);
+                else
+                    throw new Exception($"Plant {PlantToRemoveFrom.Name} does not have a Phenology that can be set");
             }
         }
 
