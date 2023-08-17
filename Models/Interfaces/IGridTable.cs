@@ -1,4 +1,5 @@
-﻿using Models.Utilities;
+﻿using System.Collections.Generic;
+using Models.Utilities;
 
 namespace Models.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Models.Interfaces
     public interface IGridTable
     {
         /// <summary>Get tabular data. Called by GUI.</summary>
-        GridTable GetGridTable();
+        List<GridTable> Tables { get; }
     }
 }

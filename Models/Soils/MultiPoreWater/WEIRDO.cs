@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
@@ -1388,18 +1389,25 @@ namespace Models.Soils
         #endregion
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new GridTable(Name, new GridTable.Column[]
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new GridTable.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))),
-                new GridTable.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))),
-                new GridTable.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))),
-                new GridTable.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))),
-                new GridTable.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))),
-                new GridTable.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC")))
-            });
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTable.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))));
+                columns.Add(new GridTable.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))));
+                columns.Add(new GridTable.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))));
+                columns.Add(new GridTable.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))));
+                columns.Add(new GridTable.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))));
+                columns.Add(new GridTable.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
         }
     }
 }

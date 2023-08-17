@@ -81,30 +81,36 @@ namespace Models.Soils
         public string[] PHMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            var solutes = GetStandardisedSolutes();
+            get {
+                var solutes = GetStandardisedSolutes();
 
-            var columns = new List<GridTable.Column>();
+                var columns = new List<GridTable.Column>();
 
-            var depthColumns = new List<VariableProperty>();
-            depthColumns.Add(new VariableProperty(this, GetType().GetProperty("Depth")));
-            foreach (var solute in solutes)
-            {
-                if (MathUtilities.AreEqual(solute.Thickness, Thickness))
-                    depthColumns.Add(new VariableProperty(solute, solute.GetType().GetProperty("Depth")));
+                var depthColumns = new List<VariableProperty>();
+                depthColumns.Add(new VariableProperty(this, GetType().GetProperty("Depth")));
+                foreach (var solute in solutes)
+                {
+                    if (MathUtilities.AreEqual(solute.Thickness, Thickness))
+                        depthColumns.Add(new VariableProperty(solute, solute.GetType().GetProperty("Depth")));
+                }
+                columns.Add(new GridTable.Column("Depth", depthColumns));
+
+                foreach (var solute in solutes)
+                    columns.Add(new GridTable.Column(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
+
+                columns.Add(new GridTable.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
+                columns.Add(new GridTable.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
+                columns.Add(new GridTable.Column("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
+                columns.Add(new GridTable.Column("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
             }
-            columns.Add(new GridTable.Column("Depth", depthColumns));
-
-            foreach (var solute in solutes)
-                columns.Add(new GridTable.Column(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
-
-            columns.Add(new GridTable.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
-            columns.Add(new GridTable.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
-            columns.Add(new GridTable.Column("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
-            columns.Add(new GridTable.Column("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
-
-            return new GridTable(Name, columns);
         }
 
         /// <summary>Get all solutes with standardised layer structure.</summary>

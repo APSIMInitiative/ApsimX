@@ -209,20 +209,27 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-            var columns = new List<GridTable.Column>()
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            };
-            if (swimPresent)
-            {
-                columns.Add(new GridTable.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                columns.Add(new GridTable.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
+                var columns = new List<GridTable.Column>()
+                {
+                    new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                    new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                };
+                if (swimPresent)
+                {
+                    columns.Add(new GridTable.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                    columns.Add(new GridTable.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                }
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
             }
-            return new GridTable(Name, columns);
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

@@ -1,13 +1,14 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using UserInterface.Commands;
+using Models.Soils;
+using System;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Views;
+using Models.Interfaces;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the water model.</summary>
     public class WaterPresenter : IPresenter
     {
@@ -54,9 +55,12 @@
         {
             water = model as Water;
             view = v as ViewBase;
+
+
+
             this.explorerPresenter = explorerPresenter;
             gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, v, explorerPresenter);
+            gridPresenter.Attach((model as IGridTable).Tables[0], v, explorerPresenter);
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");

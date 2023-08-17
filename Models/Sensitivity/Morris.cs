@@ -127,6 +127,43 @@ namespace Models
         /// <summary>Have the values of the parameters changed?</summary>
         public bool ParametersHaveChanged { get; set; } = false;
 
+        /// <summary>Tabular data. Called by GUI.</summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+
+                columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+
+                // Add a parameter table
+                DataTable table = new DataTable();
+                table.Columns.Add("Name", typeof(string));
+                table.Columns.Add("Path", typeof(string));
+                table.Columns.Add("LowerBound", typeof(double));
+                table.Columns.Add("UpperBound", typeof(double));
+
+                foreach (Parameter param in Parameters)
+                {
+                    DataRow row = table.NewRow();
+                    row["Name"] = param.Name;
+                    row["Path"] = param.Path;
+                    row["LowerBound"] = param.LowerBound;
+                    row["UpperBound"] = param.UpperBound;
+                    table.Rows.Add(row);
+                }
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
+        }
+
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
@@ -382,38 +419,6 @@ namespace Models
                 dataStore.Writer.WriteTable(eeTable);
                 dataStore.Writer.WriteTable(muStarTable);
             }
-        }
-
-        /// <summary>Gets the table of values.</summary>
-        public GridTable GetGridTable()
-        {
-
-            List<GridTable.Column> columns = new List<GridTable.Column>();
-
-            columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-
-            // Add a parameter table
-            DataTable table = new DataTable();
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Path", typeof(string));
-            table.Columns.Add("LowerBound", typeof(double));
-            table.Columns.Add("UpperBound", typeof(double));
-
-            foreach (Parameter param in Parameters)
-            {
-                DataRow row = table.NewRow();
-                row["Name"] = param.Name;
-                row["Path"] = param.Path;
-                row["LowerBound"] = param.LowerBound;
-                row["UpperBound"] = param.UpperBound;
-                table.Rows.Add(row);
-            }
-
-            GridTable grid = new GridTable("Table", columns);
-            return grid;
         }
 
         /// <summary>

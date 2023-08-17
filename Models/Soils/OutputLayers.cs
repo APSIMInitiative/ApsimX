@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -286,12 +287,19 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new GridTable(Name, new GridTable.Column[]
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")))
-            });
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.GrazPlan;
-    using Models.Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using System;
+using System.Collections.Generic;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the soil profile models.</summary>
     public class ProfilePresenter : IPresenter
     {
@@ -57,7 +56,7 @@
 
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, gridContainer, explorerPresenter);
+            gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
 
             Soil soilNode = this.model.FindAncestor<Soil>();
             physical = soilNode.FindChild<Physical>();

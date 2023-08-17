@@ -162,66 +162,41 @@ namespace Models.Optimisation
         [JsonIgnore]
         public string Status { get; private set; }
 
-        /// <summary>Gets the table of values.</summary>
-        public GridTable GetGridTable()
-        {
-
-            List<GridTable.Column> columns = new List<GridTable.Column>();
-
-            columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-            columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-
-            // Add a parameter table
-            DataTable table = new DataTable();
-            table.Columns.Add("Name", typeof(string));
-            table.Columns.Add("Path", typeof(string));
-            table.Columns.Add("LowerBound", typeof(double));
-            table.Columns.Add("UpperBound", typeof(double));
-
-            foreach (Parameter param in Parameters)
-            {
-                DataRow row = table.NewRow();
-                row["Name"] = param.Name;
-                row["Path"] = param.Path;
-                row["LowerBound"] = param.LowerBound;
-                row["UpperBound"] = param.UpperBound;
-                table.Rows.Add(row);
-            }
-
-            GridTable grid = new GridTable("Table", columns);
-            return grid;
-        }
-
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
+        /// <summary>Tabular data. Called by GUI.</summary>
         [JsonIgnore]
-        public List<DataTable> Tables
+        public List<GridTable> Tables
         {
             get
             {
-                List<DataTable> tables = new List<DataTable>();
-                return tables;
-            }
-            set
-            {
-                Parameters.Clear();
-                foreach (DataRow row in value[0].Rows)
+
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+
+                columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+
+                // Add a parameter table
+                DataTable table = new DataTable();
+                table.Columns.Add("Name", typeof(string));
+                table.Columns.Add("Path", typeof(string));
+                table.Columns.Add("LowerBound", typeof(double));
+                table.Columns.Add("UpperBound", typeof(double));
+
+                foreach (Parameter param in Parameters)
                 {
-                    Parameter param = new Parameter();
-                    if (!Convert.IsDBNull(row["Name"]))
-                        param.Name = row["Name"].ToString();
-                    if (!Convert.IsDBNull(row["Path"]))
-                        param.Path = row["Path"].ToString();
-                    if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
-                    if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
-                    if (param.Name != null || param.Path != null)
-                        Parameters.Add(param);
+                    DataRow row = table.NewRow();
+                    row["Name"] = param.Name;
+                    row["Path"] = param.Path;
+                    row["LowerBound"] = param.LowerBound;
+                    row["UpperBound"] = param.UpperBound;
+                    table.Rows.Add(row);
                 }
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable("Table", columns));
+
+                return tables;
             }
         }
 

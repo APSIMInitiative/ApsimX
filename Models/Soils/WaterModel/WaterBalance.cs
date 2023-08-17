@@ -854,14 +854,21 @@ namespace Models.WaterModel
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new GridTable(Name, new GridTable.Column[]
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new GridTable.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
-                new GridTable.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
-            });
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTable.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
+                columns.Add(new GridTable.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

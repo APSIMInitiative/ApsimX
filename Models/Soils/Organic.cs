@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -105,17 +106,24 @@ namespace Models.Soils
         public string[] FOMMetadata { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new GridTable(Name, new GridTable.Column[]
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new GridTable.Column("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))),
-                new GridTable.Column("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))),
-                new GridTable.Column("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))),
-                new GridTable.Column("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))),
-                new GridTable.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM")))
-            });
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTable.Column("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))));
+                columns.Add(new GridTable.Column("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))));
+                columns.Add(new GridTable.Column("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))));
+                columns.Add(new GridTable.Column("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))));
+                columns.Add(new GridTable.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

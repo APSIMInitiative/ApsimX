@@ -7,6 +7,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Data;
 using Models.Management;
+using Models.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -18,7 +19,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The underlying model.
         /// </summary>
-        private IModelAsTable tableModel;
+        private IGridTable tableModel;
 
         /// <summary>
         /// The intellisense.
@@ -27,9 +28,8 @@ namespace UserInterface.Presenters
 
         private IDualGridView view;
         private ExplorerPresenter presenter;
-        private List<DataTable> tables;
-        private GridPresenter gridPresenter1;
-        private GridPresenter gridPresenter2;
+        private NewGridPresenter gridPresenter1;
+        private NewGridPresenter gridPresenter2;
 
         /// <summary>
         /// Attach the model to the view.
@@ -44,29 +44,23 @@ namespace UserInterface.Presenters
 
             presenter = parentPresenter;
             view = v as IDualGridView;
-            tableModel = model as IModelAsTable;
-            tables = tableModel.Tables;
-            view.Grid1.DataSource = tables[0];
-            view.Grid2.DataSource = tables.Count > 1 ? tables[1] : null;
-            view.Grid1.CellsChanged += OnCellValueChanged1;
-            view.Grid2.CellsChanged += OnCellValueChanged2;
+            tableModel = model as IGridTable;
 
-            bool readOnly = !tableModel.GetType().GetProperty("Tables").CanWrite;
-            view.Grid1.ReadOnly = readOnly;
-            view.Grid2.ReadOnly = readOnly;
+            List<GridTable> tables = tableModel.Tables;
 
-            view.ShowGrid2(view.Grid2.DataSource != null);
+            gridPresenter1 = new NewGridPresenter();
+            gridPresenter2 = new NewGridPresenter();
 
-            parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
-
-            gridPresenter1 = new GridPresenter();
-            gridPresenter1.Attach(model, view.Grid1, parentPresenter);
-            gridPresenter2 = new GridPresenter();
-            gridPresenter2.Attach(model, view.Grid2, parentPresenter);
+            view.ShowGrid2(false);
+            if (tables.Count > 0)
+                gridPresenter1.Attach(tables[0], view.Grid1, parentPresenter);
+            else if (tables.Count > 1)
+                gridPresenter2.Attach(tables[1], view.Grid2, parentPresenter);
+                view.ShowGrid2(true);
 
             intellisense = new IntellisensePresenter(view.Grid2 as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
-            view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
+            //intellisense.ItemSelected += OnIntellisenseItemSelected;
+            //view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
 
             if (model is BiomassRemovalFractions)
             {
@@ -85,55 +79,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            //intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
-            view.Grid1.CellsChanged -= OnCellValueChanged1;
-            view.Grid2.CellsChanged -= OnCellValueChanged2;
+            //view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
             gridPresenter1.Detach();
             gridPresenter2.Detach();
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
-        }
-
-        /// <summary>
-        /// User has changed the value of a cell.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnCellValueChanged1(object sender, GridCellsChangedArgs e)
-        {
-            foreach (GridCellChangedArgs cell in e.ChangedCells)
-                tables[0].Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
-            ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
-            presenter.CommandHistory.Add(cmd);
-        }
-
-        /// <summary>
-        /// User has changed the value of a cell.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
-        {
-            foreach (GridCellChangedArgs cell in e.ChangedCells)
-                tables[1].Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
-            ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", tables);
-            presenter.CommandHistory.Add(cmd);
-        }
-
-        /// <summary>
-        /// The model has changed, update the grid.
-        /// </summary>
-        /// <param name="changedModel">The model that has changed.</param>
-        private void OnModelChanged(object changedModel)
-        {
-            if (changedModel == tableModel)
-            {
-                tables = tableModel.Tables;
-                view.Grid1.DataSource = tables[0];
-                if (tables.Count == 2)
-                    view.Grid2.DataSource = tables[1];
-            }
         }
 
         /// <summary>
@@ -144,6 +94,7 @@ namespace UserInterface.Presenters
         /// <param name="args">Evenet arguments.</param>
         private void OnIntellisenseItemsNeeded(object sender, NeedContextItemsArgs args)
         {
+            /*
             try
             {
                 if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, false, args.ControlSpace))
@@ -153,6 +104,7 @@ namespace UserInterface.Presenters
             {
                 presenter.MainPresenter.ShowError(err);
             }
+            */
         }
 
         /// <summary>
@@ -163,6 +115,7 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
+            /*
             try
             {
                 view.Grid2.InsertText(args.ItemSelected);
@@ -171,6 +124,7 @@ namespace UserInterface.Presenters
             {
                 presenter.MainPresenter.ShowError(err);
             }
+            */
         }
     }
 }

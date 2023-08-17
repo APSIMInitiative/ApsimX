@@ -7,9 +7,6 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
 using System.Collections;
-using System.Xml.Linq;
-using static Models.Core.ScriptCompiler;
-using Models.Interfaces;
 
 namespace Models.Utilities
 {

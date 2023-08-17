@@ -10,10 +10,10 @@ namespace UserInterface.Views
     public class DualGridView : ViewBase, IDualGridView
     {
         /// <summary>Top grid in view.</summary>
-        public IGridView Grid1 { get; private set; }
+        public ContainerView Grid1 { get; private set; }
 
         /// <summary>bottom grid in view.</summary>
-        public IGridView Grid2 { get; private set; }
+        public ContainerView Grid2 { get; private set; }
 
         /// <summary>Label at top of window</summary>
         private Gtk.Label label1;
@@ -24,8 +24,8 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public DualGridView(ViewBase owner) : base(owner)
         {
-            Grid1 = new GridView(owner);
-            Grid2 = new GridView(owner);
+            Grid1 = new ContainerView(owner);
+            Grid2 = new ContainerView(owner);
 
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
             mainWidget = (Widget)builder.GetObject("scrolledwindow1");
@@ -37,15 +37,15 @@ namespace UserInterface.Views
             this.SetLabelHeight(0.1f); 
 
             VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
-            vpaned2.Pack1((Grid1 as GridView).MainWidget, true, true);
-            vpaned2.Pack2((Grid2 as GridView).MainWidget, true, true);
+            vpaned2.Pack1(Grid1.MainWidget, true, true);
+            vpaned2.Pack2(Grid2.MainWidget, true, true);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>Show the 2nd grid?</summary>
         public void ShowGrid2(bool show)
         {
-            (Grid2 as GridView).MainWidget.Visible = show;
+            Grid2.MainWidget.Visible = show;
         }
 
         /// <summary></summary>
@@ -83,10 +83,10 @@ namespace UserInterface.Views
     public interface IDualGridView
     {
         /// <summary>Top grid in view.</summary>
-        IGridView Grid1 { get; }
+        ContainerView Grid1 { get; }
 
         /// <summary>bottom grid in view.</summary>
-        IGridView Grid2 { get; }
+        ContainerView Grid2 { get; }
 
         /// <summary>Show the 2nd grid?</summary>
         void ShowGrid2(bool show);

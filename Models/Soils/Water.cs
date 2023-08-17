@@ -169,13 +169,20 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public GridTable GetGridTable()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new GridTable(Name, new GridTable.Column[]
+            get
             {
-                new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            });
+                List<GridTable.Column> columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns));
+
+                return tables;
+            }
         }
 
         /// <summary>The crop name (or LL15) that fraction full is relative to</summary>

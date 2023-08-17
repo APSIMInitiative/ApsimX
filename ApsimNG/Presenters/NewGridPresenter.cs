@@ -52,7 +52,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                gridTable = (model as IGridTable).GetGridTable();
+                gridTable = (model as GridTable);
             }
             catch (Exception ex)
             {
