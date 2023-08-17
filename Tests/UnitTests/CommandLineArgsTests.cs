@@ -347,7 +347,7 @@ ExperimentY2
 
             // Get path string for the config file that changes the date.
             string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
-            string newFileString = "duplicate [Simulation] [SimulationCopy]\nsave savingFile.apsimx";
+            string newFileString = "duplicate [Simulation] SimulationCopy\nsave savingFile.apsimx";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config4.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
