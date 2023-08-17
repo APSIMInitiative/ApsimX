@@ -49,17 +49,17 @@ namespace UnitTests.Core
             System.Data.DataRow simEvents = dt.Rows[1];
             System.Data.DataRow simNone = dt.Rows[2];
 
-            Assert.AreEqual(simScript[7], simEvents[7]);
-            Assert.AreEqual(simScript[8], simEvents[8]);
-            Assert.AreEqual(simScript[9], simEvents[9]);
+            Assert.AreEqual(simScript["AboveGroundWt"], simEvents["AboveGroundWt"]);
+            Assert.AreEqual(simScript["AboveGroundN"], simEvents["AboveGroundN"]);
+            Assert.AreEqual(simScript["TotalWt"], simEvents["TotalWt"]);
 
-            Assert.AreNotEqual(simNone[7], simScript[7]);
-            Assert.AreNotEqual(simNone[8], simScript[8]);
-            Assert.AreNotEqual(simNone[9], simScript[9]);
+            Assert.AreNotEqual(simNone["AboveGroundWt"], simScript["AboveGroundWt"]);
+            Assert.AreNotEqual(simNone["AboveGroundN"], simScript["AboveGroundN"]);
+            Assert.AreNotEqual(simNone["TotalWt"], simScript["TotalWt"]);
 
-            Assert.AreNotEqual(simNone[7], simEvents[7]);
-            Assert.AreNotEqual(simNone[8], simEvents[8]);
-            Assert.AreNotEqual(simNone[9], simEvents[9]);
+            Assert.AreNotEqual(simNone["AboveGroundWt"], simEvents["AboveGroundWt"]);
+            Assert.AreNotEqual(simNone["AboveGroundN"], simEvents["AboveGroundN"]);
+            Assert.AreNotEqual(simNone["TotalWt"], simEvents["TotalWt"]);
         }
     }
 }

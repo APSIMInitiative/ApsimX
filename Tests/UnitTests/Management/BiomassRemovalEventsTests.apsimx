@@ -839,9 +839,9 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Wheat].AboveGround.Wt",
-                "[Wheat].AboveGround.N",
-                "[Wheat].Total.Wt"
+                "[Wheat].AboveGround.Wt as AboveGroundWt",
+                "[Wheat].AboveGround.N as AboveGroundN",
+                "[Wheat].Total.Wt as TotalWt"
               ],
               "EventNames": [
                 "[Clock].EndOfYear"
