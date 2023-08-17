@@ -45,9 +45,21 @@ namespace UnitTests.Core
             Assert.AreEqual(dataStore.Reader.SimulationNames.Count, 3);
             System.Data.DataTable dt = dataStore.Reader.GetData("Report");
 
-            System.Data.DataRow simScript = dt.Rows[0];
-            System.Data.DataRow simEvents = dt.Rows[1];
-            System.Data.DataRow simNone = dt.Rows[2];
+
+            System.Data.DataRow simScript = null;
+            System.Data.DataRow simEvents = null;
+            System.Data.DataRow simNone = null;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                if ((dt.Rows[i]["SimulationName"] as string).CompareTo("ExperimentScriptfalse") == 0)
+                    simScript = dt.Rows[i];
+                else if ((dt.Rows[i]["SimulationName"] as string).CompareTo("ExperimentEventsfalse") == 0)
+                    simEvents = dt.Rows[i];
+                else if ((dt.Rows[i]["SimulationName"] as string).CompareTo("ExperimentNone") == 0)
+                    simNone = dt.Rows[i];
+                else
+                    Assert.Fail();
+            }
 
             Assert.AreEqual(simScript["AboveGroundWt"], simEvents["AboveGroundWt"]);
             Assert.AreEqual(simScript["AboveGroundN"], simEvents["AboveGroundN"]);
