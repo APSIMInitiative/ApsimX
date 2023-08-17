@@ -72,10 +72,14 @@ namespace UserInterface.Views
 
             commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
             commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
-            // TODO: make it so above has a size roughly 20% of screen size.
+
             commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
-            // TODO: make it so above has a size roughly 20% of screen size.
+
+            // Set the position of the divider to 80% of the width of the Paned gtk object.
+            reportVariablesBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
+            reportFrequencyBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
+
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;

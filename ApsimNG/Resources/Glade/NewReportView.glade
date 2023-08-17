@@ -10,7 +10,7 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <child>
-          <object class="GtkPaned" id="reportingVariablesBox">
+          <object class="GtkPaned" id="reportVariablesBox">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="wide-handle">True</property>
