@@ -4557,48 +4557,48 @@
                 "ReadOnly": false
               },
               "RemovalType": 0,
-              "StageToSet": 3.5,
+              "StageToSet": "3.5",
               "RemovalDatesInput": "15/12/2010, 15/01/2011",
               "BiomassRemovals": [
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Product",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.5",
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.5,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Stover",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": "0.5",
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.5,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Root",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 },
                 {
-                  "$type": "Models.Management.BiomassRemovalEvents+BiomassRemovalOfPlantOrganType, Models",
+                  "$type": "Models.Management.BiomassRemovalOfPlantOrganType, Models",
                   "PlantName": "SCRUM",
                   "OrganName": "Nodule",
                   "TypeString": "Cutting",
-                  "LiveToRemoveString": null,
-                  "DeadToRemoveString": null,
-                  "LiveToResidueString": null,
-                  "DeadToResidueString": null
+                  "LiveToRemove": 0.0,
+                  "DeadToRemove": 0.0,
+                  "LiveToResidue": 0.0,
+                  "DeadToResidue": 0.0
                 }
               ],
               "Name": "BiomassRemovalEvents",
