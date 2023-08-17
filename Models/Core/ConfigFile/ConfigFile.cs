@@ -173,9 +173,22 @@ namespace Models.Core.ConfigFile
                                     {
                                         Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(commandSplits[2], Assembly.GetExecutingAssembly());
                                         if (typeArray.Length == 0)
-                                            throw new Exception($"Unable to find a model for action by the name of: {commandSplits[2]}");
-                                        string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
-                                        nodeForAction = reformattedNode;
+                                        {
+                                            if (commandSplits[0].Equals("duplicate"))
+                                            {
+                                                // Makes the nodeForAction function as a new name for the cloned node.
+                                                nodeForAction = commandSplits[2];
+                                            }
+                                            else
+                                            {
+                                                throw new Exception($"Unable to find a model for action by the name of: {commandSplits[2]}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
+                                            nodeForAction = reformattedNode;
+                                        }
                                     }
                                 }
                             }
@@ -240,8 +253,9 @@ namespace Models.Core.ConfigFile
                         IModel nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
                         IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
                         IModel nodeClone = nodeToBeCopied.Clone();
-                        string newNodeName = instruction.NodeForAction.ToString().Substring(1).Trim(']');
-                        nodeClone.Name = newNodeName;
+                        string newNodeName = instruction.NodeForAction.ToString();
+                        if (!string.IsNullOrWhiteSpace(newNodeName))
+                            nodeClone.Name = newNodeName;
                         Structure.Add(nodeClone, nodeToBeCopiedsParent);
                         break;
                     case "Copy":
