@@ -1,0 +1,11 @@
+[{
+  "variableName":"MineralN",
+  "variableCode":"NO3.kgha + NH4.kgha + Urea.kgha as MineralN"
+},
+{
+  "variableName":"Yield",
+  "variableCode":"Something"
+}]
+
+
+

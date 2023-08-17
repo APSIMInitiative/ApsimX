@@ -78,4 +78,6 @@
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Copy ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(AzureFiles)" DestinationFiles="@(AzureFiles->'$(OutputPath)%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
+
+  <ProjectExtensions><VisualStudio><UserProperties resources_4commonreportvariables_4commonfrequencyvariables_1json__JsonSchema="json" /></VisualStudio></ProjectExtensions>
 </Project>

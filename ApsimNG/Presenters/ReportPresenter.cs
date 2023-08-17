@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Reflection;
+using ApsimNG.Classes;
 using Models;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;
+using Newtonsoft.Json;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -140,53 +145,59 @@ namespace UserInterface.Presenters
 
         public DataTable SetCommonReportVariables()
         {
-            //JObject reportingVariablesJSON = null;
-            //string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-            //string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "Models\\Resources\\CommonReportingVariables.json");
+            string reportingVariablesJSON = null;
+            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\CommonReportingVariables.json");
 
-            //// Get the resource file contents into a JSON Object.
-            //reportingVariablesJSON = JObject.Parse(File.ReadAllText(commonReportingVariablesFilePath));
-
-            //JArray reportingVariableArray = (JArray)reportingVariablesJSON["variables"];
-            //// Expecting to get a Dictionary<string, string> 
-            //IList reportingVariableList = reportingVariableArray.ToObject<Dictionary<string, string>>();
+            // Get the resource file contents into a JSON Object.
+            reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
+            List<ReportVariable> reportVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
 
             // Build a DataTable to replace the private variable
-            DataTable dt = new DataTable();
+            DataTable reportVariableDataTable = new DataTable();
 
             DataColumn reportingVariableNameColumn = new DataColumn("Variable name");
             DataColumn reportingVariableCodeColumn = new DataColumn("Variable code");
-            dt.Columns.Add(reportingVariableNameColumn);
-            dt.Columns.Add(reportingVariableCodeColumn);
+            reportVariableDataTable.Columns.Add(reportingVariableNameColumn);
+            reportVariableDataTable.Columns.Add(reportingVariableCodeColumn);
 
-            DataRow row1 = dt.NewRow();
-            DataRow row2 = dt.NewRow();
-            row1["Variable name"] = "MineralN";
-            row1["Variable code"] = "NO3.kgha + NH4.kgha + Urea.kgha as MineralN";
-            row2["Variable name"] = "Yield";
-            row2["Variable code"] = "Something";
-            dt.Rows.Add(row1);
-            dt.Rows.Add(row2);
-            return dt;
+            foreach (ReportVariable reportVariable in reportVariableList)
+            {
+                DataRow row = reportVariableDataTable.NewRow();
+                row["Variable name"] = reportVariable.VariableName;
+                row["Variable code"] = reportVariable.VariableCode;
+                reportVariableDataTable.Rows.Add(row);
+            }
+
+            return reportVariableDataTable;
         }
 
         public DataTable SetCommonReportFrequencyVariables()
         {
+            string reportingFrequencyVariablesJSON = null;
+            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\CommonFrequencyVariables.json");
+
+            // Get the resource file contents into a JSON Object.
+            reportingFrequencyVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
+            List<ReportVariable> reportFrequencyVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingFrequencyVariablesJSON);
+
             // Build a DataTable to replace the private variable
-            DataTable dt = new DataTable();
+            DataTable reportFrequencyVariableDataTable = new("Report frequency variable table");
 
-            DataColumn reportingVariableNameColumn = new DataColumn("Variable name");
-            DataColumn reportingVariableCodeColumn = new DataColumn("Variable code");
-            dt.Columns.Add(reportingVariableNameColumn);
-            dt.Columns.Add(reportingVariableCodeColumn);
+            DataColumn reportingFrequencyVariableNameColumn = new DataColumn("Variable name");
+            DataColumn reportingFrequencyVariableCodeColumn = new DataColumn("Variable code");
+            reportFrequencyVariableDataTable.Columns.Add(reportingFrequencyVariableNameColumn);
+            reportFrequencyVariableDataTable.Columns.Add(reportingFrequencyVariableCodeColumn);
 
-            DataRow row1 = dt.NewRow();
-            row1["Variable name"] = "Today";
-            row1["Variable code"] = "[Clock].Today";
-
-            dt.Rows.Add(row1);
-
-            return dt;
+            foreach (ReportVariable reportFrequencyVariable in reportFrequencyVariableList)
+            {
+                DataRow row = reportFrequencyVariableDataTable.NewRow();
+                row["Variable name"] = reportFrequencyVariable.VariableName;
+                row["Variable code"] = reportFrequencyVariable.VariableCode;
+                reportFrequencyVariableDataTable.Rows.Add(row);
+            }
+            return reportFrequencyVariableDataTable;
         }
 
         /// <summary>

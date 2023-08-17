@@ -1,0 +1,11 @@
+﻿[
+  {
+    "variableName": "Today",
+    "variableCode": "[Clock].Today"
+  },
+  {
+    "variableName": "Harvest",
+    "variableCode": "Plant.Harvest"
+  }
+]
+
