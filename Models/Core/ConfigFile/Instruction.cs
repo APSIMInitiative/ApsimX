@@ -91,9 +91,9 @@
         /// </summary>
         Run,
         /// <summary>
-        /// Makes instruction a Create type
+        /// Makes instruction a duplicate type.
         /// </summary>
-        Create
+        Duplicate
 
     }
 }

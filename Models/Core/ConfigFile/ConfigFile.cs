@@ -114,13 +114,14 @@ namespace Models.Core.ConfigFile
                         else if (keywordString.Contains("save")) { keyword = Keyword.Save; }
                         else if (keywordString.Contains("load")) { keyword = Keyword.Load; }
                         else if (keywordString.Contains("run")) { keyword = Keyword.Run; }
+                        else if (keywordString.Contains("duplicate")) { keyword = Keyword.Duplicate; }
                         else throw new Exception($"keyword in command didn't match any recognised commands. Keyword given {keywordString}");
 
                         //if (commandSplits.Length >= 2)
                         if (commandSplits.Count >= 2)
                         {
                             // Determine if its a nodeToModify/SavePath/LoadPath
-                            if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete)
+                            if (keyword == Keyword.Add || keyword == Keyword.Copy || keyword == Keyword.Delete || keyword == Keyword.Duplicate)
                             {
                                 Match secondSplitResult = rxNode.Match(commandSplits[1]);
                                 Match secondSplitComplexResult = rxNodeComplex.Match(commandSplits[1]);
@@ -152,7 +153,6 @@ namespace Models.Core.ConfigFile
                                     if (thirdCommandMatchesApsimxFilePath.Value.Equals(thirdCommandMatchesNode))
                                         doRegexValuesMatch = true;
                                     // If third command split string is a file path...
-                                    //if (commandSplits[2].Contains('\\') || commandSplits[2].Contains('/'))
                                     if (!doRegexValuesMatch && thirdCommandMatchesApsimxFilePath.Success)
                                     {
                                         string[] filePathAndNodeName = commandSplits[2].Split(';');
@@ -165,15 +165,15 @@ namespace Models.Core.ConfigFile
                                         else throw new Exception("Add command missing either file or node name.");
                                     }
                                     // If third command split string is a [NodeName]...
-                                    //else if (commandSplits[2].Contains('[') && commandSplits[2].Contains(']'))
                                     else if (!doRegexValuesMatch && thirdCommandMatchesNode.Success)
                                     {
                                         nodeForAction = commandSplits[2];
                                     }
                                     else
                                     {
-                                        //string reformattedNode = "{\"$type\": \"Models." + commandSplits[2] + ", Models\"}";
                                         Type[] typeArray = ReflectionUtilities.GetTypeWithoutNameSpace(commandSplits[2], Assembly.GetExecutingAssembly());
+                                        if (typeArray.Length == 0)
+                                            throw new Exception($"Unable to find a model for action by the name of: {commandSplits[2]}");
                                         string reformattedNode = "{\"$type\":\"" + typeArray[0].ToString() + ", Models\"}";
                                         nodeForAction = reformattedNode;
                                     }
@@ -230,22 +230,25 @@ namespace Models.Core.ConfigFile
                 {
                     case "Add":
                         IModel parentNode = locator.Get(instruction.NodeToModify) as IModel;
-                        //// Removes brackets if present.
-                        //if (instruction.NodeForAction.Contains('['))
-                        //    instruction.NodeForAction.Substring(1).Trim(']');
                         Structure.Add(instruction.NodeForAction, parentNode);
                         break;
                     case "Delete":
                         IModel nodeToBeDeleted = locator.Get(instruction.NodeToModify) as IModel;
                         Structure.Delete(nodeToBeDeleted);
                         break;
-                    case "Copy":
+                    case "Duplicate":
                         IModel nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
                         IModel nodeToBeCopiedsParent = nodeToBeCopied.Parent;
                         IModel nodeClone = nodeToBeCopied.Clone();
                         string newNodeName = instruction.NodeForAction.ToString().Substring(1).Trim(']');
                         nodeClone.Name = newNodeName;
                         Structure.Add(nodeClone, nodeToBeCopiedsParent);
+                        break;
+                    case "Copy":
+                        nodeToBeCopied = locator.Get(instruction.NodeToModify) as IModel;
+                        IModel parentNodeForCopiedNode = locator.Get(instruction.NodeForAction) as IModel;
+                        nodeClone = nodeToBeCopied.Clone();
+                        Structure.Add(nodeClone, parentNodeForCopiedNode);
                         break;
                 }
                 return simulation;
@@ -294,7 +297,7 @@ namespace Models.Core.ConfigFile
         public static List<string> EncodeSpacesInCommandList(List<string> commandsList)
         {
             // TODO: Needs to encode nodes that have multiple spaces as well.
-            Regex rxKeywordSubstring = new Regex(@"(add|copy|delete|save|load|run)");
+            Regex rxKeywordSubstring = new Regex(@"(add|copy|delete|save|load|run|duplicate)");
             Regex rxBrokenNodeStart = new Regex(@"(\[){1}([\w])+");
             Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
             Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");

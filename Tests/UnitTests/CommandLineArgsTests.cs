@@ -1,15 +1,16 @@
-﻿using APSIM.Shared.Utilities;
-using Models;
-using Models.Core;
-using Models.Core.ApsimFile;
-using Models.Soils;
-using Models.Storage;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Factorial;
+using Models.Soils;
+using Models.Storage;
+using NUnit.Framework;
 
 namespace UnitTests
 {
@@ -338,7 +339,7 @@ ExperimentY2
         }
 
         [Test]
-        public void TestApplySwitchCopyCommand()
+        public void TestApplySwitchDuplicateCommand()
         {
             Simulations file = Utilities.GetRunnableSim();
 
@@ -346,7 +347,7 @@ ExperimentY2
 
             // Get path string for the config file that changes the date.
             string savingFilePath = Path.Combine(Path.GetTempPath(), "savingFile.apsimx");
-            string newFileString = "copy [Simulation] [SimulationCopy]\nsave savingFile.apsimx";
+            string newFileString = "duplicate [Simulation] [SimulationCopy]\nsave savingFile.apsimx";
             string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config4.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
@@ -571,6 +572,62 @@ year  day radn  maxt   mint  rain  pan    vp      code
             Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
             Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
 
+        }
+
+        [Test]
+        public void TestApplySwitchUsingCopyCommand()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+
+            Simulation simulationNode = file.FindInScope<Simulation>();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), apsimxFileName);
+
+            string newFileString = @$"load {apsimxFileName}
+add [Simulations] Experiment
+copy [Simulation] [Experiment]
+save {apsimxFileName}";
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+
+            string text = File.ReadAllText(newApsimxFilePath);
+
+            Simulations simAfterSave = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            Experiment experimentNode = simAfterSave.FindInScope<Experiment>();
+            Assert.NotNull(experimentNode);
+            Simulation simulation = experimentNode.FindInScope<Simulation>();
+            Assert.NotNull(simulation);
+        }
+
+        [Test]
+        public void TestInvalidCopyCommandThrowsException()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Simulation simulationNode = file.FindInScope<Simulation>();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string newFileString = @$"load {apsimxFileName}
+copy [Simulation] [Experiment]
+save {apsimxFileName}";
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            bool fileExists = File.Exists(newTempConfigFile);
+            Assert.True(File.Exists(newTempConfigFile));
+
+            Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
+            //Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
         }
     }
 }
