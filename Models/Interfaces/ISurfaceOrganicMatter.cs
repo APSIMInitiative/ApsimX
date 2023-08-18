@@ -12,7 +12,8 @@
         /// <param name="P">The amount of P added (kg/ha).</param>
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
-        void Add(double mass, double N, double P, string type, string name);
+        /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
+        void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0);
     }
 
 }
