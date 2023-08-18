@@ -56,11 +56,11 @@ namespace UserInterface.Presenters
             water = model as Water;
             view = v as ViewBase;
 
-
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
 
             this.explorerPresenter = explorerPresenter;
             gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach((model as IGridTable).Tables[0], v, explorerPresenter);
+            gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");

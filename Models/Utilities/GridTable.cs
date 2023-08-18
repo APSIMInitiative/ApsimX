@@ -7,6 +7,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
 using System.Collections;
+using static Models.PMF.Phen.PhotoperiodPhase;
+using System.ComponentModel;
 
 namespace Models.Utilities
 {
@@ -232,17 +234,24 @@ namespace Models.Utilities
                             FieldInfo fieldInfo = null;
                             foreach (object obj in list)
                             {
-                                if (propInfo == null)
-                                    propInfo = obj.GetType().GetProperty(Name);
-                                if (fieldInfo == null)
-                                    fieldInfo = obj.GetType().GetField(Name);
-
                                 object val = null;
-                                if (propInfo != null)
-                                    val = propInfo.GetValue(obj);
-                                else if (fieldInfo != null)
-                                    val = fieldInfo.GetValue(obj);
+                                if (VariableIsPrimitive(obj))
+                                {
+                                    val = obj;
+                                }
+                                else
+                                {
+                                    if (propInfo == null)
+                                        propInfo = obj.GetType().GetProperty(Name);
+                                    if (fieldInfo == null)
+                                        fieldInfo = obj.GetType().GetField(Name);
 
+                                    if (propInfo != null)
+                                        val = propInfo.GetValue(obj);
+                                    else if (fieldInfo != null)
+                                        val = fieldInfo.GetValue(obj);
+                                }
+                                
                                 if (val is double && double.IsNaN((double)val))
                                     values.Add(string.Empty);
                                 else
@@ -286,20 +295,33 @@ namespace Models.Utilities
                     else if (propertyValue is IEnumerable<object>)
                     {
                         Model model = properties.First().Object as Model;
-                        PropertyInfo fieldInfo = model.GetType().GetProperty("Parameters");
+                        PropertyInfo fieldInfo = model.GetType().GetProperty(properties.First().Name);
                         IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
-                        //rebuild the list
-                        if (data.Rows.Count != list.Count())
-                        {
-                            //make a new list
-                            Type elementType = list.GetType().GetGenericArguments()[0];
-                            Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
-                            IList newList = (IList)Activator.CreateInstance(listType);
 
+                        //make a new list
+                        Type elementType = list.GetType().GetGenericArguments()[0];
+                        Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
+                        IList newList = (IList)Activator.CreateInstance(listType);
+
+                        if (TypeIsPrimitive(elementType))
+                        {
                             for (int i = 0; i < data.Rows.Count; i++)
                             {
-                                //make a new instance of an element
-                                object obj = Activator.CreateInstance(elementType);
+                                TypeConverter typeConverter = TypeDescriptor.GetConverter(elementType);
+                                object propValue = typeConverter.ConvertFromString(data.Rows[i][Name].ToString());
+                                newList.Add(propValue);
+                            }
+
+                            //Set the Model to use our modified list
+                            fieldInfo.SetValue(model, newList);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < data.Rows.Count; i++)
+                            {
+                                object obj = null;
+                                obj = Activator.CreateInstance(elementType);
+
                                 //add it to the list
                                 newList.Add(obj);
                             }
@@ -307,21 +329,21 @@ namespace Models.Utilities
                             //Set the Model to use our modified list
                             fieldInfo.SetValue(model, newList);
                             list = newList as IEnumerable<object>;
-                        }
 
-                        for (int i = 0; i < data.Rows.Count; i++)
-                        {
-                            string value = data.Rows[i][Name].ToString();
-                            int count = 0;
-                            if (i < list.Count())
+                            for (int i = 0; i < data.Rows.Count; i++)
                             {
-                                foreach (object obj in list)
+                                string value = data.Rows[i][Name].ToString();
+                                int count = 0;
+                                if (i < list.Count())
                                 {
-                                    if (i == count)
+                                    foreach (object obj in list)
                                     {
-                                        ApplyChangesToListData(obj, Name, value);
+                                        if (i == count)
+                                        {
+                                            ApplyChangesToListData(obj, Name, value);
+                                        }
+                                        count += 1;
                                     }
-                                    count += 1;
                                 }
                             }
                         }
@@ -366,6 +388,19 @@ namespace Models.Utilities
                     }
                 }
                     
+            }
+
+            private bool VariableIsPrimitive(object obj)
+            {
+                return TypeIsPrimitive(obj.GetType());
+            }
+
+            private bool TypeIsPrimitive(Type type)
+            {
+                if (type.IsPrimitive || type == typeof(string) || type == typeof(System.String))
+                    return true;
+                else
+                    return false;
             }
         }
 

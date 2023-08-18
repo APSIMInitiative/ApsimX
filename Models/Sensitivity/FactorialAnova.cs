@@ -21,7 +21,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class FactorialAnova : Model, IModelAsTable, IPostSimulationTool
+    public class FactorialAnova : Model, IGridTable, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -57,62 +57,24 @@ namespace Models
         /// Gets or sets the table of values.
         /// </summary>
         [JsonIgnore]
-        public List<DataTable> Tables
+        public List<GridTable> Tables
         {
             get
             {
-                List<DataTable> tables = new List<DataTable>();
+                List<GridTable.Column> columns;
+                List<GridTable> tables = new List<GridTable>();
 
                 // Add an inputs table
-                DataTable inputTable = new DataTable();
-                inputTable.Columns.Add("Inputs", typeof(string));
-
-                foreach (string input in Inputs)
-                {
-                    DataRow rowIn = inputTable.NewRow();
-                    rowIn["Inputs"] = input;
-                    inputTable.Rows.Add(rowIn);
-                }
-
-                tables.Add(inputTable);
+                columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Inputs", new VariableProperty(this, GetType().GetProperty("Inputs"))));
+                tables.Add(new GridTable(Name, columns));
 
                 // Add an outputs table.
-                DataTable outputTable = new DataTable();
-                outputTable.Columns.Add("Outputs", typeof(string));
-
-                foreach (string output in Outputs)
-                {
-                    DataRow rowOut = outputTable.NewRow();
-                    rowOut["Outputs"] = output;
-                    outputTable.Rows.Add(rowOut);
-                }
-
-                tables.Add(outputTable);
+                columns = new List<GridTable.Column>();
+                columns.Add(new GridTable.Column("Outputs", new VariableProperty(this, GetType().GetProperty("Outputs"))));
+                tables.Add(new GridTable(Name, columns));
 
                 return tables;
-            }
-            set
-            {
-
-                Inputs.Clear();
-                Outputs.Clear();
-                foreach (DataRow row in value[1].Rows)
-                {
-                    string output = null;
-                    if (!Convert.IsDBNull(row["Outputs"]))
-                        output = row["Outputs"].ToString();
-                    if (output != null)
-                        Outputs.Add(output);
-                }
-
-                foreach (DataRow row in value[0].Rows)
-                {
-                    string input = null;
-                    if (!Convert.IsDBNull(row["Inputs"]))
-                        input = row["Inputs"].ToString();
-                    if (input != null)
-                        Inputs.Add(input);
-                }
             }
         }
 

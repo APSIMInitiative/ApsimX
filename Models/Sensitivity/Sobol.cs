@@ -387,23 +387,6 @@ namespace Models
                 columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
                 columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
-                // Add a parameter table
-                DataTable table = new DataTable();
-                table.Columns.Add("Name", typeof(string));
-                table.Columns.Add("Path", typeof(string));
-                table.Columns.Add("LowerBound", typeof(double));
-                table.Columns.Add("UpperBound", typeof(double));
-
-                foreach (Parameter param in Parameters)
-                {
-                    DataRow row = table.NewRow();
-                    row["Name"] = param.Name;
-                    row["Path"] = param.Path;
-                    row["LowerBound"] = param.LowerBound;
-                    row["UpperBound"] = param.UpperBound;
-                    table.Rows.Add(row);
-                }
-
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns));
 
