@@ -3457,7 +3457,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Soil].Physical.LL15mm",
+                      "VariableName": "[Root].PlantZone.SoilCrop.LLmm",
                       "Name": "llDep",
                       "ResourceName": null,
                       "Children": [],
@@ -9051,14 +9051,14 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
+                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
+                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
                   ],
                   "Lines": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
+                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
+                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
                   ],
                   "Name": "Buster",
                   "ResourceName": null,

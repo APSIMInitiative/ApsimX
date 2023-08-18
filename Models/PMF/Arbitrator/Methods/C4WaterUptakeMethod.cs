@@ -31,6 +31,9 @@ namespace Models.PMF.Arbitrator
         ///<summary>The soil</summary> needed to get KL values
         [Link]
         public Soils.Soil Soil = null;
+        
+        //Used to access the soil properties for this crop
+        private SoilCrop soilCrop = null;
 
         /// <summary>A list of organs or suborgans that have watardemands</summary>
         protected List<IHasWaterDemand> WaterDemands = new List<IHasWaterDemand>();
@@ -65,6 +68,9 @@ namespace Models.PMF.Arbitrator
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             List<IHasWaterDemand> Waterdemands = new List<IHasWaterDemand>();
+            soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 
             foreach (Model Can in plant.FindAllInScope<IHasWaterDemand>())
                 Waterdemands.Add(Can as IHasWaterDemand);
@@ -169,10 +175,6 @@ namespace Models.PMF.Arbitrator
                 myZone.AvailableSW = new double[soilPhysical.Thickness.Length];
                 myZone.PotentialAvailableSW = new double[soilPhysical.Thickness.Length];
                 myZone.Supply = new double[soilPhysical.Thickness.Length];
-
-                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
-                if (soilCrop == null)
-                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"} under Soil.Physical");
 
                 double[] kl = soilCrop.KL;
 

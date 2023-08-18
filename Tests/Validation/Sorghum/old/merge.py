@@ -49,4 +49,4 @@ def combineResults(directory):
     combined.to_csv('combined_%s.csv' % directory, header = True, index = False)
 
 combineResults('fixed')
-combineResults('dynamic')
+# combineResults('dynamic')
