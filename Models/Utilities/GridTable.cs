@@ -317,35 +317,23 @@ namespace Models.Utilities
                         }
                         else
                         {
-                            for (int i = 0; i < data.Rows.Count; i++)
-                            {
-                                object obj = null;
-                                obj = Activator.CreateInstance(elementType);
-
-                                //add it to the list
-                                newList.Add(obj);
-                            }
-
-                            //Set the Model to use our modified list
-                            fieldInfo.SetValue(model, newList);
-                            list = newList as IEnumerable<object>;
-
+                            //each column send it's own update event
+                            //so we need to use the existing object's value to avoid overwriting them
+                            //but we only add as many rows as required by the new table
+                            foreach (object obj in list)
+                                if (newList.Count < data.Rows.Count)
+                                    newList.Add(obj);                                
+                            //on the first column that runs, it must add additional entries for any new lines
+                            for (int i = 0; i < data.Rows.Count - list.Count(); i++)
+                                newList.Add(Activator.CreateInstance(elementType));
+                            //once we have a list of the right length, we then write in our cells one at a time.
                             for (int i = 0; i < data.Rows.Count; i++)
                             {
                                 string value = data.Rows[i][Name].ToString();
-                                int count = 0;
-                                if (i < list.Count())
-                                {
-                                    foreach (object obj in list)
-                                    {
-                                        if (i == count)
-                                        {
-                                            ApplyChangesToListData(obj, Name, value);
-                                        }
-                                        count += 1;
-                                    }
-                                }
+                                ApplyChangesToListData(newList[i], Name, value);
                             }
+                            //Set the Model to use our modified list
+                            fieldInfo.SetValue(model, newList);
                         }
                     }
                 }
