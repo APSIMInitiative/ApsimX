@@ -11,6 +11,8 @@ namespace UserInterface.Views
     /// </summary>
     public class NewReportView : ViewBase, IReportView
     {
+
+
         private Notebook notebook1 = null;
         private Paned reportVariablesBox = null;
         private Paned reportFrequencyBox = null;
@@ -83,10 +85,6 @@ namespace UserInterface.Views
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
-        }
-
-        private void OnVariableListDragStarted(object sender, EventArgs args)
-        {
 
         }
 

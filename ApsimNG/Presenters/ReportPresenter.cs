@@ -59,10 +59,29 @@ namespace UserInterface.Presenters
         /// </summary>
         private IntellisensePresenter intellisense;
 
-        ///// <summary>
-        ///// DataTable used for storing common reporting frequency variables from a resource.
-        ///// </summary>
-        //private DataTable commonReportingFrequencyVariables;
+        private DataTable commonReportFrequencyVariables;
+
+        private DataTable commonReportVariables;
+
+        /// <summary>Stores variable name and variable code while being dragged.</summary>
+        private ReportVariable CurrentlySelectedVariable { get; set; }
+
+        /// <summary> Stores any dragged variables index.</summary>
+        public int DraggedVariableIndex { get; set; }
+
+        /// <summary> DataTable for storing common report variables. </summary>
+        public DataTable CommonReportVariables
+        {
+            get { return commonReportVariables; }
+            set { commonReportVariables = value; }
+        }
+
+        /// <summary> DataTable for storing common report frequency variables. </summary>
+        public DataTable CommonReportFrequencyVariables
+        {
+            get { return commonReportFrequencyVariables; }
+            set { commonReportFrequencyVariables = value; }
+        }
 
         /// <summary>
         /// Attach the model (report) and the view (IReportView)
@@ -72,6 +91,8 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            CommonReportVariables = SetCommonReportVariables();
+            CommonReportFrequencyVariables = SetCommonReportFrequencyVariables();
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
             this.view = view as IReportView;
@@ -81,8 +102,11 @@ namespace UserInterface.Presenters
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
-            this.view.CommonReportVariablesList.DataSource = SetCommonReportVariables();
-            this.view.CommonReportFrequencyVariablesList.DataSource = SetCommonReportFrequencyVariables();
+            this.view.CommonReportVariablesList.DataSource = CommonReportVariables;
+            this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
+            this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
+            this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
+            (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDragDrop;
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
@@ -118,6 +142,48 @@ namespace UserInterface.Presenters
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             this.view.TabIndex = this.report.ActiveTabIndex;
+        }
+
+        private void VariableListVariableDragDrop(object sender, EventArgs e)
+        {
+
+        }
+
+        // 
+        private void OnCommonReportVariableListDragStart(object sender, EventArgs e)
+        {
+            var selection = (sender as Gtk.TreeView).Selection.GetSelectedRows();
+            DraggedVariableIndex = selection[0].Indices[0];
+            foreach (DataRow row in CommonReportVariables.Rows)
+                if (CommonReportVariables.Rows.IndexOf(row) == DraggedVariableIndex)
+                {
+                    CurrentlySelectedVariable = new ReportVariable()
+                    {
+                        VariableName = row[0].ToString(),
+                        VariableCode = row[1].ToString(),
+                    };
+                }
+
+            // TODO: Need to clear CurrentlySelectedReportVariable after DragStart event.
+
+
+        }
+
+        private void OnCommonReportFrequencyVariableListDragStart(object sender, EventArgs e)
+        {
+            var selection = (sender as Gtk.TreeView).Selection.GetSelectedRows();
+            DraggedVariableIndex = selection[0].Indices[0];
+            foreach (DataRow row in CommonReportVariables.Rows)
+                if (CommonReportFrequencyVariables.Rows.IndexOf(row) == DraggedVariableIndex)
+                {
+                    CurrentlySelectedVariable = new ReportVariable()
+                    {
+                        VariableName = row[0].ToString(),
+                        VariableCode = row[1].ToString(),
+                    };
+                }
+
+            // TODO: Need to clear CurrentlySelectedReportVariable after DragStart event.
         }
 
         private void OnSplitterChanged(object sender, EventArgs e)

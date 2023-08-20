@@ -1,8 +1,8 @@
-﻿using Gtk;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Gtk;
 using TreeModel = Gtk.ITreeModel;
 
 
@@ -41,6 +41,8 @@ namespace UserInterface.Views
         /// <summary>The sort type.</summary>
         private bool sortAscending;
 
+        public event EventHandler DragStart;
+
         /// <summary>Constructor</summary>
         public ListView()
         {
@@ -54,11 +56,28 @@ namespace UserInterface.Views
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
             tree.ButtonPressEvent += OnTreeButtonDown;
+            TargetEntry[] target_table = new TargetEntry[] {
+               new TargetEntry("application/x-model-component", TargetFlags.App, 0)
+            };
+            Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
+            Drag.SourceSet(tree, Gdk.ModifierType.Button1Mask, target_table, actions);
+            Drag.DestSet(tree, 0, target_table, actions);
+            // TODO: Need to allow Drag from this to a TextView object. Drag.DestSet may need info on what can accept this drag??
+            // Perhaps needs a Object type, like TextView added to enable this??
+            // May be worth doing doubl-click functionality first.
+            tree.DragBegin += OnTreeDragBegin;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
+        }
+
+        private void OnTreeDragBegin(object sender, DragBeginArgs args)
+        {
+            Console.WriteLine("Treeview drag began.");
+            DragStart.Invoke(sender, args);
+
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
@@ -134,7 +153,7 @@ namespace UserInterface.Views
         {
             if (columnName == null)
                 columnTypes.Add(typeof(string));    // default is string
-            else 
+            else
                 columnTypes.Add(colType);
             var cell = new CellRendererText();
             cells.Add(cell);
@@ -441,6 +460,11 @@ namespace UserInterface.Views
     {
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
+
+        /// <summary>
+        /// TODO: Needs decsription.
+        /// </summary>
+        event EventHandler DragStart;
 
         /// <summary>Get or sets the datasource for the view.</summary>
         DataTable DataSource { get; set; }

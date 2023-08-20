@@ -1,14 +1,14 @@
 ﻿using System;
-using Gtk;
-using Utility;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Collections.Generic;
-using GtkSource;
 using System.Text;
-using UserInterface.Interfaces;
+using Gtk;
+using GtkSource;
 using UserInterface.EventArguments;
 using UserInterface.Intellisense;
+using UserInterface.Interfaces;
+using Utility;
 using FontDescription = Pango.FontDescription;
 
 namespace UserInterface.Views
@@ -99,6 +99,11 @@ namespace UserInterface.Views
         public event EventHandler StyleChanged;
 
         /// <summary>
+        /// Invoked when the user drops a variable on the EditorView.
+        /// </summary>
+        public event EventHandler VariableDragDataReceived;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public string Text
@@ -184,7 +189,7 @@ namespace UserInterface.Views
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         public string IntelliSenseChars { get; set; }
-        
+
         /// <summary>
         /// Gets the current line number
         /// </summary>
@@ -313,10 +318,16 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
             textEditor = new SourceView();
+            textEditor.DragEnd += OnTextEditorDragEnd;
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
             scroller.Add(textEditor);
             InitialiseWidget();
+        }
+
+        private void OnTextEditorDragEnd(object o, DragDataReceivedArgs args)
+        {
+            VariableDragDataReceived.Invoke(o, args);
         }
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
