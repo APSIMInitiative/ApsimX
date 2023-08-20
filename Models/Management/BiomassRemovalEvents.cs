@@ -235,6 +235,20 @@ namespace Models.Management
                 if (PlantToRemoveFrom.Parent == null)
                     PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
 
+            //check if it has organs, if not, check if it is in replacements
+            List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
+            if (organs.Count == 0)
+            {
+                Simulations sims = PlantToRemoveFrom.FindAncestor<Simulations>();
+                Folder replacements = sims.FindChild<Folder>("Replacements");
+                if (replacements != null)
+                {
+                    IPlant plant = replacements.FindChild<IPlant>(PlantToRemoveFrom.Name);
+                    if (plant != null)
+                        PlantToRemoveFrom = plant;
+                }
+            }
+
             if (PlantToRemoveFrom == null)
                 throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
         }
