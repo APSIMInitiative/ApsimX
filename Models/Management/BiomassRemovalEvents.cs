@@ -189,13 +189,13 @@ namespace Models.Management
                 }
             }
 
-            if (PlantToRemoveFrom.ToString() == BiomassRemovalType.Cutting.ToString())
+            if (RemovalType.ToString() == BiomassRemovalType.Cutting.ToString())
                 Cutting?.Invoke(this, new EventArgs());
-            if (PlantToRemoveFrom.ToString() == BiomassRemovalType.Grazing.ToString())
+            if (RemovalType.ToString() == BiomassRemovalType.Grazing.ToString())
                 Grazing?.Invoke(this, new EventArgs());
-            if (PlantToRemoveFrom.ToString() == BiomassRemovalType.Pruning.ToString())
+            if (RemovalType.ToString() == BiomassRemovalType.Pruning.ToString())
                 Pruning?.Invoke(this, new EventArgs());
-            if (PlantToRemoveFrom.ToString() == BiomassRemovalType.Harvesting.ToString())
+            if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
                 Harvesting?.Invoke(this, new EventArgs());
 
             double stage;
