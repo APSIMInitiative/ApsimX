@@ -681,7 +681,7 @@ namespace Models.CLEM.Activities
 
             // check GrazeFoodStoreExists for breeders
             grazeStoreBreeders = "";
-            if(GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
+            if((ManageFemaleBreederNumbers & PerformFemaleStocking) && GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
             {
                 grazeStoreBreeders = GrazeFoodStoreNameBreeders.Split('.').Last();
                 foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -689,15 +689,15 @@ namespace Models.CLEM.Activities
 
             var ah = this.FindInScope<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
-            if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
+            if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
                 if(ah.FindAllDescendants<PastureActivityManage>().Any())
                     Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
-
+            
             // check GrazeFoodStoreExists for sires
             grazeStoreSires = "";
-            if (GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
+            if ((ManageMaleBreederNumbers & PerformMaleStocking) && GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
             {
                 grazeStoreSires = GrazeFoodStoreNameSires.Split('.').Last();
                 foodStoreSires = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -1635,12 +1635,12 @@ namespace Models.CLEM.Activities
 
             if (purchaseDetails.Count() == 0)
             {
-                if (ManageMaleBreederNumbers && PerformMaleStocking && MaximumSiresPerPurchase > 0)
+                if ((ManageMaleBreederNumbers & PerformMaleStocking) && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
                     results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
                 }
-                if (ManageFemaleBreederNumbers && PerformFemaleStocking && MaximumProportionBreedersPerPurchase > 0)
+                if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
                     results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
@@ -1648,7 +1648,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ManageMaleBreederNumbers)
+                if (ManageMaleBreederNumbers && PerformMaleStocking)
                 {
                     if(ValidateSires() is ValidationResult sires)
                         results.Add(sires);
@@ -1657,14 +1657,14 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
                         {
-                            string[] memberNames = new string[] { "Location is not valid" };
+                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                             results.Add(new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                         }
                     }
 
                 }
 
-                if (ManageFemaleBreederNumbers)
+                if (ManageFemaleBreederNumbers && PerformFemaleStocking)
                 {
                     if (ValidateBreeders() is ValidationResult breeders)
                         results.Add(breeders);
@@ -1673,7 +1673,7 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
-                            string[] memberNames = new string[] { "Location is not valid" };
+                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
                             results.Add(new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                         }
                     }
@@ -1698,7 +1698,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
-                        string[] memberNames = new string[] { "Location is not valid" };
+                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
                         results.Add(new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                     }
                 }
@@ -1710,7 +1710,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
-                        string[] memberNames = new string[] { "Location is not valid" };
+                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                         results.Add(new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                     }
                 }
