@@ -41,10 +41,10 @@
         private Upgrade[] allUpgrades = new Upgrade[0];
 
         /// <summary>
-        /// Version number that indicates custom build (set to -1 to test upgrade during development)
+        /// Version number that indicates custom build (normally 0; set to -1 to test upgrade during development)
         /// </summary>
 
-        private int customBuildVersion = -1;
+        private int customBuildVersion = 0;
 
         private bool loadFailure = false;
 
