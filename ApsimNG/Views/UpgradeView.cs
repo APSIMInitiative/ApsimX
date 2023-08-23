@@ -40,6 +40,12 @@
         /// </summary>
         private Upgrade[] allUpgrades = new Upgrade[0];
 
+        /// <summary>
+        /// Version number that indicates custom build (set to -1 to test upgrade during development)
+        /// </summary>
+
+        private int customBuildVersion = -1;
+
         private bool loadFailure = false;
 
         /// <summary>
@@ -92,7 +98,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Build == 0)
+            if (version.Build == customBuildVersion)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -204,7 +210,7 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Build == 0)
+            if (version.Build == customBuildVersion)
             {
                 button1.Sensitive = false;
                 table2.Hide();
