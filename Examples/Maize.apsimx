@@ -12,8 +12,8 @@
       "Children": [
         {
           "$type": "Models.Clock, Models",
-          "Start": "1990-01-01T00:00",
-          "End": "2000-12-31T00:00",
+          "Start": "1990-01-01T00:00:00",
+          "End": "2000-12-31T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -33,7 +33,7 @@
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
           "FileName": "%root%\\Examples\\WeatherFiles\\Dalby.met",
-          "ExcelWorkSheetName": null,
+          "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
           "Children": [],
@@ -43,6 +43,22 @@
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -68,6 +84,7 @@
                 "[Maize].Grain.Wt",
                 "[Maize].Grain.Size",
                 "[Maize].Grain.NumberFunction",
+                "[Maize].Grain.Total.Wt",
                 "[Maize].Grain.N",
                 "[Maize].Total.Wt"
               ],
@@ -551,22 +568,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.MicroClimate, Models",
-              "a_interception": 0.0,
-              "b_interception": 1.0,
-              "c_interception": 0.0,
-              "d_interception": 0.0,
-              "SoilHeatFluxFraction": 0.4,
-              "MinimumHeightDiffForNewLayer": 0.0,
-              "NightInterceptionFraction": 0.5,
-              "ReferenceHeight": 2.0,
-              "Name": "MicroClimate",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.PMF.Plant, Models",
               "Name": "Maize",
               "ResourceName": "Maize",
@@ -669,15 +670,15 @@
                 },
                 {
                   "Key": "MinESW",
-                  "Value": 100.0
+                  "Value": "100.0"
                 },
                 {
                   "Key": "MinRain",
-                  "Value": 25.0
+                  "Value": "25.0"
                 },
                 {
                   "Key": "RainDays",
-                  "Value": 7
+                  "Value": "7"
                 },
                 {
                   "Key": "CultivarName",
@@ -685,15 +686,15 @@
                 },
                 {
                   "Key": "SowingDepth",
-                  "Value": 30.0
+                  "Value": "30.0"
                 },
                 {
                   "Key": "RowSpacing",
-                  "Value": 750.0
+                  "Value": "750.0"
                 },
                 {
                   "Key": "Population",
-                  "Value": 6.0
+                  "Value": "6.0"
                 }
               ],
               "Name": "Sow using a variable rule",
@@ -748,7 +749,7 @@
                 },
                 {
                   "Key": "Amount",
-                  "Value": 160.0
+                  "Value": "160.0"
                 }
               ],
               "Name": "Fertilise at sowing",
@@ -821,7 +822,7 @@
             },
             {
               "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Yield (kg/ha)",
+              "Title": null,
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
@@ -833,9 +834,9 @@
           "LegendPosition": 0,
           "LegendOrientation": 0,
           "AnnotationLocation": 0,
-          "DisabledSeries": null,
+          "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Maize Yield Time Series",
+          "Name": "Graph",
           "ResourceName": null,
           "Children": [
             {
@@ -853,7 +854,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Yield",
+              "YFieldName": "Maize.Grain.Total.Wt",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": false,
@@ -861,7 +862,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Maize Yield",
+              "Name": "Series",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
