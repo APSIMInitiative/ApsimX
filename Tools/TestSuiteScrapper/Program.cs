@@ -7,6 +7,10 @@ using System.Reflection;
 
 namespace Models
 {
+    /// <summary>
+    /// This simple class scraps metadata from a directory structure of .apsimx files. It extracts experiment name, experment design, latitude, longitude
+    /// from all simulations found. It writes this information as CSV to standard out.
+    /// </summary>
     class Scrapper
     {
         /// <summary>
@@ -24,7 +28,7 @@ namespace Models
             try
             {
                 if (args.Length == 0)
-                    throw new Exception("Usage: ApsimXScrapper path");
+                    throw new Exception("Usage: ApsimXScrapper path > results.csv");
 
                 string rootPath = args[0];
 
