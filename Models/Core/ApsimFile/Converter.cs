@@ -28,7 +28,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 166; } }
+        public static int LatestVersion { get { return 168; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5253,6 +5253,53 @@ namespace Models.Core.ApsimFile
                     series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.NH4.kgha", "NH4.kgha");
                     series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.Urea.kgha", "Urea.kgha");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Change SoilNitrogen to Nutrient
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion167(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changeMade = manager.Replace("[Nutrient].SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+
+                if (changeMade)
+                    manager.Save();
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
+            }
+        }
+
+        /// <summary>
+        /// Change NutrientPool to OrganicPool and CarbonFlow to OrganicFlow
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion168(JObject root, string _)
+        {
+            foreach (var nutrientPool in JsonUtilities.ChildrenOfType(root, "NutrientPool"))
+                nutrientPool["$type"] = "Models.Soils.Nutrients.OrganicPool, Models";
+            foreach (var carbonFlow in JsonUtilities.ChildrenOfType(root, "CarbonFlow"))
+                carbonFlow["$type"] = "Models.Soils.Nutrients.OrganicFlow, Models";
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changeMade = manager.Replace("NutrientPool", "OrganicPool");
+                changeMade = manager.Replace("CarbonFlow", "OrganicFlow") || changeMade;
+                changeMade = manager.Replace("OrganicPoolFunctions", "NutrientPoolFunctions") || changeMade;
+
+                if (changeMade)
+                    manager.Save();
             }
         }
     }

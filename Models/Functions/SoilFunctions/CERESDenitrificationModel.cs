@@ -17,19 +17,19 @@ namespace Models.Functions
         Soils.IPhysical soilPhysical = null;
 
         [Link(ByName = true)]
-        INutrientPool Humic = null;
+        IOrganicPool Humic = null;
 
         [Link(ByName = true)]
-        INutrientPool Inert = null;
+        IOrganicPool Inert = null;
 
         [Link(ByName = true)]
-        INutrientPool FOMCarbohydrate = null;
+        IOrganicPool FOMCarbohydrate = null;
 
         [Link(ByName = true)]
-        INutrientPool FOMCellulose = null;
+        IOrganicPool FOMCellulose = null;
 
         [Link(ByName = true)]
-        INutrientPool FOMLignin = null;
+        IOrganicPool FOMLignin = null;
 
 
         [Link(Type = LinkType.Child)]

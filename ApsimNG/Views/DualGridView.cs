@@ -15,16 +15,30 @@ namespace UserInterface.Views
         /// <summary>bottom grid in view.</summary>
         public IGridView Grid2 { get; private set; }
 
+        /// <summary>Label at top of window</summary>
+        private Gtk.Label label1;
+
+        /// <summary>Label at top of window</summary>
+        private Gtk.VPaned vpaned1;
+
         /// <summary>Constructor</summary>
         public DualGridView(ViewBase owner) : base(owner)
         {
             Grid1 = new GridView(owner);
             Grid2 = new GridView(owner);
 
-            VPaned panel = new VPaned();
-            mainWidget = panel;
-            panel.Pack1((Grid1 as GridView).MainWidget, true, true);
-            panel.Pack2((Grid2 as GridView).MainWidget, true, true);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
+            mainWidget = (Widget)builder.GetObject("scrolledwindow1");
+
+            label1 = (Gtk.Label)builder.GetObject("label1");
+            label1.LineWrap = true;
+
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
+            this.SetLabelHeight(0.1f); 
+
+            VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
+            vpaned2.Pack1((Grid1 as GridView).MainWidget, true, true);
+            vpaned2.Pack2((Grid2 as GridView).MainWidget, true, true);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -34,6 +48,19 @@ namespace UserInterface.Views
             (Grid2 as GridView).MainWidget.Visible = show;
         }
 
+        /// <summary></summary>
+        /// <param name="text"></param>
+        public void SetLabelText(string text)
+        {
+            label1.Markup = text;
+        }
+
+        /// <summary></summary>
+        /// <param name="percentage"></param>
+        public void SetLabelHeight(float percentage)
+        {
+            vpaned1.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * percentage);
+        }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
@@ -63,5 +90,11 @@ namespace UserInterface.Views
 
         /// <summary>Show the 2nd grid?</summary>
         void ShowGrid2(bool show);
+
+        /// <summary></summary>
+        public void SetLabelText(string text);
+
+        /// <summary></summary>
+        public void SetLabelHeight(float percentage);
     }
 }
