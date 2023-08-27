@@ -40,6 +40,12 @@
         /// </summary>
         private Upgrade[] allUpgrades = new Upgrade[0];
 
+        /// <summary>
+        /// Version number that indicates custom build (normally 0; set to -1 to test upgrade during development)
+        /// </summary>
+
+        private int customBuildVersion = 0;
+
         private bool loadFailure = false;
 
         /// <summary>
@@ -92,7 +98,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Build == 0)
+            if (version.Build == customBuildVersion)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -204,7 +210,7 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Build == 0)
+            if (version.Build == customBuildVersion)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -453,57 +459,80 @@
                 });
                 if (!string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
-                    try
+                    int attemptCount = 0;
+                    while (attemptCount < 2)
                     {
-                        if (File.Exists(tempSetupFileName))
+                        try
                         {
 
-                            if (ProcessUtilities.CurrentOS.IsWindows)
+
+                            if (File.Exists(tempSetupFileName))
                             {
-                                // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
-                                // and will handle the removal of the previous version.
-                                string oldVersion = Models.Core.Simulations.ApsimVersion;
-                                var startInfo = new ProcessStartInfo()
+
+                                if (ProcessUtilities.CurrentOS.IsWindows)
                                 {
-                                    FileName = tempSetupFileName,
-                                    Arguments = $"/upgradefrom={oldVersion}",
-                                    WorkingDirectory = Path.GetTempPath()
-                                };
-                                Process.Start(startInfo);
-                            }
-                            else if (ProcessUtilities.CurrentOS.IsMac)
-                            {
-                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
-                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
-                                string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
-                                Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
-                            }
-                            else
-                            {
-                                // Assume (Debian) Linux and hope for the best.
-                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
-                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
-                                Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
-                            }
+                                    // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
+                                    // and will handle the removal of the previous version.
+                                    string oldVersion = Models.Core.Simulations.ApsimVersion;
+                                    var startInfo = new ProcessStartInfo()
+                                    {
+                                        FileName = tempSetupFileName,
+                                        Arguments = $"/upgradefrom={oldVersion}",
+                                        WorkingDirectory = Path.GetTempPath()
+                                    };
+                                    Process.Start(startInfo);
+                                }
+                                else if (ProcessUtilities.CurrentOS.IsMac)
+                                {
+                                    string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
+                                    ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
+                                    string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
+                                    Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
+                                }
+                                else
+                                {
+                                    // Assume (Debian) Linux and hope for the best.
+                                    string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
+                                    ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
+                                    Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
+                                }
 
-                            Application.Invoke((_, __) =>
-                            {
-                                window1.Window.Cursor = null;
+                                attemptCount = 99;
 
-                                // Shutdown the user interface
-                                window1.Dispose();
-                                tabbedExplorerView.Close();
-                            });
+                                Application.Invoke((_, __) =>
+                                {
+                                    window1.Window.Cursor = null;
+
+                                    // Shutdown the user interface
+                                    window1.Dispose();
+                                    tabbedExplorerView.Close();
+                                });
+                            }
+                        }
+                        catch (Exception err)
+                        {
+                            // Possible that the install file is being used by another process (eg. antivirus scanner)
+                            // Make one further attempt to start it after pausing for a short period, rather than failing
+
+                            attemptCount += 1;
+
+                            if (attemptCount<2)
+                            {
+                                
+                                System.Threading.Thread.Sleep(2000);
+
+                            } else
+                            {
+                                Application.Invoke(delegate
+                                {
+                                    window1.Window.Cursor = null;
+                                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
+                                });
+                            }
+                           
                         }
                     }
-                    catch (Exception err)
-                    {
-                        Application.Invoke(delegate
-                        {
-                            window1.Window.Cursor = null;
-                            ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
-                        });
-                    }
+
                 }
             }
             catch (Exception err)
