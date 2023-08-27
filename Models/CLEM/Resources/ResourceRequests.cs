@@ -107,13 +107,16 @@ namespace Models.CLEM.Resources
     ///<summary>
     /// Additional information for animal food requests
     ///</summary> 
-    public class FoodResourcePacket: IFeedType
+    public class FoodResourcePacket: IFeed
     {
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; }
+
         /// <inheritdoc/>
         public double EnergyContent { get; set; }
 
         /// <inheritdoc/>
-        public double DryMatterDigestability { get; set; }
+        public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
         public double FatContent { get; set; }
@@ -129,6 +132,29 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public double Amount { get; set; }
 
+        public double MEContent 
+        { 
+            get
+            {
+                return TypeOfFeed switch
+                {
+                    FeedType.Forage => ((0.172 * DryMatterDigestibility) - 1.707),
+                    FeedType.Supplement => ((0.134 * DryMatterDigestibility) + (0.235 * FatContent) + 1.23),
+                    _ => throw new NotImplementedException("Cannot provide MEContent for the TypeOfFeedProvided."),
+                };
+            }
+        }
+
+        public void Reset()
+        {
+            DryMatterDigestibility = 0;
+            FatContent = 0;
+            NitrogenContent = 0;
+            CPDegradability = 0;
+            Amount = 0;
+            EnergyContent = 0;
+        }
+
         /// <summary>
         /// Clone this packet 
         /// </summary>
@@ -137,10 +163,11 @@ namespace Models.CLEM.Resources
         {
             return new FoodResourcePacket()
             {
+                TypeOfFeed = TypeOfFeed,
                 EnergyContent = EnergyContent,
                 CPDegradability = CPDegradability,
                 Amount = amount,
-                DryMatterDigestability = DryMatterDigestability,
+                DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent
             };

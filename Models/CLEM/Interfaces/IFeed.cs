@@ -8,8 +8,13 @@ namespace Models.CLEM.Interfaces
     /// <summary>
     /// Interface for nutritional quality of feed types 
     /// </summary>
-    public interface IFeedType
+    public interface IFeed
     {
+        /// <summary>
+        /// Defines the broad type of this feed
+        /// </summary>
+        FeedType TypeOfFeed { get; set; }
+
         /// <summary>
         /// Gross energy content (MJ/kg DM)
         /// </summary>
@@ -19,7 +24,7 @@ namespace Models.CLEM.Interfaces
         /// Dry Matter Digestibility (%)
         /// </summary>
         [Description("Dry Matter Digestibility (%)")]
-        double DryMatterDigestability { get; set; }
+        double DryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Fat content (%)
@@ -33,16 +38,13 @@ namespace Models.CLEM.Interfaces
         [Description("Nitrogen content (%)")]
         double NitrogenContent { get; set; }
 
+
+        //ToDo: Do we need this, or just CrudeProtein (%)
+
         /// <summary>
         /// Crude protein degradability
         /// </summary>
         [Description("Crude protein degradability")]
         double CPDegradability { get; set; }
-
-        ///// <summary>
-        ///// Starting amount (kg)
-        ///// </summary>
-        //[Description("Starting amount (kg)")]
-        //double StartingAmount { get; set; }
     }
 }

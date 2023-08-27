@@ -10,8 +10,11 @@ namespace Models.CLEM.Resources
     /// A food pool of given age
     /// </summary>
     [Serializable]
-    public class GrazeFoodStorePool : IFeedType, IResourceType
+    public class GrazeFoodStorePool : IFeed, IResourceType
     {
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
+
         /// <inheritdoc/>
         public double EnergyContent { get; set; }
 
@@ -25,7 +28,7 @@ namespace Models.CLEM.Resources
         public double CPDegradability { get; set; }
 
         /// <inheritdoc/>
-        public double DryMatterDigestability { get; set; }
+        public double DryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Amount (kg)
@@ -119,10 +122,10 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DryMatterDigestability != pool.DryMatterDigestability || NitrogenContent != pool.NitrogenContent)
+                if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenContent != pool.NitrogenContent)
                 {
                     //TODO: run calculation passed others.
-                    DryMatterDigestability = ((DryMatterDigestability * Amount) + (pool.DryMatterDigestability * pool.Amount)) / (Amount + pool.Amount);
+                    DryMatterDigestibility = ((DryMatterDigestibility * Amount) + (pool.DryMatterDigestibility * pool.Amount)) / (Amount + pool.Amount);
                     NitrogenContent = ((NitrogenContent * Amount) + (pool.NitrogenContent * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;

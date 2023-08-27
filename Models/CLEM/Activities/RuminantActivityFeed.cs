@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
         /// Feed quality
         /// </summary>
         [JsonIgnore]
-        public IFeedType FeedDetails { get; set; }
+        public IFeed FeedDetails { get; set; }
 
         /// <summary>
         /// The list of individuals remaining to be fed in the current timestep
@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
-            FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
             FeedResource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 

@@ -922,6 +922,18 @@ namespace Models.CLEM
         MaximumOfProperty
     }
 
+    public enum FeedType
+    {
+        /// <summary>
+        /// Forage style feed
+        /// </summary>
+        Forage,
+        /// <summary>
+        /// Supplement style feed with Ether extract included in metabolisable energy content calculation.
+        /// </summary>
+        Supplement
+    }
+
     /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>

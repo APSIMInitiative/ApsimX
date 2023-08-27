@@ -141,7 +141,7 @@ namespace Models.CLEM.Groupings
             // create food resource packet with details
             FoodResourcePacket foodPacket = new FoodResourcePacket()
             {
-                DryMatterDigestability = feedActivityParent.FeedDetails.DryMatterDigestability,
+                DryMatterDigestibility = feedActivityParent.FeedDetails.DryMatterDigestibility,
                 NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
             };
 

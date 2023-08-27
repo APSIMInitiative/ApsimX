@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// Feed type
         /// </summary>
         [JsonIgnore]
-        public IFeedType FeedType { get; set; }
+        public IFeed FeedType { get; set; }
 
         /// <summary>
         /// Constructor
@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
         }
 
         /// <summary>
