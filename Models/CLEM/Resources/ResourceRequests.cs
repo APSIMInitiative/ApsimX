@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
                 {
                     FeedType.Forage => ((0.172 * DryMatterDigestibility) - 1.707),
                     FeedType.Supplement => ((0.134 * DryMatterDigestibility) + (0.235 * FatContent) + 1.23),
-                    _ => throw new NotImplementedException("Cannot provide MEContent for the TypeOfFeedProvided."),
+                    _ => throw new NotImplementedException($"Cannot provide MEContent for the TypeOfFeed: {TypeOfFeed}."),
                 };
             }
         }

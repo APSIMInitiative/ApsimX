@@ -260,22 +260,22 @@ namespace Models.CLEM.Activities
 
             // grow individuals
 
-            IEnumerable<string> breeds = ruminantHerd.Herd.Select(a => a.BreedParams.Name).Distinct();
+            //IEnumerable<string> breeds = ruminantHerd.Herd.Select(a => a.BreedParams.Name).Distinct();
             this.Status = ActivityStatus.NotNeeded;
 
-            foreach (string breed in breeds)
+            foreach (var breed in ruminantHerd.Herd.GroupBy(a => a.BreedParams.Name))
             {
                 int unfed = 0;
                 int unfedcalves = 0;
                 double totalMethane = 0;
-                foreach (Ruminant ind in ruminantHerd.Herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
+                foreach (Ruminant ind in breed.OrderByDescending(a => a.Age))
                 {
                     ind.MetabolicIntake = ind.Intake.Feed.Actual;
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
                         // check that they had some food
-                        if(ind.Intake.Feed.Actual == 0)
+                        if (ind.Intake.Feed.Actual == 0)
                             unfed++;
 
                         // calculate protein concentration
@@ -294,7 +294,7 @@ namespace Models.CLEM.Activities
                         double crudeProteinRequired = ind.BreedParams.ProteinCoefficient * ind.Intake.CombinedDetails.DryMatterDigestibility / 100;
 
                         // adjust for efficiency of use of protein, (default 90%) degradable. now user param.
-                        double crudeProteinSupply = (ind.PercentNOfIntake * 62.5) * ind.BreedParams.ProteinDegradability;
+                        double crudeProteinSupply = (ind.Intake.CombinedDetails.NitrogenContent * 62.5) * ind.BreedParams.ProteinDegradability;
                         // This was proteinconcentration * 0.9
 
                         // prevent future divide by zero issues.
@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                         // these individuals have access to milk or are separated from mother and must survive on calf calculated pasture intake
 
                         // if potential intake = 0 they have not needed to consume pasture and intake will be zero.
-                        if(MathUtilities.IsGreaterThan(ind.Intake.Feed.Expected, 0.0))
+                        if (MathUtilities.IsGreaterThan(ind.Intake.Feed.Expected, 0.0))
                         {
                             ind.Intake.Feed.Actual = Math.Min(ind.Intake.Feed.Actual, ind.Intake.Feed.Expected);
                             ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake.Feed.Actual);
@@ -347,44 +347,30 @@ namespace Models.CLEM.Activities
                     ind.Cashmere += ind.BreedParams.CashmereCoefficient * ind.MetabolicIntake;
                 }
 
-                // alert user to unfed animals in the month as this should not happen
-                if (unfed > 0)
-                {
-                    string warn = $"individuals of [r={breed}] not fed";
-                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                }
-                if (unfedcalves > 0)
-                {
-                    string warn = $"calves of [r={breed}] not fed";
-                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                }
+                ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
 
                 if (methaneEmissions != null)
                 {
                     // g per day -> total kg
-                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed, TransactionCategory);
+                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed.Key, TransactionCategory);
                 }
             }
         }
 
-        /// <summary>
-        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources 
-        /// This is called at the end of CLEMAnimalWeightGain so after intake determines and before deaths and sales.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMCalculateManure")]
-        private void OnCLEMCalculateManure(object sender, EventArgs e)
+        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
         {
-            if(manureStore!=null)
+            // alert user to unfed animals in the month as this should not happen
+            if (unfed > 0)
             {
-                // sort by animal location
-                foreach (var groupInds in ruminantHerd.Herd.GroupBy(a => a.Location))
-                {
-                    manureStore.AddUncollectedManure(groupInds.Key??"", groupInds.Sum(a => a.Intake.Feed.Actual * (100 - a.Intake.CombinedDetails.DryMatterDigestibility) / 100));
-                }
+                string warn = $"individuals of [r={breed.Key}] not fed";
+                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+            }
+            if (unfedcalves > 0)
+            {
+                string warn = $"calves of [r={breed.Key}] not fed";
+                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
             }
         }
 
@@ -399,10 +385,7 @@ namespace Models.CLEM.Activities
         /// <param name="methaneProduced">Output parameter for methane produced.</param>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            // The following feed quality measures are provided in IFeedType and FoodResourcePackets
-            // The individual tracks the quality of mixed feed types based on broad type (supplement or forage)
-            // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
-            // We can move these calculations to the RuminantIntake and calculate as they arrive or 
+            // local private variables
 
             //double MEcontent = 0;
             //double MEtotal = 0;
@@ -414,6 +397,11 @@ namespace Models.CLEM.Activities
             double energyMaintenance;
             double intakeDaily = ind.Intake.Feed.Actual / 30.4;
             double MEAvailableForGain = 0;
+
+            // The following feed quality measures are provided in IFeedType and FoodResourcePackets
+            // The individual tracks the quality of mixed feed types based on broad type (supplement or forage)
+            // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
+            // We can move these calculations to the RuminantIntake and calculate as they arrive or 
 
             //// for each feed type
             //foreach (var feedPool in ind.Intake.FeedDetails)
@@ -447,6 +435,8 @@ namespace Models.CLEM.Activities
             // Sme 1.15 for all non-castrated males.
             if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
                 sme = 1.15;
+
+            // TODO: wool production energy here!
 
             if (ind.Weaned)
             {
@@ -487,8 +477,9 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                //TODO: add draft individual energy requirement
+                //TODO: add draft individual energy requirement: does this also apply to unweaned individuals? If so move ouside loop
 
+                // we implemented this in the equation above, but this uses a parameter. Can we delete this parameter and assume fixed 6 years for all ruminants?
                 // set maintenance age to maximum of 6 years (2190 days). Now uses EnergyMaintenanceMaximumAge (in years)
                 double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
 
@@ -529,10 +520,11 @@ namespace Models.CLEM.Activities
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable * 30.4);
-
+                // remove consumed milk from mother.
                 ind.Mother?.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Intake.Milk.Actual / 30.4;
 
+                // TODO: check where kgl is needed 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
@@ -586,30 +578,29 @@ namespace Models.CLEM.Activities
                 // energy protein mass MJ day-1
                 energyPredictedProteinMassChange = energyPredictedBodyMassChange * ((ind.BreedParams.ProteinGainIntercept1 - ind.BreedParams.ProteinGainSlope * gainLossAdj) - (ind.BreedParams.ProteinGainIntercept2 - ind.BreedParams.ProteinGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
 
-                // Q is  energyPredictedProteinMassChange correct in following eqn or should this be energyPredictedBodyMassChange?
+                // TODO: is energyPredictedProteinMassChange correct in following eqn or should this be energyPredictedBodyMassChange? I think this was coppied in.
                 // energy fat mass MJ day-1
                 energyPredictedFatMassChange = energyPredictedProteinMassChange * (ind.BreedParams.FatGainIntercept1 + ind.BreedParams.FatGainSlope * gainLossAdj + (ind.BreedParams.FatGainIntercept2 - ind.BreedParams.FatGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
             }
 
             // TODO: Check that kgChange this isn't weaned/unweaned specific
-
+            // TODO: check.. this following is the same as adding an additional / 23.6 to the AdjustProetinMass calculation as both use energyPredictedProteinMassChange
             double kgProteinChange = energyPredictedProteinMassChange / 23.6;
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
             ind.AdjustProteinMass(energyPredictedProteinMassChange * kgProteinChange * 30.4);
 
+            // TODO: see above
             double kgFatChange = energyPredictedFatMassChange / 39.6;
             ind.AdjustFatMass(energyPredictedFatMassChange * kgFatChange * 30.4);
 
-            // tried to take more protein than available dies...
-            // tried to take more fat than available dies...
+            // if tried to take more protein than available dies...
+            // if tried to take more fat than available dies...
             // fatal....
-            // the mortality section below now checks for zero levels of fat and protein in the death decision.
-
-            energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
+            // the mortality section below now checks for zero levels of fat and protein in the death decision which happens after this weight gain event.
 
             ind.PreviousWeight = ind.Weight;
-
-            ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
+            // update weight based on the time-step
+            ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange * 30.4);
 
             // ToDo: Precious code had upper weight checks. Deletye once everyone has looked at this!
             //ind.Weight = Math.Min(
@@ -625,6 +616,25 @@ namespace Models.CLEM.Activities
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             // per day at this point.
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
+        }
+
+        /// <summary>
+        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources 
+        /// This is called at the end of CLEMAnimalWeightGain so after intake determines and before deaths and sales.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMCalculateManure")]
+        private void OnCLEMCalculateManure(object sender, EventArgs e)
+        {
+            if (manureStore != null)
+            {
+                // sort by animal location
+                foreach (var groupInds in ruminantHerd.Herd.GroupBy(a => a.Location))
+                {
+                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Intake.Feed.Actual * (100 - a.Intake.CombinedDetails.DryMatterDigestibility) / 100));
+                }
+            }
         }
 
         /// <summary>
