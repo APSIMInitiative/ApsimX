@@ -16,7 +16,6 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ValidParent(ParentType = typeof(Zone))]
     public class MicroClimate : Model
     {
         /// <summary>The clock</summary>
@@ -231,6 +230,8 @@ namespace Models
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            if (this.Parent.GetType() != typeof(Simulation))
+                throw new Exception($"MicroClimate '{this.Name}' may only be a child of Simulation. Location: {this.FullPath}");
             if (ReferenceHeight < 1 || ReferenceHeight > 10)
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
