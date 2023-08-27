@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
             // determine pasture quality from all pools (DMD) at start of grazing
-            double pastureDMD = GrazeFoodStoreModel.DryMatterDigestability;
+            double pastureDMD = GrazeFoodStoreModel.DryMatterDigestibility;
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
             // this will still occur when grazing on improved, irrigated or crops. 
@@ -314,7 +314,7 @@ namespace Models.CLEM.Activities
                 // current DMD and N of intake is stored in th DMD and N properties of this class as passed to GrazeFoodStoreType.Remove as AdditionalDetails with breed pool limits
                 foodDetails = new FoodResourcePacket()
                 {
-                    DryMatterDigestability = DMD, 
+                    DryMatterDigestibility = DMD, 
                     NitrogenContent = N
                 };
 

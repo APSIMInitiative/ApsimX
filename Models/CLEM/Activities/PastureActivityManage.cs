@@ -341,8 +341,8 @@ namespace Models.CLEM.Activities
                     };
                     newPasture.Set(growth * Area);
                     newPasture.NitrogenContent = this.LinkedNativeFoodType.GreenNitrogen;
-                    newPasture.DryMatterDigestability = newPasture.NitrogenContent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-                    newPasture.DryMatterDigestability = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestability));
+                    newPasture.DryMatterDigestibility = newPasture.NitrogenContent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
+                    newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
                     newPasture.Growth = newPasture.Amount;
                     this.LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                 }

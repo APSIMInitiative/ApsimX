@@ -19,13 +19,18 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an animal food store (e.g. lucerne)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeedType, IResourceType
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType
     {
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
         /// <inheritdoc/>
         public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
+        [Required]
+        [Description("Broad type of feed")]
+        public FeedType TypeOfFeed { get; set; }
 
         /// <inheritdoc/>
         [System.ComponentModel.DefaultValueAttribute(18.4)]
@@ -43,7 +48,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         [Description("Dry Matter Digestibility (%)")]
         [Required, Percentage, GreaterThanValue(0)]
-        public double DryMatterDigestability { get; set; }
+        public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
         [Description("Nitrogen content (%)")]
@@ -118,7 +123,7 @@ namespace Models.CLEM.Resources
             {
                 EnergyContent = EnergyContent,
                 CPDegradability = CPDegradability,
-                DryMatterDigestability = DryMatterDigestability,
+                DryMatterDigestibility = DryMatterDigestibility,
                 FatContent= FatContent,
                 NitrogenContent = NitrogenContent
             };
@@ -126,7 +131,7 @@ namespace Models.CLEM.Resources
             {
                 EnergyContent = EnergyContent,
                 CPDegradability = CPDegradability,
-                DryMatterDigestability = DryMatterDigestability,
+                DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent
             };
@@ -163,7 +168,7 @@ namespace Models.CLEM.Resources
             {
                 // update quality details to allow mixed feed inputs
                 CurrentStoreDetails.NitrogenContent = ((CurrentStoreDetails.NitrogenContent * Amount) + (foodPacket.NitrogenContent * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.DryMatterDigestability = ((CurrentStoreDetails.DryMatterDigestability * Amount) + (foodPacket.DryMatterDigestability * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * Amount) + (foodPacket.DryMatterDigestibility * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.FatContent = ((CurrentStoreDetails.FatContent * Amount) + (foodPacket.FatContent * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.EnergyContent = ((CurrentStoreDetails.EnergyContent * Amount) + (foodPacket.EnergyContent * addAmount)) / (Amount + addAmount);
 
@@ -270,8 +275,8 @@ namespace Models.CLEM.Resources
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent.ToString("0.###")}%</span>");
-                if (DryMatterDigestability > 0)
-                    htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestability.ToString("0.###")}%</span>");
+                if (DryMatterDigestibility > 0)
+                    htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility.ToString("0.###")}%</span>");
                 else
                     htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
 

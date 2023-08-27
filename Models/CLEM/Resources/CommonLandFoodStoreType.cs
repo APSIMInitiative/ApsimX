@@ -258,7 +258,7 @@ namespace Models.CLEM.Resources
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                 pool.Set(packet.Amount);
                 pool.NitrogenContent = packet.NitrogenContent;
-                pool.DryMatterDigestability = packet.DryMatterDigestability;
+                pool.DryMatterDigestibility = packet.DryMatterDigestibility;
             }
 
             if (pool.Amount > 0)
@@ -295,7 +295,7 @@ namespace Models.CLEM.Resources
             FoodResourcePacket additionalDetails = new FoodResourcePacket
             {
                 NitrogenContent = this.Nitrogen,
-                DryMatterDigestability = this.dryMatterDigestibility,
+                DryMatterDigestibility = this.dryMatterDigestibility,
                 Amount = request.Required
             };
             request.AdditionalDetails = additionalDetails;

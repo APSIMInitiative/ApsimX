@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeedType, IValidatableObject
+    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IValidatableObject
     {
         [Link]
         private readonly ZoneCLEM zoneCLEM = null;
@@ -39,6 +39,9 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         [Description("Units (nominal)")]
         public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
 
         /// <inheritdoc/>
         [System.ComponentModel.DefaultValueAttribute(18.4)]
@@ -265,13 +268,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculated total pasture (all pools) Dry Matter Digestibility (%)
         /// </summary>
-        public double DryMatterDigestability
+        public double DryMatterDigestibility
         {
             get
             {
                 double dmd = 0;
                 if (this.Amount > 0)
-                    dmd = Pools.Sum(a => a.Amount * a.DryMatterDigestability) / this.Amount;
+                    dmd = Pools.Sum(a => a.Amount * a.DryMatterDigestibility) / this.Amount;
 
                 return Math.Max(MinimumDMD, dmd);
             }
@@ -376,11 +379,11 @@ namespace Models.CLEM.Resources
                     break;
                 case "DMD":
                     if (age < 0)
-                        return DryMatterDigestability;
+                        return DryMatterDigestibility;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        valueToUse = pools.Sum(a => a.DryMatterDigestability * a.Amount) / pools.Sum(a => a.Amount);
+                        valueToUse = pools.Sum(a => a.DryMatterDigestibility * a.Amount) / pools.Sum(a => a.Amount);
                     }
                     break;
                 case "Age":
@@ -499,7 +502,7 @@ namespace Models.CLEM.Resources
                     // N is a loss of N% (x = x -loss)
                     pool.NitrogenContent = Math.Max(pool.NitrogenContent - DecayNitrogen, MinimumNitrogen);
                     // DMD is a proportional loss (x = x*(1-proploss))
-                    pool.DryMatterDigestability = Math.Max(pool.DryMatterDigestability * (1 - DecayDMD), MinimumDMD);
+                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - DecayDMD), MinimumDMD);
 
                     if (pool.Age < 12)
                         pool.Age++;
@@ -613,7 +616,7 @@ namespace Models.CLEM.Resources
                     {
                         Age = monthCount,
                         NitrogenContent = currentN,
-                        DryMatterDigestability = currentDMD,
+                        DryMatterDigestibility = currentDMD,
                         StartingAmount = propBiomass
                     });
                     includedMonthCount++;
@@ -667,7 +670,7 @@ namespace Models.CLEM.Resources
                 CPDegradability = CPDegradability,
                 FatContent = FatContent,
                 NitrogenContent = 0,
-                DryMatterDigestability = 0
+                DryMatterDigestibility = 0
             };
 
             switch (resourceAmount)
@@ -684,13 +687,13 @@ namespace Models.CLEM.Resources
                     FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                     pool.Set(packet.Amount);
                     pool.NitrogenContent = packet.NitrogenContent;
-                    pool.DryMatterDigestability = packet.DryMatterDigestability;
+                    pool.DryMatterDigestibility = packet.DryMatterDigestibility;
                     break;
                 case double _:
                     // add amount at current rates
                     pool.Set((double)resourceAmount);
                     pool.NitrogenContent = this.NitrogenContent;
-                    pool.DryMatterDigestability = DryMatterDigestability; //this.EstimateDMD(this.Nitrogen);
+                    pool.DryMatterDigestibility = DryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
@@ -762,7 +765,7 @@ namespace Models.CLEM.Resources
                     // take min of amount in pool, intake*limiter, remaining intake needed
                     double amountToRemove = Math.Min(request.Required * pool.Limit, Math.Min(pool.Pool.Amount, amountRequired));
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += pool.Pool.DryMatterDigestability * amountToRemove;
+                    thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
                     thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
 
                     amountRequired -= amountToRemove;
@@ -793,7 +796,7 @@ namespace Models.CLEM.Resources
                             amountToRemove = pool.Pool.Amount;
 
                         // update DMD and N based on pool utilised
-                        thisBreed.DMD += pool.Pool.DryMatterDigestability * amountToRemove;
+                        thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
                         thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
                         amountTakenDuringSecondTake += amountToRemove;
                         // remove resource from pool
@@ -840,7 +843,7 @@ namespace Models.CLEM.Resources
                 {
                     double amountToRemove = pool.Amount * useproportion;
                     amountCollected += amountToRemove;
-                    dryMatterDigestibility += pool.DryMatterDigestability * amountToRemove;
+                    dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
                     nitrogen += pool.NitrogenContent * amountToRemove;
                     pool.Remove(amountToRemove, this, "Cut and Carry");
                 }

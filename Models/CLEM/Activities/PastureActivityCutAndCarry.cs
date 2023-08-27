@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                 {
                     Amount = amountToDo - amountToSkip,
                     NitrogenContent = pasture.NitrogenContent,
-                    DryMatterDigestability = pasture.EstimateDMD(pasture.NitrogenContent)
+                    DryMatterDigestibility = pasture.EstimateDMD(pasture.NitrogenContent)
                 };
 
                 foodstore.Add(packet, this, null, TransactionCategory);

@@ -569,7 +569,7 @@ namespace Models.CLEM.Activities
                                 NitrogenContent = percentN
                             };
                             if (LinkedResourceItem is GrazeFoodStoreType)
-                                packet.DryMatterDigestability = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenContent);
+                                packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenContent);
                             LinkedResourceItem.Add(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));
