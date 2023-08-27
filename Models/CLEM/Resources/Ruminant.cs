@@ -5,6 +5,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Newtonsoft.Json;
 using Models.Core;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Resources
 {
@@ -20,6 +21,59 @@ namespace Models.CLEM.Resources
         private double normalisedWeight;
         private double adultEquivalent;
         private int weaned = 0;
+
+        #region All new Grow SCA properties
+
+        /// <summary>
+        /// Relative size (normalised weight / standard reference weight)
+        /// </summary>
+        [FilterByProperty]
+        public double RelativeSize 
+        {
+            // TODO: check this is right
+            get { return Weight / StandardReferenceWeight; }
+        }
+
+        //ToDo: ensure these are set at birth and new individual creation.
+        private double proteinMass = 0;
+        private double fatMass = 0;
+
+        /// <summary>
+        /// Get the current protein mass of individual
+        /// </summary>
+        public double ProteinMass { get { return proteinMass; } }
+
+        /// <summary>
+        /// Adjust the protein mass of the individual.
+        /// </summary>
+        /// <param name="amount">Amount to change by with sign.</param>
+        public void AdjustProteinMass(double amount)
+        {
+            proteinMass += amount;
+            proteinMass = Math.Max(0, proteinMass);
+        }
+
+        /// <summary>
+        /// Get the current fat mass of individual
+        /// </summary>
+        public double FatMass { get { return fatMass; } }
+
+        /// <summary>
+        /// Add fat mass to individual.
+        /// </summary>
+        /// <param name="amount">Amount to change by with sign.</param>
+        public void AdjustFatMass(double amount)
+        {
+            fatMass += amount;
+            fatMass = Math.Max(0, fatMass);
+        }
+
+        /// <summary>
+        /// Ruminant intake manager
+        /// </summary>
+        public RuminantIntake Intake = new RuminantIntake();
+
+        #endregion
 
         /// <summary>
         /// Get the value to use for the transaction style requested
@@ -117,6 +171,11 @@ namespace Models.CLEM.Resources
         public bool ReplacementBreeder { get; set; }
 
         /// <summary>
+        /// Date of birth of individual
+        /// </summary>
+        public DateTime DateOfBirth { get; set; }
+
+        /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
@@ -130,20 +189,29 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
+                AgeInDays = value * 30.4;
+                if (AgeInDays <= 0) AgeInDays = 1;                
                 normalisedWeight = CalculateNormalisedWeight(age);
             }
         }
 
         /// <summary>
+        /// Age (Days)
+        /// </summary>
+        /// <units>Months</units>
+        [FilterByProperty]
+        public double AgeInDays { get; private set; }
+
+        /// <summary>
         /// Age (Years)
         /// </summary>
-        /// <units>Years</units>
+        /// <units>Years of age as decimal</units>
         [FilterByProperty]
         public double AgeInYears
         {
             get
             {
-                return age/12.0;
+                return AgeInDays/365;
             }
         }
 
@@ -156,7 +224,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return  Convert.ToInt32(Math.Floor(age / 12.0));
+                return  Convert.ToInt32(Math.Floor(AgeInYears));
             }
         }
 
@@ -412,42 +480,34 @@ namespace Models.CLEM.Resources
             }
         }
 
-        public double ConsumedMass { get; set; }
-        public double ConsumedMilk { get; set; }
-        public double ConsumedFat { get; set; }
-        public double ConsumedCrudeProtein { get; set; }
-        public double ConsumedEnergy { get; set; }
-        public double ConsumedDMD { get; set; }
+        ///// <summary>
+        ///// Current monthly intake store
+        ///// </summary>
+        ///// <units>kg/month</units>
+        //public double Intake { get; set; }
 
+        ///// <summary>
+        ///// Current monthly intake of milk
+        ///// </summary>
+        ///// <units>kg/month</units>
+        //public double MilkIntake { get; set; }
 
-        /// <summary>
-        /// Current monthly intake store
-        /// </summary>
-        /// <units>kg/month</units>
-        public double Intake { get; set; }
+        ///// <summary>
+        ///// Required monthly intake of milk
+        ///// </summary>
+        ///// <units>kg/month</units>
+        //public double MilkPotentialIntake { get; set; }
 
-        /// <summary>
-        /// Current monthly intake of milk
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MilkIntake { get; set; }
+        ///// <summary>
+        ///// Percentage nitrogen of current intake
+        ///// </summary>
+        //public double PercentNOfIntake { get; set; }
 
-        /// <summary>
-        /// Required monthly intake of milk
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MilkPotentialIntake { get; set; }
-
-        /// <summary>
-        /// Percentage nitrogen of current intake
-        /// </summary>
-        public double PercentNOfIntake { get; set; }
-
-        /// <summary>
-        /// Diet dry matter digestibility of current monthly intake store
-        /// </summary>
-        /// <units>percent</units>
-        public double DietDryMatterDigestibility { get; set; }
+        ///// <summary>
+        ///// Diet dry matter digestibility of current monthly intake store
+        ///// </summary>
+        ///// <units>percent</units>
+        //public double DietDryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Current monthly potential intake
@@ -464,8 +524,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (PotentialIntake + MilkPotentialIntake > 0)
-                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                if (Intake.Feed.Expected + Intake.Milk.Expected > 0)
+                    return (Intake.Feed.Actual + Intake.Milk.Actual) / (Intake.Feed.Expected + Intake.Milk.Expected);
                 else
                     return 0;
             }
@@ -595,17 +655,17 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Relative size (normalised weight / standard reference weight)
-        /// </summary>
-        [FilterByProperty]
-        public double RelativeSize
-        {
-            get
-            {
-                return NormalisedAnimalWeight/StandardReferenceWeight;
-            }
-        }
+        ///// <summary>
+        ///// Relative size (normalised weight / standard reference weight)
+        ///// </summary>
+        //[FilterByProperty]
+        //public double RelativeSize
+        //{
+        //    get
+        //    {
+        //        return NormalisedAnimalWeight/StandardReferenceWeight;
+        //    }
+        //}
 
         /// <summary>
         /// Relative condition (base weight / normalised weight)
@@ -688,7 +748,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Milk production currently available from mother
+        /// Milk production currently available for each offspring from mother (L day-1)
         /// </summary>
         public double MothersMilkProductionAvailable
         {
@@ -706,22 +766,6 @@ namespace Models.CLEM.Resources
                     }
                 }
                 return milk;
-            }
-        }
-
-        /// <summary>
-        /// A funtion to add intake and totals of N, CP, DMD, Fat and energy
-        /// </summary>
-        /// <param name="intake">Feed request containing intake information kg, %N, DMD</param>
-        public void AddIntake(FoodResourcePacket intake)
-        {
-            if (intake.Amount > 0)
-            {
-                // determine the adjusted DMD of all intake
-                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DryMatterDigestability * intake.Amount)) / (this.Intake + intake.Amount);
-                // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.NitrogenContent * intake.Amount)) / (this.Intake + intake.Amount);
-                this.Intake += intake.Amount;
             }
         }
 
@@ -746,8 +790,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to increase age
         /// </summary>
-        public void IncrementAge()
+        /// <param name="days">Number of days to add</param>
+        public void IncrementAge(double days = 30.4)
         {
+            AgeInDays += days;
             Age++;
         }
 

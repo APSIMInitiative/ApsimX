@@ -33,6 +33,63 @@ namespace Models.CLEM.Resources
         private readonly List<string> warningsMultipleEntry = new List<string>();
         private readonly List<string> warningsNotFound = new List<string>();
 
+        #region Growth SCA version
+
+        // TODO: provide summary
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Feed heat production scalar")]
+        public double FHPScalar { get; set; }
+
+        // TODO: provide summary
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Heat production viscera feed level")]
+        public double HPVisceraFL { get; set; }
+
+        /// <summary>
+        /// First intercept of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain intercept number 1")]
+        public double FatGainIntercept1 { get; set; }
+
+        /// <summary>
+        /// Second intercept of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain intercept number 2")]
+        public double FatGainIntercept2 { get; set; }
+
+        /// <summary>
+        /// Slope of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain slope")]
+        public double FatGainSlope { get; set; }
+
+        /// <summary>
+        /// Second intercept of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain intercept number 1")]
+        public double ProteinGainIntercept1 { get; set; }
+
+        /// <summary>
+        /// First intercept of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain intercept number 2")]
+        public double ProteinGainIntercept2 { get; set; }
+
+        /// <summary>
+        /// Slope of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain slope")]
+        public double ProteinGainSlope { get; set; }
+
+
+        #endregion
+
+
+
         /// <summary>
         /// Unit type
         /// </summary>

@@ -264,6 +264,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Remove list of Ruminants from the herd
+        /// </summary>
+        /// <param name="list">List of Ruminants to remove</param>
+        /// <param name="model">Model removing individuals</param>
+        public void RemoveRuminant(IEnumerable<Ruminant> list, IModel model)
+        {
+            foreach (var ind in list.ToList())
+                // report removal
+                RemoveRuminant(ind, model);
+        }
+
+        /// <summary>
         /// Remove individual/cohort from the herd
         /// </summary>
         /// <param name="ind">Individual Ruminant to remove</param>
@@ -348,19 +360,6 @@ namespace Models.CLEM.Resources
             if (PurchaseIndividuals != null)
                 PurchaseIndividuals.Clear();
         }
-
-        /// <summary>
-        /// Remove list of Ruminants from the herd
-        /// </summary>
-        /// <param name="list">List of Ruminants to remove</param>
-        /// <param name="model">Model removing individuals</param>
-        public void RemoveRuminant(List<Ruminant> list, IModel model)
-        {
-            foreach (var ind in list)
-                // report removal
-                RemoveRuminant(ind, model);
-        }
-
 
         #region group tracking
 
