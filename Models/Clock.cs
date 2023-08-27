@@ -207,15 +207,15 @@ namespace Models
         /// <summary>Get potential intake. This includes suckling milk consumption</summary>
         public event EventHandler CLEMPotentialIntake;
         /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
-        public event EventHandler CLEMCalculateManure;
-        /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
-        public event EventHandler CLEMCollectManure;
-        /// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
         public event EventHandler CLEMGetResourcesRequired;
         /// <summary>CLEM Calculate Animals (Ruminant and Other) milk production</summary>
         public event EventHandler CLEMAnimalMilkProduction;
         /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
         public event EventHandler CLEMAnimalWeightGain;
+        /// <summary>Provide opportunity to allocate resources to the collection of manure produced in time-step</summary>
+        public event EventHandler CLEMCalculateManure;
+        /// <summary>Request and perform the collection of maure after resources are allocated and manure produced in time-step</summary>
+        public event EventHandler CLEMCollectManure;
         /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
         public event EventHandler CLEMAnimalDeath;
         /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
