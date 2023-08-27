@@ -67,16 +67,8 @@ namespace UserInterface.Presenters
             //intellisense.ItemSelected += OnIntellisenseItemSelected;
             //view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
 
-            if (model is BiomassRemovalFractions)
-            {
-                view.SetLabelText((model as BiomassRemovalFractions).Description);
-                view.SetLabelHeight(0.1f);
-            } 
-            else
-            {
-                view.SetLabelText("");
-                view.SetLabelHeight(0.0f);
-            }
+            view.SetLabelText("");
+            view.SetLabelHeight(0.0f);
         }
 
         /// <summary>

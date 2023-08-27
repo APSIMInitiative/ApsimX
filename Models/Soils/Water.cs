@@ -109,6 +109,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Soil hydraulic conductivity (mm/d)</summary>
+        [Units("mm/d")]
+        [JsonIgnore]
+        public double[] HydraulicConductivity
+        {
+            get
+            {
+                return MathUtilities.Multiply_Value(WaterModel.K, 10*24);
+            }
+        }
+
         /// <summary>Plant available water (mm).</summary>
         [Units("mm")]
         public double InitialPAWmm
