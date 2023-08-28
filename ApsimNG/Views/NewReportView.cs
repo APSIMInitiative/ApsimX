@@ -73,9 +73,11 @@ namespace UserInterface.Views
             frequencyBox.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
 
             commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonReportVariableList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
             commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
 
             commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonReportFrequencyVariableList.DoubleClicked += OnCommonReportFrequencyVariableListDoubleClicked;
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
 
             // Set the position of the divider to 80% of the width of the Paned gtk object.
@@ -87,6 +89,7 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
+
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -177,6 +180,16 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        private void OnCommonReportVariableListDoubleClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnCommonReportFrequencyVariableListDoubleClicked(object sender, EventArgs e)
+        {
+
         }
 
         /// <summary>Provides access to the variable list.</summary>

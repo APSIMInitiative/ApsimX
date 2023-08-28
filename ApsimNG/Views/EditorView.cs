@@ -325,7 +325,7 @@ namespace UserInterface.Views
             InitialiseWidget();
         }
 
-        private void OnTextEditorDragEnd(object o, DragDataReceivedArgs args)
+        private void OnTextEditorDragEnd(object o, DragEndArgs args)
         {
             VariableDragDataReceived.Invoke(o, args);
         }

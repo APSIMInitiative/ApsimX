@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using ApsimNG.Classes;
+using Gtk;
 using Models;
 using Models.Core;
 using Models.Factorial;
@@ -69,6 +70,7 @@ namespace UserInterface.Presenters
         /// <summary> Stores any dragged variables index.</summary>
         public int DraggedVariableIndex { get; set; }
 
+
         /// <summary> DataTable for storing common report variables. </summary>
         public DataTable CommonReportVariables
         {
@@ -117,6 +119,8 @@ namespace UserInterface.Presenters
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.CommonReportVariablesList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
+            this.view.CommonReportFrequencyVariablesList.DoubleClicked += OnCommonReportFrequencyVariablesListDoubleClicked;
 
             Simulations simulations = report.FindAncestor<Simulations>();
             if (simulations != null)
@@ -418,6 +422,59 @@ namespace UserInterface.Presenters
                 else
                     (currentEditor as IEditView).InsertCompletionOption(args.ItemSelected, args.TriggerWord);
             }
+        }
+
+        /// <summary>
+        /// Handles the adding of Report variables to the Report Variable Editor. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnCommonReportVariableListDoubleClicked(object sender, EventArgs args)
+        {
+            RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
+            // get the index of the common report variable selected from the args.
+            int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
+            // Get the line number for the report variable editorView.
+            var currentReportVariablesLineNumber = this.view.VariableList.CurrentLineNumber;
+            // Find the coressponding variable code to be inserted into the report variables view.
+            string variableCode = commonReportVariables.Rows[reportVariableIndex][1].ToString();
+            // Get the contents of the currently selected line.
+            string currentlineContent = "";
+            if (currentReportVariablesLineNumber <= this.view.VariableList.Lines.Length)
+                currentlineContent = this.view.VariableList.Lines[currentReportVariablesLineNumber - 1];
+
+            // Insert the code below the currenLine if line is not null.
+            if (string.IsNullOrWhiteSpace(currentlineContent))
+                this.view.VariableList.Text = this.view.VariableList.Text + variableCode;
+            else
+                this.view.VariableList.Text = this.view.VariableList.Text + "\n" + variableCode;
+        }
+
+        /// <summary>
+        /// Handles the adding of Report Frequency variables to the Report Frequency Variable Editor. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnCommonReportFrequencyVariablesListDoubleClicked(object sender, EventArgs args)
+        {
+            RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
+            // get the index of the common report variable selected from the args.
+            int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
+            // Get the line number for the report variable editorView.
+            var currentReportFrequencyVariablesLineNumber = this.view.EventList.CurrentLineNumber;
+            // Find the coressponding variable code to be inserted into the report variables view.
+            string variableCode = commonReportFrequencyVariables.Rows[reportVariableIndex][1].ToString();
+            // Get the contents of the currently selected line.
+            string currentlineContent = "";
+            if (currentReportFrequencyVariablesLineNumber <= this.view.EventList.Lines.Length)
+                currentlineContent = this.view.EventList.Lines[currentReportFrequencyVariablesLineNumber - 1];
+
+            // Insert the code below the currenLine if line is not null.
+            if (string.IsNullOrWhiteSpace(currentlineContent))
+                this.view.EventList.Text = this.view.EventList.Text + variableCode;
+            else
+                this.view.EventList.Text = this.view.EventList.Text + "\n" + variableCode;
+
         }
     }
 }

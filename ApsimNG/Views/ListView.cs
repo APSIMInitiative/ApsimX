@@ -41,7 +41,11 @@ namespace UserInterface.Views
         /// <summary>The sort type.</summary>
         private bool sortAscending;
 
+        /// <summary>Event handler for drag start event.</summary>
         public event EventHandler DragStart;
+
+        /// <summary>Event handler for double-click event on TreeView. </summary>
+        public event EventHandler DoubleClicked;
 
         /// <summary>Constructor</summary>
         public ListView()
@@ -56,6 +60,7 @@ namespace UserInterface.Views
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
             tree.ButtonPressEvent += OnTreeButtonDown;
+            tree.RowActivated += OnTreeDoubleClicked;
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry("application/x-model-component", TargetFlags.App, 0)
             };
@@ -64,13 +69,19 @@ namespace UserInterface.Views
             Drag.DestSet(tree, 0, target_table, actions);
             // TODO: Need to allow Drag from this to a TextView object. Drag.DestSet may need info on what can accept this drag??
             // Perhaps needs a Object type, like TextView added to enable this??
-            // May be worth doing doubl-click functionality first.
+            // May be worth doing double-click functionality first.
             tree.DragBegin += OnTreeDragBegin;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
+        }
+
+
+        private void OnTreeDoubleClicked(object o, RowActivatedArgs args)
+        {
+            DoubleClicked.Invoke(o, args);
         }
 
         private void OnTreeDragBegin(object sender, DragBeginArgs args)
@@ -461,10 +472,11 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
 
-        /// <summary>
-        /// TODO: Needs decsription.
-        /// </summary>
+        /// <summary> Invoked when a row in the ListView is dragged. </summary>
         event EventHandler DragStart;
+
+        /// <summary> Invoked when a row in the ListView is double-clicked. </summary>
+        event EventHandler DoubleClicked;
 
         /// <summary>Get or sets the datasource for the view.</summary>
         DataTable DataSource { get; set; }
