@@ -68,6 +68,22 @@
           "ResourceName": null,
           "Children": [
             {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0.0,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Clock, Models",
               "Start": "2000-04-01T00:00:00",
               "End": "2000-12-31T00:00:00",
@@ -100,6 +116,24 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "SoilArbitrator",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Wheat].AboveGround.Wt as AboveGroundWt",
+                "[Wheat].AboveGround.N as AboveGroundN",
+                "[Wheat].Total.Wt as TotalWt"
+              ],
+              "EventNames": [
+                "[Clock].EndOfYear"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -584,22 +618,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.MicroClimate, Models",
-                  "a_interception": 0.0,
-                  "b_interception": 1.0,
-                  "c_interception": 0.0,
-                  "d_interception": 0.0,
-                  "SoilHeatFluxFraction": 0.4,
-                  "MinimumHeightDiffForNewLayer": 0.0,
-                  "NightInterceptionFraction": 0.5,
-                  "ReferenceHeight": 2.0,
-                  "Name": "MicroClimate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
                     "using Models;",
@@ -832,24 +850,6 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Report, Models",
-              "VariableNames": [
-                "[Clock].Today",
-                "[Wheat].AboveGround.Wt as AboveGroundWt",
-                "[Wheat].AboveGround.N as AboveGroundN",
-                "[Wheat].Total.Wt as TotalWt"
-              ],
-              "EventNames": [
-                "[Clock].EndOfYear"
-              ],
-              "GroupByVariableName": null,
-              "Name": "Report",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }

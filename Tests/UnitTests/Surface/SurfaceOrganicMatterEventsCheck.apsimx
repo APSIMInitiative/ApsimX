@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 159,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -31,6 +30,22 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
@@ -41,7 +56,31 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\nusing Models.Core;\nusing Models.Surface;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n    \t[Description(\"Fraction to Incorporate (0.0-1.0)\")]\n\t\tpublic double Fraction {get; set;}\n\t\t[Description(\"Depth to Incorporate (mm)\")]\n\t\tpublic double Depth {get; set;}\n\t\t   \n        [Link] private SurfaceOrganicMatter SOM;\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n        \tSOM.Incorporate(Fraction, Depth, false);\n        }\n    }\n}",
+              "CodeArray": [
+                "using System;",
+                "using Models.Core;",
+                "using Models.Surface;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Description(\"Fraction to Incorporate (0.0-1.0)\")]",
+                "        public double Fraction {get; set;}",
+                "        [Description(\"Depth to Incorporate (mm)\")]",
+                "        public double Depth {get; set;}",
+                "           ",
+                "        [Link] private SurfaceOrganicMatter SOM;",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            SOM.Incorporate(Fraction, Depth, false);",
+                "        }",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "Fraction",
@@ -555,6 +594,7 @@
                     1.01
                   ],
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -763,22 +803,6 @@
               "InitialCNR": 80.0,
               "Name": "SurfaceOrganicMatter",
               "ResourceName": "SurfaceOrganicMatter",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.MicroClimate, Models",
-              "a_interception": 0.0,
-              "b_interception": 1.0,
-              "c_interception": 0.0,
-              "d_interception": 0.0,
-              "SoilHeatFluxFraction": 0.4,
-              "MinimumHeightDiffForNewLayer": 0.0,
-              "NightInterceptionFraction": 0.5,
-              "ReferenceHeight": 2.0,
-              "Name": "MicroClimate",
-              "ResourceName": null,
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
