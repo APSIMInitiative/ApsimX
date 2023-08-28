@@ -76,10 +76,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            List<Ruminant> herd = ruminantHerd.Herd;
-
             // Natural weaning takes place here before animals eat or take milk from mother.
-            foreach (var ind in herd.Where(a => a.Weaned == false))
+            foreach (var ind in ruminantHerd.Herd.Where(a => a.Weaned == false))
             {
                 // expecting weaning age in months
                 double weaningAge = ind.BreedParams.NaturalWeaningAge;
@@ -102,12 +100,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            List<Ruminant> herd = ruminantHerd.Herd;
-
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            foreach (var groupInd in herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
+            foreach (var groupInd in ruminantHerd.Herd.GroupBy(a => a.IsSucklingWithMother).OrderBy(a => a.Key))
             {
                 foreach (var ind in groupInd)
                 {
@@ -184,8 +180,8 @@ namespace Models.CLEM.Activities
                         // calculate estimated milk production for time step here
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
-                        CalculateMilkProduction(femaleind);
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
+                        CalculateLactationEnergy(femaleind);
+                        //femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
                     else
                     {
@@ -205,62 +201,12 @@ namespace Models.CLEM.Activities
             ind.Intake.Feed.Expected *= 30.4;
         }
 
-        /// <summary>
-        /// Set the milk production of the selected female given diet drymatter digesibility
-        /// </summary>
-        /// <param name="ind">Female individual</param>
-        /// <returns>energy of milk</returns>
-        private double CalculateMilkProduction(RuminantFemale ind)
-        {
-            ind.MilkMilkedThisTimeStep = 0;
-            ind.MilkSuckledThisTimeStep = 0;
-
-            // we need to ensire that the montly diet details are summaried by this point and these will be known.
-
-            double energyMetabolic = EnergyGross * (((ind.Intake.CombinedDetails.DryMatterDigestibility==0)?50: ind.Intake.CombinedDetails.DryMatterDigestibility)/100.0) * 0.81;
-            // Reference: SCA p.
-            double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
-            double milkTime = ind.DaysLactating;
-            double milkCurve;
-            
-            // determine milk production curve to use
-            // if milking is taking place use the non-suckling curve for duration of lactation
-            // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.SucklingOffspringList.Count() == 0)
-                milkCurve = ind.BreedParams.MilkCurveNonSuckling;
-            else // no milking
-                milkCurve = ind.BreedParams.MilkCurveSuckling;
-            ind.MilkProductionPotential = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
-            ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
-            // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
-            double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
-            // adjust last time step's energy balance
-            double adjustedEnergyBalance = ind.EnergyBalance;
-            if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
-                adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
-
-            // set milk production in lactating females for consumption.
-            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
-            ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
-
-            // returns the energy required for milk production
-
-            return ind.MilkProduction * 3.2 / kl;
-        }
-
-        /// <summary>Function to calculate growth of herd for the monthly timestep</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalWeightGain")]
+    /// <summary>Function to calculate growth of herd for the monthly timestep</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            //List<Ruminant> herd = ruminantHerd.Herd;
-
-            //int cmonth = clock.Today.Month;
-
-            // grow individuals
-
-            //IEnumerable<string> breeds = ruminantHerd.Herd.Select(a => a.BreedParams.Name).Distinct();
             this.Status = ActivityStatus.NotNeeded;
 
             foreach (var breed in ruminantHerd.Herd.GroupBy(a => a.BreedParams.Name))
@@ -349,11 +295,8 @@ namespace Models.CLEM.Activities
 
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
 
-                if (methaneEmissions != null)
-                {
-                    // g per day -> total kg
-                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed.Key, TransactionCategory);
-                }
+                // g per day -> total kg
+                methaneEmissions?.Add(totalMethane * 30.4 / 1000, this, breed.Key, TransactionCategory);
             }
         }
 
@@ -457,24 +400,13 @@ namespace Models.CLEM.Activities
                     // calculate energy for lactation
                     // look for milk production calculated before offspring may have been weaned
 
-                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
-                    {
-                        // recalculate milk production based on DMD of food provided
-                        energyForLactation = CalculateMilkProduction(femaleind);
-                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
-                    }
+                    // recalculate milk production based on DMD of food provided
+                    energyForLactation = CalculateLactationEnergy(femaleind);
+                    // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
+                    //femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
 
                     // Determine energy required for foetal development
-                    if (femaleind.IsPregnant)
-                    {
-                        // Potential birth weight
-                        // Reference: Freer
-                        double potentialBirthWeight = ind.BreedParams.SRWBirth * ind.StandardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / ind.StandardReferenceWeight));
-                        double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
-                        //TODO: Check fetus age correct
-                        energyForFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
-                    }
+                    energyForFetus = CalculatePregnancyEnergy(femaleind);
                 }
 
                 //TODO: add draft individual energy requirement: does this also apply to unweaned individuals? If so move ouside loop
@@ -560,7 +492,7 @@ namespace Models.CLEM.Activities
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-0.03 * ind.AgeInDays / 365);
 
                 MEAvailableForGain = energyMilkConsumed + ind.Intake.METotal - energyMaintenance;
-                // TODO: most of these are for sotring and reporting. These can be claened up.
+                // TODO: most of these are for sotring and reporting. These can be cleaned up.
                 ind.EnergyIntake = energyMilkConsumed + ind.Intake.METotal;
                 ind.EnergyFetus = 0;
                 ind.EnergyMaintenance = energyMaintenance;
@@ -616,6 +548,73 @@ namespace Models.CLEM.Activities
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             // per day at this point.
             methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
+        }
+
+        /// <summary>
+        /// Determine the energy required for lactation
+        /// </summary>
+        /// <param name="ind">Female individual</param>
+        /// <returns>daily energy required for lactation this time step</returns>
+        private double CalculateLactationEnergy(RuminantFemale ind)
+        {
+            if (ind.IsLactating | MathUtilities.IsPositive(ind.MilkProductionPotential))
+            {
+                ind.MilkMilkedThisTimeStep = 0;
+                ind.MilkSuckledThisTimeStep = 0;
+
+                //TODO: we need to ensire that the montly diet details are summaried by this point and these will be known.
+
+                double energyMetabolic = EnergyGross * (((ind.Intake.CombinedDetails.DryMatterDigestibility == 0) ? 50 : ind.Intake.CombinedDetails.DryMatterDigestibility) / 100.0) * 0.81;
+                // Reference: SCA p.
+                double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
+                double milkTime = ind.DaysLactating;
+                double milkCurve;
+
+                // determine milk production curve to use
+                // if milking is taking place use the non-suckling curve for duration of lactation
+                // otherwise use the suckling curve where there is a larger drop off in milk production
+                if (ind.SucklingOffspringList.Count() == 0)
+                    milkCurve = ind.BreedParams.MilkCurveNonSuckling;
+                else // no milking
+                    milkCurve = ind.BreedParams.MilkCurveSuckling;
+                ind.MilkProductionPotential = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
+                ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
+                // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
+                double energyMilk = ind.MilkProductionPotential * 3.2 / kl;
+                // adjust last time step's energy balance
+                double adjustedEnergyBalance = ind.EnergyBalance;
+                if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
+                    adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
+
+                // set milk production in lactating females for consumption.
+                ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
+                ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
+
+                ind.MilkProducedThisTimeStep = ind.MilkCurrentlyAvailable;
+                // returns the energy required for milk production
+
+                return ind.MilkProduction * 3.2 / kl;
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// Determine the energy required for pregnancy
+        /// </summary>
+        /// <param name="ind">Female individual</param>
+        /// <returns>energy required for fetus this timestep</returns>
+        private double CalculatePregnancyEnergy(RuminantFemale ind)
+        {
+            if (ind.IsPregnant)
+            {
+                // Potential birth weight
+                // Reference: Freer
+                double potentialBirthWeight = ind.BreedParams.SRWBirth * ind.StandardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / ind.StandardReferenceWeight));
+                double fetusAge = (ind.Age - ind.AgeAtLastConception) * 30.4;
+                //TODO: Check fetus age correct
+                return potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
+            }
+            return 0;
         }
 
         /// <summary>
@@ -753,16 +752,14 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
-                if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                    htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");
-                else
-                    htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
+            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");
+            else
+                htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 
