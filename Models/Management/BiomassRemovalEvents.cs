@@ -8,6 +8,8 @@ using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Models.Utilities;
 
 namespace Models.Management
 {
@@ -22,7 +24,7 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
-    public class BiomassRemovalEvents : Model, IModelAsTable
+    public class BiomassRemovalEvents : Model, IGridTable
     {        
         /// <summary>
         /// Crop to remove biomass from
@@ -90,84 +92,57 @@ namespace Models.Management
         /// Gets or sets the table of values.
         /// </summary>
         [JsonIgnore]
-        public List<DataTable> Tables
+        public List<GridTable> Tables
         {
             get
             {
                 LinkCrop();
 
-                List<DataTable> tables = new List<DataTable>();
+                List<GridTable.Column> columns = new List<GridTable.Column>();
 
-                //Add table headers
-                var data = new DataTable();
-                data.Columns.Add("Plant");
-                data.Columns.Add("Type");
-                data.Columns.Add("Organ");
-                data.Columns.Add("Live To Remove");
-                data.Columns.Add("Dead To Remove");
-                data.Columns.Add("Live To Residue");
-                data.Columns.Add("Dead To Residue");
-                data.Columns.Add(" "); // add an empty table so that the last column doesn't stretch across the screen
+                columns.Add(new GridTable.Column("PlantName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("OrganName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("TypeString", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("LiveToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("DeadToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("LiveToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTable.Column("DeadToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
 
-                //Create the list of removal fractions for the crop specified in the parent BiomassRemovalEvents
-                List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
-                foreach (IOrgan organ in organs)
-                {
-                    BiomassRemovalType type = RemovalType;
-                    DataRow row = data.NewRow();
-                    row["Plant"] = PlantToRemoveFrom.Name;
-                    row["Type"] = type;
-                    row["Organ"] = organ.Name;
-                    data.Rows.Add(row);
-                }
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
 
-                if (BiomassRemovals != null)
-                {
-                    //add in stored values
-                    foreach (BiomassRemovalOfPlantOrganType removal in BiomassRemovals)
-                    {
-                        //find which line of the data table matches the organ.
-                        //We don't check Plant Name or Cut Type anymore so that they aren't cleared when properties are changed
-                        foreach (DataRow row in data.Rows)
-                        {
-                            if (row["Organ"].ToString().Equals(removal.OrganName))
-                            {
-                                //matching row, fill in fractions
-                                row["Live To Remove"] = removal.LiveToRemove;
-                                row["Dead To Remove"] = removal.DeadToRemove;
-                                row["Live To Residue"] = removal.LiveToResidue;
-                                row["Dead To Residue"] = removal.DeadToResidue;
-                            }
-                        }
-                    }
-                }
-
-                tables.Add(data);
-                //pass this generated table back to be stored
-                this.Tables = tables;
                 return tables;
             }
-            set
-            {
-                BiomassRemovals = new List<BiomassRemovalOfPlantOrganType>();
-                DataTable data = value[0];
-                foreach (DataRow row in data.Rows)
-                {
-                    string plantName = row["Plant"].ToString();
-                    string organName = row["Organ"].ToString();
-                    string type = row["Type"].ToString();
-                    double liveToRemove, deadToRemove, liveToResidue, deadToResidue;
+        }
 
-                    double.TryParse(row["Live To Remove"].ToString(), out liveToRemove);
-                    double.TryParse(row["Dead To Remove"].ToString(), out deadToRemove);
-                    double.TryParse(row["Live To Residue"].ToString(), out liveToResidue);
-                    double.TryParse(row["Dead To Residue"].ToString(), out deadToResidue);
+        /// <summary>
+        /// Renames column headers for display
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            dt.Columns["PlantName"].ColumnName = "Plant";
+            dt.Columns["OrganName"].ColumnName = "Organ";
+            dt.Columns["TypeString"].ColumnName = "Type";
+            dt.Columns["LiveToRemove"].ColumnName = "Live To Remove";
+            dt.Columns["DeadToRemove"].ColumnName = "Dead To Remove";
+            dt.Columns["LiveToResidue"].ColumnName = "Live To Residue";
+            dt.Columns["DeadToResidue"].ColumnName = "Dead To Residue";
+            return dt;
+        }
 
-                    if (!String.IsNullOrEmpty(plantName)) // Dont add the blank row at the end as a removal.
-                        BiomassRemovals.Add(new BiomassRemovalOfPlantOrganType(plantName, organName, type, liveToRemove, deadToRemove, liveToResidue, deadToResidue));
-                }
-                return;
-            }
+        /// <summary>
+        /// Renames the columns back to model property names
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            dt.Columns["Plant"].ColumnName = "PlantName";
+            dt.Columns["Organ"].ColumnName = "OrganName";
+            dt.Columns["Type"].ColumnName = "TypeString";
+            dt.Columns["Live To Remove"].ColumnName = "LiveToRemove";
+            dt.Columns["Dead To Remove"].ColumnName = "DeadToRemove";
+            dt.Columns["Live To Residue"].ColumnName = "LiveToResidue";
+            dt.Columns["Dead To Residue"].ColumnName = "DeadToResidue";
+            return dt;
         }
 
         /// <summary>
