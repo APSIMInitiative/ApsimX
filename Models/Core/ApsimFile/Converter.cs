@@ -6,16 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Linq;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office.Word;
-using DocumentFormat.OpenXml.Presentation;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
-using Models.PMF.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 168; } }
+        public static int LatestVersion { get { return 169; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -215,7 +210,7 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    
+
 
                     return res;
                 }
@@ -4949,7 +4944,7 @@ namespace Models.Core.ApsimFile
                     // Find all biomass removal fractions.
                     var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.,\(\)+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
                                          .Where(man => !manager.PositionIsCommented(man.Index));
-                    List <OrganFractions> organs = new List<OrganFractions>();
+                    List<OrganFractions> organs = new List<OrganFractions>();
 
                     foreach (Match match in matches)
                     {
@@ -5117,7 +5112,7 @@ namespace Models.Core.ApsimFile
                         if (enabled)
                             if (operation[i]["Date"] != null)
                                 dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
-                        
+
                         operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
                     }
                 }
@@ -5161,7 +5156,7 @@ namespace Models.Core.ApsimFile
                     if (declaration.TypeName == "SoilNitrogenNO3" || declaration.TypeName == "SoilNitrogenNH4" || declaration.TypeName == "SoilNitrogenUrea")
                     {
                         declaration.TypeName = "Solute";
-                        var linkAttributeIndex= declaration.Attributes.IndexOf("[Link]");
+                        var linkAttributeIndex = declaration.Attributes.IndexOf("[Link]");
                         if (linkAttributeIndex != -1)
                         {
                             declaration.Attributes[linkAttributeIndex] = "[Link(Path=\"[NO3]\")]";
@@ -5197,7 +5192,7 @@ namespace Models.Core.ApsimFile
                 changeMade = manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN") || changeMade;
-                
+
                 if (changeMade)
                 {
                     manager.AddDeclaration("Nutrient", "Nutrient", new string[] { "[Link]" });
@@ -5301,6 +5296,31 @@ namespace Models.Core.ApsimFile
                 if (changeMade)
                     manager.Save();
             }
+        }
+
+        /// <summary>
+        /// MicroClimate can only be under Simulation not Zone.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="_"></param>
+        private static void UpgradeToVersion169(JObject root, string _)
+        {
+            foreach (var microClimate in JsonUtilities.ChildrenOfType(root, "MicroClimate"))
+            {
+                var parent = JsonUtilities.Parent(microClimate);
+                // If grandParent, 
+                var grandParent = JsonUtilities.Parent(parent);
+                if (JsonUtilities.Type(parent) == "Zone" && JsonUtilities.Type(grandParent) == "Simulation")
+                {
+                    // Needed for the AddModel method.
+                    MicroClimate microClimateModel = FileFormat.ReadFromString<MicroClimate>(microClimate.ToString(), e => throw e, false).NewModel as MicroClimate;
+                    // 
+                    JsonUtilities.AddModel((JObject)grandParent, microClimateModel);
+                    // Removes MicroClimate from Zone Nodes that contain MicroClimates.
+                    JsonUtilities.RemoveChild((JObject)parent, "MicroClimate");
+                }
+            }
+
         }
     }
 }
