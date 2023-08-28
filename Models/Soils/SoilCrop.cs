@@ -169,7 +169,7 @@ namespace Models.Soils
                 new GridTable.Column("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
                 new GridTable.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
                 new GridTable.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
-                });
+                }, this);
 
                 if (throwException)
                 {

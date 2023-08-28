@@ -1412,7 +1412,7 @@ namespace Models.Soils
                 columns.Add(new GridTable.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

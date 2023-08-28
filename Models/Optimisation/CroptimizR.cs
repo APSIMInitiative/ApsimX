@@ -177,7 +177,7 @@ namespace Models.Optimisation
                 columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable("Table", columns));
+                tables.Add(new GridTable("Table", columns, this));
 
                 return tables;
             }

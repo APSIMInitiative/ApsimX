@@ -80,11 +80,16 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
             //view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
             if (gridPresenter1 != null)
+            {
                 gridPresenter1.CellChanged -= OnCellChanged;
                 gridPresenter1.Detach();
+            }
+                
             if (gridPresenter2 != null)
+            {
                 gridPresenter2.CellChanged -= OnCellChanged;
                 gridPresenter2.Detach();
+            }
         }
 
         /// <summary>Invoked when a grid cell has changed.</summary>

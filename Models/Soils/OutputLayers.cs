@@ -296,7 +296,7 @@ namespace Models.Soils
                 columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

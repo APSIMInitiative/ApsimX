@@ -7,8 +7,8 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using System;
 using System.Collections;
-using static Models.PMF.Phen.PhotoperiodPhase;
 using System.ComponentModel;
+using Models.Interfaces;
 
 namespace Models.Utilities
 {
@@ -29,20 +29,25 @@ namespace Models.Utilities
         /// <summary>A description of the Data set and how it is used</summary>
         public string Description { get; set; }
 
+        /// <summary>A description of the Data set and how it is used</summary>
+        public Model Model { get; set; }
+
         /// <summary>The data table.</summary>
         public DataTable Data
         {
-            get { return GetData(); }
-            set { SetData(value); }
+            get { return (Model as IGridTable).ConvertModelToDisplay(GetData()); }
+            set { SetData((Model as IGridTable).ConvertDisplayToModel(value)); }
         }
 
         /// <summary>Constructor</summary>
         /// <param name="nameOfData">Name of tabular data.</param>
         /// <param name="columns">Properties containing array variables. One for each column.</param>
-        public GridTable(string nameOfData, IEnumerable<Column> columns)
+        /// <param name="model">The the model being shown in this grid table</param>
+        public GridTable(string nameOfData, IEnumerable<Column> columns, Model model)
         {
             Name = nameOfData;
             Description = "";
+            Model = model;
             this.columns.AddRange(columns);
         }
 
@@ -353,6 +358,12 @@ namespace Models.Utilities
                             valueAsDouble = Convert.ToDouble(value);
 
                         propInfo.SetValue(obj, valueAsDouble);
+                    }
+                    else if (propInfo.PropertyType == typeof(bool))
+                    {
+                        bool? valueAsBoolen = null;
+                        if (!String.IsNullOrEmpty(value))
+                            valueAsBoolen = Convert.ToBoolean(value);
                     }
                     else
                     {

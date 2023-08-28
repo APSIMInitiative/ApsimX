@@ -120,7 +120,7 @@ namespace Models.Soils
                 columns.Add(new GridTable.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

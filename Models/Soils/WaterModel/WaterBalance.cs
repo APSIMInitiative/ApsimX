@@ -891,7 +891,7 @@ namespace Models.WaterModel
                 columns.Add(new GridTable.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

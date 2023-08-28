@@ -233,7 +233,7 @@ namespace Models.Soils
                 }
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

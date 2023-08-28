@@ -190,7 +190,7 @@ namespace Models.Soils
                 columns.Add(new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

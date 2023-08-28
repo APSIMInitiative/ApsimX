@@ -319,7 +319,7 @@ namespace Models.Soils
                 columns.Add(new GridTable.Column("kdul", new VariableProperty(this, GetType().GetProperty("kdul"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns));
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }

@@ -1,10 +1,11 @@
 ﻿using UserInterface.Interfaces;
-using Models.Interfaces;
 using Models.Utilities;
+using Models.ForageDigestibility;
 using System;
 using System.Collections.Generic;
 using UserInterface.Views;
 using System.Data;
+using Models.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -287,9 +288,11 @@ namespace UserInterface.Presenters
         /// <summary>Save the contents of the grid to the model.</summary>
         private void SaveGridToModel()
         {
-            var dataTableProvider = grid.Sheet.DataProvider as DataTableProvider;
-            if (dataTableProvider != null)
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", dataTableProvider.Data));
+            if (grid.Sheet.DataProvider != null)
+            {
+                var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
+            }
         }
     }
 }
