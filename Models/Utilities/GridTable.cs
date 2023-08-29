@@ -88,17 +88,32 @@ namespace Models.Utilities
         {
             // If Depth is the first column then use the number of values in
             // that column to resize the other columns.
+            int startRow = 0;
             if (data != null && data.Columns.Count > 0 &&
                 data.Columns[0].ColumnName == "Depth")
             {
+                startRow = 1;
                 string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth", CultureInfo.CurrentCulture);
                 var numLayers = depths.TrimEnd().Count;
                 while (data.Rows.Count > numLayers)
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
             }
 
+            //if the last row is empty in all spaces, remove it
+            if (data.Rows.Count > 0)
+            {
+                string rowInput = "";
+                DataRow row = data.Rows[data.Rows.Count - 1];
+                foreach (var value in row.ItemArray)
+                {
+                    rowInput += value.ToString();
+                }
+                if (rowInput.Length == 0)
+                    data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
+            }
+
             foreach (var column in columns)
-                column.Set(data);
+                column.Set(data, startRow);
         }
 
         /// <summary>
@@ -269,30 +284,26 @@ namespace Models.Utilities
             }
 
             /// <summary>Setting model data. Called by GUI.</summary>
-            /// <param name="data"></param>
-            public void Set(DataTable data)
+            /// <param name="data"></param>'
+            /// <param name="startRow"></param>
+            public void Set(DataTable data, int startRow)
             {
                 if (properties != null)
                 {
                     var propertyValue = properties.First().Value;
                     if (propertyValue is Array)
                     {
-                        int numRows = data.Rows.Count-1;
+                        int numRows = data.Rows.Count;
                         foreach (var property in properties)
                         {
                             if (!property.IsReadOnly)
                             {
-                                if (numRows == -1)
-                                    property.Value = null;
-                                else
+                                if (property.DataType == typeof(string[]))
+                                    property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                                else if (property.DataType == typeof(double[]))
                                 {
-                                    if (property.DataType == typeof(string[]))
-                                        property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, 1, CultureInfo.CurrentCulture);
-                                    else if (property.DataType == typeof(double[]))
-                                    {
-                                        var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, 1, CultureInfo.CurrentCulture);
-                                        property.Value = values;
-                                    }
+                                    var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                                    property.Value = values;
                                 }
                             }
                         }

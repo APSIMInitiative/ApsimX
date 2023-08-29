@@ -1,8 +1,8 @@
-﻿namespace UserInterface.Views
-{
-    using Gtk;
-    using System;
+﻿using Gtk;
+using System;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -11,7 +11,7 @@
     {
         private VPaned vpaned;
 
-        private GridView gridView;
+        private DualGridView gridView;
 
         /// <summary>
         /// Initial water graph
@@ -25,12 +25,11 @@
         {
             vpaned = new VPaned();
             mainWidget = vpaned;
-            gridView = new GridView(this);
+            gridView = new DualGridView(this);
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
             graphView.Height = 200;
-            gridView.NumericFormat = null;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -61,7 +60,7 @@
         /// <summary>
         /// Gets the initial water graph.
         /// </summary>
-        public Views.GridView VariablesGrid
+        public Views.DualGridView VariablesGrid
         {
             get
             {

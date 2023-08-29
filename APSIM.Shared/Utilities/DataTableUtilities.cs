@@ -267,7 +267,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double[] GetColumnAsDoubles(DataTable table, string columnName, int numValues, int startRow, CultureInfo culture)
         {
-            double[] values = new double[numValues];
+            double[] values = new double[numValues-startRow];
             int index = 0;
             for (int Row = startRow; Row != table.Rows.Count && index != numValues; Row++)
             {
