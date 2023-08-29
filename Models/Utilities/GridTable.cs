@@ -86,13 +86,14 @@ namespace Models.Utilities
         /// <param name="data"></param>
         public void SetData(DataTable data)
         {
-            // If Depth is the first column then use the number of values in
-            // that column to resize the other columns.
-            int startRow = 0;
+            //if the first row is units, delete it
+            if (this.HasUnits())
+                data.Rows.RemoveAt(0);
+
+            //if there is a depth column, don't let person add more rows
             if (data != null && data.Columns.Count > 0 &&
                 data.Columns[0].ColumnName == "Depth")
             {
-                startRow = 1;
                 string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth", CultureInfo.CurrentCulture);
                 var numLayers = depths.TrimEnd().Count;
                 while (data.Rows.Count > numLayers)
@@ -102,18 +103,19 @@ namespace Models.Utilities
             //if the last row is empty in all spaces, remove it
             if (data.Rows.Count > 0)
             {
-                string rowInput = "";
                 DataRow row = data.Rows[data.Rows.Count - 1];
+                bool blank = true;
                 foreach (var value in row.ItemArray)
-                {
-                    rowInput += value.ToString();
-                }
-                if (rowInput.Length == 0)
+                    if (!String.IsNullOrEmpty(value.ToString()))
+                            blank = false;
+
+                if (blank)
                     data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
             }
 
+            //copy values into properties
             foreach (var column in columns)
-                column.Set(data, startRow);
+                column.Set(data);
         }
 
         /// <summary>
@@ -136,7 +138,7 @@ namespace Models.Utilities
         public bool HasUnits()
         {
             foreach (var column in columns)
-                if (column.Units != null)
+                if (!String.IsNullOrEmpty(column.Units))
                     return true;
             return false;
         }
@@ -243,6 +245,8 @@ namespace Models.Utilities
                                 values = ((string[])propertyValue).Select(v => v.ToString()).ToArray();
                             else if (property.DataType == typeof(double[]))
                                 values = ((double[])propertyValue).Select(v => double.IsNaN(v) ? string.Empty : v.ToString("F3")).ToArray();
+                            else if (property.DataType == typeof(DateTime[]))
+                                values = ((DateTime[])propertyValue).Select(v => v.ToString("yyyy/MM/dd")).ToArray();
 
                             DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Length);
                         }
@@ -285,13 +289,12 @@ namespace Models.Utilities
 
             /// <summary>Setting model data. Called by GUI.</summary>
             /// <param name="data"></param>'
-            /// <param name="startRow"></param>
-            public void Set(DataTable data, int startRow)
+            public void Set(DataTable data)
             {
                 if (properties != null)
                 {
-                    var propertyValue = properties.First().Value;
-                    if (propertyValue is Array)
+                    Type propertyType = properties.First().DataType;
+                    if (propertyType == typeof(string[]) || propertyType == typeof(double[]) || propertyType == typeof(DateTime[]))
                     {
                         int numRows = data.Rows.Count;
                         foreach (var property in properties)
@@ -299,16 +302,15 @@ namespace Models.Utilities
                             if (!property.IsReadOnly)
                             {
                                 if (property.DataType == typeof(string[]))
-                                    property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
+                                    property.Value = DataTableUtilities.GetColumnAsStrings(data, Name, numRows, 0, CultureInfo.CurrentCulture);
                                 else if (property.DataType == typeof(double[]))
-                                {
-                                    var values = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, startRow, CultureInfo.CurrentCulture);
-                                    property.Value = values;
-                                }
+                                    property.Value = DataTableUtilities.GetColumnAsDoubles(data, Name, numRows, 0, CultureInfo.CurrentCulture);
+                                else if (property.DataType == typeof(DateTime[]))
+                                    property.Value = DataTableUtilities.GetColumnAsDates(data, Name); //todo: add numRows/startRow option for dates
                             }
                         }
                     }
-                    else if (propertyValue is IEnumerable<object>)
+                    else if (propertyType == typeof(IEnumerable<object>))
                     {
                         Model model = properties.First().Object as Model;
                         PropertyInfo fieldInfo = model.GetType().GetProperty(properties.First().Name);

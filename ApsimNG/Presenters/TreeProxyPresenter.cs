@@ -1,16 +1,17 @@
-﻿namespace UserInterface.Presenters
-{
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using Models.Agroforestry;
-    using Models.Core;
-    using Models.Soils;
-    using Views;
-    using Commands;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Models.Agroforestry;
+using Models.Core;
+using Models.Soils;
+using UserInterface.Views;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using APSIM.Shared.Utilities;
+using Models.Utilities;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// The tree proxy presenter
     /// </summary>
@@ -34,12 +35,12 @@
         /// <summary>
         /// Presenter for the view's spatial data grid.
         /// </summary>
-        private GridPresenter spatialGridPresenter = new GridPresenter();
+        private NewGridPresenter spatialGridPresenter;
 
         /// <summary>
         /// Presenter for the view's temporal data grid.
         /// </summary>
-        private GridPresenter temporalGridPresenter = new GridPresenter();
+        private NewGridPresenter temporalGridPresenter;
 
         /// <summary>
         /// The explorer presenter.
@@ -58,14 +59,24 @@
             forestryViewer = view as TreeProxyView;
             presenter = explorerPresenter;
 
-            AttachData();
-            forestryViewer.OnCellEndEdit += OnCellEndEdit;
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
+            //AttachData();
+            //forestryViewer.OnCellEndEdit += OnCellEndEdit;
+            //presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
             propertyPresenter.Attach(forestryModel, forestryViewer.Constants, explorerPresenter);
-            spatialGridPresenter.Attach(forestryModel, forestryViewer.SpatialDataGrid, explorerPresenter);
-            temporalGridPresenter.Attach(forestryModel, forestryViewer.TemporalDataGrid, explorerPresenter);
+            //spatialGridPresenter.Attach(forestryModel, forestryViewer.SpatialDataGrid, explorerPresenter);
+            //temporalGridPresenter.Attach(forestryModel, forestryViewer.TemporalDataGrid, explorerPresenter);
+
+            List<GridTable> tables = forestryModel.Tables;
+
+            spatialGridPresenter = new NewGridPresenter();
+            spatialGridPresenter.Attach(tables[1], forestryViewer.SpatialDataGrid, explorerPresenter);
+            spatialGridPresenter.CellChanged += OnCellChanged;
+
+            temporalGridPresenter = new NewGridPresenter();
+            temporalGridPresenter.Attach(tables[0], forestryViewer.TemporalDataGrid, explorerPresenter);
+            temporalGridPresenter.CellChanged += OnCellChanged;
         }
 
         /// <summary>
@@ -73,12 +84,14 @@
         /// </summary>
         public void Detach()
         {
+            /*
             spatialGridPresenter.Detach();
             temporalGridPresenter.Detach();
             propertyPresenter.Detach();
             SaveTable();
             forestryViewer.OnCellEndEdit -= OnCellEndEdit;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            */
         }
 
         /// <summary>
@@ -205,18 +218,18 @@
         /// <param name="changedModel">The model which has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            propertyPresenter.RefreshView(forestryModel);
-            forestryViewer.SpatialData = forestryModel.Table;
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
+            //propertyPresenter.RefreshView(forestryModel);
+            //forestryViewer.SpatialData = forestryModel.Table;
+            //forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
         }
 
-        /// <summary>
-        /// Edit the cell
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCellEndEdit(object sender, GridCellsChangedArgs e)
+        /// <summary>Invoked when a grid cell has changed.</summary>
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
+        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
         {
+            /*
             GridView grid = sender as GridView;
             // fixme - need some (any!) data validation but it will
             // require a partial rewrite of TreeProxy.
@@ -225,6 +238,7 @@
 
             SaveTable();
             AttachData();
+            */
         }
     }
 }

@@ -1,18 +1,19 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Data;
-    using Gtk;
-    using OxyPlot;
-    using OxyPlot.Axes;
-    using OxyPlot.GtkSharp;
-    using Interfaces;
-    using System.Drawing;
-    using EventArguments;
-    using APSIM.Interop.Graphing.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using Gtk;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.GtkSharp;
+using UserInterface.Interfaces;
+using System.Drawing;
+using UserInterface.EventArguments;
+using APSIM.Interop.Graphing.Extensions;
+using DocumentFormat.OpenXml.Presentation;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -50,12 +51,10 @@
             HBox graphContainer = (HBox)builder.GetObject("hbox1");
             mainWidget = mainPanel;
 
-            TemporalDataGrid = new GridView(this as ViewBase);
-            TemporalDataGrid.CellsChanged += GridCellEdited;
+            TemporalDataGrid = new ContainerView(owner);
             temporalDataTab.Add((TemporalDataGrid as ViewBase).MainWidget);
 
-            SpatialDataGrid = new GridView(this as ViewBase);
-            SpatialDataGrid.CellsChanged += GridCellEdited;
+            SpatialDataGrid = new ContainerView(owner);
             spatialDataTab.Add((SpatialDataGrid as ViewBase).MainWidget);
 
             belowGroundGraph = new PlotView();
@@ -83,12 +82,12 @@
         /// <summary>
         /// Grid which displays the temporal data.
         /// </summary>
-        public IGridView TemporalDataGrid { get; private set; }
+        public ContainerView TemporalDataGrid { get; private set; }
 
         /// <summary>
         /// Grid which displays the spatial data.
         /// </summary>
-        public IGridView SpatialDataGrid { get; private set; }
+        public ContainerView SpatialDataGrid { get; private set; }
 
         /// <summary>
         /// Constants grid.
@@ -102,7 +101,9 @@
         {
             get
             {
+                
                 List<List<string>> newTable = new List<List<string>>();
+                /*
                 newTable.Add(SpatialDataGrid.DataSource.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList());
                 List<DataRow> rawData = SpatialDataGrid.DataSource.AsEnumerable().ToList();
                 int lastNonEmptyRow = rawData.IndexOf(rawData.Last(r => !r.ItemArray.All(x => x == DBNull.Value || x == null || string.IsNullOrEmpty(x.ToString()))));
@@ -118,10 +119,12 @@
                         column.Add(SpatialDataGrid.DataSource.Rows[row][col].ToString());
                     newTable.Add(column);
                 }
+                */
                 return newTable;
             }
             set
             {
+                /*
                 if (value == null || !value.Any())
                     throw new ArgumentNullException("Spatial data cannot be null.");
                 DataTable newTable = new DataTable();
@@ -139,6 +142,7 @@
                 }
                 SpatialDataGrid.DataSource = newTable;
                 SetupGraphs();
+                */
             }
         }
 
@@ -151,10 +155,10 @@
             get
             {
                 List<DateTime> dates = new List<DateTime>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[0] as string))
+                //foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
+                //    if (!string.IsNullOrEmpty(row[0] as string))
                         // Use the current culture
-                        dates.Add(DateTime.Parse((string)row[0]));
+                //        dates.Add(DateTime.Parse((string)row[0]));
                 return dates.ToArray();
             }
         }
@@ -167,9 +171,9 @@
             get
             {
                 List<double> heights = new List<double>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[1] as string))
-                        heights.Add(Convert.ToDouble((string)row[1], System.Globalization.CultureInfo.InvariantCulture) * 1000.0);
+                //foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
+                //    if (!string.IsNullOrEmpty(row[1] as string))
+                //        heights.Add(Convert.ToDouble((string)row[1], System.Globalization.CultureInfo.InvariantCulture) * 1000.0);
                 return heights.ToArray();
             }
         }
@@ -182,9 +186,9 @@
             get
             {
                 List<double> nDemands = new List<double>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[2] as string))
-                        nDemands.Add(Convert.ToDouble((string)row[2], System.Globalization.CultureInfo.InvariantCulture));
+                //foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
+                //    if (!string.IsNullOrEmpty(row[2] as string))
+                //        nDemands.Add(Convert.ToDouble((string)row[2], System.Globalization.CultureInfo.InvariantCulture));
                 return nDemands.ToArray();
             }
         }
@@ -197,9 +201,9 @@
             get
             {
                 List<double> shadeModifiers = new List<double>();
-                foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
-                    if (!string.IsNullOrEmpty(row[3] as string))
-                        shadeModifiers.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
+                //foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
+                //    if (!string.IsNullOrEmpty(row[3] as string))
+                //        shadeModifiers.Add(Convert.ToDouble((string)row[3], System.Globalization.CultureInfo.InvariantCulture));
                 return shadeModifiers.ToArray();
             }
         }
@@ -234,7 +238,7 @@
                 table.Rows.Add(date, height, nDemand, shadeModifier);
             }
 
-            TemporalDataGrid.DataSource = table;
+            //TemporalDataGrid.DataSource = table;
         }
 
         /// <summary>
@@ -263,6 +267,7 @@
                 agyAxis.AxisDistance = 2;
                 Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
                 List<DataPoint> pointsShade = new List<DataPoint>();
+                /*
                 DataRow rowShade = SpatialDataGrid.DataSource.Rows[0];
                 DataColumn col = SpatialDataGrid.DataSource.Columns[0];
                 double[] yShade = new double[SpatialDataGrid.DataSource.Columns.Count - 1];
@@ -277,11 +282,12 @@
                     yShade[i - 1] = Convert.ToDouble(rowShade[i], 
                                                      System.Globalization.CultureInfo.InvariantCulture);
                 }
-
+                
                 for (int i = 0; i < x.Length; i++)
                 {
                     pointsShade.Add(new DataPoint(x[i], yShade[i]));
                 }
+                */
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
@@ -320,7 +326,7 @@
                 bgyAxis.MinorTickSize = 0;
                 bgyAxis.AxislineStyle = LineStyle.Solid;
                 belowGroundGraph.Model.Axes.Add(bgyAxis);
-
+                /*
                 for (int i = 1; i < SpatialDataGrid.DataSource.Columns.Count; i++)
                 {
                     Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
@@ -341,6 +347,7 @@
                     series.ItemsSource = points;
                     belowGroundGraph.Model.Series.Add(series);
                 }
+                */
                 Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
                 SetForegroundColour(belowGroundGraph, foregroundColour);
