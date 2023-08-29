@@ -1,11 +1,19 @@
 ﻿[
   {
-    "variableName": "Today",
-    "variableCode": "[Clock].Today"
+    "description": "Today",
+    "code": "[Clock].Today"
   },
   {
-    "variableName": "Harvest",
-    "variableCode": "Plant.Harvest"
+    "description": "Harvest",
+    "code": "Plant.Harvest"
+  },
+  {
+    "description": "End of Day",
+    "code": "[Clock].EndOfDay"
+  },
+  {
+    "description": "End of Year",
+    "code": "[Clock].EndOfYear"
   }
 ]
 

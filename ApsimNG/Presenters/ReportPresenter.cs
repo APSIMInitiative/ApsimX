@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using ApsimNG.Classes;
 using Gtk;
 using Models;
 using Models.Core;
+using Models.Core.ApsimFile;
 using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
@@ -60,9 +62,17 @@ namespace UserInterface.Presenters
         /// </summary>
         private IntellisensePresenter intellisense;
 
+        /// <summary>Stores a DataTable of common report frequency variables.</summary>
         private DataTable commonReportFrequencyVariables;
 
+        /// <summary>Stores a DataTable of common report variables.</summary>
         private DataTable commonReportVariables;
+
+        /// <summary> File name for reporting variables.</summary>
+        private readonly string commonReportVariablesFilePath = "CommonReportingVariables.json";
+
+        /// <summary> File name for report frequency variables.</summary>
+        private readonly string commonReportFrequencyVariablesFilePath = "CommonFrequencyVariables.json";
 
         /// <summary>Stores variable name and variable code while being dragged.</summary>
         private ReportVariable CurrentlySelectedVariable { get; set; }
@@ -93,10 +103,10 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            CommonReportVariables = SetCommonReportVariables();
-            CommonReportFrequencyVariables = SetCommonReportFrequencyVariables();
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
+            CommonReportVariables = SetReportVariables(commonReportVariablesFilePath);
+            CommonReportFrequencyVariables = SetReportVariables(commonReportFrequencyVariablesFilePath);
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -114,7 +124,9 @@ namespace UserInterface.Presenters
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
+            this.view.VariableList.TextHasChangedByUser += OnVariableListTextChanged; //TODO: add the functionality to filter the common variables list.
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
+            this.view.EventList.TextHasChangedByUser += OnEventListTextChanged; //TODO: add the functionality to filter the common frequency variables list.
             this.view.GroupByEdit.Changed += OnGroupByChanged;
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
@@ -148,6 +160,26 @@ namespace UserInterface.Presenters
             this.view.TabIndex = this.report.ActiveTabIndex;
         }
 
+        /// <summary>
+        /// Intended to handle what happens to common report frequency variables when text is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnEventListTextChanged(object sender, EventArgs e)
+        {
+            // TODO: fill this.
+        }
+
+        /// <summary>
+        /// Intended to handle what happens to common report variables when text is changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnVariableListTextChanged(object sender, EventArgs e)
+        {
+            // TODO: fill this.
+        }
+
         private void VariableListVariableDragDrop(object sender, EventArgs e)
         {
 
@@ -163,8 +195,8 @@ namespace UserInterface.Presenters
                 {
                     CurrentlySelectedVariable = new ReportVariable()
                     {
-                        VariableName = row[0].ToString(),
-                        VariableCode = row[1].ToString(),
+                        Description = row[0].ToString(),
+                        Code = row[1].ToString(),
                     };
                 }
 
@@ -182,8 +214,8 @@ namespace UserInterface.Presenters
                 {
                     CurrentlySelectedVariable = new ReportVariable()
                     {
-                        VariableName = row[0].ToString(),
-                        VariableCode = row[1].ToString(),
+                        Description = row[0].ToString(),
+                        Code = row[1].ToString(),
                     };
                 }
 
@@ -213,61 +245,80 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
         }
 
-        public DataTable SetCommonReportVariables()
+        /// <summary>
+        /// Creates a DataTable with the reportVariables inside a resource file name. 
+        /// </summary>
+        /// <param name="fileName"> The name including the json extension.</param>
+        /// <returns>A <see cref="DataTable"/> containing commonReportVariables or commonReportFrequencyVariables.</returns>
+        public DataTable SetReportVariables(string fileName)
         {
-            string reportingVariablesJSON = null;
-            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\CommonReportingVariables.json");
-
-            // Get the resource file contents into a JSON Object.
-            reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
-            List<ReportVariable> reportVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
-
-            // Build a DataTable to replace the private variable
-            DataTable reportVariableDataTable = new DataTable();
-
-            DataColumn reportingVariableNameColumn = new DataColumn("Variable name");
-            DataColumn reportingVariableCodeColumn = new DataColumn("Variable code");
-            reportVariableDataTable.Columns.Add(reportingVariableNameColumn);
-            reportVariableDataTable.Columns.Add(reportingVariableCodeColumn);
-
-            foreach (ReportVariable reportVariable in reportVariableList)
+            try
             {
-                DataRow row = reportVariableDataTable.NewRow();
-                row["Variable name"] = reportVariable.VariableName;
-                row["Variable code"] = reportVariable.VariableCode;
-                reportVariableDataTable.Rows.Add(row);
+                // reportFrequencyVariables name = "CommonFrequencyVariables.json"
+                // reportVariables name = "CommonReportingVariables.json"
+                string reportingVariablesJSON = null;
+                string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+                string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\", fileName);
+
+                // Build a DataTable to replace the private variable
+                DataTable variableDataTable = new DataTable();
+
+                // Get the resource file contents into a JSON Object.
+                reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
+                List<ReportVariable> reportVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
+                DataColumn reportingVariableNameColumn = new DataColumn("Description");
+                DataColumn reportingVariableCodeColumn = new DataColumn("Code");
+                variableDataTable.Columns.Add(reportingVariableNameColumn);
+                variableDataTable.Columns.Add(reportingVariableCodeColumn);
+
+                foreach (ReportVariable reportVariable in reportVariableList)
+                {
+                    bool isReportVariableRelevant = false;
+                    // Find only relevant variables based on models in simulation.
+                    List<string> relevantModelnames = GetModelScopeNames();
+                    //Check the description
+                    foreach (string modelName in relevantModelnames)
+                    {
+                        if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modelName))
+                            isReportVariableRelevant = true;
+                        if (isReportVariableRelevant)
+                        {
+                            // Check that DataTable does not already 
+                            bool isReportVariableAlreadyAdded = false;
+                            foreach (DataRow tableRow in variableDataTable.Rows)
+                            {
+                                if (tableRow[0].ToString().Contains(reportVariable.Description))
+                                    isReportVariableAlreadyAdded = true;
+                            }
+
+                            if (isReportVariableAlreadyAdded == false)
+                            {
+                                // Add to row if relevant.
+                                DataRow row = variableDataTable.NewRow();
+                                row["Description"] = reportVariable.Description;
+                                row["Code"] = reportVariable.Code;
+                                variableDataTable.Rows.Add(row);
+                            }
+                        }
+                    }
+                }
+                return variableDataTable;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
             }
 
-            return reportVariableDataTable;
         }
 
-        public DataTable SetCommonReportFrequencyVariables()
+
+        private List<string> GetModelScopeNames()
         {
-            string reportingFrequencyVariablesJSON = null;
-            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\CommonFrequencyVariables.json");
-
-            // Get the resource file contents into a JSON Object.
-            reportingFrequencyVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
-            List<ReportVariable> reportFrequencyVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingFrequencyVariablesJSON);
-
-            // Build a DataTable to replace the private variable
-            DataTable reportFrequencyVariableDataTable = new("Report frequency variable table");
-
-            DataColumn reportingFrequencyVariableNameColumn = new DataColumn("Variable name");
-            DataColumn reportingFrequencyVariableCodeColumn = new DataColumn("Variable code");
-            reportFrequencyVariableDataTable.Columns.Add(reportingFrequencyVariableNameColumn);
-            reportFrequencyVariableDataTable.Columns.Add(reportingFrequencyVariableCodeColumn);
-
-            foreach (ReportVariable reportFrequencyVariable in reportFrequencyVariableList)
-            {
-                DataRow row = reportFrequencyVariableDataTable.NewRow();
-                row["Variable name"] = reportFrequencyVariable.VariableName;
-                row["Variable code"] = reportFrequencyVariable.VariableCode;
-                reportFrequencyVariableDataTable.Rows.Add(row);
-            }
-            return reportFrequencyVariableDataTable;
+            List<string> modelNamesInScope = new();
+            Simulations simulations = FileFormat.ReadFromFile<Simulations>(explorerPresenter.ApsimXFile.FileName, e => throw e, false).NewModel as Simulations;
+            List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
+            modelNamesInScope = modelInScope.Select(x => x.Name).ToList();
+            return modelNamesInScope;
         }
 
         /// <summary>

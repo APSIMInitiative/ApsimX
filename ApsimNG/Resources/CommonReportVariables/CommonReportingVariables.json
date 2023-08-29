@@ -1,11 +1,25 @@
-[{
-  "variableName":"MineralN",
-  "variableCode":"NO3.kgha + NH4.kgha + Urea.kgha as MineralN"
-},
-{
-  "variableName":"Yield",
-  "variableCode":"Something"
-}]
+[
+  {
+    "description": "MineralN",
+    "code": "NO3.kgha + NH4.kgha + Urea.kgha as MineralN"
+  },
+  {
+    "description": "Yield",
+    "code": "Something"
+  },
+  {
+    "description": "Wheat",
+    "code": "[Wheat].LAI"
+  },
+  {
+    "description": "SugarCane",
+    "code": "[SugarCane].Weight"
+  },
+  {
+    "description": "Barley",
+    "code": "[Barley].Script.Something"
+  }
+]
 
 
 
