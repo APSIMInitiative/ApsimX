@@ -97,8 +97,9 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Refresh()
         {
-            forestryViewer.SpatialData = forestryModel.Table;
-            forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
+            Physical physical = forestryModel.Parent.FindDescendant<Physical>();
+            forestryViewer.SoilMidpoints = physical.DepthMidPoints;
+            forestryViewer.DrawGraphs(forestryModel.Tables[1].Data);
             propertyPresenter.RefreshView(forestryModel);
         }
 
