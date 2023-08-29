@@ -10,7 +10,6 @@ using UserInterface.Interfaces;
 using System.Drawing;
 using UserInterface.EventArguments;
 using APSIM.Interop.Graphing.Extensions;
-using DocumentFormat.OpenXml.Presentation;
 
 namespace UserInterface.Views
 {

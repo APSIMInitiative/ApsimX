@@ -234,6 +234,7 @@ namespace Models.Agroforestry
             else if (dt.TableName.Equals("TreeProxySpatial"))
             {
                 var data = new DataTable();
+                data.TableName = dt.TableName;
                 data.Columns.Add("Parameter");
                 data.Columns.Add("0");
                 data.Columns.Add("0.5h");
@@ -285,7 +286,6 @@ namespace Models.Agroforestry
                 }
                 else
                 {
-
                     for (int y = 0; y < this.Table.Count-1; y++)
                     {
                         for (int x = 0; x < this.Table[y+1].Count; x++)
@@ -324,7 +324,6 @@ namespace Models.Agroforestry
                     }
                     */
                 }
-
                 return data;
             }
             else
@@ -349,7 +348,28 @@ namespace Models.Agroforestry
             }
             else if (dt.TableName.Equals("TreeProxySpatial"))
             {
-                return dt;
+                //add all datas
+                List<List<string>> newTable = new List<List<string>>();
+                for (int x = 0; x < dt.Rows.Count; x++)
+                {
+                    for (int y = 0; y < dt.Columns.Count; y++)
+                    {
+                        if (x == 0)
+                            newTable.Add(new List<string>());
+                        newTable[y].Add(dt.Rows[x][y].ToString());
+                    }
+                }
+
+                //add headers - Yes, this is how it's supposed to be
+                newTable.Insert(0, new List<string>());
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    newTable[0].Add(dt.Columns[i].ColumnName);
+                }
+                this.Table = newTable;
+
+                //since we don't want the gridtable to edit anything in the model, we just return an empty datatable here.
+                return new DataTable();
             }
             else
             {
