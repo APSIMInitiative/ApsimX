@@ -571,7 +571,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Renames a child node if it exists.
+        /// Removes a child node if it exists.
         /// </summary>
         /// <param name="node">Parent node.</param>
         /// <param name="childName">Name of the child to be removed.</param>
@@ -585,7 +585,7 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Renames a child node if it exists.
+        /// Removes a child node if it exists.
         /// </summary>
         /// <param name="node">Parent node.</param>
         public static void RemoveChildren(JObject node)

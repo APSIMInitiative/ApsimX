@@ -1,15 +1,15 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Models.PMF;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Soils;
 using Models.Functions;
 using Models.Interfaces;
+using Models.PMF;
 using Models.PMF.Interfaces;
+using Models.Soils;
 using Models.Soils.Arbitrator;
-using APSIM.Shared.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.AgPasture
 {
@@ -936,7 +936,7 @@ namespace Models.AgPasture
 
         /// <summary>Describes the FVPD function.</summary>
         [Units("0-1")]
-        public LinearInterpolationFunction FVPDFunction 
+        public LinearInterpolationFunction FVPDFunction
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });
 
@@ -1181,7 +1181,7 @@ namespace Models.AgPasture
         private double[] mySoilNO3Uptake;
 
         /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
-        public IReadOnlyList<double> NitrogenUptake  => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
+        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1428,7 +1428,7 @@ namespace Models.AgPasture
                 return dmTotal;
             }
         }
-        
+
         /// <summary>Dry matter weight of plant's leaves (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double LeafWt
@@ -2721,7 +2721,7 @@ namespace Models.AgPasture
             {
                 if (phenologicStage > 0)
                 {
-                   // Evaluate whether remobilisation of luxury N is needed
+                    // Evaluate whether remobilisation of luxury N is needed
                     EvaluateLuxuryNRemobilisation();
 
                     // Get the actual growth, after nutrient limitations but before senescence
@@ -2865,7 +2865,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0, Epsilon);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * swardGreenCover*fractionGreenCover / LightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * swardGreenCover * fractionGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
@@ -3113,7 +3113,7 @@ namespace Models.AgPasture
                 {
                     // Available N was not enough to meet basic demand, allocate N taken up based on optimum N content
                     double Nsum = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                                + (toStolon * Stolon.NConcOptimum) + (toRoot *Root.NConcOptimum);
+                                + (toStolon * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
                         Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
@@ -3167,7 +3167,7 @@ namespace Models.AgPasture
             if (Stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            if(Root.Update() == false)
+            if (Root.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
@@ -3756,7 +3756,7 @@ namespace Models.AgPasture
 
                 Stolon.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0, Epsilon)),
                                      deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0, Epsilon)));
-                
+
 
                 // Update LAI and herbage digestibility
                 EvaluateLAI();
