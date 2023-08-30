@@ -1,12 +1,10 @@
-﻿using NUnit.Framework;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Newtonsoft.Json.Linq;
-using System.Collections.Generic;
-using System;
+using NUnit.Framework;
 
 namespace UnitTests.Resources
 {
@@ -17,7 +15,7 @@ namespace UnitTests.Resources
     {
         /// <summary>
         /// Checks all resources files for released models (all resources 
-        /// under Models.Resources). Ensures that all released modlels have
+        /// under Models.Resources). Ensures that all released models have
         /// a top-level simulations node and that they are converted to the
         /// latest version when read.
         /// </summary>
@@ -31,8 +29,8 @@ namespace UnitTests.Resources
                 {
                     string resource;
                     using (Stream stream = models.GetManifestResourceStream(resourceName))
-                        using (StreamReader reader = new StreamReader(stream))
-                            resource = reader.ReadToEnd();
+                    using (StreamReader reader = new StreamReader(stream))
+                        resource = reader.ReadToEnd();
 
                     // Assume resource is json.
                     JObject root = JObject.Parse(resource);
