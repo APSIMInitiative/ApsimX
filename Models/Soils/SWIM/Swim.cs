@@ -568,10 +568,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Turn vapour conductivity on?</summary>
-        [JsonIgnore]
-        public bool WaterVapourConductivityOn { get; set; }
-
         /// <summary>Pond depth.</summary>
         [Units("mm")]
         public double Pond => _h * 10.0;
@@ -4231,7 +4227,7 @@ namespace Models.Soils
             //if (thsat == 0.0)
             //    thsat = _sat[ix];
 
-            if (WaterVapourConductivityOn)
+            if (VC)
             {
                 //        add vapour conductivity hkv
                 double phi = thsat / 0.93 - tth;
