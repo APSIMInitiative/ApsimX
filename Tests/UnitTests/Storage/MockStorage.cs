@@ -312,5 +312,9 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public int CommandCount()
+        { return 0; }
+
     }
 }
