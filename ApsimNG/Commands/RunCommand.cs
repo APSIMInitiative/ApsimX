@@ -1,16 +1,15 @@
-﻿namespace UserInterface.Commands
-{
-    using Models.Core;
-    using Models.Core.Run;
-    using Presenters;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Media;
-    using System.Timers;
-    using Utility;
+﻿using Models.Core;
+using Models.Core.Run;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Media;
+using System.Timers;
+using UserInterface.Presenters;
+using Utility;
 
+namespace UserInterface.Commands
+{
     public sealed class RunCommand : IDisposable
     {
         /// <summary>The name of the job</summary>
@@ -24,6 +23,11 @@
 
         /// <summary>The timer we use to update the progress bar.</summary>
         private Timer timer = null;
+
+        /// <summary>
+        /// Indicates the runs were aborted rather than allowed to run to completion
+        /// </summary>
+        private Boolean aborted = false;
 
         /// <summary>List of all errors encountered</summary>
         private List<Exception> errors = new List<Exception>();
@@ -89,7 +93,7 @@
             {
                 // We could display the error message, but we're about to display output to the user anyway.
             }
-            if (errors.Count == 0)
+            if (errors.Count == 0 && !aborted)
                 explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
             // We don't need to display error messages now - they are displayed as they occur.
 
@@ -131,6 +135,7 @@
             // Any error messages will already be onscreen, as they are
             // rendered as they occur.
             explorerPresenter.MainPresenter.ShowMessage($"{jobName} aborted", Simulation.MessageType.Information, false);
+            aborted = true;
         }
 
         /// <summary>

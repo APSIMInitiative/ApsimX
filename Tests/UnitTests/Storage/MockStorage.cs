@@ -182,6 +182,9 @@ namespace UnitTests.Storage
         {
         }
 
+        public void Cancel()
+        {
+        }
         public void Stop()
         {
         }

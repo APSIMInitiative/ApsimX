@@ -198,16 +198,19 @@ namespace Models.Storage
             // Otherwise, we delete all data corresponding to the "Current" checkpoint ID.
             bool tableHasCheckpointID = Connection.GetColumns(tableName).Any(c => c.Item1 == "CheckpointID");
             if (checkpointIDs.Count <= 1 || !tableHasCheckpointID)
-                sql = $"DROP TABLE \"{tableName}\"";
+                Connection.DropTable(tableName);
             else
             {
                 int currentCheckpointID = checkpointIDs["Current"].ID;
-                sql = $"DELETE FROM \"{tableName}\" WHERE CheckpointID = {currentCheckpointID}";
+                sql = $"DELETE FROM \"{tableName}\" WHERE \"CheckpointID\" = {currentCheckpointID}";
+
+                Connection.ExecuteNonQuery(sql);
+                lock (lockObject)
+                {
+                    if (!TablesModified.Contains(tableName))
+                        TablesModified.Add(tableName);
+                }
             }
-            Connection.ExecuteNonQuery(sql);
-            lock (lockObject)
-                if (!TablesModified.Contains(tableName))
-                    TablesModified.Add(tableName);
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -220,7 +223,25 @@ namespace Models.Storage
             }
         }
 
-        /// <summary>Stop all writing to database.</summary>
+        /// <summary>Immediately stop all writing to database.</summary>
+        public void Cancel()
+        {
+            if (commandRunner != null)
+            {
+                stopping = true;
+                commandRunner.Stop();
+                idle = true;
+                commandRunner = null;
+                commands.Clear();
+                lock (lockObject)
+                    simulationIDs.Clear();
+                checkpointIDs.Clear();
+                simulationNamesThatHaveBeenCleanedUp.Clear();
+                units.Clear();
+            }
+        }
+
+        /// <summary>Finish all writing to database.</summary>
         public void Stop()
         {
             if (commandRunner != null)
@@ -228,10 +249,13 @@ namespace Models.Storage
                 try
                 {
                     WaitForIdle();
-
                     WriteSimulationIDs();
                     WriteCheckpointIDs();
                     WriteAllUnits();
+                    WaitForIdle();
+                    // Make sure all existing writing has completed.
+                    SpinWait.SpinUntil(() => commandRunner.SimsRunning.IsEmpty);
+                    Connection.EndWriting();
                 }
                 catch
                 {
@@ -240,9 +264,7 @@ namespace Models.Storage
                 finally
                 {
                     WaitForIdle();
-
                     stopping = true;
-                    commandRunner?.Stop();
                     commandRunner = null;
                     commands.Clear();
                     lock (lockObject)
@@ -504,6 +526,14 @@ namespace Models.Storage
         }
 
         /// <summary>
+        /// Returns the number of entries in the command queue
+        /// </summary>
+        /// <returns></returns>
+        public int CommandCount()
+        {
+            return commands.Count;
+        }
+        /// <summary>
         /// Initiate a clean of the database.
         /// </summary>
         /// <param name="names">Simulation names to be cleaned.</param>
@@ -528,7 +558,7 @@ namespace Models.Storage
                     if (commandRunner == null)
                     {
                         stopping = false;
-                        commandRunner = new JobRunner(numProcessors: 1);
+                        commandRunner = new JobRunner(numProcessors: (Connection is Firebird && (Connection as Firebird).fbDBServerType == FirebirdSql.Data.FirebirdClient.FbServerType.Default) ? -1 : 1);
                         commandRunner.Add(this);
                         commandRunner.Run();
                         ReadExistingDatabase(Connection);

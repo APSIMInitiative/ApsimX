@@ -322,7 +322,7 @@ namespace Models.Core
         /// <summary>
         /// Cleanup the simulation after the run.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
             UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
         }
