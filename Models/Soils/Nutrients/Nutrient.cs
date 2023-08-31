@@ -74,6 +74,7 @@ namespace Models.Soils.Nutrients
         private readonly OrganicPool surfaceResidue = null;
 
         /// <summary>Child carbon flows.</summary>
+        [NonSerialized]
         private IEnumerable<OrganicFlow> organicFlows = null;
 
         /// <summary>The inert pool.</summary>
