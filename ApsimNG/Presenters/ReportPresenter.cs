@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using ApsimNG.Classes;
 using Gtk;
 using Models;
@@ -80,7 +81,6 @@ namespace UserInterface.Presenters
         /// <summary> Stores any dragged variables index.</summary>
         public int DraggedVariableIndex { get; set; }
 
-
         /// <summary> DataTable for storing common report variables. </summary>
         public DataTable CommonReportVariables
         {
@@ -101,12 +101,12 @@ namespace UserInterface.Presenters
         /// <param name="model">The report model object</param>
         /// <param name="view">The view object</param>
         /// <param name="explorerPresenter">The explorer presenter</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public async void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            CommonReportVariables = SetReportVariables(commonReportVariablesFilePath);
-            CommonReportFrequencyVariables = SetReportVariables(commonReportFrequencyVariablesFilePath);
+            CommonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames()); // TODO: Needs to be made async as it makes the GUI chug
+            CommonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames()); // TODO: Needs to be made async as it makes the GUI chug
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -165,9 +165,24 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnEventListTextChanged(object sender, EventArgs e)
+        private async void OnEventListTextChanged(object sender, EventArgs e)
         {
-            // TODO: fill this.
+            int frequencyVariableListLineNumber = view.EventList.CurrentLineNumber;
+            int lineIndex = frequencyVariableListLineNumber - 1;
+            if (lineIndex < view.EventList.Lines.Count())
+            {
+                string lineContent = view.EventList.Lines[lineIndex];
+                List<string> lineStrings = new();
+                if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
+                    lineStrings = lineContent.Split(". ").ToList();
+                // Used async wrapper method to avoid sluggish GUI.
+                if (lineStrings.Count != 0)
+                {
+                    commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, lineStrings);
+                    view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
+                }
+
+            }
         }
 
         /// <summary>
@@ -175,9 +190,24 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnVariableListTextChanged(object sender, EventArgs e)
+        private async void OnVariableListTextChanged(object sender, EventArgs e)
         {
-            // TODO: fill this.
+            int variableListLineNumber = view.VariableList.CurrentLineNumber;
+            int lineIndex = variableListLineNumber - 1;
+            if (lineIndex < view.VariableList.Lines.Count())
+            {
+                string lineContent = this.view.VariableList.Lines[lineIndex];
+                List<string> lineStrings = new();
+                if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
+                    lineStrings = lineContent.Split(". ").ToList();
+                // Used async wrapper method to avoid sluggish GUI.
+                if (lineStrings.Count != 0)
+                {
+                    commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, lineStrings);
+                    view.CommonReportVariablesList.DataSource = commonReportVariables;
+                }
+
+            }
         }
 
         private void VariableListVariableDragDrop(object sender, EventArgs e)
@@ -249,8 +279,9 @@ namespace UserInterface.Presenters
         /// Creates a DataTable with the reportVariables inside a resource file name. 
         /// </summary>
         /// <param name="fileName"> The name including the json extension.</param>
+        /// <param name="filterStrings">String List containing model names or properties to use as filters.</param>
         /// <returns>A <see cref="DataTable"/> containing commonReportVariables or commonReportFrequencyVariables.</returns>
-        public DataTable SetReportVariables(string fileName)
+        public DataTable GetReportVariables(string fileName, List<string> filterStrings)
         {
             try
             {
@@ -275,9 +306,9 @@ namespace UserInterface.Presenters
                 {
                     bool isReportVariableRelevant = false;
                     // Find only relevant variables based on models in simulation.
-                    List<string> relevantModelnames = GetModelScopeNames();
+                    List<string> relevantNames = filterStrings;
                     //Check the description
-                    foreach (string modelName in relevantModelnames)
+                    foreach (string modelName in relevantNames)
                     {
                         if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modelName))
                             isReportVariableRelevant = true;
@@ -309,6 +340,17 @@ namespace UserInterface.Presenters
                 throw new Exception(e.Message);
             }
 
+        }
+
+        /// <summary>
+        /// Asynchronous version of GetReportVariables().
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="filterStrings"></param>
+        /// <returns></returns>
+        private async Task<DataTable> GetReportVariablesAsync(string fileName, List<string> filterStrings)
+        {
+            return await Task.Run(() => GetReportVariables(fileName, filterStrings));
         }
 
 
