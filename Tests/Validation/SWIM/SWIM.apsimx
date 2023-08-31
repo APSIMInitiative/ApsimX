@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 167,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -4480,7 +4480,7 @@
                             "        [Link(ByName=true)] PastureSpecies AGPRyegrass;",
                             "        //[Link(ByName=true)] PastureSpecies AGPWhiteClover;",
                             "        [Link] private Swim3 Swim;",
-                            "       // [Link(ByName=true)] private NutrientPool NO3; ",
+                            "       // [Link(ByName=true)] private OrganicPool NO3; ",
                             "",
                             "",
                             "        //[Description(\"Winter white clover generic growth limiting factor; default = 1\")]",
@@ -9108,7 +9108,7 @@
                           "CNCov": 0.8,
                           "KDul": 0.25,
                           "PSIDul": -250.0,
-                          "VC": true,
+                          "VC": false,
                           "DTMin": 0.0,
                           "DTMax": 1440.0,
                           "MaxWaterIncrement": 10.0,
