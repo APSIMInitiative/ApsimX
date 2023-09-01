@@ -101,6 +101,19 @@ namespace Models.CLEM.Resources
         public double WeightAtConception { get; set; }
 
         /// <summary>
+        /// Highest weight achieved when not pregnant
+        /// </summary>
+        public double HighWeightWhenNotPregnant { get; set; }
+
+        public void UpdateHighWeightWhenNotPregnant(double weight)
+        {
+            if(!IsPregnant)
+            {
+                HighWeightWhenNotPregnant = Math.Max(HighWeightWhenNotPregnant, weight);
+            }
+        }
+
+        /// <summary>
         /// Previous conception rate
         /// </summary>
         public double PreviousConceptionRate { get; set; }
@@ -178,6 +191,20 @@ namespace Models.CLEM.Resources
             return birthCount;
         }
 
+        /// <summary>
+        /// Indicates if birth is due this month
+        /// Knows whether the fetus(es) have survived
+        /// </summary>
+        public double DaysPregnant
+        {
+            get
+            {
+                if (IsPregnant)
+                    return (Age - AgeAtLastConception) * 30.4;
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>
         /// Indicates if birth is due this month

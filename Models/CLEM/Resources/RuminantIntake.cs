@@ -38,17 +38,17 @@ namespace Models.CLEM.Resources
             {
                 CombinedDetails.DryMatterDigestibility = ((CombinedDetails.DryMatterDigestibility * CombinedDetails.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
                 CombinedDetails.FatContent = ((CombinedDetails.FatContent * CombinedDetails.Amount) + (packet.FatContent * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
-                CombinedDetails.EnergyContent = ((CombinedDetails.EnergyContent * CombinedDetails.Amount) + (packet.EnergyContent * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
+                //CombinedDetails.EnergyContent = ((CombinedDetails.EnergyContent * CombinedDetails.Amount) + (packet.EnergyContent * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
                 CombinedDetails.NitrogenContent = ((CombinedDetails.NitrogenContent * CombinedDetails.Amount) + (packet.NitrogenContent * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
                 CombinedDetails.CPDegradability = ((CombinedDetails.CPDegradability * CombinedDetails.Amount) + (packet.CPDegradability * packet.Amount)) / (CombinedDetails.Amount + packet.Amount);
 
                 // TODO: think about consequences
-                // removed the separation of braod feed types (supp and forage) as we can calculate the ME COntent differences on the fly and after combined no reason to keep them in memory.
+                // removed the separation of braod feed types (supp and forage) as we can calculate the ME Content differences on the fly and after combined no reason to keep them in memory.
 
                 // Track combined MEContent
                 MEContent = ((MEContent * Feed.Actual) + (packet.MEContent * packet.Amount)) / (Feed.Actual + packet.Amount);
                 // Track combined METotal
-                METotal = ((METotal * Feed.Actual) + (packet.EnergyContent * packet.Amount)) / (Feed.Actual + packet.Amount);
+                METotal += packet.MEContent * packet.Amount;
 
                 CombinedDetails.Amount += packet.Amount;
                 Feed.Actual = CombinedDetails.Amount;

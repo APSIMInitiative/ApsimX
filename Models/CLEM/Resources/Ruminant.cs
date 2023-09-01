@@ -25,13 +25,23 @@ namespace Models.CLEM.Resources
         #region All new Grow SCA properties
 
         /// <summary>
-        /// Relative size (normalised weight / standard reference weight)
+        /// Relative size (weight / standard reference weight)
         /// </summary>
         [FilterByProperty]
         public double RelativeSize 
         {
             // TODO: check this is right
             get { return Weight / StandardReferenceWeight; }
+        }
+
+        /// <summary>
+        /// Relative size based on highest weight achieved (High weight / standard reference weight)
+        /// </summary>
+        [FilterByProperty]
+        public double RelativeSizeByHighWeight
+        {
+            // TODO: check this is right
+            get { return HighWeight / StandardReferenceWeight; }
         }
 
         //ToDo: ensure these are set at birth and new individual creation.
@@ -296,6 +306,9 @@ namespace Models.CLEM.Resources
                 if (HighWeight == 0)
                     HighWeight = weight;
                 HighWeight = Math.Max(HighWeight, weight);
+
+                if(this is RuminantFemale)
+                    (this as RuminantFemale).UpdateHighWeightWhenNotPregnant(weight);
             }
         }
 
@@ -635,7 +648,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Sex == Sex.Male)
+                if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
                     return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
                 else
                     return BreedParams.SRWFemale;

@@ -112,8 +112,8 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; }
 
-        /// <inheritdoc/>
-        public double EnergyContent { get; set; }
+        ///// <inheritdoc/>
+        //public double EnergyContent { get; set; }
 
         /// <inheritdoc/>
         public double DryMatterDigestibility { get; set; }
@@ -152,7 +152,7 @@ namespace Models.CLEM.Resources
             NitrogenContent = 0;
             CPDegradability = 0;
             Amount = 0;
-            EnergyContent = 0;
+            //EnergyContent = 0;
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Models.CLEM.Resources
             return new FoodResourcePacket()
             {
                 TypeOfFeed = TypeOfFeed,
-                EnergyContent = EnergyContent,
+                //EnergyContent = EnergyContent,
                 CPDegradability = CPDegradability,
                 Amount = amount,
                 DryMatterDigestibility = DryMatterDigestibility,

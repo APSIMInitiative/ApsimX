@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Models.CLEM.Activities
 {
@@ -328,10 +329,6 @@ namespace Models.CLEM.Activities
         /// <param name="methaneProduced">Output parameter for methane produced.</param>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            // local private variables
-
-            //double MEcontent = 0;
-            //double MEtotal = 0;
             double km = 0;
             double kg = 0;
             double energyPredictedBodyMassChange = 0;
@@ -345,33 +342,6 @@ namespace Models.CLEM.Activities
             // The individual tracks the quality of mixed feed types based on broad type (supplement or forage)
             // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
             // We can move these calculations to the RuminantIntake and calculate as they arrive or 
-
-            //// for each feed type
-            //foreach (var feedPool in ind.Intake.FeedDetails)
-            //{
-            //    switch (feedPool.Key)
-            //    {
-            //        case FeedType.Forage:
-            //            //SCA eqn 1.12A
-            //            intakeDaily += feedPool.Value.Amount / 30.4;
-            //            //units MJ ME/kg DM
-            //            MEcontent += ((0.172 * feedPool.Value.DryMatterDigestibility) - 1.707) * feedPool.Value.Amount / 30.4;
-            //            MEtotal += feedPool.Value.EnergyContent * (feedPool.Value.Amount / 30.4);
-            //            break;
-            //        case FeedType.Supplement:
-            //            // SCA eqn 1.11a (p7)
-            //            intakeDaily += feedPool.Value.Amount / 30.4;
-            //            //units MJ ME/kg DM, fat content used as EE Ether extract in equation 
-            //            MEcontent += (0.134 * feedPool.Value.DryMatterDigestibility) + (0.235 * feedPool.Value.FatContent) + 1.23;
-            //            MEtotal += feedPool.Value.EnergyContent * (feedPool.Value.Amount / 30.4);
-            //            break;
-            //        default:
-            //            throw new NotImplementedException ("Unexpected feed type in diet");
-            //    }
-            //}
-
-            // ToDo: Does MEtotal get calculated from MEcontent or from the ME of feed type?
-            // ToDo: Are these ajusted based on proportion of total diet?
 
             // Sme 1 for females and castrates
             double sme = 1;
@@ -397,6 +367,10 @@ namespace Models.CLEM.Activities
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
+                    // Determine energy required for foetal development
+                    energyForFetus = CalculatePregnancyEnergy(femaleind);
+
+
                     // calculate energy for lactation
                     // look for milk production calculated before offspring may have been weaned
 
@@ -405,20 +379,18 @@ namespace Models.CLEM.Activities
                     // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
                     //femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
 
-                    // Determine energy required for foetal development
-                    energyForFetus = CalculatePregnancyEnergy(femaleind);
                 }
 
                 //TODO: add draft individual energy requirement: does this also apply to unweaned individuals? If so move ouside loop
 
                 // we implemented this in the equation above, but this uses a parameter. Can we delete this parameter and assume fixed 6 years for all ruminants?
                 // set maintenance age to maximum of 6 years (2190 days). Now uses EnergyMaintenanceMaximumAge (in years)
-                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
+                //double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
 
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
                 // 0.000082 is -0.03 Age in Years/365 for days 
-                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * ind.Intake.METotal);
+                //energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * ind.Intake.METotal);
                 ind.EnergyBalance = ind.Intake.METotal - energyMaintenance - energyForLactation - energyForFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
                 ind.EnergyIntake = ind.Intake.METotal;
@@ -426,23 +398,33 @@ namespace Models.CLEM.Activities
                 ind.EnergyMaintenance = energyMaintenance;
                 ind.EnergyMilk = energyForLactation;
 
-                // Reference: Feeding_value = Adjustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
+                MEAvailableForGain = ind.Intake.METotal - energyMaintenance;
+
+                // TODO: most of these are for sotring and reporting. These can be cleaned up.
+                ind.EnergyIntake = ind.Intake.METotal;
+                ind.EnergyFetus = 0;
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyMilk = 0;
+
+                double feedingLevel = (ind.Intake.METotal) / energyMaintenance;
+                double gainLossAdj = feedingLevel - 2;
+
+                double energyEmptyBodyGain = (ind.BreedParams.GrowthEnergyIntercept1 + gainLossAdj + (ind.BreedParams.GrowthEnergyIntercept2 - gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
+
+                if (MEAvailableForGain < 0)
+                {
+                    energyPredictedBodyMassChange = (0.8 * MEAvailableForGain) / (ind.BreedParams.EB2LW * energyEmptyBodyGain);
+                }
                 else
-                    feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
+                {
+                    energyPredictedBodyMassChange = (kg * MEAvailableForGain) / (ind.BreedParams.EB2LW * energyEmptyBodyGain);
+                }
 
-                double weightToReferenceRatio = Math.Min(1.0, ind.Weight / ind.StandardReferenceWeight);
+                // energy protein mass MJ day-1
+                energyPredictedProteinMassChange = energyPredictedBodyMassChange * ((ind.BreedParams.ProteinGainIntercept1 - ind.BreedParams.ProteinGainSlope * gainLossAdj) - (ind.BreedParams.ProteinGainIntercept2 - ind.BreedParams.ProteinGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
 
-                // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
-                double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
-                // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
-                if (MathUtilities.IsPositive(ind.EnergyBalance))
-                    energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * kg * ind.EnergyBalance / energyEmptyBodyGain;
-                else
-                    // Reference: from Hirata model
-                    energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * km * ind.EnergyBalance / (0.8 * energyEmptyBodyGain);
-
+                // energy fat mass MJ day-1
+                energyPredictedFatMassChange = energyPredictedBodyMassChange * (ind.BreedParams.FatGainIntercept1 + ind.BreedParams.FatGainSlope * gainLossAdj + (ind.BreedParams.FatGainIntercept2 - ind.BreedParams.FatGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
             }
             else // Unweaned
             {
@@ -456,7 +438,6 @@ namespace Models.CLEM.Activities
                 ind.Mother?.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Intake.Milk.Actual / 30.4;
 
-                // TODO: check where kgl is needed 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
@@ -473,25 +454,24 @@ namespace Models.CLEM.Activities
                 double energyMilkConsumed = milkIntakeDaily * 3.2;
                 // limit suckling intake of milk per day
 
-                // TODO: previous kgl not used.
-
                 // ToDo: ensure MilkIntakeMaximum is daily and add units to summary description
                 double MEmilk = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
                 //MEtotal += MEmilk;
 
-                double Kmmilk = MEmilk / (ind.Intake.METotal + MEmilk) * 0.85;
+                //double Kmmilk = MEmilk / (ind.Intake.METotal + MEmilk) * 0.85;
 
-                double Kmdiet = ind.Intake.METotal / (ind.Intake.METotal + MEmilk) * ((0.02 * ind.Intake.MEContent) + 0.5);
+                //double Kmdiet = ind.Intake.METotal / (ind.Intake.METotal + MEmilk) * ((0.02 * ind.Intake.MEContent) + 0.5);
 
                 // ToDo: this value is not used...  I think the kml in energyMaintenance is meant to be km
-                double Km = Kmmilk + Kmdiet;
+                //double Km = Kmmilk + Kmdiet;
 
                 // SCA assumes Age is double and in years    MainCoeff 0.26     EmainExp 0.03 (age in years)    the eqn changes to age in days
                 // Delete EMaintExponent as fixed at -0.03
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-0.03 * ind.AgeInDays / 365);
 
                 MEAvailableForGain = energyMilkConsumed + ind.Intake.METotal - energyMaintenance;
+
                 // TODO: most of these are for sotring and reporting. These can be cleaned up.
                 ind.EnergyIntake = energyMilkConsumed + ind.Intake.METotal;
                 ind.EnergyFetus = 0;
@@ -501,18 +481,22 @@ namespace Models.CLEM.Activities
                 double feedingLevel = (ind.Intake.METotal + MEmilk) / energyMaintenance;
                 double gainLossAdj = feedingLevel - 2;
 
-                // ToDo: Does relative size need to take into account maximum previous weight while growing? We'll do this in the Ruminant.RelativeSize property
-
                 double energyEmptyBodyGain = (ind.BreedParams.GrowthEnergyIntercept1 + gainLossAdj + (ind.BreedParams.GrowthEnergyIntercept2 - gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
 
-                energyPredictedBodyMassChange = (0.8 * MEAvailableForGain) / energyEmptyBodyGain;
+                if(MEAvailableForGain < 0)
+                {
+                    energyPredictedBodyMassChange = (0.8 * MEAvailableForGain) / (ind.BreedParams.EB2LW * energyEmptyBodyGain);
+                }
+                else
+                {
+                    energyPredictedBodyMassChange = (kgl * MEAvailableForGain) / (ind.BreedParams.EB2LW * energyEmptyBodyGain);
+                }
 
                 // energy protein mass MJ day-1
                 energyPredictedProteinMassChange = energyPredictedBodyMassChange * ((ind.BreedParams.ProteinGainIntercept1 - ind.BreedParams.ProteinGainSlope * gainLossAdj) - (ind.BreedParams.ProteinGainIntercept2 - ind.BreedParams.ProteinGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
 
-                // TODO: is energyPredictedProteinMassChange correct in following eqn or should this be energyPredictedBodyMassChange? I think this was coppied in.
                 // energy fat mass MJ day-1
-                energyPredictedFatMassChange = energyPredictedProteinMassChange * (ind.BreedParams.FatGainIntercept1 + ind.BreedParams.FatGainSlope * gainLossAdj + (ind.BreedParams.FatGainIntercept2 - ind.BreedParams.FatGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
+                energyPredictedFatMassChange = energyPredictedBodyMassChange * (ind.BreedParams.FatGainIntercept1 + ind.BreedParams.FatGainSlope * gainLossAdj + (ind.BreedParams.FatGainIntercept2 - ind.BreedParams.FatGainSlope * gainLossAdj) / (1 + Math.Exp(-6 * (ind.RelativeSize - 0.4))));
             }
 
             // TODO: Check that kgChange this isn't weaned/unweaned specific
@@ -609,10 +593,38 @@ namespace Models.CLEM.Activities
             {
                 // Potential birth weight
                 // Reference: Freer
-                double potentialBirthWeight = ind.BreedParams.SRWBirth * ind.StandardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / ind.StandardReferenceWeight));
-                double fetusAge = (ind.Age - ind.AgeAtLastConception) * 30.4;
-                //TODO: Check fetus age correct
-                return potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
+                // SRWBirth -> BirthScalar
+
+                double scaledBirthWeight = (1 - 0.33 + 0.33 * ind.RelativeSize) * ind.BreedParams.SRWBirth * ind.StandardReferenceWeight;
+
+                double normalWeightFetus = scaledBirthWeight * Math.Exp(ind.BreedParams.FoetalNormWeightParameter * (1 - Math.Exp(ind.BreedParams.FoetalNormWeightParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength))));
+
+                double fetusWeight = double.NaN;
+
+                double conceptusWeight = ind.NumberOfOffspring * (ind.BreedParams.ConceptusWeightRatio * scaledBirthWeight * Math.Exp(ind.BreedParams.ConceptusWeightParameter * (1 - Math.Exp(ind.BreedParams.ConceptusWeightParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength)))) + (fetusWeight - normalWeightFetus));
+
+                double relativeConditionFoet = double.NaN;
+
+                // MJ per day
+                double conceptusME = (ind.BreedParams.ConceptusEnergyContent * (ind.NumberOfOffspring * ind.BreedParams.ConceptusWeightRatio * scaledBirthWeight) * relativeConditionFoet *
+                    (ind.BreedParams.ConceptusEnergyParameter * ind.BreedParams.ConceptusEnergyParameter2 / (ind.BreedParams.GestationLength * 30.4)) * 
+                    Math.Exp(ind.BreedParams.ConceptusEnergyParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength) + ind.BreedParams.ConceptusEnergyParameter * (1 - Math.Exp(ind.BreedParams.ConceptusEnergyParameter2 * (1 - ind.DaysPregnant/ ind.BreedParams.GestationLength))))) / 0.13;
+
+                // kg protein per day
+                double conceptusProteinReq = ind.BreedParams.ConceptusProteinContent * (ind.NumberOfOffspring * ind.BreedParams.ConceptusWeightRatio * scaledBirthWeight) * relativeConditionFoet * 
+                    (ind.BreedParams.conceptusProteinParameter * ind.BreedParams.conceptusProteinParameter2 / (ind.BreedParams.GestationLength * 30.4)) * Math.Exp(ind.BreedParams.conceptusProteinParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength) + ind.BreedParams.conceptusProteinParameter * (1 - Math.Exp(ind.BreedParams.conceptusProteinParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength))));
+
+                ind.Weight / ind.HighestOpenWeight
+
+                double conceptusProteinKG = conceptusProteinReq * conceptusWeight;
+
+                double WtFetus = 0;
+                double EnergyFetus = 0;
+                double FatFetus = 0;
+                double ProteinFetus = 0;
+
+                // 0.13 means calculated in NE (Nett energy) but reported back in ME
+                //return potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
             }
             return 0;
         }
