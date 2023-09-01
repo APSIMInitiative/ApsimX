@@ -560,6 +560,11 @@ namespace Models.CLEM.Activities
             minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
             maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
 
+            if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
+                SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
+            else
+                SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
+
             if (AdjustBreedingMalesAtStartup | AdjustBreedingFemalesAtStartup)
             {
                 HerdResource = Resources.FindResourceGroup<RuminantHerd>();
@@ -637,10 +642,6 @@ namespace Models.CLEM.Activities
                             if(breederm.Any())
                             {
                                 double totalm = breederm.Sum(a => a.Number);
-                                if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
-                                    SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
-                                else
-                                    SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
 
                                 if (SiresKept > 0 && MathUtilities.IsPositive(totalm))
                                 {
