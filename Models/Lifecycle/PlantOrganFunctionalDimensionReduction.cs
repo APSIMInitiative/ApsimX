@@ -34,8 +34,8 @@ namespace Models.LifeCycle
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            if (HostOrgan.GetType() == typeof(ICanopy))
-                HostPlant.ReduceCanopy(Reduction.Value());
+            if (HostOrgan is ICanopy canopy)
+                canopy.LAI -= Reduction.Value();
             else if (HostOrgan is IRoot root)
                 root.RootLengthDensityModifierDueToDamage = Reduction.Value();
             else

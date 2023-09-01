@@ -476,18 +476,6 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
-        /// <param name="deltaLAI">Delta LAI.</param>
-        public void ReduceCanopy(double deltaLAI)
-        {
-            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-            var lai = leaf.LAI;
-            if (lai > 0)
-                leaf.LAI = lai - deltaLAI;
-        }
-
-        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>
