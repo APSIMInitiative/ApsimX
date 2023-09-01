@@ -1,11 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using Models;
+using Models.Core;
+using Utility;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using APSIM.Shared.Graphing;
+using Gtk;
+using Models.Utilities;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using Models;
-    using Models.Core;
-    using Utility;
-    using Interfaces;
-    using Views;
+    
 
     /// <summary>
     /// Attaches an Input model to an Input View.
@@ -20,7 +25,12 @@
         /// <summary>
         /// The input view
         /// </summary>
-        private IInputView view;
+        private InputView view;
+
+        /// <summary>
+        /// The Explorer
+        /// </summary>
+        private NewGridPresenter gridPresenter;
 
         /// <summary>
         /// The Explorer
@@ -36,7 +46,12 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.input = model as Models.PostSimulationTools.Input;
-            this.view = view as IInputView;
+            this.view = view as InputView;
+
+            gridPresenter = new NewGridPresenter();
+            gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
+            gridPresenter.CellChanged += OnCellChanged;
+
             this.explorerPresenter = explorerPresenter;
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
@@ -79,6 +94,14 @@
             }
         }
 
+        /// <summary>Invoked when a grid cell has changed.</summary>
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
+        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        {
+        }
+
         /// <summary>
         /// The model has changed - update the view.
         /// </summary>
@@ -87,9 +110,6 @@
         {
             if (input.FullFileNames != null)
                 view.FileName = string.Join(", ", input.FullFileNames);
-
-            if (input.FullFileNames != null && input.FullFileNames.Length > 0)
-            this.view.GridView.DataSource = this.input.GetTable(input.FullFileNames[0]);
         }
     }
 }

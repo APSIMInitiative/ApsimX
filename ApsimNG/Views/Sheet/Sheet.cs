@@ -30,6 +30,9 @@ namespace UserInterface.Views
         /// <summary>A backing field for NumberHiddenRows property.</summary>
         private int numberHiddenRowsBackingField;
 
+        /// <summary>Stores how many columns were drawn last draw. We have to re-initialise if this changes</summary>
+        private int prevNumColumns = -1;
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -312,8 +315,10 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (ColumnWidths == null)
+                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount)
                     Initialise(cr);
+
+                prevNumColumns = DataProvider.ColumnCount;
 
                 foreach (var columnIndex in VisibleColumnIndexes)
                     foreach (var rowIndex in VisibleRowIndexes)
