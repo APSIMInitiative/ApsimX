@@ -931,7 +931,7 @@ namespace Models.CLEM
                 if (modelToSummarise is ZoneCLEM)
                     htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is Market)
-                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), markdown2Html));
                 else if (modelToSummarise is CLEMModel)
                     htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
