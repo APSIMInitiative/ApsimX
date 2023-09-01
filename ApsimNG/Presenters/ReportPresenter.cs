@@ -9,7 +9,6 @@ using ApsimNG.Classes;
 using Gtk;
 using Models;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
@@ -171,11 +170,12 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void OnEventListTextChanged(object sender, EventArgs e)
+        private async void OnEventListTextChanged(object sender, EventArgs e) // TODO: event list needs to filter.
         {
             int frequencyVariableListLineNumber = view.EventList.CurrentLineNumber;
             int lineIndex = frequencyVariableListLineNumber - 1;
-            if (lineIndex < view.EventList.Lines.Count())
+            int linesCount = view.EventList.Lines.Length;
+            if (lineIndex < linesCount)
             {
                 string lineContent = view.EventList.Lines[lineIndex];
                 List<string> lineStrings = new();
@@ -184,6 +184,7 @@ namespace UserInterface.Presenters
                 // Used async wrapper method to avoid sluggish GUI.
                 if (lineStrings.Count != 0)
                 {
+                    lineStrings.AddRange(GetModelScopeNames());
                     commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, lineStrings);
                     view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
                 }
@@ -211,10 +212,11 @@ namespace UserInterface.Presenters
                 string lineContent = this.view.VariableList.Lines[lineIndex];
                 List<string> lineStrings = new();
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
-                    lineStrings = lineContent.Split(". ").ToList();
+                    lineStrings = lineContent.Split("[]").ToList(); // TODO needs to only filter on Model names i.e. [Example]
                 // Used async wrapper method to avoid sluggish GUI.
                 if (lineStrings.Count != 0)
                 {
+                    lineStrings.AddRange(GetModelScopeNames()); // Not sure if this needs to be done.
                     commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, lineStrings);
                     view.CommonReportVariablesList.DataSource = commonReportVariables;
                 }
@@ -343,7 +345,12 @@ namespace UserInterface.Presenters
                     //Check the description
                     foreach (string modelName in relevantNames)
                     {
-                        if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modelName))
+                        string modifiedModelName;
+                        if (modelName.StartsWith('[') && modelName.EndsWith("]"))
+                            modifiedModelName = modelName;
+                        else modifiedModelName = "[" + modelName + "]";
+
+                        if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modifiedModelName))
                             isReportVariableRelevant = true;
                         if (isReportVariableRelevant)
                         {
@@ -384,13 +391,14 @@ namespace UserInterface.Presenters
         private async Task<DataTable> GetReportVariablesAsync(string fileName, List<string> filterStrings)
         {
             return await Task.Run(() => GetReportVariables(fileName, filterStrings));
+
         }
 
 
         private List<string> GetModelScopeNames()
         {
             List<string> modelNamesInScope = new();
-            Simulations simulations = FileFormat.ReadFromFile<Simulations>(explorerPresenter.ApsimXFile.FileName, e => throw e, false).NewModel as Simulations;
+            Simulations simulations = explorerPresenter.ApsimXFile;
             List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
             modelNamesInScope = modelInScope.Select(x => x.Name).ToList();
             return modelNamesInScope;

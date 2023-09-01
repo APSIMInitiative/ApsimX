@@ -325,6 +325,11 @@ namespace UserInterface.Views
             InitialiseWidget();
         }
 
+        /// <summary>
+        /// Handler for when a 'drop' is done over an EditorView.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
         private void TextEditorDragDataReceived(object o, DragDataReceivedArgs args)
         {
             VariableDragDataReceived.Invoke(o, args);

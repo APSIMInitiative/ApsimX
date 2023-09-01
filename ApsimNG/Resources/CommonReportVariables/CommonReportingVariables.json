@@ -1,23 +1,355 @@
 [
   {
-    "description": "MineralN",
-    "code": "NO3.kgha + NH4.kgha + Urea.kgha as MineralN"
+    "description": "Above ground weight (kg/ha)",
+    "code": "[Plant].AboveGround.Wt*10 as AboveGroundWtKgha"
   },
   {
-    "description": "Yield",
-    "code": "Something"
+    "description": "Above ground nitrogen (kg/ha)",
+    "code": "[Plant].AboveGround.N*10 as AboveGroundNKgha"
   },
   {
-    "description": "Wheat",
-    "code": "[Wheat].LAI"
+    "description": "LAI",
+    "code": "[Plant].Leaf.LAI"
   },
   {
-    "description": "SugarCane",
-    "code": "[SugarCane].Weight"
+    "description": "Grain Number",
+    "code": "[Plant].Grain.Number"
   },
   {
-    "description": "Barley",
-    "code": "[Barley].Script.Something"
+    "description": "Protein (%)",
+    "code": "[Plant].Grain.Protein"
+  },
+  {
+    "description": "Yield (kgha)",
+    "code": "[Plant].Grain.Wt*10 as Yieldkgha"
+  },
+  {
+    "description": "In crop rain (mm)",
+    "code": "sum of [Weather].Rain from [Plant].Sowing to [Plant].Harvesting as InCropRain"
+  },
+  {
+    "description": "Gross primary production (kg/ha)",
+    "code": "[AGPRyegrass].GPP+[AGPWhiteClover].GPP as GPP"
+  },
+  {
+    "description": "Net primary production (kg/ha)",
+    "code": "[AGPRyegrass].NPP+[AGPWhiteClover].NPP as NPP"
+  },
+  {
+    "description": "Above ground weight (kg/ha)",
+    "code": "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundWtKgha"
+  },
+  {
+    "description": "Above ground nitrogen (kg/ha)",
+    "code": "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundNKgha"
+  },
+  {
+    "description": "Harvested weight (kg/ha)",
+    "code": "[AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt as HarvestedWtKgha"
+  },
+  {
+    "description": "Net growth weight (kg/ha)",
+    "code": "[AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt as NetGrowthWtKgHa"
+  },
+  {
+    "description": "LAI green",
+    "code": "[AGPRyegrass].LAIGreen + [AGPWhiteClover].LAIGreen as LAIGreen"
+  },
+  {
+    "description": "LAI dead",
+    "code": "[AGPRyegrass].LAIDead + [AGPWhiteClover].LAIDead as LAIDead"
+  },
+  {
+    "description": "Fixed nitrogen (kg/ha)",
+    "code": "[AGPWhiteClover].FixedN as FixedN"
+  },
+  {
+    "description": "Nitrogen uptake (kg/ha)",
+    "code": "[AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN as NitrogenUptake"
+  },
+  {
+    "description": "Water uptake (mm)",
+    "code": "sum([AGPRyegrass].WaterUptake) + Sum([AGPWhiteClover].WaterUptake) as WaterUptake"
+  },
+  {
+    "description": "Surface organic matter cover (%)",
+    "code": "[SurfaceOrganicMatter].Cover"
+  },
+  {
+    "description": "Surface organic matter weight (kg/ha)",
+    "code": "[SurfaceOrganicMatter].Wt"
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
+  },
+  {
+    "description": "",
+    "code": ""
   }
 ]
 
