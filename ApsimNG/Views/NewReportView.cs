@@ -12,7 +12,6 @@ namespace UserInterface.Views
     public class NewReportView : ViewBase, IReportView
     {
 
-
         private Notebook notebook1 = null;
         private Paned reportVariablesBox = null;
         private Paned reportFrequencyBox = null;
@@ -64,6 +63,9 @@ namespace UserInterface.Views
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
 
+            reportVariablesBox.AddNotification(OnVariablesPanePropertyNotified);
+            reportFrequencyBox.AddNotification(OnFrequencyPanePropertyNotified);
+
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
             variablesBox.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
@@ -72,11 +74,11 @@ namespace UserInterface.Views
             frequencyEditor.StyleChanged += OnStyleChanged;
             frequencyBox.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
 
-            commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)variableEditor);
             commonReportVariableList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
             commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
 
-            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu());
+            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)frequencyEditor);
             commonReportFrequencyVariableList.DoubleClicked += OnCommonReportFrequencyVariableListDoubleClicked;
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
 
@@ -89,6 +91,8 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
+
+
 
 
         /// <summary>
@@ -111,6 +115,22 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary> Updates The position of either common variable listView.</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
+        {
+            this.reportVariablesBox.Position = reportFrequencyBox.Position;
+        }
+
+        /// <summary> Updates The position of either common variable listView.</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
+        {
+            this.reportFrequencyBox.Position = reportVariablesBox.Position;
         }
 
         /// <summary>

@@ -318,14 +318,14 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
             textEditor = new SourceView();
-            textEditor.DragEnd += OnTextEditorDragEnd;
+            textEditor.DragDataReceived += TextEditorDragDataReceived;
             searchSettings = new SearchSettings();
             searchContext = new SearchContext(textEditor.Buffer, searchSettings);
             scroller.Add(textEditor);
             InitialiseWidget();
         }
 
-        private void OnTextEditorDragEnd(object o, DragEndArgs args)
+        private void TextEditorDragDataReceived(object o, DragDataReceivedArgs args)
         {
             VariableDragDataReceived.Invoke(o, args);
         }
@@ -647,6 +647,12 @@ namespace UserInterface.Views
         public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
         {
 
+        }
+
+        // Get reference to EditorView's GTK SourceView widget.
+        public SourceView GetSourceView()
+        {
+            return textEditor;
         }
 
         /// <summary>

@@ -78,6 +78,9 @@ namespace UserInterface.Presenters
         /// <summary>Stores variable name and variable code while being dragged.</summary>
         private ReportVariable CurrentlySelectedVariable { get; set; }
 
+        // Stores ReportDragObject to coping into EditorView.
+        public ReportDragObject StoredDragObject { get; set; }
+
         /// <summary> Stores any dragged variables index.</summary>
         public int DraggedVariableIndex { get; set; }
 
@@ -105,8 +108,8 @@ namespace UserInterface.Presenters
         {
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            CommonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames()); // TODO: Needs to be made async as it makes the GUI chug
-            CommonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames()); // TODO: Needs to be made async as it makes the GUI chug
+            CommonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames());
+            CommonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames());
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -118,15 +121,17 @@ namespace UserInterface.Presenters
             this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
-            (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDragDrop;
+            (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
+            (this.view as NewReportView).EventList.VariableDragDataReceived += EventListVariableDrop;
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
-            this.view.VariableList.TextHasChangedByUser += OnVariableListTextChanged; //TODO: add the functionality to filter the common variables list.
+            this.view.VariableList.TextHasChangedByUser += OnVariableListTextChanged;
+            //(this.view.VariableList as EditorView).GetSourceView().DragDrop += OnVariableListDrop;
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
-            this.view.EventList.TextHasChangedByUser += OnEventListTextChanged; //TODO: add the functionality to filter the common frequency variables list.
+            this.view.EventList.TextHasChangedByUser += OnEventListTextChanged;
             this.view.GroupByEdit.Changed += OnGroupByChanged;
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
@@ -160,6 +165,7 @@ namespace UserInterface.Presenters
             this.view.TabIndex = this.report.ActiveTabIndex;
         }
 
+
         /// <summary>
         /// Intended to handle what happens to common report frequency variables when text is changed.
         /// </summary>
@@ -181,6 +187,11 @@ namespace UserInterface.Presenters
                     commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, lineStrings);
                     view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
                 }
+                else
+                {
+                    commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames());
+                    view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
+                }
 
             }
         }
@@ -194,7 +205,8 @@ namespace UserInterface.Presenters
         {
             int variableListLineNumber = view.VariableList.CurrentLineNumber;
             int lineIndex = variableListLineNumber - 1;
-            if (lineIndex < view.VariableList.Lines.Count())
+            int linesCount = view.VariableList.Lines.Length;
+            if (lineIndex < linesCount)
             {
                 string lineContent = this.view.VariableList.Lines[lineIndex];
                 List<string> lineStrings = new();
@@ -206,50 +218,71 @@ namespace UserInterface.Presenters
                     commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, lineStrings);
                     view.CommonReportVariablesList.DataSource = commonReportVariables;
                 }
+                else
+                {
+                    commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames());
+                    view.CommonReportVariablesList.DataSource = commonReportVariables;
+                }
 
             }
         }
 
-        private void VariableListVariableDragDrop(object sender, EventArgs e)
+        /// <summary>
+        /// Adds the code from the StoredDragObject to the EventList in the NewReportView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VariableListVariableDrop(object sender, EventArgs e)
         {
-
+            if (StoredDragObject != null)
+            {
+                List<string> textLinesList = view.VariableList.Lines.ToList();
+                textLinesList.Insert(view.VariableList.CurrentLineNumber, StoredDragObject.Code);
+                string modifiedText = string.Join(Environment.NewLine, textLinesList);
+                view.VariableList.Text = modifiedText;
+                //view.VariableList.Text = view.VariableList.Text + Environment.NewLine + StoredDragObject.Code;
+                StoredDragObject = null;
+            }
         }
 
-        // 
-        private void OnCommonReportVariableListDragStart(object sender, EventArgs e)
+        /// <summary>
+        /// Adds the code from the StoredDragObject to the EventList in the NewReportView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EventListVariableDrop(object sender, EventArgs e)
         {
-            var selection = (sender as Gtk.TreeView).Selection.GetSelectedRows();
-            DraggedVariableIndex = selection[0].Indices[0];
-            foreach (DataRow row in CommonReportVariables.Rows)
-                if (CommonReportVariables.Rows.IndexOf(row) == DraggedVariableIndex)
-                {
-                    CurrentlySelectedVariable = new ReportVariable()
-                    {
-                        Description = row[0].ToString(),
-                        Code = row[1].ToString(),
-                    };
-                }
-
-            // TODO: Need to clear CurrentlySelectedReportVariable after DragStart event.
-
-
+            if (!string.IsNullOrWhiteSpace(StoredDragObject.Code))
+            {
+                List<string> textLinesList = view.EventList.Lines.ToList();
+                textLinesList.Insert(view.EventList.CurrentLineNumber, StoredDragObject.Code);
+                string modifiedText = string.Join(Environment.NewLine, textLinesList);
+                view.EventList.Text = modifiedText;
+                //view.VariableList.Text = view.VariableList.Text + Environment.NewLine + StoredDragObject.Code;
+                StoredDragObject = null;
+            }
         }
 
+        /// <summary>
+        /// Stores the ReportDragObject on DragBegin.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCommonReportVariableListDragStart(object sender, EventArgs e) // Make this store the ReportDragObject.
+        {
+            if (e != null)
+                StoredDragObject = (ReportDragObject)e;
+        }
+
+        /// <summary>
+        /// Stores the ReportDragObject on DragBegin.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnCommonReportFrequencyVariableListDragStart(object sender, EventArgs e)
         {
-            var selection = (sender as Gtk.TreeView).Selection.GetSelectedRows();
-            DraggedVariableIndex = selection[0].Indices[0];
-            foreach (DataRow row in CommonReportVariables.Rows)
-                if (CommonReportFrequencyVariables.Rows.IndexOf(row) == DraggedVariableIndex)
-                {
-                    CurrentlySelectedVariable = new ReportVariable()
-                    {
-                        Description = row[0].ToString(),
-                        Code = row[1].ToString(),
-                    };
-                }
-
-            // TODO: Need to clear CurrentlySelectedReportVariable after DragStart event.
+            if (e != null)
+                StoredDragObject = (ReportDragObject)e;
         }
 
         private void OnSplitterChanged(object sender, EventArgs e)

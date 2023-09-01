@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using ApsimNG.Classes;
 using Gtk;
 using TreeModel = Gtk.ITreeModel;
 
@@ -41,6 +42,11 @@ namespace UserInterface.Views
         /// <summary>The sort type.</summary>
         private bool sortAscending;
 
+        /// <summary>
+        /// A reference to an editor view for drag and drop functionality.
+        /// </summary>
+        private EditorView editor;
+
         /// <summary>Event handler for drag start event.</summary>
         public event EventHandler DragStart;
 
@@ -54,19 +60,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>Constructor</summary>
-        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null) : base(owner)
+        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null, EditorView editor = null) : base(owner)
         {
             tree = treeView;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
             tree.ButtonPressEvent += OnTreeButtonDown;
             tree.RowActivated += OnTreeDoubleClicked;
+            this.editor = editor;
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry("application/x-model-component", TargetFlags.App, 0)
             };
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
             Drag.SourceSet(tree, Gdk.ModifierType.Button1Mask, target_table, actions);
-            Drag.DestSet(tree, 0, target_table, actions);
+            // makes the destination for a drop and drop action.
+            Drag.DestSet(editor.GetSourceView(), 0, target_table, actions);
             // TODO: Need to allow Drag from this to a TextView object. Drag.DestSet may need info on what can accept this drag??
             // Perhaps needs a Object type, like TextView added to enable this??
             // May be worth doing double-click functionality first.
@@ -86,9 +94,18 @@ namespace UserInterface.Views
 
         private void OnTreeDragBegin(object sender, DragBeginArgs args)
         {
-            Console.WriteLine("Treeview drag began.");
-            DragStart.Invoke(sender, args);
+            if (SelectedIndicies.Length > 0)
+            {
+                ReportDragObject dragObject = new()
+                {
+                    Index = SelectedIndicies[0],
+                    Description = table.Rows[SelectedIndicies[0]]["Description"].ToString(),
+                    Code = table.Rows[SelectedIndicies[0]]["Code"].ToString(),
+                    OtherArgs = args
+                };
 
+                DragStart.Invoke(sender, dragObject);
+            }
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
