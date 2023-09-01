@@ -270,31 +270,34 @@ namespace Models.Storage
                     Connection.DropTable("_SelectIDs");
             }
 
-            // Add SimulationName and CheckpointName if necessary.
-            if (!fieldNamesInTable.Contains("CheckpointName"))
+            if (result.Rows.Count > 0)
             {
-                result.Columns.Add("CheckpointName", typeof(string));
-                result.Columns["CheckpointName"].SetOrdinal(0);
-            }
-            if (!fieldNamesInTable.Contains("SimulationName"))
-            {
-                result.Columns.Add("SimulationName", typeof(string));
-                result.Columns["SimulationName"].SetOrdinal(2);
-            }
-            if (fieldNamesInTable.Contains("SimulationID"))
-            {
-                foreach (DataRow row in result.Rows)
+                // Add SimulationName and CheckpointName if necessary.
+                if (!fieldNamesInTable.Contains("CheckpointName"))
                 {
-                    string simulationName = null;
-                    if (!Convert.IsDBNull(row["SimulationID"]) && Int32.TryParse(row["SimulationID"].ToString(), out int simulationID))
-                        simulationName = simulationIDs.FirstOrDefault(x => x.Value == simulationID).Key;
-                    else
+                    result.Columns.Add("CheckpointName", typeof(string));
+                    result.Columns["CheckpointName"].SetOrdinal(0);
+                }
+                if (!fieldNamesInTable.Contains("SimulationName"))
+                {
+                    result.Columns.Add("SimulationName", typeof(string));
+                    result.Columns["SimulationName"].SetOrdinal(2);
+                }
+                if (fieldNamesInTable.Contains("SimulationID"))
+                {
+                    foreach (DataRow row in result.Rows)
                     {
-                        throw new Exception($"In table {tableName}, SimulationID has a value of {row["SimulationID"].ToString()} which is not valid");
-                    }
+                        string simulationName = null;
+                        if (!Convert.IsDBNull(row["SimulationID"]) && Int32.TryParse(row["SimulationID"].ToString(), out int simulationID))
+                            simulationName = simulationIDs.FirstOrDefault(x => x.Value == simulationID).Key;
+                        else
+                        {
+                            throw new Exception($"In table {tableName}, SimulationID has a value of {row["SimulationID"].ToString()} which is not valid");
+                        }
 
-                    row["CheckpointName"] = checkpointName;
-                    row["SimulationName"] = simulationName;
+                        row["CheckpointName"] = checkpointName;
+                        row["SimulationName"] = simulationName;
+                    }
                 }
             }
             return result;
