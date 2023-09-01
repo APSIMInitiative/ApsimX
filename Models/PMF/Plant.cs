@@ -488,25 +488,6 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Set the plant root length density.
-        /// </summary>
-        /// <param name="rootLengthModifier">The root length modifier due to root damage (0-1).</param>
-        public void ReduceRootLengthDensity(double rootLengthModifier)
-        {
-            if (Root != null)
-                Root.RootLengthDensityModifierDueToDamage = rootLengthModifier;
-        }
-
-        /// <summary>
-        /// Remove an amount of assimilate from the plant.
-        /// </summary>
-        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>
