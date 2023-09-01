@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UserInterface.Interfaces;
 using Gtk;
+using UserInterface.Presenters;
 
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
@@ -33,7 +34,8 @@ namespace UserInterface.Views
         private GraphView graphViewTemperature;
         private GraphView graphViewRadiation;
 
-        private GridView gridViewData;
+        private SheetWidget grid;
+        private ContainerView container;
 
         /// <summary>Occurs when browse button is clicked</summary>
         public event BrowseDelegate BrowseClicked;
@@ -110,9 +112,18 @@ namespace UserInterface.Views
             vboxTemp.PackEnd(graphViewTemperature.MainWidget, true, true, 0);
             graphViewRadiation = new GraphView(this);
             vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
-            gridViewData = new GridView(this);
-            gridViewData.ReadOnly = true;
-            alignData.Add(gridViewData.MainWidget);
+
+            container = new ContainerView(owner);
+            grid = new SheetWidget();
+            grid.Sheet = new Sheet();
+            grid.Sheet.DataProvider = new DataTableProvider(new DataTable());
+            grid.Sheet.NumberFrozenRows = 1;
+            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
+            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+            container.Add(grid.Sheet.ScrollBars.MainWidget);
+            alignData.Add(container.MainWidget);
+
             button1.Clicked += OnButton1Click;
             spinStartYear.ValueChanged += OnGraphStartYearValueChanged;
             spinNYears.ValueChanged += OnGraphShowYearsValueChanged;
@@ -285,7 +296,7 @@ namespace UserInterface.Views
         public void PopulateData(DataTable data)
         {
             //fill the grid with data
-            gridViewData.DataSource = data;
+            grid.Sheet.DataProvider = new DataTableProvider(data);
         }
 
         /// <summary>
