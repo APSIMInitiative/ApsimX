@@ -30,12 +30,6 @@ namespace Models.PMF.Interfaces
         double AssimilateAvailable { get; }
 
         /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
-        /// <param name="deltaLAI">Delta LAI.</param>
-        void ReduceCanopy(double deltaLAI);
-
-        /// <summary>
         /// Set the plant root length density.
         /// </summary>
         /// <param name="deltaRLD">New root length density.</param>

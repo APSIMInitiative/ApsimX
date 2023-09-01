@@ -476,18 +476,6 @@ namespace Models.PMF
         }
 
         /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
-        /// <param name="deltaLAI">Delta LAI.</param>
-        public void ReduceCanopy(double deltaLAI)
-        {
-            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-            var lai = leaf.LAI;
-            if (lai > 0)
-                leaf.LAI = lai - deltaLAI;
-        }
-
-        /// <summary>
         /// Set the plant root length density.
         /// </summary>
         /// <param name="rootLengthModifier">The root length modifier due to root damage (0-1).</param>
