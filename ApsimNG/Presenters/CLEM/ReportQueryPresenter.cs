@@ -9,7 +9,7 @@ using UserInterface.Views;
 namespace UserInterface.Presenters
 {
     /// <summary>
-    /// Combines a <see cref="PropertyPresenter"/> and <see cref="GridView"/> to customise and display
+    /// Combines a <see cref="PropertyPresenter"/> and <see cref="SheetWidget"/> to customise and display
     /// a pivot table for a report
     /// </summary>
     class ReportQueryPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
