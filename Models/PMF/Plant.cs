@@ -230,9 +230,6 @@ namespace Models.PMF
         /// <summary>The nitrogen uptake</summary>
         public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
-        /// <summary>Amount of assimilate available to be damaged.</summary>
-        public double AssimilateAvailable => 0;
-
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>

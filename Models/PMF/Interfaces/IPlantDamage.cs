@@ -26,9 +26,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Leaf area index.</summary>
         double LAI { get; }
 
-        /// <summary>Amount of assimilate available to be damaged.</summary>
-        double AssimilateAvailable { get; }
-
         /// <summary>
         /// Set the plant root length density.
         /// </summary>
