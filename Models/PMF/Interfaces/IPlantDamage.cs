@@ -27,18 +27,6 @@ namespace Models.PMF.Interfaces
         double LAI { get; }
 
         /// <summary>
-        /// Set the plant root length density.
-        /// </summary>
-        /// <param name="deltaRLD">New root length density.</param>
-        void ReduceRootLengthDensity(double deltaRLD);
-
-        /// <summary>
-        /// Remove an amount of assimilate from the plant.
-        /// </summary>
-        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
-        void RemoveAssimilate(double deltaAssimilate);
-
-        /// <summary>
         /// Reduce the plant population.
         /// </summary>
         /// <param name="newPlantPopulation">The new plant population.</param>
