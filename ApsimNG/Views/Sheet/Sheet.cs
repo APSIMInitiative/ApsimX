@@ -33,6 +33,9 @@ namespace UserInterface.Views
         /// <summary>Stores how many columns were drawn last draw. We have to re-initialise if this changes</summary>
         private int prevNumColumns = -1;
 
+        /// <summary>Stores how many rows were drawn last draw. We have to re-initialise if this changes</summary>
+        private int prevNumRows = -1;
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -315,10 +318,11 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount)
+                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
 
                 prevNumColumns = DataProvider.ColumnCount;
+                prevNumRows = DataProvider.RowCount;
 
                 foreach (var columnIndex in VisibleColumnIndexes)
                     foreach (var rowIndex in VisibleRowIndexes)
@@ -326,7 +330,7 @@ namespace UserInterface.Views
 
                 // Optionally add in blank rows at bottom of grid.
                 int numRowsOfData = VisibleRowIndexes.Count();
-                int numBlankRowsToAdd = Math.Max(0, VisibleRowCount - numRowsOfData);
+                int numBlankRowsToAdd = 0;
                 foreach (var columnIndex in VisibleColumnIndexes)
                     for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
                         DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
@@ -347,7 +351,7 @@ namespace UserInterface.Views
                 CalculateColumnWidths(cr);
 
             if (RowCount == 0)
-                RowCount = DataProvider.RowCount;
+                RowCount = DataProvider.RowCount + 1;
 
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)

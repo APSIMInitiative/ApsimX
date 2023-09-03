@@ -110,7 +110,6 @@ namespace UserInterface.Presenters
                 grid.Sheet = new Sheet();
                 
                 grid.Sheet.NumberFrozenColumns = 1;
-                grid.Sheet.RowCount = 50;
                 grid.Sheet.DataProvider = dataProvider;
                 grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
                 grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
