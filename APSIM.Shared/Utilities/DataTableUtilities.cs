@@ -222,6 +222,21 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Get a column as long integers
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        static public long[] GetColumnAsLongInts(DataTable table, string columnName)
+        {
+            long[] values = new long[table.Rows.Count];
+            for (int Row = 0; Row != table.Rows.Count; Row++)
+                values[Row] = Convert.ToInt64(table.Rows[Row][columnName], CultureInfo.InvariantCulture);
+
+            return values;
+        }
+
+        /// <summary>
         /// Get a column as integers
         /// </summary>
         /// <param name="table"></param>
@@ -237,7 +252,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Get a column as doubles
+        /// Get a column as integers
         /// </summary>
         /// <param name="table"></param>
         /// <param name="columnName"></param>
