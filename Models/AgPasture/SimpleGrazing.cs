@@ -444,8 +444,8 @@ namespace Models.AgPasture
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
                 GrazedToday = FlexibleTiming();
 
-            if (NoGrazingStartString != null &&
-                NoGrazingEndString != null &&
+            if (NoGrazingStartString.Length > 0 &&
+                NoGrazingEndString.Length > 0 &&
                 DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
                 GrazedToday = false;
 
