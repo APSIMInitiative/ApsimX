@@ -54,23 +54,23 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-#if false
+#if true
             //Console.WriteLine("About to start " + s);
             var sim = sims.FindChild<Simulation>(s);
 
             // fixme hook up a semaphore here
             //foreach (var x in sim.FindAllByPath("[Semaphore].Script.Semaphore"))
-            var s2 = sim.FindAllByPath("[Semaphore].Script");
+            var s2 = sim.FindAllByPath("[Synchroniser].Script.Identifier");
             Console.WriteLine("n=" + s2.Count().ToString());
             foreach (var s3 in s2)
             {
                 object s4 = s3.Value;
-                var t4 = s4.GetType();
+                //var t4 = s4.GetType();
 
-                if (t4.GetMethod("OnPause") != null)
-                {
+                //if (t4.GetMethod("OnPause") != null)
+                //{
                     //t4.GetMethod("OnPause") = OnPause = x => Console.WriteLine(x);
-                }
+                //}
             }
 #endif
         }

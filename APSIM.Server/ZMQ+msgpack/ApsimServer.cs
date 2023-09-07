@@ -22,6 +22,8 @@ namespace APSIM.ZMQServer
         /// </summary>
         protected GlobalServerOptions options;
 
+        protected ICommProtocol conn;
+
         protected ApsimEncapsulator apsimBlob;
 
         /// <summary>
@@ -43,34 +45,32 @@ namespace APSIM.ZMQServer
         {
             try
             {
-                using (var conn = new ZMQComms(options.Verbose, options.IPAddress, options.Port))
-                {
-                        try
-                        {
-                            conn.doCommands(apsimBlob);
-                        }
-                        catch (IOException)
-                        {
-                            // Broken pipe is handled further down.
-                            throw;
-                        }
-                        catch (Exception error)
-                        {
-                            // Other exceptions will usually be triggered by a
-                            // problem executing the command. This shouldn't cause
-                            // the server to crash.
-                            // todo : custom exception type for comamnd failures?
-                            if (options.Verbose) Console.WriteLine("server ran with errors:");
-                            if (options.Verbose) Console.WriteLine(error.ToString());
-                        }
-                    }
-                    if (options.Verbose) Console.WriteLine($"Connection closed by client.");
+                if (options.Protocol == "oneshot")
+                    conn = new OneshotComms(options);
+                else if (options.Protocol == "interactive")
+                    conn = new InteractiveComms(options);
+                else 
+                    throw new Exception("Unknown comms protocol '" + options.Protocol + "'");
+
+                conn.doCommands(apsimBlob);
+            }
+            catch (IOException)
+            {
+                // Broken pipe is handled further down.
+                throw;
+            }
+            catch (Exception error)
+            {
+                // Other exceptions will usually be triggered by a
+                // problem executing the command. This shouldn't cause
+                // the server to crash.
+                if (options.Verbose) Console.WriteLine("server ran with errors:\n" + error.ToString());
             }
             finally
             {
                 apsimBlob.Close();
+                conn.Dispose();
             }
-
         }
     }
 }

@@ -10,6 +10,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
+using NetMQ;
+using MessagePack;
 
 namespace Models.Core
 {
@@ -214,6 +216,8 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location)
             };
 
             if (previousCompilations != null)

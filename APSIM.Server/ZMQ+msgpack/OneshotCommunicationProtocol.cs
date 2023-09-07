@@ -7,13 +7,21 @@ using System.Linq;
 using NetMQ;
 using NetMQ.Sockets;
 using Models.Core;
+using System.Dynamic;
+
 
 namespace APSIM.ZMQServer.IO
 {
+    public interface ICommProtocol : IDisposable
+    {
+        //public interface CommProtocol(GlobalServerOptions options);
+        public void doCommands(ApsimEncapsulator e);
+    }
+
     /// <summary>
     /// This class handles the communications protocol .
     /// </summary>
-    public class ZMQComms : IDisposable
+    public class OneshotComms : ICommProtocol
     {
         private const int protocolVersionMajor = 2; // Increment every time there is a breaking protocol change
         private const int protocolVersionMinor = 0; // Increment every time there is a non-breaking protocol change, set to 0 when the major version changes
@@ -21,11 +29,11 @@ namespace APSIM.ZMQServer.IO
         private const string commandState = "STATE";
         private const string commandRun = "RUN";
         private const string commandGetDataStore = "GET";
-        private const string commandGetVariable = "GET2";
         private const string commandSet = "SET";
         private const string commandVersion = "VERSION";
-        private ResponseSocket connection;
+        private ResponseSocket conn;
 
+        private ApsimEncapsulator apsim;
         private bool verbose;
 
         /// <summary>
@@ -33,24 +41,23 @@ namespace APSIM.ZMQServer.IO
         /// specified connection stream.
         /// </summary>
         /// <param name="conn"></param>
-        public ZMQComms(bool verbosity, string ipAddress, uint port)
+        public OneshotComms(GlobalServerOptions options)
         {
-            // Create a TCP socket.
-            connection = new ResponseSocket();
-            connection.Bind("tcp://" + ipAddress + ":" + port.ToString());
+            verbose = options.Verbose;
 
-            verbose = verbosity;
-            Console.WriteLine($"Starting server on {connection.Options.LastEndpoint.ToString()}");
+            // Create a TCP socket.
+            conn = new ResponseSocket("@tcp://" + options.IPAddress + ":" + options.Port.ToString());
+            if (verbose) { Console.WriteLine($"Started external server on {conn.Options.LastEndpoint.ToString()}"); }
         }
 
         /// <summary>
-        /// Wait for a command from the connected client.
+        /// Wait for a command from the connected clients.
         /// </summary>
         public void doCommands(ApsimEncapsulator apsim)
         {
             while (true)
             {
-                var msg = connection.ReceiveMultipartMessage();
+                var msg = conn.ReceiveMultipartMessage();
                 try
                 {
                     if (verbose) { Console.WriteLine($"Got multipart message with {msg.FrameCount} frames"); }
@@ -59,7 +66,7 @@ namespace APSIM.ZMQServer.IO
                     if (verbose) { Console.WriteLine($"Command from client: {command}"); }
                     if (command == commandState)
                     {
-                        SendString(apsim.runState.ToString());
+                        conn.SendFrame(apsim.runState.ToString());
                     }
                     else if (command == commandRun)
                     {
@@ -71,36 +78,33 @@ namespace APSIM.ZMQServer.IO
                             if (apsim.getErrors()?.Count > 0) {
                                 throw new AggregateException("Simulation Error", apsim.getErrors());
                             }
-                            SendString(apsim.runState.ToString());
-                        } else if (apsim.runState == ApsimEncapsulator.runStateT.waiting) {
-                            apsim.Proceed();
-                            SendString(apsim.runState.ToString());
+                            conn.SendFrame(apsim.runState.ToString());
                         } else {
                             throw new Exception("Already running");
                         }
                     }
-                    else if (command == commandGetVariable)
+                    else if (command == commandGetDataStore)
                     {
                         if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
                         byte[] result = apsim.getVariableFromModel(msg[1].ConvertToString());
-                        SendBytes(result);
+                        conn.SendFrame(result);
                     }
                     else if (command == commandGetDataStore)
                     {
                         if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
                         if (verbose) { Console.WriteLine("get from DS=" + msg[1].ConvertToString()); }
                         byte[] result = apsim.getVariableFromDS(msg[1].ConvertToString());
-                        SendBytes(result);
+                        conn.SendFrame(result);
                     }
                     else if (command == commandSet)
                     {
                         if (msg.FrameCount < 2) { throw new Exception($"Malformed SET: {msg.FrameCount} args"); }
                         apsim.setVariable(msg[1].ConvertToString().Split("\n"));
-                        SendString("OK");
+                        conn.SendFrame("OK");
                     }
                     else if (command == commandVersion)
                     {
-                        SendString(protocolVersionMajor.ToString() + "." + protocolVersionMinor.ToString());
+                        conn.SendFrame(protocolVersionMajor.ToString() + "." + protocolVersionMinor.ToString());
                     }
                     else
                     {
@@ -111,24 +115,14 @@ namespace APSIM.ZMQServer.IO
                 {
                     string msgBuf = "ERROR\n" + e.ToString();
                     if (verbose) {Console.WriteLine(msgBuf);}
-                    SendString(msgBuf);
+                    conn.SendFrame(msgBuf);
                 }
             }
         }
 
-        private void SendString(string s)
-        {
-            connection.SendFrame(s);
-        }
-
-        private void SendBytes(byte[] bytes)
-        {
-            connection.SendFrame(bytes);
-        }
-
         public void Dispose()
         {
-            connection?.Dispose();
+            conn?.Close();
         }
     }
 }
