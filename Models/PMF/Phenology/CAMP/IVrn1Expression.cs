@@ -17,10 +17,10 @@ namespace Models.PMF.Phen
         double Vrn3 { get; }
         
         /// <summary> base Vrn expression</summary>
-        double BaseVrn { get; }
+        double VrnB { get; }
         
         /// <summary> Maximum Vrn expression</summary>
-        double MaxVrn { get; }
+        double MaxApicalDev { get; }
 
         /// <summary>The target for phase completion</summary>
         bool IsVernalised { get; }

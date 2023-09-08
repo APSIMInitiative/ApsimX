@@ -52,7 +52,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             Target = 1 + CAMP.Vrn2;
-            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
+            double RelativeVernalisation = Math.Min((CAMP.VrnB + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxApicalDev);
             if (firstDay)
             {
                 relativeVernalisationAtEmergence = RelativeVernalisation;

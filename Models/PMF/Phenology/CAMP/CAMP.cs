@@ -1,4 +1,5 @@
 ﻿using System;
+using DocumentFormat.OpenXml.Math;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
@@ -108,7 +109,7 @@ namespace Models.PMF.Phen
         /// <summary>The current expression of Vrn upregulated at base rate.  
         /// Is methalated each day so always accumulates.
         /// Provides mechanism for gradual vernalisation at warm temperatures</summary>
-        [JsonIgnore] public double BaseVrn { get; private set; }
+        [JsonIgnore] public double VrnB { get; private set; }
         /// <summary>The current expression of Vrn upregulated by cold.  
         /// Is methalated when Vrn1 reaches params.MethalationThreshold, 
         /// Downregulated by exposure to temperatures > 20oC.
@@ -116,7 +117,7 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double Cold { get; private set; }
         /// <summary>The sum of expression of all vrn genes
         /// BaseVrn + ColdVrn1 + Vrn3 - Vrn2</summary>
-        [JsonIgnore] public double Vrn { get; private set; }
+        [JsonIgnore] public double ApicalDev { get; private set; }
         /// <summary>The methalated Vrn1 expressed
         /// This is what gives persistant cold vernalisation response</summary>
         [JsonIgnore] public double Vrn1 { get; private set; }
@@ -134,13 +135,13 @@ namespace Models.PMF.Phen
         /// <summary>Vrn3 expression (relative to baseVrn) due to long Pp</summary>
         [JsonIgnore] public double PpVrn3Fact { get; set; }
         /// <summary>Maximum potential Vrn expression</summary>
-        [JsonIgnore] public double MaxVrn { get; private set; }
+        [JsonIgnore] public double MaxApicalDev { get; private set; }
         /// <summary>Maximum potential Vrn expression</summary>
         [JsonIgnore] public double MaxVrn2 { get; private set; }
         /// <summary>daily delta methalation of Vrn1</summary>
-        [JsonIgnore] public double dVrn { get; set; }
+        [JsonIgnore] public double dApicalDev { get; set; }
         /// <summary>daily delta upregulation of BaseVrn</summary>
-        [JsonIgnore] public double dBaseVrn { get; set; }
+        [JsonIgnore] public double dVrnB { get; set; }
         /// <summary>daily delta upregulation of Vrn1 due to cold</summary>
         [JsonIgnore] public double dCold { get; set; }
         /// <summary>daily delta methalation of Vrn1</summary>
@@ -155,10 +156,12 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double RelPp { get; set; }
         /// <summary>Vernalisation releative to max and min temperatures</summary>
         [JsonIgnore] public double RelCold { get; set; }
+        /// <summary>Accumulated short day exposure</summary>
+        [JsonIgnore] public double AccumSPp { get; set; }
 
         /// Leaf number variables
-        /// <summary>Haun stage of Vernalisation saturation</summary>
-        [JsonIgnore] public double VSHS { get; private set; }
+        /// <summary>Haun stage of Vernal induction</summary>
+        [JsonIgnore] public double VIHS { get; private set; }
         /// <summary>Haun Stage of Terminal Spikelet</summary>
         [JsonIgnore] public double TSHS { get; private set; }
         /// <summary>Final Leaf Number</summary>
@@ -196,87 +199,85 @@ namespace Models.PMF.Phen
                 { // Crop emerged
                     dHS = DHS.Value();
                 }
-                
-                // Set stage specific parameter values
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if (isVernalised == false) // do vernalisation calculations if crop not yet vernalised
+
+                // Calculate Vrn gene expression
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                if (isReproductive == false)
                 {
-                    VSHS = haunStage.Value();
-                    dBaseVrn = Params.BaseDVrnVeg * dHS;
-                    dMaxVrn = Params.MaxDVrnVeg * dHS;
-                    PpVrn3Fact = Params.PpVrn3FactVeg;
-                }
-                else
-                {
-                    if (isReproductive == false)
-                    {
-                        dBaseVrn = Params.BaseDVrnER * dHS;
+                    if (isVernalised == false)
+                    {  // set as rates and factors for vegetative phase
+                        VIHS = haunStage.Value();
+                        dVrnB = Params.BaseDVrnVeg * dHS;
+                        dMaxVrn = Params.MaxDVrnVeg * dHS;
+                        PpVrn3Fact = Params.PpVrn3FactVeg;
+                    }
+                    else
+                    {  //set as rates and factors for early reproductive phase
+
+                        dVrnB = Params.BaseDVrnER * dHS;
                         dMaxVrn = Params.MaxDVrnER * dHS;
                         PpVrn3Fact = Params.PpVrn3FactER;
-                    }
-                }
-                // Increment todays Vrn expression values using deltas just calculated
-                BaseVrn += dBaseVrn;
-                MaxVrn += dMaxVrn;
 
-                // Calculate daily cold response
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if (IsVernalised == false)
-                {
-                    double ColdYesterday = Cold;
-                    RelCold = ColdVrnResponse.Value();
-                    dCold = RelCold * dBaseVrn * Params.ColdVrn1Fact;
-                    Cold = Math.Max(0.0, Cold + dCold);
-                    if (Cold > Params.MethalationThreshold)
+                    }
+                    // Increment BaseVern and MaxVern
+                    VrnB += dVrnB;
+                    MaxApicalDev += dMaxVrn;
+
+                    // Calculate daily cold response
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    if (IsVernalised == false)
                     {
-                        dVrn1 = Math.Max(0, (Cold - Params.MethalationThreshold) - (ColdYesterday - Params.MethalationThreshold));
+                        double ColdYesterday = Cold;
+                        RelCold = ColdVrnResponse.Value();
+                        dCold = RelCold * dVrnB * Params.ColdVrn1Fact;
+                        Cold = Math.Max(0.0, Cold + dCold);
+                        if (Cold > Params.MethalationThreshold)
+                        {
+                            dVrn1 = Math.Max(0, (Cold - Params.MethalationThreshold) - (ColdYesterday - Params.MethalationThreshold));
+                        }
                     }
-                }
-                // Increment Vrn 1
-                Vrn1 += dVrn1;
+                    // Increment Vrn 1
+                    Vrn1 += dVrn1;
 
-                // Calcualte expression of photoperiod sensitive genes
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if (isEmerged == true)  // Photoperiod sensitive genes only express after emergence
-                {
-                    RelPp = PpResponse.Value(); //relative Pp, scaled between 0 at lower threshold and 1 at upper threshold
-                    if (RelPp == 0) //Reduce MaxVrn2 if short Pp encountered
+                    // Calcualte expression of photoperiod sensitive genes
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    if (isEmerged == true)  // Photoperiod sensitive genes only express after emergence
                     {
-                        MaxVrn2 = Math.Max(0,MaxVrn2-dBaseVrn);  // Fixme.  I don't think this should be here. I dont think is doing anything and can be removed
+                        RelPp = PpResponse.Value(); //relative Pp, scaled between 0 at lower threshold and 1 at upper threshold
+                        AccumSPp += dVrnB * (1 - RelPp); //accumulate short day exposure for reducing maxVrn2
+                        MaxVrn2 = Math.Max(0, (Params.MaxVrn2 * RelPp) - AccumSPp);  
+                        Vrn2 = Math.Max(0,MaxVrn2 - (VrnB + Vrn1));
+                        if (Vrn2 == 0) // express vrn3 relative to Pp if Vrn2 is down regulated to zero
+                            dVrn3 = (PpVrn3Fact - 1) * RelPp * dVrnB;
                     }
-                    if (isVernalised == false) // Set Vrn2 relative to MaxVrn2 and current Pp
+                    // Increment Vrn3
+                    Vrn3 += dVrn3;
+
+                    // Increment todays Vrn expression values using deltas just calculated
+                    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    double VrnYesterday = ApicalDev;
+                    if (isVernalised == false) //If not vernalised need to include Vrn2 and constrain to maxrate
                     {
-                        Vrn2 = MaxVrn2 * RelPp;
+                        ApicalDev = Math.Min(MaxApicalDev, Math.Max(0, VrnB + Vrn1 + Vrn3 - Vrn2));
                     }
-                    if ((BaseVrn + Vrn1) > Vrn2) // express vrn3 relative to Pp if Vrn2 is down regulated
-                        dVrn3 = (PpVrn3Fact - 1) * RelPp * dBaseVrn;
-                }
-                // Increment Vrn3
-                Vrn3 += dVrn3;
+                    else
+                    {
+                        ApicalDev = ApicalDev + dVrnB + dVrn3;
+                    }
 
-                // Increment todays Vrn expression values using deltas just calculated
-                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                double VrnYesterday = Vrn;
-                if (isVernalised == false) //If not vernalised need to include Vrn2 and constrain to maxrate
-                {
-                    Vrn = Math.Min(MaxVrn, Math.Max(0, BaseVrn + Vrn1 + Vrn3 - Vrn2));
+                    dApicalDev = ApicalDev - VrnYesterday;
                 }
-                else
-                {
-                    Vrn = Vrn + dBaseVrn + dVrn3;
-                }
-                dVrn = Vrn - VrnYesterday;
-
+                                
                 // Then work out phase progression based on Vrn expression
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if ((isEmerged == true) && (Vrn >= VSThreshold) && (IsVernalised == false))
+                if ((isEmerged == true) && (ApicalDev >= VSThreshold) && (IsVernalised == false))
                     isVernalised = true;
                 if (isVernalised == false)
                 {
-                    VSHS = haunStage.Value();
+                    VIHS = haunStage.Value();
                 }
 
-                if ((isVernalised == true) && (Vrn >= TSThreshold) && (isReproductive == false))
+                if ((isVernalised == true) && (ApicalDev >= TSThreshold) && (isReproductive == false))
                     isReproductive = true;
                 
                 TSHS = haunStage.Value();
@@ -336,21 +337,22 @@ namespace Models.PMF.Phen
             isEmerged = false;
             isVernalised = false;
             isReproductive = false;
-            BaseVrn = 0;
-            Vrn = 0;
+            VrnB = 0;
+            ApicalDev = 0;
             Cold = 0;
             Vrn1 = 0;
             Vrn2 = 0;
             Vrn3 = 0;
             TSHS = 0;
             FLN = 2.86;
+            AccumSPp = 0;
             ZeroDeltas();
         }
         private void ZeroDeltas()
         {
             dHS = 0;
-            dVrn = 0;
-            dBaseVrn = 0;
+            dApicalDev = 0;
+            dVrnB = 0;
             dCold = 0;
             dVrn1 = 0;
             dVrn3 = 0.0;

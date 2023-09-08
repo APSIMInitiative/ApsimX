@@ -658,7 +658,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].CAMP.dVrn",
+                  "VariableName": "[Phenology].CAMP.dApicalDev",
                   "Name": "Progression",
                   "ResourceName": null,
                   "Children": [],
