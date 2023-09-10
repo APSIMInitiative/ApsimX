@@ -321,7 +321,8 @@
                             definition.ShowInLegend,
                             definition.Line,
                             definition.Marker,
-                            definition.LineThickness);
+                            definition.LineThickness,
+                            definition.Y2FieldName);
                     }
                 }
                 catch (Exception err)

@@ -19,6 +19,12 @@ namespace UserInterface.Presenters
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
 
+        /// <summary></summary>
+        private int selectedRow = -1;
+
+        /// <summary></summary>
+        private int selectedColumn = -1;
+
         /// <summary>A counter to track cell changed events in a queue</summary>
         private int cellChangedCounter;
 
@@ -42,6 +48,14 @@ namespace UserInterface.Presenters
 
         /// <summary>An event invoked when a cell changes.</summary>
         public event CellChangedDelegate CellChanged;
+
+        /// <summary>Delegate for a SelectedCellChanged event.</summary>
+        /// <param name="colIndex">The index of the column that was changed.</param>
+        /// <param name="rowIndex">The index of the row that was changed.</param>
+        public delegate void SelectedCellChangedDelegate(int colIndex, int rowIndex);
+
+        /// <summary>An event invoked when a cell changes.</summary>
+        public event SelectedCellChangedDelegate SelectedCellChanged;
 
         /// <summary>
         /// Attach the model to the view.
@@ -104,7 +118,19 @@ namespace UserInterface.Presenters
                 // Cleanup existing sheet instances before creating new ones.
                 CleanupSheet();
 
-                var dataProvider = new DataTableProvider(gridTable.Data);
+                DataTable data = gridTable.Data;
+
+                List<string> units = null;
+                if (gridTable.HasUnits())
+                {
+                    units = new List<string>();
+                    for ( int i = 0; i < data.Columns.Count; i++ )
+                    {
+                        units.Add(data.Rows[0].ItemArray[i].ToString());
+                    }
+                    data.Rows.Remove(data.Rows[0]);
+                }
+                var dataProvider = new DataTableProvider(data, units);
 
                 grid = new SheetWidget();
                 grid.Sheet = new Sheet();
@@ -124,6 +150,7 @@ namespace UserInterface.Presenters
                 sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
 
                 dataProvider.CellChanged += OnCellChanged;
+                grid.Sheet.RedrawNeeded += OnSelectedCellChanged;
             }
             catch (Exception err)
             {
@@ -180,11 +207,29 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// User has changed a cell.
+        /// </summary>
+        /// <param name="sender">sender</param>
+        /// <param name="e">event</param>
+        private void OnSelectedCellChanged(object sender, EventArgs e)
+        {
+            int row = 0;
+            int column = 0;
+            (sender as Sheet).CellSelector.GetSelection(out row, out column);
+
+            if (selectedRow != row || selectedColumn != column) {
+                selectedRow = row;
+                selectedColumn = column;
+                SelectedCellChanged.Invoke(selectedRow, selectedColumn);
+            }
+        }
+
+        /// <summary>
         /// User has right clicked - display popup menu.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
+            private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
             if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
             {

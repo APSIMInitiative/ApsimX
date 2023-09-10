@@ -15,7 +15,6 @@ namespace UserInterface.Views
         /// <summary>Number of heading rows.</summary>
         private int numHeadingRows;
 
-
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="colIndex">The index of the column that was changed.</param>
@@ -98,6 +97,16 @@ namespace UserInterface.Views
         public bool IsColumnReadonly(int colIndex)
         {
             return Data.Columns[colIndex].ReadOnly;
+        }
+
+        /// <summary>Get the Units assigned to this column</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public string GetColumnUnits(int colIndex)
+        {
+            if (units == null)
+                return "";
+            else
+                return units[colIndex];
         }
     }
 }

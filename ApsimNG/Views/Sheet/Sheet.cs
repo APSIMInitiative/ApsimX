@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Interop.Drawing;
+using APSIM.Shared.Graphing;
+using Pango;
 
 namespace UserInterface.Views
 {
@@ -529,6 +531,17 @@ namespace UserInterface.Views
                 string text = null;
                 if (rowIndex < DataProvider.RowCount)
                     text = DataProvider.GetCellContents(columnIndex, rowIndex);
+
+                if (DataProvider.GetColumnUnits(columnIndex) != null)
+                {
+                    string units = DataProvider.GetColumnUnits(columnIndex);
+                    if (units.CompareTo("boolean") == 0 && rowIndex > 0)
+                    {
+                        text = "\u2713";
+                    }
+                }
+                
+
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
                 if (cellBounds != null)
                 {
@@ -557,9 +570,9 @@ namespace UserInterface.Views
                         }
 
                         // Measure text for cell.
-                        var r = cr.GetPixelExtents(text, 
-                                                   CellPainter.TextBold(columnIndex, rowIndex), 
-                                                   CellPainter.TextItalics(columnIndex, rowIndex));
+                        var r = cr.GetPixelExtents(text,
+                                                    CellPainter.TextBold(columnIndex, rowIndex),
+                                                    CellPainter.TextItalics(columnIndex, rowIndex));
 
                         // Vertically center the text.
                         double y = cellBounds.Top + (cellBounds.Height - r.Height) / 2;
@@ -573,7 +586,8 @@ namespace UserInterface.Views
 
                         cr.MoveTo(x, y);
                         cr.DrawText(text, CellPainter.TextBold(columnIndex, rowIndex),
-                                          CellPainter.TextItalics(columnIndex, rowIndex));
+                                            CellPainter.TextItalics(columnIndex, rowIndex));
+                        
                     }
                     cr.ResetClip();
                     cr.State = States.Normal;

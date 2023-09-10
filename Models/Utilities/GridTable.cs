@@ -86,6 +86,9 @@ namespace Models.Utilities
         /// <param name="data"></param>
         public void SetData(DataTable data)
         {
+            if (data.Rows.Count == 0)
+                return;
+
             //if the first row is units, delete it
             if (this.HasUnits())
                 data.Rows.RemoveAt(0);
@@ -115,7 +118,8 @@ namespace Models.Utilities
 
             //copy values into properties
             foreach (var column in columns)
-                column.Set(data);
+                if (!column.IsReadOnly)
+                    column.Set(data);
         }
 
         /// <summary>
@@ -184,11 +188,11 @@ namespace Models.Utilities
                 }
 
                 IsReadOnly = readOnly;
-                if (properties != null)
+                if (properties != null && IsReadOnly == false)
                     IsReadOnly = properties.First().IsReadOnly;
 
                 this.units = units;
-                if (properties != null)
+                if (properties != null && this.units == null)
                     this.units = properties.First().Units;
             }
 
@@ -310,48 +314,51 @@ namespace Models.Utilities
                             }
                         }
                     }
-                    else if (propertyType == typeof(IEnumerable<object>))
+                    else if (propertyType.FullName.Contains("System.Collections.Generic.List"))
                     {
                         Model model = properties.First().Object as Model;
                         PropertyInfo fieldInfo = model.GetType().GetProperty(properties.First().Name);
                         IEnumerable<object> list = fieldInfo.GetValue(model) as IEnumerable<object>;
 
                         //make a new list
-                        Type elementType = list.GetType().GetGenericArguments()[0];
-                        Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
-                        IList newList = (IList)Activator.CreateInstance(listType);
-
-                        if (TypeIsPrimitive(elementType))
+                        if (list != null)
                         {
-                            for (int i = 0; i < data.Rows.Count; i++)
-                            {
-                                TypeConverter typeConverter = TypeDescriptor.GetConverter(elementType);
-                                object propValue = typeConverter.ConvertFromString(data.Rows[i][Name].ToString());
-                                newList.Add(propValue);
-                            }
+                            Type elementType = list.GetType().GetGenericArguments()[0];
+                            Type listType = typeof(List<>).MakeGenericType(new[] { elementType });
+                            IList newList = (IList)Activator.CreateInstance(listType);
 
-                            //Set the Model to use our modified list
-                            fieldInfo.SetValue(model, newList);
-                        }
-                        else
-                        {
-                            //each column send it's own update event
-                            //so we need to use the existing object's value to avoid overwriting them
-                            //but we only add as many rows as required by the new table
-                            foreach (object obj in list)
-                                if (newList.Count < data.Rows.Count)
-                                    newList.Add(obj);                                
-                            //on the first column that runs, it must add additional entries for any new lines
-                            for (int i = 0; i < data.Rows.Count - list.Count(); i++)
-                                newList.Add(Activator.CreateInstance(elementType));
-                            //once we have a list of the right length, we then write in our cells one at a time.
-                            for (int i = 0; i < data.Rows.Count; i++)
+                            if (TypeIsPrimitive(elementType))
                             {
-                                string value = data.Rows[i][Name].ToString();
-                                ApplyChangesToListData(newList[i], Name, value);
+                                for (int i = 0; i < data.Rows.Count; i++)
+                                {
+                                    TypeConverter typeConverter = TypeDescriptor.GetConverter(elementType);
+                                    object propValue = typeConverter.ConvertFromString(data.Rows[i][Name].ToString());
+                                    newList.Add(propValue);
+                                }
+
+                                //Set the Model to use our modified list
+                                fieldInfo.SetValue(model, newList);
                             }
-                            //Set the Model to use our modified list
-                            fieldInfo.SetValue(model, newList);
+                            else
+                            {
+                                //each column send it's own update event
+                                //so we need to use the existing object's value to avoid overwriting them
+                                //but we only add as many rows as required by the new table
+                                foreach (object obj in list)
+                                    if (newList.Count < data.Rows.Count)
+                                        newList.Add(obj);
+                                //on the first column that runs, it must add additional entries for any new lines
+                                for (int i = 0; i < data.Rows.Count - list.Count(); i++)
+                                    newList.Add(Activator.CreateInstance(elementType));
+                                //once we have a list of the right length, we then write in our cells one at a time.
+                                for (int i = 0; i < data.Rows.Count; i++)
+                                {
+                                    string value = data.Rows[i][Name].ToString();
+                                    ApplyChangesToListData(newList[i], Name, value);
+                                }
+                                //Set the Model to use our modified list
+                                fieldInfo.SetValue(model, newList);
+                            }
                         }
                     }
                 }
@@ -377,6 +384,7 @@ namespace Models.Utilities
                         bool? valueAsBoolen = null;
                         if (!String.IsNullOrEmpty(value))
                             valueAsBoolen = Convert.ToBoolean(value);
+                        propInfo.SetValue(obj, valueAsBoolen);
                     }
                     else
                     {
