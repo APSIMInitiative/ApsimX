@@ -74,7 +74,8 @@ namespace UserInterface.Views
             Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
             Drag.SourceSet(tree, Gdk.ModifierType.Button1Mask, target_table, actions);
             // makes the destination for a drop and drop action.
-            Drag.DestSet(editor.GetSourceView(), 0, target_table, actions);
+            if (editor != null)
+                Drag.DestSet(editor.GetSourceView(), 0, target_table, actions);
             // TODO: Need to allow Drag from this to a TextView object. Drag.DestSet may need info on what can accept this drag??
             // Perhaps needs a Object type, like TextView added to enable this??
             // May be worth doing double-click functionality first.
