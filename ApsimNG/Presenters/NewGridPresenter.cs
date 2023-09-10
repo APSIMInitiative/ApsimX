@@ -220,7 +220,8 @@ namespace UserInterface.Presenters
             if (selectedRow != row || selectedColumn != column) {
                 selectedRow = row;
                 selectedColumn = column;
-                SelectedCellChanged.Invoke(selectedRow, selectedColumn);
+                if (SelectedCellChanged != null) 
+                    SelectedCellChanged.Invoke(selectedRow, selectedColumn);
             }
         }
 
