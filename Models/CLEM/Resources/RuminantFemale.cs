@@ -114,6 +114,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Predicted birth weight of offspring scaled by mother's relative weight
+        /// </summary>
+        public double ScaledBirthWeight 
+        { 
+            get
+            {
+                return (1 - 0.33 + 0.33 * RelativeSize) * BreedParams.SRWBirth * StandardReferenceWeight;
+            }
+        }
+
+        /// <summary>
         /// Previous conception rate
         /// </summary>
         public double PreviousConceptionRate { get; set; }

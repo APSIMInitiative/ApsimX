@@ -85,10 +85,79 @@ namespace Models.CLEM.Resources
         [Description("Protein gain slope")]
         public double ProteinGainSlope { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double FetalNormWeightParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double FetalNormWeightParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightRatio { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyContent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinContent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double EB2LW { get; set; }
 
         #endregion
-
-
 
         /// <summary>
         /// Unit type
