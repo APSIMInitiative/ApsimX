@@ -10,6 +10,7 @@ using Gtk;
 using Models;
 using Models.Core;
 using Models.Factorial;
+using Models.PMF;
 using Models.Storage;
 using Newtonsoft.Json;
 using UserInterface.EventArguments;
@@ -68,14 +69,55 @@ namespace UserInterface.Presenters
         /// <summary>Stores a DataTable of common report variables.</summary>
         private DataTable commonReportVariables;
 
+        /// <summary>
+        /// Stores a list of  common ReportVariables.
+        /// </summary>
+        private List<ReportVariable> commonReportVariablesList;
+
+        /// <summary>
+        /// Stores a lst of common frequency ReportVariables.
+        /// </summary>
+        private List<ReportVariable> commonFrequencyVariableList;
+
+        /// <summary>
+        /// Currently selected ReportVariable.
+        /// </summary>
+        private ReportVariable CurrentlySelectedVariable { get; set; }
+
+
         /// <summary> File name for reporting variables.</summary>
-        private readonly string commonReportVariablesFilePath = "CommonReportingVariables.json";
+        private readonly string commonReportVariablesFileName = "CommonReportingVariables.json";
 
         /// <summary> File name for report frequency variables.</summary>
-        private readonly string commonReportFrequencyVariablesFilePath = "CommonFrequencyVariables.json";
+        private readonly string commonReportFrequencyVariablesFileName = "CommonFrequencyVariables.json";
+
+        /// <summary>
+        /// Common directory path
+        /// </summary>
+        private readonly string reportVariablesDirectoryPath = "ApsimNG\\Resources\\CommonReportVariables\\";
+
+        public List<ReportVariable> CommonReportVariablesList
+        {
+            get { return commonReportVariablesList; }
+            set { commonReportVariablesList = value; }
+        }
+
+        public List<ReportVariable> CommonFrequencyVariablesList
+        {
+            get { return commonFrequencyVariableList; }
+            set { commonFrequencyVariableList = value; }
+        }
+
+        private List<ReportVariable> GetCommonVariables(string fileName, string fileDirectoryPath)
+        {
+            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, fileDirectoryPath, fileName);
+            string reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
+            return JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
+        }
+
 
         /// <summary>Stores variable name and variable code while being dragged.</summary>
-        private ReportVariable CurrentlySelectedVariable { get; set; }
 
         // Stores ReportDragObject to coping into EditorView.
         public ReportDragObject StoredDragObject { get; set; }
@@ -107,8 +149,10 @@ namespace UserInterface.Presenters
         {
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            CommonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames());
-            CommonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames());
+            CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
+            CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
+            CommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
+            CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -128,7 +172,6 @@ namespace UserInterface.Presenters
             this.view.GroupByEdit.IntellisenseItemsNeeded += OnNeedVariableNames;
             this.view.VariableList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.VariableList.TextHasChangedByUser += OnVariableListTextChanged;
-            //(this.view.VariableList as EditorView).GetSourceView().DragDrop += OnVariableListDrop;
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
             this.view.EventList.TextHasChangedByUser += OnEventListTextChanged;
             this.view.GroupByEdit.Changed += OnGroupByChanged;
@@ -177,20 +220,22 @@ namespace UserInterface.Presenters
             int linesCount = view.EventList.Lines.Length;
             if (lineIndex < linesCount)
             {
-                string lineContent = view.EventList.Lines[lineIndex];
+                string lineContent = "";
+                if (lineIndex < linesCount)
+                    lineContent = this.view.EventList.Lines[lineIndex];
                 List<string> lineStrings = new();
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
-                    lineStrings = lineContent.Split(". ").ToList();
-                // Used async wrapper method to avoid sluggish GUI.
+                    lineStrings = lineContent.Split("[]").ToList();
                 if (lineStrings.Count != 0)
                 {
-                    lineStrings.AddRange(GetModelScopeNames());
-                    commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, lineStrings);
+                    DataTable potentialCommonReportVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, lineStrings);
+                    if (potentialCommonReportVariables.Rows.Count != 0)
+                        commonReportFrequencyVariables = potentialCommonReportVariables;
                     view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
                 }
                 else
                 {
-                    commonReportFrequencyVariables = await GetReportVariablesAsync(commonReportFrequencyVariablesFilePath, GetModelScopeNames());
+                    commonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
                     view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
                 }
 
@@ -207,25 +252,33 @@ namespace UserInterface.Presenters
             int variableListLineNumber = view.VariableList.CurrentLineNumber;
             int lineIndex = variableListLineNumber - 1;
             int linesCount = view.VariableList.Lines.Length;
-            if (lineIndex < linesCount)
+            if (lineIndex <= linesCount)
             {
-                string lineContent = this.view.VariableList.Lines[lineIndex];
+                string lineContent = "";
+                if (lineIndex < linesCount)
+                    lineContent = this.view.VariableList.Lines[lineIndex];
+
                 List<string> lineStrings = new();
+
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
-                    lineStrings = lineContent.Split("[]").ToList(); // TODO needs to only filter on Model names i.e. [Example]
-                // Used async wrapper method to avoid sluggish GUI.
+                {
+                    lineStrings = lineContent.Split(new char[2] { '[', ']' }).ToList<string>();
+                    lineStrings.RemoveAll(s => s == "");
+                }
+
+
                 if (lineStrings.Count != 0)
                 {
-                    lineStrings.AddRange(GetModelScopeNames()); // Not sure if this needs to be done.
-                    commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, lineStrings);
+                    DataTable potentialCommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, lineStrings);
+                    if (potentialCommonReportVariables.Rows.Count != 0)
+                        commonReportVariables = potentialCommonReportVariables;
                     view.CommonReportVariablesList.DataSource = commonReportVariables;
                 }
                 else
                 {
-                    commonReportVariables = await GetReportVariablesAsync(commonReportVariablesFilePath, GetModelScopeNames());
+                    commonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
                     view.CommonReportVariablesList.DataSource = commonReportVariables;
                 }
-
             }
         }
 
@@ -313,65 +366,84 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Creates a DataTable with the reportVariables inside a resource file name. 
         /// </summary>
-        /// <param name="fileName"> The name including the json extension.</param>
+        /// <param name="variableList"> List of ReportVariables</param>
         /// <param name="filterStrings">String List containing model names or properties to use as filters.</param>
         /// <returns>A <see cref="DataTable"/> containing commonReportVariables or commonReportFrequencyVariables.</returns>
-        public DataTable GetReportVariables(string fileName, List<string> filterStrings)
+        public DataTable GetReportVariables(List<ReportVariable> variableList, List<string> filterStrings)
         {
             try
             {
-                // reportFrequencyVariables name = "CommonFrequencyVariables.json"
-                // reportVariables name = "CommonReportingVariables.json"
-                string reportingVariablesJSON = null;
-                string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-                string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, "ApsimNG\\Resources\\CommonReportVariables\\", fileName);
-
                 // Build a DataTable to replace the private variable
                 DataTable variableDataTable = new DataTable();
-
-                // Get the resource file contents into a JSON Object.
-                reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
-                List<ReportVariable> reportVariableList = JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
                 DataColumn reportingVariableNameColumn = new DataColumn("Description");
                 DataColumn reportingVariableCodeColumn = new DataColumn("Code");
                 variableDataTable.Columns.Add(reportingVariableNameColumn);
                 variableDataTable.Columns.Add(reportingVariableCodeColumn);
 
-                foreach (ReportVariable reportVariable in reportVariableList)
+                foreach (ReportVariable reportVariable in variableList)
                 {
-                    bool isReportVariableRelevant = false;
                     // Find only relevant variables based on models in simulation.
-                    List<string> relevantNames = filterStrings;
-                    //Check the description
-                    foreach (string modelName in relevantNames)
+                    bool plantTypeInFilters = false;
+                    foreach (string variableModelName in reportVariable.ModelNames)
                     {
-                        string modifiedModelName;
-                        if (modelName.StartsWith('[') && modelName.EndsWith("]"))
-                            modifiedModelName = modelName;
-                        else modifiedModelName = "[" + modelName + "]";
-
-                        if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modifiedModelName))
-                            isReportVariableRelevant = true;
-                        if (isReportVariableRelevant)
+                        foreach (string filter in filterStrings)
                         {
-                            // Check that DataTable does not already 
-                            bool isReportVariableAlreadyAdded = false;
-                            foreach (DataRow tableRow in variableDataTable.Rows)
-                            {
-                                if (tableRow[0].ToString().Contains(reportVariable.Description))
-                                    isReportVariableAlreadyAdded = true;
-                            }
+                            plantTypeInFilters = IsModelTypePlantAsync(filter).Result; // Needs a faster way of determing if filter is of type plant.
+                        }
 
-                            if (isReportVariableAlreadyAdded == false)
-                            {
-                                // Add to row if relevant.
-                                DataRow row = variableDataTable.NewRow();
-                                row["Description"] = reportVariable.Description;
-                                row["Code"] = reportVariable.Code;
-                                variableDataTable.Rows.Add(row);
-                            }
+                        if (filterStrings.Contains(variableModelName))
+                        {
+                            DataRow row = variableDataTable.NewRow();
+                            row["Description"] = reportVariable.Description;
+                            row["Code"] = reportVariable.Code;
+                            variableDataTable.Rows.Add(row);
                         }
                     }
+
+                    // Adds if a plant type name is typed.
+                    if (plantTypeInFilters == true && reportVariable.Code.Contains("[Plant]"))
+                    {
+                        DataRow row = variableDataTable.NewRow();
+                        row["Description"] = reportVariable.Description;
+                        row["Code"] = reportVariable.Code;
+                        variableDataTable.Rows.Add(row);
+                    }
+                    //Check the description
+                    //foreach (string modelName in relevantNames)
+                    //{
+                    //    string modifiedModelName;
+                    //    if (modelName.StartsWith('[') && modelName.EndsWith("]"))
+                    //        modifiedModelName = modelName;
+                    //    else modifiedModelName = "[" + modelName + "]";
+
+                    //    // Check to see if Plant is type to see if they should be included.
+                    //    isModelTypePlant = IsModelTypePlantAsync(modelName).Result;
+                    //    if (isModelTypePlant && reportVariable.Code.Contains("[Plant]"))
+                    //        isReportVariableRelevant = true;
+
+                    //    if (reportVariable.Description.Contains(modelName) || reportVariable.Code.Contains(modifiedModelName))
+                    //        isReportVariableRelevant = true;
+                    //    if (isReportVariableRelevant)
+                    //    {
+
+                    //        // Check that DataTable does not already have this variable.
+                    //        bool isReportVariableAlreadyAdded = false;
+                    //        foreach (DataRow tableRow in variableDataTable.Rows)
+                    //        {
+                    //            if (tableRow[0].ToString().Contains(reportVariable.Description))
+                    //                isReportVariableAlreadyAdded = true;
+                    //        }
+
+                    //        if (isReportVariableAlreadyAdded == false)
+                    //        {
+                    //            // Add to row if relevant.
+                    //            DataRow row = variableDataTable.NewRow();
+                    //            row["Description"] = reportVariable.Description;
+                    //            row["Code"] = reportVariable.Code;
+                    //            variableDataTable.Rows.Add(row);
+                    //        }
+                    //    }
+                    //}
                 }
                 return variableDataTable;
             }
@@ -385,12 +457,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Asynchronous version of GetReportVariables().
         /// </summary>
-        /// <param name="fileName"></param>
+        /// <param name="variablesList"></param>
         /// <param name="filterStrings"></param>
         /// <returns></returns>
-        private async Task<DataTable> GetReportVariablesAsync(string fileName, List<string> filterStrings)
+        private async Task<DataTable> GetReportVariablesAsync(List<ReportVariable> variablesList, List<string> filterStrings)
         {
-            return await Task.Run(() => GetReportVariables(fileName, filterStrings));
+            return await Task.Run(() => GetReportVariables(variablesList, filterStrings));
 
         }
 
@@ -400,8 +472,22 @@ namespace UserInterface.Presenters
             List<string> modelNamesInScope = new();
             Simulations simulations = explorerPresenter.ApsimXFile;
             List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
-            modelNamesInScope = modelInScope.Select(x => x.Name).ToList();
+            modelNamesInScope = modelInScope.Select(x => x.Name).Distinct<string>().ToList();
             return modelNamesInScope;
+        }
+
+        private bool IsModelTypePlant(string modelName)
+        {
+            bool isPlantType = false;
+            List<IModel> matches = explorerPresenter.ApsimXFile.FindAllInScope(modelName).Where(m => m is Plant).ToList();
+            if (matches.Count > 0)
+                isPlantType = true;
+            return isPlantType;
+        }
+
+        private async Task<bool> IsModelTypePlantAsync(string modelName)
+        {
+            return await Task.Run(() => IsModelTypePlant(modelName));
         }
 
         /// <summary>

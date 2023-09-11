@@ -80,276 +80,144 @@
     "code": "[SurfaceOrganicMatter].Wt"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water content layered (mm)",
+    "code": "[Soil].Water.MM"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water content profile (mm)",
+    "code": "sum([Soil].Water.MM) as ProfileWater"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water content volumetric (mm/mm)",
+    "code": "[Soil].Water.Volumetric"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water evaporation potential (mm)",
+    "code": "[ISoilWater].Eos"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water evaporation actual (mm)",
+    "code": "[ISoilWater].Es"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water evapotranspiration potential (mm)",
+    "code": "[ISoilWater].Eo"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water runoff (mm)",
+    "code": "[ISoilWater].Runoff"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water infiltration (mm)",
+    "code": "[ISoilWater].Infiltration"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water drainage (mm)",
+    "code": "[ISoilWater].Drainage"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil water potential (kPa)",
+    "code": "[Soil].Water.Potential"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil NO3 leaching (kg/ha)",
+    "code": "[ISoilWater].LeachNO3"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil NH4 leaching (kg/ha)",
+    "code": "[ISoilWater].LeachNH4"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil CL leaching (kg/ha)",
+    "code": "[ISoilWater].LeachCl"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil plant available water SW-LL15 (mm/mm)",
+    "code": "[Soil].Water.PAW"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil plant available water SW-LL15 (mm)",
+    "code": "[Soil].Water.PAWmm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil plant available water CAPACITY (DUL-LL15) (mm/mm)",
+    "code": "[Physical].PAWC"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil plant available water CAPACITY (DUL-LL15) (mm)",
+    "code": "[Physical].PAWCmm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil carbon (kg/ha)",
+    "code": "[OrganicPool].C"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil carbon lost to the atmosphere (kg/ha)",
+    "code": "[OrganicPool].Catm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil nitrogen lost to the atmosphere (kg/ha)",
+    "code": "[NFlow].Natm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil N2O lost to the atmosphere (kg/ha)",
+    "code": "[NFlow].N2Oatm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil denitrified nitrogen (N flow from NO3) (kg/ha)",
+    "code": "[Denitrification].Value + [Denitrification].Natm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil N2O lost to the atmosphere (kg/ha)",
+    "code": "[NFlow].N2Oatm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil denitrified nitrogen (N flow from NO3) (kg/ha)",
+    "code": "[Denitrification].Value + [Denitrification].Natm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil nitrified nitrogen (from NH4 to either NO3 or N2O) (kg/ha)",
+    "code": "[Nitrification].Value + [Nitrification].Natm"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil urea converted to NH4 via hydrolysis (kg/ha)",
+    "code": "[Hydrolysis].Value"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil net nitrogen mineralisation in each soil layer (kg/ha)",
+    "code": "[OrganiFlow].MineralisedN"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil organic carbon layered, organic and mineral (kg/ha)",
+    "code": "[OrganicPool].C"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil organic nitrogen layered, organic and mineral (kg/ha)",
+    "code": "[OrganicPool].N"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil mineral nitrogen layered (kg/ha)",
+    "code": "[NO3].kgha + [NH4].kgha + [Urea].kgha as MineralN"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil total nitrogen - organic + mineral (kg/ha)",
+    "code": "[OrganicPool].N + [Urea].kgha + [NO3].kgha + [NH4].kgha as TotalNitrogen"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil NO3",
+    "code": "[NO3].kgha"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil NH4",
+    "code": "[NH4].kgha"
   },
   {
-    "description": "",
-    "code": ""
+    "description": "Soil Urea",
+    "code": "[Urea].kgha"
   },
   {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
-  },
-  {
-    "description": "",
-    "code": ""
+    "description": "Soil Cl",
+    "code": "[Cl].kgha"
   }
 ]
 
