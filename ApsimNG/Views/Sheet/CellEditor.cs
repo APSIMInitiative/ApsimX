@@ -1,5 +1,4 @@
-﻿using Gdk;
-using Gtk;
+﻿using Gtk;
 
 namespace UserInterface.Views
 {
@@ -56,13 +55,14 @@ namespace UserInterface.Views
         /// <summary>Display an entry box for the user to edit the current selected cell data.</summary>
         public void Edit(char defaultChar = char.MinValue)
         {
+            
             EndEdit();
-
+            
             sheet.CellSelector.GetSelection(out int selectedColumnIndex, out int selectedRowIndex);
             if (!sheet.DataProvider.IsColumnReadonly(selectedColumnIndex))
             {
                 var cellBounds = sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
-
+                
                 entry = new Entry();
                 entry.SetSizeRequest((int)cellBounds.Width - 3, (int)cellBounds.Height - 10);
                 entry.WidthChars = 5;
@@ -85,9 +85,30 @@ namespace UserInterface.Views
                 }
                 fix.Put(entry, (int)cellBounds.Left + 1, (int)cellBounds.Top + 1);
 
+                //////////////////////////////////////
+                Paned parentPane = null;
+                Widget parent = sheetWidget;
+                while (parent != null && parentPane == null)
+                {
+                    if (!(parent is Paned))
+                        parent = parent.Parent;
+                    else
+                        parentPane = parent as Paned;
+                }
+                int panedPos = 0;
+                if (parentPane != null)
+                    panedPos = parentPane.Position;
+
+                //this causes paned windows to move, but it's GTK code. So we have to manually reset paned positions here.
                 sheetWidget.ShowAll();
                 sheet.Refresh();
 
+                if (parentPane != null)
+                    parentPane.Position = panedPos;
+                if (sheetWidget.Parent.Parent is Paned)
+                    (sheetWidget.Parent.Parent as Paned).Position = panedPos;
+                //////////////////////////////////////
+                
                 entry.GrabFocus();
                 if (defaultChar != char.MinValue)
                 {
@@ -95,6 +116,7 @@ namespace UserInterface.Views
                     entry.Position = 1;
                 }
             }
+
         }
 
         /// <summary>End edit mode.</summary>

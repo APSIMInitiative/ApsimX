@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Interop.Drawing;
-using APSIM.Shared.Graphing;
-using Pango;
 
 namespace UserInterface.Views
 {

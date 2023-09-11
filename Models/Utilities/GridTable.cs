@@ -88,32 +88,18 @@ namespace Models.Utilities
         {
             if (data.Rows.Count == 0)
                 return;
-
-            //if the first row is units, delete it
-            if (this.HasUnits())
-                data.Rows.RemoveAt(0);
-
-            //if there is a depth column, don't let person add more rows
-            if (data != null && data.Columns.Count > 0 &&
-                data.Columns[0].ColumnName == "Depth")
-            {
-                string[] depths = DataTableUtilities.GetColumnAsStrings(data, "Depth", CultureInfo.CurrentCulture);
-                var numLayers = depths.TrimEnd().Count;
-                while (data.Rows.Count > numLayers)
-                    data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
-            }
-
+            
             //if the last row is empty in all spaces, remove it
-            if (data.Rows.Count > 0)
+            for(int i = data.Rows.Count-1; i >= 0; i--)
             {
-                DataRow row = data.Rows[data.Rows.Count - 1];
+                DataRow row = data.Rows[i];
                 bool blank = true;
                 foreach (var value in row.ItemArray)
                     if (!String.IsNullOrEmpty(value.ToString()))
                             blank = false;
 
                 if (blank)
-                    data.Rows.RemoveAt(data.Rows.Count - 1); // remove bottom row.
+                    data.Rows.RemoveAt(i); //remove blank row
             }
 
             //copy values into properties

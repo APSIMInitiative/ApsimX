@@ -1,11 +1,9 @@
 ﻿using UserInterface.Interfaces;
 using Models.Utilities;
-using Models.ForageDigestibility;
 using System;
 using System.Collections.Generic;
 using UserInterface.Views;
 using System.Data;
-using Models.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -24,9 +22,6 @@ namespace UserInterface.Presenters
 
         /// <summary></summary>
         private int selectedColumn = -1;
-
-        /// <summary>A counter to track cell changed events in a queue</summary>
-        private int cellChangedCounter;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -85,9 +80,25 @@ namespace UserInterface.Presenters
             
             this.explorerPresenter = parentPresenter;
 
-            Populate();
+            grid = new SheetWidget();
+            grid.Sheet = new Sheet();
 
-            cellChangedCounter = 0;
+            grid.Sheet.DataProvider = null;
+            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
+            grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
+            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+
+            if (gridTable.HasUnits())
+                grid.Sheet.NumberFrozenRows = 2;
+            else
+                grid.Sheet.NumberFrozenRows = 1;
+
+            sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
+            grid.Sheet.RedrawNeeded += OnSelectedCellChanged;
+
+            Refresh();
+
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             contextMenuHelper = new ContextMenuHelper(grid);
             contextMenu = new MenuView();
@@ -109,55 +120,6 @@ namespace UserInterface.Presenters
             CleanupSheet();
         }
 
-        /// <summary>Populate the grid control with data.</summary>
-        private void Populate()
-        {
-            // Create sheet control
-            try
-            {
-                // Cleanup existing sheet instances before creating new ones.
-                CleanupSheet();
-
-                DataTable data = gridTable.Data;
-
-                List<string> units = null;
-                if (gridTable.HasUnits())
-                {
-                    units = new List<string>();
-                    for ( int i = 0; i < data.Columns.Count; i++ )
-                    {
-                        units.Add(data.Rows[0].ItemArray[i].ToString());
-                    }
-                    data.Rows.Remove(data.Rows[0]);
-                }
-                var dataProvider = new DataTableProvider(data, units);
-
-                grid = new SheetWidget();
-                grid.Sheet = new Sheet();
-                
-                grid.Sheet.NumberFrozenColumns = 1;
-                grid.Sheet.DataProvider = dataProvider;
-                grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
-                grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-                grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-
-                if (gridTable.HasUnits())
-                    grid.Sheet.NumberFrozenRows = 2;
-                else
-                    grid.Sheet.NumberFrozenRows = 1;
-
-                sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
-
-                dataProvider.CellChanged += OnCellChanged;
-                grid.Sheet.RedrawNeeded += OnSelectedCellChanged;
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err.ToString());
-            }
-        }
-
         /// <summary>
         /// User has changed a cell.
         /// </summary>
@@ -170,32 +132,6 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    cellChangedCounter += 1;
-                    int count = (grid.Sheet.CellSelector as MultiCellSelect).GetNumberOfCellsSelected();
-                    if (cellChangedCounter >= count)
-                    {
-                        DataTable dt = (grid.Sheet.DataProvider as DataTableProvider).Data;
-                        //check if a row should be deleted
-                        for (int i = dt.Rows.Count - 1; i >= 0; i--)
-                        {
-                            DataRow row = dt.Rows[i];
-                            bool hasValues = false;
-                            foreach (var item in row.ItemArray)
-                            {
-                                string value = item.ToString();
-                                if (!String.IsNullOrEmpty(value))
-                                {
-                                    hasValues = true;
-                                }
-                            }
-                            if (!hasValues)
-                            {
-                                dt.Rows.RemoveAt(i);
-                            }
-                        }
-                        grid.Sheet.DataProvider = new DataTableProvider(dt);
-                        cellChangedCounter = 0;
-                    }
                     SaveGridToModel();
                     CellChanged.Invoke(sender, colIndex, rowIndex);
                 }
@@ -294,12 +230,25 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (grid.Sheet.DataProvider is DataTableProvider dataProvider)
-                dataProvider.CellChanged -= OnCellChanged;
+            if (grid.Sheet.DataProvider != null)
+                (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
 
-            dataProvider = new DataTableProvider(gridTable.Data);
+            DataTable data = gridTable.Data;
+
+            List<string> units = null;
+            if (gridTable.HasUnits())
+            {
+                units = new List<string>();
+                for (int i = 0; i < data.Columns.Count; i++)
+                {
+                    units.Add(data.Rows[0].ItemArray[i].ToString());
+                }
+                data.Rows.Remove(data.Rows[0]);
+            }
+            DataTableProvider dataProvider = new DataTableProvider(data, units);
+
+            grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
             grid.Sheet.DataProvider = dataProvider;
-            grid.Sheet.Refresh();
 
             dataProvider.CellChanged += OnCellChanged;
         }
