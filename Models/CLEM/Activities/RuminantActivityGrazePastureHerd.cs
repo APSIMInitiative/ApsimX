@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
         public double PotentialIntakePastureBiomassLimiter { get; set; }
 
         /// <summary>
-        /// Potential intake limiter based on the proprtion of 8 hours grazing allowed
+        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
         /// </summary>
         [JsonIgnore]
         public double PotentialIntakeGrazingTimeLimiter { get; set; }
@@ -182,6 +182,7 @@ namespace Models.CLEM.Activities
         {
             ResourceRequestList = null;
             this.PoolFeedLimits = null;
+            //TODO: add local hoursGrazed that is reset to user level each time step but can be reduced by other activities such as RuminantActivityMove, or ManageRuminants
             PotentialIntakeGrazingTimeLimiter = HoursGrazed / 8;
         }
 
@@ -245,16 +246,16 @@ namespace Models.CLEM.Activities
                             // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                             // calculate intake from potential modified by pasture availability and hours grazed
                             // min of grazed and potential remaining
-                            totalPastureRequired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
+                            totalPastureRequired += Math.Min(Math.Max(0, ind.Intake.Feed.Required), ind.Intake.Feed.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter);
                             // potential graing minus low biomass limiter
-                            totalPastureDesired += Math.Min(Math.Max(0, ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
+                            totalPastureDesired += Math.Min(Math.Max(0, ind.Intake.Feed.Required), ind.Intake.Feed.Expected * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
                         }
                         else
                         {
                             // treat sucklings separate
                             // potentialIntake defined based on proportion of body weight and MilkLWTFodderSubstitutionProportion when milk intake is low or missing (lost mother) (see RuminantActivityGrow.CalculatePotentialIntake)
                             // they can eat defined potential intake minus what's already been fed. Milk intake assumed elsewhere.
-                            double amountToEat = Math.Max(0, ind.PotentialIntake - ind.Intake);
+                            double amountToEat = Math.Max(0, ind.Intake.Feed.Required);
                             totalPastureRequired += amountToEat;
                             // desired same as required
                             // TODO: check with researchers, but this should also include the PastureQuality, PastureBiomass and GrazingTime limiters
@@ -322,12 +323,12 @@ namespace Models.CLEM.Activities
                 {
                     double eaten;
                     if (ind.Weaned)
-                        eaten = Math.Min(Math.Max(0,ind.PotentialIntake - ind.Intake), ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                        eaten = Math.Min(Math.Max(0,ind.Intake.Feed.Required), ind.Intake.Feed.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
-                        eaten = Math.Max(0, ind.PotentialIntake - ind.Intake); ;
+                        eaten = Math.Max(0, ind.Intake.Feed.Required); ;
 
                     foodDetails.Amount = eaten * shortfall;
-                    ind.AddIntake(foodDetails);
+                    ind.Intake.AddFeed(foodDetails);
                 }
                 Status = ActivityStatus.Success;
 

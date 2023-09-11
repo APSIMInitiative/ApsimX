@@ -245,7 +245,7 @@ namespace Models.CLEM
                                     Number = ageGroup.Sum(a => a.Number),
                                     AverageWeight = ageGroup.Average(a => a.Weight),
                                     AverageWeightGain = ageGroup.Average(a => a.WeightGain),
-                                    AverageIntake = ageGroup.Average(a => (a.Intake + a.MilkIntake)), //now daily/30.4;
+                                    AverageIntake = ageGroup.Average(a => (a.Intake.Feed.Actual)), // + a.MilkIntake)), //now daily/30.4;
                                     AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent)
                                 };
                                 if (sexGroup.Key == Sex.Female)
