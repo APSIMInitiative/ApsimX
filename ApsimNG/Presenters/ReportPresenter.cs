@@ -79,11 +79,10 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<ReportVariable> commonFrequencyVariableList;
 
-        /// <summary>
-        /// Currently selected ReportVariable.
-        /// </summary>
-        private ReportVariable CurrentlySelectedVariable { get; set; }
+        private List<string> simulationPlantModelNames;
 
+        /// <summary>Currently selected ReportVariable. </summary>
+        private ReportVariable CurrentlySelectedVariable { get; set; }
 
         /// <summary> File name for reporting variables.</summary>
         private readonly string commonReportVariablesFileName = "CommonReportingVariables.json";
@@ -91,10 +90,23 @@ namespace UserInterface.Presenters
         /// <summary> File name for report frequency variables.</summary>
         private readonly string commonReportFrequencyVariablesFileName = "CommonFrequencyVariables.json";
 
-        /// <summary>
-        /// Common directory path
-        /// </summary>
+        /// <summary> Common directory path. </summary>
         private readonly string reportVariablesDirectoryPath = "ApsimNG\\Resources\\CommonReportVariables\\";
+
+        // Returns all model names that are of type Plant.
+        public List<string> SimulationPlantModelNames
+        {
+            set { simulationPlantModelNames = value; }
+            get { return simulationPlantModelNames; }
+        }
+
+        private List<ReportVariable> GetCommonVariables(string fileName, string fileDirectoryPath)
+        {
+            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
+            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, fileDirectoryPath, fileName);
+            string reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
+            return JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
+        }
 
         public List<ReportVariable> CommonReportVariablesList
         {
@@ -108,13 +120,6 @@ namespace UserInterface.Presenters
             set { commonFrequencyVariableList = value; }
         }
 
-        private List<ReportVariable> GetCommonVariables(string fileName, string fileDirectoryPath)
-        {
-            string currentAssemblyDirectory = Assembly.GetExecutingAssembly().Location.Split("bin")[0];
-            string commonReportingVariablesFilePath = Path.Combine(currentAssemblyDirectory, fileDirectoryPath, fileName);
-            string reportingVariablesJSON = File.ReadAllText(commonReportingVariablesFilePath);
-            return JsonConvert.DeserializeObject<List<ReportVariable>>(reportingVariablesJSON);
-        }
 
 
         /// <summary>Stores variable name and variable code while being dragged.</summary>
@@ -149,10 +154,7 @@ namespace UserInterface.Presenters
         {
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
-            CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
-            CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
-            CommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
-            CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
+
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -160,8 +162,13 @@ namespace UserInterface.Presenters
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
+            SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
+            CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
+            CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
+            CommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
             this.view.CommonReportVariablesList.DataSource = CommonReportVariables;
             this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
+            CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
             (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
@@ -218,27 +225,32 @@ namespace UserInterface.Presenters
             int frequencyVariableListLineNumber = view.EventList.CurrentLineNumber;
             int lineIndex = frequencyVariableListLineNumber - 1;
             int linesCount = view.EventList.Lines.Length;
-            if (lineIndex < linesCount)
+            if (lineIndex <= linesCount)
             {
                 string lineContent = "";
                 if (lineIndex < linesCount)
                     lineContent = this.view.EventList.Lines[lineIndex];
+
                 List<string> lineStrings = new();
+
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
-                    lineStrings = lineContent.Split("[]").ToList();
+                {
+                    lineStrings = lineContent.Split(new char[2] { '[', ']' }).ToList<string>();
+                    lineStrings.RemoveAll(s => s == "");
+                }
+
                 if (lineStrings.Count != 0)
                 {
-                    DataTable potentialCommonReportVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, lineStrings);
-                    if (potentialCommonReportVariables.Rows.Count != 0)
-                        commonReportFrequencyVariables = potentialCommonReportVariables;
-                    view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
+                    DataTable potentialCommonFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, lineStrings);
+                    if (potentialCommonFrequencyVariables.Rows.Count != 0)
+                        CommonReportFrequencyVariables = potentialCommonFrequencyVariables;
+                    view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
                 }
                 else
                 {
-                    commonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
-                    view.CommonReportFrequencyVariablesList.DataSource = commonReportFrequencyVariables;
+                    CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
+                    view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
                 }
-
             }
         }
 
@@ -265,7 +277,6 @@ namespace UserInterface.Presenters
                     lineStrings = lineContent.Split(new char[2] { '[', ']' }).ToList<string>();
                     lineStrings.RemoveAll(s => s == "");
                 }
-
 
                 if (lineStrings.Count != 0)
                 {
@@ -384,20 +395,24 @@ namespace UserInterface.Presenters
                 {
                     // Find only relevant variables based on models in simulation.
                     bool plantTypeInFilters = false;
-                    foreach (string variableModelName in reportVariable.ModelNames)
+                    if (!plantTypeInFilters)
                     {
                         foreach (string filter in filterStrings)
                         {
-                            plantTypeInFilters = IsModelTypePlantAsync(filter).Result; // Needs a faster way of determing if filter is of type plant.
+                            //plantTypeInFilters = IsModelTypePlant(filter);
+                            if (SimulationPlantModelNames.Contains(filter))
+                                plantTypeInFilters = true;
+                            if (plantTypeInFilters)
+                                break;
                         }
+                    }
 
-                        if (filterStrings.Contains(variableModelName))
-                        {
-                            DataRow row = variableDataTable.NewRow();
-                            row["Description"] = reportVariable.Description;
-                            row["Code"] = reportVariable.Code;
-                            variableDataTable.Rows.Add(row);
-                        }
+                    if (filterStrings.Contains(reportVariable.ModelName))
+                    {
+                        DataRow row = variableDataTable.NewRow();
+                        row["Description"] = reportVariable.Description;
+                        row["Code"] = reportVariable.Code;
+                        variableDataTable.Rows.Add(row);
                     }
 
                     // Adds if a plant type name is typed.
