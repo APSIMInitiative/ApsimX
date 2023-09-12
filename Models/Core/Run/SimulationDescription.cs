@@ -120,10 +120,13 @@ namespace Models.Core.Run
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
-            // Do nothing.
-            SimulationToRun.Cleanup();
+            SimulationToRun.Cleanup(cancelToken);
+            // If the user has aborted the run, let the DataStoreWriter knows that it
+            // needs to shut down as well.
+            if (cancelToken.IsCancellationRequested)
+                Storage?.Writer.Cancel();
         }
 
         /// <summary>Run the simulation.</summary>

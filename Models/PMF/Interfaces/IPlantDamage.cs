@@ -26,27 +26,6 @@ namespace Models.PMF.Interfaces
         /// <summary>Leaf area index.</summary>
         double LAI { get; }
 
-        /// <summary>Amount of assimilate available to be damaged.</summary>
-        double AssimilateAvailable { get; }
-
-        /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
-        /// <param name="deltaLAI">Delta LAI.</param>
-        void ReduceCanopy(double deltaLAI);
-
-        /// <summary>
-        /// Set the plant root length density.
-        /// </summary>
-        /// <param name="deltaRLD">New root length density.</param>
-        void ReduceRootLengthDensity(double deltaRLD);
-
-        /// <summary>
-        /// Remove an amount of assimilate from the plant.
-        /// </summary>
-        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
-        void RemoveAssimilate(double deltaAssimilate);
-
         /// <summary>
         /// Reduce the plant population.
         /// </summary>
