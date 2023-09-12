@@ -17,9 +17,6 @@ namespace APSIM.ZMQServer.IO
     /// </summary>
     public class InteractiveComms : ICommProtocol
     {
-        private const int protocolVersionMajor = 2; // Increment every time there is a breaking protocol change
-        private const int protocolVersionMinor = 0; // Increment every time there is a non-breaking protocol change, set to 0 when the major version changes
-
         private GlobalServerOptions options;
 
         /// <summary>

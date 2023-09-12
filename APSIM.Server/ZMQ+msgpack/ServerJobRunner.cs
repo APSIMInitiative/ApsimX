@@ -73,7 +73,7 @@ namespace APSIM.ZMQServer
         {
             foreach ( (IRunnable job, _) in jobs)
             {
-                job.Cleanup();
+                job.Cleanup(null);
             }
         }
     }

@@ -14,7 +14,6 @@ namespace APSIM.ZMQServer.IO
 {
     public interface ICommProtocol : IDisposable
     {
-        //public interface CommProtocol(GlobalServerOptions options);
         public void doCommands(ApsimEncapsulator e);
     }
 
@@ -64,22 +63,18 @@ namespace APSIM.ZMQServer.IO
                     if (verbose) { Console.WriteLine($"Command from client: {command}"); }
                     if (command == commandState)
                     {
-                        conn.SendFrame(apsim.runState.ToString());
+                        conn.SendFrame("idle");
                     }
                     else if (command == commandRun)
                     {
-                        if (apsim.runState == ApsimEncapsulator.runStateT.idling)
+                        var args = msg.FrameCount > 1 ? msg[1].ConvertToString().Split("\n") : null;
+                        apsim.Run(args);
+                        apsim.WaitForStateChange();
+                        if (apsim.getErrors()?.Count > 0)
                         {
-                            var args = msg.FrameCount > 1 ? msg[1].ConvertToString().Split("\n") : null;
-                            apsim.Run(args);
-                            apsim.WaitForStateChange();
-                            if (apsim.getErrors()?.Count > 0) {
-                                throw new AggregateException("Simulation Error", apsim.getErrors());
-                            }
-                            conn.SendFrame(apsim.runState.ToString());
-                        } else {
-                            throw new Exception("Already running");
+                            throw new AggregateException("Simulation Error", apsim.getErrors());
                         }
+                        conn.SendFrame("ok");
                     }
                     else if (command == commandGetDataStore)
                     {
@@ -100,7 +95,7 @@ namespace APSIM.ZMQServer.IO
                 catch (Exception e)
                 {
                     string msgBuf = "ERROR\n" + e.ToString();
-                    if (verbose) {Console.WriteLine(msgBuf);}
+                    if (verbose) { Console.WriteLine(msgBuf); }
                     conn.SendFrame(msgBuf);
                 }
             }

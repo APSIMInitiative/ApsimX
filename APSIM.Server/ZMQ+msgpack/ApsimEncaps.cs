@@ -42,14 +42,6 @@ namespace APSIM.ZMQServer
             runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
-            runState = runStateT.idling;
-        }
-
-        public runStateT runState;
-
-        public enum runStateT
-        {
-            idling, running, waiting
         }
 
         public void aboutToStart(string s)
@@ -137,7 +129,6 @@ namespace APSIM.ZMQServer
         /// </summary>
         public void Run(string[] changes)
         {
-            runState = runStateT.running;
             errors = null;
             if (changes != null)
                 jobRunner.Replacements = Overrides.ParseStrings(changes);
@@ -146,7 +137,6 @@ namespace APSIM.ZMQServer
 
             Action onWorkerExit = () =>
             {
-                runState = runStateT.idling;
                 workerThread = null;
             };
             workerThread = new Thread(
@@ -179,11 +169,7 @@ namespace APSIM.ZMQServer
         }
         public List<Exception> getErrors()
         {
-            if (runState == runStateT.idling)
-            {
-                return (errors);
-            }
-            return (null);
+            return (errors);
         }
 
         /// <summary>
