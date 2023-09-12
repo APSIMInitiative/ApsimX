@@ -15,6 +15,7 @@ namespace Models.WaterModel
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(WaterBalance))]
     public class CNReductionForTillage : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------

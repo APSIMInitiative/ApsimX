@@ -24,6 +24,9 @@ namespace Models.Core.ApsimFile
         /// </summary>
         public JObject Token { get; private set; }
 
+        /// <summary>Name of manager model - useful for debugging.</summary>
+        public string Name => Token["Name"].ToString();
+
         /// <summary>Default constructor.</summary>
         public ManagerConverter() { }
 
@@ -44,6 +47,9 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>Returns true if manager is empty.</summary>
+        public bool IsEmpty => lines.Count == 0;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -53,6 +59,11 @@ namespace Models.Core.ApsimFile
             this.Token = manager;
             if (manager["Code"] != null)
                 Read(manager["Code"].ToString());
+            else if (manager["CodeArray"] != null)
+            {
+                var codeArray = manager["CodeArray"] as JArray;
+                lines = codeArray.Values<string>().ToList();
+            }
         }
 
         /// <summary>Load script</summary>
@@ -93,10 +104,20 @@ namespace Models.Core.ApsimFile
 
         /// <summary>
         /// Save the manager object code back to the manager JSON object.
+        /// Changed how Manager Code is stored in version 163, stored as array of lines instead of single string
         /// </summary>
         public void Save()
         {
-            Token["Code"] = ToString();
+            if (Token["CodeArray"] != null)
+            {
+                Token["CodeArray"] = new JArray(lines);
+                if (Token["Code"] != null)
+                    Token.Remove("Code");
+            }
+            else
+            {
+                Token["Code"] = ToString();
+            }            
         }
 
         /// <summary>Write script</summary>
@@ -437,6 +458,19 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Find a string using a regular expression.
+        /// </summary>
+        /// <param name="searchPattern">The pattern to search for.</param>
+        /// <returns>The match.</returns>
+        public MatchCollection FindRegexMatches(string searchPattern)
+        {
+            string oldCode = ToString();
+            if (oldCode == null || searchPattern == null)
+                return null;
+            return Regex.Matches(oldCode, searchPattern);
+        }
+
+        /// <summary>
         /// Add a declaration if it doesn't exist.
         /// </summary>
         /// <param name="typeName">The type name of the declaration.</param>
@@ -528,7 +562,7 @@ namespace Models.Core.ApsimFile
         /// <returns>The line after the classes curly bracket.</returns>
         private int FindStartOfClass()
         {
-            int lineNumberClass = FindString("public class Script");
+            int lineNumberClass = FindString("public class ");
             if (lineNumberClass != -1)
             {
                 while (!lines[lineNumberClass].Contains('{'))
@@ -628,6 +662,19 @@ namespace Models.Core.ApsimFile
             if (replacementMade)
                 SetDeclarations(declarations);
             return replacementMade;
+        }
+
+        /// <summary>
+        /// Return true if the specified position is commented out in the code.
+        /// </summary>
+        /// <param name="pos"></param>
+        public bool PositionIsCommented(int pos)
+        {
+            string code = ToString();
+            // Search backwards for either '/*'
+            int posOpenComment = code.LastIndexOf("/*", pos);
+            int posCloseComment = code.LastIndexOf("*/", pos);
+            return posOpenComment > posCloseComment;
         }
     }
 

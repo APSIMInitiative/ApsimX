@@ -469,6 +469,38 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Water potential of layer</summary>
+        [JsonIgnore]
+        [Units("cm/h")]
+        public double[] K
+        {
+            get
+            {
+                double[] k = new double[n+1];
+
+                for (int i = 0; i <= n; i++)
+                    k[i] = HP.SimpleK(i, _psi[i], physical.SAT, physical.KS);
+                return k;
+            }
+        }
+
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex 
+        { 
+            get 
+            { 
+                return HP.PoreInteractionIndex; 
+            } 
+            set 
+            { 
+                HP.PoreInteractionIndex = value;
+                HP.SetupKCurve(n, physical.LL15, physical.DUL, physical.SAT, physical.KS, KDul, PSIDul);
+            } 
+        }
+
         /// <summary>
         /// Soil water potential including solute concentration effects. Not currently active.
         /// Maybe useful in the future for salinity effects on plant water uptake.
@@ -535,10 +567,6 @@ namespace Models.Soils
                 return value;
             }
         }
-
-        /// <summary>Turn vapour conductivity on?</summary>
-        [JsonIgnore]
-        public bool WaterVapourConductivityOn { get; set; }
 
         /// <summary>Pond depth.</summary>
         [Units("mm")]
@@ -2347,17 +2375,11 @@ namespace Models.Soils
 
         private double Time(int yy, int dd, int tt)
         {
-            // first we must calculate the julian date for the starting date.
-            // We will calculate time relative to this date.
-            double beginStartYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(start_year, 1, 1)) - 1.0;
-            double julianStartDate = beginStartYear + start_day - 1.0;
-
-            // all times are relative to beginning of the day
-
-            double beginYear = DateUtilities.DateTimeToJulianDayNumber(new DateTime(yy, 1, 1)) - 1.0;
-            double julianDate = beginYear + dd - 1.0;
-
-            return (julianDate - julianStartDate) * 24.0 + tt / 60.0; // Convert to hours
+            //Work out the number of days, in hours, between the start date and the given date
+            //Adapted from older code to remove Julian date calculations
+            DateTime startDate = DateUtilities.GetDate(start_day, start_year);
+            DateTime thisDate = DateUtilities.GetDate(dd, yy);
+            return (thisDate - startDate).TotalDays * 24.0 + tt / 60.0; // Convert to hours
         }
 
         private void PurgeLogInfo(double time, ref double[] SWIMTime, ref double[] SWIMAmt)
@@ -4205,7 +4227,7 @@ namespace Models.Soils
             //if (thsat == 0.0)
             //    thsat = _sat[ix];
 
-            if (WaterVapourConductivityOn)
+            if (VC)
             {
                 //        add vapour conductivity hkv
                 double phi = thsat / 0.93 - tth;

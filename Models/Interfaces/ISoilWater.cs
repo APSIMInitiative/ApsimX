@@ -24,6 +24,13 @@ namespace Models.Interfaces
         ///<summary>Gets soil water potential (cm)</summary>
         double[] PSI { get; }
 
+        ///<summary>Gets soil hydraulic conductivity</summary>
+        double[] K { get; }
+
+        ///<summary>Gets pore interaction index</summary>
+        double[] PoreInteractionIndex { get; set; }
+
+
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         double[] ESW { get; }
 

@@ -6,6 +6,8 @@ using Models.Interfaces;
 using Models.PMF;
 using Models.Soils;
 using Models.Soils.Arbitrator;
+using Models.Soils.Nutrients;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models
@@ -478,6 +480,11 @@ namespace Models
         /// <summary>Link to NH4 solute.</summary>
         [Link(ByName = true)]
         private ISolute NH4 = null;
+
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link]
+        private Nutrient nutrient = null;
 
         #endregion
 
@@ -12055,7 +12062,7 @@ namespace Models
         public bool IsReadyForHarvesting { get { return false; } }
 
         /// <summary>Harvest the crop</summary>
-        public void Harvest() { HarvestCrop(); }
+        public void Harvest(bool removeBiomassFromOrgans = true) { HarvestCrop(); }
 
         /// <summary>
         /// Gets a list of cultivar names
@@ -12125,7 +12132,7 @@ namespace Models
         /// <param name="tillering">tillering method (-1, 0, 1).</param>
         /// <param name="ftn">Fertile Tiller Number.</param>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
-        {
+            {
             SowNewPlant(population, depth, cultivar);
         }
 
@@ -14145,11 +14152,6 @@ namespace Models
         /// </summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        /// <summary>
-        /// Occurs when [incorp fom].
-        /// </summary>
-        public event FOMLayerDelegate IncorpFOM;
-
 
         //ToFloatArray is needed because some of these Events pass Float Arrays rather then Double Arrays as Parameters.
         /// <summary>
@@ -14457,7 +14459,7 @@ namespace Models
                     fomInSoil.Type = c_crop_type;
                     fomInSoil.Layer = allLayers;
 
-                    IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
+                    nutrient.DoIncorpFOM(fomInSoil);
                 }
                 else
                 {
@@ -14536,9 +14538,7 @@ namespace Models
                 fomInSoil.Type = crop_type;
                 fomInSoil.Layer = allLayers;
 
-                IncorpFOM.Invoke(fomInSoil);   //trigger/invoke the IncorpFOM Event
-
-
+                nutrient.DoIncorpFOM(fomInSoil);
 
                 //Change Global Variables
 

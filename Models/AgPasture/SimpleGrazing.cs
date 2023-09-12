@@ -419,6 +419,7 @@ namespace Models.AgPasture
         {
             DaysSinceGraze += 1;
             ProportionOfTotalDM = new double[zones.First().NumForages];
+            PostGrazeDM = 0;
 
             foreach (var zone in zones)
                 zone.OnStartOfDay();
@@ -428,6 +429,9 @@ namespace Models.AgPasture
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            PreGrazeDM = zones.Sum(z => z.TotalDM);
+            PreGrazeHarvestableDM = zones.Sum(z => z.HarvestableDM);
+
             foreach (var zone in zones)
                 zone.DoManagement();
 
@@ -440,8 +444,8 @@ namespace Models.AgPasture
             else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
                 GrazedToday = FlexibleTiming();
 
-            if (NoGrazingStartString != null &&
-                NoGrazingEndString != null &&
+            if (NoGrazingStartString != null && NoGrazingStartString.Length > 0 &&
+                NoGrazingEndString != null && NoGrazingEndString.Length > 0 &&
                 DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
                 GrazedToday = false;
 
@@ -699,7 +703,7 @@ namespace Models.AgPasture
                         var amountToRemove = removeAmount * proportion;
                         if (MathUtilities.IsGreaterThan(amountToRemove * 0.1, 0.0))
                         {
-                            var grazed = forages[i].RemoveBiomass(amountToRemove * 0.1);
+                            var grazed = forages[i].RemoveBiomass(amountToRemove: amountToRemove * 0.1);
                             double grazedDigestibility = grazed.Digestibility;
                             var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 

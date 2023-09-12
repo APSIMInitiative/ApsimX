@@ -232,8 +232,13 @@ namespace Models.PMF.Phen
                 List<IPhase> phasesToFastForward = new List<IPhase>();
                 foreach (IPhase phase in phases)
                 {
-                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex)
-                        phasesToFastForward.Add(phase);
+                    if (IndexFromPhaseName(phase.Name)>=oldPhaseIndex) //If the phase has not yet passed 
+                    {
+                        if (newStage == phases.Count) //If winding to the end add all phases
+                            phasesToFastForward.Add(phase);
+                        else if (IndexFromPhaseName(phase.Name) < (newStage - 1))// Inf only winding part way throug only add the relevent stages
+                            phasesToFastForward.Add(phase);
+                    }
                 }
                 foreach (IPhase phase in phasesToFastForward)
                 {
@@ -411,6 +416,31 @@ namespace Models.PMF.Phen
                 gp.GerminationDate = germinationDate;
         }
 
+        /// <summary>
+        /// Returns a DataTable with each Phase listed
+        /// </summary>
+        public DataTable GetPhaseTable()
+        {
+            DataTable phaseTable = new DataTable();
+            phaseTable.Columns.Add("Phase Number", typeof(int));
+            phaseTable.Columns.Add("Phase Name", typeof(string));
+            phaseTable.Columns.Add("Initial Stage", typeof(string));
+            phaseTable.Columns.Add("Final Stage", typeof(string));
+
+            int n = 1;
+            foreach (IPhase child in FindAllChildren<IPhase>())
+            {
+                DataRow row = phaseTable.NewRow();
+                row[0] = n;
+                row[1] = child.Name;
+                row[2] = (child as IPhase).Start;
+                row[3] = (child as IPhase).End;
+                phaseTable.Rows.Add(row);
+                n++;
+            }
+            return phaseTable;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
@@ -533,25 +563,7 @@ namespace Models.PMF.Phen
 
             // Write a table containing phase numers and start/end stages.
             yield return new Paragraph("**List of stages and phases used in the simulation of crop phenological development**");
-
-            DataTable phaseTable = new DataTable();
-            phaseTable.Columns.Add("Phase Number", typeof(int));
-            phaseTable.Columns.Add("Phase Name", typeof(string));
-            phaseTable.Columns.Add("Initial Stage", typeof(string));
-            phaseTable.Columns.Add("Final Stage", typeof(string));
-
-            int n = 1;
-            foreach (IPhase child in FindAllChildren<IPhase>())
-            {
-                DataRow row = phaseTable.NewRow();
-                row[0] = n;
-                row[1] = child.Name;
-                row[2] = (child as IPhase).Start;
-                row[3] = (child as IPhase).End;
-                phaseTable.Rows.Add(row);
-                n++;
-            }
-            yield return new Table(phaseTable);
+            yield return new Table(GetPhaseTable());
 
             // Document Phases
             foreach (var phase in FindAllChildren<IPhase>())

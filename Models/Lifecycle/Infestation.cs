@@ -113,7 +113,7 @@ namespace Models.LifeCycle
             }
             else if (TypeOfInfestation == InfestationType.OnDate)
             {
-                if (DateUtilities.DatesEqual(InfestationDate, Clock.Today))
+                if (DateUtilities.DayMonthIsEqual(InfestationDate, Clock.Today))
                     Infest();
                 return;
             }

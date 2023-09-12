@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
+using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Newtonsoft.Json;
 
@@ -24,7 +26,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage
+    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
 
         /// <summary>The surface organic matter model</summary>
@@ -222,6 +224,16 @@ namespace Models.PMF.Organs
         [Link]
         public Structure Structure = null;
         #endregion
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
 
         /// <summary>Gets the LAI of the main stem </summary>
         [Units("m^2/m^2")]
@@ -1421,30 +1433,32 @@ namespace Models.PMF.Organs
             return 1 - Math.Exp(-extinctionoeff * LAIabove);
         }
 
-        /// <summary>
-        /// remove biomass from the leaf.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The frations of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
             bool writeToSummary = false;
             double totalBiomass = Live.Wt + Dead.Wt;
+            double amountRemoved = 0;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
                 {
-                    double remainingLiveFraction = biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                    double remainingLiveFraction = 1.0 - (liveToResidue + liveToRemove);
+                    amountRemoved += biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue,
+                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
-                    //writeToSummary = false; // only want it written once.
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
                 }
-
                 needToRecalculateLiveDead = true;
             }
 
-            if (amountToRemove != null && totalBiomass != 0.0)
+            if (totalBiomass != 0.0)
             {
                 double totalFractionToRemove = (Removed.Wt + Detached.Wt) * 100.0 / totalBiomass;
                 double toResidue = Detached.Wt * 100.0 / (Removed.Wt + Detached.Wt);
@@ -1456,6 +1470,16 @@ namespace Models.PMF.Organs
                 Summary.WriteMessage(this, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
                                          + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
             }
+
+            return amountRemoved;
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>
@@ -2058,12 +2082,22 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
             {
                 ClearBiomassFlows();
                 foreach (LeafCohort leaf in Leaves)
                     leaf.DoDailyCleanup();
             }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            Summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            Summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>

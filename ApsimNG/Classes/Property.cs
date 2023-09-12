@@ -1,19 +1,18 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Extensions.Collections;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.LifeCycle;
+using Models.PMF;
+using Models.Storage;
+using Models.Surface;
 namespace UserInterface.Classes
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Extensions.Collections;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.LifeCycle;
-    using Models.PMF;
-    using Models.Storage;
-    using Models.Surface;
-
     public enum PropertyType
     {
         SingleLineText,
@@ -232,7 +231,6 @@ namespace UserInterface.Classes
                                                .Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                                .Select(m => m.Name)
                                                .ToArray();
-
                     }
                     else if (metadata.PropertyType == typeof(bool))
                         DisplayMethod = PropertyType.Checkbox;
@@ -278,6 +276,12 @@ namespace UserInterface.Classes
                         plant = model.FindInScope<IPlant>();
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    break;
+                case DisplayType.SCRUMcropName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Zone zoney = model.FindInScope<Zone>();
+                    if (zoney != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetSCRUMcropNames(zoney);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;
@@ -346,6 +350,14 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.MultiLineText;
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
+                    break;
+                case DisplayType.ScrumEstablishStages:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[3] { "Seed", "Emergence", "Seedling" };
+                    break;
+                case DisplayType.ScrumHarvestStages: 
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
                     break;
 
                 // Should never happen - presenter should handle this(?)

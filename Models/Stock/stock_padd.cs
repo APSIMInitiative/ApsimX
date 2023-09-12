@@ -951,10 +951,7 @@ namespace Models.GrazPlan
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
                         double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Total.Wt + dead.Total.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
-                        removal.FractionLiveToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(live.Name, removal);
+                        ForageObj.RemoveBiomass(liveToRemove: prpnOfOrganToRemove, deadToRemove: prpnOfOrganToRemove);
 
                         amountRemoved += amountOfOrganToRemove;
                     }
@@ -969,9 +966,7 @@ namespace Models.GrazPlan
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
                         double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Total.Wt, 0);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(dead.Name, removal);
+                        ForageObj.RemoveBiomass(deadToRemove: prpnOfOrganToRemove);
 
                         amountRemoved += amountOfOrganToRemove;
                     }

@@ -85,7 +85,7 @@ namespace Models.PMF.Phen
 
             if (GerminationDate != null)
             {
-                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                if (DateUtilities.DayMonthIsEqual(GerminationDate, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }

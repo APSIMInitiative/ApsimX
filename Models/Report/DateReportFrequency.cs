@@ -19,7 +19,7 @@ namespace Models
         /// <returns>true if line was able to be parsed.</returns>
         public static bool TryParse(string line, Report report, IEvent events)
         {
-            if (DateUtilities.validateDateString(line) != null)
+            if (DateUtilities.ValidateDateString(line) != null)
             {
                 new DateReportFrequency(report, events, line);
                 return true;
