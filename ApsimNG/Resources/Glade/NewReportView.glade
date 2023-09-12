@@ -63,6 +63,7 @@
                           <object class="GtkLabel" id="commonVariablesLbl">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="halign">start</property>
                             <property name="label" translatable="yes">Common report variables</property>
                           </object>
                           <packing>
@@ -178,6 +179,7 @@
                           <object class="GtkLabel" id="commonReportFrequencyLbl">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="halign">start</property>
                             <property name="label" translatable="yes">Common report frequency variables
 </property>
                           </object>
