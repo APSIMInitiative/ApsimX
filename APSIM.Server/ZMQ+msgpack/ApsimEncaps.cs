@@ -54,26 +54,12 @@ namespace APSIM.ZMQServer
 
         public void aboutToStart(string s)
         {
-#if true
-            //Console.WriteLine("About to start " + s);
+#if false
+            Console.WriteLine("About to start " + s);
             var sim = sims.FindChild<Simulation>(s);
-
-            // fixme hook up a semaphore here
-            //foreach (var x in sim.FindAllByPath("[Semaphore].Script.Semaphore"))
-            var s2 = sim.FindAllByPath("[Synchroniser].Script.Identifier");
-            Console.WriteLine("n=" + s2.Count().ToString());
-            foreach (var s3 in s2)
-            {
-                object s4 = s3.Value;
-                //var t4 = s4.GetType();
-
-                //if (t4.GetMethod("OnPause") != null)
-                //{
-                    //t4.GetMethod("OnPause") = OnPause = x => Console.WriteLine(x);
-                //}
-            }
 #endif
         }
+#if false
         public bool HasMethod(object objectToCheck, string methodName)
         {
             var type = objectToCheck.GetType();
@@ -114,6 +100,7 @@ namespace APSIM.ZMQServer
             byte[] bytes = MessagePackSerializer.Serialize(v);
             return (bytes);
         }
+#endif
 
         ///
         // get a variable from the datastore 
@@ -160,7 +147,6 @@ namespace APSIM.ZMQServer
             Action onWorkerExit = () =>
             {
                 runState = runStateT.idling;
-                onRunFinished?.Invoke("idling");
                 workerThread = null;
             };
             workerThread = new Thread(
@@ -185,32 +171,11 @@ namespace APSIM.ZMQServer
               }));
 
             workerThread.Start();
-            onRunStart?.Invoke("running");
         }
-        /// Wait until the simulation terminates (thread exit), or until all 
-        /// simulations paused
+        /// Wait until the simulation terminates (thread exit)
         public void WaitForStateChange()
         {
-#if false
-            while (true)
-            {
-                workerThread?.Join(250);
-                if (workerThread == null)
-                    break;
-                // this is wrong, need to syhchronise between threads, not poll them
-                var s2 = sims.FindAllByPath("[Semaphore].Script.semaphore");
-                foreach (var x in s2)
-                {
-                    Console.WriteLine("x=", x.ToString());
-                }
-            }
-#else
             workerThread?.Join();
-#endif
-        }
-        public void Proceed()
-        {
-
         }
         public List<Exception> getErrors()
         {

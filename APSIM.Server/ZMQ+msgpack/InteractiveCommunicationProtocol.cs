@@ -37,25 +37,24 @@ namespace APSIM.ZMQServer.IO
         /// </summary>
         public void doCommands(ApsimEncapsulator apsim)
         {
-            while (true) 
+            while (true)
             {
                 try
                 {
-                        string[] args = {"[Synchroniser].Script.Identifier = " + options.IPAddress + ":" + options.Port};
-                        Console.WriteLine("args=" + args[0]);
-                        apsim.Run(args);
-                        apsim.WaitForStateChange();
-                        if (apsim.getErrors()?.Count > 0)
-                        {
-                            throw new AggregateException("Simulation Error", apsim.getErrors());
-                        }
+                    // double slash comments are not escaped - just send host/port
+                    string[] args = { "[Synchroniser].Script.Identifier = " + options.IPAddress + ":" + options.Port }; 
+                    apsim.Run(args);
+                    apsim.WaitForStateChange();
+                    if (apsim.getErrors()?.Count > 0)
+                    {
+                        throw new AggregateException("Simulation Error", apsim.getErrors());
+                    }
                 }
-            catch (Exception ex)
-            {
-                string msgBuf = "ERROR\n" + ex.ToString();
-                if (options.Verbose) { Console.WriteLine(msgBuf); }
-            }
-            break; // temporary fixme
+                catch (Exception ex)
+                {
+                    string msgBuf = "ERROR\n" + ex.ToString();
+                    if (options.Verbose) { Console.WriteLine(msgBuf); }
+                }
             }
         }
         public void Dispose()

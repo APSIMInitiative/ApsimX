@@ -29,11 +29,9 @@ namespace APSIM.ZMQServer.IO
         private const string commandState = "STATE";
         private const string commandRun = "RUN";
         private const string commandGetDataStore = "GET";
-        private const string commandSet = "SET";
         private const string commandVersion = "VERSION";
         private ResponseSocket conn;
 
-        private ApsimEncapsulator apsim;
         private bool verbose;
 
         /// <summary>
@@ -86,21 +84,9 @@ namespace APSIM.ZMQServer.IO
                     else if (command == commandGetDataStore)
                     {
                         if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
-                        byte[] result = apsim.getVariableFromModel(msg[1].ConvertToString());
-                        conn.SendFrame(result);
-                    }
-                    else if (command == commandGetDataStore)
-                    {
-                        if (msg.FrameCount < 2) { throw new Exception($"Malformed GET: {msg.FrameCount} args"); }
                         if (verbose) { Console.WriteLine("get from DS=" + msg[1].ConvertToString()); }
                         byte[] result = apsim.getVariableFromDS(msg[1].ConvertToString());
                         conn.SendFrame(result);
-                    }
-                    else if (command == commandSet)
-                    {
-                        if (msg.FrameCount < 2) { throw new Exception($"Malformed SET: {msg.FrameCount} args"); }
-                        apsim.setVariable(msg[1].ConvertToString().Split("\n"));
-                        conn.SendFrame("OK");
                     }
                     else if (command == commandVersion)
                     {
