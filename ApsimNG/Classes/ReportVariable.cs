@@ -15,7 +15,13 @@ namespace ApsimNG.Classes
         /// <summary> Code to be used as reporting variable.</summary>
         public string Code { get; set; }
 
-        // Model name from within Code property.
+        /// <summary> The type that reporting variable returns eg. int, double, string, vector a.k.a '[]'. </summary>
+        public string Type { get; set; }
+
+        /// <summary> The units e.g. kg/m2, mm etc</summary>
+        public string Units { get; set; }
+
+        /// <summary> Model name from within Code property.</summary>
         public string ModelName
         {
             get
@@ -28,10 +34,12 @@ namespace ApsimNG.Classes
 
         public ReportVariable() { }
 
-        public ReportVariable(string variableName, string variableCode)
+        public ReportVariable(string variableName, string variableCode, string variableType, string variableUnits)
         {
             Description = variableName;
             Code = variableCode;
+            Type = variableType;
+            Units = variableUnits;
         }
 
 

@@ -157,7 +157,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The number</summary>
         [JsonIgnore]
-        [Units("/m^2")]
+        [Units("g/m^2")]
         public double Number { get; set; }
 
         /// <summary>Gets the live fresh weight of grains.</summary>

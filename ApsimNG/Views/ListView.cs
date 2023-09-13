@@ -53,6 +53,8 @@ namespace UserInterface.Views
         /// <summary>Event handler for double-click event on TreeView. </summary>
         public event EventHandler DoubleClicked;
 
+        public event EventHandler<ListViewArgs> TreeHover;
+
         /// <summary>Constructor</summary>
         public ListView()
         {
@@ -63,6 +65,8 @@ namespace UserInterface.Views
         public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null, EditorView editor = null) : base(owner)
         {
             tree = treeView;
+            tree.HasTooltip = true;
+            tree.QueryTooltip += OnTreeHover;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
             tree.ButtonPressEvent += OnTreeButtonDown;
@@ -76,9 +80,6 @@ namespace UserInterface.Views
             // makes the destination for a drop and drop action.
             if (editor != null)
                 Drag.DestSet(editor.GetSourceView(), 0, target_table, actions);
-            // TODO: Need to allow Drag from this to a TextView object. Drag.DestSet may need info on what can accept this drag??
-            // Perhaps needs a Object type, like TextView added to enable this??
-            // May be worth doing double-click functionality first.
             tree.DragBegin += OnTreeDragBegin;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
@@ -87,6 +88,24 @@ namespace UserInterface.Views
             tree.CanFocus = true;
         }
 
+        private void OnTreeHover(object o, QueryTooltipArgs args)
+        {
+            ListViewArgs newArgs = new ListViewArgs { QueryTooltipArgs = args };
+
+            if (tree.GetPathAtPos(args.X, args.Y, out TreePath path))
+            {
+                TreeModel model = tree.Model;
+
+                if (model.GetIter(out TreeIter iter, path))
+                {
+                    if (path.Indices[0] < 0)
+                        newArgs.ListViewRowIndex = 0;
+                    else newArgs.ListViewRowIndex = path.Indices[0] - 1;
+                }
+            }
+            if (TreeHover != null)
+                TreeHover.Invoke(o, newArgs);
+        }
 
         private void OnTreeDoubleClicked(object o, RowActivatedArgs args)
         {
@@ -262,6 +281,27 @@ namespace UserInterface.Views
                 var path = new TreePath(new int[] { index });
                 if (store.GetIter(out TreeIter treeiter, path))
                     store.Remove(ref treeiter);
+            }
+        }
+
+        /// <summary> Sets text of tooltip with corresponding code string. </summary>
+        /// <param name="reportVariableCode">a string that is ReportVariable.Code</param>
+        /// <param name="args"></param>
+        public void ShowTooltip(string reportVariableCode, ListViewArgs args)
+        {
+            //tree.ConvertWidgetToBinWindowCoords(args.X, args.Y, out int bx, out int by);
+            if (tree.GetPathAtPos(args.QueryTooltipArgs.X, args.QueryTooltipArgs.Y, out TreePath path))
+            {
+                TreeModel model = tree.Model;
+
+                if (model.GetIter(out TreeIter iter, path))
+                {
+                    string rowString = model.GetValue(iter, 0) as string;
+                    // Get the code string from the corresponding DataTable row.
+                    args.QueryTooltipArgs.Tooltip.Text = reportVariableCode;
+                    // Tells the TreeView to show tooltip.
+                    args.QueryTooltipArgs.RetVal = true;
+                }
             }
         }
 
@@ -482,6 +522,8 @@ namespace UserInterface.Views
                 return string.Compare(o1.ToString(), o2.ToString());
             return 0;
         }
+
+
     }
 
     /// <summary>An interface for a list view</summary>
@@ -495,6 +537,8 @@ namespace UserInterface.Views
 
         /// <summary> Invoked when a row in the ListView is double-clicked. </summary>
         event EventHandler DoubleClicked;
+
+        event EventHandler<ListViewArgs> TreeHover;
 
         /// <summary>Get or sets the datasource for the view.</summary>
         DataTable DataSource { get; set; }
