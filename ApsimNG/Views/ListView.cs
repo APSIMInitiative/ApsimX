@@ -91,18 +91,22 @@ namespace UserInterface.Views
         private void OnTreeHover(object o, QueryTooltipArgs args)
         {
             ListViewArgs newArgs = new ListViewArgs { QueryTooltipArgs = args };
+            tree.ConvertWidgetToTreeCoords(args.X, args.Y, out int tx, out int ty);
+            newArgs.NewX = tx; // TODO: need to store new coordinates for use in ShowTooltip method.
+            newArgs.NewY = ty;
 
-            if (tree.GetPathAtPos(args.X, args.Y, out TreePath path))
+            var pathpos = tree.GetPathAtPos(tx, ty, out TreePath path);
+
+            TreeModel model = tree.Model;
+            var modelIterator = model.GetIter(out TreeIter iter, path);
+            if (modelIterator)
             {
-                TreeModel model = tree.Model;
-
-                if (model.GetIter(out TreeIter iter, path))
-                {
-                    if (path.Indices[0] < 0)
-                        newArgs.ListViewRowIndex = 0;
-                    else newArgs.ListViewRowIndex = path.Indices[0] - 1;
-                }
+                if (path.Indices[0] < 0)
+                    newArgs.ListViewRowIndex = 0;
+                else newArgs.ListViewRowIndex = path.Indices[0];
             }
+
+
             if (TreeHover != null)
                 TreeHover.Invoke(o, newArgs);
         }
@@ -213,8 +217,11 @@ namespace UserInterface.Views
                 Title = columnName,
                 Resizable = true,
                 SortColumnId = colIndex,
-                Sizing = TreeViewColumnSizing.GrowOnly
+                Sizing = TreeViewColumnSizing.GrowOnly,
+                Visible = true // TODO: Make false when 'Code' is received.
             };
+            if (columnName == "Code")
+                newColumn.Visible = false;
             newColumn.PackStart(cell, false);
             newColumn.AddAttribute(cell, "text", columns.Count);
             newColumn.AddNotification("width", OnColumnWidthChange);
@@ -289,15 +296,13 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         public void ShowTooltip(string reportVariableCode, ListViewArgs args)
         {
-            //tree.ConvertWidgetToBinWindowCoords(args.X, args.Y, out int bx, out int by);
-            if (tree.GetPathAtPos(args.QueryTooltipArgs.X, args.QueryTooltipArgs.Y, out TreePath path))
+            //tree.ConvertWidgetToTreeCoords(args.NewX, NewY, out int tx, out int ty);
+
+            if (tree.GetPathAtPos(args.NewX, args.NewY, out TreePath path))
             {
                 TreeModel model = tree.Model;
-
                 if (model.GetIter(out TreeIter iter, path))
                 {
-                    string rowString = model.GetValue(iter, 0) as string;
-                    // Get the code string from the corresponding DataTable row.
                     args.QueryTooltipArgs.Tooltip.Text = reportVariableCode;
                     // Tells the TreeView to show tooltip.
                     args.QueryTooltipArgs.RetVal = true;
@@ -336,6 +341,7 @@ namespace UserInterface.Views
             // Populate with rows.
             foreach (DataRow row in table.Rows)
                 AddRow(row.ItemArray);
+
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 using ApsimNG.Classes;
@@ -134,28 +135,15 @@ namespace UserInterface.Presenters
         /// <summary> DataTable for storing common report variables. </summary>
         public DataTable CommonReportVariables
         {
-            get
-            {
-                // To avoid GUI being taken up by code column,
-                // It is removed before being used as the 'DataSource' for a LisView.
-                DataTable simplifiedDT = commonReportVariables.Copy();
-                simplifiedDT.Columns.Remove("Code");
-                return simplifiedDT;
-            }
+            get { return commonReportVariables; }
             set { commonReportVariables = value; }
         }
 
         /// <summary> DataTable for storing common report frequency variables. </summary>
         public DataTable CommonReportFrequencyVariables
         {
-            get
-            {
-                // To avoid GUI being taken up by code column,
-                // It is removed before being used as the 'DataSource' for a LisView.
-                DataTable simplifiedDT = commonReportFrequencyVariables.Copy();
-                simplifiedDT.Columns.Remove("Code");
-                return simplifiedDT;
-            }
+            get { return commonReportFrequencyVariables; }
+
             set { commonReportFrequencyVariables = value; }
         }
 
@@ -165,7 +153,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The report model object</param>
         /// <param name="view">The view object</param>
         /// <param name="explorerPresenter">The explorer presenter</param>
-        public async void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter) // was using an async keyword
         {
             this.report = model as Report;
             this.explorerPresenter = explorerPresenter;
@@ -179,10 +167,10 @@ namespace UserInterface.Presenters
             SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
             CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
             CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
-            CommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
+            CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true); // was async
             this.view.CommonReportVariablesList.DataSource = CommonReportVariables;
             this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
-            CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
+            CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, GetModelScopeNames(), true); // was async
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
             (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
@@ -232,18 +220,19 @@ namespace UserInterface.Presenters
 
         private void OnCommonVariableListTreeHover(object o, ListViewArgs args)
         {
-            if (args.ListViewRowIndex >= 0)
+            if (args.ListViewRowIndex >= 0 && CommonReportVariables.Rows.Count >= args.ListViewRowIndex)
             {
-                string reportVariableCode = CommonReportVariablesList[args.ListViewRowIndex].Code;
+                //string reportVariableCode = CommonReportVariablesList[args.ListViewRowIndex].Code;
+                string reportVariableCode = CommonReportVariables.Rows[args.ListViewRowIndex]["Code"].ToString();
                 (view.CommonReportVariablesList as ListView).ShowTooltip(reportVariableCode, args);
             }
         }
 
         private void OnCommonFrequencyListTreeHover(object o, ListViewArgs args)
         {
-            if (args.ListViewRowIndex >= 0)
+            if (args.ListViewRowIndex >= 0 && CommonReportFrequencyVariables.Rows.Count >= args.ListViewRowIndex)
             {
-                string reportVariableCode = CommonFrequencyVariablesList[args.ListViewRowIndex].Code;
+                string reportVariableCode = CommonReportFrequencyVariables.Rows[args.ListViewRowIndex]["Code"].ToString();
                 (view.CommonReportFrequencyVariablesList as ListView).ShowTooltip(reportVariableCode, args);
             }
         }
@@ -254,7 +243,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void OnEventListTextChanged(object sender, EventArgs e) // TODO: event list needs to filter.
+        private void OnEventListTextChanged(object sender, EventArgs e) // was using an async keyword
         {
             int frequencyVariableListLineNumber = view.EventList.CurrentLineNumber;
             int lineIndex = frequencyVariableListLineNumber - 1;
@@ -269,13 +258,13 @@ namespace UserInterface.Presenters
 
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
                 {
-                    lineStrings = lineContent.Split(new char[2] { '[', ']' }).ToList<string>();
+                    lineStrings = lineContent.Split(new char[3] { '[', ']', '.' }).ToList<string>();
                     lineStrings.RemoveAll(s => s == "");
                 }
 
                 if (lineStrings.Count != 0)
                 {
-                    DataTable potentialCommonFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, lineStrings);
+                    DataTable potentialCommonFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, lineStrings, false);
                     if (potentialCommonFrequencyVariables.Rows.Count != 0)
                         CommonReportFrequencyVariables = potentialCommonFrequencyVariables;
                     else
@@ -288,12 +277,12 @@ namespace UserInterface.Presenters
                         potentialCommonFrequencyVariables.Rows.Add(emptyRow);
                         CommonReportFrequencyVariables = potentialCommonFrequencyVariables;
                     }
-                    view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
+                    view.CommonReportFrequencyVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportFrequencyVariables);
                 }
                 else
                 {
-                    CommonReportFrequencyVariables = await GetReportVariablesAsync(CommonFrequencyVariablesList, GetModelScopeNames());
-                    view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
+                    CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, GetModelScopeNames(), true);
+                    view.CommonReportFrequencyVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportFrequencyVariables);
                 }
             }
         }
@@ -303,7 +292,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private async void OnVariableListTextChanged(object sender, EventArgs e)
+        private void OnVariableListTextChanged(object sender, EventArgs e) // was using an async keyword.
         {
             int variableListLineNumber = view.VariableList.CurrentLineNumber;
             int lineIndex = variableListLineNumber - 1;
@@ -318,7 +307,7 @@ namespace UserInterface.Presenters
 
                 if (!lineContent.Equals(".") && !string.IsNullOrWhiteSpace(lineContent))
                 {
-                    lineStrings = lineContent.Split(new char[2] { '[', ']' }).ToList<string>();
+                    lineStrings = lineContent.Split(new char[3] { '[', ']', '.' }).ToList<string>();
                     lineStrings.RemoveAll(s => s == "");
                 }
 
@@ -326,7 +315,7 @@ namespace UserInterface.Presenters
                 {
                     DataTable potentialCommonReportVariables = CreateDataTableWithColumns();
 
-                    potentialCommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, lineStrings);
+                    potentialCommonReportVariables = GetReportVariables(CommonReportVariablesList, lineStrings, false);
                     if (potentialCommonReportVariables.Rows.Count != 0)
                         CommonReportVariables = potentialCommonReportVariables;
                     else
@@ -339,11 +328,14 @@ namespace UserInterface.Presenters
                         potentialCommonReportVariables.Rows.Add(emptyRow);
                         CommonReportVariables = potentialCommonReportVariables;
                     }
+                    //view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
                     view.CommonReportVariablesList.DataSource = CommonReportVariables;
+
                 }
                 else
                 {
-                    CommonReportVariables = await GetReportVariablesAsync(CommonReportVariablesList, GetModelScopeNames());
+                    CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true); // was async
+                    //view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
                     view.CommonReportVariablesList.DataSource = CommonReportVariables;
                 }
             }
@@ -435,12 +427,27 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Takes a full DataTable with all columns and removes the Code column
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns> a DataTable</returns>
+        public DataTable GetCommonReportVariablesWithoutCodeColumn(DataTable dataTable)
+        {
+            DataTable modifiedDataTable = dataTable.Copy();
+            modifiedDataTable.Columns.Remove("Code");
+            return modifiedDataTable;
+        }
+
+        /// <summary>
         /// Creates a DataTable with the reportVariables inside a resource file name. 
         /// </summary>
         /// <param name="variableList"> List of ReportVariables</param>
         /// <param name="inputStrings">String List containing model names or properties to use as filters.</param>
+        /// <param name="isModelScope"> A flag to determine if GetReportVariables should perform a substring check on the ReportVariable.Description field. 
+        /// If inputStrings are model names and isModelScope is false, many duplicates will appear in the common report variables/events lists.
+        /// </param>
         /// <returns>A <see cref="DataTable"/> containing commonReportVariables or commonReportFrequencyVariables.</returns>
-        public DataTable GetReportVariables(List<ReportVariable> variableList, List<string> inputStrings)
+        public DataTable GetReportVariables(List<ReportVariable> variableList, List<string> inputStrings, bool isModelScope)
         {
             try
             {
@@ -479,6 +486,25 @@ namespace UserInterface.Presenters
                         variableDataTable.Rows.Add(row);
                     }
 
+                    if (!isModelScope)
+                    {
+                        List<string> inputStringsLowercase = inputStrings.Select(s => s.ToLower()).ToList();
+                        string reportVariableDescriptionLowercase = reportVariable.Description.ToLower();
+                        foreach (string input in inputStringsLowercase)
+                        {
+                            if (reportVariableDescriptionLowercase.Contains(input))
+                            {
+                                DataRow row = variableDataTable.NewRow();
+                                row["Description"] = reportVariable.Description;
+                                row["Code"] = reportVariable.Code;
+                                row["Type"] = reportVariable.Type;
+                                row["Units"] = reportVariable.Units;
+
+                                variableDataTable.Rows.Add(row);
+                            }
+                        }
+                    }
+
                     // Adds if a plant type name is typed.
                     if (plantTypeInFilters == true && reportVariable.Code.Contains("[Plant]"))
                     {
@@ -488,7 +514,7 @@ namespace UserInterface.Presenters
                         row["Type"] = reportVariable.Type;
                         row["Units"] = reportVariable.Units;
 
-                        variableDataTable.Rows.Add(row); // Not sure if necessary.
+                        variableDataTable.Rows.Add(row);
                     }
                 }
                 return variableDataTable;
@@ -519,10 +545,11 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="variablesList"></param>
         /// <param name="filterStrings"></param>
+        /// <param name="isModelScope"></param>
         /// <returns></returns>
-        private async Task<DataTable> GetReportVariablesAsync(List<ReportVariable> variablesList, List<string> filterStrings)
+        private async Task<DataTable> GetReportVariablesAsync(List<ReportVariable> variablesList, List<string> filterStrings, bool isModelScope)
         {
-            return await Task.Run(() => GetReportVariables(variablesList, filterStrings));
+            return await Task.Run(() => GetReportVariables(variablesList, filterStrings, isModelScope));
 
         }
 
@@ -706,6 +733,7 @@ namespace UserInterface.Presenters
         /// <param name="args"></param>
         private void OnCommonReportVariableListDoubleClicked(object sender, EventArgs args)
         {
+            Regex modelNameFollowedByText = new Regex(@"(\\[){1}([A-Za-z\\s_]){1,}(\\]){1}(.){1}([A-za-z.]){1,}");
             RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
             // get the index of the common report variable selected from the args.
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
@@ -725,11 +753,28 @@ namespace UserInterface.Presenters
             {
                 int currentLineNumber = this.view.VariableList.CurrentLineNumber;
                 List<string> lines = view.VariableList.Lines.ToList();
+                bool isModelStringPresent = false;
+                bool isClosingBracketPresent = false;
+                bool isThereTextAfterModelString = false;
+                // Check for any of the above flag conditions.
+                if (currentlineContent.Contains("[") && currentlineContent.Contains("]"))
+                    isModelStringPresent = true;
+                if (currentlineContent.Contains("]"))
+                    isClosingBracketPresent = true;
+                if (isModelStringPresent == true)
+                {
+                    if (Regex.IsMatch(currentlineContent, @"(\\[){1}([A-Za-z\\s_]){1,}(\\]){1}(.){1}([A-za-z.]){1,}"))
+                        isThereTextAfterModelString = true; // TODO: needs testing.
+                }
                 string codeString = variableCode;
                 if (variableCode.IndexOf('[') == 0)
                 {
                     StringUtilities.SplitOffBracketedValue(ref codeString, '[', ']');
                     lines[currentLineNumber - 1] += codeString;
+                }
+                else if (isModelStringPresent)
+                {
+
                 }
                 else
                 {
