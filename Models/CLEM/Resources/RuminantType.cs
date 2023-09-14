@@ -701,7 +701,7 @@ namespace Models.CLEM.Resources
         /// Proportion of max body weight needed for survival
         /// </summary>
         [Category("Advanced", "Survival")]
-        [Description("Proportion of max body weight needed for survival")]
+        [Description("Proportion of max body weight needed for survival (-1 to use Body Condition Score)")]
         [Required]
         public double ProportionOfMaxWeightToSurvive { get; set; }
         /// <summary>

@@ -110,6 +110,12 @@ namespace Models.CLEM.Resources
         public abstract Sex Sex { get; }
 
         /// <summary>
+        /// Has the individual been sterilised (webbed, spayed or castrated)
+        /// </summary>
+        [FilterByProperty]
+        public abstract bool Sterilised { get; }
+
+        /// <summary>
         /// Marked as a replacement breeder
         /// </summary>
         [FilterByProperty]
@@ -799,7 +805,7 @@ namespace Models.CLEM.Resources
             IIndividualAttribute indAttribute = attribute.Value.GetInheritedAttribute() as IIndividualAttribute;
 
             // is this a property attribute that may modify the individuals parameter set?
-            if(indAttribute.SetAttributeSettings is SetAttributeWithProperty)
+            if(indAttribute?.SetAttributeSettings is SetAttributeWithProperty)
             {
                 // has the value changed from that in the breed params provided to the individual?
                 if (indAttribute.StoredValue != (attribute.Value.SetAttributeSettings as SetAttributeWithProperty).RuminantPropertyInfo.GetValue(this))
