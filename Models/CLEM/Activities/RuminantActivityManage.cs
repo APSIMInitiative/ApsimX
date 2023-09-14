@@ -1274,11 +1274,8 @@ namespace Models.CLEM.Activities
                             AddStatusMessage("Excess breeders");
                             Status = ActivityStatus.Warning;
                         }
-                        else
-                            this.Status = ActivityStatus.Success;
 
                         // excess breeders were found so there is no need for any replacement breeders to be flagged
-
                         foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemaleReplacementBreeders"))
                             foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.ReplacementBreeder)).ToList())
                             {
@@ -1498,8 +1495,6 @@ namespace Models.CLEM.Activities
                             AddStatusMessage("Breeder shortfall");
                             Status = ActivityStatus.Partial;
                         }
-                        else
-                            this.Status = ActivityStatus.Success;
 
                         // identify shortfall in 
 
