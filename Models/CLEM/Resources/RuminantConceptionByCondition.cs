@@ -22,9 +22,16 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Condition cutoff for conception
         /// </summary>
-        [Description("Condition index (wt/normalised wt for age) below which no conception")]
-        [Required, GreaterThanValue(0)]
+        [Description("Condition index (wt/normalised wt for age) below which no conception (set -1 to use BCS below)")]
+        [Required, GreaterThanEqualValue(-1)]
         public double ConditionCutOff { get; set; }
+
+        /// <summary>
+        /// Condition cutoff for conception
+        /// </summary>
+        [Description("Relative body condition score below which no conception")]
+        [Required, GreaterThanEqualValue(0)]
+        public double BodyConditionScoreCutOff { get; set; }
 
         /// <summary>
         /// Maximum probability of conceiving given condition satisfied
@@ -46,10 +53,14 @@ namespace Models.CLEM.Resources
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
-        /// <returns></returns>
+        /// <returns>Conception rate (0-1)</returns>
+        /// <remarks>A negative value for Condition index will use the Body Condition Score approach</remarks>
         public double ConceptionRate(RuminantFemale female)
         {
-            return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
+            if(ConditionCutOff >= 0)
+                return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
+            else
+                return (female.BodyConditionScore >= BodyConditionScoreCutOff) ? MaximumConceptionProbability : 0;
         }
 
         #region descriptive summary 
