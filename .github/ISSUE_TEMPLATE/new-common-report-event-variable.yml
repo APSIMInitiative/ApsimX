@@ -1,0 +1,32 @@
+name: "📄 Create a new common report event/variable"
+description: Create a new common report event or variable.
+labels: ["New common report event/variable"]
+body:
+  - type: textarea
+    id: description-area
+    attributes:
+      label: What is the description for the event/variable?
+      placeholder: Write a simple description here
+    validations:
+      required: true
+  - type: textarea
+    id: code-area
+    attributes:
+      label: What is the code for the event/variable?
+      placeholder: Write a simple description here
+    validations:
+      required: true
+  - type: textarea
+    id: type-area
+    attributes:
+      label: What is the type for the variable?
+      placeholder: If you know the type outputted by the variable put it here
+    validations:
+      required: false
+  - type: textarea
+    id: unit-area
+    attributes:
+      label: What are the units for the variable?
+      placeholder: If you know the units for the variable put it here
+    validations:
+      required: false
