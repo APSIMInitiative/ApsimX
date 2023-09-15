@@ -2,31 +2,23 @@ name: "📄 Create a new common report event/variable"
 description: Create a new common report event or variable.
 labels: ["New common report event/variable"]
 body:
+  - type: markdown
+    attributes:
+      value: "Provide all your events or varibles below. An example of an event is: [Clock].EndOfDay. An example of a report variable is: [Wheat].AboveGround.Wt"
   - type: textarea
     id: description-area
     attributes:
-      label: What is the description for the event/variable?
-      placeholder: Write a simple description here
+      label: "For each event or variable write a short description followed by the code. An example: End of day: [Clock].EndOfDay"
+      placeholder: Put your descriptions and code here
     validations:
       required: true
   - type: textarea
-    id: code-area
+    id: notes-area
     attributes:
-      label: What is the code for the event/variable?
-      placeholder: Write a simple description here
-    validations:
-      required: true
-  - type: textarea
-    id: type-area
-    attributes:
-      label: What is the type for the variable?
-      placeholder: If you know the type outputted by the variable put it here
+      label: "Notes"
+      placeholder: Put notes/comments here
     validations:
       required: false
-  - type: textarea
-    id: unit-area
-    attributes:
-      label: What are the units for the variable?
-      placeholder: If you know the units for the variable put it here
-    validations:
-      required: false
+
+
+
