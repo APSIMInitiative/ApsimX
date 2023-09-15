@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using ApsimNG.Classes;
 using Gtk;
@@ -15,6 +16,8 @@ namespace UserInterface.Views
     {
         /// <summary>The main tree view control.</summary>
         private Gtk.TreeView tree;
+
+        private Button submitButton;
 
         /// <summary>The data table used to populate the tree view.</summary>
         private DataTable table;
@@ -62,7 +65,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Constructor</summary>
-        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null, EditorView editor = null) : base(owner)
+        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null, EditorView editor = null, Button submitButton = null) : base(owner)
         {
             tree = treeView;
             tree.HasTooltip = true;
@@ -86,6 +89,30 @@ namespace UserInterface.Views
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
+            if (submitButton != null)
+            {
+                this.submitButton = submitButton;
+                submitButton.Pressed += SubmitButtonPressed;
+            }
+
+        }
+
+        private void SubmitButtonPressed(object sender, EventArgs e)
+        {
+            try
+            {
+                string target = "http://www.github.com/APSIMInitiative/ApsimX/issues/new/choose";
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = target,
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured trying to open link to create new common report event/variable. {ex}");
+            }
         }
 
         private void OnTreeHover(object o, QueryTooltipArgs args)

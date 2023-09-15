@@ -28,6 +28,7 @@ namespace UserInterface.Views
         private ViewBase dataStoreView1;
         private VPaned panel;
         private EditView groupByEdit;
+        private Button submitButton;
 
         /// <summary>
         /// Invoked when the user moves the vertical splitter
@@ -52,6 +53,8 @@ namespace UserInterface.Views
             frequencyBox = (Box)builder.GetObject("frequencyBox");
             commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
             alignment1 = (Alignment)builder.GetObject("alignment1");
+            submitButton = (Button)builder.GetObject("submitBtn");
+
 
             panel = (VPaned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
@@ -78,7 +81,7 @@ namespace UserInterface.Views
             commonReportVariableList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
             commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
 
-            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)frequencyEditor);
+            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)frequencyEditor, submitButton);
             commonReportFrequencyVariableList.DoubleClicked += OnCommonReportFrequencyVariableListDoubleClicked;
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
 

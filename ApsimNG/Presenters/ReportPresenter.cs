@@ -292,7 +292,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnVariableListTextChanged(object sender, EventArgs e) // was using an async keyword.
+        private void OnVariableListTextChanged(object sender, EventArgs e)
         {
             int variableListLineNumber = view.VariableList.CurrentLineNumber;
             int lineIndex = variableListLineNumber - 1;
@@ -328,15 +328,13 @@ namespace UserInterface.Presenters
                         potentialCommonReportVariables.Rows.Add(emptyRow);
                         CommonReportVariables = potentialCommonReportVariables;
                     }
-                    //view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
-                    view.CommonReportVariablesList.DataSource = CommonReportVariables;
+                    view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
 
                 }
                 else
                 {
-                    CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true); // was async
-                    //view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
-                    view.CommonReportVariablesList.DataSource = CommonReportVariables;
+                    CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true);
+                    view.CommonReportVariablesList.DataSource = GetCommonReportVariablesWithoutCodeColumn(CommonReportVariables);
                 }
             }
         }
@@ -482,7 +480,6 @@ namespace UserInterface.Presenters
                         row["Code"] = reportVariable.Code;
                         row["Type"] = reportVariable.Type;
                         row["Units"] = reportVariable.Units;
-
                         variableDataTable.Rows.Add(row);
                     }
 
@@ -494,13 +491,17 @@ namespace UserInterface.Presenters
                         {
                             if (reportVariableDescriptionLowercase.Contains(input))
                             {
+                                //// Only adds ReportVariable if the modelname matches first inputString.
+                                //List<string> inputStringsSplitOnWhitespace = inputStrings[0].Split(" ").ToList();
+                                //if (reportVariable.ModelName.ToLower().Contains(inputStringsSplitOnWhitespace.First().ToLower().Trim()))
+                                //{
                                 DataRow row = variableDataTable.NewRow();
                                 row["Description"] = reportVariable.Description;
                                 row["Code"] = reportVariable.Code;
                                 row["Type"] = reportVariable.Type;
                                 row["Units"] = reportVariable.Units;
-
                                 variableDataTable.Rows.Add(row);
+                                //}
                             }
                         }
                     }
@@ -513,11 +514,24 @@ namespace UserInterface.Presenters
                         row["Code"] = reportVariable.Code;
                         row["Type"] = reportVariable.Type;
                         row["Units"] = reportVariable.Units;
-
                         variableDataTable.Rows.Add(row);
                     }
                 }
-                return variableDataTable;
+
+                // Perform a check to see if rows are unique, then remove any that are duplicates.
+                DataTable allUniqueTable = CreateDataTableWithColumns();
+                if (variableDataTable.Rows.Count > 0)
+                {
+                    allUniqueTable = variableDataTable.AsEnumerable()
+                        .GroupBy(row => new
+                        {
+                            Code = row.Field<string>("Code"),
+                        })
+                        .Select(group => group.First())
+                        .CopyToDataTable();
+                }
+
+                return allUniqueTable;
             }
             catch (Exception e)
             {
@@ -733,52 +747,54 @@ namespace UserInterface.Presenters
         /// <param name="args"></param>
         private void OnCommonReportVariableListDoubleClicked(object sender, EventArgs args)
         {
-            Regex modelNameFollowedByText = new Regex(@"(\\[){1}([A-Za-z\\s_]){1,}(\\]){1}(.){1}([A-za-z.]){1,}");
+            string partialModelStringRegex = @"(\[){1}([A-Za-z\s_0-9]){1,}";
+            string textAfterStringRegex = @"(\[){1}([A-Za-z0-9\s_]){1,}(\]){1}(\.){1}([A-za-z0-9_]){1,}";
             RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
-            // get the index of the common report variable selected from the args.
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
-            // Get the line number for the report variable editorView.
             var currentReportVariablesLineNumber = this.view.VariableList.CurrentLineNumber;
-            // Find the coressponding variable code to be inserted into the report variables view.
             string variableCode = commonReportVariables.Rows[reportVariableIndex][1].ToString();
-            // Get the contents of the currently selected line.
-            string currentlineContent = "";
+            string currentLineContent = "";
             if (currentReportVariablesLineNumber <= this.view.VariableList.Lines.Length)
-                currentlineContent = this.view.VariableList.Lines[currentReportVariablesLineNumber - 1];
+                currentLineContent = this.view.VariableList.Lines[currentReportVariablesLineNumber - 1];
 
             // Insert the code below the currentLine if line is not null.
-            if (string.IsNullOrWhiteSpace(currentlineContent))
+            if (string.IsNullOrWhiteSpace(currentLineContent))
                 this.view.VariableList.Text = this.view.VariableList.Text + variableCode;
             else
             {
-                int currentLineNumber = this.view.VariableList.CurrentLineNumber;
+                int currentlineNumber = this.view.VariableList.CurrentLineNumber;
                 List<string> lines = view.VariableList.Lines.ToList();
                 bool isModelStringPresent = false;
                 bool isClosingBracketPresent = false;
                 bool isThereTextAfterModelString = false;
+
                 // Check for any of the above flag conditions.
-                if (currentlineContent.Contains("[") && currentlineContent.Contains("]"))
+                if (Regex.IsMatch(currentLineContent, partialModelStringRegex))
                     isModelStringPresent = true;
-                if (currentlineContent.Contains("]"))
+                if (currentLineContent.Contains("]"))
                     isClosingBracketPresent = true;
                 if (isModelStringPresent == true)
                 {
-                    if (Regex.IsMatch(currentlineContent, @"(\\[){1}([A-Za-z\\s_]){1,}(\\]){1}(.){1}([A-za-z.]){1,}"))
+                    if (Regex.IsMatch(currentLineContent, textAfterStringRegex))
                         isThereTextAfterModelString = true; // TODO: needs testing.
                 }
                 string codeString = variableCode;
                 if (variableCode.IndexOf('[') == 0)
                 {
                     StringUtilities.SplitOffBracketedValue(ref codeString, '[', ']');
-                    lines[currentLineNumber - 1] += codeString;
-                }
-                else if (isModelStringPresent)
-                {
-
+                    if (isModelStringPresent && isClosingBracketPresent && !isThereTextAfterModelString)
+                        lines[currentlineNumber - 1] += codeString;
+                    else if (isModelStringPresent && !isClosingBracketPresent && !isThereTextAfterModelString)
+                        lines[currentlineNumber - 1] += "]" + codeString;
+                    else if (isModelStringPresent && isClosingBracketPresent && isThereTextAfterModelString)
+                    {
+                        List<string> lineSplits = lines[currentlineNumber - 1].Split('.').ToList();
+                        lines[currentlineNumber - 1] = lineSplits[0] + codeString;
+                    }
                 }
                 else
                 {
-                    lines[currentLineNumber - 1] = codeString;
+                    lines[currentlineNumber - 1] = codeString;
                 }
                 string modifiedText = string.Join(Environment.NewLine, lines);
                 view.VariableList.Text = modifiedText;
@@ -792,28 +808,55 @@ namespace UserInterface.Presenters
         /// <param name="args"></param>
         private void OnCommonReportFrequencyVariablesListDoubleClicked(object sender, EventArgs args)
         {
+            string partialModelStringRegex = @"(\[){1}([A-Za-z\s_0-9]){1,}";
+            string textAfterStringRegex = @"(\[){1}([A-Za-z0-9\s_]){1,}(\]){1}(\.){1}([A-za-z0-9_]){1,}";
             RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
-            // get the index of the common report variable selected from the args.
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
-            // Get the line number for the report variable editorView.
             var currentReportFrequencyVariablesLineNumber = this.view.EventList.CurrentLineNumber;
-            // Find the coressponding variable code to be inserted into the report variables view.
             string variableCode = commonReportFrequencyVariables.Rows[reportVariableIndex][1].ToString();
-            // Get the contents of the currently selected line.
-            string currentlineContent = "";
+            string currentLineContent = "";
             if (currentReportFrequencyVariablesLineNumber <= this.view.EventList.Lines.Length)
-                currentlineContent = this.view.EventList.Lines[currentReportFrequencyVariablesLineNumber - 1];
+                currentLineContent = this.view.EventList.Lines[currentReportFrequencyVariablesLineNumber - 1];
 
             // Insert the code below the currenLine if line is not null.
-            if (string.IsNullOrWhiteSpace(currentlineContent))
+            if (string.IsNullOrWhiteSpace(currentLineContent))
                 this.view.EventList.Text = this.view.EventList.Text + variableCode;
             else
             {
-                int currentLineNumber = view.EventList.CurrentLineNumber;
+                int currentlineNumber = this.view.EventList.CurrentLineNumber;
                 List<string> lines = view.EventList.Lines.ToList();
+                bool isModelStringPresent = false;
+                bool isClosingBracketPresent = false;
+                bool isThereTextAfterModelString = false;
+
+                // Check for any of the above flag conditions.
+                if (Regex.IsMatch(currentLineContent, partialModelStringRegex))
+                    isModelStringPresent = true;
+                if (currentLineContent.Contains("]"))
+                    isClosingBracketPresent = true;
+                if (isModelStringPresent == true)
+                {
+                    if (Regex.IsMatch(currentLineContent, textAfterStringRegex))
+                        isThereTextAfterModelString = true; // TODO: needs testing.
+                }
                 string codeString = variableCode;
-                StringUtilities.SplitOffBracketedValue(ref codeString, '[', ']');
-                lines[currentLineNumber - 1] += codeString;
+                if (variableCode.IndexOf('[') == 0)
+                {
+                    StringUtilities.SplitOffBracketedValue(ref codeString, '[', ']');
+                    if (isModelStringPresent && isClosingBracketPresent && !isThereTextAfterModelString)
+                        lines[currentlineNumber - 1] += codeString;
+                    else if (isModelStringPresent && !isClosingBracketPresent && !isThereTextAfterModelString)
+                        lines[currentlineNumber - 1] += "]" + codeString;
+                    else if (isModelStringPresent && isClosingBracketPresent && isThereTextAfterModelString)
+                    {
+                        List<string> lineSplits = lines[currentlineNumber - 1].Split('.').ToList();
+                        lines[currentlineNumber - 1] = lineSplits[0] + codeString;
+                    }
+                }
+                else
+                {
+                    lines[currentlineNumber - 1] = codeString;
+                }
                 string modifiedText = string.Join(Environment.NewLine, lines);
                 view.EventList.Text = modifiedText;
             }
