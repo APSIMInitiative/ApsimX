@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrowSCA : CLEMActivityBase
     {
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -551,6 +551,10 @@ namespace Models.CLEM.Activities
                     milkCurve = ind.BreedParams.MilkCurveNonSuckling;
 
                 // calculate
+                // eq 66 thru 76
+
+
+
                 ind.MilkProductionPotential = ind.BreedParams.MilkPeakYield * Math.Pow(ind.StandardReferenceWeight, y: 0.75) * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
                 ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
                 // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008

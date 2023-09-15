@@ -327,6 +327,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The body condition score at birth.
+        /// </summary>
+        public double BodyConditionScoreAtLastBirth { get; set; }
+
+        /// <summary>
         /// Calculate the MilkinIndicates if the individual is lactating
         /// </summary>
         public double DaysLactating
