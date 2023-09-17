@@ -3,22 +3,23 @@ title: "Report Node"
 draft: false
 ---
 ## How to create a basic report
->Here we will describe how to create a basic report with the Wheat example.
+>Here we will describe the features of the report node and some additional information on how to use it.
 >
->By the end of this short tutorial you'll know how to:
-
 > - Understand the anatomy of the report node.
-> - Find relevant variables to report.
-> - Add variables to a report.
-> - Find simulation events that will record the variables when that occurs.
+> - Find relevant report variables.
+> - Add report variables to a report.
+> - Find report events that will record the variables when that occurs.
 > - Add events to report.
 > - How to set an alias/nickname for a report variable.
 
-### The Report node 
+### Report variables and Report events
 
-1. Go ahead and open the example Wheat simulation. You can do this by pressing the 'Open an example' menu button to the top left of the main menu. This will open a file explorer, The Wheat simulation is a file called 'Wheat.apsimx'.
-2. Once the example simulation is opened, double-click the 'Field' node and click the child node 'Report'. This will show the code that is used to generate a report when a simulation is run.
-3. There are our sections in the report node view.
+- Report variables are the data you want to record.
+    - Examples are plant leaf area index, grain weight, grain size, yield and many others.
+- Report events are when report variables are recorded.
+    - This can be a time of day, week, month, year or when harvesting as well as many other events.
+
+### The Report node 
 
 #### Report Variables window
 
@@ -44,7 +45,7 @@ draft: false
 
 - The bottom right window is the common report events window.
     - Initially all relevant events for the simulation show up here.
-    - When you begin typing in the report events window, the contents of this window will change to show events that match either the description of a common report event or a node within your current simulation.
+    - When you begin typing in the report events window, the contents of this window will change to show events that match either the description of a common report event or a node within your Apsimx file.
 
 ### Finding relevant report variables
 
@@ -60,10 +61,27 @@ draft: false
     2. Dragging a variable from the common report variables list to the report variables window.
     3. Typing the code directly into the reporting variables window.
 
+### Giving a report variable a nickname/alias
 
+To do this simply add the phrase: 'as alias' at the end of a line to give a variable a specific column name in your report.
+This is a good idea for variables that are long and complex.
 
+### Notes about report
 
+If you try to run a report with a variable or event that is not valid you will see an error message appear in the message box at the bottom of the ApsimX window.
 
+### Adding an event or variable to the common report variable/event list.
+
+Anyone can submit a new common report variable or event to the lists for anyone to use.
+Mulitple events and variables can be added at one time.
+
+There are two ways to do this:
+
+1. Use the 'submit new event/variable' button in the common report events window. 
+    - This will take you to the ApsimX github page where you can submit a new 'issue' where you can add the information required to add a new variable or event.
+2. Navigate directly to https://github.com/APSIMInitiative/ApsimX/issues/new?assignees=&labels=New+common+report+event%2Fvariable&projects=&template=new-common-report-event-variable.yml and add your details there.
+
+Once this is submitted the event or variable will be reviewed. If accepted it will be added to the list for anyone to use.
 
 
 ## Using report row filters

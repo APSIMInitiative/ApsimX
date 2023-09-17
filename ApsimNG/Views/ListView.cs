@@ -101,7 +101,7 @@ namespace UserInterface.Views
         {
             try
             {
-                string target = "http://www.github.com/APSIMInitiative/ApsimX/issues/new/choose";
+                string target = "https://github.com/APSIMInitiative/ApsimX/issues/new?assignees=&labels=New+common+report+event%2Fvariable&projects=&template=new-common-report-event-variable.yml";
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = target,

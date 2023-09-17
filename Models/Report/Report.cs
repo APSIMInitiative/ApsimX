@@ -1,14 +1,14 @@
-using APSIM.Shared.Utilities;
-using Models.CLEM;
-using Models.Core;
-using Models.Storage;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.Core;
+using Models.Storage;
+using Newtonsoft.Json;
 
 namespace Models
 {
@@ -17,7 +17,7 @@ namespace Models
     /// A report class for writing output to the data store.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.NewReportView")]
+    [ViewName("UserInterface.Views.ReportView")]
     [PresenterName("UserInterface.Presenters.ReportPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]

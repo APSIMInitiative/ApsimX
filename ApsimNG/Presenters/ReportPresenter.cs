@@ -123,7 +123,6 @@ namespace UserInterface.Presenters
         }
 
 
-
         /// <summary>Stores variable name and variable code while being dragged.</summary>
 
         // Stores ReportDragObject to coping into EditorView.
@@ -173,8 +172,8 @@ namespace UserInterface.Presenters
             CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, GetModelScopeNames(), true); // was async
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
-            (this.view as NewReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
-            (this.view as NewReportView).EventList.VariableDragDataReceived += EventListVariableDrop;
+            (this.view as ReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
+            (this.view as ReportView).EventList.VariableDragDataReceived += EventListVariableDrop;
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
@@ -491,17 +490,12 @@ namespace UserInterface.Presenters
                         {
                             if (reportVariableDescriptionLowercase.Contains(input))
                             {
-                                //// Only adds ReportVariable if the modelname matches first inputString.
-                                //List<string> inputStringsSplitOnWhitespace = inputStrings[0].Split(" ").ToList();
-                                //if (reportVariable.ModelName.ToLower().Contains(inputStringsSplitOnWhitespace.First().ToLower().Trim()))
-                                //{
                                 DataRow row = variableDataTable.NewRow();
                                 row["Description"] = reportVariable.Description;
                                 row["Code"] = reportVariable.Code;
                                 row["Type"] = reportVariable.Type;
                                 row["Units"] = reportVariable.Units;
                                 variableDataTable.Rows.Add(row);
-                                //}
                             }
                         }
                     }
@@ -575,15 +569,6 @@ namespace UserInterface.Presenters
             List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
             modelNamesInScope = modelInScope.Select(x => x.Name).Distinct<string>().ToList();
             return modelNamesInScope;
-        }
-
-        private bool IsModelTypePlant(string modelName)
-        {
-            bool isPlantType = false;
-            List<IModel> matches = explorerPresenter.ApsimXFile.FindAllInScope(modelName).Where(m => m is Plant).ToList();
-            if (matches.Count > 0)
-                isPlantType = true;
-            return isPlantType;
         }
 
         /// <summary>
