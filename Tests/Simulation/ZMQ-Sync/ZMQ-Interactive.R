@@ -2,15 +2,17 @@ library(rzmq)
 library(msgpackR)
 library(processx)
 
+# Exercise the Interactive protocol
+
 apsimDir <- "/home/uqpdevo1/src/ApsimX-ZMQ"
 #apsimDir <- "/usr/local/lib/apsim/"
 
-# Interactive protocol
+# Set up a listening server on a random port
 testProto2 <- function() {
-  # Set up a listening server on a random port
   apsim <- list()
-  apsim$apsimSocket <- open_zmq2(port = 0)
   
+  # The simulation will connect back to this port:
+  apsim$apsimSocket <- open_zmq2(port = 0)
   apsim$randomPort <- unlist(strsplit(get.last.endpoint(apsim$apsimSocket),":"))[3]
   cat("Listening on", get.last.endpoint(apsim$apsimSocket), "\n")
   
@@ -20,9 +22,7 @@ testProto2 <- function() {
     "-P", "interactive",
     "-f", paste0(apsimDir, "/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx")),
     stdout="", stderr="")
-  
-  if (! apsim$process$is_alive() ) { stop("Didnt start apsim?") }
-  
+
   cat("Started Apsim process id ", apsim$process$get_pid(), "\n")
   return(apsim)
 }
@@ -35,13 +35,21 @@ open_zmq2 <- function(port) {
   return(out.socket)
 }
 
-send_multipart <- function(socket, listOfStrings) {
-  for (i in 1:length(listOfStrings)) {
-    send.socket(socket, charToRaw(listOfStrings[[i]]), 
-                serialize = F, send.more = (i != length(listOfStrings)))
-  }
+close_zmq2 <- function(apsim) {
+  disconnect.socket(apsim$apsimSocket, get.last.endpoint(apsim$apsimSocket))
+  # kill off apsim server
+  apsim$process$kill()
 }
 
+# Send a command, eg resume/set/get
+sendCommand <- function(socket, command, args = NULL) {
+  send.raw.string(socket, command, send.more = !is.null(args))
+  if (!is.null(args)) {
+     for (i in 1:length(args)) {
+        send.socket(socket, msgpackR::pack(args[[i]]), serialize = F, send.more = (i != length(args)))
+     }
+  }
+}
 # The response loop. When the simulation connects we tell it what to do.
 # connect -> ok
 # paused -> resume/get/set
@@ -51,43 +59,59 @@ poll_zmq2 <- function(socket) {
     msg <- receive.string(socket)
     # cat(msg, "\n")
     if (msg == "connect") {
-      send.raw.string(socket, "ok",send.more=FALSE)
+      sendCommand(socket, "ok")
     } else if (msg == "paused") {
+      # Each send is followed by a receive. "set" responds with a string "ok",
+      # "get" responds with a packed byte array that we pass to the deserialiser
+      sendCommand(socket, "get", "[Clock].Today.Day")
+      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      stopifnot(class(reply) == "numeric")
+
+      sendCommand(socket, "get", "[Wheat].Phenology.Zadok.Stage")
+      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      stopifnot(class(reply) == "numeric")
       
-      send_multipart(socket, list("get", "[Clock].Today.Day"))
-      msg <- receive.socket(socket, unserialize = F)
-      msg <- msgpackR::unpack(msg)
-      #cat("Day = ", msg, "\n")
+      sendCommand(socket, "get", "[Soil].Water.PAW")
+      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      stopifnot(class(reply) == "numeric" && length(reply) == 7 )
+
+      sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
+      reply1 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       
-      send_multipart(socket, list("set", "[Manager].Script.DummyStringVar", "Blork"))
-      msg <- receive.socket(socket, unserialize = F)
-      msg <- msgpackR::unpack(msg)
-      #cat("result = ", msg, "\n")
+      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
+      msg <- receive.string(socket)
+
+      sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
+      reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      #cat("r1 = ", reply1,"r2 = ", reply2, "\n")
+      stopifnot(reply1 != reply2)
+
+      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", reply1))
+      msg <- receive.string(socket)
       
-      #msg <- receive.string(socket)
-      #cat(msg, "\n")s
-      send.raw.string(socket, "resume",send.more=FALSE)
+      sendCommand(socket, "set", list("[Manager].Script.DummyDoubleVar", 42.42))
+      msg <- receive.string(socket)
+      # cat("set result = ", msg, "\n")
+      
+      # resume the simulation and come back tomorrow
+      sendCommand(socket, "resume")
     } else if (msg == "finished") {
-      send.raw.string(socket, "ok",send.more=FALSE)
+      sendCommand(socket, "ok")
       break
     } 
   }
 }
 
-close_zmq2 <- function(socket) {
-  disconnect.socket(socket, get.last.endpoint(socket))
-}
-
 apsim <- testProto2()
-rec <- data.frame(iter = 1:100, mem=NA)
+rec <- data.frame(iter = 1:10, mem=NA)
+
 for (i in 1:nrow(rec)) {
+  start_time <- Sys.time()
   poll_zmq2(apsim$apsimSocket)
   rec$mem[i] <- apsim$process$get_memory_info()[["rss"]]
+  rec$time[i] <-  Sys.time() - start_time
 }
 
-close_zmq2(apsim$apsimSocket)
-
-# kill off apsim server
-apsim$process$kill()
+close_zmq2(apsim)
 
 print(rec)

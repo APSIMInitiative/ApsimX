@@ -217,7 +217,9 @@ namespace Models.Core
                MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
-               MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location)
+               MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Memory.dll"))
+
             };
 
             if (previousCompilations != null)

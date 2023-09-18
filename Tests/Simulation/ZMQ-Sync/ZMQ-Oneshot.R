@@ -2,10 +2,12 @@ library(rzmq)
 library(msgpackR)
 library(processx)
 
+# Exercise "One-shot" protocol
+
 apsimDir <- "/home/uqpdevo1/src/ApsimX-ZMQ"
 #apsimDir <- "/usr/local/lib/apsim/"
 
-# One-shot protocol
+# Open a request socket 
 open_zmq1 <- function(port) {
   zcontext <<- init.context()  # This needs to be kept around (global environment)..
   out.socket <- init.socket(zcontext, "ZMQ_REQ")
@@ -13,6 +15,9 @@ open_zmq1 <- function(port) {
   return(out.socket)
 }
 
+# Send a "run" command. Args are "Changes" - name=value pairs that each set an
+# apsim variable in a simulation. 
+# Blocks until simulation completes
 run_zmq1 <- function (socket, args) {
   send.socket(socket, charToRaw("RUN"), serialize = F,  send.more = T)
   send.socket(socket, charToRaw(paste(args, collapse="\n")), serialize = F, send.more = F)
@@ -20,6 +25,7 @@ run_zmq1 <- function (socket, args) {
   return(message)
 }
 
+# Get columns from the datastore after the simulation has finished.
 get_zmq1 <- function (socket, table, args) {
   result <- list()
   for (v in args) {
@@ -32,12 +38,16 @@ get_zmq1 <- function (socket, table, args) {
   return(as.data.frame(result))
 }
 
+# Close this connection, shut down the server
 close_zmq1 <- function(socket) {
   disconnect.socket(socket, get.last.endpoint(socket))
+  # kill off apsim server
+  apsim$process$kill()
 }
 
+
+# Set up an apsim server process
 testProto1 <- function() {
-  # Set up the apsim server
   apsim <- list()
   
   # Find a random unused port:
@@ -63,7 +73,7 @@ apsim <- testProto1()
 
 run_zmq1(apsim$apsimSocket, "[Sow using a variable rule].Script.CultivarName = Batavia")
 
-close_zmq1(apsim$apsimSocket)
+df <- get_zmq1(apsim$apsimSocket, "Report", c("[Clock].Today", "[Wheat].LAI"))
+str(df)
 
-# kill off apsim server
-apsim$process$kill()
+close_zmq1(apsim$apsimSocket)

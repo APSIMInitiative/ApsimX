@@ -142,18 +142,16 @@ namespace APSIM.ZMQServer
             workerThread = new Thread(
               new ThreadStart(() =>
               {
-                  var timer = Stopwatch.StartNew();
                   try
                   {
                       errors = runner.Run();
                   }
                   finally
                   {
-                      timer.Stop();
-                      Console.WriteLine($"Job took {timer.ElapsedMilliseconds}ms");
                       if (errors != null && errors.Count > 0)
                       {
                           Console.WriteLine("Errors:\n");
+                       
                           foreach (var e in errors) { Console.WriteLine(e.ToString()); }
                       }
                       onWorkerExit();
