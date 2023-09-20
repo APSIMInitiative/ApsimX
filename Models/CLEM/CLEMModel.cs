@@ -557,7 +557,7 @@ namespace Models.CLEM
                 string memoText = memo.Text;
                 if (markdown2Html != null)
                     memoText = markdown2Html(memoText);
-                memoText = memoText.Replace("\n", "<br />").Replace("</p><br />", "</p>");
+                memoText = memoText.Replace("\n\n", "\n").Replace("\n", "<br />").Replace("</p><br />", "</p>");
 
                 html += $"<div class='{memoTextClass}'>{memoText}</div></div>";
             }
@@ -931,7 +931,7 @@ namespace Models.CLEM
                 if (modelToSummarise is ZoneCLEM)
                     htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is Market)
-                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), markdown2Html));
                 else if (modelToSummarise is CLEMModel)
                     htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is ICLEMDescriptiveSummary)

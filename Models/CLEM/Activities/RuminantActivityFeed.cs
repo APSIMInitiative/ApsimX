@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             feedEstimated = filterGroups.OfType<RuminantFeedGroup>().Sum(a => a.CurrentResourceRequest.Required);
 
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
 
