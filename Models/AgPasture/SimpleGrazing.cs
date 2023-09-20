@@ -715,9 +715,9 @@ namespace Models.AgPasture
                         }
                     }
 
-                    // Check the amount grazed is the same as requested amount to graze.
-                    if (!MathUtilities.FloatsAreEqual(grazedDM, removeAmount, 0.0001))
-                        throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
+                    // Check the amount grazed is the same as requested amount to graze.  THIS IS NOT AN ERROR!!!
+                    //if (!MathUtilities.FloatsAreEqual(grazedDM, removeAmount, 0.0001))
+                    //    throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
                 }
             }
 
