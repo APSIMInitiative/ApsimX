@@ -929,9 +929,13 @@ namespace Models.CLEM
         /// </summary>
         Forage,
         /// <summary>
-        /// Supplement style feed with Ether extract included in metabolisable energy content calculation.
+        /// Concentrate style feed with Ether extract included in metabolisable energy content calculation.
         /// </summary>
-        Supplement
+        Concentrate,
+        /// <summary>
+        /// Milk
+        /// </summary>
+        Milk
     }
 
     /// <summary>

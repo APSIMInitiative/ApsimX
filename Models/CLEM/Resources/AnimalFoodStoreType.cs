@@ -56,15 +56,19 @@ namespace Models.CLEM.Resources
         public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
-        [Description("Crude protein degradability")]
-        [Required, Proportion, GreaterThanValue(0)]
-        public double CPDegradability { get; set; }
+        [Description("Degradable protein content (g/g DM)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double RumenDegradableProtein { get; set; }
 
-        ///// <summary>
-        ///// Current store nitrogen (%)
-        ///// </summary>
-        //[JsonIgnore]
-        //public double CurrentStoreNitrogen { get; set; }
+        /// <inheritdoc/>
+        [Description("Acid detergent insoluable protein")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Nitrogen to Crude protein factor")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenToCrudeProteinFactor { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
@@ -122,7 +126,6 @@ namespace Models.CLEM.Resources
             CurrentStoreDetails = new FoodResourcePacket()
             {
                 EnergyContent = EnergyContent,
-                CPDegradability = CPDegradability,
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent= FatContent,
                 NitrogenContent = NitrogenContent
@@ -130,7 +133,6 @@ namespace Models.CLEM.Resources
             StoreDetails = new FoodResourcePacket()
             {
                 EnergyContent = EnergyContent,
-                CPDegradability = CPDegradability,
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent

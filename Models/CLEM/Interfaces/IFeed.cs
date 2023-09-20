@@ -38,13 +38,22 @@ namespace Models.CLEM.Interfaces
         [Description("Nitrogen content (%)")]
         double NitrogenContent { get; set; }
 
-
-        //ToDo: Do we need this, or just CrudeProtein (%)
+        /// <summary>
+        /// Rumen Degradable Protein (g/g DM) (1-Rumen Undegradable Protein)
+        /// </summary>
+        [Description("Degradable protein content (g/g DM)")]
+        public double RumenDegradableProtein { get; set; }
 
         /// <summary>
-        /// Crude protein degradability
+        /// Acid detergent insoluable protein
         /// </summary>
-        [Description("Crude protein degradability")]
-        double CPDegradability { get; set; }
+        [Description("Acid detergent insoluable protein")]
+        public double ADIP { get; set; }
+
+        /// <summary>
+        /// Factor used to convert the Nitrogen percentage and DM to crude protein
+        /// </summary>
+        [Description("Nitrogen to Crude protein factor")]
+        public double NitrogenToCrudeProteinFactor { get; set; }
     }
 }

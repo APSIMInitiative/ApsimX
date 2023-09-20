@@ -51,6 +51,18 @@ namespace Models.CLEM.Resources
         public double EnergyContent { get; set; }
 
         /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double RumenDegradableProtein { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenToCrudeProteinFactor { get; set; }
+
+        /// <inheritdoc/>
         public double FatContent { get; set; } = 0;
 
         /// <inheritdoc/>

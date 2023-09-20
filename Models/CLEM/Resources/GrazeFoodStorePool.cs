@@ -30,6 +30,15 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double DryMatterDigestibility { get; set; }
 
+        /// <inheritdoc/>
+        public double RumenDegradableProtein { get; set; }
+
+        /// <inheritdoc/>
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        public double NitrogenToCrudeProteinFactor { get; set; } = 6.25;
+
         /// <summary>
         /// Amount (kg)
         /// </summary>
