@@ -307,16 +307,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double result = 0;
-                double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
-                double mid = NormalisedAnimalWeight;
-                double max = BreedParams.MaximumSizeOfIndividual;
-
-                if (weight < mid)
-                    result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
-                else if (weight > mid)
-                    result = Math.Round((weight - mid) / ((max - mid) / 2.5));
-                return Convert.ToInt32(result, CultureInfo.InvariantCulture);
+                throw new NotImplementedException("The Ruminant.HealthScore property is depeciated. Please use Body Condition Score.");
             }
         }
 
