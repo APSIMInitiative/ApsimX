@@ -527,7 +527,7 @@ namespace Models.AgPasture
                 else
                 {
                     summary.WriteMessage(this, "Defoliation will not happen because there is not enough plant material.", MessageType.Diagnostic);
-                    DaysSinceGraze = 0;
+                    DaysSinceGraze = 0;  //VOS why would this be zeroed if it is not grazed?
                 }
             }
             return false;
@@ -567,7 +567,7 @@ namespace Models.AgPasture
 
             // Do graze if expression is true
             else
-                return expressionFunction.Value();
+                return expressionFunction.Value();  
         }
 
 
