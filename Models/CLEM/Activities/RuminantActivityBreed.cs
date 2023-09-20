@@ -302,7 +302,7 @@ namespace Models.CLEM.Activities
                     {
                         bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale;
                         Sex sex = isMale ? Sex.Male : Sex.Female;
-                        double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+                        double weight = female.BreedParams.BirthScalar * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                         
                         Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, 0, weight);
                         newSucklingRuminant.HerdName = female.HerdName;

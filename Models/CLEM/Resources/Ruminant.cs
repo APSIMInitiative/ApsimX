@@ -132,7 +132,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy from intake
         /// </summary>
-        public double EnergyFromIntake { get { return Intake.MEIntakeMilk + Intake.MEIntakeFeed; } }
+        public double EnergyFromIntake { get { return Intake.ME; } }
 
         public void ResetEnergy()
         {
@@ -144,31 +144,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
-
-        /// <summary>
-        /// Get the value to use for the transaction style requested
-        /// </summary>
-        /// <param name="transactionStyle">Style of transaction grouping</param>
-        /// <param name="pricingStyle">Style of pricing if necessary</param>
-        /// <returns>Label to group by</returns>
-        public string GetTransactionCategory(RuminantTransactionsGroupingStyle transactionStyle, PurchaseOrSalePricingStyleType pricingStyle = PurchaseOrSalePricingStyleType.Both)
-        {
-            string result = "N/A";
-            switch (transactionStyle)
-            {
-                case RuminantTransactionsGroupingStyle.Combined:
-                    return "All";
-                case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
-                case RuminantTransactionsGroupingStyle.ByClass:
-                    return this.Class;
-                case RuminantTransactionsGroupingStyle.BySexAndClass:
-                    return this.FullCategory;
-                default:
-                    break;
-            }
-            return result;
-        }
 
         /// <summary>
         /// Current animal price group for this individual 
@@ -306,7 +281,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double CalculateNormalisedWeight(double age)
         {
-            return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
 
         /// <summary>
@@ -469,6 +444,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Class for Breeder individuals
+        /// </summary>
+        public abstract string BreederClass { get; }
+
+        /// <summary>
         /// Determine the category of this individual
         /// </summary>
         [FilterByProperty]
@@ -476,37 +456,38 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (this.IsSuckling)
+                if (IsSuckling)
                     return "Suckling";
-                else if (this.IsWeaner)
+                else if (IsWeaner)
                     return "Weaner";
                 else
                 {
-                    if (this is RuminantFemale)
-                    {
-                        if ((this as RuminantFemale).IsPreBreeder)
-                            return "PreBreeder";
-                        else
-                            return "Breeder";
-                    }
-                    else
-                    {
-                        if ((this as RuminantMale).IsSire)
-                            return "Sire";
-                        else if ((this as RuminantMale).IsCastrated)
-                            return "Castrate";
-                        else
-                        {
-                            if ((this as RuminantMale).IsWildBreeder)
-                            {
-                                return "Breeder";
-                            }
-                            else
-                            {
-                                return "PreBreeder";
-                            }
-                        }
-                    }
+                    return BreederClass;
+                    //if (this is RuminantFemale)
+                    //{
+                    //    if ((this as RuminantFemale).IsPreBreeder)
+                    //        return "PreBreeder";
+                    //    else
+                    //        return "Breeder";
+                    //}
+                    //else
+                    //{
+                    //    if ((this as RuminantMale).IsSire)
+                    //        return "Sire";
+                    //    else if ((this as RuminantMale).IsCastrated)
+                    //        return "Castrate";
+                    //    else
+                    //    {
+                    //        if ((this as RuminantMale).IsWildBreeder)
+                    //        {
+                    //            return "Breeder";
+                    //        }
+                    //        else
+                    //        {
+                    //            return "PreBreeder";
+                    //        }
+                    //    }
+                    //}
                 }
             }
         }
@@ -533,7 +514,7 @@ namespace Models.CLEM.Resources
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
         [FilterByProperty]
-        public bool IsWeaner
+        public bool IsWeaner 
         {
             get
             {
@@ -570,11 +551,11 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Current monthly metabolic intake after crude protein adjustment
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MetabolicIntake { get; set; }
+        ///// <summary>
+        ///// Current monthly metabolic intake after crude protein adjustment
+        ///// </summary>
+        ///// <units>kg/month</units>
+        //public double MetabolicIntake { get; set; }
 
         /// <summary>
         /// Number in this class (1 if individual model)
@@ -851,6 +832,32 @@ namespace Models.CLEM.Resources
             else
                 return new RuminantFemale(parameters, age, weight);
         }
+
+        /// <summary>
+        /// Get the value to use for the transaction style requested
+        /// </summary>
+        /// <param name="transactionStyle">Style of transaction grouping</param>
+        /// <param name="pricingStyle">Style of pricing if necessary</param>
+        /// <returns>Label to group by</returns>
+        public string GetTransactionCategory(RuminantTransactionsGroupingStyle transactionStyle, PurchaseOrSalePricingStyleType pricingStyle = PurchaseOrSalePricingStyleType.Both)
+        {
+            string result = "N/A";
+            switch (transactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    return "All";
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name ?? $"{pricingStyle}NotSet";
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    return this.Class;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    return this.FullCategory;
+                default:
+                    break;
+            }
+            return result;
+        }
+
     }
 
     /// <summary>

@@ -12,10 +12,28 @@ namespace Models.CLEM.Resources
 
     public class RuminantFemale : Ruminant
     {
-        /// <summary>
-        /// Sex of individual
-        /// </summary>
+        /// <inheritdoc/>
         public override Sex Sex { get { return Sex.Female; } }
+
+        /// <inheritdoc/>
+        public override string BreederClass
+        {
+            get
+            {
+                if (IsPreBreeder)
+                    return "PreBreeder";
+                else
+                {
+                    // ToDo: update when the spayed and webbed properties are pulled from CN30 branch
+                    //if (IsSpayed)
+                    //    return "Spayed";
+                    //else if (IsWebbed)
+                    //    return "Webbed";
+                    //else
+                        return "Breeder";
+                }
+            }
+        }
 
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
@@ -120,7 +138,7 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return (1 - 0.33 + 0.33 * RelativeSize) * BreedParams.SRWBirth * StandardReferenceWeight;
+                return (1 - 0.33 + 0.33 * RelativeSize) * BreedParams.BirthScalar * StandardReferenceWeight;
             }
         }
 
@@ -243,9 +261,12 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
+            ProportionMilkProductionAchieved = 1;
+            MilkLag = 1;
             AgeAtLastBirth = this.Age;
             CarryingCount = 0;
             MilkingPerformed = false;
+            RelativeConditionAtParturition = RelativeCondition;
         }
 
         /// <summary>
@@ -327,9 +348,14 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The proportion of the potential milk production achieved in timestep
+        /// </summary>
+        public double ProportionMilkProductionAchieved { get; set; }
+
+        /// <summary>
         /// The body condition score at birth.
         /// </summary>
-        public double BodyConditionScoreAtLastBirth { get; set; }
+        public double RelativeConditionAtParturition { get; set; }
 
         /// <summary>
         /// Calculate the MilkinIndicates if the individual is lactating
@@ -348,6 +374,16 @@ namespace Models.CLEM.Resources
                     return 0;
             }
         }
+
+        /// <summary>
+        /// Lag term for milk production
+        /// </summary>
+        public double MilkLag { get; set; }
+
+        /// <summary>
+        /// Tracks the nutrition after peak lactation for milk production.
+        /// </summary>
+        public double NutritionAfterPeakLactationFactor { get; set; }
 
         /// <summary>
         /// Determines if milking has been performed on individual to increase milk production
