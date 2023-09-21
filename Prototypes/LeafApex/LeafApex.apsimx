@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 160,
+  "Version": 165,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -714,6 +713,7 @@
                   "$type": "Models.PMF.Phen.GerminatingPhase, Models",
                   "Start": "Sowing",
                   "End": "Germination",
+                  "IsEmerged": false,
                   "Name": "Germinating",
                   "ResourceName": null,
                   "Children": [],
@@ -724,6 +724,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
+                  "IsEmerged": true,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -792,6 +793,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Emergence",
                   "End": "TerminalSpikelet",
+                  "IsEmerged": true,
                   "Name": "Vegetative",
                   "ResourceName": null,
                   "Children": [
@@ -857,6 +859,7 @@
                   "$type": "Models.PMF.Phen.LeafAppearancePhase, Models",
                   "Start": "TerminalSpikelet",
                   "End": "FlagLeaf",
+                  "IsEmerged": true,
                   "Name": "StemElongation",
                   "ResourceName": null,
                   "Children": [
@@ -922,6 +925,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "FlagLeaf",
                   "End": "Flowering",
+                  "IsEmerged": true,
                   "Name": "EarlyReproductive",
                   "ResourceName": null,
                   "Children": [
@@ -1031,6 +1035,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Flowering",
                   "End": "StartGrainFill",
+                  "IsEmerged": true,
                   "Name": "GrainDevelopment",
                   "ResourceName": null,
                   "Children": [
@@ -1061,6 +1066,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "StartGrainFill",
                   "End": "EndGrainFill",
+                  "IsEmerged": true,
                   "Name": "GrainFilling",
                   "ResourceName": null,
                   "Children": [
@@ -1091,6 +1097,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "EndGrainFill",
                   "End": "Maturity",
+                  "IsEmerged": true,
                   "Name": "Maturing",
                   "ResourceName": null,
                   "Children": [
@@ -1121,6 +1128,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Maturity",
                   "End": "HarvestRipe",
+                  "IsEmerged": true,
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
@@ -1151,6 +1159,7 @@
                   "$type": "Models.PMF.Phen.EndPhase, Models",
                   "Start": "HarvestRipe",
                   "End": "Unused",
+                  "IsEmerged": true,
                   "Name": "ReadyForHarvesting",
                   "ResourceName": null,
                   "Children": [
@@ -2478,70 +2487,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 1.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.8,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Thin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2808,70 +2760,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.2,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.3,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.15,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Thin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3614,7 +3509,6 @@
               "LAI": 0.0,
               "Depth": 0.0,
               "Width": 0.0,
-              "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
               "LightProfile": null,
@@ -4970,70 +4864,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.3,
+                  "HarvestFractionDeadToResidue": 0.3,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.3,
-                      "FractionDeadToResidue": 0.3,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.8,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.6,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.6,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.1,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.05,
-                      "Name": "Thin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5262,70 +5099,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.5,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.1,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Thin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6082,70 +5862,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.5,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.1,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.5,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.05,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Thin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8901,7 +8624,49 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Arbitrator;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing Models.Interfaces;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Newtonsoft.Json;\r\n\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat;\r\n        \r\n        public event EventHandler LeafReport;\r\n        \r\n        [JsonIgnore] public int LeafPosition { get; set; }\r\n        [JsonIgnore] public double MaxLeafSize { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            var leaf = Wheat.Leaf as Leaf;\r\n            if ((leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))\r\n            {\r\n                LeafPosition = (int)\r\n                leaf.ExpandedCohortNo;\r\n                MaxLeafSize = leaf.CohortSize[LeafPosition - 1];\r\n                LeafReport.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "CodeArray": [
+            "using Models.Soils;",
+            "using APSIM.Shared.Utilities;",
+            "using Models.Soils.Arbitrator;",
+            "using Models.PMF.Organs;",
+            "using Models.PMF;",
+            "using Models.Interfaces;",
+            "using Models.Core;",
+            "using System.Xml.Serialization;",
+            "using System.Collections.Generic;",
+            "using System;",
+            "using Newtonsoft.Json;",
+            "",
+            "",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] Clock Clock;",
+            "        [Link] Plant Wheat;",
+            "        ",
+            "        public event EventHandler LeafReport;",
+            "        ",
+            "        [JsonIgnore] public int LeafPosition { get; set; }",
+            "        [JsonIgnore] public double MaxLeafSize { get; set; }",
+            "        ",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            var leaf = Wheat.Leaf as Leaf;",
+            "            if ((leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))",
+            "            {",
+            "                LeafPosition = (int)",
+            "                leaf.ExpandedCohortNo;",
+            "                MaxLeafSize = leaf.CohortSize[LeafPosition - 1];",
+            "                LeafReport.Invoke(this, new EventArgs());",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
           "Parameters": [],
           "Name": "MaxLeafSize",
           "ResourceName": null,
@@ -8927,7 +8692,39 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Wheat;\r\n        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]\r\n        private Phenology phenology;\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"Maturing\")\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+          "CodeArray": [
+            "using Models.PMF.Phen;",
+            "using System;",
+            "using Models.Core;",
+            "using System.Collections.Generic;",
+            "using System.Text;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models;",
+            "using System.Xml.Serialization;",
+            "using APSIM.Shared.Utilities;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model",
+            "    {",
+            "        [Link] private Plant Wheat;",
+            "        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]",
+            "        private Phenology phenology;",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            if (phenology.CurrentPhase.Name == \"Maturing\")",
+            "            {",
+            "                Wheat.Harvest();",
+            "                Wheat.EndCrop();",
+            "            }",
+            "        }",
+            "    }",
+            "}",
+            "       "
+          ],
           "Parameters": null,
           "Name": "Harvesting",
           "ResourceName": null,
@@ -9020,7 +8817,41 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Day of year fertiliser is to be applied\")]\r\n        public int FertDayOfYear { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser to be applied\")]\r\n        public double Amount { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.DayOfYear == FertDayOfYear)\r\n            {\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+              "CodeArray": [
+                "using Models.Soils;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using APSIM.Shared.Utilities;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock;",
+                "        [Link] Fertiliser Fertiliser;",
+                "        [Link] Summary Summary;",
+                "        ",
+                "        [Description(\"Day of year fertiliser is to be applied\")]",
+                "        public int FertDayOfYear { get; set; }",
+                "",
+                "        [Description(\"Amount of fertiliser to be applied\")]",
+                "        public double Amount { get; set; }",
+                "",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (Clock.Today.DayOfYear == FertDayOfYear)",
+                "            {",
+                "                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);",
+                "            }",
+                "        ",
+                "        }",
+                "        ",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "FertDayOfYear",
@@ -9256,42 +9087,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "ResourceName": null,
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "Nutrient",
+                  "ResourceName": "Nutrient",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -9409,6 +9207,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -9463,7 +9262,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -9504,7 +9303,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -9545,7 +9344,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                  "$type": "Models.Soils.Solute, Models",
                   "Thickness": [
                     150.0,
                     150.0,
@@ -9618,111 +9417,129 @@
               "Operation": [
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-05-31T00:00:00",
                   "Action": "[Irrigation].Apply(amount:31);",
-                  "Enabled": true
+                  "Line": "1995-05-31 [Irrigation].Apply(amount:31);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-01T00:00:00",
                   "Action": "[Irrigation].Apply(amount:13);",
-                  "Enabled": true
+                  "Line": "1995-06-01 [Irrigation].Apply(amount:13);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-02T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-06-02 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-05T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-06-05 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-06T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-06-06 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-07T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-06-07 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-08T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-06-08 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-06-15T00:00:00",
                   "Action": "[Wheat].Sow(population:120, cultivar:\"Hartog\", depth:40, rowSpacing:250);",
-                  "Enabled": true
+                  "Line": "1995-06-15 [Wheat].Sow(population:120, cultivar:\"Hartog\", depth:40, rowSpacing:250);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-07-05T00:00:00",
                   "Action": "[Irrigation].Apply(amount:26);",
-                  "Enabled": true
+                  "Line": "1995-07-05 [Irrigation].Apply(amount:26);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-07-21T00:00:00",
                   "Action": "[Irrigation].Apply(amount:14);",
-                  "Enabled": true
+                  "Line": "1995-07-21 [Irrigation].Apply(amount:14);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-08-01T00:00:00",
                   "Action": "[Irrigation].Apply(amount:28);",
-                  "Enabled": true
+                  "Line": "1995-08-01 [Irrigation].Apply(amount:28);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-08-11T00:00:00",
                   "Action": "[Irrigation].Apply(amount:30);",
-                  "Enabled": true
+                  "Line": "1995-08-11 [Irrigation].Apply(amount:30);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-08-25T00:00:00",
                   "Action": "[Irrigation].Apply(amount:15);",
-                  "Enabled": true
+                  "Line": "1995-08-25 [Irrigation].Apply(amount:15);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-08-31T00:00:00",
                   "Action": "[Irrigation].Apply(amount:14);",
-                  "Enabled": true
+                  "Line": "1995-08-31 [Irrigation].Apply(amount:14);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-09-04T00:00:00",
                   "Action": "[Irrigation].Apply(amount:15);",
-                  "Enabled": true
+                  "Line": "1995-09-04 [Irrigation].Apply(amount:15);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-09-15T00:00:00",
                   "Action": "[Irrigation].Apply(amount:25);",
-                  "Enabled": true
+                  "Line": "1995-09-15 [Irrigation].Apply(amount:25);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-09-22T00:00:00",
                   "Action": "[Irrigation].Apply(amount:20);",
-                  "Enabled": true
+                  "Line": "1995-09-22 [Irrigation].Apply(amount:20);"
                 },
                 {
                   "$type": "Models.Operation, Models",
+                  "Enabled": true,
                   "Date": "1995-10-02T00:00:00",
                   "Action": "[Irrigation].Apply(amount:11);",
-                  "Enabled": true
+                  "Line": "1995-10-02 [Irrigation].Apply(amount:11);"
                 }
               ],
               "Name": "IrrigationSchedule",
@@ -9749,17 +9566,50 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.OilPalm;\r\nusing Models.Soils;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private SurfaceOrganicMatter SurfaceOM;\r\n        [Link] private Summary Summary;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        \r\n        public double NitTot { get; set; }\r\n        public double CarbonTot { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {    \r\n            NitTot = 0;\r\n            CarbonTot = 0;\r\n        }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            NitTot = MathUtilities.Sum(SoilNitrogen.TotalN);\r\n            CarbonTot = MathUtilities.Sum(SoilNitrogen.TotalC);\r\n        }\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "NitTot",
-                  "Value": "27077.3722617306"
-                },
-                {
-                  "Key": "CarbonTot",
-                  "Value": "0"
-                }
+              "CodeArray": [
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.PMF.OilPalm;",
+                "using Models.Soils;",
+                "using Models.Surface;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Interfaces;",
+                "using Models.Soils.Nutrients;",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] private Clock Clock;",
+                "        [Link] private Soil Soil;",
+                "        [Link] private SurfaceOrganicMatter SurfaceOM;",
+                "        [Link] private Summary Summary;",
+                "        [Link]",
+                "        private Nutrient Nutrient;",
+                "        ",
+                "        public double NitTot { get; set; }",
+                "        public double CarbonTot { get; set; }",
+                "        ",
+                "        [EventSubscribe(\"StartOfSimulation\")]",
+                "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                "        {    ",
+                "            NitTot = 0;",
+                "            CarbonTot = 0;",
+                "        }",
+                "        ",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            NitTot = MathUtilities.Sum(Nutrient.TotalN);",
+                "            CarbonTot = MathUtilities.Sum(Nutrient.TotalC);",
+                "        }",
+                "    }",
+                "}"
               ],
+              "Parameters": [],
               "Name": "Calculations",
               "ResourceName": null,
               "Children": [],
@@ -9816,7 +9666,39 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Wheat;\r\n        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]\r\n        private Phenology phenology;\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"Ripening\")\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+              "CodeArray": [
+                "using Models.PMF.Phen;",
+                "using System;",
+                "using Models.Core;",
+                "using System.Collections.Generic;",
+                "using System.Text;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models;",
+                "using System.Xml.Serialization;",
+                "using APSIM.Shared.Utilities;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] private Plant Wheat;",
+                "        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]",
+                "        private Phenology phenology;",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (phenology.CurrentPhase.Name == \"Ripening\")",
+                "            {",
+                "                Wheat.Harvest();",
+                "                Wheat.EndCrop();",
+                "            }",
+                "        }",
+                "    }",
+                "}",
+                "       "
+              ],
               "Parameters": null,
               "Name": "Harvesting",
               "ResourceName": null,

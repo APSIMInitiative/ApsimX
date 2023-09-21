@@ -52,7 +52,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// List of all separators that can be used for date strings
         /// </summary>
-        static public readonly char[] VALID_SEPERATORS = new char[] { '/', '-', ',', '.', '_', ' ' };
+        static public readonly char[] VALID_SEPERATORS = new char[] { '-', '/',  ',', '.', '_', ' ' };
         private const char SEPERATOR_REPLACEMENT = '-';
 
         /// <summary>
@@ -444,15 +444,15 @@ namespace APSIM.Shared.Utilities
             //replace it with a - character
 
             //valid choices: / - , . _
-
+            string dateCleaned = dateTrimmed;
             int types = 0;
             foreach (char c in VALID_SEPERATORS)
             {
-                if (dateString.Contains(c))
+                if (dateTrimmed.Contains(c))
                 {
                     types += 1;
                     //change symbol to \t
-                    dateTrimmed = dateTrimmed.Replace(c, SEPERATOR_REPLACEMENT);
+                    dateCleaned = dateTrimmed.Replace(c, SEPERATOR_REPLACEMENT);
                 }
             }
 
@@ -471,11 +471,11 @@ namespace APSIM.Shared.Utilities
                 else if (types == 0)
                 {
                     //we may be dealing with a Jan01 or 01Jan string, we need to check and handle that
-                    Match result = rxDateNoSymbol.Match(dateTrimmed);
+                    Match result = rxDateNoSymbol.Match(dateCleaned);
                     if (result.Success && result.Groups.Count == 2)
                     {
                         //convert it to 01-Jan format
-                        dateTrimmed = result.Groups[0] + SEPERATOR_REPLACEMENT.ToString() + result.Groups[1];
+                        dateCleaned = result.Groups[0] + SEPERATOR_REPLACEMENT.ToString() + result.Groups[1];
                     }
                     else
                     {
@@ -486,7 +486,7 @@ namespace APSIM.Shared.Utilities
             }
 
             //separate by \t to get parts
-            string[] parts = dateTrimmed.Split(SEPERATOR_REPLACEMENT);
+            string[] parts = dateCleaned.Split(SEPERATOR_REPLACEMENT);
 
             //check that there are 2 or 3 parts and that each part has text in it
             if (parts.Length < 2 || parts.Length > 3)
@@ -510,10 +510,10 @@ namespace APSIM.Shared.Utilities
             string monthError = "";
             string yearError = "";
             //if date is in ISO format 2000-01-01 or 2000-01-01T00:00:00
-            if (rxISO.Match(dateTrimmed).Success)
+            if (rxISO.Match(dateCleaned).Success)
             {
-                values.year = ParseYearString(parts[0], dateTrimmed, out yearError);
-                values.month = ParseMonthString(parts[1], dateTrimmed, out monthError);
+                values.year = ParseYearString(parts[0], dateCleaned, out yearError);
+                values.month = ParseMonthString(parts[1], dateCleaned, out monthError);
                 //if this is a full ISO, split on the T character
                 if (parts[2].Contains('T'))
                     parts[2] = parts[2].Split('T')[0];
@@ -521,7 +521,7 @@ namespace APSIM.Shared.Utilities
                 values.day = ParseDayString(parts[2], dateString, out dayError);
             }
             //if date is in ambiguous 01-01-2000 format
-            else if (rxDateAllNums.Match(dateTrimmed).Success)
+            else if (rxDateAllNums.Match(dateCleaned).Success)
             {
                 //by default we treat these as day-month-year
                 values.day = ParseDayString(parts[0], dateString, out dayError);

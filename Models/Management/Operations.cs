@@ -26,11 +26,12 @@ namespace Models
         /// <summary>
         /// 
         /// </summary>
-        public Operation(bool enabled, string date, string action)
+        public Operation(bool enabled, string date, string action, string line)
         {
             Enabled = enabled;
             Date = date;
             Action = action;
+            Line = line;
         }
 
         /// <summary>
@@ -44,6 +45,10 @@ namespace Models
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
         public string Action { get; set; }
+
+        /// <summary>Gets or sets the line shown in the view.</summary>
+        /// <value>A string</value>
+        public string Line { get; set; }
 
         /// <summary>Gets the action model.</summary>
         /// <returns></returns>
@@ -72,14 +77,14 @@ namespace Models
                 if (line.Length == 0)
                     return null;
 
-                string lineTrimmed = line.Trim();
-
-                Regex parser = new Regex(@"^(\/?\/?)\s*?(\S*)\s*(\S*)$");
-                Match match = parser.Match(lineTrimmed);
+                Regex parser = new Regex(@"^(\/?\/?)\s*(\S*)\s+(.+)$");
+                Match match = parser.Match(line.Trim());
 
                 if (match.Success)
                 {
                     Operation operation = new Operation();
+                    operation.Line = line;
+
                     if (match.Groups[1].Value.CompareTo("//") == 0)
                         operation.Enabled = false;
                     else
@@ -147,6 +152,9 @@ namespace Models
             DateTime operationDate;
             foreach (Operation operation in Operation.Where(o => o.Enabled))
             {
+                if (operation.Date == null || operation.Action == null)
+                    throw new Exception($"Error: Operation line '{operation.Line}' cannot be parsed.");
+
                 operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
                 if (operationDate == Clock.Today)
                 {

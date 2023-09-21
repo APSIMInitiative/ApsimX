@@ -2082,7 +2082,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
             {
                 ClearBiomassFlows();
                 foreach (LeafCohort leaf in Leaves)

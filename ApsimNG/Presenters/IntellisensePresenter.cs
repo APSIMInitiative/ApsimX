@@ -437,7 +437,10 @@
                 parameterStrings.Add(parameterString);
                 parameterDocumentation.AppendLine(string.Format("{0}: {1}", parameter.Name, NeedContextItemsArgs.GetDescription(method, parameter.Name)));
             }
-            string parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+            string parameters = "";
+            if (parameterStrings.Count > 0)
+                parameters = parameterStrings.Aggregate((a, b) => string.Format("{0}, {1}", a, b));
+
 
             completion.Signature = string.Format("{0} {1}({2})", method.ReturnType.Name, method.Name, parameters);
             completion.Summary = NeedContextItemsArgs.GetDescription(method);

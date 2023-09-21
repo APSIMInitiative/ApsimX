@@ -85,7 +85,7 @@ namespace Models.Storage
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
             // Do nothing.
         }

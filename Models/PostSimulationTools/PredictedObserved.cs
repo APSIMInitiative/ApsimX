@@ -112,23 +112,19 @@ namespace Models.PostSimulationTools
                                                         .Where(f => !string.IsNullOrEmpty(f))
                                                         .Select(f => f == "SimulationName" ? "SimulationID" : f);
 
-                IEnumerable<string> shortObservedFieldNamesToMatch = fieldNamesToMatch.Select(f => dataStore.Reader.BriefColumnName(ObservedTableName, f));
-
                 bool useSimulationNameForMatch = fieldNamesToMatch.Contains("SimulationID");
 
                 StringBuilder query = new StringBuilder("SELECT ");
                 for (int i = 0; i < commonCols.Count; i++)
                 {
                     string s = commonCols[i];
-                    string obsColShort = dataStore.Reader.BriefColumnName(ObservedTableName, s);
-                    string predColShort = dataStore.Reader.BriefColumnName(PredictedTableName, s);
                     if (i != 0)
                         query.Append(", ");
 
                     if (fieldNamesToMatch.Contains(s))
-                        query.Append($"O.\"{obsColShort}\"");
+                        query.Append($"O.\"{s}\"");
                     else
-                        query.Append($"O.\"{obsColShort}\" AS \"Observed.{obsColShort}\", P.\"{predColShort}\" AS \"Predicted.{predColShort}\"");
+                        query.Append($"O.\"{s}\" AS \"Observed.{s}\", P.\"{s}\" AS \"Predicted.{s}\"");
                 }
 
                 // Add columns which exist in one table but not both.
@@ -193,24 +189,6 @@ namespace Models.PostSimulationTools
 
                 if (predictedObservedData != null)
                 {
-                    foreach (DataColumn column in predictedObservedData.Columns)
-                    {
-                        if (column.ColumnName.StartsWith("Predicted."))
-                        {
-                            string shortName = column.ColumnName.Substring("Predicted.".Length);
-                            column.ColumnName = "Predicted." + dataStore.Reader.FullColumnName(PredictedTableName, shortName);
-                        }
-                        else if (column.ColumnName.StartsWith("Observed."))
-                        {
-                            string shortName = column.ColumnName.Substring("Observed.".Length);
-                            column.ColumnName = "Observed." + dataStore.Reader.FullColumnName(ObservedTableName, shortName);
-                        }
-                        else if (shortObservedFieldNamesToMatch.Contains(column.ColumnName))
-                        {
-                            column.ColumnName = dataStore.Reader.FullColumnName(ObservedTableName, column.ColumnName);
-                        }
-                    }
-
                     // Add in error columns for each data column.
                     foreach (string columnName in commonCols)
                     {
@@ -308,7 +286,23 @@ namespace Models.PostSimulationTools
             IEnumerable<string> predictedColumns = storage.Reader.GetColumns(PredictedTableName).Select(c => c.Item1);
             IEnumerable<string> observedColumns = storage.Reader.GetColumns(ObservedTableName).Select(c => c.Item1);
 
-            return predictedColumns.Intersect(observedColumns).ToArray();
+            List<string> intersect = predictedColumns.Intersect(observedColumns).ToList();
+
+            //These columns will always exist, however may have been added when the table was loaded.
+            //We need to add them back in here for PredictObserve
+            if (!intersect.Contains("SimulationName"))
+            {
+                int pos = intersect.IndexOf("SimulationID");
+                intersect.Insert(pos+1, "SimulationName");
+            }
+
+            if (!intersect.Contains("CheckpointName"))
+            {
+                int pos = intersect.IndexOf("CheckpointID");
+                intersect.Insert(pos + 1, "CheckpointName");
+            }
+
+            return intersect.ToArray();
         }
     }
 }

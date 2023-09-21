@@ -469,6 +469,38 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Water potential of layer</summary>
+        [JsonIgnore]
+        [Units("cm/h")]
+        public double[] K
+        {
+            get
+            {
+                double[] k = new double[n+1];
+
+                for (int i = 0; i <= n; i++)
+                    k[i] = HP.SimpleK(i, _psi[i], physical.SAT, physical.KS);
+                return k;
+            }
+        }
+
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex 
+        { 
+            get 
+            { 
+                return HP.PoreInteractionIndex; 
+            } 
+            set 
+            { 
+                HP.PoreInteractionIndex = value;
+                HP.SetupKCurve(n, physical.LL15, physical.DUL, physical.SAT, physical.KS, KDul, PSIDul);
+            } 
+        }
+
         /// <summary>
         /// Soil water potential including solute concentration effects. Not currently active.
         /// Maybe useful in the future for salinity effects on plant water uptake.
@@ -535,10 +567,6 @@ namespace Models.Soils
                 return value;
             }
         }
-
-        /// <summary>Turn vapour conductivity on?</summary>
-        [JsonIgnore]
-        public bool WaterVapourConductivityOn { get; set; }
 
         /// <summary>Pond depth.</summary>
         [Units("mm")]
@@ -4199,7 +4227,7 @@ namespace Models.Soils
             //if (thsat == 0.0)
             //    thsat = _sat[ix];
 
-            if (WaterVapourConductivityOn)
+            if (VC)
             {
                 //        add vapour conductivity hkv
                 double phi = thsat / 0.93 - tth;
