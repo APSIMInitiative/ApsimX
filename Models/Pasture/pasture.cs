@@ -136,6 +136,9 @@ namespace Models.GrazPlan
         [Link]
         private Chemical soilChemical = null;
 
+        [Link(IsOptional = true)]
+        private Stock stockModel = null;
+
         /// <summary>Soil-plant parameterisation.</summary>
         private Models.Soils.SoilCrop soilCropData;
 
@@ -2551,10 +2554,11 @@ namespace Models.GrazPlan
             FFieldDAI = PastureModel.AreaIndex(sgDRY);
             FFieldCoverSum = PastureModel.Cover(TOTAL);
 
-            FInputs.TrampleRate = 0.0;  // default
-                                        // Animal drivers - trampling is in kg/ha
-                                        // TODO: Find the stock component and request the Trampling value for the paddock that this pasture is in.
-                                        // FInputs.TrampleRate  = FInputs.TrampleRate + Stock.Trampling / 10000.0; // Stocking rate factor used to determine fall of standing dead
+            // Animal drivers - trampling is in kg/ha
+            // Find the stock component and request the Trampling value for the paddock that this pasture is in.
+            FInputs.TrampleRate = 0.0;
+            if (stockModel != null)
+                FInputs.TrampleRate = stockModel.TramplingMass(zone.Name) / 10000.0;   // ha -> m^2
 
             if (PastureModel.ElementSet.Length > 0)
             {
