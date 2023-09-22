@@ -181,6 +181,16 @@ namespace Models.AgPasture
         public double DepthUrineIsAdded { get; set; }
 
         /// <summary></summary>
+        [Description("Send some fraction of the calculated dung off-paddock - usually this should be zero (0-1)")]
+        [Units("0-1")]
+        public double SendDungElsewhere { get; set; }
+
+        /// <summary></summary>
+        [Description("Send some fraction of the calculated urine off-paddock - usually this should be zero (0-1)")]
+        [Units("0-1")]
+        public double SendUrineElsewhere { get; set; }
+
+        /// <summary></summary>
         [Separator("Plant population modifier")]
         [Description("Enter the fraction of population decline due to defoliation (0-1):")]
         public double FractionPopulationDecline { get; set; }
@@ -495,7 +505,8 @@ namespace Models.AgPasture
                         zone.DoUrineDungTrampling(clock.Today.Month, FractionDefoliatedBiomassToSoil,
                                                   FractionDefoliatedNToSoil, FractionExcretedNToDung,
                                                   CNRatioDung, DepthUrineIsAdded, TramplingOn,
-                                                  PastureConsumedAtMaximumRateOfLitterRemoval, MaximumPropLitterMovedToSoil);
+                                                  PastureConsumedAtMaximumRateOfLitterRemoval, MaximumPropLitterMovedToSoil,
+                                                  SendDungElsewhere, SendUrineElsewhere);
                 }
                 else
                     throw new Exception("Currently, when SimpleGrazing is at the top level of a simulation it must have a SimpleCow sibling present.");
@@ -733,6 +744,8 @@ namespace Models.AgPasture
             /// <param name="doTrampling"></param>
             /// <param name="pastureConsumedAtMaximumRateOfLitterRemoval"></param>
             /// <param name="maximumPropLitterMovedToSoil"></param>
+            /// <param name="sendDungElsewhere"></param>
+            /// <param name="sendUrineElsewhere"></param>
             public void DoUrineDungTrampling(int month, double[] fractionDefoliatedBiomassToSoil,
                                     double[] fractionDefoliatedNToSoil,
                                     double[] fractionExcretedNToDung,
@@ -740,7 +753,9 @@ namespace Models.AgPasture
                                     double depthUrineIsAdded,
                                     bool doTrampling,
                                     double pastureConsumedAtMaximumRateOfLitterRemoval,
-                                    double maximumPropLitterMovedToSoil)
+                                    double maximumPropLitterMovedToSoil,
+                                    double sendDungElsewhere,
+                                    double sendUrineElsewhere)
             {
                 if (grazedForages.Any())
                 {
@@ -770,15 +785,15 @@ namespace Models.AgPasture
                     // find the layer that the fertilizer is to be added to.
                     int layer = SoilUtilities.LayerIndexOfDepth(physical.Thickness, depthUrineIsAdded);
                     var ureaValues = urea.kgha;
-                    ureaValues[layer] += AmountUrineNReturned;
+                    ureaValues[layer] += AmountUrineNReturned * (1- sendUrineElsewhere);
                     urea.SetKgHa(SoluteSetterType.Fertiliser, ureaValues);
 
                     // Send dung to surface
                     var SOMData = new BiomassRemovedType();
                     SOMData.crop_type = "RuminantDung_PastureFed";
                     SOMData.dm_type = new string[] { SOMData.crop_type };
-                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned };
-                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned };
+                    SOMData.dlt_crop_dm = new float[] { (float)AmountDungWtReturned * ((float)1.0 - (float)sendDungElsewhere)};
+                    SOMData.dlt_dm_n = new float[] { (float)AmountDungNReturned * ((float)1.0 - (float)sendDungElsewhere)};
                     SOMData.dlt_dm_p = new float[] { 0.0F };
                     SOMData.fraction_to_residue = new float[] { 1.0F };
                     surfaceOrganicMatter.OnBiomassRemoved(SOMData);
