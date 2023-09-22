@@ -186,7 +186,7 @@ namespace Models.AgPasture
         public double SendDungElsewhere { get; set; }
 
         /// <summary></summary>
-        [Description("Send some fraction of the calculated urine off-paddock - usually this should be zero (0-1)")]
+        [Description("Send some fraction of the  calculated urine off-paddock - usually this should be zero (0-1)")]
         [Units("0-1")]
         public double SendUrineElsewhere { get; set; }
 
