@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
                 unitsToDo = Math.Truncate(unitsToDo);
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {
