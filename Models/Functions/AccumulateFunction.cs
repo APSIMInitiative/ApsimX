@@ -138,22 +138,6 @@ namespace Models.Functions
         }
 
         /// <summary>Called when [cut].</summary>
-        /// <param name="_">The sender.</param>
-        /// <param name="ra">The <see cref="BiomassRemovalArgs"/> instance containing the event data.</param>
-        [EventSubscribe("BiomassRemovedFromManager")]
-        private void OnBiomassRemoved(object _, BiomassRemovalArgs ra)
-        {
-            if (ra.RemovalType == RemovalTypes.Cutting.ToString())
-                AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
-            if (ra.RemovalType == RemovalTypes.Grazing.ToString())
-                AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
-            if (ra.RemovalType == RemovalTypes.Harvesting.ToString())
-                AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
-            if (ra.RemovalType == RemovalTypes.Pruning.ToString())
-                AccumulatedValue -= FractionRemovedOnPrune * AccumulatedValue;
-        }
-
-        /// <summary>Called when [cut].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Cutting")]
