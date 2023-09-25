@@ -24,9 +24,12 @@ namespace Models.PMF.Organs
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001;
+<<<<<<< HEAD
 
         [Link]
         private Clock clock = null;
+=======
+>>>>>>> ddab75f451592c1e7f5a5b0619492027fc4c1c54
         
         /// <summary>The parent plant</summary>
         [Link]
