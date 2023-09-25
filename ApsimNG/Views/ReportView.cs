@@ -7,26 +7,36 @@ namespace UserInterface.Views
 {
 
     /// <summary>
-    /// View for a report component.
+    /// View for a report component that includes new report variable and report frequency UI sections.
     /// </summary>
     public class ReportView : ViewBase, IReportView
     {
+
         private Notebook notebook1 = null;
-        private VBox vbox1 = null;
-        private VBox vbox2 = null;
+        private Paned reportVariablesBox = null;
+        private Paned reportFrequencyBox = null;
+        private Box variablesBox = null;
+        private Box commonVariablesBox = null;
+        private Box frequencyBox = null;
+        private Box commonFrequencyBox = null;
         private Alignment alignment1 = null;
 
         private IEditorView variableEditor;
         private IEditorView frequencyEditor;
+        private IListView commonReportVariableList;
+        private IListView commonReportFrequencyVariableList;
         private ViewBase dataStoreView1;
         private VPaned panel;
         private EditView groupByEdit;
+        private Button submitButton;
 
         /// <summary>
         /// Invoked when the user moves the vertical splitter
         /// between the two text editors.
         /// </summary>
         public event EventHandler SplitterChanged;
+
+        public event EventHandler VerticalSplitterChanged;
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -36,34 +46,59 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.NewReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
-            vbox1 = (VBox)builder.GetObject("vbox1");
-            vbox2 = (VBox)builder.GetObject("vbox2");
+            reportVariablesBox = (Paned)builder.GetObject("reportVariablesBox");
+            variablesBox = (Box)builder.GetObject("variablesBox");
+            commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
+            reportFrequencyBox = (Paned)builder.GetObject("reportFrequencyBox");
+            frequencyBox = (Box)builder.GetObject("frequencyBox");
+            commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
             alignment1 = (Alignment)builder.GetObject("alignment1");
-            
+            submitButton = (Button)builder.GetObject("submitBtn");
+
+
             panel = (VPaned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
             panel.AddNotification(OnPropertyNotified);
 
             groupByEdit = new EditView(owner,
-                                      (Entry)builder.GetObject("groupByEdit")); 
+                                      (Entry)builder.GetObject("groupByEdit"));
 
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
 
+            reportVariablesBox.AddNotification(OnVariablesPanePropertyNotified);
+            reportFrequencyBox.AddNotification(OnFrequencyPanePropertyNotified);
+
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
-            vbox1.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
+            variablesBox.PackStart((variableEditor as ViewBase).MainWidget, true, true, 0);
 
             frequencyEditor = new EditorView(this);
             frequencyEditor.StyleChanged += OnStyleChanged;
-            vbox2.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
+            frequencyBox.PackStart((frequencyEditor as ViewBase).MainWidget, true, true, 0);
+
+            commonReportVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)variableEditor);
+            commonReportVariableList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
+            commonVariablesBox.PackStart((commonReportVariableList as ViewBase).MainWidget, true, true, 0);
+
+            commonReportFrequencyVariableList = new ListView(this, new Gtk.TreeView(), new Gtk.Menu(), (EditorView)frequencyEditor, submitButton);
+            commonReportFrequencyVariableList.DoubleClicked += OnCommonReportFrequencyVariableListDoubleClicked;
+            commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
+
+            // Set the position of the divider to 80% of the width of the Paned gtk object.
+            reportVariablesBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
+            reportFrequencyBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+
         }
+
+
+
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -85,6 +120,26 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary> Updates The position of either common variable listView.</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
+        {
+            this.reportVariablesBox.Position = reportFrequencyBox.Position;
+            if (args.Property == "position")
+                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary> Updates The position of either common variable listView.</summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
+        {
+            this.reportFrequencyBox.Position = reportVariablesBox.Position;
+            if (args.Property == "position")
+                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -124,6 +179,7 @@ namespace UserInterface.Views
             {
                 variableEditor?.Refresh();
                 frequencyEditor?.Refresh();
+
             }
             catch (Exception err)
             {
@@ -155,6 +211,16 @@ namespace UserInterface.Views
             }
         }
 
+        private void OnCommonReportVariableListDoubleClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void OnCommonReportFrequencyVariableListDoubleClicked(object sender, EventArgs e)
+        {
+
+        }
+
         /// <summary>Provides access to the variable list.</summary>
         public IEditorView VariableList { get { return variableEditor; } }
 
@@ -162,7 +228,11 @@ namespace UserInterface.Views
         public IEditorView EventList { get { return frequencyEditor; } }
 
         /// <summary>Provides access to the group by edit.</summary>
-        public IEditView GroupByEdit {  get { return groupByEdit; } }
+        public IEditView GroupByEdit { get { return groupByEdit; } }
+
+        public IListView CommonReportVariablesList { get { return commonReportVariableList; } set { commonReportVariableList = value; } }
+
+        public IListView CommonReportFrequencyVariablesList { get { return commonReportFrequencyVariableList; } set { commonReportFrequencyVariableList = value; } }
 
         /// <summary>Provides access to the DataGrid.</summary>
         public ViewBase DataStoreView { get { return dataStoreView1; } }
@@ -192,43 +262,24 @@ namespace UserInterface.Views
                 panel.Position = value;
             }
         }
+
+        /// <summary>
+        /// Position of the splitter between both the common variable/event list and report variable/event text editors.
+        /// Larger number means further to the end.
+        /// </summary>
+        public int VerticalSplitterPosition
+        {
+            get
+            {
+                return reportVariablesBox.Position;
+            }
+            set
+            {
+                reportVariablesBox.Position = value;
+            }
+        }
+
     }
 
-    interface IReportView
-    {
-        /// <summary>Provides access to the variable list.</summary>
-        IEditorView VariableList { get; }
-
-        /// <summary>Provides access to the variable list.</summary>
-        IEditorView EventList { get; }
-
-        /// <summary>Provides access to the DataGrid.</summary>
-        ViewBase DataStoreView { get; }
-
-        /// <summary>Provides access to the group by edit.</summary>
-        IEditView GroupByEdit { get; }
-
-        /// <summary>
-        /// Invoked when the user moves the vertical splitter
-        /// between the two text editors.
-        /// </summary>
-        event EventHandler SplitterChanged;
-
-        /// <summary>
-        /// Invoked when the selected tab is changed.
-        /// </summary>
-        event EventHandler TabChanged;
-
-        /// <summary>
-        /// Indicates the index of the currently active tab
-        /// </summary>
-        int TabIndex { get; set; }
-
-        /// <summary>
-        /// Position of the splitter between the variable and
-        /// frequency text editors. Larger number means further
-        /// down.
-        /// </summary>
-        int SplitterPosition { get; set; }
-    }
 }
+
