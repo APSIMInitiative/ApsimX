@@ -36,6 +36,8 @@ namespace UserInterface.Views
         /// </summary>
         public event EventHandler SplitterChanged;
 
+        public event EventHandler VerticalSplitterChanged;
+
         /// <summary>
         /// Invoked when the selected tab is changed.
         /// </summary>
@@ -126,6 +128,8 @@ namespace UserInterface.Views
         private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
         {
             this.reportVariablesBox.Position = reportFrequencyBox.Position;
+            if (args.Property == "position")
+                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary> Updates The position of either common variable listView.</summary>
@@ -134,6 +138,8 @@ namespace UserInterface.Views
         private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
         {
             this.reportFrequencyBox.Position = reportVariablesBox.Position;
+            if (args.Property == "position")
+                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -254,6 +260,22 @@ namespace UserInterface.Views
             set
             {
                 panel.Position = value;
+            }
+        }
+
+        /// <summary>
+        /// Position of the splitter between both the common variable/event list and report variable/event text editors.
+        /// Larger number means further to the end.
+        /// </summary>
+        public int VerticalSplitterPosition
+        {
+            get
+            {
+                return reportVariablesBox.Position;
+            }
+            set
+            {
+                reportVariablesBox.Position = value;
             }
         }
 

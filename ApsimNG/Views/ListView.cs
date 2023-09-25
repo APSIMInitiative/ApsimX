@@ -245,7 +245,7 @@ namespace UserInterface.Views
                 Resizable = true,
                 SortColumnId = colIndex,
                 Sizing = TreeViewColumnSizing.GrowOnly,
-                Visible = true // TODO: Make false when 'Code' is received.
+                Visible = true
             };
             if (columnName == "Code")
                 newColumn.Visible = false;

@@ -1,8 +1,8 @@
-﻿using Models.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Models.Core;
 
 namespace Utility
 {
@@ -52,6 +52,12 @@ namespace Utility
         /// and frequency text editors in the report UI.
         /// </summary>
         public int ReportSplitterPosition { get; set; }
+
+        /// <summary>
+        /// The position of the splitter between the variables/event text editors
+        /// and the common report/event ListViews.
+        /// </summary>
+        public int ReportSplitterVerticalPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
