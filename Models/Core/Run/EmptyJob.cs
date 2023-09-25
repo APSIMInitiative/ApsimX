@@ -24,7 +24,7 @@ namespace Models.Core.Run
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
             // Do nothing.
         }

@@ -2365,10 +2365,6 @@ namespace Models.AgPasture
         /// <summary>Plant population.</summary>
         public double Population { get { return 0; } }
 
-        /// <summary>Amount of assimilate available to be damaged.</summary>
-        [JsonIgnore]
-        public double AssimilateAvailable => throw new NotImplementedException();
-
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -4318,24 +4314,6 @@ namespace Models.AgPasture
                 var prop = deltaLAI / LAI;
                 Leaf.RemoveBiomass(liveToRemove: prop * Leaf.DMLive);
             }
-        }
-
-        /// <summary>
-        /// Set the plant root length density.
-        /// </summary>
-        /// <param name="deltaRLD">New root length density.</param>
-        public void ReduceRootLengthDensity(double deltaRLD)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Remove an amount of assimilate from the plant.
-        /// </summary>
-        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

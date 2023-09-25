@@ -182,6 +182,9 @@ namespace UnitTests.Storage
         {
         }
 
+        public void Cancel()
+        {
+        }
         public void Stop()
         {
         }
@@ -309,5 +312,9 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public int CommandCount()
+        { return 0; }
+
     }
 }

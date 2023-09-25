@@ -149,15 +149,6 @@ namespace Models.PMF
             }
         }
 
-        /// <summary>Returns true if the crop is being ended.</summary>
-        /// <remarks>Used to clean up data the day after an EndCrop, enabling some reporting.</remarks>
-        public bool IsEnding { get; set; }
-
-        /// <summary>Counter for the number of days after corp being ended.</summary>
-        /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
-        [Units("d")]
-        public int DaysAfterEnding { get; set; }
-
         /// <summary>
         /// Number of days after sowing.
         /// </summary>
@@ -230,9 +221,6 @@ namespace Models.PMF
         /// <summary>The nitrogen uptake</summary>
         public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
-        /// <summary>Amount of assimilate available to be damaged.</summary>
-        public double AssimilateAvailable => 0;
-
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler Sowing;
         /// <summary>Occurs when a plant is sown.</summary>
@@ -252,8 +240,6 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            IsEnding = false;
-            DaysAfterEnding = 0;
             Clear();
             IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
@@ -285,20 +271,6 @@ namespace Models.PMF
             // Seed mortality
             if (!IsEmerged && SowingData != null && SowingData.Seeds > 0)
                 Population -= Population * seedMortalityRate.Value();
-        }
-
-        /// <summary>Called at the end of the day.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfDay")]
-        private void EndOfDay(object sender, EventArgs e)
-        {
-            // Check whether the plant was terminated (yesterday), complete termination
-            if (IsEnding)
-                if (DaysAfterEnding > 0)
-                    IsEnding = false;
-                else
-                    DaysAfterEnding += 1;
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
@@ -367,7 +339,6 @@ namespace Models.PMF
             SowingData.SkipDensityScale = 1.0 + SowingData.SkipRow / SowingData.SkipPlant;
 
             IsAlive = true;
-            DaysAfterEnding = 0;
 
             if (population > 0)
                 this.Population = population;
@@ -416,7 +387,6 @@ namespace Models.PMF
                 PlantEnding.Invoke(this, new EventArgs());
 
             Clear();
-            IsEnding = true;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -473,37 +443,6 @@ namespace Models.PMF
             foreach (IModel child in Children)
                 if (child != introduction)
                     yield return new Section(child.Name, child.Document());
-        }
-
-        /// <summary>
-        /// Set the plant leaf area index.
-        /// </summary>
-        /// <param name="deltaLAI">Delta LAI.</param>
-        public void ReduceCanopy(double deltaLAI)
-        {
-            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-            var lai = leaf.LAI;
-            if (lai > 0)
-                leaf.LAI = lai - deltaLAI;
-        }
-
-        /// <summary>
-        /// Set the plant root length density.
-        /// </summary>
-        /// <param name="rootLengthModifier">The root length modifier due to root damage (0-1).</param>
-        public void ReduceRootLengthDensity(double rootLengthModifier)
-        {
-            if (Root != null)
-                Root.RootLengthDensityModifierDueToDamage = rootLengthModifier;
-        }
-
-        /// <summary>
-        /// Remove an amount of assimilate from the plant.
-        /// </summary>
-        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

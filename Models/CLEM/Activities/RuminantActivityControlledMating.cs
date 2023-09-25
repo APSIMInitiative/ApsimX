@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.identifier)
                 {
@@ -258,7 +258,14 @@ namespace Models.CLEM.Activities
                     ruminant.ActivityDeterminedConceptionRate = 0;
             }
             uniqueIndividuals = selectedBreeders;
-            SetStatusSuccessOrPartial(numberToSkip > 0 || amountToSkip > 0);
+            if (mated > 0 || numberToSkip > 0 || amountToSkip > 0)
+            {
+                if (mated > 0)
+                {
+                    AddStatusMessage($"{mated} mated where {amountToDo - amountToSkip - conceived} conceived");
+                }
+                SetStatusSuccessOrPartial(numberToSkip + amountToSkip > 0);
+            }
         }
 
         /// <summary>

@@ -923,6 +923,29 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Approaches available to calculate additional mortality based on animal condition
+    /// </summary>
+    public enum ConditionBasedCalculationStyle
+    {
+        /// <summary>
+        /// Use weight as proportion of max weight cutoff (Depreciated)
+        /// </summary>
+        ProportionOfMaxWeightToSurvive,
+        /// <summary>
+        /// Use relative condition cutoff
+        /// </summary>
+        RelativeCondition,
+        /// <summary>
+        /// Use Body Condition Score cutoff
+        /// </summary>
+        BodyConditionScore,
+        /// <summary>
+        /// Ignore condtion-based calculation.
+        /// </summary>
+        None
+    }
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]

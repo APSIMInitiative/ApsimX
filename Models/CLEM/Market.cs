@@ -145,7 +145,7 @@ namespace Models.CLEM
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
 
         /// <inheritdoc/>
-        public string GetFullSummary(object model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(object model, List<string> parentControls, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

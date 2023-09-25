@@ -69,14 +69,13 @@ namespace Models.Soils.Nutrients
         [Link(Type = LinkType.Child)]
         private readonly NFlow[] nutrientFlows = null;
 
-        /// <summary>Child carbon flows.</summary>
-        [Link(Type = LinkType.Child)]
-        private readonly OrganicFlow[] carbonFlows = null;
-
         /// <summary>Surface residue decomposition pool.</summary>
         [Link(ByName = true)]
         private readonly OrganicPool surfaceResidue = null;
 
+        /// <summary>Child carbon flows.</summary>
+        [NonSerialized]
+        private IEnumerable<OrganicFlow> organicFlows = null;
 
         /// <summary>The inert pool.</summary>
         public IOrganicPool Inert { get; private set; }
@@ -300,6 +299,7 @@ namespace Models.Soils.Nutrients
             hydrolysis = nutrientFlows.First(flow => flow.Name == "Hydrolysis");
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
+            organicFlows = FindAllDescendants<OrganicFlow>();
 
             Reset();
             FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
@@ -354,7 +354,7 @@ namespace Models.Soils.Nutrients
                 }
             }
 
-            foreach (OrganicFlow flow in carbonFlows)
+            foreach (OrganicFlow flow in organicFlows)
             {
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     mineralisedN[i] += flow.MineralisedN[i];
