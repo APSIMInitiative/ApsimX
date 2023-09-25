@@ -138,8 +138,7 @@ namespace Models.Soils
 
             if (psiValue >= psiSat)
             {
-                i = 0;
-                t = 0.0;
+                return y0[layer, 0];
             }
             else if (psiValue > psid[layer])
             {
@@ -155,11 +154,11 @@ namespace Models.Soils
             {
                 i = 3;
                 t = (Math.Log10(-psiValue) - Math.Log10(-psi_ll15)) / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                return (1-t) * y0[layer, 3];
             }
             else
             {
-                i = 4;
-                t = 0.0;
+                return 0.0;
             }
 
             double tSqr = t * t;
