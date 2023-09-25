@@ -1,9 +1,5 @@
-﻿using Gtk;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Gtk;
 using UserInterface.EventArguments;
 
 namespace UserInterface.Interfaces
@@ -56,6 +52,11 @@ namespace UserInterface.Interfaces
         /// Invoked when the user changes the style.
         /// </summary>
         event EventHandler StyleChanged;
+
+        /// <summary>
+        /// Invoked when the user drops a variable on the EditorView.
+        /// </summary>
+        public event EventHandler VariableDragDataReceived;
 
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
