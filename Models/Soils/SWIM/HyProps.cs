@@ -67,7 +67,7 @@ namespace Models.Soils
             {
                 psid[layer] = psiDul;  //- (p%x(p%n) - p%x(layer))
 
-                delk[layer, 0] = (dul[layer] - sat[layer]) / (Math.Log10(-psid[layer]));
+                delk[layer, 0] = (dul[layer] - sat[layer]) / (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
                 delk[layer, 1] = (ll15[layer] - dul[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 delk[layer, 2] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 delk[layer, 3] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
@@ -93,8 +93,8 @@ namespace Models.Soils
                 y0[layer, 0] = sat[layer];
                 y1[layer, 0] = sat[layer];
 
-                m0[layer, 1] = mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
-                m1[layer, 1] = mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
+                m0[layer, 1] = mk[layer, 0] * (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
+                m1[layer, 1] = mk[layer, 1] * (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
                 y0[layer, 1] = sat[layer];
                 y1[layer, 1] = dul[layer];
 
