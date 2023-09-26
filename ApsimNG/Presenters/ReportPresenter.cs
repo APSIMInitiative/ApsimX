@@ -184,7 +184,12 @@ namespace UserInterface.Presenters
             this.view.SplitterChanged += OnSplitterChanged;
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.view.VerticalSplitterChanged += OnVerticalSplitterChanged;
-            this.view.VerticalSplitterPosition = Configuration.Settings.ReportSplitterVerticalPosition;
+            // Below check required to prevent commonReportVariables/Events
+            // windows from occuping whole screen.
+            if (Configuration.Settings.ReportSplitterVerticalPosition != 0)
+                this.view.VerticalSplitterPosition = Configuration.Settings.ReportSplitterVerticalPosition;
+            else
+                this.view.VerticalSplitterPosition = 800;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.CommonReportVariablesList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
             this.view.CommonReportFrequencyVariablesList.DoubleClicked += OnCommonReportFrequencyVariablesListDoubleClicked;
