@@ -34,8 +34,7 @@ namespace UserInterface.Views
         private GraphView graphViewTemperature;
         private GraphView graphViewRadiation;
 
-        private SheetWidget grid;
-        private ContainerView container;
+        public ContainerView container { get; set; }
 
         /// <summary>Occurs when browse button is clicked</summary>
         public event BrowseDelegate BrowseClicked;
@@ -114,15 +113,8 @@ namespace UserInterface.Views
             vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
 
             container = new ContainerView(owner);
-            grid = new SheetWidget();
-            grid.Sheet = new Sheet();
-            grid.Sheet.DataProvider = new DataTableProvider(new DataTable());
-            grid.Sheet.NumberFrozenRows = 1;
-            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-            container.Add(grid.Sheet.ScrollBars.MainWidget);
             alignData.Add(container.MainWidget);
+            
 
             button1.Clicked += OnButton1Click;
             spinStartYear.ValueChanged += OnGraphStartYearValueChanged;
@@ -289,14 +281,6 @@ namespace UserInterface.Views
             if (show)
                 hbox2.ShowAll();
             hbox2.Visible = show;
-        }
-
-        /// <summary>Populates the data.</summary>
-        /// <param name="data">The data.</param>
-        public void PopulateData(DataTable data)
-        {
-            //fill the grid with data
-            grid.Sheet.DataProvider = new DataTableProvider(data);
         }
 
         /// <summary>
@@ -490,6 +474,9 @@ namespace UserInterface.Views
     /// </summary>
     interface IMetDataView
     {
+        /// <summary>Container for grid</summary>
+        ContainerView container { get; }
+
         /// <summary>Occurs when browse button is clicked</summary>
         event BrowseDelegate BrowseClicked;
 
@@ -551,10 +538,6 @@ namespace UserInterface.Views
 
         /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
         int GraphShowYearsMaxValue { set; }
-
-        /// <summary>Populates the data grid</summary>
-        /// <param name="data">The data</param>
-        void PopulateData(DataTable data);
 
         /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 

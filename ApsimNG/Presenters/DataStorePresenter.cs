@@ -19,13 +19,10 @@ namespace UserInterface.Presenters
         private IDataStore dataStore;
 
         /// <summary>The sheet widget.</summary>
-        private SheetWidget grid;
-
-        ///// <summary>The sheet scrollbars</summary>
-        //SheetScrollBars scrollbars;
+        private NewGridPresenter gridPresenter;
 
         /// <summary>The data provider for the sheet</summary>
-        PagedDataProvider dataProvider;
+        private PagedDataProvider dataProvider;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -110,6 +107,9 @@ namespace UserInterface.Presenters
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
             sheetContainer = view.GetControl<ContainerView>("grid");
             statusLabel = view.GetControl<LabelView>("statusLabel");
+
+            gridPresenter = new NewGridPresenter();
+            gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
 
             tableDropDown.IsEditable = false;
             if (dataStore != null)
@@ -199,16 +199,8 @@ namespace UserInterface.Presenters
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        grid = new SheetWidget();
-                        grid.Sheet = new Sheet();
-                        grid.Sheet.DataProvider = dataProvider;
-                        grid.Sheet.CellSelector = new SingleCellSelect(grid.Sheet, grid);
-                        grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-                        grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-                        grid.Sheet.NumberFrozenRows = dataProvider.NumHeadingRows;
-                        grid.Sheet.NumberFrozenColumns = dataProvider.NumPriorityColumns;
+                        gridPresenter.PopulateWithDataProvider(dataProvider, dataProvider.NumPriorityColumns, dataProvider.NumHeadingRows);
 
-                        sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
                         statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
                     catch (Exception err)
@@ -222,11 +214,10 @@ namespace UserInterface.Presenters
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
         {
-            if (grid != null && grid.Sheet.CellSelector != null)
+            if (gridPresenter != null && dataProvider != null)
             {
+                gridPresenter.Detach();
                 dataProvider.Cleanup();
-                (grid.Sheet.CellSelector as SingleCellSelect).Cleanup();
-                grid.Sheet.ScrollBars.Cleanup();
             }
         }
 

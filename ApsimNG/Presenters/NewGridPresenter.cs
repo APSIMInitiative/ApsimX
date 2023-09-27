@@ -60,13 +60,22 @@ namespace UserInterface.Presenters
         /// <param name="parentPresenter">The parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter parentPresenter)
         {
-            try
+            //this allows a data provider to be passed in instead of a model.
+            //For example, the datastore presenter uses this to fill out the table.
+            ISheetDataProvider dataProvider = null;
+            if (model as ISheetDataProvider != null)
+            {
+                dataProvider = model as ISheetDataProvider;
+                gridTable = null;
+            }
+            //else we expect the model which is inheriting from GridTable
+            else if(model as GridTable != null)
             {
                 gridTable = (model as GridTable);
             }
-            catch (Exception ex)
+            else
             {
-                throw new Exception(ex.Message, ex);
+                throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
             }
 
             if (v as ContainerView != null)
@@ -75,24 +84,21 @@ namespace UserInterface.Presenters
             }
             else
             {
-                sheetContainer = new ContainerView(v as ViewBase);
+                throw new Exception($"View {v} passed to GridPresenter, is not a ContainerView, cannot insert grid.");
             }
             
             this.explorerPresenter = parentPresenter;
-
+            
             grid = new SheetWidget();
             grid.Sheet = new Sheet();
-
-            grid.Sheet.DataProvider = null;
-            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-            grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
-            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-
-            if (gridTable.HasUnits())
-                grid.Sheet.NumberFrozenRows = 2;
-            else
-                grid.Sheet.NumberFrozenRows = 1;
+            SetupSheet(dataProvider);
+            if (gridTable != null)
+            {
+                if (gridTable.HasUnits())
+                    grid.Sheet.NumberFrozenRows = 2;
+                else
+                    grid.Sheet.NumberFrozenRows = 1;
+            } 
 
             sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
             grid.Sheet.RedrawNeeded += OnRedraw;
@@ -118,6 +124,34 @@ namespace UserInterface.Presenters
 
             //base.Detach();
             CleanupSheet();
+        }
+
+        /// <summary>
+        /// Provide a new data provider to populate the table with.
+        /// Used by presentors that are displaying data instead of editting a model. (eg DataStore)
+        /// </summary>
+        /// <param name="dataProvider"></param>
+        /// <param name="frozenColumns"></param>
+        /// <param name="frozenRows"></param>
+        public void PopulateWithDataProvider(ISheetDataProvider dataProvider, int frozenColumns, int frozenRows)
+        {
+            if (gridTable == null)
+            {
+                SetupSheet(dataProvider);
+                grid.Sheet.NumberFrozenColumns = frozenColumns;
+                grid.Sheet.NumberFrozenRows = frozenRows;
+            }
+            else
+                throw new Exception($"PopulateWithDataProvider cannot be used on a presenter that has supplied a Model");
+        }
+
+        private void SetupSheet(ISheetDataProvider dataProvider)
+        {
+            grid.Sheet.DataProvider = dataProvider;
+            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
+            grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
+            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
         }
 
         /// <summary>
@@ -170,43 +204,46 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
-            if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
+            if (gridTable != null)
             {
-                var menuItems = new List<MenuDescriptionArgs>();
-                if (rowIndex == 1)
+                if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
                 {
-                    foreach (string units in gridTable.GetUnits(columnIndex))
+                    var menuItems = new List<MenuDescriptionArgs>();
+                    if (rowIndex == 1)
+                    {
+                        foreach (string units in gridTable.GetUnits(columnIndex))
+                        {
+                            var menuItem = new MenuDescriptionArgs()
+                            {
+                                Name = units,
+                            };
+                            menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                            menuItems.Add(menuItem);
+                        }
+                    }
+                    else
                     {
                         var menuItem = new MenuDescriptionArgs()
                         {
-                            Name = units,
+                            Name = "Copy",
+                            ShortcutKey = "Ctrl+C"
                         };
-                        menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                        menuItem.OnClick += OnCopy;
+                        menuItems.Add(menuItem);
+                        menuItem = new MenuDescriptionArgs()
+                        {
+                            Name = "Paste",
+                            ShortcutKey = "Ctrl+V"
+                        };
+                        menuItem.OnClick += OnPaste;
                         menuItems.Add(menuItem);
                     }
-                }
-                else
-                {
-                    var menuItem = new MenuDescriptionArgs()
-                    {
-                        Name = "Copy",
-                        ShortcutKey = "Ctrl+C"
-                    };
-                    menuItem.OnClick += OnCopy;
-                    menuItems.Add(menuItem);
-                    menuItem = new MenuDescriptionArgs()
-                    {
-                        Name = "Paste",
-                        ShortcutKey = "Ctrl+V"
-                    };
-                    menuItem.OnClick += OnPaste;
-                    menuItems.Add(menuItem);
-                }
 
-                if (menuItems.Count > 0)
-                {
-                    contextMenu.Populate(menuItems);
-                    contextMenu.Show();
+                    if (menuItems.Count > 0)
+                    {
+                        contextMenu.Populate(menuItems);
+                        contextMenu.Show();
+                    }
                 }
             }
         }
@@ -232,27 +269,30 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
-            if (grid.Sheet.DataProvider != null)
-                (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
-
-            DataTable data = gridTable.Data;
-
-            List<string> units = null;
-            if (gridTable.HasUnits())
+            if (gridTable != null)
             {
-                units = new List<string>();
-                for (int i = 0; i < data.Columns.Count; i++)
+                if (grid.Sheet.DataProvider != null)
+                    (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
+
+                DataTable data = gridTable.Data;
+
+                List<string> units = null;
+                if (gridTable.HasUnits())
                 {
-                    units.Add(data.Rows[0].ItemArray[i].ToString());
+                    units = new List<string>();
+                    for (int i = 0; i < data.Columns.Count; i++)
+                    {
+                        units.Add(data.Rows[0].ItemArray[i].ToString());
+                    }
+                    data.Rows.Remove(data.Rows[0]);
                 }
-                data.Rows.Remove(data.Rows[0]);
+                DataTableProvider dataProvider = new DataTableProvider(data, units);
+
+                grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
+                grid.Sheet.DataProvider = dataProvider;
+
+                dataProvider.CellChanged += OnCellChanged;
             }
-            DataTableProvider dataProvider = new DataTableProvider(data, units);
-
-            grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
-            grid.Sheet.DataProvider = dataProvider;
-
-            dataProvider.CellChanged += OnCellChanged;
 
             UpdateScrollBars();
         }
@@ -286,10 +326,13 @@ namespace UserInterface.Presenters
         /// <summary>Save the contents of the grid to the model.</summary>
         private void SaveGridToModel()
         {
-            if (grid.Sheet.DataProvider != null)
+            if (gridTable != null)
             {
-                var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
+                if (grid.Sheet.DataProvider != null)
+                {
+                    var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
+                }
             }
         }
 
