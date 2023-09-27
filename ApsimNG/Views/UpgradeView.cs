@@ -1,16 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Gtk;
+using UserInterface.Extensions;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
-    using System.Net;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
 
     /// <summary>
     /// An upgrade form.
@@ -438,9 +438,9 @@
         /// </summary>
         private void AssertInputsAreValid()
         {
-            if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
+            if (string.IsNullOrWhiteSpace(firstNameBox.Text) ||
                 string.IsNullOrWhiteSpace(lastNameBox.Text) ||
-                string.IsNullOrWhiteSpace(emailBox.Text) || 
+                string.IsNullOrWhiteSpace(emailBox.Text) ||
                 string.IsNullOrWhiteSpace(countryBox.GetActiveText()))
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
@@ -516,12 +516,13 @@
 
                             attemptCount += 1;
 
-                            if (attemptCount<2)
+                            if (attemptCount < 2)
                             {
-                                
+
                                 System.Threading.Thread.Sleep(2000);
 
-                            } else
+                            }
+                            else
                             {
                                 Application.Invoke(delegate
                                 {
@@ -529,7 +530,7 @@
                                     ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                                 });
                             }
-                           
+
                         }
                     }
 

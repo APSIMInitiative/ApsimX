@@ -1,4 +1,10 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using APSIM.Shared.Utilities;
 using Gdk;
 using Gtk;
 using Markdig;
@@ -6,12 +12,6 @@ using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Pango;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using UserInterface.Extensions;
 using Utility;
 using Table = Markdig.Extensions.Tables.Table;
@@ -256,7 +256,7 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
