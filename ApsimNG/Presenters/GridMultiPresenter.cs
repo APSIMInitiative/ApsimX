@@ -1,12 +1,8 @@
-﻿using UserInterface.Commands;
-using UserInterface.EventArguments;
+﻿using UserInterface.EventArguments;
 using Models.Interfaces;
-using System;
 using UserInterface.Views;
 using Models.Core;
 using System.Collections.Generic;
-using System.Data;
-using Models.Management;
 using Models.Utilities;
 
 namespace UserInterface.Presenters
@@ -14,22 +10,17 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presenter for any <see cref="IGridTable"/>.
     /// </summary>
-    class TablePresenter : IPresenter
+    class GridMultiPresenter : IPresenter
     {
         /// <summary>
         /// The underlying model.
         /// </summary>
         private IGridTable tableModel;
 
-        /// <summary>
-        /// The intellisense.
-        /// </summary>
-        private IntellisensePresenter intellisense;
-
-        private IDualGridView view;
+        private IGridView view;
         private ExplorerPresenter presenter;
-        private NewGridPresenter gridPresenter1;
-        private NewGridPresenter gridPresenter2;
+        private GridPresenter gridPresenter1;
+        private GridPresenter gridPresenter2;
 
         /// <summary>
         /// Attach the model to the view.
@@ -43,27 +34,24 @@ namespace UserInterface.Presenters
                 t.Test(false, true);
 
             presenter = parentPresenter;
-            view = v as IDualGridView;
+            view = v as IGridView;
             tableModel = model as IGridTable;
 
             List<GridTable> tables = tableModel.Tables;
 
-            view.ShowGrid2(false);
+            view.ShowGrid(2, false);
             if (tables.Count > 0)
             {
-                gridPresenter1 = new NewGridPresenter();
+                gridPresenter1 = new GridPresenter();
                 gridPresenter1.Attach(tables[0], view.Grid1, parentPresenter);
-                gridPresenter1.CellChanged += OnCellChanged;
             } 
             if (tables.Count > 1)
             {
-                gridPresenter2 = new NewGridPresenter();
+                gridPresenter2 = new GridPresenter();
                 gridPresenter2.Attach(tables[1], view.Grid2, parentPresenter);
-                gridPresenter2.CellChanged += OnCellChanged;
-                view.ShowGrid2(true);
+                view.ShowGrid(2, true);
             }
 
-            intellisense = new IntellisensePresenter(view.Grid2 as ViewBase);
             //intellisense.ItemSelected += OnIntellisenseItemSelected;
             //view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
 
@@ -77,27 +65,13 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             //intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            intellisense.Cleanup();
             //view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
-            if (gridPresenter1 != null)
-            {
-                gridPresenter1.CellChanged -= OnCellChanged;
-                gridPresenter1.Detach();
-            }
-                
-            if (gridPresenter2 != null)
-            {
-                gridPresenter2.CellChanged -= OnCellChanged;
-                gridPresenter2.Detach();
-            }
-        }
 
-        /// <summary>Invoked when a grid cell has changed.</summary>
-        /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
-        {
+            if (gridPresenter1 != null)
+                gridPresenter1.Detach();
+
+            if (gridPresenter2 != null)
+                gridPresenter2.Detach();
         }
 
         /// <summary>

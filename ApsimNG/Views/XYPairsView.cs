@@ -11,7 +11,7 @@ namespace UserInterface.Views
     {
         private VPaned vpaned;
 
-        private DualGridView gridView;
+        private GridView gridView;
 
         /// <summary>
         /// Initial water graph
@@ -25,7 +25,7 @@ namespace UserInterface.Views
         {
             vpaned = new VPaned();
             mainWidget = vpaned;
-            gridView = new DualGridView(this);
+            gridView = new GridView(this);
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
@@ -60,7 +60,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Gets the initial water graph.
         /// </summary>
-        public Views.DualGridView VariablesGrid
+        public Views.GridView VariablesGrid
         {
             get
             {

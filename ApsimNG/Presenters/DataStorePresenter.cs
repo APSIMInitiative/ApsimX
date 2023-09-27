@@ -19,7 +19,7 @@ namespace UserInterface.Presenters
         private IDataStore dataStore;
 
         /// <summary>The sheet widget.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>The data provider for the sheet</summary>
         private PagedDataProvider dataProvider;
@@ -108,7 +108,7 @@ namespace UserInterface.Presenters
             sheetContainer = view.GetControl<ContainerView>("grid");
             statusLabel = view.GetControl<LabelView>("statusLabel");
 
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
 
             tableDropDown.IsEditable = false;

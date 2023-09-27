@@ -61,22 +61,43 @@ namespace UserInterface.Views
         /// </summary>
         public void SetScrollbarVisible(bool verticalBar, bool visible)
         {
-            if (verticalBar)
+            if (MainWidget != null)
             {
-                VScrollbar verticalScrollBar = (VScrollbar)((Gtk.Container)((Gtk.Container)(MainWidget as Box).Children[0]).Children[0]).Children[1];
-                if (visible)
-                    verticalScrollBar.Show();
-                else
-                    verticalScrollBar.Hide();
+                Box box = (MainWidget as Box);
+                if (box.Children.Length > 0)
+                {
+                    Container container = (Container)box.Children[0];
+                    if (verticalBar)
+                    {
+                        if (container.Children.Length > 0)
+                        {
+                            Container container2 = (Gtk.Container)container.Children[0];
+                            if (container2.Children.Length > 1)
+                            {
+                                VScrollbar verticalScrollBar = (VScrollbar)container2.Children[1];
+                                if (visible)
+                                    verticalScrollBar.Show();
+                                else
+                                    verticalScrollBar.Hide();
+                            }
+                        }
+                        
+                    }
+                    else
+                    {
+                        if (container.Children.Length > 1)
+                        {
+                            HScrollbar horizontalScrollBar = (HScrollbar)container.Children[1];
+                            if (visible)
+                                horizontalScrollBar.Show();
+                            else
+                                horizontalScrollBar.Hide();
+                        }
+                    }
+                }
             }
-            else
-            {
-                HScrollbar horizontalScrollBar = (HScrollbar)((Gtk.Container)(MainWidget as Box).Children[0]).Children[1];
-                if (visible)
-                    horizontalScrollBar.Show();
-                else
-                    horizontalScrollBar.Hide();
-            }
+
+            
         }
     }
 }

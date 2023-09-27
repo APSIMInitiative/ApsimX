@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     public class ProfilePresenter : IPresenter
     {
         /// <summary>The grid presenter.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         ///// <summary>The property presenter.</summary>
         private PropertyPresenter propertyPresenter;
@@ -55,7 +55,7 @@ namespace UserInterface.Presenters
             this.explorerPresenter = explorerPresenter;
 
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
 
             Soil soilNode = this.model.FindAncestor<Soil>();

@@ -53,7 +53,7 @@ namespace Models.Optimisation
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class CroptimizR : Model, IGridTable, IRunnable, IReportsStatus
     {

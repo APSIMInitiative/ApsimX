@@ -1,18 +1,16 @@
 ﻿using Gtk;
 using System;
-using UserInterface.Extensions;
-using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
 
-    /// <summary>A drop down view.</summary>
-    public class DualGridView : ViewBase, IDualGridView
+    /// <summary>A view for Table Presenter, can show up to two tables on one screen.</summary>
+    public class GridView : ViewBase, IGridView
     {
         /// <summary>Top grid in view.</summary>
         public ContainerView Grid1 { get; private set; }
 
-        /// <summary>bottom grid in view.</summary>
+        /// <summary>Bottom grid in view.</summary>
         public ContainerView Grid2 { get; private set; }
 
         /// <summary>Label at top of window</summary>
@@ -21,13 +19,16 @@ namespace UserInterface.Views
         /// <summary>Label at top of window</summary>
         private Gtk.VPaned vpaned1;
 
+        /// <summary>Label at top of window</summary>
+        private Gtk.VPaned vpaned2;
+
         /// <summary>Constructor</summary>
-        public DualGridView(ViewBase owner) : base(owner)
+        public GridView(ViewBase owner) : base(owner)
         {
             Grid1 = new ContainerView(owner);
             Grid2 = new ContainerView(owner);
 
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             mainWidget = (Widget)builder.GetObject("scrolledwindow1");
 
             label1 = (Gtk.Label)builder.GetObject("label1");
@@ -36,16 +37,31 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             this.SetLabelHeight(0.1f); 
 
-            VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
+            vpaned2 = (VPaned)builder.GetObject("vpaned2");
             vpaned2.Pack1(Grid1.MainWidget, true, true);
             vpaned2.Pack2(Grid2.MainWidget, true, true);
+
+            //hide all except first grid
+            ShowGrid(1, false);
+            ShowGrid(2, false);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
-        /// <summary>Show the 2nd grid?</summary>
-        public void ShowGrid2(bool show)
+        /// <summary>Hide or Show the Grids</summary>
+        public void ShowGrid(int number, bool show)
         {
-            Grid2.MainWidget.Visible = show;
+            if (number == 1)
+                Grid1.MainWidget.Visible = show;
+            else if (number == 2)
+                Grid2.MainWidget.Visible = show;
+
+            if (Grid1.MainWidget.Visible && !Grid2.MainWidget.Visible)
+                vpaned2.Position = this.owner.MainWidget.AllocatedHeight;
+            else if (!Grid1.MainWidget.Visible && Grid2.MainWidget.Visible)
+                vpaned2.Position = 0;
+            else
+                vpaned2.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * 0.5);
         }
 
         /// <summary></summary>
@@ -80,7 +96,7 @@ namespace UserInterface.Views
     }
 
     /// <summary>An interface for a drop down</summary>
-    public interface IDualGridView
+    public interface IGridView
     {
         /// <summary>Top grid in view.</summary>
         ContainerView Grid1 { get; }
@@ -89,7 +105,7 @@ namespace UserInterface.Views
         ContainerView Grid2 { get; }
 
         /// <summary>Show the 2nd grid?</summary>
-        void ShowGrid2(bool show);
+        void ShowGrid(int number, bool show);
 
         /// <summary></summary>
         public void SetLabelText(string text);

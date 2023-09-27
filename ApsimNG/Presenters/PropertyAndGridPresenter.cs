@@ -1,27 +1,19 @@
-﻿using APSIM.Shared.Utilities;
-using UserInterface.Commands;
-using UserInterface.EventArguments;
-using Models.Core;
+﻿using UserInterface.EventArguments;
 using Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using UserInterface.Views;
-using DocumentFormat.OpenXml.Drawing.Charts;
 
 namespace UserInterface.Presenters
 {
 
     /// <summary>Presenter that has a PropertyPresenter and a GridPresenter.</summary>
-    class PropertyAndTablePresenter : IPresenter
+    class PropertyAndGridPresenter : IPresenter
     {
         /// <summary>The underlying model</summary>
         private IntellisensePresenter intellisense;
         private IPropertyAndGridView view;
         private ExplorerPresenter explorerPresenter;
         private IPresenter propertyPresenter;
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// Attach the model to the view.
@@ -39,7 +31,7 @@ namespace UserInterface.Presenters
             propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridTable).Tables[0], view.Grid, parentPresenter);
             gridPresenter.CellChanged += OnCellChanged;
             //view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;

@@ -18,8 +18,8 @@ namespace Models.ForageDigestibility
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(Simulation))]
-    [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
 
     public class Forages : Model, IGridTable
     {

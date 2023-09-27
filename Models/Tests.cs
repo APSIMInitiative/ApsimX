@@ -17,8 +17,8 @@ namespace Models
     /// Test interface.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
     public class Tests : Model, ITestable, IGridTable
     {

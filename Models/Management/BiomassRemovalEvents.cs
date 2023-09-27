@@ -23,7 +23,7 @@ namespace Models.Management
     [ValidParent(ParentType = typeof(Folder))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     public class BiomassRemovalEvents : Model, IGridTable
     {        
         /// <summary>

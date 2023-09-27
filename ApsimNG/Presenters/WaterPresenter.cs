@@ -13,7 +13,7 @@ namespace UserInterface.Presenters
     public class WaterPresenter : IPresenter
     {
         /// <summary>The grid presenter.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -59,7 +59,7 @@ namespace UserInterface.Presenters
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
 
             this.explorerPresenter = explorerPresenter;
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");

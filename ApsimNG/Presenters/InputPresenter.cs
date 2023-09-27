@@ -30,7 +30,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The Explorer
         /// </summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// The Explorer
@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
             this.input = model as Models.PostSimulationTools.Input;
             this.view = view as InputView;
 
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
             gridPresenter.CellChanged += OnCellChanged;
 

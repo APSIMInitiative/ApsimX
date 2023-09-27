@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The Grid Presenter
         /// </summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// A reference to the 'graphPresenter' responsible for our graph.
@@ -70,7 +70,7 @@ namespace UserInterface.Presenters
             this.presenter = explorerPresenter as ExplorerPresenter;
 
             List<GridTable> tables = this.xYPairs.Tables;
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid.Grid1, this.presenter);
 
             // Populate the graph.

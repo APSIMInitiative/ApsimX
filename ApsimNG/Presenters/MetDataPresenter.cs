@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         private IMetDataView weatherDataView;
 
         /// <summary>The sheet widget.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>Hold the data used by the graphs</summary>
         private DataTable graphMetData;
@@ -65,7 +65,7 @@ namespace UserInterface.Presenters
 
             ContainerView sheetContainer = this.weatherDataView.container;
 
-            gridPresenter = new NewGridPresenter();
+            gridPresenter = new GridPresenter();
             gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;

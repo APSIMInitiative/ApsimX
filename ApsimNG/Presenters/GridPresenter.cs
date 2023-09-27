@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using UserInterface.Views;
 using System.Data;
+using Models.Interfaces;
 
 namespace UserInterface.Presenters
 {
     /// <summary>A generic grid presenter for displaying a data table and allowing editing.
-    /// This is built to run within other presenters, so pass in a ContainerView in the attach method to have it drawn.</summary>
-    class NewGridPresenter : IPresenter
+    /// This is built to run within other presenters, so pass in a ContainerView in the attach method to have it drawn.
+    /// Table Presenter can be used for a two grid view, or for additional functionality like intellisense</summary>
+    class GridPresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
@@ -34,6 +36,11 @@ namespace UserInterface.Presenters
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>
+        /// The intellisense.
+        /// </summary>
+        private IntellisensePresenter intellisense;
 
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
@@ -68,23 +75,37 @@ namespace UserInterface.Presenters
                 dataProvider = model as ISheetDataProvider;
                 gridTable = null;
             }
-            //else we expect the model which is inheriting from GridTable
+            //else we are receiving a model with IGridTable that we should get our GridTable from
+            else if (model as IGridTable != null)
+            {
+                IGridTable m = (model as IGridTable);
+                gridTable = m.Tables[0];
+            }
+            //else we are receiving a GridTable that was created by another presenter
             else if(model as GridTable != null)
             {
                 gridTable = (model as GridTable);
             }
+
             else
             {
                 throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
             }
 
+            //we are receiving a container to put the grid into
             if (v as ContainerView != null)
             {
                 sheetContainer = v as ContainerView;
             }
-            else
+            //we are receiving a GridView and should setup and load into that directly
+            else if (v as IGridView != null)
             {
-                throw new Exception($"View {v} passed to GridPresenter, is not a ContainerView, cannot insert grid.");
+                IGridView view = v as IGridView;
+                sheetContainer = view.Grid1;
+                view.ShowGrid(1, true);
+                view.ShowGrid(2, false);
+                view.SetLabelText("");
+                view.SetLabelHeight(0);
             }
             
             this.explorerPresenter = parentPresenter;
@@ -109,6 +130,8 @@ namespace UserInterface.Presenters
             contextMenuHelper = new ContextMenuHelper(grid);
             contextMenu = new MenuView();
             contextMenuHelper.ContextMenu += OnContextMenuPopup;
+
+            intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -122,8 +145,9 @@ namespace UserInterface.Presenters
 
             SaveGridToModel();
 
-            //base.Detach();
             CleanupSheet();
+
+            intellisense.Cleanup();
         }
 
         /// <summary>
@@ -167,7 +191,7 @@ namespace UserInterface.Presenters
                 try
                 {
                     SaveGridToModel();
-                    CellChanged.Invoke(sender, colIndex, rowIndex);
+                    CellChanged?.Invoke(sender, colIndex, rowIndex);
                 }
                 catch (Exception err)
                 {
@@ -193,7 +217,7 @@ namespace UserInterface.Presenters
                 selectedRow = row;
                 selectedColumn = column;
                 if (SelectedCellChanged != null) 
-                    SelectedCellChanged.Invoke(selectedRow, selectedColumn);
+                    SelectedCellChanged?.Invoke(selectedRow, selectedColumn);
             }
         }
 
@@ -209,6 +233,7 @@ namespace UserInterface.Presenters
                 if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
                 {
                     var menuItems = new List<MenuDescriptionArgs>();
+
                     if (rowIndex == 1)
                     {
                         foreach (string units in gridTable.GetUnits(columnIndex))

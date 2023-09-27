@@ -35,12 +35,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Presenter for the view's spatial data grid.
         /// </summary>
-        private NewGridPresenter spatialGridPresenter;
+        private GridPresenter spatialGridPresenter;
 
         /// <summary>
         /// Presenter for the view's temporal data grid.
         /// </summary>
-        private NewGridPresenter temporalGridPresenter;
+        private GridPresenter temporalGridPresenter;
 
         /// <summary>
         /// The explorer presenter.
@@ -66,11 +66,11 @@ namespace UserInterface.Presenters
 
             List<GridTable> tables = forestryModel.Tables;
 
-            spatialGridPresenter = new NewGridPresenter();
+            spatialGridPresenter = new GridPresenter();
             spatialGridPresenter.Attach(tables[1], forestryViewer.SpatialDataGrid, explorerPresenter);
             spatialGridPresenter.CellChanged += OnCellChanged;
 
-            temporalGridPresenter = new NewGridPresenter();
+            temporalGridPresenter = new GridPresenter();
             temporalGridPresenter.Attach(tables[0], forestryViewer.TemporalDataGrid, explorerPresenter);
             temporalGridPresenter.CellChanged += OnCellChanged;
 

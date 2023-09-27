@@ -23,7 +23,7 @@ namespace Models
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
     public class Sobol : Model, ISimulationDescriptionGenerator, IGridTable, IPostSimulationTool
