@@ -18,6 +18,12 @@ namespace UserInterface.Views
         /// <summary>The vertical scroll bar</summary>
         private VScrollbar verticalScrollbar;
 
+        /// <summary>The vertical scroll bar</summary>
+        private VBox horizontalScrollbarBox;
+
+        /// <summary>The horizontal scroll bar</summary>
+        private HBox verticalScrollbarBox;
+
         /// <summary>Constructor.</summary>
         /// <param name="sheet">The sheet.</param>
         /// <param name="sheetWidget">The sheet widget.</param>
@@ -59,32 +65,26 @@ namespace UserInterface.Views
         /// <summary>A scroll bars to the sheet widget.</summary>
         private void Initialise()
         {
-            //// Remove existing child.
-            //if (sheet.Children.Length > 0)
-            //    sheet.Remove(sheet.Children[0]);
-
             var horizontalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
             horizontalScrollbar = new HScrollbar(horizontalAdjustment);
             horizontalScrollbar.Value = 0;
             horizontalScrollbar.ValueChanged += OnHorizontalScrollbarChanged;
-            //horizontalScrollbar.SetSizeRequest(sheet.Width, ScrollBarWidth);
 
             var verticalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
             verticalScrollbar = new VScrollbar(verticalAdjustment);
             verticalScrollbar.Value = 0;
             verticalScrollbar.ValueChanged += OnVerticalScrollbarChanged;
-            //verticalScrollbar.SetSizeRequest(ScrollBarWidth, sheet.Height);
 
-            var hbox = new HBox();
-            var vbox = new VBox();
+            verticalScrollbarBox = new HBox();
+            horizontalScrollbarBox = new VBox();
 
-            hbox.PackEnd(verticalScrollbar, false, true, 0);
-            hbox.PackStart(sheetWidget, true, true, 0);
+            verticalScrollbarBox.PackStart(sheetWidget, true, true, 0);
+            verticalScrollbarBox.PackEnd(verticalScrollbar, false, true, 0);
 
-            vbox.PackEnd(horizontalScrollbar, false, true, 0);
-            vbox.PackStart(hbox, true, true, 0);
+            horizontalScrollbarBox.PackStart(verticalScrollbarBox, true, true, 0);
+            horizontalScrollbarBox.PackEnd(horizontalScrollbar, false, true, 0);
 
-            MainWidget = vbox;
+            MainWidget = horizontalScrollbarBox;
         }
 
         private void SetScrollbarAdjustments()

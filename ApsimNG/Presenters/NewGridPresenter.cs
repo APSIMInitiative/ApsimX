@@ -95,7 +95,7 @@ namespace UserInterface.Presenters
                 grid.Sheet.NumberFrozenRows = 1;
 
             sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
-            grid.Sheet.RedrawNeeded += OnSelectedCellChanged;
+            grid.Sheet.RedrawNeeded += OnRedraw;
 
             Refresh();
 
@@ -147,8 +147,10 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">sender</param>
         /// <param name="e">event</param>
-        private void OnSelectedCellChanged(object sender, EventArgs e)
+        private void OnRedraw(object sender, EventArgs e)
         {
+            UpdateScrollBars();
+
             int row = 0;
             int column = 0;
             (sender as Sheet).CellSelector.GetSelection(out row, out column);
@@ -166,7 +168,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-            private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
+        private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
             if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
             {
@@ -251,6 +253,8 @@ namespace UserInterface.Presenters
             grid.Sheet.DataProvider = dataProvider;
 
             dataProvider.CellChanged += OnCellChanged;
+
+            UpdateScrollBars();
         }
 
         public int NumRows()
@@ -286,6 +290,40 @@ namespace UserInterface.Presenters
             {
                 var data = (grid.Sheet.DataProvider as DataTableProvider).Data;
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(gridTable, "Data", data));
+            }
+        }
+
+        private void UpdateScrollBars()
+        {
+            int width = grid.Sheet.Width;
+            int column_widths = 0;
+            if (grid.Sheet.ColumnWidths != null && width > 0)
+            {
+                for (int i = 0; i < grid.Sheet.ColumnWidths.Length; i++)
+                    column_widths += grid.Sheet.ColumnWidths[i];
+
+                if (column_widths > width)
+                    sheetContainer.SetScrollbarVisible(false, true);
+                else
+                    sheetContainer.SetScrollbarVisible(false, false);
+            } 
+            else
+            {
+                sheetContainer.SetScrollbarVisible(false, false);
+            }
+
+            int height = grid.Sheet.Height;
+            int row_heights = grid.Sheet.RowHeight * grid.Sheet.RowCount;
+            if (height > 0)
+            {
+                if (row_heights > height)
+                    sheetContainer.SetScrollbarVisible(true, true);
+                else
+                    sheetContainer.SetScrollbarVisible(true, false);
+            } 
+            else
+            {
+                sheetContainer.SetScrollbarVisible(true, false);
             }
         }
     }

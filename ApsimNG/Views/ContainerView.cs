@@ -55,5 +55,28 @@ namespace UserInterface.Views
         {
             container.ShowAll();
         }
+
+        /// <summary>
+        /// Hide or show either of the scrollbars
+        /// </summary>
+        public void SetScrollbarVisible(bool verticalBar, bool visible)
+        {
+            if (verticalBar)
+            {
+                VScrollbar verticalScrollBar = (VScrollbar)((Gtk.Container)((Gtk.Container)(MainWidget as Box).Children[0]).Children[0]).Children[1];
+                if (visible)
+                    verticalScrollBar.Show();
+                else
+                    verticalScrollBar.Hide();
+            }
+            else
+            {
+                HScrollbar horizontalScrollBar = (HScrollbar)((Gtk.Container)(MainWidget as Box).Children[0]).Children[1];
+                if (visible)
+                    horizontalScrollBar.Show();
+                else
+                    horizontalScrollBar.Hide();
+            }
+        }
     }
 }

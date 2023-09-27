@@ -499,6 +499,7 @@ namespace UserInterface.Views
 
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
+            RedrawNeeded?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
