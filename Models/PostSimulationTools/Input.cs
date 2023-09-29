@@ -73,7 +73,7 @@ namespace Models.PostSimulationTools
         {
             get
             {
-                return new List<GridTable>() { new GridTable(Name, new List<GridTable.Column>(), this) };
+                return new List<GridTable>() { new GridTable(Name, new List<GridTableColumn>(), this) };
             }
         }
 

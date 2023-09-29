@@ -162,13 +162,13 @@ namespace Models.Soils
                     XF = listXF.ToArray();
                 }
 
-                GridTable tb = new GridTable(Name, new GridTable.Column[]
+                GridTable tb = new GridTable(Name, new GridTableColumn[]
                 {
-                new GridTable.Column("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
-                new GridTable.Column("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
-                new GridTable.Column("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
-                new GridTable.Column("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
-                new GridTable.Column("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
+                new GridTableColumn("Depth", new VariableProperty(Parent, Parent.GetType().GetProperty("Depth")), readOnly:true),
+                new GridTableColumn("LL", new VariableProperty(this, GetType().GetProperty("LL"))),
+                new GridTableColumn("KL", new VariableProperty(this, GetType().GetProperty("KL"))),
+                new GridTableColumn("XF", new VariableProperty(this, GetType().GetProperty("XF"))),
+                new GridTableColumn("PAWC", new VariableProperty(this, GetType().GetProperty("PAWCmm")), units: $"{PAWCmm.Sum():F1} mm")
                 }, this);
 
                 if (throwException)

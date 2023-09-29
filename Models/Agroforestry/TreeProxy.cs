@@ -193,16 +193,16 @@ namespace Models.Agroforestry
         public List<GridTable> Tables
         {
             get {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Date", new VariableProperty(this, GetType().GetProperty("Dates"))));
-                columns.Add(new GridTable.Column("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
-                columns.Add(new GridTable.Column("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
-                columns.Add(new GridTable.Column("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Date", new VariableProperty(this, GetType().GetProperty("Dates"))));
+                columns.Add(new GridTableColumn("Height", new VariableProperty(this, GetType().GetProperty("Heights"))));
+                columns.Add(new GridTableColumn("NDemand", new VariableProperty(this, GetType().GetProperty("NDemands"))));
+                columns.Add(new GridTableColumn("ShadeModifier", new VariableProperty(this, GetType().GetProperty("ShadeModifiers"))));
                 GridTable grid1 = new GridTable("TreeProxyTemporal", columns, this);
                 grid1.SetUnits(1, "m");
                 grid1.SetUnits(3, "(>=0)");
 
-                columns = new List<GridTable.Column>();
+                columns = new List<GridTableColumn>();
                 GridTable grid2 = new GridTable("TreeProxySpatial", columns, this);
 
                 List<GridTable> list = new List<GridTable>() { grid1, grid2 };

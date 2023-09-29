@@ -185,9 +185,9 @@ namespace Models.Soils
         {
             get
             {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

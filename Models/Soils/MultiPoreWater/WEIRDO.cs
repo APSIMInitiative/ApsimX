@@ -1402,14 +1402,14 @@ namespace Models.Soils
         {
             get
             {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTable.Column("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))));
-                columns.Add(new GridTable.Column("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))));
-                columns.Add(new GridTable.Column("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))));
-                columns.Add(new GridTable.Column("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))));
-                columns.Add(new GridTable.Column("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))));
-                columns.Add(new GridTable.Column("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC"))));
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("CFlow", new VariableProperty(this, GetType().GetProperty("CFlow"))));
+                columns.Add(new GridTableColumn("XFlow", new VariableProperty(this, GetType().GetProperty("XFlow"))));
+                columns.Add(new GridTableColumn("PsiBub", new VariableProperty(this, GetType().GetProperty("PsiBub"))));
+                columns.Add(new GridTableColumn("MinRepellancyFactor", new VariableProperty(this, GetType().GetProperty("MinRepellancyFactor"))));
+                columns.Add(new GridTableColumn("LowerRepellentWC", new VariableProperty(this, GetType().GetProperty("LowerRepellentWC"))));
+                columns.Add(new GridTableColumn("UpperRepellentWC", new VariableProperty(this, GetType().GetProperty("UpperRepellentWC"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

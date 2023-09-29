@@ -61,17 +61,17 @@ namespace Models
         {
             get
             {
-                List<GridTable.Column> columns;
+                List<GridTableColumn> columns;
                 List<GridTable> tables = new List<GridTable>();
 
                 // Add an inputs table
-                columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Inputs", new VariableProperty(this, GetType().GetProperty("Inputs"))));
+                columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Inputs", new VariableProperty(this, GetType().GetProperty("Inputs"))));
                 tables.Add(new GridTable(Name, columns, this));
 
                 // Add an outputs table.
-                columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Outputs", new VariableProperty(this, GetType().GetProperty("Outputs"))));
+                columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Outputs", new VariableProperty(this, GetType().GetProperty("Outputs"))));
                 tables.Add(new GridTable(Name, columns, this));
 
                 return tables;

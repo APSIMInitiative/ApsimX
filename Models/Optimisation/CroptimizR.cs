@@ -169,12 +169,12 @@ namespace Models.Optimisation
             get
             {
 
-                List<GridTable.Column> columns = new List<GridTable.Column>();
+                List<GridTableColumn> columns = new List<GridTableColumn>();
 
-                columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable("Table", columns, this));

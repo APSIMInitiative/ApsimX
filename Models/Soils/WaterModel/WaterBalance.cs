@@ -885,10 +885,10 @@ namespace Models.WaterModel
         {
             get
             {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTable.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
-                columns.Add(new GridTable.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
+                columns.Add(new GridTableColumn("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

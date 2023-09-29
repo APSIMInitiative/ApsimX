@@ -215,15 +215,15 @@ namespace Models.Soils
             get
             {
                 bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-                var columns = new List<GridTable.Column>()
+                var columns = new List<GridTableColumn>()
                 {
-                    new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                    new GridTable.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                    new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                    new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
                 };
                 if (swimPresent)
                 {
-                    columns.Add(new GridTable.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                    columns.Add(new GridTable.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                    columns.Add(new GridTableColumn("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                    columns.Add(new GridTableColumn("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
                 }
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

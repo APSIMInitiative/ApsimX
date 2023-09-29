@@ -34,13 +34,13 @@ namespace Models.ForageDigestibility
         {
             get
             {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
+                List<GridTableColumn> columns = new List<GridTableColumn>();
 
-                columns.Add(new GridTable.Column("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("IsLive", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("DigestibilityString", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("FractionConsumable", new VariableProperty(this, GetType().GetProperty("Parameters"))));
-                columns.Add(new GridTable.Column("MinimumAmount", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("IsLive", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("DigestibilityString", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("FractionConsumable", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("MinimumAmount", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

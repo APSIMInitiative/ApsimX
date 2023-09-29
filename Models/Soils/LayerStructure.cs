@@ -34,8 +34,8 @@ namespace Models.Soils
         {
             get
             {
-                var columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly: false));
+                var columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly: false));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

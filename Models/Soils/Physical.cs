@@ -207,29 +207,29 @@ namespace Models.Soils
             get
             {
                 bool waterNodePresent = FindInScope<Water>() != null;
-                var columns = new List<GridTable.Column>();
+                var columns = new List<GridTableColumn>();
 
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTable.Column("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
-                columns.Add(new GridTable.Column("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
-                columns.Add(new GridTable.Column("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
-                columns.Add(new GridTable.Column("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
-                columns.Add(new GridTable.Column("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
-                columns.Add(new GridTable.Column("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
-                columns.Add(new GridTable.Column("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
-                columns.Add(new GridTable.Column("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
-                columns.Add(new GridTable.Column("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("Sand", new VariableProperty(this, GetType().GetProperty("ParticleSizeSand"))));
+                columns.Add(new GridTableColumn("Silt", new VariableProperty(this, GetType().GetProperty("ParticleSizeSilt"))));
+                columns.Add(new GridTableColumn("Clay", new VariableProperty(this, GetType().GetProperty("ParticleSizeClay"))));
+                columns.Add(new GridTableColumn("Rocks", new VariableProperty(this, GetType().GetProperty("Rocks"))));
+                columns.Add(new GridTableColumn("BD", new VariableProperty(this, GetType().GetProperty("BD"))));
+                columns.Add(new GridTableColumn("AirDry", new VariableProperty(this, GetType().GetProperty("AirDry"))));
+                columns.Add(new GridTableColumn("LL15", new VariableProperty(this, GetType().GetProperty("LL15"))));
+                columns.Add(new GridTableColumn("DUL", new VariableProperty(this, GetType().GetProperty("DUL"))));
+                columns.Add(new GridTableColumn("SAT", new VariableProperty(this, GetType().GetProperty("SAT"))));
                 if (waterNodePresent)
-                    columns.Add(new GridTable.Column("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
-                columns.Add(new GridTable.Column("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
+                    columns.Add(new GridTableColumn("SW", new VariableProperty(this, GetType().GetProperty("SW")), readOnly: !IsSWSameLayerStructure));
+                columns.Add(new GridTableColumn("KS", new VariableProperty(this, GetType().GetProperty("KS"))));
 
                 foreach (var soilCrop in FindAllChildren<SoilCrop>())
                 {
                     var cropName = soilCrop.Name.Replace("Soil", "");
-                    columns.Add(new GridTable.Column($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
-                    columns.Add(new GridTable.Column($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
-                    columns.Add(new GridTable.Column($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
-                    columns.Add(new GridTable.Column($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
+                    columns.Add(new GridTableColumn($"{cropName} LL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("LL"))));
+                    columns.Add(new GridTableColumn($"{cropName} KL", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("KL"))));
+                    columns.Add(new GridTableColumn($"{cropName} XF", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("XF"))));
+                    columns.Add(new GridTableColumn($"{cropName} PAWC", new VariableProperty(soilCrop, soilCrop.GetType().GetProperty("PAWCmm")), units: $"{soilCrop.PAWCmm.Sum():F1} mm"));
                 }
 
                 List<GridTable> tables = new List<GridTable>();

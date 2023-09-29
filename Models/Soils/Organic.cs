@@ -111,13 +111,13 @@ namespace Models.Soils
         {
             get
             {
-                List<GridTable.Column> columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
-                columns.Add(new GridTable.Column("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))));
-                columns.Add(new GridTable.Column("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))));
-                columns.Add(new GridTable.Column("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))));
-                columns.Add(new GridTable.Column("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))));
-                columns.Add(new GridTable.Column("FOM", new VariableProperty(this, GetType().GetProperty("FOM"))));
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("Carbon", new VariableProperty(this, GetType().GetProperty("Carbon"))));
+                columns.Add(new GridTableColumn("SoilCNRatio", new VariableProperty(this, GetType().GetProperty("SoilCNRatio"))));
+                columns.Add(new GridTableColumn("FBiom", new VariableProperty(this, GetType().GetProperty("FBiom"))));
+                columns.Add(new GridTableColumn("FInert", new VariableProperty(this, GetType().GetProperty("FInert"))));
+                columns.Add(new GridTableColumn("FOM", new VariableProperty(this, GetType().GetProperty("FOM"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

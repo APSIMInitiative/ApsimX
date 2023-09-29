@@ -40,9 +40,9 @@ namespace Models.Functions
         {
             get
             {
-                var columns = new List<GridTable.Column>();
-                columns.Add(new GridTable.Column("X", new VariableProperty(this, GetType().GetProperty("X"))));
-                columns.Add(new GridTable.Column("Y", new VariableProperty(this, GetType().GetProperty("Y"))));
+                var columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("X", new VariableProperty(this, GetType().GetProperty("X"))));
+                columns.Add(new GridTableColumn("Y", new VariableProperty(this, GetType().GetProperty("Y"))));
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));
                 return tables;

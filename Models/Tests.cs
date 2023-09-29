@@ -49,7 +49,7 @@ namespace Models
         /// Implement IGridTable so that this can be shown in the GUI
         /// </summary>
         public List<GridTable> Tables { 
-            get { return new List<GridTable>() { new GridTable("Tests", new List<GridTable.Column>(), this) }; } 
+            get { return new List<GridTable>() { new GridTable("Tests", new List<GridTableColumn>(), this) }; } 
         }
 
         /// <summary>

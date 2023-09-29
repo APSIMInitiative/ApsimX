@@ -107,15 +107,15 @@ namespace Models.Management
             {
                 LinkCrop();
 
-                List<GridTable.Column> columns = new List<GridTable.Column>();
+                List<GridTableColumn> columns = new List<GridTableColumn>();
 
-                columns.Add(new GridTable.Column("PlantName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("OrganName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("TypeString", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("LiveToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("DeadToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("LiveToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
-                columns.Add(new GridTable.Column("DeadToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("PlantName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("OrganName", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("TypeString", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("LiveToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("DeadToRemove", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("LiveToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
+                columns.Add(new GridTableColumn("DeadToResidue", new VariableProperty(this, GetType().GetProperty("BiomassRemovals"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));

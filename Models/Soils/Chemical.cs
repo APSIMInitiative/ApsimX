@@ -87,7 +87,7 @@ namespace Models.Soils
             get {
                 var solutes = GetStandardisedSolutes();
 
-                var columns = new List<GridTable.Column>();
+                var columns = new List<GridTableColumn>();
 
                 var depthColumns = new List<VariableProperty>();
                 depthColumns.Add(new VariableProperty(this, GetType().GetProperty("Depth")));
@@ -96,15 +96,15 @@ namespace Models.Soils
                     if (MathUtilities.AreEqual(solute.Thickness, Thickness))
                         depthColumns.Add(new VariableProperty(solute, solute.GetType().GetProperty("Depth")));
                 }
-                columns.Add(new GridTable.Column("Depth", depthColumns));
+                columns.Add(new GridTableColumn("Depth", depthColumns));
 
                 foreach (var solute in solutes)
-                    columns.Add(new GridTable.Column(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
+                    columns.Add(new GridTableColumn(solute.Name, new VariableProperty(solute, solute.GetType().GetProperty("InitialValues"))));
 
-                columns.Add(new GridTable.Column("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
-                columns.Add(new GridTable.Column("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
-                columns.Add(new GridTable.Column("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
-                columns.Add(new GridTable.Column("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
+                columns.Add(new GridTableColumn("pH", new VariableProperty(this, GetType().GetProperty("PH"))));
+                columns.Add(new GridTableColumn("EC", new VariableProperty(this, GetType().GetProperty("EC"))));
+                columns.Add(new GridTableColumn("ESP", new VariableProperty(this, GetType().GetProperty("ESP"))));
+                columns.Add(new GridTableColumn("CEC", new VariableProperty(this, GetType().GetProperty("CEC"))));
 
                 List<GridTable> tables = new List<GridTable>();
                 tables.Add(new GridTable(Name, columns, this));
