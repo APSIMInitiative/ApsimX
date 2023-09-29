@@ -35,8 +35,8 @@ namespace Models.Utilities
         /// <summary>The data table.</summary>
         public DataTable Data
         {
-            get { return (Model as IGridTable).ConvertModelToDisplay(GetData()); }
-            set { SetData((Model as IGridTable).ConvertDisplayToModel(value)); }
+            get { return (Model as IGridModel).ConvertModelToDisplay(GetData()); }
+            set { SetData((Model as IGridModel).ConvertDisplayToModel(value)); }
         }
 
         /// <summary>Constructor</summary>
