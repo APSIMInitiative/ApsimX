@@ -90,7 +90,7 @@ namespace UserInterface.Views
         private void SetScrollbarAdjustments()
         {
             horizontalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenColumns + 1, 1, 1, 1);
-            verticalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenRows + 1, 1, 1, 1);
+            verticalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenRows + 2, 1, 1, 1);
             OnSheetScrolled(this, null);
         }
 
