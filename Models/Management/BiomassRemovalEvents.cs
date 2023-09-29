@@ -8,9 +8,7 @@ using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Utilities;
-using Models.PMF;
 
 namespace Models.Management
 {
@@ -251,6 +249,18 @@ namespace Models.Management
                 if (PlantToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
                     BiomassRemovals.Remove(rem);
             }
+            //remove duplicates
+            List<BiomassRemovalOfPlantOrganType> removeList = new List<BiomassRemovalOfPlantOrganType>();
+            for (int i = BiomassRemovals.Count - 1; i >= 0; i--)
+            {
+                BiomassRemovalOfPlantOrganType rem = BiomassRemovals[i];
+                for (int j = BiomassRemovals.Count - 1; j >= 0; j--)
+                    if (!removeList.Contains(rem))
+                        if (i != j && rem.OrganName == BiomassRemovals[j].OrganName)
+                            removeList.Add(BiomassRemovals[j]);
+            }
+            for (int i = 0; i < removeList.Count; i++)
+                BiomassRemovals.Remove(removeList[i]);
 
             //add in organs that are missing
             foreach (IOrgan organ in organs)

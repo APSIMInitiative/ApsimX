@@ -46,6 +46,7 @@ namespace UserInterface.Presenters
                 gridPresenter1.Attach(tables[0], view.Grid1, presenter);
                 gridPresenter1.AddContextMenuOptions(contextMenuOptions);
                 gridPresenter1.AddIntellisense(model as Model);
+                gridPresenter1.CellChanged += OnCellChanged;
             } 
             if (tables.Count > 1)
             {
@@ -53,6 +54,7 @@ namespace UserInterface.Presenters
                 gridPresenter2.Attach(tables[1], view.Grid2, presenter);
                 gridPresenter2.AddContextMenuOptions(contextMenuOptions);
                 gridPresenter2.AddIntellisense(model as Model);
+                gridPresenter2.CellChanged += OnCellChanged;
                 view.ShowGrid(2, true);
             }
 
@@ -75,10 +77,21 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             if (gridPresenter1 != null)
+            {
+                gridPresenter1.CellChanged -= OnCellChanged;
                 gridPresenter1.Detach();
+            }
+                
 
             if (gridPresenter2 != null)
+            {
+                gridPresenter2.CellChanged -= OnCellChanged;
                 gridPresenter2.Detach();
+            }
+        }
+
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        {
         }
     }
 }

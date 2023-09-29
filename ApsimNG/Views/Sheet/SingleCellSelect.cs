@@ -217,6 +217,9 @@ namespace UserInterface.Views
         /// <summary>Paste cells from clipboard.</summary>
         public virtual void Paste()
         {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
             int rowIndex = selectedRowIndex;
 
             foreach (string line in sheetWidget.GetClipboard().Split("\n", StringSplitOptions.RemoveEmptyEntries))
@@ -239,6 +242,9 @@ namespace UserInterface.Views
         /// <summary>Delete contents of cells.</summary>
         public virtual void Delete()
         {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
             sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
         }
 

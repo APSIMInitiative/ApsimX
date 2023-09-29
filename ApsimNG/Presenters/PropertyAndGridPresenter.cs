@@ -30,6 +30,7 @@ namespace UserInterface.Presenters
             gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridModel).Tables[0], view.Grid, parentPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+            gridPresenter.CellChanged += OnCellChanged;
         }
 
         /// <summary>
@@ -37,8 +38,13 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            gridPresenter.CellChanged -= OnCellChanged;
             propertyPresenter.Detach();
             gridPresenter.Detach();
+        }
+
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
+        {
         }
     }
 }

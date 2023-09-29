@@ -136,6 +136,9 @@ namespace UserInterface.Views
         /// <summary>Copy cells to clipboard.</summary>
         public override void Copy()
         {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
             if (selectedColumnIndexRight == selectedColumnIndex &&
                 selectedRowIndexBottom == selectedRowIndex)
                 base.Copy();
@@ -160,6 +163,9 @@ namespace UserInterface.Views
         /// <summary>Delete contents of cells.</summary>
         public override void Delete()
         {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
             for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                     sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
@@ -168,6 +174,9 @@ namespace UserInterface.Views
         /// <summary>Select all cells</summary>
         public override void SelectAll()
         {
+            if (sheet.CellEditor.IsEditing)
+                sheet.CellEditor.EndEdit();
+
             selectedColumnIndex = 0;
             selectedColumnIndexRight = sheet.DataProvider.ColumnCount - 1;
 

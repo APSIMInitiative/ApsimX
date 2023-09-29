@@ -7,6 +7,7 @@ using System.Data;
 using Models.Interfaces;
 using UserInterface.EventArguments;
 using Models.Core;
+using Gtk;
 
 namespace UserInterface.Presenters
 {
@@ -249,6 +250,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void AddContextMenuOptions(string[] options)
         {
+            if (contextMenuOptions == null)
+                contextMenuOptions = new List<string>();
             foreach (string text in options)
             {
                 string textLower = text.ToLower();
@@ -284,9 +287,12 @@ namespace UserInterface.Presenters
         {
             grid.Sheet.DataProvider = dataProvider;
             grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-            grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
             grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
             grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+
+            //we don't want an editor on grids that are linked to a dataProvider instead of a model
+            if (dataProvider == null)
+                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
         }
 
         /// <summary>
@@ -534,7 +540,7 @@ namespace UserInterface.Presenters
             }
 
             int height = grid.Sheet.Height;
-            int row_heights = grid.Sheet.RowHeight * grid.Sheet.RowCount;
+            int row_heights = grid.Sheet.RowHeight * (grid.Sheet.RowCount + 1); //plus 1 for the empty row
             if (height > 0)
             {
                 if (row_heights > height)
