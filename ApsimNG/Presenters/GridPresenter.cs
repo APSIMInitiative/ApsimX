@@ -69,12 +69,6 @@ namespace UserInterface.Presenters
         /// <summary>An event invoked when a cell changes.</summary>
         public event SelectedCellChangedDelegate SelectedCellChanged;
 
-        /// <summary>An event when an intellisense item is selected</summary>
-        public event EventHandler<IntellisenseItemSelectedArgs> IntellisenseItemSelected;
-
-        /// <summary>An event when an intellisense menu is needed</summary>
-        public event EventHandler<NeedContextItemsArgs> IntellisenseNeedContextItems;
-
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
@@ -109,7 +103,7 @@ namespace UserInterface.Presenters
                 throw new Exception($"Model {model.GetType()} passed to GridPresenter, does not inherit from GridTable.");
             }
 
-            //we are receiving a container to put the grid into
+            //we are receiving a container from another presenter to put the grid into
             if (v as ContainerView != null)
             {
                 sheetContainer = v as ContainerView;
@@ -123,6 +117,8 @@ namespace UserInterface.Presenters
                 view.ShowGrid(2, false);
                 view.SetLabelText("");
                 view.SetLabelHeight(0);
+                AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+
                 if (model as IGridModel != null)
                 {
                     string text = (model as IGridModel).GetDescription();
@@ -134,8 +130,7 @@ namespace UserInterface.Presenters
                 }
             }
             
-            this.explorerPresenter = parentPresenter;
-            
+            //Create the sheet widget here.
             grid = new SheetWidget();
             grid.Sheet = new Sheet();
             SetupSheet(dataProvider);
@@ -146,17 +141,20 @@ namespace UserInterface.Presenters
                 else
                     grid.Sheet.NumberFrozenRows = 1;
             } 
-
+            //Add the sheet's scrollbar widget to the view. (sheet sits within the scrollbar objects)
             sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
             grid.Sheet.RedrawNeeded += OnRedraw;
 
+            explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            contextMenuHelper = new ContextMenuHelper(grid);
+
             contextMenu = new MenuView();
+            contextMenuHelper = new ContextMenuHelper(grid);
             contextMenuHelper.ContextMenu += OnContextMenuPopup;
+            if (contextMenuOptions == null)
+                contextMenuOptions = new List<string>(); //this will be populated by a presenter
 
-            contextMenuOptions = new List<string>();
-
+            //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
 
             Refresh();
@@ -550,6 +548,13 @@ namespace UserInterface.Presenters
             }
         }
 
+
+        /// <summary>
+        /// Invoked when the user types a . into the editter.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
         private void OnIntellisenseNeedContextItems(object sender, NeedContextItemsArgs args)
         {
             try
@@ -561,7 +566,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-            IntellisenseNeedContextItems?.Invoke(sender, args);
         }
 
         /// <summary>
@@ -584,7 +588,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-            IntellisenseItemSelected?.Invoke(sender, args);
         }
     }
 

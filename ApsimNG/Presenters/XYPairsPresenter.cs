@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using APSIM.Shared.Utilities;
-using UserInterface.EventArguments;
-using UserInterface.Interfaces;
 using Models.Core;
 using Models;
 using Models.Functions;
 using APSIM.Shared.Graphing;
 using Series = Models.Series;
-using System.Globalization;
 using UserInterface.Views;
-using Models.Interfaces;
 using Models.Utilities;
 
 namespace UserInterface.Presenters

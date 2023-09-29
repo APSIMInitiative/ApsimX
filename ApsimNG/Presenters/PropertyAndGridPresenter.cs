@@ -1,5 +1,4 @@
-﻿using Models.Core;
-using Models.Interfaces;
+﻿using Models.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
