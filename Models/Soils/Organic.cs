@@ -14,7 +14,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Organic : Model, IGridTable
+    public class Organic : Model, IGridModel
     {
         /// <summary>
         /// An enumeration for specifying organic carbon units

@@ -18,7 +18,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.WaterView.glade")]
     [PresenterName("UserInterface.Presenters.WaterPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IGridTable
+    public class Water : Model, IGridModel
     {
         private double[] volumetric;
 

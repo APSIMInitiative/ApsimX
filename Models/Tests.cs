@@ -20,7 +20,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, IGridTable
+    public class Tests : Model, ITestable, IGridModel
     {
         /// <summary>
         /// data table

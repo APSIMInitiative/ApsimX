@@ -28,7 +28,7 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridTable
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridModel
     {
         /// <summary>
         /// The DataStore.

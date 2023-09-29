@@ -21,7 +21,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater, IGridTable
+    public class WEIRDO : Model, ISoilWater, IGridModel
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>

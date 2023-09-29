@@ -6,10 +6,17 @@ using System.Data;
 namespace Models.Interfaces
 {
     /// <summary>An interface for editable tabular data.</summary>
-    public interface IGridTable
+    public interface IGridModel
     {
         /// <summary>Get tabular data. Called by GUI.</summary>
-        List<GridTable> Tables { get; }
+        public List<GridTable> Tables { get; }
+
+        /// <summary>
+        /// A Description of the Model displayed in the Grid view
+        /// Default is a blank string, this can be overridden by a model class</summary>
+        public string GetDescription() {
+            return "";
+        }
 
         /// <summary>
         /// Called by Presenter and allow classes to modify the data table to change how its displayed.

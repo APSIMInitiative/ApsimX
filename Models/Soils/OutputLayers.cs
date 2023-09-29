@@ -18,7 +18,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class OutputLayers : Model, IGridTable
+    public class OutputLayers : Model, IGridModel
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]

@@ -20,7 +20,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, IGridTable
+    public class Solute : Model, ISolute, IGridModel
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link]

@@ -24,7 +24,7 @@ namespace Models.Management
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
-    public class BiomassRemovalEvents : Model, IGridTable
+    public class BiomassRemovalEvents : Model, IGridModel
     {        
         /// <summary>
         /// Crop to remove biomass from

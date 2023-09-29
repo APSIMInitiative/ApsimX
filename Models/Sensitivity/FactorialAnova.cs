@@ -21,7 +21,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class FactorialAnova : Model, IGridTable, IPostSimulationTool
+    public class FactorialAnova : Model, IGridModel, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;

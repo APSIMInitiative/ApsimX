@@ -13,7 +13,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class LayerStructure : Model, IGridTable
+    public class LayerStructure : Model, IGridModel
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]

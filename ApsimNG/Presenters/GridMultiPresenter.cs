@@ -8,7 +8,7 @@ using Models.Utilities;
 namespace UserInterface.Presenters
 {
     /// <summary>
-    /// Presenter for any <see cref="IGridTable"/>.
+    /// Presenter for any <see cref="IGridModel"/>.
     /// </summary>
     class GridMultiPresenter : IPresenter
     {

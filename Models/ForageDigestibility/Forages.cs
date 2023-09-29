@@ -21,7 +21,7 @@ namespace Models.ForageDigestibility
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
 
-    public class Forages : Model, IGridTable
+    public class Forages : Model, IGridModel
     {
         private List<ModelWithDigestibleBiomass> forageModels = null;
 

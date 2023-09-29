@@ -15,7 +15,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class HydraulicProperties : Model, IGridTable
+    public class HydraulicProperties : Model, IGridModel
     {
         #region External links
         [Link]

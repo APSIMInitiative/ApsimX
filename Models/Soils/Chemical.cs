@@ -13,7 +13,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Chemical : Model, IGridTable
+    public class Chemical : Model, IGridModel
     {
         /// <summary>An enumeration for specifying PH units.</summary>
         public enum PHUnitsEnum

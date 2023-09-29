@@ -17,7 +17,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Physical : Model, IPhysical, IGridTable
+    public class Physical : Model, IPhysical, IGridModel
     {
         // Water node.
         private Water waterNode = null;

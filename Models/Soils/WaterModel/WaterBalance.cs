@@ -45,7 +45,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, IGridTable
+    public class WaterBalance : Model, ISoilWater, IGridModel
     {
         private Physical physical;
         private HyProps hyprops = new HyProps();

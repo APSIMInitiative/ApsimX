@@ -26,7 +26,7 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Morris : Model, ISimulationDescriptionGenerator, IGridTable, IPostSimulationTool
+    public class Morris : Model, ISimulationDescriptionGenerator, IGridModel, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;

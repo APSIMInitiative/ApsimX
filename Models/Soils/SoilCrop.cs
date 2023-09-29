@@ -16,7 +16,7 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Physical))]
-    public class SoilCrop : Model, IGridTable
+    public class SoilCrop : Model, IGridModel
     {
         /// <summary>Depth strings (mm/mm)</summary>
         [Summary]

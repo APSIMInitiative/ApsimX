@@ -36,7 +36,7 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.TreeProxyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class TreeProxy : Model, IUptake, IGridTable
+    public class TreeProxy : Model, IUptake, IGridModel
     {
         [Link]
         IWeather weather = null;
