@@ -680,7 +680,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Survival")]
         [Description("Probability of death below condition-based cut-off")]
         [System.ComponentModel.DefaultValue(1)]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ConditionBasedMortalityProbability { get; set; }
 
         /// <summary>
