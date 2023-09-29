@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Utilities;
+using Models.PMF;
 
 namespace Models.Management
 {
@@ -29,14 +30,24 @@ namespace Models.Management
         /// <summary>
         /// Crop to remove biomass from
         /// </summary>
-        [Description("Crop to remove biomass from")]
-        public IPlant PlantToRemoveFrom { get; set; }
+        [Description("Crop to remove biomass from") ]
+        public IPlant PlantToRemoveFrom {
+            get { return _plant; }
+            set { _plant = value; LinkCrop(); } 
+        }
+        [JsonIgnore]
+        private IPlant _plant { get; set; }
 
         /// <summary>
         /// The type of biomass removal event
         /// </summary>
         [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
-        public BiomassRemovalType RemovalType { get; set; }
+        public BiomassRemovalType RemovalType {
+            get { return _removalType; }
+            set { _removalType = value; LinkCrop(); }
+        }
+        [JsonIgnore]
+        private BiomassRemovalType _removalType { get; set; }
 
         /// <summary>
         /// The stage to set phenology to on removal event
@@ -202,6 +213,9 @@ namespace Models.Management
 
         private void LinkCrop()
         {
+            if (this.Parent == null)
+                return;
+
             //check if our plant is currently linked, link if not
             if (PlantToRemoveFrom == null)
                 PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>();
@@ -209,6 +223,12 @@ namespace Models.Management
             if (PlantToRemoveFrom != null)
                 if (PlantToRemoveFrom.Parent == null)
                     PlantToRemoveFrom = this.Parent.FindDescendant<IPlant>(PlantToRemoveFrom.Name);
+
+            if (PlantToRemoveFrom == null)
+                throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
+
+            if (BiomassRemovals == null)
+                BiomassRemovals = new List<BiomassRemovalOfPlantOrganType>();
 
             //check if it has organs, if not, check if it is in replacements
             List<IOrgan> organs = PlantToRemoveFrom.FindAllDescendants<IOrgan>().ToList();
@@ -224,8 +244,28 @@ namespace Models.Management
                 }
             }
 
-            if (PlantToRemoveFrom == null)
-                throw new Exception("BiomassRemovalEvents could not find a crop in this simulation.");
+            //remove all non-matching plants
+            for (int i = BiomassRemovals.Count-1; i >=0; i--)
+            {
+                BiomassRemovalOfPlantOrganType rem = BiomassRemovals[i];
+                if (PlantToRemoveFrom.Name != rem.PlantName || RemovalType != rem.Type)
+                    BiomassRemovals.Remove(rem);
+            }
+
+            //add in organs that are missing
+            foreach (IOrgan organ in organs)
+            {
+                bool isInList = false;
+                for (int i = 0; i < BiomassRemovals.Count && !isInList; i++)
+                    if (organ.Name == BiomassRemovals[i].OrganName)
+                        isInList = true;
+
+                if (!isInList)
+                {
+                    BiomassRemovalOfPlantOrganType rem = new BiomassRemovalOfPlantOrganType(PlantToRemoveFrom.Name, organ.Name, RemovalType.ToString(), 0, 0, 0, 0);
+                    BiomassRemovals.Add(rem);
+                }
+            }
         }
 
     }
