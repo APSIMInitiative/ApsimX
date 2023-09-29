@@ -391,7 +391,7 @@ namespace APSIM.Shared.Utilities
                 if (Convert.IsDBNull(table.Rows[row][columnName]))
                     values[row] = DateTime.MinValue;
                 else
-                    values[row] = DateUtilities.GetDate(table.Rows[row][columnName].ToString());
+                    values[row] = Convert.ToDateTime(table.Rows[row][columnName], CultureInfo.InvariantCulture);
             }
             return values;
         }
@@ -410,7 +410,7 @@ namespace APSIM.Shared.Utilities
                 if (Convert.IsDBNull(view[row][columnName]))
                     values[row] = DateTime.MinValue;
                 else
-                    values[row] = DateUtilities.GetDate(view[row][columnName].ToString());
+                    values[row] = Convert.ToDateTime(view[row][columnName], CultureInfo.InvariantCulture);
             }
 
             return values;
@@ -432,7 +432,7 @@ namespace APSIM.Shared.Utilities
 
             List<DateTime> rValues = new List<DateTime>();
             foreach (var row in result)
-                rValues.Add(DateUtilities.GetDate(row[colName].ToString()));
+                rValues.Add(Convert.ToDateTime(row[colName], CultureInfo.InvariantCulture));
 
             return rValues.ToArray();
 
@@ -514,7 +514,7 @@ namespace APSIM.Shared.Utilities
                     if (row.Table.Columns[Col].DataType == typeof(DateTime))
                         return (DateTime)row[Col];
                     else
-                        return DateUtilities.GetDate(row[Col].ToString().ToString());
+                        return DateTime.Parse(row[Col].ToString(), CultureInfo.InvariantCulture);
                 }
                 else if (ColumnName == "year")
                     Year = Convert.ToInt32(row[Col], CultureInfo.InvariantCulture);
