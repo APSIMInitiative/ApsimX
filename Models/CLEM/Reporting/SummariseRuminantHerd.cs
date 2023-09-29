@@ -175,7 +175,8 @@ namespace Models.CLEM
                         AverageWeight = group.Average(a => a.Weight),
                         AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
                         AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
-                        AverageIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                        AverageIntake = group.Average(a => a.Intake),
+                        AverageMilkIntake = group.Average(a => a.MilkIntake),
                         AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
                         AverageWeightGain = group.Average(a => a.WeightGain),
                         AdultEquivalents = group.Sum(a => a.AdultEquivalent),
@@ -212,7 +213,8 @@ namespace Models.CLEM
                             AverageWeight = group.Average(a => a.Weight),
                             AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
                             AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
-                            AverageIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
+                            AverageIntake = group.Average(a => a.Intake),
+                            AverageMilkIntake = group.Average(a => a.MilkIntake),
                             AverageProportionPotentialIntake = group.Average(a => a.ProportionOfPotentialIntakeObtained),
                             AverageWeightGain = group.Average(a => a.WeightGain),
                             AdultEquivalents = group.Sum(a => a.AdultEquivalent),
@@ -256,7 +258,8 @@ namespace Models.CLEM
                                     Number = ageGroup.Sum(a => a.Number),
                                     AverageWeight = ageGroup.Average(a => a.Weight),
                                     AverageWeightGain = ageGroup.Average(a => a.WeightGain),
-                                    AverageIntake = ageGroup.Average(a => (a.Intake + a.MilkIntake)), //now daily/30.4;
+                                    AverageIntake = ageGroup.Average(a => a.Intake), //now daily/30.4;
+                                    AverageMilkIntake = ageGroup.Average(a => a.MilkIntake), //now daily/30.4;
                                     AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent)
                                 };
                                 if (sexGroup.Key == Sex.Female)
@@ -415,6 +418,10 @@ namespace Models.CLEM
         /// Average intake of individuals
         /// </summary>
         public double AverageIntake { get; set; }
+        /// <summary>
+        /// Average milk intake of individuals
+        /// </summary>
+        public double AverageMilkIntake { get; set; }
         /// <summary>
         /// Average proportion intake of potential intake
         /// </summary>
