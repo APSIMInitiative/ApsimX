@@ -5,24 +5,31 @@ using System.Collections.Generic;
 using UserInterface.Views;
 using System.Data;
 using Models.Interfaces;
+using UserInterface.EventArguments;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
-    /// <summary>A generic grid presenter for displaying a data table and allowing editing.
+    /// <summary>
+    /// A generic grid presenter for displaying a data table and allowing editing.
     /// This is built to run within other presenters, so pass in a ContainerView in the attach method to have it drawn.
-    /// Table Presenter can be used for a two grid view, or for additional functionality like intellisense</summary>
+    /// Table Presenter can be used for a two grid view, or for additional functionality like intellisense
+    /// </summary>
     class GridPresenter : IPresenter
     {
+        /// <summary>Stores a reference to the model for intellisense or if it was passed in when attached.</summary>
+        private Model model;
+
         /// <summary>The data store model to work with.</summary>
         private GridTable gridTable;
 
         /// <summary>The sheet widget.</summary>
         private SheetWidget grid;
 
-        /// <summary></summary>
+        /// <summary>Currently Selected Row. Used to detect when a cell is slected</summary>
         private int selectedRow = -1;
 
-        /// <summary></summary>
+        /// <summary>Currently Selected Column. Used to detect when a cell is slected</summary>
         private int selectedColumn = -1;
 
         /// <summary>The container that houses the sheet.</summary>
@@ -36,6 +43,9 @@ namespace UserInterface.Presenters
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
+
+        /// <summary>Parent explorer presenter.</summary>
+        private List<string> contextMenuOptions;
 
         /// <summary>
         /// The intellisense.
@@ -59,6 +69,12 @@ namespace UserInterface.Presenters
         /// <summary>An event invoked when a cell changes.</summary>
         public event SelectedCellChangedDelegate SelectedCellChanged;
 
+        /// <summary>An event when an intellisense item is selected</summary>
+        public event EventHandler<IntellisenseItemSelectedArgs> IntellisenseItemSelected;
+
+        /// <summary>An event when an intellisense menu is needed</summary>
+        public event EventHandler<NeedContextItemsArgs> IntellisenseNeedContextItems;
+
         /// <summary>
         /// Attach the model to the view.
         /// </summary>
@@ -76,9 +92,10 @@ namespace UserInterface.Presenters
                 gridTable = null;
             }
             //else we are receiving a model with IGridTable that we should get our GridTable from
-            else if (model as IGridTable != null)
+            else if (model as IGridModel != null)
             {
-                IGridTable m = (model as IGridTable);
+                this.model = (model as Model);
+                IGridModel m = (model as IGridModel);
                 gridTable = m.Tables[0];
             }
             //else we are receiving a GridTable that was created by another presenter
@@ -106,6 +123,15 @@ namespace UserInterface.Presenters
                 view.ShowGrid(2, false);
                 view.SetLabelText("");
                 view.SetLabelHeight(0);
+                if (model as IGridModel != null)
+                {
+                    string text = (model as IGridModel).GetDescription();
+                    if (text.Length > 0)
+                    {
+                        view.SetLabelText(text);
+                        view.SetLabelHeight(0.1f);
+                    }
+                }
             }
             
             this.explorerPresenter = parentPresenter;
@@ -124,14 +150,16 @@ namespace UserInterface.Presenters
             sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
             grid.Sheet.RedrawNeeded += OnRedraw;
 
-            Refresh();
-
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             contextMenuHelper = new ContextMenuHelper(grid);
             contextMenu = new MenuView();
             contextMenuHelper.ContextMenu += OnContextMenuPopup;
 
-            intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
+            contextMenuOptions = new List<string>();
+
+            intellisense = null;
+
+            Refresh();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -147,7 +175,13 @@ namespace UserInterface.Presenters
 
             CleanupSheet();
 
-            intellisense.Cleanup();
+            if (intellisense != null)
+            {
+                intellisense.Cleanup();
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                intellisense.ContextItemsNeeded -= OnIntellisenseNeedContextItems;
+            }
+            
         }
 
         /// <summary>
@@ -169,6 +203,85 @@ namespace UserInterface.Presenters
                 throw new Exception($"PopulateWithDataProvider cannot be used on a presenter that has supplied a Model");
         }
 
+        /// <summary>Refresh the grid.</summary>
+        public void Refresh()
+        {
+            if (gridTable != null)
+            {
+                if (grid.Sheet.DataProvider != null)
+                    (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
+
+                DataTable data = gridTable.Data;
+
+                List<string> units = null;
+                if (gridTable.HasUnits())
+                {
+                    units = new List<string>();
+                    for (int i = 0; i < data.Columns.Count; i++)
+                    {
+                        units.Add(data.Rows[0].ItemArray[i].ToString());
+                    }
+                    data.Rows.Remove(data.Rows[0]);
+                }
+                DataTableProvider dataProvider = new DataTableProvider(data, units);
+
+                grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
+                grid.Sheet.DataProvider = dataProvider;
+
+                dataProvider.CellChanged += OnCellChanged;
+            }
+
+            UpdateScrollBars();
+        }
+
+        public int NumRows()
+        {
+            var provider = grid.Sheet.DataProvider as DataTableProvider;
+            return grid.Sheet.DataProvider.RowCount - grid.Sheet.NumberFrozenRows;
+        }
+
+        /// <summary>
+        /// Adds options to the right-click context menu, valid options are:
+        /// Cut - Any Editable Cell
+        /// Copy - Any Cell
+        /// Paste - Any Editable Cell
+        /// Delete - Any Editable Cell
+        /// Select All - Any Cell
+        /// Units - Change Units on Solute grids, only on row == 1
+        /// </summary>
+        public void AddContextMenuOptions(string[] options)
+        {
+            foreach (string text in options)
+            {
+                string textLower = text.ToLower();
+                if (textLower == "cut" || textLower == "copy" || textLower == "paste" || textLower == "delete" || textLower == "select all" || textLower == "units")
+                    contextMenuOptions.Add(textLower);
+                else
+                    throw new Exception(text + " is not a valid context menu option for a Grid");
+            }
+        }
+
+        /// <summary>
+        /// Adds options to the right-click context menu, valid options are:
+        /// Cut - Any Editable Cell
+        /// Copy - Any Cell
+        /// Paste - Any Editable Cell
+        /// Delete - Any Editable Cell
+        /// Select All - Any Cell
+        /// Units - Change Units on Solute grids, only on row == 1
+        /// </summary>
+        public void AddIntellisense(Model model)
+        {
+            this.model = model;
+            intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
+            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
+        }
+
+        /// <summary>
+        /// Adds cell selection, cell editing, scrollbars and the cell painter
+        /// Update this function as more customisation is required
+        /// </summary>
         private void SetupSheet(ISheetDataProvider dataProvider)
         {
             grid.Sheet.DataProvider = dataProvider;
@@ -213,10 +326,11 @@ namespace UserInterface.Presenters
             int column = 0;
             (sender as Sheet).CellSelector.GetSelection(out row, out column);
 
-            if (selectedRow != row || selectedColumn != column) {
+            if (selectedRow != row || selectedColumn != column)
+            {
                 selectedRow = row;
                 selectedColumn = column;
-                if (SelectedCellChanged != null) 
+                if (SelectedCellChanged != null)
                     SelectedCellChanged?.Invoke(selectedRow, selectedColumn);
             }
         }
@@ -228,53 +342,116 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         private void OnContextMenuPopup(object sender, ContextMenuEventArgs e)
         {
-            if (gridTable != null)
-            {
-                if (grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex))
-                {
-                    var menuItems = new List<MenuDescriptionArgs>();
+            bool validCell = grid.Sheet.CellHitTest((int)e.X, (int)e.Y, out int columnIndex, out int rowIndex);
 
-                    if (rowIndex == 1)
+            if (validCell)
+            {
+                bool isReadOnly = false;
+                if (columnIndex < grid.Sheet.NumberFrozenColumns)
+                    isReadOnly = true;
+                if (rowIndex < grid.Sheet.NumberFrozenRows)
+                    isReadOnly = true;
+
+                var menuItems = new List<MenuDescriptionArgs>();
+
+                foreach (string option in contextMenuOptions)
+                {
+                    if (option.CompareTo("units") == 0) //used by solute grids to change units
                     {
-                        foreach (string units in gridTable.GetUnits(columnIndex))
+                        if (rowIndex == 1)
                         {
-                            var menuItem = new MenuDescriptionArgs()
+                            foreach (string units in gridTable.GetUnits(columnIndex))
                             {
-                                Name = units,
-                            };
-                            menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
-                            menuItems.Add(menuItem);
+                                var menuItem = new MenuDescriptionArgs()
+                                {
+                                    Name = units,
+                                };
+                                menuItem.OnClick += (s, e) => { gridTable.SetUnits(columnIndex, menuItem.Name); SaveGridToModel(); Refresh(); };
+                                menuItems.Add(menuItem);
+                            }
                         }
                     }
-                    else
-                    {
-                        var menuItem = new MenuDescriptionArgs()
-                        {
-                            Name = "Copy",
-                            ShortcutKey = "Ctrl+C"
-                        };
-                        menuItem.OnClick += OnCopy;
-                        menuItems.Add(menuItem);
-                        menuItem = new MenuDescriptionArgs()
-                        {
-                            Name = "Paste",
-                            ShortcutKey = "Ctrl+V"
-                        };
-                        menuItem.OnClick += OnPaste;
-                        menuItems.Add(menuItem);
-                    }
 
-                    if (menuItems.Count > 0)
+                    bool showingUnits = false;
+                    if (contextMenuOptions.Contains("units") && rowIndex == 1)
+                        showingUnits = true;
+
+                    if (!showingUnits)
                     {
-                        contextMenu.Populate(menuItems);
-                        contextMenu.Show();
+                        if (option.CompareTo("cut") == 0 && !isReadOnly)
+                        {
+                            MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
+                            {
+                                Name = "Cut",
+                                ShortcutKey = "Ctrl+X"
+                            };
+                            menuItem.OnClick += OnCut;
+                            menuItems.Add(menuItem);
+                        }
+                        if (option.CompareTo("copy") == 0)
+                        {
+                            MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
+                            {
+                                Name = "Copy",
+                                ShortcutKey = "Ctrl+C"
+                            };
+                            menuItem.OnClick += OnCopy;
+                            menuItems.Add(menuItem);
+                        }
+                        if (option.CompareTo("paste") == 0 && !isReadOnly)
+                        {
+                            MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
+                            {
+                                Name = "Paste",
+                                ShortcutKey = "Ctrl+V"
+                            };
+                            menuItem.OnClick += OnPaste;
+                            menuItems.Add(menuItem);
+                        }
+                        if (option.CompareTo("delete") == 0 && !isReadOnly)
+                        {
+                            MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
+                            {
+                                Name = "Delete",
+                                ShortcutKey = "Delete"
+                            };
+                            menuItem.OnClick += OnDelete;
+                            menuItems.Add(menuItem);
+                        }
+                        if (option.CompareTo("select all") == 0)
+                        {
+                            if (grid.Sheet.CellSelector is MultiCellSelect)
+                            {
+                                MenuDescriptionArgs menuItem = new MenuDescriptionArgs()
+                                {
+                                    Name = "Select All",
+                                    ShortcutKey = ""
+                                };
+                                menuItem.OnClick += OnSelectAll;
+                                menuItems.Add(menuItem);
+                            }
+                        }
                     }
+                }
+
+                if (menuItems.Count > 0)
+                {
+                    contextMenu.Populate(menuItems);
+                    contextMenu.Show();
                 }
             }
         }
 
         /// <summary>
-        /// User has selected paste.
+        /// User has selected cut.
+        /// </summary>
+        private void OnCut(object sender, EventArgs e)
+        {
+            grid.Sheet.CellSelector.Cut();
+        }
+
+        /// <summary>
+        /// User has selected copy.
         /// </summary>
         private void OnCopy(object sender, EventArgs e)
         {
@@ -291,43 +468,21 @@ namespace UserInterface.Presenters
             grid.Sheet.CellSelector.Paste();
         }
 
-        /// <summary>Refresh the grid.</summary>
-        public void Refresh()
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        private void OnDelete(object sender, EventArgs e)
         {
-            if (gridTable != null)
-            {
-                if (grid.Sheet.DataProvider != null)
-                    (grid.Sheet.DataProvider as DataTableProvider).CellChanged -= OnCellChanged;
-
-                DataTable data = gridTable.Data;
-
-                List<string> units = null;
-                if (gridTable.HasUnits())
-                {
-                    units = new List<string>();
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        units.Add(data.Rows[0].ItemArray[i].ToString());
-                    }
-                    data.Rows.Remove(data.Rows[0]);
-                }
-                DataTableProvider dataProvider = new DataTableProvider(data, units);
-
-                grid.Sheet.RowCount = grid.Sheet.NumberFrozenRows + data.Rows.Count + 1;
-                grid.Sheet.DataProvider = dataProvider;
-
-                dataProvider.CellChanged += OnCellChanged;
-            }
-
-            UpdateScrollBars();
+            grid.Sheet.CellSelector.Delete();
         }
 
-        public int NumRows()
+        /// <summary>
+        /// User has selected cut.
+        /// </summary>
+        private void OnSelectAll(object sender, EventArgs e)
         {
-            var provider = grid.Sheet.DataProvider as DataTableProvider;
-            return grid.Sheet.DataProvider.RowCount - grid.Sheet.NumberFrozenRows;
+            grid.Sheet.CellSelector.SelectAll();
         }
-
 
         /// <summary>Clean up the sheet components.</summary>
         private void CleanupSheet()
@@ -394,5 +549,43 @@ namespace UserInterface.Presenters
                 sheetContainer.SetScrollbarVisible(true, false);
             }
         }
+
+        private void OnIntellisenseNeedContextItems(object sender, NeedContextItemsArgs args)
+        {
+            try
+            {
+                if (intellisense.GenerateGridCompletions(args.Code, args.Code.Length, model, true, false, false, false))
+                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+            IntellisenseNeedContextItems?.Invoke(sender, args);
+        }
+
+        /// <summary>
+        /// Invoked when the user selects an item in the intellisense.
+        /// Inserts the selected item at the caret.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
+        {
+            try
+            {
+                grid.Sheet.CellEditor.EndEdit();
+                grid.Sheet.CellSelector.GetSelection(out int columnIndex, out int rowIndex);
+                string text = grid.Sheet.DataProvider.GetCellContents(columnIndex, rowIndex);
+                grid.Sheet.DataProvider.SetCellContents(columnIndex, rowIndex, text + args.ItemSelected);
+                grid.Sheet.CalculateBounds(columnIndex, rowIndex);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+            IntellisenseItemSelected?.Invoke(sender, args);
+        }
     }
+
 }

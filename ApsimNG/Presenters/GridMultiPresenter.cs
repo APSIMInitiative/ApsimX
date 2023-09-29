@@ -1,5 +1,4 @@
-﻿using UserInterface.EventArguments;
-using Models.Interfaces;
+﻿using Models.Interfaces;
 using UserInterface.Views;
 using Models.Core;
 using System.Collections.Generic;
@@ -15,8 +14,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The underlying model.
         /// </summary>
-        private IGridTable tableModel;
-
+        private IGridModel tableModel;
         private IGridView view;
         private ExplorerPresenter presenter;
         private GridPresenter gridPresenter1;
@@ -35,28 +33,40 @@ namespace UserInterface.Presenters
 
             presenter = parentPresenter;
             view = v as IGridView;
-            tableModel = model as IGridTable;
+            tableModel = model as IGridModel;
 
             List<GridTable> tables = tableModel.Tables;
+
+            string[] contextMenuOptions = new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" };
 
             view.ShowGrid(2, false);
             if (tables.Count > 0)
             {
                 gridPresenter1 = new GridPresenter();
-                gridPresenter1.Attach(tables[0], view.Grid1, parentPresenter);
+                gridPresenter1.Attach(tables[0], view.Grid1, presenter);
+                gridPresenter1.AddContextMenuOptions(contextMenuOptions);
+                gridPresenter1.AddIntellisense(model as Model);
             } 
             if (tables.Count > 1)
             {
                 gridPresenter2 = new GridPresenter();
-                gridPresenter2.Attach(tables[1], view.Grid2, parentPresenter);
+                gridPresenter2.Attach(tables[1], view.Grid2, presenter);
+                gridPresenter2.AddContextMenuOptions(contextMenuOptions);
+                gridPresenter2.AddIntellisense(model as Model);
                 view.ShowGrid(2, true);
             }
 
-            //intellisense.ItemSelected += OnIntellisenseItemSelected;
-            //view.Grid2.ContextItemsNeeded += OnIntellisenseItemsNeeded;
-
-            view.SetLabelText("");
-            view.SetLabelHeight(0.0f);
+            string text = tableModel.GetDescription();
+            if (text.Length > 0)
+            {
+                view.SetLabelText(text);
+                view.SetLabelHeight(0.1f);
+            } 
+            else
+            {
+                view.SetLabelText("");
+                view.SetLabelHeight(0.0f);
+            }
         }
 
         /// <summary>
@@ -64,55 +74,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            //intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            //view.Grid2.ContextItemsNeeded -= OnIntellisenseItemsNeeded;
-
             if (gridPresenter1 != null)
                 gridPresenter1.Detach();
 
             if (gridPresenter2 != null)
                 gridPresenter2.Detach();
-        }
-
-        /// <summary>
-        /// Invoked when the view is asking for completion options.
-        /// Generates and displays these completion options.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Evenet arguments.</param>
-        private void OnIntellisenseItemsNeeded(object sender, NeedContextItemsArgs args)
-        {
-            /*
-            try
-            {
-                if (intellisense.GenerateGridCompletions(args.Code, args.Offset, (tableModel as IModel).Children[0], true, false, false, false, args.ControlSpace))
-                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
-            */
-        }
-
-        /// <summary>
-        /// Invoked when the user selects an item in the intellisense.
-        /// Inserts the selected item at the caret.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
-        {
-            /*
-            try
-            {
-                view.Grid2.InsertText(args.ItemSelected);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
-            */
         }
     }
 }

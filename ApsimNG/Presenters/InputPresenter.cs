@@ -1,12 +1,7 @@
 ﻿using System;
-using Models;
-using Models.Core;
 using Utility;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using APSIM.Shared.Graphing;
-using Gtk;
-using Models.Utilities;
 
 namespace UserInterface.Presenters
 {
@@ -50,7 +45,7 @@ namespace UserInterface.Presenters
 
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
-            gridPresenter.CellChanged += OnCellChanged;
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             this.explorerPresenter = explorerPresenter;
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
@@ -92,14 +87,6 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>Invoked when a grid cell has changed.</summary>
-        /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
-        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
-        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
-        {
         }
 
         /// <summary>

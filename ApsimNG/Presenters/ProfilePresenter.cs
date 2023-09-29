@@ -56,7 +56,8 @@ namespace UserInterface.Presenters
 
             ContainerView gridContainer = view.GetControl<ContainerView>("grid");
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
 
             Soil soilNode = this.model.FindAncestor<Soil>();
             physical = soilNode.FindChild<Physical>();

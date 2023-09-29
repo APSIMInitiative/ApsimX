@@ -201,6 +201,13 @@ namespace UserInterface.Views
             sheet.NumberHiddenRows = 0;
         }
 
+        /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
+        public virtual void Cut()
+        {
+            Copy();
+            Delete();
+        }
+
         /// <summary>Copy cells to clipboard.</summary>
         public virtual void Copy()
         {
@@ -233,6 +240,12 @@ namespace UserInterface.Views
         public virtual void Delete()
         {
             sheet.DataProvider.SetCellContents(selectedColumnIndex, selectedRowIndex, null);
+        }
+
+        /// <summary>Select all cells</summary>
+        public virtual void SelectAll()
+        {
+            return;
         }
     }
 }

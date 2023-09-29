@@ -110,6 +110,7 @@ namespace UserInterface.Presenters
 
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
 
             tableDropDown.IsEditable = false;
             if (dataStore != null)

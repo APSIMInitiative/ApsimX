@@ -126,6 +126,13 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
+        public override void Cut()
+        {
+            Copy();
+            Delete();
+        }
+
         /// <summary>Copy cells to clipboard.</summary>
         public override void Copy()
         {
@@ -156,6 +163,16 @@ namespace UserInterface.Views
             for (int rowIndex = selectedRowIndex; rowIndex <= selectedRowIndexBottom; rowIndex++)
                 for (int columnIndex = selectedColumnIndex; columnIndex <= selectedColumnIndexRight; columnIndex++)
                     sheet.DataProvider.SetCellContents(columnIndex, rowIndex, null);
+        }
+
+        /// <summary>Select all cells</summary>
+        public override void SelectAll()
+        {
+            selectedColumnIndex = 0;
+            selectedColumnIndexRight = sheet.DataProvider.ColumnCount - 1;
+
+            selectedRowIndex = 0;
+            selectedRowIndexBottom = sheet.DataProvider.RowCount - 1;
         }
 
         /// <summary>Delete contents of cells.</summary>

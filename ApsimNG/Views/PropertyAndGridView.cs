@@ -25,6 +25,8 @@ namespace UserInterface.Views
             mainWidget = panel;
             panel.Pack1((PropertiesView as ViewBase).MainWidget, true, false);
             panel.Pack2((Grid as ViewBase).MainWidget, true, false);
+            panel.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * 0.5);
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 

@@ -67,6 +67,7 @@ namespace UserInterface.Presenters
 
             gridPresenter = new GridPresenter();
             gridPresenter.Attach(new DataTableProvider(new DataTable()), sheetContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Copy", "Select All" });
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;

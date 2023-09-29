@@ -78,16 +78,19 @@ namespace UserInterface.Views
             if (!IsColumnReadonly(colIndex))
             {
                 int i = rowIndex - numHeadingRows;
-                while (i >= Data.Rows.Count)
-                    Data.Rows.Add(Data.NewRow());
-
-                var existingValue = Data.Rows[i][colIndex];
-                if (existingValue != null && value == null ||
-                    existingValue == null && value != null ||
-                    existingValue.ToString() != value.ToString())
+                if (i >= 0)
                 {
-                    Data.Rows[i][colIndex] = value;
-                    CellChanged?.Invoke(this, colIndex, rowIndex);
+                    while (i >= Data.Rows.Count)
+                        Data.Rows.Add(Data.NewRow());
+
+                    var existingValue = Data.Rows[i][colIndex];
+                    if (existingValue != null && value == null ||
+                        existingValue == null && value != null ||
+                        existingValue.ToString() != value.ToString())
+                    {
+                        Data.Rows[i][colIndex] = value;
+                        CellChanged?.Invoke(this, colIndex, rowIndex);
+                    }
                 }
             }
         }

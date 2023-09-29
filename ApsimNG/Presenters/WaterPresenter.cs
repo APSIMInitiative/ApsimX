@@ -60,7 +60,8 @@ namespace UserInterface.Presenters
 
             this.explorerPresenter = explorerPresenter;
             gridPresenter = new GridPresenter();
-            gridPresenter.Attach((model as IGridTable).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");
