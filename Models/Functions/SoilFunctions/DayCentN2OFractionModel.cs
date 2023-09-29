@@ -1,9 +1,9 @@
 ﻿using System;
-using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
-using Models.Soils;
+using Models.Core;
 using Models.Interfaces;
+using Models.Soils;
+using Models.Soils.Nutrients;
 
 namespace Models.Functions
 {
@@ -18,7 +18,7 @@ namespace Models.Functions
     {
         [Link]
         IPhysical soilPhysical = null;
-        
+
         /// <summary>The water balance model</summary>
         [Link]
         ISoilWater waterBalance = null;
@@ -40,7 +40,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Nitrification Model");
 
-            double WFPS = MathUtilities.Divide(waterBalance.SW[arrayIndex], soilPhysical.SAT[arrayIndex], 0)*100;
+            double WFPS = MathUtilities.Divide(waterBalance.SW[arrayIndex], soilPhysical.SAT[arrayIndex], 0) * 100;
             double WF = 0;
             if (WFPS > 21.3)
                 WF = 1.18 * (WFPS - 21.3) / (100 - 21.3);

@@ -1,10 +1,9 @@
-﻿namespace Models.LifeCycle
+﻿using System;
+using Models.Core;
+using Models.Functions;
+
+namespace Models.LifeCycle
 {
-    using Models.Core;
-    using Models.Functions;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This class specifies which life cycle and which phase the progeny of the parent 

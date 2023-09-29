@@ -280,39 +280,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         }
-
-        ///// <inheritdoc/>
-        //public override string ModelSummaryInnerClosingTags()
-        //{
-        //    using (StringWriter htmlWriter = new StringWriter())
-        //    {
-        //        if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
-        //            htmlWriter.Write("\r\n</div>");
-        //        return htmlWriter.ToString(); 
-        //    }
-        //}
-
-        ///// <inheritdoc/>
-        //public override string ModelSummaryInnerOpeningTags()
-        //{
-        //    using (StringWriter htmlWriter = new StringWriter())
-        //    {
-        //        if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
-        //        {
-        //            htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
-        //            htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
-        //            htmlWriter.Write("</div>");
-        //        }
-        //        else
-        //        {
-        //            bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
-        //            if (rotation)
-        //                htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
-        //            htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
-        //        }
-        //        return htmlWriter.ToString(); 
-        //    }
-        //} 
         #endregion
     }
 }

@@ -52,7 +52,10 @@ namespace UserInterface.Views
             var clipboardName = "CLIPBOARD";
             Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = text;
+            if (text != null)
+            {
+                cb.Text = text;
+            }
         }
 
         public string GetClipboard()
@@ -104,7 +107,6 @@ namespace UserInterface.Views
             if (cr != null)
                 Sheet.Initialise(new CairoContext(cr, this));
 
-            GrabFocus();
         }
 
         protected override void OnSizeAllocated(Gdk.Rectangle allocation)

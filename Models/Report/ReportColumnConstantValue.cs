@@ -1,6 +1,7 @@
+using System;
+
 namespace Models
 {
-    using System;
 
     /// <summary>A class for outputting a constant value in a report column.</summary>
     [Serializable]
@@ -35,6 +36,6 @@ namespace Models
         }
 
         /// <summary>Retrieve the current value for the specified group number to be stored in the report.</summary>
-        public int NumberOfGroups {  get { return 1; } }
+        public int NumberOfGroups { get { return 1; } }
     }
 }

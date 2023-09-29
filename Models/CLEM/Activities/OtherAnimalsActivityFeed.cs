@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Name of Feed to use

@@ -1,14 +1,15 @@
-﻿namespace Models.PMF.Struct
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Core;
+using Models.Functions;
+using Models.PMF.Interfaces;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Struct
 {
-    using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Models.PMF.Phen;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Newtonsoft.Json;
+
     /// <summary>
     /// 
     /// </summary>
@@ -121,7 +122,7 @@
         {
             //Calculation the infertile tiller number and 
             //Scale up to population scale
-            
+
             //Leaf cohort model is a single plant model. Structure model is a population model.Apex model need to scale up from single plant level to population scale.
             //In the population scale, all tillers in the population were split into two groups(i.e.strong and weak) according to appeared tip number.The age for infertile tiller also indicated the probability of tiller senescence for the non-integer value.
 
@@ -153,7 +154,8 @@
                 if (apexGroupAge[i - 1] < weakAge)
                 {
                     num += weakTillerRatio * apexGroupSize[i - 1];
-                } else if (Math.Abs(apexGroupAge[i - 1] - weakAge) < Double.Epsilon)
+                }
+                else if (Math.Abs(apexGroupAge[i - 1] - weakAge) < Double.Epsilon)
                 {
                     num += weakTillerRatio * apexGroupSize[i - 1] * ageFraction;
                 }

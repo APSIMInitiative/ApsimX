@@ -6,6 +6,9 @@ using System.Text;
 
 namespace Models.CLEM.Resources
 {
+    /// <summary>
+    /// A store for a particular type of animal food used to track details as multiple instances are mixed in the diet
+    /// </summary>
     public class FoodResourceStore
     {
         /// <summary>
@@ -53,6 +56,9 @@ namespace Models.CLEM.Resources
             DegradableCrudeProtein *= factor;
         }
 
+        /// <summary>
+        /// Reset running stores
+        /// </summary>
         public void Reset()
         {
             CrudeProtein = 0;

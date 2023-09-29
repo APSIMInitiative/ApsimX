@@ -1,10 +1,12 @@
+using System;
+using System.Linq;
+using Models.Core;
+using Models.Soils;
+using Newtonsoft.Json;
+
 namespace Models
 {
-    using System;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using Soils;
+
     /// <summary>
     /// This model controls irrigation events, which can be triggered using the Apply() method.
     /// </summary>
@@ -14,10 +16,10 @@ namespace Models
     {
         /// <summary>Access the summary model.</summary>
         [Link] private ISummary summary = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
         [Link] private IPhysical soilPhysical = null;
-        
+
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
         [JsonIgnore]
         public double IrrigationApplied { get; private set; }

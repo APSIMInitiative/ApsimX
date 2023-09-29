@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -119,7 +118,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.unit)

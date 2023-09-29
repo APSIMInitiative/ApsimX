@@ -1,15 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
 namespace Models.Management
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Globalization;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Newtonsoft.Json;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// The rotation manager model
@@ -151,7 +152,7 @@ namespace Models.Management
 
                     if (Verbose)
                     {
-                        string arcName = $"Transition from {arc.DestinationName} to {arc.DestinationName}";
+                        string arcName = $"Transition from {arc.SourceName} to {arc.DestinationName}";
                         string message;
                         if (score > 0)
                         {
@@ -262,7 +263,7 @@ namespace Models.Management
 
             // Parse arguments provided by user.
             object[] parameterValues = GetArgumentsForMethod(arguments, method);
-            
+
             // Call the method.
             method.Invoke(model, parameterValues);
         }

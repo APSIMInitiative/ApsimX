@@ -1,6 +1,7 @@
-﻿using Models.Core;
+﻿using System;
+using Models.Core;
 using Models.Functions;
-using System;
+using Newtonsoft.Json;
 
 namespace Models.ForageDigestibility
 {
@@ -51,6 +52,7 @@ namespace Models.ForageDigestibility
         public double MinimumAmount { get; set; }
 
         /// <summary>Digestibility of material (0-1).</summary>
+        [JsonIgnore]
         public double Digestibility => digestibilityFunction.Value();
 
         /// <summary>Use digestibility from the mode?</summary>

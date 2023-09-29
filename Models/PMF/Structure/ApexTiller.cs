@@ -1,8 +1,8 @@
-﻿namespace Models.PMF.Struct
+﻿using System;
+using Models.PMF.Interfaces;
+
+namespace Models.PMF.Struct
 {
-    using System;
-    using Models.Core;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// Calculate cohort populations using apex number

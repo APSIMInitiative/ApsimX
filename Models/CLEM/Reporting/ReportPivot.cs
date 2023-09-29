@@ -190,7 +190,7 @@ namespace Models.CLEM.Reporting
                 .AsEnumerable()
                 .Select(r => isDate ? ((DateTime)r[Column]).ToString(cs_format) : r[Column])
                 .Distinct()
-                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE 0 END) AS '{o}{((IncludeValueColumnNameOutputColumns)? ".{Value}" : "")}'");
+                .Select(o => $"{Aggregator}(CASE WHEN {test} == '{o}' THEN {Value} ELSE 0 END) AS '{o}{((IncludeValueColumnNameOutputColumns) ? ".{Value}" : "")}'");
 
             // Set up the rows in the pivot
             var rows = $"[{Row}]";

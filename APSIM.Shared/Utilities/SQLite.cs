@@ -792,8 +792,8 @@ namespace APSIM.Shared.Utilities
         {
             List<string> tableNames = new List<string>();
             DataTable tableData = ExecuteQuery("SELECT * FROM sqlite_master");
-            var names = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
-            var types = DataTableUtilities.GetColumnAsStrings(tableData, "Type");
+            var names = DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture);
+            var types = DataTableUtilities.GetColumnAsStrings(tableData, "Type", CultureInfo.InvariantCulture);
             for (int i = 0; i < names.Length; i++)
             {
                 if (types[i] == "table")
@@ -807,8 +807,8 @@ namespace APSIM.Shared.Utilities
         {
             List<string> tableNames = new List<string>();
             DataTable tableData = ExecuteQuery("SELECT * FROM sqlite_master");
-            var names = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
-            var types = DataTableUtilities.GetColumnAsStrings(tableData, "Type");
+            var names = DataTableUtilities.GetColumnAsStrings(tableData, "Name", CultureInfo.InvariantCulture);
+            var types = DataTableUtilities.GetColumnAsStrings(tableData, "Type", CultureInfo.InvariantCulture);
             for (int i = 0; i < names.Length; i++)
             {
                 if (types[i] == "view")
@@ -1171,6 +1171,12 @@ namespace APSIM.Shared.Utilities
             }
 
         }
+
+        /// <summary>
+        /// Indicates that writing to the database has concluded (for the moment).
+        /// Provides a chance to clean up any buffers still in use.
+        /// </summary>
+        public void EndWriting() { }
 
         /// <summary>
         /// 

@@ -1,8 +1,8 @@
-﻿using APSIM.Shared.Documentation;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
-using System;
-using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {

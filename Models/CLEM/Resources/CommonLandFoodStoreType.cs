@@ -1,12 +1,12 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -263,19 +263,7 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = pool.Amount,
-                    Activity = activity,
-                    Category = category,
-                    RelatesToResource = relatesToResource,
-                    ResourceType = this
-                };
-                LastGain = pool.Amount;
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, pool.Amount, activity, relatesToResource, category, this);
             }
         }
 
@@ -303,19 +291,7 @@ namespace Models.CLEM.Resources
             // other non grazing activities requesting common land pasture
             request.Provided = request.Required;
 
-            // report 
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                TransactionType = TransactionType.Loss,
-                Amount = request.Provided,
-                Activity = request.ActivityModel,
-                Category = request.Category,
-                RelatesToResource = request.RelatesToResource
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+            ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <inheritdoc/>
@@ -323,26 +299,6 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// Back account transaction occured
-        /// </summary>
-        public event EventHandler TransactionOccurred;
-
-        /// <summary>
-        /// Transcation occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Last transaction received
-        /// </summary>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
@@ -378,7 +334,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("Dry matter digestibility will be calculated from the N%");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

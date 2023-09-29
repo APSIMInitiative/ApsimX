@@ -922,6 +922,9 @@ namespace Models.CLEM
         MaximumOfProperty
     }
 
+    /// <summary>
+    /// The general type of feed for a feed packet
+    /// </summary>
     public enum FeedType
     {
         /// <summary>
@@ -936,6 +939,29 @@ namespace Models.CLEM
         /// Milk
         /// </summary>
         Milk
+    }
+
+    /// <summary>
+    /// Approaches available to calculate additional mortality based on animal condition
+    /// </summary>
+    public enum ConditionBasedCalculationStyle
+    {
+        /// <summary>
+        /// Use weight as proportion of max weight cutoff (Depreciated)
+        /// </summary>
+        ProportionOfMaxWeightToSurvive,
+        /// <summary>
+        /// Use relative condition cutoff
+        /// </summary>
+        RelativeCondition,
+        /// <summary>
+        /// Use Body Condition Score cutoff
+        /// </summary>
+        BodyConditionScore,
+        /// <summary>
+        /// Ignore condtion-based calculation.
+        /// </summary>
+        None
     }
 
     /// <summary>

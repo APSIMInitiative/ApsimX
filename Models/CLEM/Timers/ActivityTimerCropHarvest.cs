@@ -3,12 +3,12 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -43,7 +43,7 @@ namespace Models.CLEM.Timers
         [Description("Offset from harvest to end activity (-ve before, 0 harvest, +ve after)")]
         [Required, GreaterThanEqual("OffsetMonthHarvestStart", ErrorMessage = "Offset from harvest to end activity must be greater than or equal to offset to start activity.")]
         public int OffsetMonthHarvestStop { get; set; }
-    
+
         /// <summary>
         /// Notify CLEM that this activity was performed.
         /// </summary>
@@ -78,7 +78,7 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                int? seqStart = null; 
+                int? seqStart = null;
                 (int? previous, int? first, int? current, int? last) harvestOffsets = ManageProductActivity.HarvestOffset;
 
                 // if next harvest (offset.first) is between bounds
@@ -107,7 +107,7 @@ namespace Models.CLEM.Timers
                     seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
                 }
 
-                if(seqStart != null)
+                if (seqStart != null)
                     return ActivityTimerSequence.IsInSequence(sequenceTimerList, seqStart);
 
                 return false;
@@ -197,7 +197,7 @@ namespace Models.CLEM.Timers
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -219,9 +219,9 @@ namespace Models.CLEM.Timers
                 }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
     }
 }

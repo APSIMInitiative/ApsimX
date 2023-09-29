@@ -1,7 +1,8 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace Models
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>A painter for setting the visual element of a simulation description using consecutive values of up to three visual elements.</summary>
     public class SequentialPainter : ISeriesDefinitionPainter

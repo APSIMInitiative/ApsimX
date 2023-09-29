@@ -1,4 +1,4 @@
-﻿//using Models.Core;
+//using Models.Core;
 //using Models.CLEM.Resources;
 //using System;
 //using System.Collections.Generic;
@@ -590,11 +590,37 @@
 
 //            List<Ruminant> herd = ruminantHerd.Herd;
 
-//            // weight based mortality
-//            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
-//            // set died flag
-//            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
-//            ruminantHerd.RemoveRuminant(died, this);
+            //// weight based mortality
+            //List<Ruminant> died = new List<Ruminant>();
+            //if (herd.Any())
+            //{
+            //    switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
+            //    {
+            //        case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+            //            died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight, a.HighWeight*a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+            //            break;
+            //        case ConditionBasedCalculationStyle.RelativeCondition:
+            //            died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+            //            break;
+            //        case ConditionBasedCalculationStyle.BodyConditionScore:
+            //            died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+            //            break;
+            //        case ConditionBasedCalculationStyle.None:
+            //            break;
+            //        default:
+            //            break;
+            //    }
+
+            //    if(died.Any())
+            //    {
+            //        foreach (Ruminant ind in died)
+            //        {
+            //            ind.Died = true;
+            //            ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+            //        }
+            //        ruminantHerd.RemoveRuminant(died, this);
+            //    }
+            //}
 
 //            // base mortality adjusted for condition
 //            foreach (var ind in ruminantHerd.Herd)
@@ -621,8 +647,8 @@
 //                    ind.Died = true;
 //            }
 
-//            died = herd.Where(a => a.Died).ToList();
-//            died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            //died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
 //            // TODO: separate foster from real mother for genetics
 //            // check for death of mother with sucklings and try foster sucklings

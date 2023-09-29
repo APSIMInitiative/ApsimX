@@ -2,8 +2,6 @@
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
-using Models.LifeCycle;
-using Models.PMF;
 using Models.PMF.Interfaces;
 
 namespace Models.LifeCycle
@@ -27,7 +25,7 @@ namespace Models.LifeCycle
         [Description("Select host plant that Pest/Disease may bother")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
         public IPlantDamage HostPlant { get; set; }
-        
+
         /// <summary> </summary>
         [Description("Select host organ that Pest/Disease may Obstruct")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IOrganDamage))]
@@ -36,10 +34,10 @@ namespace Models.LifeCycle
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            if (HostOrgan.GetType() == typeof(ICanopy))
-                HostPlant.ReduceCanopy(Reduction.Value());
-            else if (HostOrgan.GetType() == typeof(IRoot))
-                HostPlant.ReduceRootLengthDensity(Reduction.Value());
+            if (HostOrgan is ICanopy canopy)
+                canopy.LAI -= Reduction.Value();
+            else if (HostOrgan is IRoot root)
+                root.RootLengthDensityModifierDueToDamage = Reduction.Value();
             else
                 throw new Exception("FunctionalDimensionReduction is only possible for organs implementing ICanopy or IRoot interfaces");
         }

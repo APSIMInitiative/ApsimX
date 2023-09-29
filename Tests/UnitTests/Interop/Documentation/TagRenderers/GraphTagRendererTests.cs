@@ -52,7 +52,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// <summary>
         /// Our mock graph will use this image as its generated graph.
         /// </summary>
-        private static Image image;
+        private static SkiaSharp.SKImage image;
 
         [SetUp]
         public void SetUp()
@@ -62,15 +62,15 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             pdfBuilder.UseTagRenderer(new MockTagRenderer());
-            image = new Bitmap(4, 4);
+            image = SkiaSharp.SKImage.Create(new SkiaSharp.SKImageInfo(4, 4));
 
             Mock<IGraph> mockGraph = new Mock<IGraph>();
             graph = mockGraph.Object;
 
             // Mock graph exporter - this will just return the image field of this class.
             Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
-            mockExporter.Setup<Image>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
-            mockExporter.Setup<Image>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<SkiaSharp.SKImage>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<SkiaSharp.SKImage>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
 
             renderer = new GraphTagRenderer(mockExporter.Object);
         }
@@ -146,7 +146,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void TestExportedSize()
         {
             Mock<IGraphExporter> exporter = new Mock<IGraphExporter>();
-            exporter.Setup<Image>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns<IGraph, double, double>((graph, width, height) =>
+            exporter.Setup<SkiaSharp.SKImage>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns<IGraph, double, double>((graph, width, height) =>
             {
                 // This should be the page width in px, with height calculated from an aspect ratio of 16:9.
                 // fixme: this isn't really the best way to verify this but it'll do for now.
@@ -165,7 +165,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         /// </summary>
         /// <param name="expected">Expected image.</param>
         /// <param name="actual">Actual image.</param>
-        private void AssertEqual(Image expected, MigraDocImage actual)
+        private void AssertEqual(SkiaSharp.SKImage expected, MigraDocImage actual)
         {
             if (expected == null)
                 Assert.Null(actual);

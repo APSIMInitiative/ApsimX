@@ -1,19 +1,17 @@
+using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Timers;
+using UserInterface.Interfaces;
+using Utility;
+using TreeModel = Gtk.ITreeModel;
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Serialization;
-    using System.Timers;
-    using Utility;
-    using TreeModel = Gtk.ITreeModel;
-
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -77,7 +75,7 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            treeview1 = (Gtk.TreeView) gtkControl;
+            treeview1 = (Gtk.TreeView)gtkControl;
             mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -326,6 +324,18 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Return the position of the node under its parent</summary>
+        /// <param name="path">The full node path.</param>
+        public int GetNodePosition(string path)
+        {
+            int count = 0;
+            if (FindNode(path, out TreeIter node))
+                while (treemodel.IterPrevious(ref node))
+                    count = count + 1;
+
+            return count;
+        }
+
         /// <summary>
         /// Treeview is being destroyed.
         /// </summary>
@@ -527,8 +537,8 @@ namespace UserInterface.Views
                 result = "." + (string)treemodel.GetValue(iter, 0);
                 for (int i = 1; i < ilist.Length; i++)
                 {
-                   treemodel.IterNthChild(out iter, iter, ilist[i]);
-                   result += "." + (string)treemodel.GetValue(iter, 0);
+                    treemodel.IterNthChild(out iter, iter, ilist[i]);
+                    result += "." + (string)treemodel.GetValue(iter, 0);
                 }
             }
             return result;
@@ -950,9 +960,9 @@ namespace UserInterface.Views
 
                         dropArgs.DragObject = dragDropData;
                         Gdk.DragAction action = e.Context.SelectedAction;
-                        if ( (action & Gdk.DragAction.Move) == Gdk.DragAction.Move)
+                        if ((action & Gdk.DragAction.Move) == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
-                        else if ( (action & Gdk.DragAction.Copy) == Gdk.DragAction.Copy)
+                        else if ((action & Gdk.DragAction.Copy) == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
                         else
                             dropArgs.Linked = true;
@@ -985,7 +995,7 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-        
+
         /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The EventArgs instance containing the event data.</param>

@@ -1,9 +1,9 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Models.CLEM.Resources
@@ -176,19 +176,7 @@ namespace Models.CLEM.Resources
 
                 this.amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    TransactionType = TransactionType.Gain,
-                    Amount = addAmount,
-                    Activity = activity,
-                    RelatesToResource = relatesToResource,
-                    Category = category,
-                    ResourceType = this
-                };
-                LastTransaction = details;
-                LastGain = addAmount;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
+                ReportTransaction(TransactionType.Gain, addAmount, activity, relatesToResource, category, this);
             }
         }
 
@@ -230,41 +218,29 @@ namespace Models.CLEM.Resources
                     (EquivalentMarketStore as AnimalFoodStoreType).Add(marketDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    ResourceType = this,
-                    TransactionType = TransactionType.Loss,
-                    Amount = amountRemoved,
-                    Activity = request.ActivityModel,
-                    RelatesToResource = request.RelatesToResource,
-                    Category = request.Category
-                };
-                LastTransaction = details;
-                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-                OnTransactionOccurred(te);
-
+                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
             }
             return;
         }
 
-        /// <inheritdoc/>
-        public new void Set(double newValue)
-        {
-            this.amount = newValue;
-        }
+        ///// <inheritdoc/>
+        //public new void Set(double newValue)
+        //{
+        //    this.amount = newValue;
+        //}
 
-        /// <inheritdoc/>
-        public event EventHandler TransactionOccurred;
+        ///// <inheritdoc/>
+        //public event EventHandler TransactionOccurred;
 
-        /// <inheritdoc/>
-        protected virtual void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
+        ///// <inheritdoc/>
+        //protected virtual void OnTransactionOccurred(EventArgs e)
+        //{
+        //    TransactionOccurred?.Invoke(this, e);
+        //}
 
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public ResourceTransaction LastTransaction { get; set; }
+        ///// <inheritdoc/>
+        //[JsonIgnore]
+        //public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
@@ -289,7 +265,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write($"Simulation starts with <span class=\"setvalue\">{StartingAmount.ToString("#,##0.##")}</span> kg");
                     htmlWriter.Write("</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -297,7 +273,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             return "";
-        } 
+        }
         #endregion
 
     }

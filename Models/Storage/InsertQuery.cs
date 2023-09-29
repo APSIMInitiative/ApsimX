@@ -1,10 +1,11 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Utilities;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>Encapsulates an insert query for a table.</summary>
     class InsertQuery
@@ -16,6 +17,8 @@
         /// The datatable associated with this query.
         /// </summary>
         private DataTable dataTable;
+
+        // static private object fbMessageQuery = null;
 
         /// <summary>
         /// Constructor

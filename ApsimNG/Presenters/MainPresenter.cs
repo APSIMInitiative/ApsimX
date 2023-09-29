@@ -1,23 +1,19 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+using System.Linq;
+using UserInterface.EventArguments;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Apsim710File;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
-    using System.Linq;
-    using System.Diagnostics;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using EventArguments;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Apsim710File;
 
     /// <summary>
     /// This presenter class provides the functionality behind a TabbedExplorerView 
@@ -87,11 +83,25 @@
             this.view.TabClosing += this.OnTabClosing;
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
-            if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
-                this.view.StatusPanelHeight = 20;
+
+            int height = this.view.WindowSize.Height;
+            int savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            if (savedHeight > 90)
+                this.view.StatusPanelHeight = (int)Math.Round(height * 0.9);
+            else if (savedHeight < 10)
+                this.view.StatusPanelHeight = (int)Math.Round(height * 0.1);
             else
-                this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
-            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
+                this.view.StatusPanelHeight = (int)Math.Round(height * (savedHeight/100.0f));
+
+            int width = this.view.WindowSize.Width;
+            int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
+            if (savedWidth > 90)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.9);
+            else if (savedWidth < 10)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.1);
+            else
+                this.view.SplitScreenPosition = (int)Math.Round(width * (savedWidth / 100.0f));
+
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -501,8 +511,15 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    var converter = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = converter.NewModel as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
+
+                    // Clear simulation messages.
+                    this.ShowMessage("", Simulation.MessageType.Information, true);
+
+                    if (converter.DidConvert)
+                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -549,30 +566,6 @@
             this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
-        /// <summary>
-        /// Event handler invoked when user clicks on 'Standard toolbox'.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        public void OnStandardToolboxClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
-                StreamReader streamReader = new StreamReader(s);
-                bool onLeftTabControl = true;
-                if (sender != null)
-                {
-                    onLeftTabControl = this.view.IsControlOnLeft(sender);
-                }
-
-                this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
         /// <summary>
         /// Gets the inner-most exception of an exception.
@@ -603,10 +596,6 @@
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
-            startPage.AddButton(
-                                "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
-                                          this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
@@ -941,7 +930,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).NewModel as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -989,14 +978,14 @@
             // restore the simulation tree width on the form
             if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
-                if (simulations.ExplorerWidth == 0)
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = 250;
-                }
+                int width = this.view.WindowSize.Width;
+                int savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
+                if (savedWidth > 90)
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.9);
+                else if (savedWidth < 10)
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.1);
                 else
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = simulations.ExplorerWidth;
-                }
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * (savedWidth / 100.0f));
             }
             return newPresenter;
         }
@@ -1333,14 +1322,20 @@
         /// <param name="e">Close arguments</param>
         private void OnClosing(object sender, AllowCloseArgs e)
         {
+            int treeWidth = 0;
+            if (this.GetCurrentExplorerPresenter() != null)
+                treeWidth = this.GetCurrentExplorerPresenter().TreeWidth;
+
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
+                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round(((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)MathF.Round(((float)this.view.StatusPanelHeight / (float)this.view.WindowSize.Height)*100);
+                if (treeWidth > 0)
+                    Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();
             }
         }

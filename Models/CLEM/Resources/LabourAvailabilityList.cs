@@ -1,11 +1,7 @@
-﻿using Models.CLEM.Groupings;
-using Models.Core;
+﻿using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {
@@ -19,7 +15,7 @@ namespace Models.CLEM.Resources
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
-    public class LabourAvailabilityList: LabourSpecifications
+    public class LabourAvailabilityList : LabourSpecifications
     {
         /// <summary>
         /// Constructor

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils.Nutrients;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions
 {

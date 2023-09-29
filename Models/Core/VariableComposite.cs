@@ -1,8 +1,9 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// This class encapsulates a list of IVariables that are evaluated when
@@ -78,7 +79,7 @@
             {
                 object relativeTo = null;
                 int i;
-                for (i = 0; i < this.Variables.Count-1; i++)
+                for (i = 0; i < this.Variables.Count - 1; i++)
                 {
                     if (relativeTo != null)
                     {
@@ -198,15 +199,15 @@
         public override Attribute GetAttribute(Type attributeType) { return null; }
 
         /// <summary>Return the summary comments from the source code.</summary>
-        public override string Summary 
-        { 
-            get 
+        public override string Summary
+        {
+            get
             {
                 if (Variables.Last() is VariableProperty)
                     return (Variables.Last() as VariableProperty).Summary;
                 else
-                    return null; 
-            } 
+                    return null;
+            }
         }
 
         /// <summary>Return the remarks comments from the source code.</summary>
@@ -221,4 +222,4 @@
             }
         }
     }
-} 
+}

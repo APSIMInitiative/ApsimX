@@ -1,6 +1,7 @@
-﻿namespace Models.Core.Run
+﻿using System.Collections.Generic;
+
+namespace Models.Core.Run
 {
-    using System.Collections.Generic;
 
     /// <summary>
     /// An interface for a model that generates simulation descriptions.

@@ -1,6 +1,6 @@
 ---
 title: "3. Merge changes into the master repository"
-draft: false
+draft: true
 ---
 
 ## Push changes to a remote

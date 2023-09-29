@@ -1,9 +1,9 @@
-﻿using Models.Core;
-using Models.CLEM.Resources;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {

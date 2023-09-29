@@ -150,7 +150,7 @@
         /// <param name="changedModel">The changed manager model</param>
         public void CommandHistory_ModelChanged(object changedModel)
         {
-            if (changedModel == manager)
+            if (changedModel == manager && managerView.Editor != null)
             {
                 managerView.Editor.Text = manager.Code;
             }

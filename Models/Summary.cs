@@ -1,19 +1,18 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Logging;
+using Models.Storage;
+
+namespace Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Soils;
-    using Models;
-    using Storage;
-    using Logging;
-    using System.Linq;
-    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -22,20 +21,11 @@
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         [NonSerialized]
         private DataTable messages;
-
-        /// <summary>
-        /// The current messages during simulation before saving to db
-        /// </summary>
-        /// <returns>Messages</returns>
-        public DataTable Messages()
-        {
-            return messages;
-        }
 
         /// <summary>A link to a storage service</summary>
         [Link]
@@ -43,7 +33,7 @@
 
         /// <summary>A link to the clock in the simulation</summary>
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>A link to the parent simulation</summary>
         [Link]
@@ -207,22 +197,26 @@
             // run, so we don't need to delete existing data in this call to WriteTable().
             storage.Writer.WriteTable(initConditions, false);
         }
-        
+
         #region Static summary report generation
 
         /// <summary>
-        /// Write a single sumary file for all simulations.
+        /// Write a single summary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
-        /// <param name="fileName">The file name to write</param>           
+        /// <param name="fileName">The file name to write</param>
         /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
         public static void WriteSummaryToTextFiles(IDataStore storage, string fileName, bool darkTheme)
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
-                foreach (string simulationName in storage.Reader.SimulationNames)
+                //get list of simulations in alphabetical order
+                List<string> names = storage.Reader.SimulationNames;
+                names.Sort();
+
+                foreach (string simulationName in names)
                 {
-                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme, true, true, true, true);
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme: darkTheme, true, true, true, true);
                     report.WriteLine();
                     report.WriteLine();
                     report.WriteLine("############################################################################");
@@ -231,7 +225,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="simulationName"></param>
         public IEnumerable<Message> GetMessages(string simulationName)
@@ -257,7 +251,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="simulationName"></param>
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
@@ -346,10 +340,10 @@
 
             }
 
-            // Get the initial conditions table.            
+            // Get the initial conditions table.
             if (showInitialConditions)
             {
-                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName:"_InitialConditions");
+                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName: "_InitialConditions");
                 if (initialConditionsTable != null)
                 {
                     // Convert the '_InitialConditions' table in the DataStore to a series of
@@ -582,7 +576,7 @@
                             st = "Total";
                         else
                             st = row[i].ToString();
-                        
+
                         writer.Write("<td");
                         if (i == 0)
                             writer.Write(" class='col1'");

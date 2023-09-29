@@ -1,15 +1,14 @@
-using Models.Core;
+using Models.CLEM.Activities;
+using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.CLEM.Activities;
-using Models.Core.Attributes;
-using Models.CLEM.Groupings;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM
 {
@@ -25,7 +24,7 @@ namespace Models.CLEM
     [Description("This component will generate summarised details for a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
-    public class SummariseRuminantHerd: CLEMModel
+    public class SummariseRuminantHerd : CLEMModel
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -111,7 +110,7 @@ namespace Models.CLEM
             string name = this.Name;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "["+current.Name+"]":current.Name;
+                string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "[" + current.Name + "]" : current.Name;
                 name = quoteName + "." + name;
                 current = current.Parent as IModel;
             }
@@ -141,13 +140,16 @@ namespace Models.CLEM
                 {
                     case SummarizeRuminantHerdStyle.BySexClass:
                     case SummarizeRuminantHerdStyle.ByClass:
-                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation)?a.Location:"", a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Class)) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeYears:
-                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.AgeInYears.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.AgeInWholeYears.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeMonths:
                         groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Age.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
+                        break;
+                    case SummarizeRuminantHerdStyle.ByAgeYearsClass:
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.AgeInWholeYears.ToString(), a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Class )) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     default:
                         break;
@@ -166,9 +168,10 @@ namespace Models.CLEM
                         Herd = group.Key.Item2,
                         Sex = group.Key.Item4.ToString(),
                         Location = group.Key.Item3,
-                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass) ? $"{group.Key.Item4}.{group.Key.Item5}" : group.Key.Item5,
+                        Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass | GroupStyle == SummarizeRuminantHerdStyle.ByAgeYearsClass) ? $"{group.Key.Item4}.{group.Key.Item5}" : group.Key.Item5,
                         Number = group.Count(),
                         Age = group.Average(a => a.Age),
+                        AgeInYears = group.Average(a => a.AgeInWholeYears),
                         AverageWeight = group.Average(a => a.Weight),
                         AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
                         AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
@@ -179,6 +182,8 @@ namespace Models.CLEM
                         NumberPregnant = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count() : 0,
                         NumberLactating = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
                         NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
+                        AverageIntakeDMD = group.Average(a => a.Intake.DMD),
+                        AverageIntakeN = group.Average(a => a.Intake.GetStoreDetails(FeedType.Forage).NitrogenContent)
                     }
                 });
 
@@ -188,7 +193,7 @@ namespace Models.CLEM
                     ReportItemGenerated(ReportDetails);
                 }
 
-                if(IncludeTotalColumn)
+                if (IncludeTotalColumn)
                 {
                     var herdGroups = herd.GroupBy(a => a.HerdName);
                     var herdResult = herdGroups.Select(group => new
@@ -203,6 +208,7 @@ namespace Models.CLEM
                             Group = group.Key,
                             Number = group.Count(),
                             Age = group.Average(a => a.Age),
+                            AgeInYears = group.Average(a => a.AgeInWholeYears),
                             AverageWeight = group.Average(a => a.Weight),
                             AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
                             AverageProportionOfNormalisedWeight = group.Average(a => a.ProportionOfNormalisedWeight),
@@ -213,10 +219,15 @@ namespace Models.CLEM
                             NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
                             NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
                             NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
+                            AverageIntakeDMD = group.Average(a => a.Intake.DMD),
+                            AverageIntakeN = group.Average(a => a.Intake.GetStoreDetails(FeedType.Forage).NitrogenContent)
                         }
                     });
-                    ReportDetails = herdResult.FirstOrDefault().Info;
-                    ReportItemGenerated(ReportDetails);
+                    if (herdResult.Any())
+                    {
+                        ReportDetails = herdResult.FirstOrDefault().Info;
+                        ReportItemGenerated(ReportDetails);
+                    }
                 }
             }
             else
@@ -279,7 +290,7 @@ namespace Models.CLEM
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
-                if(AddGroupByLocation)
+                if (AddGroupByLocation)
                     htmlWriter.Write("based on location and ");
 
                 switch (GroupStyle)
@@ -327,13 +338,17 @@ namespace Models.CLEM
         /// </summary>
         BySexClass,
         /// <summary>
-        /// Group by age in years
+        /// Group by age in whole years
         /// </summary>
         ByAgeYears,
         /// <summary>
         /// Group by age in months 
         /// </summary>
         ByAgeMonths,
+        /// <summary>
+        /// Group by age in whole years and class 
+        /// </summary>
+        ByAgeYearsClass
     }
 
 
@@ -363,6 +378,10 @@ namespace Models.CLEM
         /// Age of individuals (lower bound of year class)
         /// </summary>
         public double Age { get; set; }
+        /// <summary>
+        /// Age of individuals in whole years
+        /// </summary>
+        public double AgeInYears { get; set; }
         /// <summary>
         /// Sex of individuals
         /// </summary>
@@ -416,6 +435,14 @@ namespace Models.CLEM
         /// Number lactating
         /// </summary>
         public int NumberLactating { get; set; }
+        /// <summary>
+        /// Average DMD of intake of individuals
+        /// </summary>
+        public double AverageIntakeDMD { get; set; }
+        /// <summary>
+        /// Average N content of intake of individuals
+        /// </summary>
+        public double AverageIntakeN { get; set; }
     }
 
 }

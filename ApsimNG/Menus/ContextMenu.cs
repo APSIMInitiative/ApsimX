@@ -1,31 +1,33 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using UserInterface.Commands;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using Models.Soils;
+using APSIM.Shared.Utilities;
+using Models.Storage;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using System.Reflection;
+using System.Linq;
+using System.Text;
+using Models.Functions;
+using Models.Climate;
+using APSIM.Interop.Documentation;
+using System.Threading.Tasks;
+using System.Threading;
+using APSIM.Server.Sensibility;
+using ApsimNG.Properties;
+using Gtk;
+using Models.CLEM.Interfaces;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Diagnostics;
-    using System.IO;
-    using Commands;
-    using Models;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Soils;
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Run;
-    using System.Reflection;
-    using System.Linq;
-    using System.Text;
-    using Models.Functions;
-    using Models.GrazPlan;
-    using Models.Climate;
-    using APSIM.Interop.Markdown.Renderers;
-    using APSIM.Interop.Documentation;
-    using System.Threading.Tasks;
-    using System.Threading;
-    using APSIM.Server.Sensibility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -164,6 +166,7 @@
                                               typeof(Folder),
                                               typeof(Morris),
                                               typeof(Sobol),
+                                              typeof(Playlist),
                                               typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
@@ -295,12 +298,15 @@
                 string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
-
-                IModel currentNode = explorerPresenter.CurrentNode as IModel;
-                if (currentNode != null)
+                if (!string.IsNullOrEmpty(text))
                 {
-                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
-                    explorerPresenter.CommandHistory.Add(command, true);
+
+                    IModel currentNode = explorerPresenter.CurrentNode as IModel;
+                    if (currentNode != null)
+                    {
+                        ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                    }
                 }
             }
             catch (Exception err)
@@ -452,7 +458,7 @@
                 string namesp = explorerPresenter.CurrentNode.GetType().Namespace;
 
                 string snippet = $"using {namesp};{Environment.NewLine}{Environment.NewLine}" +
-                                 $"[Link(Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
+                                 $"[Link(Type=LinkType.Path, Path=\"{path}\")] private {modelType} {explorerPresenter.CurrentNode.Name};";
 
                 explorerPresenter.SetClipboardText(snippet, "CLIPBOARD");
             }
@@ -804,15 +810,28 @@
                 IModel model = explorerPresenter.CurrentNode;
                 if (model != null)
                 {
-                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
-                    hidden = !hidden; // toggle
-                    foreach (IModel child in model.FindAllDescendants())
-                        child.IsHidden = hidden; 
-                    foreach (IModel child in model.Children)
-                        if (child.IsHidden)
-                            explorerPresenter.Tree.Delete(child.FullPath);
-                    explorerPresenter.PopulateContextMenu(model.FullPath);
-                    explorerPresenter.RefreshNode(model);
+                    //check if model is from a resource, if so, set all children to read only
+                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model);
+                    if (childrenFromResource != null)
+                    {
+                        var hidden = !(sender as Gtk.CheckMenuItem).Active;
+                        foreach (IModel child in childrenFromResource)
+                        {
+                            child.IsHidden = hidden;
+                            child.ReadOnly = !hidden;
+
+                            // Recursively set the hidden property.
+                            foreach (IModel c in child.FindAllDescendants())
+                                c.ReadOnly = !hidden;
+                        }
+
+                        // Delete hidden models from tree control and refresh tree control.
+                        foreach (IModel child in model.Children)
+                            if (child.IsHidden)
+                                explorerPresenter.Tree.Delete(child.FullPath);
+                        explorerPresenter.PopulateContextMenu(model.FullPath);
+                        explorerPresenter.RefreshNode(model);
+                    }
                 }
             }
             catch (Exception err)
@@ -871,60 +890,12 @@
         }
 
         /// <summary>
-        /// Event handler for 'Enabled' menu item.
-        /// </summary>
-        [ContextMenu(MenuName = "Read-only", IsToggle = true)]
-        public void ReadOnly(object sender, EventArgs e)
-        {
-            try
-            {
-                IModel model = explorerPresenter.CurrentNode as IModel;
-                if (model == null)
-                    return;
-                
-                // Don't allow users to change read-only status of released models.
-                if (!string.IsNullOrEmpty(model.ResourceName) || model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName)))
-                    return;
-
-                bool readOnly = !model.ReadOnly;
-                List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
-                
-                // Toggle read-only on the model and all descendants.
-                changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
-                foreach (IModel child in model.FindAllDescendants())
-                    changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
-
-                // Apply changes.
-                ChangeProperty command = new ChangeProperty(changes);
-                explorerPresenter.CommandHistory.Add(command);
-
-                // Refresh the context menu.
-                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Event handler for checkbox for 'Enabled' menu item.
         /// </summary>
         public bool EnabledChecked()
         {
             IModel model = explorerPresenter.CurrentNode as IModel;
             return model.Enabled;
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'ReadOnly' menu item.
-        /// </summary>
-        /// <returns></returns>
-        public bool ReadOnlyChecked()
-        {
-            IModel model = explorerPresenter.CurrentNode as IModel;
-            return model.ReadOnly;
         }
 
         /// <summary>
@@ -962,11 +933,32 @@
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
-                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                IModel currentN = explorerPresenter.CurrentNode;
+                IModel modelToDocument;
+
+                if (currentN is Models.Graph || currentN is Simulation)
+                    modelToDocument = currentN;
+                else
+                {
+                    modelToDocument = currentN.Clone();
+                    explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
+                }               
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+
+                //if filename is null, prompt user to save the file
+                if (fileNameWritten == null)
+                {
+                    explorerPresenter.Save();
+                    fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                }
+                //check if filename is still null (user didn't save) and throw a useful exception
+                if (fileNameWritten == null)
+                {
+                    throw new Exception("You must save this file before documentation can be created");
+                }
+
                 pdf.Write(fileNameWritten, modelToDocument.Document());
 
                 explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
@@ -1047,5 +1039,78 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
+
+        [ContextMenu(MenuName = "Compile Script",
+                     ShortcutKey = "",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Manager) })]
+        public void OnCompileScript(object sender, EventArgs e)
+        {
+            try
+            {
+                Manager model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Manager;
+                if (model != null)
+                {
+                    model.RebuildScriptModel();
+                    explorerPresenter.MainPresenter.ShowMessage("\"" + model.Name + "\" compiled successfully", Simulation.MessageType.Information);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        //This menu item is dynamically added by ExplorerPresented based on how many 
+        //Playlists exist within the file.
+        [ContextMenu(MenuName = "Playlist",
+                     ShortcutKey = "",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Simulation),
+                                         typeof(Simulations),
+                                         typeof(Experiment),
+                                         typeof(Folder) })]
+        public void OnAddToPlaylist(object sender, EventArgs e)
+        {
+            List<string> namesToAdd = new List<string>();
+            IModel model = explorerPresenter.CurrentNode;
+
+            if (model is Simulations || model is Folder)
+            {
+                IEnumerable<Simulation> sims = (model as Model).FindAllDescendants<Simulation>();
+                foreach (Simulation sim in sims)
+                    namesToAdd.Add(sim.Name);
+
+                IEnumerable<Experiment> exps = (model as Model).FindAllDescendants<Experiment>();
+                foreach (Experiment exp in exps)
+                    namesToAdd.Add(exp.Name);
+            }
+            else if (model is Simulation || model is Experiment)
+            {
+                namesToAdd.Add((model as Model).Name);
+            }
+
+            //This digs through the menu item that sends the event to see what the text was on the button
+            //This is not good code and will break if the GUI changes
+            MenuItem menuItem = sender as MenuItem;
+            HBox hBox = menuItem.Children[0] as HBox;
+            Label label = hBox.Children[1] as Label;
+            string itemText = label.Text;
+            string playlistName = itemText.Replace("Add to", "").Trim();
+
+            Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+            if (playlist != null)
+            {
+                playlist.AddSimulationNamesToList(namesToAdd.ToArray());
+            }
+            else
+            {
+                string outputNames = "";
+                foreach (string simName in namesToAdd)
+                    outputNames += simName + ", ";
+                explorerPresenter.MainPresenter.ShowMessage($"Could not add {outputNames} to Playlist called '{playlistName}'", Simulation.MessageType.Warning);
+            }
+        }
+
     }
 }

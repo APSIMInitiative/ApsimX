@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.Functions;
-using System.IO;
-using Newtonsoft.Json;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -24,10 +22,6 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
-        [Link]
-        private Plant plant = null;
-
-
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>The start</summary>
@@ -43,13 +37,17 @@ namespace Models.PMF.Phen
             }
         }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
+
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
         public string PhaseNameToGoto { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
         [JsonIgnore]
-        public double FractionComplete { get;}
+        public double FractionComplete { get; }
 
         /// <summary>Thermal time target</summary>
         [JsonIgnore]
@@ -61,13 +59,14 @@ namespace Models.PMF.Phen
         /// <summary>Should not be called in this class</summary>
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto)+1);
-            plant.RemoveBiomass("Graze");
+            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
+            // TODO: Defaults don't exist anymore for 'Graze'. Need to specify fractions to graze on RemoveBiomass line.
+            //plant.RemoveBiomass("Graze");
             return true;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() {}
+        public virtual void ResetPhase() { }
 
         /// <summary>
         /// Document the model.

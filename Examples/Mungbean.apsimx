@@ -1,20 +1,9 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 156,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
-    {
-      "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "ResourceName": null,
-      "Children": [],
-      "Enabled": true,
-      "ReadOnly": false
-    },
     {
       "$type": "Models.Core.Simulation, Models",
       "Descriptors": null,
@@ -25,7 +14,7 @@
           "$type": "Models.Clock, Models",
           "Start": "1900-01-01T00:00:00",
           "End": "2000-12-31T00:00:00",
-          "Name": "clock",
+          "Name": "Clock",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -34,7 +23,7 @@
         {
           "$type": "Models.Summary, Models",
           "Verbosity": 100,
-          "Name": "summaryfile",
+          "Name": "Summary",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -53,7 +42,7 @@
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
-          "Name": "Soil Arbitrator",
+          "Name": "SoilArbitrator",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -81,7 +70,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
-          "Name": "paddock",
+          "Name": "Field",
           "ResourceName": null,
           "Children": [
             {
@@ -98,13 +87,14 @@
                 "[Mungbean].Grain.Number",
                 "[Mungbean].Grain.Wt",
                 "[Mungbean].Grain.N",
+                "[Mungbean].Grain.Total.Wt",
                 "[Mungbean].Total.Wt"
               ],
               "EventNames": [
                 "[Mungbean].Harvesting"
               ],
               "GroupByVariableName": null,
-              "Name": "HarvestReport",
+              "Name": "Report",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -112,7 +102,7 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "Name": "fertiliser",
+              "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
               "Enabled": true,
@@ -120,7 +110,7 @@
             },
             {
               "$type": "Models.Soils.Soil, Models",
-              "RecordNumber": 0,
+              "RecordNumber": 104,
               "ASCOrder": "Vertosol",
               "ASCSubOrder": "Black",
               "SoilType": "Clay",
@@ -135,9 +125,9 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
-              "YearOfSampling": null,
+              "YearOfSampling": "0",
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
-              "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+              "Comments": "Clay - OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
               "ResourceName": null,
               "Children": [
@@ -398,6 +388,7 @@
                   "PHUnits": 0,
                   "EC": null,
                   "ESP": null,
+                  "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
@@ -428,7 +419,8 @@
                     0.457070570557793,
                     0.452331759845006
                   ],
-                  "RelativeTo": null,
+                  "InitialPAWmm": 361.2454283127387,
+                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
                   "ResourceName": null,
@@ -578,12 +570,68 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.PMF.Plant, Models",
+              "Name": "Mungbean",
+              "ResourceName": "Mungbean",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "CodeArray": [
+                "using APSIM.Shared.Utilities;",
+                "using Models.Utilities;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using System.Linq;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock Clock;",
+                "        [Link] Fertiliser Fertiliser;",
+                "        [Link] Summary Summary;",
+                "        [Link] Soil Soil;",
+                "        ",
+                "        [Description(\"Crop\")]",
+                "        public IPlant Crop { get; set; }",
+                "",
+                "        [Description(\"Sowing date (d-mmm)\")]",
+                "        public string SowDate { get; set; }",
+                "",
+                "        [Display(Type = DisplayType.CultivarName)]",
+                "        [Description(\"Cultivar to be sown\")]",
+                "        public string CultivarName { get; set; }",
+                "",
+                "        [Description(\"Sowing depth (mm)\")]",
+                "        public double SowingDepth { get; set; }",
+                "",
+                "        [Description(\"Row spacing (mm)\")]",
+                "        public double RowSpacing { get; set; }",
+                "",
+                "        [Description(\"Plant population (/m2)\")]",
+                "        public double Population { get; set; }",
+                "",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
+                "            {",
+                "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
+                "            }",
+                "        }",
+                "    }",
+                "}"
+              ],
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": "[Mungbean]"
+                  "Value": "Mungbean"
                 },
                 {
                   "Key": "SowDate",
@@ -595,15 +643,15 @@
                 },
                 {
                   "Key": "SowingDepth",
-                  "Value": "30"
+                  "Value": "30.0"
                 },
                 {
                   "Key": "RowSpacing",
-                  "Value": "250"
+                  "Value": "250.0"
                 },
                 {
                   "Key": "Population",
-                  "Value": "30"
+                  "Value": "30.0"
                 }
               ],
               "Name": "Sow on a fixed date",
@@ -614,23 +662,44 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+              "CodeArray": [
+                "using APSIM.Shared.Utilities;",
+                "using Models.Utilities;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using Models.Core;",
+                "using System;",
+                "using System.Linq;",
+                "",
+                "namespace Models",
+                "{",
+                "    [Serializable] ",
+                "    public class Script : Model",
+                "    {",
+                "        [Description(\"Crop\")]",
+                "        public IPlant Crop { get; set; }",
+                "        ",
+                "        [EventSubscribe(\"DoManagement\")]",
+                "        private void OnDoManagement(object sender, EventArgs e)",
+                "        {",
+                "            if (Crop.IsReadyForHarvesting)",
+                "            {",
+                "                Crop.Harvest();",
+                "                Crop.EndCrop();",
+                "            }",
+                "        }",
+                "    }",
+                "}",
+                "       "
+              ],
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": "[Mungbean]"
+                  "Value": "Mungbean"
                 }
               ],
-              "Name": "Harvesting",
+              "Name": "Harvest",
               "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Plant, Models",
-              "Name": "Mungbean",
-              "ResourceName": "Mungbean",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -669,7 +738,7 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Yield Time Series",
+          "Name": "Graph",
           "ResourceName": null,
           "Children": [
             {
@@ -677,7 +746,7 @@
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
-              "ColourArgb": -1663232,
+              "ColourArgb": -16777216,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
@@ -685,11 +754,11 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "TableName": "HarvestReport",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Mungbean.Grain.Wt",
-              "X2FieldName": "",
-              "Y2FieldName": "",
+              "YFieldName": "Mungbean.Grain.Total.Wt",
+              "X2FieldName": null,
+              "Y2FieldName": null,
               "ShowInLegend": false,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
@@ -706,6 +775,16 @@
           "ReadOnly": false
         }
       ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
       "Enabled": true,
       "ReadOnly": false
     }

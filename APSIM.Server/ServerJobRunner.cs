@@ -69,7 +69,7 @@ namespace APSIM.Server
         {
             foreach ( (IRunnable job, _) in jobs)
             {
-                job.Cleanup();
+                job.Cleanup(cancelToken);
             }
         }
     }

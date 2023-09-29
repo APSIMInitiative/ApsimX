@@ -1,14 +1,10 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Interfaces;
-using Models.PMF.Arbitrator;
-using Models.PMF.Interfaces;
-using Models.Soils.Arbitrator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
 using Newtonsoft.Json;
-using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -145,7 +141,7 @@ namespace Models.PMF
                     {
                         o.SuppliesAllocated.ReAllocation = new NutrientPoolsState(
                             0,
-                            calcAllocated(NTotalReAlocationAllocated, o.Supplies.ReAllocation.Metabolic , Nitrogen.TotalReAllocationSupply),
+                            calcAllocated(NTotalReAlocationAllocated, o.Supplies.ReAllocation.Metabolic, Nitrogen.TotalReAllocationSupply),
                             calcAllocated(NTotalReAlocationAllocated, o.Supplies.ReAllocation.Storage, Nitrogen.TotalReAllocationSupply));
 
                     }
@@ -174,7 +170,7 @@ namespace Models.PMF
                 }
             }
         }
-        
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -204,7 +200,7 @@ namespace Models.PMF
                 NutrientConstrainedDMAllocation();
             }
         }
-        
+
         /// <summary>Determines Nutrient limitations to DM allocations</summary>
         public void NutrientConstrainedDMAllocation()
         {
@@ -249,7 +245,7 @@ namespace Models.PMF
                 throw new Exception("Allocation of supplies gave a Nan");
             if (retVal < -tolerence)
                 throw new Exception("Allocation was negative");
-            return Math.Max(0,retVal); //Constrained to zero to wipe floating point errors
+            return Math.Max(0, retVal); //Constrained to zero to wipe floating point errors
         }
 
         /// <summary>Relatives the allocation.</summary>
@@ -261,7 +257,7 @@ namespace Models.PMF
             if (TotalSupply > tolerence)
             {
                 double notAllocated = TotalSupply;
-                
+
                 ////First time round allocate with priority factors applied so higher priority sinks get more allocation
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {
@@ -323,15 +319,15 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-               // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // add a heading.
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // write description of this class.
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-       }
+            // write children.
+            foreach (IModel child in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+        }
     }
 }

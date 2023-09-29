@@ -137,8 +137,22 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (APSIM.Shared.Graphing.Axis a in graph.Axis)
-                    FormatAxis(a);
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                    FormatAxis(axis);
+
+                //check if the axes are too small, update if so
+                const double tolerance = 0.00001;
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                {
+                    double minimum = graphView.AxisMinimum(axis.Position);
+                    double maximum = graphView.AxisMaximum(axis.Position);
+                    if (axis.Maximum - axis.Minimum < tolerance)
+                    {
+                        axis.Minimum -= tolerance / 2;
+                        axis.Maximum += tolerance / 2;
+                        FormatAxis(axis);
+                    }
+                }
 
                 // Get a list of series annotations.
                 DrawOnView(graph.GetAnnotationsToGraph());
@@ -181,13 +195,12 @@
             // The rectange numbers below are optimised for generation of PDF document
             // on a computer that has its display settings at 100%.
             Rectangle r = new Rectangle(0, 0, 600, 450);
-            Bitmap img = new Bitmap(r.Width, r.Height);
-
-            graphView.Export(ref img, r, true);
+            Gdk.Pixbuf img;
+            graphView.Export(out img, r, true);
 
             string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
-            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            img.Save(fileName, "png");
 
             return fileName;
         }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
 using System.IO;
+using Models.Core;
 
 namespace Models
 {
@@ -14,7 +11,7 @@ namespace Models
     public class Log : Model
     {
         [Link]
-        Clock Clock = null;
+        IClock Clock = null;
 
         [Link]
         Simulation Simulation = null;

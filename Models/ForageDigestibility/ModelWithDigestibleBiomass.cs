@@ -1,10 +1,10 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Models.ForageDigestibility
 {
@@ -36,17 +36,16 @@ namespace Models.ForageDigestibility
             {
                 foreach (var material in forageModel.Material)
                 {
-                    var fullName = $"{Name}.{material.Name}";
-                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase) 
+                    var materialParameters = parameters.FirstOrDefault(p => p.Name.Equals(material.Name, StringComparison.InvariantCultureIgnoreCase)
                                                                             && p.IsLive == material.IsLive);
                     if (materialParameters == null)
-                        throw new Exception($"Cannot find forage parameters for {fullName}");
+                        throw new Exception($"Cannot find forage parameters for {material.Name}");
                     if (materialParameters.FractionConsumable > 0)
                     {
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
                         var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
                         var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0, 0.000000001);
-                        
+
                         yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
                                                            materialParameters);
                     }
@@ -54,14 +53,15 @@ namespace Models.ForageDigestibility
             }
         }
 
-        /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="materialName">Name of organ.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        public void RemoveBiomass(string materialName, OrganBiomassRemovalType biomassToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            forageModel.RemoveBiomass(materialName, "Graze", biomassToRemove);
+            return forageModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue);
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
@@ -164,11 +164,8 @@ namespace Models.ForageDigestibility
                         throw new Exception("Cannot find associated dead material while removing biomass in SimpleGrazing");
                     }
 
-                    RemoveBiomass(live.Material.Name, new OrganBiomassRemovalType()
-                    {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0, 0.000000001)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0, 0.000000001))
-                    });
+                    forageModel.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0, 0.000000001)),
+                                              deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0, 0.000000001)));
                 }
 
                 if (liveMaterial.Count == 0)
@@ -177,11 +174,8 @@ namespace Models.ForageDigestibility
                     foreach (var dead in deadMaterial)
                     {
                         // This can happen for surface organic matter which only has dead material.
-                        RemoveBiomass(dead.Material.Name, new OrganBiomassRemovalType()
-                        {
-                            FractionLiveToRemove = 0,
-                            FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0, 0.000000001))
-                        });
+                        forageModel.RemoveBiomass(liveToRemove: 0,
+                                                  deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0, 0.000000001)));
                     }
                 }
 
@@ -237,11 +231,11 @@ namespace Models.ForageDigestibility
 
                 // Do the actual removal
                 if (!MathUtilities.FloatsAreEqual(amountToRemove, 0, 0.0001))
-                    RemoveBiomass(amountToRemove);
+                    RemoveBiomass(amountToRemove: amountToRemove);
 
             }
             else
-                summary.WriteMessage(forageModel as IModel, "Could not graze due to lack of DM available", MessageType.Warning);
+                summary?.WriteMessage(forageModel as IModel, "Could not graze due to lack of DM available", MessageType.Warning);
         }
 
         private class FractionDigestibleBiomass

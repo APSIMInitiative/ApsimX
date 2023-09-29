@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
     /// Object for an individual male Ruminant.
     /// </summary>
-    public class RuminantMale: Ruminant
+    [Serializable]
+    public class RuminantMale : Ruminant
     {
         /// <inheritdoc/>
         public override Sex Sex { get { return Sex.Male; } }
@@ -43,11 +40,11 @@ namespace Models.CLEM.Resources
         /// Represents any uncastrated male of breeding age
         /// </summary>
         [FilterByProperty]
-        public bool IsSire 
+        public bool IsSire
         {
             get
             {
-                if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                if (Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
@@ -73,28 +70,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override bool Sterilised { get { return IsCastrated; } }
+
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
         [FilterByProperty]
-        public bool IsCastrated 
-        { 
-            get
-            {
-                return Attributes.Exists("Castrated");
-            }
-        }
+        public bool IsCastrated { get { return Attributes.Exists("Castrated"); }}
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public override bool IsAbleToBreed
-        {
-            get
-            {
-                return this.IsSire | this.IsWildBreeder;
-            }
-        }
+        public override bool IsAbleToBreed {  get { return this.IsSire | this.IsWildBreeder; } }
 
         /// <summary>
         /// Constructor

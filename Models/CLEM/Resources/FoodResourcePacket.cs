@@ -37,6 +37,9 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public double Amount { get; set; }
 
+        /// <summary>
+        /// Metabolic Energy Content of the food resource packet
+        /// </summary>
         public double MEContent 
         { 
             get

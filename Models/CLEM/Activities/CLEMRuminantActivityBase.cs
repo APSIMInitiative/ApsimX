@@ -2,8 +2,6 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
@@ -197,7 +195,7 @@ namespace Models.CLEM.Activities
                 PredictedHerdName = "Multiple";
             }
 
-            if (herd.Count() > 0)
+            if (herd.Any())
             {
                 PredictedHerdBreed = herd.FirstOrDefault().Breed;
                 PredictedHerdName = herd.FirstOrDefault().HerdName;

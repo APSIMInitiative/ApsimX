@@ -1,11 +1,12 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// 
@@ -60,7 +61,7 @@
             // Go looking for [Link]s
             foreach (IVariable field in GetAllDeclarations(obj, GetModel(obj).GetType(),
                                                            BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
-                                                           allLinks:true))
+                                                           allLinks: true))
             {
                 LinkAttribute link = field.GetAttribute(typeof(LinkAttribute)) as LinkAttribute;
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -19,14 +18,10 @@ namespace Models.PMF.Phen
     public class VernalisationPhase : Model, IPhase, IPhaseWithTarget
     {
         [Link]
-        private IVrn1Expression CAMP = null;
-
-        [Link]
-        private Phenology phenology = null;
-
-        private double fractionVrn1AtEmergence = 0.0;
+        private IVrnExpression CAMP = null;
 
         private bool firstDay = true;
+        private double relativeVernalisationAtEmergence { get; set; }
 
         /// <summary>The phenological stage at the start of this phase.</summary>
         [Description("Start")]
@@ -35,6 +30,10 @@ namespace Models.PMF.Phen
         /// <summary>The phenological stage at the end of this phase.</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
@@ -52,23 +51,15 @@ namespace Models.PMF.Phen
         /// <remarks>Returns true when target is met.</remarks>
         public bool DoTimeStep(ref double propOfDayToUse)
         {
-
-
+            Target = 1 + CAMP.Vrn2;
+            double RelativeVernalisation = Math.Min((CAMP.BaseVrn + CAMP.Vrn1 + CAMP.Vrn3) / Target, CAMP.MaxVrn);
             if (firstDay)
             {
-                fractionVrn1AtEmergence = CAMP.Vrn1;
+                relativeVernalisationAtEmergence = RelativeVernalisation;
                 firstDay = false;
             }
-            Target = Math.Max(CAMP.pVrn2,1.0);
-            double RelativeVrn1Expression = Math.Min(1, (CAMP.Vrn1 - fractionVrn1AtEmergence) / (Target - fractionVrn1AtEmergence));
-
-            double HS = phenology.FindChild<IFunction>("HaunStage").Value();
-            double RelativeBasicVegetative = Math.Min(1, HS / 1.1);
-
-            FractionComplete = Math.Min(RelativeBasicVegetative, RelativeVrn1Expression);
-
-            ProgressThroughPhase = RelativeVrn1Expression;
-            
+            double ProgressThroughPhase = Math.Min(1, (RelativeVernalisation - relativeVernalisationAtEmergence) / (1 - relativeVernalisationAtEmergence));
+            FractionComplete = ProgressThroughPhase;
             return CAMP.IsVernalised;
         }
 
@@ -76,7 +67,7 @@ namespace Models.PMF.Phen
         public void ResetPhase()
         {
             firstDay = true;
-            fractionVrn1AtEmergence = 0.0;
+            relativeVernalisationAtEmergence = 0.0;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

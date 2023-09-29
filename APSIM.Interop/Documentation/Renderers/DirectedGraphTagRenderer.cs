@@ -34,7 +34,7 @@ namespace APSIM.Interop.Documentation.Renderers
         /// <param name="width">Desired width of the image.</param>
         /// <param name="height">Desired height of the image.</param>
         /// <returns></returns>
-        private Image WriteToImage(DirectedGraph graph, int width, int height)
+        private SkiaSharp.SKImage WriteToImage(DirectedGraph graph, int width, int height)
         {
             using (SkiaContext context = new SkiaContext((int)width, (int)height))
             {

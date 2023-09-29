@@ -1,13 +1,11 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using System;
+using System.Linq;
+using Utility;
+using MessageType = Models.Core.MessageType;
+
+namespace UserInterface.Views
 {
-    using Interfaces;
-    using Gtk;
-    using System;
-    using Extensions;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Utility;
-    using MessageType = Models.Core.MessageType;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
@@ -15,6 +13,7 @@
         private Widget captureRules;
         private Widget simulationFilter;
         private VBox mainControl;
+        private HBox settingsControl;
 
         /// <summary>Drop down box which displays the simulation names.</summary>
         public DropDownView SimulationDropDown { get; private set; }
@@ -60,15 +59,17 @@
 
 
             mainControl = new VBox();
+            settingsControl = new HBox();   
             mainWidget = mainControl;
-            mainControl.PackStart(captureRules, false, false, 0);
-            mainControl.PackStart(messageFilters, false, false, 0);
+            settingsControl.PackStart(captureRules, false, false, 0);
+            settingsControl.PackStart(messageFilters, false, false, 0);
             // mainControl.PackStart(messageSorting, false, false, 0);
-            mainControl.PackStart(simulationFilter, false, false, 0);
-            mainControl.PackStart(jumpToLogContainer, false, false, 0);
+            settingsControl.PackStart(simulationFilter, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
             ScrolledWindow scroller = new ScrolledWindow();
             scroller.Add(((ViewBase)SummaryDisplay).MainWidget);
+            mainControl.PackStart(settingsControl, false, false, 0);
+            mainControl.PackStart(jumpToLogContainer, false, false, 0);
             mainControl.PackEnd(scroller, true, true, 0);
 
             mainWidget.Destroyed += MainWidgetDestroyed;
@@ -87,10 +88,12 @@
 
         private Widget CreateSimulationFilter()
         {
-            HBox box = new HBox();
+            VBox box = new VBox();
+            HBox hBox = new HBox();
             SimulationDropDown = new DropDownView(this);
-            box.PackStart(new Label("Simulation:"), false, false, 5);
-            box.PackStart(SimulationDropDown.MainWidget, false, false, 5);
+            hBox.PackStart(new Label("Simulation:"), false, false, 5);
+            hBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
+            box.PackStart(hBox, false, false, 5);
             box.MarginBottom = 5;
             Frame frame = new Frame("Simulation Filter");
             frame.Add(box);
@@ -102,7 +105,7 @@
         {
             VerbosityDropDown = new EnumDropDownView<MessageType>(this);
             Label verbosity = new Label("Messages which should be saved when the simulation is run:");
-            HBox box = new HBox();
+            VBox box = new VBox();
             box.PackStart(verbosity, false, false, 5);
             box.PackStart(VerbosityDropDown.MainWidget, false, false, 5);
             box.Margin = 5;
@@ -129,11 +132,11 @@
             MessagesFilter = new EnumDropDownView<MessageType>(this);
             Label label = new Label("Filter messages by severity: ");
 
-            Box box = new Box(Orientation.Horizontal, 0);
+            Box box = new VBox();
             box.PackStart(label, false, false, 5);
             box.PackStart(MessagesFilter.MainWidget, false, false, 0);
 
-            Box filtersBox = new VBox();
+            Box filtersBox = new HBox();
             filtersBox.PackStart(ShowInitialConditions.MainWidget, false, false, 0);
             filtersBox.PackStart(box, false, false, 0);
             filtersBox.Homogeneous = true;

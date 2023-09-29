@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 
 namespace Models.CLEM.Resources
 {
@@ -21,7 +20,7 @@ namespace Models.CLEM.Resources
     [Description("Specify an attribute for the individual with associated value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
-    public class SetAttributeFromHerd : CLEMModel, ISetAttribute 
+    public class SetAttributeFromHerd : CLEMModel, ISetAttribute
     {
         private IndividualAttribute lastInstance { get; set; } = null;
         private IEnumerable<RuminantGroup> filterGroups;
@@ -82,7 +81,7 @@ namespace Models.CLEM.Resources
         {
             if (createNewInstance || lastInstance is null)
             {
-                // get all individual Attributes from unique individuals across all filter gorups provided 
+                // get all individual Attributes from unique individuals across all filter groups provided 
                 var attributeInds = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, ruminantActivity.CurrentHerd().Where(a => a.Attributes.Exists(AttributeName)));
                 var inds = attributeInds.Select(a => (float)a.Attributes.GetValue(AttributeName).StoredValue);
 

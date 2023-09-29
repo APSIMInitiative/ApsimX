@@ -1,22 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Xml;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Factorial;
+using Models.Functions;
+using Models.PMF;
+using Models.Soils;
+using Newtonsoft.Json.Linq;
+
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using Models.Climate;
-    using Models.Factorial;
-    using Models.Functions;
-    using Models.LifeCycle;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using Models.Soils;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text.RegularExpressions;
-    using System.Xml;
 
     /// <summary>
     /// Converts the .apsim file from one version to the next
@@ -24,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 159; } }
+        public static int LatestVersion { get { return 168; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -132,6 +131,8 @@ namespace Models.Core.ApsimFile
                     if (sample == null)
                         sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".Solute"));
 
+                    var soilNitrogenSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogen"));
+
                     bool res = false;
                     if (initWater == null)
                     {
@@ -144,7 +145,7 @@ namespace Models.Core.ApsimFile
                         soilChildren.Add(initWater);
                         res = true;
                     }
-                    if (sample == null)
+                    if (sample == null && soilNitrogenSample == null) //no solutes on Soil Nitrogen, don't add them
                     {
                         soilChildren.Add(new JObject
                         {
@@ -171,6 +172,46 @@ namespace Models.Core.ApsimFile
                         });
                         res = true;
                     }
+
+                    var soilNitrogenNO3Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNO3"));
+                    var soilNitrogenNH4Sample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenNH4"));
+                    var soilNitrogenUreaSample = soilChildren.FirstOrDefault(c => c["$type"].Value<string>().Contains(".SoilNitrogenUrea"));
+                    if (soilNitrogenSample != null)
+                    {
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNO3, Models",
+                                ["Name"] = "NO3",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 3 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenNH4, Models",
+                                ["Name"] = "NH4",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 1 })
+                            });
+                        }
+                        if (soilNitrogenNO3Sample == null)
+                        {
+                            soilChildren.Add(new JObject
+                            {
+                                ["$type"] = "Models.Soils.SoilNitrogenUrea, Models",
+                                ["Name"] = "Urea",
+                                ["Thickness"] = new JArray(new double[] { 1800 }),
+                                ["InitialValues"] = new JArray(new double[] { 0.0 })
+                            });
+                        }
+                    }
+
+
+
                     return res;
                 }
             }
@@ -2266,7 +2307,7 @@ namespace Models.Core.ApsimFile
             foreach (JObject AirTempFunc in JsonUtilities.ChildrenOfType(root, "AirTemperatureFunction"))
             {
                 AirTempFunc["agregationMethod"] = "0";
-                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourSin), "InterpolationMethod");
+                JsonUtilities.AddModel(AirTempFunc, typeof(ThreeHourAirTemperature), "InterpolationMethod");
             }
         }
 
@@ -2327,7 +2368,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject atf in JsonUtilities.ChildrenRecursively(root, "AirTemperatureFunction"))
             {
-                atf["$type"] = "Models.Functions.HourlyInterpolation, Models";
+                atf["$type"] = "Models.Functions.SubDailyInterpolation, Models";
                 foreach (JObject c in atf["Children"])
                 {
                     if (c["Name"].ToString() == "TemperatureResponse")
@@ -3068,11 +3109,11 @@ namespace Models.Core.ApsimFile
                     plantType = pasture["Name"]?.ToString();
                 pasture["PlantType"] = plantType;
             }
-            
+
             foreach (JObject plant in JsonUtilities.ChildrenRecursively(root, "Plant"))
                 plant["PlantType"] = plant["CropType"]?.ToString();
 
-            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType")});
+            JsonUtilities.RenameVariables(root, new Tuple<string, string>[] { new Tuple<string, string>("CropType", "PlantType") });
         }
 
         /// <summary>
@@ -3184,14 +3225,14 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
-                if ( (sample["NO3N"] == null || !sample["NO3N"].HasValues)
-                 &&  (sample["NH4N"] == null || !sample["NH4N"].HasValues)
-                 &&  (sample["SW"]   == null || !sample["SW"].HasValues)
-                 &&  (sample["OC"]   == null || !sample["OC"].HasValues)
-                 &&  (sample["EC"]   == null || !sample["EC"].HasValues)
-                 &&  (sample["CL"]   == null || !sample["CL"].HasValues)
-                 &&  (sample["ESP"]  == null || !sample["ESP"].HasValues)
-                 &&  (sample["PH"]   == null || !sample["PH"].HasValues) )
+                if ((sample["NO3N"] == null || !sample["NO3N"].HasValues)
+                 && (sample["NH4N"] == null || !sample["NH4N"].HasValues)
+                 && (sample["SW"] == null || !sample["SW"].HasValues)
+                 && (sample["OC"] == null || !sample["OC"].HasValues)
+                 && (sample["EC"] == null || !sample["EC"].HasValues)
+                 && (sample["CL"] == null || !sample["CL"].HasValues)
+                 && (sample["ESP"] == null || !sample["ESP"].HasValues)
+                 && (sample["PH"] == null || !sample["PH"].HasValues))
                 {
                     // The sample is empty. If it is not being overridden by a factor
                     // or replacements, get rid of it.
@@ -3394,7 +3435,7 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="root">The root json token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-         private static void UpgradeToVersion128(JObject root, string fileName)
+        private static void UpgradeToVersion128(JObject root, string fileName)
         {
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
@@ -3520,7 +3561,7 @@ namespace Models.Core.ApsimFile
             {
                 JToken property = microClimate[propertyName];
                 if (property == null || property.Value<double>() <= 0)
-                        microClimate[propertyName] = 2;
+                    microClimate[propertyName] = 2;
             }
         }
 
@@ -3686,7 +3727,7 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion140(JObject root, string fileName)
         {
-            
+
             foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNO3"))
                 PAN.Remove();
             foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNH4"))
@@ -3801,7 +3842,7 @@ namespace Models.Core.ApsimFile
             void RemoveAxisNaNs(JObject axis, string propertyName)
             {
                 JToken value = axis[propertyName];
-                if (value == null)  
+                if (value == null)
                     return;
                 if (value.Value<string>() == "NaN")
                     axis[propertyName] = null;
@@ -3887,7 +3928,7 @@ namespace Models.Core.ApsimFile
                     if (position == -1)
                         simulationChildren.Add(forages);
                     else
-                        simulationChildren.Insert(position+1, forages);
+                        simulationChildren.Insert(position + 1, forages);
                 }
             }
         }
@@ -3964,7 +4005,7 @@ namespace Models.Core.ApsimFile
                 var target = JsonUtilities.CreateNewChildModel(emergingPhase, "Target", "Models.Functions.AddFunction");
                 JsonUtilities.AddConstantFunctionIfNotExists(target, "ShootLag", shootLag);
                 var depthxRate = JsonUtilities.CreateNewChildModel(target, "DepthxRate", "Models.Functions.MultiplyFunction");
-                
+
                 var sowingDepthReference = JsonUtilities.CreateNewChildModel(depthxRate, "SowingDepth", "Models.Functions.VariableReference");
                 sowingDepthReference["VariableName"] = "[Plant].SowingData.Depth";
 
@@ -4030,7 +4071,7 @@ namespace Models.Core.ApsimFile
                 { "Models.CLEM.Activities.ActivityTimerResourceLevel", "Models.CLEM.Timers.ActivityTimerResourceLevel" },
                 { "Models.CLEM.Activities.ActivityTimerSequence", "Models.CLEM.Timers.ActivityTimerSequence" },
             };
-            
+
             foreach (var item in searchReplaceStrings)
                 JsonUtilities.ReplaceChildModelType(root, item.Key, item.Value);
         }
@@ -4069,7 +4110,7 @@ namespace Models.Core.ApsimFile
                         });
                     }
 
-                    if (soilChildren != null && chemicalChildren != null && bdToken != null)
+                    if (soilChildren != null && bdToken != null)
                     {
                         var bd = bdToken.Values<double>().ToArray();
                         var bdThickness = physical["Thickness"].Values<double>().ToArray();
@@ -4114,11 +4155,19 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Move solutes from nutrient to soil.
-                        var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        var no3Token = JsonUtilities.ChildWithName(soil, "NO3");
+                        if (no3Token == null)
+                        {
+                            var no3 = GetValues(tokensContainingValues, "NO3", 0.1, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(no3, soluteTypeName, "NO3"));
+                        }
 
-                        var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
-                        soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        var nh4Token = JsonUtilities.ChildWithName(soil, "NH4");
+                        if (nh4Token == null)
+                        {
+                            var nh4 = GetValues(tokensContainingValues, "NH4", 0.01, bd, bdThickness, null);
+                            soilChildren.Add(CreateSoluteToken(nh4, soluteTypeName, "NH4"));
+                        }
 
                         var labileP = GetValues(tokensContainingValues, "LabileP", 0.0, bd, bdThickness, null);
                         var unavailableP = GetValues(tokensContainingValues, "UnavailableP", 0.0, bd, bdThickness, null);
@@ -4159,8 +4208,12 @@ namespace Models.Core.ApsimFile
                         }
 
                         // Add a urea solute to soil
-                        var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
-                        soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        var ureaToken = JsonUtilities.ChildWithName(soil, "Urea");
+                        if (ureaToken == null)
+                        {
+                            var urea = (double[])Array.CreateInstance(typeof(double), chemicalThickness.Length);
+                            soilChildren.Add(CreateSoluteToken((urea, "kgha", chemicalThickness), soluteTypeName, "Urea"));
+                        }
                     }
 
 
@@ -4334,7 +4387,7 @@ namespace Models.Core.ApsimFile
                 new Tuple<string, string>("[Soil].Initial water.SW", "[Soil].Water.InitialValues"),
                 new Tuple<string, string>("[Soil].InitialWater.FractionFull", "[Soil].Water.FractionFull"),
                 new Tuple<string, string>("[Soil].Initial.OC", "[Soil].Organic.Carbon"),
-                
+
                 new Tuple<string, string>("[Swim3].Cl", "[Soil].Cl"),
 
                 new Tuple<string, string>("[Soil].Nutrient.NO3.Denitrification", "[Nutrient].Denitrification"),
@@ -4547,7 +4600,7 @@ namespace Models.Core.ApsimFile
                         var unitsToken = sampleToken[$"{nodeName}Units"];
                         if (unitsToken != null)
                             units = unitsToken.ToString();
-                        
+
                         if (thicknessToReturn != null)
                         {
                             if (units == "kgha")
@@ -4606,7 +4659,7 @@ namespace Models.Core.ApsimFile
                 cultivarFolder["$type"] = "Models.Core.Folder, Models";
         }
 
-       
+
         /// <summary>
         /// Change PredictedObserved to make SimulationName an explicit first field to match on.
         /// </summary>
@@ -4765,330 +4818,418 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
-        /// Update the SoilNitrogen component to be a Nutrient
+        /// Changes to some arbitrator structures and types to tidy up and make new arbitration approach possible.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        /// 
-
-        private static void UpgradeToVersion889(JObject root, string fileName)
+        private static void UpgradeToVersion160(JObject root, string fileName)
         {
-            foreach (var manager in JsonUtilities.ChildManagers(root))
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "ThreeHourSin"))
             {
-                var originalCode = manager.ToString();
-                if (originalCode != null)
-                {
-                    if (originalCode.Contains("SoilNitrogen"))
-                    {
-                        manager.Replace("SoilNitrogen", "INutrient");
-                        manager.Replace("SoilN", "nutrient");
-                        manager.Replace("soilN", "nutrient");
-                    }
-                    if (originalCode != manager.ToString())
-                    {
-                        var usingLines = manager.GetUsingStatements().ToList();
-                        usingLines.Add("Models.Soils.Nutrients");
-                        manager.SetUsingStatements(usingLines);
-                        manager.Save();
-                    }
-                }
+                demand["$type"] = "Models.Functions.ThreeHourAirTemperature, Models";
+            }
+            foreach (JObject demand in JsonUtilities.ChildrenRecursively(root, "HourlyInterpolation"))
+            {
+                demand["$type"] = "Models.Functions.SubDailyInterpolation, Models";
+            }
+        }
+
+        /// <summary>
+        /// Change SimpleLeaf.Tallness to Height
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion161(JObject root, string fileName)
+        {
+            foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
+            {
+                JObject tallness = JsonUtilities.ChildWithName(leaf, "Tallness");
+                if (tallness != null)
+                    tallness["Name"] = "HeightFunction";
             }
 
-            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            // Remove tallness from manager scripts.
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
             {
-                foreach (var soilnitrogen in JsonUtilities.ChildrenOfType(soil, "SoilNitrogen"))
+                JsonUtilities.ReplaceManagerCode(manager, ".Tallness", ".HeightFunction");
+            }
+
+
+            // Remove tallness from report variables.
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Tallness", ".HeightFunction");
+            }
+
+            // Remove tallness from cultivars.
+            foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+            {
+                if (!cultivar["Command"].HasValues)
+                    continue;
+
+                foreach (JValue command in cultivar["Command"].Children())
+                    command.Value = command.Value.ToString().Replace("[Leaf].Tallness", "[Leaf].HeightFunction");
+            }
+        }
+
+        /// <summary>
+        /// Move SetEmergenceDate and SetGerminationDate to Phenology.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion162(JObject root, string fileName)
+        {
+            // Move SetEmergenceDate and SetGerminationDat in manager scripts.
+            foreach (JObject manager in JsonUtilities.ChildrenRecursively(root, "Manager"))
+            {
+                JsonUtilities.ReplaceManagerCode(manager, ".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                JsonUtilities.ReplaceManagerCode(manager, ".SetGerminationDate", ".Phenology.SetGerminationDate");
+            }
+
+            // Move SetEmergenceDate and SetGerminationDate in operations.
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
                 {
-                    soilnitrogen.Remove();
-                                        
-                    JArray soilChildren = soil["Children"] as JArray;
-                    if (soilChildren != null)
+                    for (int i = 0; i < operation.Count(); i++)
                     {
-                        JObject nutrient = new JObject();
-                        nutrient["$type"] = "Models.Soils.Nutrients.Nutrient, Models";
-                        JsonUtilities.RenameModel(nutrient as JObject, "Nutrient");
-                        nutrient["ResourceName"] = "Nutrient";
-                        nutrient["IncludeInDocumentation"] = true;
-                        nutrient["Enabled"] = true;
-                        nutrient["ReadOnly"] = false;
-                        soilChildren.Add(nutrient);
+                        var specification = operation[i]["Action"];
+                        var specificationString = specification.ToString();
+                        specificationString = specificationString.Replace(".SetEmergenceDate", ".Phenology.SetEmergenceDate");
+                        specificationString = specificationString.Replace(".SetGerminationDate", ".Phenology.SetGerminationDate");
+                        operation[i]["Action"] = specificationString;
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Refactor LifeCycle model
+        /// Rearrange the BiomassRemoval defaults in the plant models and manager scripts.
         /// </summary>
-        /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion890(JObject root, string fileName)
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion163(JObject root, string fileName)
         {
-            //Method to convert LifeCycleProcesses to functions
-            void ChangeToFunction(JObject LifePhase, string OldType, string NewName, string FunctType, string SubFunctType = "")
+            foreach (JObject biomassRemoval in JsonUtilities.ChildrenRecursively(root, "BiomassRemoval"))
             {
-                JArray children = LifePhase["Children"] as JArray;
-                var Process = JsonUtilities.ChildrenOfType(LifePhase, OldType);
-                if (Process.Count >= 1)
+                // Find a harvest OrganBiomassRemovalType child
+                JObject harvest = JsonUtilities.ChildWithName(biomassRemoval, "Harvest");
+                if (harvest != null)
                 {
-                    bool FirstProc = true;
-                    JObject funct = new JObject();
-                    JArray ChildFunctions = new JArray();
-                    foreach (var proc in Process)
+                    biomassRemoval["HarvestFractionLiveToRemove"] = harvest["FractionLiveToRemove"];
+                    biomassRemoval["HarvestFractionDeadToRemove"] = harvest["FractionDeadToRemove"];
+                    biomassRemoval["HarvestFractionLiveToResidue"] = harvest["FractionLiveToResidue"];
+                    biomassRemoval["HarvestFractionDeadToResidue"] = harvest["FractionDeadToResidue"];
+                }
+                biomassRemoval["Children"] = new JArray();
+            }
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root)
+                                                              .Where(man => !man.IsEmpty))
+            {
+                string managerName = manager.Name;
+
+                // Remove the 'RemoveFractions' declaration
+                string declarationPattern = @$".+RemovalFractions\s+(\w+).+";
+                Match declarationMatch = Regex.Match(manager.ToString(), declarationPattern);
+                if (declarationMatch.Success)
+                {
+                    // Remove the declaration
+                    string declarationInstanceName = declarationMatch.Groups[1].Value;
+                    manager.ReplaceRegex(declarationPattern, string.Empty);
+
+                    // Remove the 'RemovalFractions' instance creation.
+                    manager.ReplaceRegex(@$"{declarationInstanceName}\W*new.+;", string.Empty);
+
+                    // Find all biomass removal fractions.
+                    var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.,\(\)+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
+                                         .Where(man => !manager.PositionIsCommented(man.Index));
+                    List<OrganFractions> organs = new List<OrganFractions>();
+
+                    foreach (Match match in matches)
                     {
-                        if (FunctType == "Add")
+                        if (!manager.PositionIsCommented(match.Index))
                         {
-                            if (FirstProc)
+                            bool remove = match.Groups[1].Value == "Remove";
+                            string organName = match.Groups[2].Value;
+                            string fractionObjectName = match.Groups[3].Value;
+                            bool isLive = true;
+                            if (match.Groups[5].Value == "Dead")
+                                isLive = false;
+                            var organ = organs.Find(o => o.Name == organName);
+                            if (organ == null)
                             {
-                                funct["$type"] = "Models.Functions.AddFunction, Models";
-                                funct["Name"] = NewName;
-                                FirstProc = false;
+                                organ = new OrganFractions(organName);
+                                organs.Add(organ);
                             }
-                            foreach (var c in proc["Children"])
+                            if (isLive)
                             {
-                                if ((SubFunctType == "All") && (c["$type"].ToString() != "Models.Memo, Models"))
-                                {
-                                    JObject cld = new JObject();
-                                    cld["$type"] = "Models.Functions.MultiplyFunction, Models";
-                                    cld["Name"] = c["Name"].ToString();
-                                    JObject Popn = new JObject();
-                                    Popn["$type"] = "Models.Functions.VariableReference, Models";
-                                    Popn["Name"] = "CohortPopulation";
-                                    Popn["VariableName"] = "[" + LifePhase["Name"].ToString() + "].CurrentCohort.Population";
-                                    JArray kids = new JArray();
-                                    kids.Add(Popn);
-                                    kids.Add(c);
-                                    cld["Children"] = kids;
-                                    ChildFunctions.Add(cld);
-                                }
+                                if (remove)
+                                    organ.FractionLiveToRemove = fractionObjectName;
                                 else
-                                    ChildFunctions.Add(c);
+                                    organ.FractionLiveToResidue = fractionObjectName;
+                            }
+                            else
+                            {
+                                if (remove)
+                                    organ.FractionDeadToRemove = fractionObjectName;
+                                else
+                                    organ.FractionDeadToResidue = fractionObjectName;
                             }
                         }
-                        else if (FunctType == "Multiply")
+                    }
+
+                    string code = manager.ToString();
+
+                    // Calculate the level of indentation based on the first match.
+                    int indent = 0;
+                    if (matches.Any())
+                    {
+                        int pos = matches.First().Index;
+                        indent = code.IndexOf(code.Substring(pos).First(ch => ch != ' '), pos) - pos;
+                    }
+
+                    // Delete the removal fraction matches lines. 
+                    // Do it in reverse order so that match.Index remains valid.
+                    foreach (Match match in matches.Reverse())
+                        code = code.Remove(match.Index, match.Length);
+
+                    // Find the RemoveBiomass method call.
+                    Match removeBiomassMatch = Regex.Match(code, @" +(\w+).RemoveBiomass\(.+\);");
+                    if (removeBiomassMatch.Success)
+                    {
+                        var modelName = removeBiomassMatch.Groups[1].Value;
+
+                        // Add in code to get each organ
+                        string codeToInsert = null;
+                        foreach (var organ in organs)
                         {
-                            if (FirstProc)
-                            {
-                                funct["$type"] = "Models.Functions.MultiplyFunction, Models";
-                                funct["Name"] = NewName;
-                                JObject Popn = new JObject();
-                                Popn["$type"] = "Models.Functions.VariableReference, Models";
-                                Popn["Name"] = "CohortPopulation";
-                                Popn["VariableName"] = "[" + LifePhase["Name"].ToString() + "].CurrentCohort.Population";
-                                ChildFunctions.Add(Popn);
-                                FirstProc = false;
-                            }
-                            if (SubFunctType == "All")
-                            {
-                                foreach (JObject kid in proc["Children"])
-                                    ChildFunctions.Add(kid);
-                            }
-                            else if (SubFunctType == "Min")
-                            {
-                                JObject Min = new JObject();
-                                Min["$type"] = "Models.Functions.MinimumFunction, Models";
-                                Min["Name"] = "ProgenyRate";
-                                Min["Children"] = proc["Children"];
-                                ChildFunctions.Add(Min);
-                            }
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"var {organ.Name} = {modelName}.FindChild<IHasDamageableBiomass>(\"{organ.Name}\");" + Environment.NewLine;
                         }
-                        else
-                            throw new Exception("Something got Funct up");
 
-                        JsonUtilities.RemoveChild(LifePhase, proc["Name"].ToString());
-                    }
-                    funct["Children"] = ChildFunctions;
-                    children.Add(funct);
-                }
-                else
-                    JsonUtilities.AddConstantFunctionIfNotExists(LifePhase, NewName, "0.0");
-            }
+                        // Add in code to remove biomass from organ.
+                        foreach (var organ in organs)
+                        {
+                            codeToInsert += new string(' ', indent);
+                            codeToInsert += $"{organ.Name}.RemoveBiomass(liveToRemove: {organ.FractionLiveToRemove}, deadToRemove: {organ.FractionDeadToRemove}, " +
+                                                                        $"liveToResidue: {organ.FractionLiveToResidue}, deadToResidue: {organ.FractionDeadToResidue});" + Environment.NewLine;
+                        }
 
-            // Method to add infestation object
-            void AddInfestObject(string Name, JToken zone, string Org, string Phase, JArray ChildFunction, int typeIndex)
-            {
-                JObject Infest = JsonUtilities.CreateNewChildModel(zone, Name, "Models.LifeCycle.Infestation");
-                Infest["TypeOfInfestation"] = typeIndex;
-                Infest["InfestingOrganisumName"] = Org;
-                Infest["InfestingPhaseName"] = Phase;
-                Infest["ChronoAgeOfImmigrants"] = 0;
-                Infest["PhysAgeOfImmigrants"] = 0.2;
-                Infest["Children"] = ChildFunction;
-            }
+                        // Remove unwanted code and replace with new code.
+                        code = code.Remove(removeBiomassMatch.Index, removeBiomassMatch.Length);
+                        if (codeToInsert != null)
+                            code = code.Insert(removeBiomassMatch.Index, codeToInsert);
 
-            foreach (JObject LC in JsonUtilities.ChildrenRecursively(root, "LifeCycle"))
-            {
-                List<string> ChildPhases = new List<string>();
-                JToken zone = JsonUtilities.Parent(LC);
+                        // Replace 'SetThinningProportion'.
+                        Match thinningMatch = Regex.Match(code, $@" +\w+\.SetThinningProportion\s*=\s*(.+);");
+                        if (thinningMatch.Success)
+                        {
+                            string newThinningCode = new string(' ', indent) +
+                                                    $"{modelName}.structure?.DoThin({thinningMatch.Groups[1].Value});";
+                            code = code.Remove(thinningMatch.Index, thinningMatch.Length);
+                            code = code.Insert(thinningMatch.Index, newThinningCode);
+                        }
 
-                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeStage"))
-                {
-                    LP["$type"] = "Models.LifeCycle.LifeCyclePhase, Models";
-                    var ReproductiveProcess = JsonUtilities.ChildrenOfType(LP, "LifeStageReproduction");
-                    //Convert LifeCycleProcesses to functions
-                    ChangeToFunction(LP, "LifeStageImmigration", "Immigration", "Add");
-                    ChangeToFunction(LP, "LifeStageGrowth", "Development", "Add");
-                    ChangeToFunction(LP, "LifeStageMortality", "Mortality", "Add", "All");
-                    ChangeToFunction(LP, "LifeStageReproduction", "Reproduction", "Multiply", "Min");
-                    ChangeToFunction(LP, "LifeStageTransfer", "Graduation", "Multiply", "All");
 
-                    //If functionality present in Graduation, move to development and delete graduation
-                    var Dev = JsonUtilities.ChildWithName(LP, "Development");
-                    var Grad = JsonUtilities.ChildWithName(LP, "Graduation");
-                    if (Dev["$type"].ToString() == "Models.Functions.Constant, Models") //There was no functionality in Development
-                    {
-                        JsonUtilities.RemoveChild(LP, "Development");
-                        Grad["Name"] = "Development"; //Set Graduation function to be Development
-                        JsonUtilities.RemoveChild(Grad, "CohortPopulation");
-                    }
-                    else
-                        JsonUtilities.RemoveChild(LP, "Graduation");
+                        // Replace 'SetPhenologyStage'.
+                        Match stageMatch = Regex.Match(code, $@" +\w+\.SetPhenologyStage\s*=\s*(.+);");
+                        if (stageMatch.Success)
+                        {
+                            string newStageCode = new string(' ', indent) +
+                                                    $"{modelName}.Phenology?.SetToStage({stageMatch.Groups[1].Value});";
+                            code = code.Remove(stageMatch.Index, stageMatch.Length);
+                            code = code.Insert(stageMatch.Index, newStageCode);
+                        }
 
-                    //Fix variable references
-                    foreach (JObject xv in JsonUtilities.ChildrenOfType(LP, "VariableReference"))
-                    {
-                        if (xv["VariableName"].ToString() == "[LifeCycle].CurrentLifeStage.CurrentCohort.PhenoAge")
-                            xv["VariableName"] = "[" + LP["Name"] + "].CurrentCohort.ChronologicalAge";
-                    }
-                    foreach (JObject xv in JsonUtilities.ChildrenOfType(LP, "LinearAfterThresholdFunction"))
-                    {
-                        if (xv["XProperty"].ToString() == "[LifeCycle].CurrentLifeStage.CurrentCohort.PhenoAge")
-                            xv["XProperty"] = "[" + LP["Name"] + "].CurrentCohort.ChronologicalAge";
+                        manager.Read(code);
+
+                        // Add in a using statement.
+                        var usings = manager.GetUsingStatements();
+                        usings = usings.Append("Models.PMF.Interfaces");
+                        manager.SetUsingStatements(usings);
                     }
 
-                    if (ReproductiveProcess.Count >= 1)
-                    {
-                        LP["NameOfPhaseForProgeny"] = ReproductiveProcess[0]["TransferTo"].ToString();
-                    }
-                    ChildPhases.Add(LP["Name"].ToString());
-                }
-
-                //Move immigration function from life phase to infestation event
-                foreach (JObject LP in JsonUtilities.ChildrenRecursively(LC, "LifeCyclePhase"))
-                {
-                    JObject NumberFunction = JsonUtilities.ChildWithName(LP, "Immigration");
-                    NumberFunction["Name"] = "NumberOfImmigrants";
-                    JArray ChildFunction = new JArray();
-                    ChildFunction.Add(NumberFunction);
-                    if ((NumberFunction["$type"].ToString() == "Models.Functions.Constant, Models") &&
-                        (double.Parse(NumberFunction["FixedValue"].ToString()) == 0.0))
-                    {
-                        //Don't add immigration event, not needed
-                    }
-                    else
-                    {
-                        AddInfestObject("Ongoing Infestation " + LP["Name"], zone, LC["Name"].ToString(), LP["Name"].ToString(), ChildFunction, 3);
-                    }
-                    JsonUtilities.RemoveChild(LP, "NumberOfImmigrants");
-                }
-
-                // Add infestation phase for initial populations
-                int cou = 0;
-                foreach (double init in LC["InitialPopulation"])
-                {
-                    if (init > 0)
-                    {
-                        string Name = "Initial Infestation " + ChildPhases[cou];
-                        JObject NumberFunction = new JObject();
-                        NumberFunction["$type"] = "Models.Functions.Constant, Models";
-                        NumberFunction["Name"] = "NumberOfImmigrants";
-                        NumberFunction["FixedValue"] = init;
-                        JArray ChildFunction = new JArray();
-                        ChildFunction.Add(NumberFunction);
-                        AddInfestObject(Name, zone, LC["Name"].ToString(), ChildPhases[cou], ChildFunction, 0);
-                        cou += 1;
-                    }
+                    // Save the manager.
+                    manager.Save();
                 }
             }
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        }
+
+        private class OrganFractions
+        {
+            public OrganFractions(string name)
             {
-                JsonUtilities.SearchReplaceReportVariableNames(report, "Migrants", "Graduates");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "Mortality", "Mortalities");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "PhenologicalAge", "PhysiologicalAge");
+                Name = name;
             }
 
-            foreach (var manager in JsonUtilities.ChildManagers(root))
+            public string Name { get; }
+
+            public string FractionLiveToRemove { get; set; } = "0.0";
+            public string FractionDeadToRemove { get; set; } = "0.0";
+            public string FractionLiveToResidue { get; set; } = "0.0";
+            public string FractionDeadToResidue { get; set; } = "0.0";
+        }
+
+        /// <summary>
+        /// Change Manger Code from String into Array of Strings (each line is an element)
+        /// For better readability of apsim files.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion164(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
-                manager.Replace("LifeCycle.LifeStage", "LifeCycle.LifeCyclePhase");
+                string[] code = manager.Token["Code"].ToString().Split('\n');
+                manager.Token["CodeArray"] = new JArray(code);
                 manager.Save();
             }
         }
 
         /// <summary>
-        /// Changes initial Root Wt to an array.
+        /// Adds a line property to the Operation object. This stores the input that is given, 
+        /// even if it is not able to be parsed as an Operation
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion165(JObject root, string fileName)
+        {
+            foreach (JObject operations in JsonUtilities.ChildrenRecursively(root, "Operations"))
+            {
+                var operation = operations["Operation"];
+                if (operation != null && operation.HasValues)
+                {
+                    for (int i = 0; i < operation.Count(); i++)
+                    {
+                        bool enabled = false;
+                        if (operation[i]["Enabled"] != null)
+                            enabled = (bool)operation[i]["Enabled"];
+
+                        string commentChar = enabled ? "" : "//";
+
+                        string dateStr = "";
+                        if (enabled)
+                            if (operation[i]["Date"] != null)
+                                dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
+
+                        operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change SoilNitrogen to Nutrient
         /// </summary>
         /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion999(JObject root, string fileName)
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion166(JObject root, string _)
         {
-            // Delete all alias children.
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
             {
                 var parent = JsonUtilities.Parent(soilNitrogen);
-                var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
-                nutrient["ResourceName"] = "Nutrient";
+                // check for an existing Nutrient node. If it exists, do not add another one.
+                JObject parentObject = parent.ToObject<JObject>();
+                var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
+                if (existingNutrient == null)
+                {
+                    var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
+                    nutrient["ResourceName"] = "Nutrient";
+                }
                 soilNitrogen.Remove();
             }
+
+            foreach (var solute in JsonUtilities.ChildrenOfType(root, "SoilNitrogenNH4"))
+                solute["$type"] = "Models.Soils.Solute, Models";
+
+            foreach (var solute in JsonUtilities.ChildrenOfType(root, "SoilNitrogenNO3"))
+                solute["$type"] = "Models.Soils.Solute, Models";
+
+            foreach (var solute in JsonUtilities.ChildrenOfType(root, "SoilNitrogenUrea"))
+                solute["$type"] = "Models.Soils.Solute, Models";
+
 
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 manager.Replace("using Models.Soils;", "using Models.Soils;\r\nusing Models.Soils.Nutrients;");
 
-                manager.Replace("SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                manager.Replace("SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                bool changeMade = false;
 
-                if (manager.Replace("Soil.SoilNitrogen.HumicN", "Humic.N"))
-                    manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.HumicC", "Humic.C"))
-                    manager.AddDeclaration("NutrientPool", "Humic", new string[] { "[ScopedLinkByName]" });
-
-                if (manager.Replace("Soil.SoilNitrogen.MicrobialN", "Microbial.N"))
-                    manager.AddDeclaration("NutrientPool", "Microbial", new string[] { "[ScopedLinkByName]" });
-                if (manager.Replace("Soil.SoilNitrogen.MicrobialC", "Microbial.C"))
-                    manager.AddDeclaration("NutrientPool", "Microbial", new string[] { "[ScopedLinkByName]" });
-
-                if (manager.Replace("Soil.SoilNitrogen.dlt_n_min_res", "SurfaceResidueDecomposition.MineralisedN"))
-                    manager.AddDeclaration("CarbonFlow", "SurfaceResidueDecomposition", new string[] { "[LinkByPath(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
-
-                manager.Replace("SoilNitrogen.MineralisedN", "Nutrient.MineralisedN");
-
-                manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN");
-                if (manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN"))
+                var declarations = manager.GetDeclarations();
+                foreach (var declaration in declarations)
                 {
-                    manager.RemoveDeclaration("SoilNitrogen");
-                    manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
+                    if (declaration.TypeName == "SoilNitrogenNO3" || declaration.TypeName == "SoilNitrogenNH4" || declaration.TypeName == "SoilNitrogenUrea")
+                    {
+                        declaration.TypeName = "Solute";
+                        var linkAttributeIndex = declaration.Attributes.IndexOf("[Link]");
+                        if (linkAttributeIndex != -1)
+                        {
+                            declaration.Attributes[linkAttributeIndex] = "[Link(Path=\"[NO3]\")]";
+                        }
+
+                        manager.SetDeclarations(declarations);
+                        changeMade = true;
+                    }
+                    else if (declaration.TypeName == "SoilNitrogen")
+                    {
+                        declaration.TypeName = "Nutrient";
+                        manager.SetDeclarations(declarations);
+                        changeMade = true;
+                    }
                 }
 
-                manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC");
-                if (manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC"))
-                {
-                    manager.RemoveDeclaration("SoilNitrogen");
-                    manager.AddDeclaration("INutrient", "Nutrient", new string[] { "[ScopedLinkByName]" });
-                }
+                changeMade = manager.Replace(".FindInScope<SoilNitrogen>() as SoilNitrogen;", ".FindInScope<Nutrient>() as Nutrient;") || changeMade;
+                changeMade = manager.Replace("SoilNitrogenNO3 SoilNitrogenNO3;", "Solute SoilNitrogenNO3;") || changeMade;
 
-                manager.Replace("SoilNitrogen.mineral_n", "Nutrient.MineralN");
-                manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm");
-                manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm");
-                manager.Save();
+
+                changeMade = manager.Replace("SoilNitrogen nitrogen;", "Nutrient nitrogen;") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.FOMN", "Nutrient.FOM.N") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.FOMC", "Nutrient.FOM.C") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.HumicN", "Nutrient.Humic.N") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.HumicC", "Nutrient.Humic.C") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.MicrobialN", "Nutrient.Microbial.N") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.MicrobialC", "Nutrient.Microbial.C") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.MineralisedN", "Nutrient.MineralisedN") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.TotalN", "Nutrient.TotalN") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.TotalC", "Nutrient.TotalC") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.mineral_n", "Nutrient.MineralN") || changeMade;
+                changeMade = manager.Replace(".mineral_n", ".MineralN") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm") || changeMade;
+                changeMade = manager.Replace("SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN") || changeMade;
+
+                if (changeMade)
+                {
+                    manager.AddDeclaration("Nutrient", "Nutrient", new string[] { "[Link]" });
+                    manager.AddDeclaration("CarbonFlow", "ResidueDecomposition", new string[] { "[Link(Path=\"[Nutrient].SurfaceResidue.Decomposition\")]" });
+                    manager.Save();
+                }
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
             {
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NO3.kgha", "Nutrient.NO3.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NH4.kgha", "Nutrient.NH4.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.Urea.kgha", "Nutrient.Urea.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNO3.kgha", "Nutrient.PlantAvailableNO3.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.PlantAvailableNH4.kgha", "Nutrient.PlantAvailableNH4.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NO3.kgha", "[Nutrient].NO3.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NH4.kgha", "[Nutrient].NH4.kgha");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].Urea.kgha", "[Nutrient].Urea.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NO3.kgha", "[NO3].kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.NH4.kgha", "[NH4].kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "SoilNitrogen.Urea.kgha", "[Urea].kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NO3.kgha", "[NO3].kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].NH4.kgha", "[NH4].kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[SoilNitrogen].Urea.kgha", "[Urea].kgha");
 
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMN", ".Nutrient.FOMN");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMC", ".Nutrient.FOMC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOM.N", ".Nutrient.FOM.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOM.C", ".Nutrient.FOM.C");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Humic.N", ".Nutrient.Humic.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Humic.C", ".Nutrient.Humic.C");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Microbial.N", ".Nutrient.Microbial.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Microbial.C", ".Nutrient.Microbial.C");
+
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMN", ".Nutrient.FOM.N");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.FOMC", ".Nutrient.FOM.C");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.HumicN", ".Nutrient.Humic.N");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.HumicC", ".Nutrient.Humic.C");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MicrobialN", ".Nutrient.Microbial.N");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MicrobialC", ".Nutrient.Microbial.C");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.urea", ".Nutrient.Urea.kgha");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.urea", "[Urea].kgha");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.dlt_n_min_res", ".Nutrient.SurfaceResidue.Decomposition.MineralisedN");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.MineralisedN", ".Nutrient.MineralisedN");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilNitrogen.Denitrification", ".Nutrient.Natm");
@@ -5103,22 +5244,64 @@ namespace Models.Core.ApsimFile
             {
                 if (series["XFieldName"] != null)
                 {
-                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.NO3.kgha", "Nutrient.NO3.kgha");
-                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.NH4.kgha", "Nutrient.NH4.kgha");
-                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.Urea.kgha", "Nutrient.Urea.kgha");
-                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.PlantAvailableNO3.kgha", "Nutrient.PlantAvailableNO3.kgha");
-                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.PlantAvailableNH4.kgha", "Nutrient.PlantAvailableNH4.kgha");
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.NO3.kgha", "NO3.kgha");
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.NH4.kgha", "NH4.kgha");
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilNitrogen.Urea.kgha", "Urea.kgha");
                 }
                 if (series["YFieldName"] != null)
                 {
-                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.NO3.kgha", "Nutrient.NO3.kgha");
-                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.NH4.kgha", "Nutrient.NH4.kgha");
-                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.Urea.kgha", "Nutrient.Urea.kgha");
-                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.PlantAvailableNO3.kgha", "Nutrient.PlantAvailableNO3.kgha");
-                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.PlantAvailableNH4.kgha", "Nutrient.PlantAvailableNH4.kgha");
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.NO3.kgha", "NO3.kgha");
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.NH4.kgha", "NH4.kgha");
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilNitrogen.Urea.kgha", "Urea.kgha");
                 }
             }
+        }
 
+        /// <summary>
+        /// Change SoilNitrogen to Nutrient
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion167(JObject root, string _)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changeMade = manager.Replace("[Nutrient].SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+
+                if (changeMade)
+                    manager.Save();
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Nutrient.MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Nutrient].MineralisedNSurfaceResidue", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN");
+            }
+        }
+
+        /// <summary>
+        /// Change NutrientPool to OrganicPool and CarbonFlow to OrganicFlow
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion168(JObject root, string _)
+        {
+            foreach (var nutrientPool in JsonUtilities.ChildrenOfType(root, "NutrientPool"))
+                nutrientPool["$type"] = "Models.Soils.Nutrients.OrganicPool, Models";
+            foreach (var carbonFlow in JsonUtilities.ChildrenOfType(root, "CarbonFlow"))
+                carbonFlow["$type"] = "Models.Soils.Nutrients.OrganicFlow, Models";
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changeMade = manager.Replace("NutrientPool", "OrganicPool");
+                changeMade = manager.Replace("CarbonFlow", "OrganicFlow") || changeMade;
+                changeMade = manager.Replace("OrganicPoolFunctions", "NutrientPoolFunctions") || changeMade;
+
+                if (changeMade)
+                    manager.Save();
+            }
         }
     }
 }

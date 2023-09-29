@@ -1,10 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -27,7 +25,7 @@ namespace Models.Functions
             if (compiler != null)
             {
                 // From a list of visible models in scope, create [Link] lines e.g.
-                //    [Link] Clock Clock;
+                //    [Link] IClock Clock;
                 //    [Link] Weather Weather;
                 // and namespace lines e.g.
                 //    using Models.Clock;
@@ -58,12 +56,9 @@ namespace Models.Functions
 
                 // Replace the "using Models;" namespace place holder with the namesspaces above.
                 template = template.Replace("using Models;", namespaces);
-
-                var scriptName = Guid.NewGuid().ToString().Replace("-", "");
-                template = template.Replace("class Script", $"class Script{scriptName}");
-
+                                
                 // Replace the link place holder in the template with links created above.
-                template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
+                template = template.Replace("        [Link] IClock Clock = null;", links.ToString());
 
                 // Replace the expression place holder in the template with the real expression.
                 template = template.Replace("return Clock.FractionComplete;", "return " + expression + ";");
