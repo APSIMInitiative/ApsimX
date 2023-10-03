@@ -351,6 +351,7 @@ Source: {#ApsimX}\DeploymentSupport\Windows\Bin64\sqlite3.dll; DestDir: {app}\bi
 Source: {#ApsimX}\bin\Release\net6.0\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: {#ApsimX}\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 Source: {#ApsimX}\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
+Source: {#ApsimX}\ApsimNG\Resources\CommonReportVariables\*; DestDir: {app}\ApsimNG\Resources\CommonReportVariables; Flags: recursesubdirs
 
 ;Sample files 
 Source: {#ApsimX}\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
