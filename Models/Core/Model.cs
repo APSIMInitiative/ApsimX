@@ -451,28 +451,9 @@ namespace Models.Core
         public IEnumerable<IModel> FindAllInScope()
         {
             Simulation sim = FindAncestor<Simulation>();
-            Experiment exp = null;
-            if (sim == null) //if model is under an experiment factor, look for the simulation under the experiment
-            {
-                exp = FindAncestor<Experiment>();
-                if (exp != null)
-                    sim = exp.FindChild<Simulation>();
-            }
-
             ScopingRules scope = sim?.Scope ?? new ScopingRules();
             foreach (IModel result in scope.FindAll(this))
                 yield return result;
-
-            //scope may not work for models under experiment (that need to link back to the actual sim)
-            //so first we find models that are in scope (aka, also under the factor), then also return
-            //the descendants of the simulation
-            if (exp != null)
-            {   
-                IEnumerable<IModel> descendants = sim.FindAllDescendants();
-                foreach (IModel result in descendants)
-                    yield return result;
-            }
-            
         }
 
         /// <summary>
