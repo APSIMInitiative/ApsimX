@@ -108,7 +108,7 @@ namespace Models.GrazPlan
         private double[][] FSoilPropn = new double[GrazType.stSENC + 1][];      // [stSEEDL..stSENC] - [1..3][1..]
         private double[][] FTranspiration = new double[GrazType.stSENC + 1][];  // [TOTAL..stSENC]   - [0..3][1..]
 
-        private bool FWaterValueReqd = true;
+        //private bool FWaterValueReqd = true;
         private double FIntercepted = 0.0;  // Precipitation intercepted by herbage.  Default is 0.0
 
         private double[] mySoilNH4Available;    // [0..
@@ -2442,12 +2442,16 @@ namespace Models.GrazPlan
 
             // Get the canopy details for all cohorts of this population
             // This must be done before the water demand is calculated (for the arbitrator)
-            LightProfile lightProfile = GetLightProfile();  // from ICanopy
-            storeLightPropn(lightProfile);                  // with light from ICanopy
-            // OR....
-            // if this fails or no values are available the the model can set light using (?)
-            PastureModel.SetMonocultureLight();
-
+            LightProfile lightProfile = GetLightProfile();      // from ICanopy
+            if (lightProfile != null)
+            {
+                storeLightPropn(lightProfile);                  // with light from ICanopy
+            }
+            else
+            {
+                // if it fails or no values are available then the model can set light using
+                PastureModel.SetMonocultureLight();
+            }
         }
 
         /// <summary>
@@ -2643,28 +2647,6 @@ namespace Models.GrazPlan
             return null;
         }
 
-        /// <summary>
-        /// Get the canopy details. Populate this object for each cohort
-        /// </summary>
-        /// <returns>The light profile data</returns>
-        private LightProfile GetLightProfile()
-        {
-            // TODO: fix this. This is a rough go at getting a light profile
-            LightProfile lightProfile = new LightProfile();
-            lightProfile.interception = new Population[1];
-            lightProfile.interception[0] = new Population();
-            lightProfile.interception[0].population = this.Name;
-            lightProfile.interception[0].element = new PopulationItem[1];
-            lightProfile.interception[0].element[0] = new PopulationItem(); // seedling, established, senescing, dead, litter
-            lightProfile.interception[0].element[0].name = "established";
-            lightProfile.interception[0].element[0].layer = new Layer[1];
-            lightProfile.interception[0].element[0].layer[0] = new Layer();
-            lightProfile.interception[0].element[0].layer[0].amount = locWtr.Radn; //microClimate.RadiationInterception;
-            lightProfile.interception[0].element[0].layer[0].thickness = this.Depth * 0.001;
-            lightProfile.interception[0].element[0].layer[0].intensity = locWtr.Radn * 1e6 / (locWtr.CalculateDayLength(-6) * 3600);  // intensity over the daylight hours
-
-            return lightProfile;
-        }
 
         /// <summary>
         /// Computes the derived values that go to make up the FInputs record for weather
@@ -2712,42 +2694,63 @@ namespace Models.GrazPlan
             }
         }
 
+        /// <summary>
+        /// Get the canopy details. Populate this object for each cohort
+        /// </summary>
+        /// <returns>The light profile data</returns>
+        private LightProfile GetLightProfile()
+        {
+            // TODO: This is a rough go at getting a light profile
+            LightProfile lightProfile = null;
+            if (microClimate.RadiationInterception != 0)
+            {
+                // if there is a microclimate zone
+                lightProfile = new LightProfile();
+                lightProfile.interception = new Population[1];
+                lightProfile.interception[0] = new Population();    // this APSIM component
+                lightProfile.interception[0].population = this.Name;
+                lightProfile.interception[0].element = new PopulationItem[3];   // seedling, established, senescing
+                for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                {
+                    lightProfile.interception[0].element[iComp - 1] = new PopulationItem();
+                    lightProfile.interception[0].element[iComp - 1].name = sCOMPNAME[iComp];
+                    lightProfile.interception[0].element[iComp - 1].layer = new Layer[1];
+                    lightProfile.interception[0].element[iComp - 1].layer[0] = new Layer();
+                    lightProfile.interception[0].element[iComp - 1].layer[0].amount = microClimate.RadiationInterception;
+                    lightProfile.interception[0].element[iComp - 1].layer[0].thickness = this.Depth * 0.001;
+                    lightProfile.interception[0].element[iComp - 1].layer[0].intensity = microClimate.RadiationInterception * 1e6 / (locWtr.CalculateDayLength(-6) * 3600);  // intensity over the daylight hours
+                }
+            }
+
+            return lightProfile;
+        }
+
         /// <summary>Pasture herbage cohort component name</summary>
         public static string[] sCOMPNAME = { "", "seedling", "established", "senescing", "dead", "litter" };    // [0, stSEEDL..stLITT1]  - [0, 1..5]
 
         /// <summary>
-        /// This function is used to store the light intercepted as calculated.
-        /// This population also appears in the lightValues.
+        /// This function is used to store the light intercepted as calculated by MicroClimate.
         /// </summary>
-        /// <param name="lightValues"></param>
+        /// <param name="lightValues">Light values for this component and it's plant populations</param>
         private void storeLightPropn(LightProfile lightValues)
         {
-            Population[] intcpValue;
-            PopulationItem[] popnValue;
-            PopulationItem compValue;
+            PopulationItem[] popnValues;
+            PopulationItem compValue;   // seedling, est, senescing ...
             int iComp;
 
             if (lightValues != null)
             {
+                // initialise the light for each cohort
                 for (iComp = stSEEDL; iComp <= stSENC; iComp++)
                     FLightAbsorbed[iComp] = 0.0;
 
-                intcpValue = lightValues.interception;
-                popnValue = null;
-                int Idx = 0;
-                while ((Idx < intcpValue.Length) && (popnValue == null))
+                // [0] item is this APSIM component
+                popnValues = lightValues.interception[0].element;  // seedling, est, sen, ....;
+                if (popnValues != null)
                 {
-                    if (intcpValue[Idx].population == this.Name)    ///// TODO: check this name
-                        popnValue = intcpValue[Idx].element;
-                    else
-                        Idx++;
-                }
-
-                if (popnValue != null)
-                {
-                    for (Idx = 0; Idx < popnValue.Length; Idx++)                                // One entry per component for which a FPC was given
+                    for (int Idx = 0; Idx < popnValues.Length; Idx++)                                // One entry per component for which a FPC was given
                     {
-                        compValue = popnValue[Idx];
+                        compValue = popnValues[Idx]; // seedling or est or sen ....
 
                         iComp = stSEEDL;
                         while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
@@ -2762,6 +2765,7 @@ namespace Models.GrazPlan
             }
         }
 
+        /*
         /// <summary>
         /// Water uptake by plant populations interacting with this module
         /// </summary>
@@ -2805,7 +2809,7 @@ namespace Models.GrazPlan
                     }
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Called when a water arbitrator has calculated water uptakes
