@@ -122,7 +122,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// The random number host
         /// </summary>
-        public MyRandom randFactory;
+        public MyRandom randFactory = null;
 
         /// <summary>
         /// The supplement used
@@ -3691,7 +3691,7 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            randFactory.Initialise(RandSeed);
+            this.randFactory.Initialise(RandSeed);
             StockModel = new StockList(this, systemClock, locWtr, paddocks);
 
             var childGenotypes = this.FindAllChildren<Genotype>().Cast<Genotype>().ToList();
@@ -3709,7 +3709,7 @@ namespace Models.GrazPlan
         [EventSubscribe("EndOfSimulation")]
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
-            randFactory = new MyRandom(RandSeed);
+            this.randFactory = new MyRandom(RandSeed);
         }
 
 
