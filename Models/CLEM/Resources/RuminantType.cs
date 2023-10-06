@@ -906,6 +906,15 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
 
+        /// <summary>
+        /// Proportion of wet mother's with no offspring accepting orphan
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion suitable fmeales accpeting orphan")]
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Required, Proportion]
+        public double ProportionAcceptingSurrogate { get; set; } = 0;
+
         #endregion
 
         #region other
