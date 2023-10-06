@@ -52,6 +52,7 @@ namespace Models.CLEM.Activities
         private RuminantType breedParams;
         private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
         private double mortalityRate = 0;
+        private IEnumerable<Ruminant> selectHerdAvailable = null;
 
         private int numberMaleSiresInHerd = 0;
         private int numberMaleSiresInPurchases = 0;
@@ -677,6 +678,11 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
+            if (FindAllChildren<RuminantActivityGroup>().Any())
+            {
+                selectHerdAvailable = new List<Ruminant>();
+            }
+
             // get the mortality rate for the herd if available or assume zero
             mortalityRate = breedParams.MortalityBase;
 
@@ -755,6 +761,13 @@ namespace Models.CLEM.Activities
             excessBreeders = 0;
             sufficientFoodBreeders = true;
             sufficientFoodSires = true;
+
+            // if this activity has determined where is a RuminantFilterGroup apply the rules to define individuals available this time-step
+            // this allows a filter to determine what individuals are available to manage e.g. incomplete muster.
+            if (selectHerdAvailable != null)
+            {
+                selectHerdAvailable = GetIndividuals<Ruminant>();
+            }
 
             // calculate numbers for current herd
             if (ManageFemaleBreederNumbers | ManageMaleBreederNumbers)
