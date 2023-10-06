@@ -365,12 +365,32 @@ namespace StdUnits
         }
 
         /// <summary>
-        /// Container class for a random number generator. This means that it becomes
-        /// thread safe and won't be trampled my another thread generating random
-        /// numbers. Code moved from global implementation in StdMATH.pas and System.pas.
+        /// Container class for a random number generator.
+        /// This will be thread safe and won't be trampled my another thread generating random
+        /// numbers.
+        /// Use a unique set of random numbers.
+        /// </summary>
+        public MyRandom()
+        {
+            initInstance(0);
+        }
+
+        /// <summary>
+        /// Container class for a random number generator.
+        /// Use a seed value that will ensure replicated runs.
         /// </summary>
         /// <param name="seedVal">The seed value</param>
         public MyRandom(int seedVal)
+        {
+            initInstance(seedVal);
+        }
+
+        /// <summary>
+        /// Initialise the new instance of this object with the
+        /// required type of random numbers.
+        /// </summary>
+        /// <param name="seedVal"></param>
+        private void initInstance(int seedVal)
         {
             this.FRandomBuffer = new double[97];
             this.FSeed = 0;
@@ -394,6 +414,9 @@ namespace StdUnits
                 this.FSeed = Convert.ToUInt32(seedVal, CultureInfo.InvariantCulture);
             else
             {
+                // because System.Random is not serializable this.SysRandom can be null at this point.
+                if (this.SysRandom == null)
+                    initInstance(seedVal);
                 this.FSeed = Convert.ToUInt32(this.SysRandom.Next(), CultureInfo.InvariantCulture);
             }
             this.MyRandomize();
