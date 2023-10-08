@@ -74,7 +74,10 @@ namespace Models.Storage
         /// <summary>Wait for all records to be written.</summary>
         void WaitForIdle();
 
-        /// <summary>Stop all writing to database.</summary>
+        /// <summary>Immediately stop all writing to database.</summary>
+        void Cancel();
+
+        /// <summary>Finish writing to database.</summary>
         void Stop();
 
         /// <summary>
@@ -108,5 +111,12 @@ namespace Models.Storage
         /// <param name="names">A list of simulation names that are about to run.</param>
         /// <param name="wait">Wait for the clean operation to finish?</param>
         void Clean(IEnumerable<string> names, bool wait);
+
+        /// <summary>
+        /// Returns the number of entries in the command queue
+        /// </summary>
+        /// <returns></returns>
+
+        int CommandCount();
     }
 }

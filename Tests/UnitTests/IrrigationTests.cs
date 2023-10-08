@@ -1,17 +1,17 @@
-﻿namespace UnitTests
-{
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Soils;
+﻿using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Surface;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Soils;
 
+namespace UnitTests
+{
     public class IrrigationTests
     {
         [Test]
@@ -25,7 +25,7 @@
             events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -47,7 +47,7 @@
             events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[6] as Models.WaterModel.WaterBalance;
+            var soilWater = zone.Children[1].Children[7] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -110,6 +110,13 @@
                             },
                             new Solute
                             {
+                                Name = "NH4",
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                                InitialValues = new double[] { 23, 7, 2, 1, 1, 1 },
+                                InitialValuesUnits = Solute.UnitsEnum.kgha
+                            },
+                            new Solute
+                            {
                                 Name = "Urea",
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 InitialValues = new double[] { 0, 0, 0, 0, 0, 0 },
@@ -139,13 +146,16 @@
                             {
                                 Children = new List<IModel>()
                                 {
-                                    new MockNutrientPool() { Name = "Inert" },
-                                    new MockNutrientPool() { Name = "Microbial" },
-                                    new MockNutrientPool() { Name = "Humic" },
-                                    new MockNutrientPool() { Name = "FOMCellulose" },
-                                    new MockNutrientPool() { Name = "FOMCarbohydrate" },
-                                    new MockNutrientPool() { Name = "FOMLignin" },
-                                    new MockNutrientPool() { Name = "SurfaceResidue" }
+                                    new OrganicPool() { Name = "Inert" },
+                                    new OrganicPool() { Name = "Microbial" },
+                                    new OrganicPool() { Name = "Humic" },
+                                    new OrganicPool() { Name = "FOMCellulose" },
+                                    new OrganicPool() { Name = "FOMCarbohydrate" },
+                                    new OrganicPool() { Name = "FOMLignin" },
+                                    new OrganicPool() { Name = "SurfaceResidue" },
+                                    new NFlow() { Name = "Hydrolysis" },
+                                    new NFlow() { Name = "Denitrification" },
+                                    new NFlow() { Name = "Nitrification" },
                                 }
                             },
                             new MockSoilTemperature(),

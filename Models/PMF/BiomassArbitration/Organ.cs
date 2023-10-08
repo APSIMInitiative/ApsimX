@@ -277,7 +277,7 @@ namespace Models.PMF
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
                 ClearBiomassFlows();
             totalDMDemand = TotalDMDemand.Value();
         }

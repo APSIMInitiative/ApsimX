@@ -1,8 +1,10 @@
-﻿using Gtk;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
+using ApsimNG.Classes;
+using Gtk;
 using TreeModel = Gtk.ITreeModel;
 
 
@@ -14,6 +16,8 @@ namespace UserInterface.Views
     {
         /// <summary>The main tree view control.</summary>
         private Gtk.TreeView tree;
+
+        private Button submitButton;
 
         /// <summary>The data table used to populate the tree view.</summary>
         private DataTable table;
@@ -41,6 +45,19 @@ namespace UserInterface.Views
         /// <summary>The sort type.</summary>
         private bool sortAscending;
 
+        /// <summary>
+        /// A reference to an editor view for drag and drop functionality.
+        /// </summary>
+        private EditorView editor;
+
+        /// <summary>Event handler for drag start event.</summary>
+        public event EventHandler DragStart;
+
+        /// <summary>Event handler for double-click event on TreeView. </summary>
+        public event EventHandler DoubleClicked;
+
+        public event EventHandler<ListViewArgs> TreeHover;
+
         /// <summary>Constructor</summary>
         public ListView()
         {
@@ -48,17 +65,102 @@ namespace UserInterface.Views
         }
 
         /// <summary>Constructor</summary>
-        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null) : base(owner)
+        public ListView(ViewBase owner, Gtk.TreeView treeView, Gtk.Menu menu = null, EditorView editor = null, Button submitButton = null) : base(owner)
         {
             tree = treeView;
+            tree.HasTooltip = true;
+            tree.QueryTooltip += OnTreeHover;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
             tree.ButtonPressEvent += OnTreeButtonDown;
+            tree.RowActivated += OnTreeDoubleClicked;
+            this.editor = editor;
+            TargetEntry[] target_table = new TargetEntry[] {
+               new TargetEntry("application/x-model-component", TargetFlags.App, 0)
+            };
+            Gdk.DragAction actions = Gdk.DragAction.Copy | Gdk.DragAction.Link | Gdk.DragAction.Move;
+            Drag.SourceSet(tree, Gdk.ModifierType.Button1Mask, target_table, actions);
+            // makes the destination for a drop and drop action.
+            if (editor != null)
+                Drag.DestSet(editor.GetSourceView(), 0, target_table, actions);
+            tree.DragBegin += OnTreeDragBegin;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
+            if (submitButton != null)
+            {
+                this.submitButton = submitButton;
+                submitButton.Pressed += SubmitButtonPressed;
+            }
+
+        }
+
+        private void SubmitButtonPressed(object sender, EventArgs e)
+        {
+            try
+            {
+                string target = "https://github.com/APSIMInitiative/ApsimX/issues/new?assignees=&labels=New+common+report+event%2Fvariable&projects=&template=new-common-report-event-variable.yml";
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = target,
+                    CreateNoWindow = true,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occured trying to open link to create new common report event/variable. {ex}");
+            }
+        }
+
+        private void OnTreeHover(object o, QueryTooltipArgs args)
+        {
+            if (tree.Model != null)
+            {
+                ListViewArgs newArgs = new ListViewArgs { QueryTooltipArgs = args };
+                tree.ConvertWidgetToTreeCoords(args.X, args.Y, out int tx, out int ty);
+                newArgs.NewX = tx; // TODO: need to store new coordinates for use in ShowTooltip method.
+                newArgs.NewY = ty;
+
+            
+                var pathpos = tree.GetPathAtPos(tx, ty, out TreePath path);
+
+                TreeModel model = tree.Model;
+                var modelIterator = model.GetIter(out TreeIter iter, path);
+                if (modelIterator)
+                {
+                    if (path.Indices[0] < 0)
+                        newArgs.ListViewRowIndex = 0;
+                    else newArgs.ListViewRowIndex = path.Indices[0];
+                }
+
+
+                if (TreeHover != null)
+                    TreeHover.Invoke(o, newArgs);
+            }
+        }
+
+        private void OnTreeDoubleClicked(object o, RowActivatedArgs args)
+        {
+            DoubleClicked.Invoke(o, args);
+        }
+
+        private void OnTreeDragBegin(object sender, DragBeginArgs args)
+        {
+            if (SelectedIndicies.Length > 0)
+            {
+                ReportDragObject dragObject = new()
+                {
+                    Index = SelectedIndicies[0],
+                    Description = table.Rows[SelectedIndicies[0]]["Description"].ToString(),
+                    Code = table.Rows[SelectedIndicies[0]]["Code"].ToString(),
+                    OtherArgs = args
+                };
+
+                DragStart.Invoke(sender, dragObject);
+            }
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
@@ -134,7 +236,7 @@ namespace UserInterface.Views
         {
             if (columnName == null)
                 columnTypes.Add(typeof(string));    // default is string
-            else 
+            else
                 columnTypes.Add(colType);
             var cell = new CellRendererText();
             cells.Add(cell);
@@ -146,8 +248,11 @@ namespace UserInterface.Views
                 Title = columnName,
                 Resizable = true,
                 SortColumnId = colIndex,
-                Sizing = TreeViewColumnSizing.GrowOnly
+                Sizing = TreeViewColumnSizing.GrowOnly,
+                Visible = true
             };
+            if (columnName == "Code")
+                newColumn.Visible = false;
             newColumn.PackStart(cell, false);
             newColumn.AddAttribute(cell, "text", columns.Count);
             newColumn.AddNotification("width", OnColumnWidthChange);
@@ -217,6 +322,25 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary> Sets text of tooltip with corresponding code string. </summary>
+        /// <param name="reportVariableCode">a string that is ReportVariable.Code</param>
+        /// <param name="args"></param>
+        public void ShowTooltip(string reportVariableCode, ListViewArgs args)
+        {
+            //tree.ConvertWidgetToTreeCoords(args.NewX, NewY, out int tx, out int ty);
+
+            if (tree.GetPathAtPos(args.NewX, args.NewY, out TreePath path))
+            {
+                TreeModel model = tree.Model;
+                if (model.GetIter(out TreeIter iter, path))
+                {
+                    args.QueryTooltipArgs.Tooltip.Text = reportVariableCode;
+                    // Tells the TreeView to show tooltip.
+                    args.QueryTooltipArgs.RetVal = true;
+                }
+            }
+        }
+
         /// <summary>The main widget has been destroyed.</summary>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
@@ -248,6 +372,7 @@ namespace UserInterface.Views
             // Populate with rows.
             foreach (DataRow row in table.Rows)
                 AddRow(row.ItemArray);
+
         }
 
         /// <summary>
@@ -434,6 +559,8 @@ namespace UserInterface.Views
                 return string.Compare(o1.ToString(), o2.ToString());
             return 0;
         }
+
+
     }
 
     /// <summary>An interface for a list view</summary>
@@ -441,6 +568,14 @@ namespace UserInterface.Views
     {
         /// <summary>Invoked when the user changes the selection</summary>
         event EventHandler Changed;
+
+        /// <summary> Invoked when a row in the ListView is dragged. </summary>
+        event EventHandler DragStart;
+
+        /// <summary> Invoked when a row in the ListView is double-clicked. </summary>
+        event EventHandler DoubleClicked;
+
+        event EventHandler<ListViewArgs> TreeHover;
 
         /// <summary>Get or sets the datasource for the view.</summary>
         DataTable DataSource { get; set; }

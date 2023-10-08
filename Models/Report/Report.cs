@@ -83,6 +83,8 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName { get; set; }
 
+
+
         /// <summary>
         /// Connect event handlers.
         /// </summary>

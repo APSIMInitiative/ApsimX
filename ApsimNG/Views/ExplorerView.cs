@@ -4,14 +4,14 @@
 // Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.
 // Link doesn't work, but it appears that move and link aren't working in the Windows.Forms implementation either.
 // Actually, Move "works" here but doesn't undo correctly
+using Gtk;
+using System;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    
+
+
     /// <summary>
     /// An ExplorerView is a "Windows Explorer" like control that displays a virtual tree control on the left
     /// and a user interface on the right allowing the user to modify properties of whatever they
@@ -20,7 +20,6 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private VBox rightHandView;
-        private HPaned hpaned1;
         private Gtk.TreeView treeviewWidget;
         private MarkdownView descriptionView;
 
@@ -30,8 +29,6 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
             mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
-
-            hpaned1 = (HPaned)builder.GetObject("hpaned1");
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
@@ -51,12 +48,8 @@ namespace UserInterface.Views
         /// <summary>The toolstrip at the top of the explorer view</summary>
         public IToolStripView ToolStrip { get; private set; }
 
-        /// <summary>The tree on the left side of the explorer view</summary>
-        public int DividerPosition
-        {
-            get { return hpaned1.Position; }
-            set { hpaned1.Position = value; }
-        }
+        /// <summary>Position of the divider between the tree and content</summary>
+        public int DividerPosition { get; set; }
 
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
@@ -150,7 +143,7 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-        
+
         /// <summary>
         /// Widget has been destroyed - clean up.
         /// </summary>

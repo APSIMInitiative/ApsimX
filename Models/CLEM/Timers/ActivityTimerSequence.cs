@@ -112,6 +112,7 @@ namespace Models.CLEM.Timers
             {
                 foreach (var seq in timerSequences)
                 {
+                    int seqIndex = index ?? 0;
                     string sequence = seq.Sequence;
                     if (reverseDirection)
                     {
@@ -119,11 +120,13 @@ namespace Models.CLEM.Timers
                         Array.Reverse(array);
                         sequence = new String(array);
                     }
-                    if (index > seq.Sequence.Length)
+                    if (seqIndex >= seq.Sequence.Length)
                     {
-                        sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(index ?? 0 / (double)seq.Sequence.Length))));
+                        // recalculate index
+                        seqIndex = seqIndex - Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
+                        //sequence = string.Concat(Enumerable.Repeat(sequence, Convert.ToInt32(Math.Ceiling(index ?? 0 / (double)seq.Sequence.Length))));
                     }
-                    if (sequence.Substring(index ?? 0, 1) == "0")
+                    if (sequence.Substring(seqIndex, 1) == "0")
                         return false;
                 }
                 return (index != null);

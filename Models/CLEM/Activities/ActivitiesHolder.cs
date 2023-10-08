@@ -42,33 +42,33 @@ namespace Models.CLEM.Activities
         public event EventHandler ActivityPerformed;
 
         /// <summary>
-        /// Shortfall occurred 
+        /// Method to raise the Shortfall occurred event handler.
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Event arguments.</param>
         protected virtual void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Details of the last activity performed
+        /// Holds the event arguments for the activity performed event
         /// </summary>
         [JsonIgnore]
         public ActivityPerformedEventArgs LastActivityPerformed { get; set; }
 
         /// <summary>
-        /// Shortfall occurred 
+        /// Shortfall occurred Event Handler
         /// </summary>
-        /// <param name="e"></param>
+        /// <param name="e">Default event args object for this event.</param>
         protected virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
         /// <summary>
-        /// Create a GuID string based on next unique ID
+        /// Create a GuID object based on next unique ID available.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>CLEM formated GuID object.</returns>
         public Guid NextGuID
         {
             get 
@@ -80,19 +80,17 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Provide next GUID based on level specified
+        /// Provide the next GUID based on level specified when using GUID for identifying nested activities.
         /// </summary>
-        /// <param name="guid">GuID to add to</param>
-        /// <param name="level">Level to add to</param>
-        /// <returns>New GuID</returns>
+        /// <param name="guid">GuID object which needs one level incremented by 1.</param>
+        /// <param name="level">Zero bound level index to be incremented (permits 1 to 3).</param>
+        /// <returns>New GuID object with updated level.</returns>
         public static Guid AddToGuID(Guid guid, int level)
         {
-            string guidString = guid.ToString();
             if (level > 0 & level <= 3)
             {
-                List<string> parts = guidString.Split('-').ToList();
-                int number = Convert.ToInt32(parts[level]);
-                number++;
+                string[] parts = guid.ToString().Split('-');
+                int number = Convert.ToInt32(parts[level]) + 1;
                 parts[level] = number.ToString().PadLeft(4, '0');
                 return Guid.Parse(string.Join('-', parts));
             }
@@ -101,7 +99,7 @@ namespace Models.CLEM.Activities
         }
 
 
-        /// <summary>An method to perform core actions when simulation commences</summary>
+        /// <summary>An method to perform core actions when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
@@ -111,7 +109,7 @@ namespace Models.CLEM.Activities
                 activity.UniqueID = NextGuID;
         }
 
-        /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
+        /// <summary>A method to allow all activities to perform actions at the end of the time step.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
@@ -120,7 +118,7 @@ namespace Models.CLEM.Activities
             ReportAllActivityStatus();
         }
 
-        /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
+        /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("FinalInitialise")]
@@ -153,9 +151,7 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
-            // save 
             LastActivityPerformed = e;
-            // call ActivityPerformedEventhandler
             OnActivityPerformed(e);
         }
 
@@ -165,19 +161,17 @@ namespace Models.CLEM.Activities
         /// <param name="e"></param>
         public void ReportActivityShortfall(ResourceRequestEventArgs e)
         {
-            // save 
             LastShortfallResourceRequest = e.Request;
-            // call ShortfallOccurredEventhandler
             OnShortfallOccurred(e);
         }
 
         #region validation
 
         /// <summary>
-        /// Validate model
+        /// Determines whether the specified object is valid.
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A collection that holds failed-validation information.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

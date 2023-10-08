@@ -10,10 +10,24 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantFemale : Ruminant
     {
-        /// <summary>
-        /// Sex of individual
-        /// </summary>
+        /// <inheritdoc/>
         public override Sex Sex { get { return Sex.Female; } }
+
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override bool Sterilised { get { return (IsWebbed || IsSpayed); } }
+
+        /// <summary>
+        /// Is the female webbed
+        /// </summary>
+        [FilterByProperty]
+        public bool IsWebbed { get { return Attributes.Exists("Webbed"); } }
+
+        /// <summary>
+        /// Is the female spayed
+        /// </summary>
+        [FilterByProperty]
+        public bool IsSpayed { get { return Attributes.Exists("Spayed"); } }
 
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
@@ -34,7 +48,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
+                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception && (!IsWebbed && !IsSpayed));
             }
         }
 

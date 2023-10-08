@@ -106,7 +106,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.identifier)

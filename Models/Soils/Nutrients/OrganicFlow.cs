@@ -1,10 +1,8 @@
-﻿using APSIM.Shared.Documentation;
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Models.Soils.Nutrients
@@ -15,15 +13,19 @@ namespace Models.Soils.Nutrients
     /// Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(NutrientPool))]
+    [ValidParent(ParentType = typeof(OrganicPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class CarbonFlow : Model
+    public class OrganicFlow : Model
     {
-        private INutrientPool[] destinations;
+        private IOrganicPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
         private double[] phosphorusFlowToDestination;
+        private double[] mineralisedN;
+        private double[] mineralisedP;
+        private double[] catm;
+
 
         [Link(Type = LinkType.Child, ByName = true)]
         private readonly IFunction rate = null;
@@ -40,14 +42,6 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true, IsOptional = true)]
         private readonly ISolute labileP = null;
 
-        /// <summary>Amount of N Mineralised (kg/ha)</summary>
-        public double[] MineralisedN { get; private set; }
-
-        /// <summary>Amount of P Mineralised (kg/ha)</summary>
-        public double[] MineralisedP { get; private set; }
-
-        /// <summary>Total carbon lost to the atmosphere (kg/ha)</summary>
-        public double[] Catm { get; private set; }
 
         /// <summary>Names of destination pools</summary>
         [Description("Names of destination pools (comma separated)")]
@@ -57,22 +51,33 @@ namespace Models.Soils.Nutrients
         [Description("Fractions of flow to each pool (comma separated)")]
         public double[] DestinationFraction { get; set; }
 
+
+        /// <summary>Amount of N Mineralised (kg/ha)</summary>
+        public IReadOnlyList<double> MineralisedN => mineralisedN;
+
+        /// <summary>Amount of P Mineralised (kg/ha)</summary>
+        public IReadOnlyList<double> MineralisedP => mineralisedP;
+
+        /// <summary>Total carbon lost to the atmosphere (kg/ha)</summary>
+        public IReadOnlyList<double> Catm => catm;
+
+
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="numberLayers">Number of layers.</param>
         public void Initialise(int numberLayers)
         {
-            destinations = new INutrientPool[DestinationNames.Length];
+            destinations = new IOrganicPool[DestinationNames.Length];
 
             for (int i = 0; i < DestinationNames.Length; i++)
             {
-                INutrientPool destination = FindInScope<INutrientPool>(DestinationNames[i]);
+                IOrganicPool destination = FindInScope<IOrganicPool>(DestinationNames[i]);
                 if (destination == null)
                     throw new Exception("Cannot find destination pool with name: " + DestinationNames[i]);
                 destinations[i] = destination;
             }
-            MineralisedN = new double[numberLayers];
-            MineralisedP = new double[numberLayers];
-            Catm = new double[numberLayers];
+            mineralisedN = new double[numberLayers];
+            mineralisedP = new double[numberLayers];
+            catm = new double[numberLayers];
             carbonFlowToDestination = new double[destinations.Length];
             nitrogenFlowToDestination = new double[destinations.Length];
             phosphorusFlowToDestination = new double[destinations.Length];
@@ -81,9 +86,9 @@ namespace Models.Soils.Nutrients
         /// <summary>Perform daily flow calculations.</summary>
         public void DoFlow()
         {
-            NutrientPool source = Parent as NutrientPool;
+            OrganicPool source = Parent as OrganicPool;
 
-            int numLayers = source.C.Length;
+            int numLayers = source.C.Count;
 
             double[] no3 = this.no3.kgha;
             double[] nh4 = this.nh4.kgha;
@@ -151,21 +156,18 @@ namespace Models.Soils.Nutrients
 
                 }
 
-                source.C[i] -= carbonFlowFromSource;
-                source.N[i] -= nitrogenFlowFromSource;
-                source.P[i] -= phosphorusFlowFromSource;
+                // Remove from source
+                source.Add(i, -carbonFlowFromSource, -nitrogenFlowFromSource, -phosphorusFlowFromSource);
 
-                Catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
+                catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
+
+                // Add to destination
                 for (int j = 0; j < numDestinations; j++)
-                {
-                    destinations[j].C[i] += carbonFlowToDestination[j];
-                    destinations[j].N[i] += nitrogenFlowToDestination[j];
-                    destinations[j].P[i] += phosphorusFlowToDestination[j];
-                }
+                    destinations[j].Add(i, carbonFlowToDestination[j], nitrogenFlowToDestination[j], phosphorusFlowToDestination[j]);
 
                 if (totalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {
-                    MineralisedN[i] = nitrogenFlowFromSource - totalNitrogenFlowToDestinations;
+                    mineralisedN[i] = nitrogenFlowFromSource - totalNitrogenFlowToDestinations;
                     nh4[i] += MineralisedN[i];
                 }
                 else
@@ -179,7 +181,7 @@ namespace Models.Soils.Nutrients
                     no3[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
 
-                    MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
+                    mineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
 
                     if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
                         throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
@@ -187,7 +189,7 @@ namespace Models.Soils.Nutrients
 
                 if (totalPhosphorusFlowToDestinations <= phosphorusFlowFromSource)
                 {
-                    MineralisedP[i] = phosphorusFlowFromSource - totalPhosphorusFlowToDestinations;
+                    mineralisedP[i] = phosphorusFlowFromSource - totalPhosphorusFlowToDestinations;
                     labileP[i] += MineralisedP[i];
                 }
                 else
@@ -196,7 +198,7 @@ namespace Models.Soils.Nutrients
                     double PImmobilisation = Math.Min(labileP[i], PDeficit);
                     labileP[i] -= PImmobilisation;
                     PDeficit -= PImmobilisation;
-                    MineralisedP[i] = -PImmobilisation;
+                    mineralisedP[i] = -PImmobilisation;
 
                     // ALERT
                     //if (MathUtilities.IsGreaterThan(PDeficit, 0.0))
