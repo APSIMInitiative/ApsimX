@@ -1,28 +1,17 @@
-// -----------------------------------------------------------------------
-// <copyright file="RotBubbleChartPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using UserInterface.EventArguments.DirectedGraph;
+using Models.Interfaces;
+using Models.Management;
+using UserInterface.Views;
+using UserInterface.Interfaces;
+using APSIM.Shared.Graphing;
 
 namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using Models;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Management;
-    using Views;
-    using Interfaces;
-    using APSIM.Shared.Graphing;
-
     /// <summary>
     /// Presenter for the rotation bubble chart component
     /// </summary>

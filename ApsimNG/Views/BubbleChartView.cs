@@ -1,20 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UserInterface.Interfaces;
+using UserInterface.EventArguments;
+using UserInterface.EventArguments.DirectedGraph;
+using APSIM.Interop.Visualisation;
+using Gtk;
+using Models.Management;
+using Utility;
+using APSIM.Shared.Graphing;
+using Node = APSIM.Shared.Graphing.Node;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using APSIM.Interop.Visualisation;
-    using Gtk;
-    using Models.Management;
-    using Models;
-    using Extensions;
-    using Utility;
-    using APSIM.Shared.Graphing;
-    using Node = APSIM.Shared.Graphing.Node;
-
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -664,6 +662,7 @@ namespace UserInterface.Views
                 // todo: set location to context menu location
                 var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
+                newNode.Location = GetPositionOfWidgetInGraph(sender as Widget);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }
             catch (Exception err)
@@ -842,6 +841,40 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Gets the location of the widget in regards to the graphview
+        /// </summary>
+        private System.Drawing.Point GetPositionOfWidgetInGraph(Widget widget)
+        {
+            System.Drawing.Point menuPos = GetPositionOfWidget(widget);
+            System.Drawing.Point graphPos = GetPositionOfWidget(graphView.MainWidget);
+            return new System.Drawing.Point(menuPos.X - graphPos.X, menuPos.Y - graphPos.Y);
+        }
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the widget.
+        /// </summary>
+        private System.Drawing.Point GetPositionOfWidget(Widget widget)
+        {
+            if (widget == null)
+                return new System.Drawing.Point(0, 0);
+
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = widget.Allocation;
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            widget.TranslateCoordinates(widget.Toplevel, location.X, location.Y, out int windowX, out int windowY);
+
+            Widget win = widget;
+            while (win.Parent != null)
+                win = win.Parent;
+
+            win.Window.GetOrigin(out int frameX, out int frameY);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY);
         }
     }
 }
