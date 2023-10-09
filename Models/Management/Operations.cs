@@ -102,7 +102,7 @@ namespace Models
 
                     string dateString = match.Groups[1].Value;
                     operation.Date = DateUtilities.ValidateDateString(dateString);
-                    if (dateString == null)
+                    if (operation.Date == null)
                         return null;
 
                     if (match.Groups[2].Value.Length > 0)

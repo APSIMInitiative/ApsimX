@@ -348,7 +348,15 @@ namespace APSIM.Shared.Utilities
             if (parts.parseError)
                 return null;
 
-            DateTime date = GetDate(parts);
+            DateTime date;
+            try
+            {
+                date = GetDate(parts);
+            }
+            catch
+            {
+                return null;
+            }
 
             if (parts.yearWasMissing)
             {
