@@ -709,7 +709,7 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>Cover of standing dead and litter</summary>
+        /// <summary>Height of the pasture (mm)</summary>
         [Units("mm")]
         public double Height
         {
