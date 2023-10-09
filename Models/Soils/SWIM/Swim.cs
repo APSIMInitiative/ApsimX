@@ -838,7 +838,7 @@ namespace Models.Soils
             //   summary file.
 
             //+  Constant Values
-            const int num_psio = 8;
+            const int num_psio = 13;
 
             double[,] tho = new double[n + 1, num_psio];
             double[,] hklo = new double[n + 1, num_psio];
@@ -847,7 +847,7 @@ namespace Models.Soils
             double hklgd;
 
             //+  Initial Data Values
-            double[] psio = new double[num_psio] { -0.01, -10.0, -25.0, -100.0, -1000.0, -15000.0, -1.0e6, -1.0e7 };
+            double[] psio = new double[num_psio] { -0.01, -1, -10.0, -25.0, -100.0, -330.0, -1000.0, -3000.0, -15000.0, -1.0e5, -5.0e5, -1.0e6, -6.0e6 };
 
             summary.WriteMessage(this, "APSIM Soil Profile", MessageType.Diagnostic);
 
@@ -877,30 +877,30 @@ namespace Models.Soils
                 }
             }
 
-            summary.WriteMessage(this, "Soil Moisture Characteristics", MessageType.Diagnostic);
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "Soil Moisture Characteristics (volumetric water content)", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
-            summary.WriteMessage(this, "    x       0      10      25    100   1000  15000   10^6   10^7", MessageType.Diagnostic);
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0       1      10      25    100    330   1000   3000  15000  1.0e5  5.0e5  1.0e6  6.0e6", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
-                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,6:F4} {2,6:F4} {3,6:F4} {4,6:F4} {5,6:F4} {6,6:F4} {7,6:F4} {8,6:F4}",
-                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7]), MessageType.Diagnostic);
+                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,6:F4} {2,6:F4} {3,6:F4} {4,6:F4} {5,6:F4} {6,6:F4} {7,6:F4} {8,6:F4} {9,6:F4} {10,6:F4} {11,6:F4} {12,6:F4} {13,6:F4}",
+                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7], tho[j, 8], tho[j, 9], tho[j, 10], tho[j, 11], tho[j, 12]), MessageType.Diagnostic);
             }
 
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "Soil Hydraulic Conductivity", MessageType.Diagnostic);
-            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
-            summary.WriteMessage(this, "    x       0        10       25       100     1000    15000     10^6", MessageType.Diagnostic);
-            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0       1      10      25    100    330   1000   3000  15000  1.0e5  5.0e5  1.0e6  6.0e6", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
-                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,8:G3} {2,8:G3} {3,8:G3} {4,8:G3} {5,8:G3} {6,8:G3} {7,8:G3}",
+                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,8:G3} {2,8:G3} {3,8:G3} {4,8:G3} {5,8:G3} {6,8:G3} {7,8:G3} {8,8:G3} {9,8:G3} {10,8:G3} {11,8:G3} {12,8:G3} {13,8:G3}",
                     x[j] * 10.0, hko[j, 0] * 24.0 * 10.0, hko[j, 1] * 24.0 * 10.0, hko[j, 2] * 24.0 * 10.0, hko[j, 3] * 24.0 * 10.0,
-                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0), MessageType.Diagnostic);
+                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0 , hko[j, 7] * 24.0 * 10.0 , hko[j, 8] * 24.0 * 10.0 , hko[j, 9] * 24.0 * 10.0 , hko[j, 10] * 24.0 * 10.0 , hko[j, 11] * 24.0 * 10.0, hko[j, 12] * 24.0 * 10.0), MessageType.Diagnostic);
             }
 
             summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);

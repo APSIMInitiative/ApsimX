@@ -32,6 +32,15 @@ namespace Models.PostSimulationTools
         [Link]
         private IDataStore dataStore = null;
 
+        /// <summary> First field name used for match.</summary>
+        private string fieldNameUsedForMatch = null;
+        /// <summary> Second field name used for match.</summary>
+        private string fieldName2UsedForMatch = null;
+        /// <summary> Third field name used for match.</summary>
+        private string fieldName3UsedForMatch = null;
+        /// <summary> Fourth field name used for match.</summary>
+        private string fieldName4UsedForMatch = null;
+
         /// <summary>Gets or sets the name of the predicted table.</summary>
         [Description("Predicted table")]
         [Display(Type = DisplayType.TableName)]
@@ -45,22 +54,58 @@ namespace Models.PostSimulationTools
         /// <summary>Gets or sets the field name used for match.</summary>
         [Description("Field name to use for matching predicted with observed data")]
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
-        public string FieldNameUsedForMatch { get; set; }
+        public string FieldNameUsedForMatch
+        {
+            get { return fieldNameUsedForMatch; }
+            set
+            {
+                if (value == "")
+                    fieldNameUsedForMatch = null;
+                else fieldNameUsedForMatch = value;
+            }
+        }
 
         /// <summary>Gets or sets the second field name used for match.</summary>
         [Description("Second field name to use for matching predicted with observed data (optional)")]
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
-        public string FieldName2UsedForMatch { get; set; }
+        public string FieldName2UsedForMatch
+        {
+            get { return fieldName2UsedForMatch; }
+            set
+            {
+                if (value == "")
+                    fieldName2UsedForMatch = null;
+                else fieldName2UsedForMatch = value;
+            }
+        }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Third field name to use for matching predicted with observed data (optional)")]
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
-        public string FieldName3UsedForMatch { get; set; }
+        public string FieldName3UsedForMatch
+        {
+            get { return fieldName3UsedForMatch; }
+            set
+            {
+                if (value == "")
+                    fieldName3UsedForMatch = null;
+                else fieldName3UsedForMatch = value;
+            }
+        }
 
         /// <summary>Gets or sets the third field name used for match.</summary>
         [Description("Fourth field name to use for matching predicted with observed data (optional)")]
         [Display(Type = DisplayType.DropDown, Values = nameof(CommonColumns))]
-        public string FieldName4UsedForMatch { get; set; }
+        public string FieldName4UsedForMatch
+        {
+            get { return fieldName4UsedForMatch; }
+            set
+            {
+                if (value == "")
+                    fieldName4UsedForMatch = null;
+                else fieldName4UsedForMatch = value;
+            }
+        }
 
         /// <summary>
         /// Normally, the only columns added to the PredictedObserved table are
@@ -293,7 +338,7 @@ namespace Models.PostSimulationTools
             if (!intersect.Contains("SimulationName"))
             {
                 int pos = intersect.IndexOf("SimulationID");
-                intersect.Insert(pos+1, "SimulationName");
+                intersect.Insert(pos + 1, "SimulationName");
             }
 
             if (!intersect.Contains("CheckpointName"))

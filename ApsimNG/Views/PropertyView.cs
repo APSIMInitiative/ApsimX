@@ -1,14 +1,14 @@
 namespace UserInterface.Views
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using APSIM.Shared.Utilities;
     using Classes;
     using EventArguments;
     using Gtk;
     using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using Utility;
 
     /// <summary>
@@ -71,7 +71,7 @@ namespace UserInterface.Views
         private bool isDisposed;
 
         /// <summary>Constructor.</summary>
-        public PropertyView() {  }
+        public PropertyView() { }
 
         /// <summary>
         /// Constructor.
@@ -236,7 +236,7 @@ namespace UserInterface.Views
                 propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
                 inputWidget.Hexpand = true;
 
-                startRow++; 
+                startRow++;
             }
 
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
@@ -290,7 +290,7 @@ namespace UserInterface.Views
                 case PropertyType.DropDown:
                     // Dropdown list - use a DropDownView (which wraps GtkComboBox).
                     DropDownView dropDown = new DropDownView(this);
-                    dropDown.Values = property.DropDownOptions;
+                    dropDown.Values = new string[1] { "" }.Concat(property.DropDownOptions).ToArray();
                     dropDown.SelectedValue = property.Value?.ToString();
                     dropDown.Changed += OnDropDownChanged;
                     component = dropDown.MainWidget;
@@ -298,7 +298,7 @@ namespace UserInterface.Views
                 case PropertyType.File:
                 case PropertyType.Files:
                 case PropertyType.Directory:
-                //case PropertyType.Directories:
+                    //case PropertyType.Directories:
                     // Add an Entry and a Button inside a VBox.
                     Entry fileNameInput = new Entry(property.Value?.ToString() ?? "");
                     fileNameInput.Name = property.ID.ToString();
@@ -313,7 +313,7 @@ namespace UserInterface.Views
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, true, false);
                     else if (property.DisplayMethod == PropertyType.Directory)
                         fileChooserButton.Clicked += (o, _) => ChooseFile(o as Widget, false, true);
-                    
+
                     Box container = new HBox();
                     container.PackStart(fileNameInput, true, true, 0);
                     container.PackStart(fileChooserButton, false, false, 0);
