@@ -2223,7 +2223,7 @@ namespace Models.GrazPlan
             // Some initialisation that will be on the user interface
             //
 
-            this.Species = "Phalaris";
+            this.Species = "Perennial Ryegrass";
             this.MaxRtDep = 650;
             this.Phenology = 1.0015;
             this.ExtinctCoeff = new double[] { 0.0, 0.0, 0.55 };
@@ -2688,11 +2688,11 @@ namespace Models.GrazPlan
                 for (int layer = 0; layer < FNoLayers; layer++)
                 {
                     FOMType fomData = new FOMType();
-                    fomData.amount = removed.FOM[layer][0].Weight + removed.FOM[layer][1].Weight + removed.FOM[layer][2].Weight;
-                    fomData.N = removed.FOM[layer][0].N + removed.FOM[layer][1].N + removed.FOM[layer][2].N;
+                    //fomData.amount = removed.FOM[layer][0].Weight + removed.FOM[layer][1].Weight + removed.FOM[layer][2].Weight;
+                    //fomData.N = removed.FOM[layer][0].N + removed.FOM[layer][1].N + removed.FOM[layer][2].N;
                     //fomData.C = fomData.amount * carbonFractionInDM;
-                    fomData.P = removed.FOM[layer][0].P + removed.FOM[layer][1].P + removed.FOM[layer][2].P;
-                    fomData.AshAlk = removed.FOM[layer][0].AshAlk + removed.FOM[layer][1].AshAlk + removed.FOM[layer][2].AshAlk; // ?
+                    //fomData.P = removed.FOM[layer][0].P + removed.FOM[layer][1].P + removed.FOM[layer][2].P;
+                    //fomData.AshAlk = removed.FOM[layer][0].AshAlk + removed.FOM[layer][1].AshAlk + removed.FOM[layer][2].AshAlk; // ?
 
                     FOMLayerLayerType layerData = new FOMLayerLayerType();
                     layerData.FOM = fomData;
