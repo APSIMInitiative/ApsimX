@@ -1,10 +1,12 @@
 ﻿
 using APSIM.Shared.Utilities;
 using CMPServices;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.AgPasture;
 using Models.Core;
+using Models.Grazplan;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Soils;
@@ -204,7 +206,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Name of the pasture species for which parameters are to be used
         /// </summary>
-        public string Species { get; set; }
+        [Description("Species")]
+        public string Species { get; set; } = "Perennial Ryegrass";
 
         /// <summary>
         /// Determines which of the plant nutrient submodels to activate.
@@ -231,7 +234,8 @@ namespace Models.GrazPlan
         /// The default value is calculated from soil bulk density and sand content
         /// mm
         /// </summary>
-        public double MaxRtDep { get; set; } = 1.0;
+        [Description("Maximum rooting depth (mm)")]
+        public double MaxRtDep { get; set; } = 650;
 
         /// <summary>
         /// Lagged daytime temperature.
@@ -251,7 +255,8 @@ namespace Models.GrazPlan
         /// (5-6) Spray-topped.
         /// (6.0) Winter-dormant perennials. See Help for more info.
         /// </summary>
-        public double Phenology { get; set; }
+        [Description("Value denoting the phenological stage of the species")]
+        public double Phenology { get; set; } = 1.0015;
 
         /// <summary>
         /// Current maximum length of the flowering period.
@@ -292,7 +297,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Apparent extinction coefficients of seedlings, established plants and senescing plants.
         /// </summary>
-        public double[] ExtinctCoeff { get; set; }
+        [Description("Apparent extinction coefficients of seedlings, established plants and senescing plants")]
+        public double[] ExtinctCoeff { get; set; } = new double[] { 0.0, 0.0, 0.55 };
 
         /*
         These rules apply when providing values for GreenInit[].herbage or DryInit[].herbage:
@@ -2219,61 +2225,69 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            // =========================================================
-            // Some initialisation that will be on the user interface
-            //
+            if (Children.Count == 0)
+                throw new Exception("There must be at least one child pasture cohort initialisation model");
 
-            this.Species = "Perennial Ryegrass";
-            this.MaxRtDep = 650;
-            this.Phenology = 1.0015;
-            this.ExtinctCoeff = new double[] { 0.0, 0.0, 0.55 };
+            foreach (var initCohort in Children)
+            {
+                if (initCohort is GreenCohortInitialise greenInit)
+                {
+                    GreenInit[] green = new GreenInit[1];
+                    green[0] = new GreenInit();
+                    green[0].root_wt = new double[greenInit.RootWeight.Length][];
+                    for (int i = 0; i < greenInit.RootWeight.Length; i++)
+                        green[0].root_wt[i] = new double[] { greenInit.RootWeight[i] };
+                    green[0].status = greenInit.Status;
+                    green[0].rt_dep = greenInit.RootDepth;
+                    green[0].herbage = new Herbage[2]; // leaf and stem
+                    green[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    green[0].herbage[0].dmd = greenInit.LeafDMD;
+                    green[0].herbage[0].weight = greenInit.LeafWeight;
+                    green[0].herbage[0].n_conc = greenInit.LeafNConc;
+                    green[0].herbage[0].spec_area = greenInit.LeafSpecificArea;
 
-            GreenInit[] green = new GreenInit[1];
-            green[0] = new GreenInit();
-            green[0].status = "established";
-            green[0].root_wt = new double[2][];
-            green[0].root_wt[0] = new double[] { 400 };
-            green[0].root_wt[1] = new double[] { 400 };
-            green[0].rt_dep = 650;
+                    green[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    green[0].herbage[1].dmd = greenInit.StemDMD;
+                    green[0].herbage[1].weight = greenInit.StemWeight;
+                    green[0].herbage[1].n_conc = greenInit.StemNConc;
+                    green[0].herbage[1].spec_area = greenInit.StemSpecificArea;
+                    this.Green = green;
+                }
+                else if (initCohort is DryCohortInitialise dryInit)
+                {
+                    DryInit[] dry = new DryInit[1];
+                    dry[0] = new DryInit();
+                    dry[0].status = dryInit.Status;
+                    dry[0].herbage = new Herbage[2]; // leaf and stem
+                    dry[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[0].herbage[0].dmd = dryInit.LeafDMD;
+                    dry[0].herbage[0].weight = dryInit.LeafWeight;
+                    dry[0].herbage[0].n_conc = dryInit.LeafNConc;
+                    dry[0].herbage[0].spec_area = dryInit.LeafSpecificArea;
 
-            green[0].herbage = new Herbage[2]; // leaf and stem
-            green[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-            green[0].herbage[0].dmd[0] = 0.825;
-            green[0].herbage[0].weight[0] = 800.0;
-            green[0].herbage[0].n_conc[0] = 0.01;
-            green[0].herbage[0].spec_area[0] = 430.0;
-
-            green[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-            green[0].herbage[1].dmd[0] = 0.825;
-            green[0].herbage[1].weight[0] = 800.0;
-            green[0].herbage[1].n_conc[0] = 0.01;
-            green[0].herbage[1].spec_area[0] = 10.0;
-
-            this.Green = green;
-
-            DryInit[] dry = new DryInit[1];
-            dry[0] = new DryInit();
-            dry[0].status = "litter";
-            dry[0].herbage = new Herbage[2];    // leaf and stem
-            dry[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-            dry[0].herbage[0].dmd[0] = 0.6;
-            dry[0].herbage[0].weight[0] = 500.0;
-            dry[0].herbage[0].n_conc[0] = 0.0;
-            dry[0].herbage[0].spec_area[0] = 430.0;
-
-            dry[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-            dry[0].herbage[1].dmd[0] = 0.35;
-            dry[0].herbage[1].weight[0] = 1500.0;
-            dry[0].herbage[1].n_conc[0] = 0.0;
-            dry[0].herbage[1].spec_area[0] = 80.0;
-            this.Dry = dry;
-
+                    dry[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[0].herbage[1].dmd = dryInit.StemDMD;
+                    dry[0].herbage[1].weight = dryInit.StemWeight;
+                    dry[0].herbage[1].n_conc = dryInit.StemNConc;
+                    dry[0].herbage[1].spec_area = dryInit.StemSpecificArea;
+                    this.Dry = dry;
+                }
+                else if (initCohort is SeedCohortInitialise seedInit)
+                {
+                    Seeds = new SeedInit();
+                    Seeds.hard_ripe = seedInit.HardRipe;
+                    Seeds.hard_unripe = seedInit.HardUnripe;
+                    Seeds.soft_ripe = seedInit.SoftRipe;
+                    Seeds.soft_unripe = seedInit.SoftUnripe;                  
+                }
+            }
 
             // =========================================================
 
             StartSimulation();
 
         }
+
 
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
