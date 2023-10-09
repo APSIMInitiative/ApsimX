@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 164,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -34,7 +34,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "1990-08-01T00:00:00",
-          "End": "1991-02-01T00:00:00",
+          "End": "1992-02-03T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
@@ -163,61 +163,71 @@
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-11-11",
-                  "Action": "[Irrigation].Apply(20); "
+                  "Action": "[Irrigation].Apply(20); ",
+                  "Line": "2009-11-11 [Irrigation].Apply(20); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-11-19",
-                  "Action": "[Irrigation].Apply(25); "
+                  "Action": "[Irrigation].Apply(25); ",
+                  "Line": "2009-11-19 [Irrigation].Apply(25); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-11-26",
-                  "Action": "[Irrigation].Apply(25); "
+                  "Action": "[Irrigation].Apply(25); ",
+                  "Line": "2009-11-26 [Irrigation].Apply(25); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-12-11",
-                  "Action": "[Irrigation].Apply(20); "
+                  "Action": "[Irrigation].Apply(20); ",
+                  "Line": "2009-12-11 [Irrigation].Apply(20); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-12-21",
-                  "Action": "[Irrigation].Apply(35); "
+                  "Action": "[Irrigation].Apply(35); ",
+                  "Line": "2009-12-21 [Irrigation].Apply(35); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-12-29",
-                  "Action": "[Irrigation].Apply(40); "
+                  "Action": "[Irrigation].Apply(40); ",
+                  "Line": "2009-12-29 [Irrigation].Apply(40); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2010-01-05",
-                  "Action": "[Irrigation].Apply(35); "
+                  "Action": "[Irrigation].Apply(35); ",
+                  "Line": "2010-01-05 [Irrigation].Apply(35); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2010-01-13",
-                  "Action": "[Irrigation].Apply(30); "
+                  "Action": "[Irrigation].Apply(30); ",
+                  "Line": "2010-01-13 [Irrigation].Apply(30); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2010-03-02",
-                  "Action": "[Irrigation].Apply(40); "
+                  "Action": "[Irrigation].Apply(40); ",
+                  "Line": "2010-03-02 [Irrigation].Apply(40); "
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2010-03-03",
-                  "Action": "[Irrigation].Apply(40);"
+                  "Action": "[Irrigation].Apply(40);",
+                  "Line": "2010-03-03 [Irrigation].Apply(40);"
                 }
               ],
               "Name": "IrrigationEvents",
@@ -233,7 +243,8 @@
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2009-11-23",
-                  "Action": "[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);"
+                  "Action": "[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);",
+                  "Line": "2009-11-23 [Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);"
                 }
               ],
               "Name": "FertiliserEvents",
@@ -249,7 +260,8 @@
                   "$type": "Models.Operation, Models",
                   "Enabled": true,
                   "Date": "2010-02-23",
-                  "Action": "[Barley].Harvest();"
+                  "Action": "[Barley].Harvest();",
+                  "Line": "2010-02-23 [Barley].Harvest();"
                 }
               ],
               "Name": "Harvest",
@@ -494,6 +506,50 @@
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "PhalarisSoil",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.15,
+                        0.14,
+                        0.08,
+                        0.12,
+                        0.12,
+                        0.12,
+                        0.12,
+                        0.12,
+                        0.12
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.08,
+                        0.04,
+                        0.01,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "Perennial RyegrassSoil",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -763,23 +819,15 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Plant, Models",
-              "Name": "Barley",
-              "ResourceName": "Barley",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
               "SurfOM": [],
               "Canopies": [],
-              "InitialResidueName": "Barley_stubble",
+              "InitialResidueName": "",
               "InitialResidueType": "Barley",
-              "InitialResidueMass": 1500.0,
+              "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
-              "InitialCNR": 80.0,
+              "InitialCNR": 0.0,
               "Name": "Surface Organic Matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
