@@ -358,6 +358,61 @@ namespace Models.GrazPlan
         /// </summary>
         public double[] seed = new double[GrazType.RIPE];
     }
+
+    /// <summary>
+    /// Store the litter that is being removed to SOM
+    /// </summary>
+    [Serializable]
+    public class BiomassRemoved
+    {
+        /// <summary>
+        /// Crop type
+        /// </summary>
+        public string CropType;
+
+        /// <summary>
+        /// Dry matter type
+        /// </summary>
+        public string[] DMType;
+
+        /// <summary>
+        /// kg/ha
+        /// </summary>
+        public double[] dltCropDM;
+
+        /// <summary>
+        /// kg/ha
+        /// </summary>
+        public double[] dltDM_N;
+
+        /// <summary>
+        /// kg/ha
+        /// </summary>
+        public double[] dltDM_P;
+
+        /// <summary>
+        /// 0-1
+        /// </summary>
+        public double[] FractionToResidue;
+
+        public BiomassRemoved(int elements)
+        {
+            DMType = new string[elements];
+            dltCropDM = new double[elements];
+            dltDM_N = new double[elements];
+            dltDM_P = new double[elements];
+            FractionToResidue = new double[elements];
+        }
+    }
+
+    [Serializable]
+    public class PastureFOMType
+    {
+        public string[] FOMTypes;
+        public double[] Layers; //mm
+        public OrganicMatter[][] FOM; // [layer][root,leaf,stem]
+    }
+
 #pragma warning restore CS1591
 }
 

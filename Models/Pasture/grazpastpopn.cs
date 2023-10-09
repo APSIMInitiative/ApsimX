@@ -4133,7 +4133,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Light interception for a monoculture (Used if the MicroClimate calcs fail)
         /// </summary>
         public void SetMonocultureLight()
         {

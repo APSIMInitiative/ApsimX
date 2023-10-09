@@ -1,7 +1,12 @@
 ﻿
 using APSIM.Shared.Utilities;
+using CMPServices;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Models.AgPasture;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
@@ -35,8 +40,6 @@ namespace Models.GrazPlan
         /// <summary>Layer thicknesses</summary>
         protected double[] FInputProfile = null;        // [1..
 
-        /// <summary>Layer values temporary array</summary>
-        protected double[] FLayerValues;                // [1..
 
         // <summary></summary>
         //protected double[] FSoilValues = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers] SURFACE = 0
@@ -142,10 +145,10 @@ namespace Models.GrazPlan
         /// <summary>Soil-plant parameterisation.</summary>
         private Models.Soils.SoilCrop soilCropData;
 
-        /* TODO: use this for the end of day event
+
         /// <summary>The surface organic matter model.</summary>
         [Link]
-        private SurfaceOrganicMatter surfaceOrganicMatter = null; */
+        private SurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to the zone this pasture species resides in.</summary>
         [Link]
@@ -421,6 +424,28 @@ namespace Models.GrazPlan
 
             }
         }
+        #endregion
+
+        #region Child organs
+
+        // Plant parts and state
+        /*
+        /// <summary>Holds info about state of leaves (DM and N).</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public PastureAboveGroundOrgan Leaf { get; set; } = null;
+
+        /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public PastureAboveGroundOrgan Stem { get; set; } = null;
+
+        /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
+        [Link(Type = LinkType.Child)]
+        internal List<PastureBelowGroundOrgan> roots = null;
+
+        /// <summary>Above ground organs.</summary>
+        [Link(Type = LinkType.Child)]
+        public List<PastureAboveGroundOrgan> AboveGroundOrgans { get; private set; }
+        */
         #endregion
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
@@ -1602,6 +1627,15 @@ namespace Models.GrazPlan
             }
         }
 
+        private void DMPool2Value(DM_Pool Pool, ref OrganicMatter aValue)
+        {
+            aValue.Weight = Pool.DM;                    // kg / ha
+            aValue.N = Pool.Nu[(int)TPlantElement.N];   // kg / ha
+            aValue.P = Pool.Nu[(int)TPlantElement.P];   // kg / ha
+            aValue.S = Pool.Nu[(int)TPlantElement.S];   // kg / ha
+            aValue.AshAlk = Pool.AshAlk;                // mol / ha
+        }
+
         private double[] LayerArray2Value(double[] fLayers, int iNoLayers)
         {
             double[] result = new double[iNoLayers];
@@ -2590,24 +2624,130 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Publish biomass values = 9900
-        /// Obtains and computes removal of herbage by livestock. Obtains and adds residue inputs from other plant models. Updates remaining state variables
+        /// Adds residue inputs from other models. Updates remaining state variables
         /// </summary>
         private void EndStep()
         {
             PastureModel.UpdateState();
 
-            // TODO: finish this
-            // Publish an "add_fom" event
+            // soil residue destination
+            BiomassToFOM(); // evtADD_FOM
 
-            /*publParams = eventParams(evtADD_FOM);
-            if (makeFOMValue(ref publParams))
-                sendPublishEvent(evtADD_FOM, false);*/
+            BiomassRemoved removed = TransferLitter();  // evtBIOMASS_OUT
+            if (removed != null && surfaceOrganicMatter != null)
+            {
+                // leaf and stem
+                for (int part = 0; part <= 1; part++)
+                {
+                    surfaceOrganicMatter.Add(removed.dltCropDM[part], removed.dltDM_N[part], removed.dltDM_P[part], /*removed.DMType[part]*/"pasture", removed.CropType);
+                }
+            }
+        }
 
+        /// <summary>
+        /// Transfer the residues to the soil
+        /// </summary>
+        private void BiomassToFOM()
+        {
+            string[] sFOMTypes = { "", "pasture_root", "pasture_leaf", "pasture_stem" };
 
-            /*publParams = eventParams(evtBIOMASS_OUT);
-            if (transferLitterToValue(ref publParams))
-                sendPublishEvent(evtBIOMASS_OUT, false);*/
+            PastureFOMType removed = new PastureFOMType();
+            removed.FOMTypes = new string[3];
+            for (int Idx = 1; Idx <= 3; Idx++)
+                removed.FOMTypes[Idx-1] = sFOMTypes[Idx];
 
+            removed.Layers = new double[FNoLayers];
+            for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
+                removed.Layers[Ldx-1] = FLayerProfile[Ldx]; // [1..
+
+            removed.FOM = new OrganicMatter[FNoLayers][];
+            removed.FOM[0] = new OrganicMatter[3];          // surface
+            for (int i = 0; i < 3; i++)
+                removed.FOM[0][i] = new OrganicMatter();
+            for (int Ldx = 2; Ldx <= FNoLayers; Ldx++)
+            {
+                removed.FOM[Ldx - 1] = new OrganicMatter[1];
+                removed.FOM[Ldx-1][0] = new OrganicMatter();
+            }
+
+            if (PastureModel != null)
+            {
+                string sPrevUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+                for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)                                                 // Root residues
+                {
+                    DMPool2Value(PastureModel.GetResidueFlux(ptROOT, Ldx), ref removed.FOM[Ldx - 1][0]);
+                }
+                DMPool2Value(PastureModel.GetResidueFlux(ptLEAF), ref removed.FOM[0][1]);       // Surface residues all go into the first soil layer
+                DMPool2Value(PastureModel.GetResidueFlux(ptSTEM), ref removed.FOM[0][2]);
+
+                PastureModel.MassUnit = sPrevUnit;
+
+                // Fill a FOMLayerType and do the Incorp
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[FNoLayers];
+                for (int layer = 0; layer < FNoLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = removed.FOM[layer][0].Weight + removed.FOM[layer][1].Weight + removed.FOM[layer][2].Weight;
+                    fomData.N = removed.FOM[layer][0].N + removed.FOM[layer][1].N + removed.FOM[layer][2].N;
+                    //fomData.C = fomData.amount * carbonFractionInDM;
+                    fomData.P = removed.FOM[layer][0].P + removed.FOM[layer][1].P + removed.FOM[layer][2].P;
+                    fomData.AshAlk = removed.FOM[layer][0].AshAlk + removed.FOM[layer][1].AshAlk + removed.FOM[layer][2].AshAlk; // ?
+
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0;        // not used here
+                    layerData.LabileP = 0.0;    // not used here
+
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = this.Species;
+                FOMData.Layer = FOMdataLayer;
+                nutrient.DoIncorpFOM(FOMData);
+            }
+        }
+
+        /// <summary>
+        /// Get the litter dry matter that is going to SOM
+        /// </summary>
+        /// <returns></returns>
+        private BiomassRemoved TransferLitter()
+        {
+            string[] sPartName = { "", "leaf", "stem" };
+
+            BiomassRemoved removed = null;
+            if (PastureModel != null)
+            {
+                if ((PastureModel.GetHerbageMass(stLITT1, TOTAL, TOTAL) + PastureModel.GetHerbageMass(stLITT2, TOTAL, TOTAL)) > 0.0)
+                {
+                    string sPrevUnit = PastureModel.MassUnit;
+                    PastureModel.MassUnit = "kg/ha";
+
+                    removed = new BiomassRemoved(2); // leaf and stem
+                    removed.CropType = this.Species;
+
+                    for (int iPart = ptLEAF; iPart <= ptSTEM; iPart++)
+                    {
+                        removed.DMType[iPart - 1] = sPartName[iPart];
+                        removed.dltCropDM[iPart - 1] = PastureModel.GetHerbageMass(stLITT1, iPart, TOTAL) + PastureModel.GetHerbageMass(stLITT2, iPart, TOTAL);
+                        removed.dltDM_N[iPart - 1] = PastureModel.GetHerbageNutr(stLITT1, iPart, TOTAL, TPlantElement.N) + PastureModel.GetHerbageNutr(stLITT2, iPart, TOTAL, TPlantElement.N);
+                        removed.dltDM_P[iPart - 1] = PastureModel.GetHerbageNutr(stLITT1, iPart, TOTAL, TPlantElement.P) + PastureModel.GetHerbageNutr(stLITT2, iPart, TOTAL, TPlantElement.P);
+                        removed.FractionToResidue[iPart - 1] = 1.0;
+
+                        for (int Idx = 1; Idx <= HerbClassNo; Idx++)
+                        {
+                            PastureModel.SetHerbageMass(stLITT1, iPart, Idx, 0.0);
+                            PastureModel.SetHerbageMass(stLITT2, iPart, Idx, 0.0);
+                        }
+                    }
+
+                    PastureModel.MassUnit = sPrevUnit;
+                }
+            }
+
+            return removed;
         }
 
         /// <summary>
@@ -2838,7 +2978,7 @@ namespace Models.GrazPlan
         {
             int Ldx;
             SoilLayer soilLayer;
-            FLayerValues = new double[layers.Length + 1];
+            double[] FLayerValues = new double[layers.Length + 1]; //[1..
 
             if (FInputProfile == null)
                 FInputProfile = new double[layers.Length + 1];
