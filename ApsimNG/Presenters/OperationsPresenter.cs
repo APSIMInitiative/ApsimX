@@ -121,7 +121,7 @@ namespace UserInterface.Presenters
                         }
                         else
                         {
-                            operations.Add(new Operation(true, null, null, lineTrimmed));
+                            operations.Add(new Operation(false, null, null, lineTrimmed));
                             explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
                         }
                     }

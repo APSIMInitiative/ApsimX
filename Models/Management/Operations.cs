@@ -77,26 +77,36 @@ namespace Models
                 if (line.Length == 0)
                     return null;
 
-                Regex parser = new Regex(@"^(\/?\/?)\s*(\S*)\s+(.+)$");
-                Match match = parser.Match(line.Trim());
+                string lineTrimmed = line.Trim();
 
+                Regex parser = new Regex(@"\s*(\S*)\s+(.+)$");
+                Regex commentParser = new Regex(@"^(\/\/)");
+
+                Match match = commentParser.Match(lineTrimmed);
                 if (match.Success)
                 {
                     Operation operation = new Operation();
                     operation.Line = line;
+                    operation.Enabled = false;
+                    operation.Date = null;
+                    operation.Action = null;
+                    return operation;
+                }
 
-                    if (match.Groups[1].Value.CompareTo("//") == 0)
-                        operation.Enabled = false;
-                    else
-                        operation.Enabled = true;
+                match = parser.Match(lineTrimmed);
+                if (match.Success)
+                {
+                    Operation operation = new Operation();
+                    operation.Line = line;
+                    operation.Enabled = true;
 
-                    string dateString = match.Groups[2].Value;
+                    string dateString = match.Groups[1].Value;
                     operation.Date = DateUtilities.ValidateDateString(dateString);
-                    if (operation.Date == null)
+                    if (dateString == null)
                         return null;
 
-                    if (match.Groups[3].Value.Length > 0)
-                        operation.Action = match.Groups[3].Value;
+                    if (match.Groups[2].Value.Length > 0)
+                        operation.Action = match.Groups[2].Value;
                     else
                         return null;
 
