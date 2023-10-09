@@ -3458,7 +3458,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="propnHerbage">Proportion of herbage to be killed</param>
         /// <param name="propnSeed">Proportion of seeds to be killed</param>
-        public void Kill(double propnHerbage, double propnSeed)
+        public void Kill(double propnHerbage = 1, double propnSeed = 1)
         {
             PastureModel.Kill(propnHerbage, propnSeed);
         }
