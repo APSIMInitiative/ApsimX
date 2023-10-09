@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
         public double NitrogenContent { get; set; }
 
         /// <inheritdoc/>
-        public double RumenDegradableProtein { get; set; }
+        public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
         public double ADIP { get; set; }
@@ -57,7 +57,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Calculate Crude Protein from nitrogen content and amount
         /// </summary>
@@ -66,6 +65,28 @@ namespace Models.CLEM.Resources
             get
             {
                 return NitrogenContent * NitrogenToCrudeProteinFactor * Amount;
+            }
+        }
+
+        /// <summary>
+        /// Calculate Crude Protein percentage from nitrogen content
+        /// </summary>
+        public double CrudeProteinContent
+        {
+            get
+            {
+                return NitrogenContent * NitrogenToCrudeProteinFactor;
+            }
+        }
+
+        /// <summary>
+        /// Calculate Undegradable Crude Protein content
+        /// </summary>
+        public double UndegradableCrudeProteinContent
+        {
+            get
+            {
+                return CrudeProteinContent - RumenDegradableProteinContent;
             }
         }
 
@@ -79,7 +100,7 @@ namespace Models.CLEM.Resources
                 return TypeOfFeed switch
                 {
                     FeedType.Forage => CrudeProtein * Math.Min(0.84 * DryMatterDigestibility + 0.33, 1),
-                    FeedType.Concentrate => RumenDegradableProtein * Amount,
+                    FeedType.Concentrate => RumenDegradableProteinContent * Amount,
                     FeedType.Milk => 0,
                     _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),
                 };
@@ -96,6 +117,8 @@ namespace Models.CLEM.Resources
             NitrogenContent = 0;
             Amount = 0;
             EnergyContent = 0;
+            RumenDegradableProteinContent = 0;
+            ADIP = 0;
         }
 
         /// <summary>
@@ -112,7 +135,7 @@ namespace Models.CLEM.Resources
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent,
-                RumenDegradableProtein = RumenDegradableProtein,
+                RumenDegradableProteinContent = RumenDegradableProteinContent,
                 ADIP = ADIP,
                 NitrogenToCrudeProteinFactor = NitrogenToCrudeProteinFactor
             };

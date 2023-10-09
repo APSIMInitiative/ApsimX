@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
                 // ToDo: fill with correct values
                 TypeOfFeed = FeedType.Milk,
                 EnergyContent = 0,
-                RumenDegradableProtein = 0,
+                RumenDegradableProteinContent = 0,
                 FatContent = 0,
                 NitrogenToCrudeProteinFactor = 5.0,
                 NitrogenContent = 0
@@ -411,8 +411,9 @@ namespace Models.CLEM.Activities
         {
             // calculate maintenance energy
             // then determine the protein requirement of rumen bacteria
-            // adjujst intake proportionally and recalulate maintenance energy with adjusted intake energy
+            // adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
             int recalculate = 0;
+            (double reduction, double RDPReq) cp_out;
             do
             {
                 // SCA assumes Age is double and in years    MainCoeff 0.26     EmainExp 0.03 (age in years)    the eqn changes to age in days
@@ -426,17 +427,34 @@ namespace Models.CLEM.Activities
 
                 feedingLevel = (ind.EnergyFromIntake / ind.EnergyForMaintenance) - 1;
 
-                if (recalculate == 0)
-                {
-                    if(!ind.Intake.AdjustIntakeByRumenProteinRequired(CalculateCrudeProtein(ind, feedingLevel)))
-                        break;
-                }
+                cp_out = CalculateCrudeProtein(ind, feedingLevel);
+                if (cp_out.reduction < 1 & recalculate == 0)
+                    ind.Intake.AdjustIntakeByRumenProteinRequired(cp_out.reduction);
+                else
+                    break;
+
                 recalculate++;
             }
             while (recalculate < 2);
+
+            double dpls = CalculateDigestibleProteinLeavingStomach(ind, cp_out.RDPReq);
+
+
         }
 
-        private double CalculateCrudeProtein(Ruminant ind, double feedingLevel)
+        private static double CalculateDigestibleProteinLeavingStomach(Ruminant ind, double RDPRequired)
+        {
+            FoodResourceStore forage = ind.Intake.GetStore(FeedType.Forage);
+            FoodResourceStore concentrate = ind.Intake.GetStore(FeedType.Concentrate);
+            FoodResourceStore milk = ind.Intake.GetStore(FeedType.Milk);
+
+            // digestibility of undegradable protein for each feet type
+            double forageDUDP = Math.Max(0.05, Math.Min(5.5 * forage.Details.CrudeProteinContent - 0.178, 0.85));
+            double concentrateDUDP = 0.9 * (1 - ((concentrate.Details.ADIP / concentrate.Details.UndegradableCrudeProteinContent));
+
+            return forageDUDP * forage.UndegradableCrudeProtein + concentrateDUDP * concentrate.UndegradableCrudeProtein + (0.92 * milk.CrudeProtein) + (0.6 * RDPRequired);
+        }
+        private static (double reduction, double RDPReq) CalculateCrudeProtein(Ruminant ind, double feedingLevel)
         {
             // 1. calc RDP intake. Rumen Degradable Protein
 
@@ -450,11 +468,12 @@ namespace Models.CLEM.Activities
                 if (concentrate != null)
                     ind.Intake.ReduceDegradableProtein(FeedType.Concentrate, (1 - ind.BreedParams.RumenDegradabilityConcentrateSlope * feedingLevel)); // Eq.(50)
             }
+            
             double RDPIntake = forage?.DegradableCrudeProtein??0 + concentrate?.DegradableCrudeProtein??0; //Eq.(50)
 
             // 2. calc UDP intake by difference(CPI-RDPI)
 
-            double UDPIntake = ind.Intake.CrudeProtein - RDPIntake;
+            // double UDPIntake = ind.Intake.CrudeProtein - RDPIntake;
 
             // 3.calculate RDP requirement
 
@@ -467,9 +486,9 @@ namespace Models.CLEM.Activities
 
             if(RDPReq > RDPIntake)
             {
-                return (RDPIntake / RDPReq) * ind.BreedParams.RumenDegradableProteinShortfallScalar;
+                return ((RDPIntake / RDPReq) * ind.BreedParams.RumenDegradableProteinShortfallScalar, RDPReq);
             }
-            return 1;
+            return (1, RDPReq);
         }
 
         /// <summary>

@@ -42,7 +42,7 @@ namespace Models.CLEM.Interfaces
         /// Rumen Degradable Protein (g/g DM) (1-Rumen Undegradable Protein)
         /// </summary>
         [Description("Degradable protein content (g/g DM)")]
-        public double RumenDegradableProtein { get; set; }
+        public double RumenDegradableProteinContent { get; set; }
 
         /// <summary>
         /// Acid detergent insoluable protein

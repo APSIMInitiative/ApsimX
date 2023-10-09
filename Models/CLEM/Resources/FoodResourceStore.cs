@@ -39,10 +39,12 @@ namespace Models.CLEM.Resources
             Details.FatContent = ((Details.FatContent * Details.Amount) + (packet.FatContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.NitrogenContent = ((Details.NitrogenContent * Details.Amount) + (packet.NitrogenContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.EnergyContent = ((Details.EnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.ADIP = ((Details.ADIP * Details.Amount) + (packet.ADIP * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
 
             Details.Amount += packet.Amount;
 
-            CrudeProtein += packet.CrudeProtein;
+            CrudeProtein = Details.CrudeProtein;
             DegradableCrudeProtein += packet.DegradableProtein;
         }
 
@@ -52,8 +54,8 @@ namespace Models.CLEM.Resources
         /// <param name="factor">The reduction factor</param>
         public void ReduceDegradableProtein(double factor)
         {
-            CrudeProtein -= factor * DegradableCrudeProtein;
-            DegradableCrudeProtein *= factor;
+            DegradableCrudeProtein = factor * (DegradableCrudeProtein * Math.Min(0.84 * Details.DryMatterDigestibility + 0.33, 1.0));
+            CrudeProtein = Details.CrudeProtein;
         }
 
         /// <summary>
