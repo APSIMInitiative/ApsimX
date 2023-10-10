@@ -10,7 +10,22 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
-      "Children": [],
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "Validation\\ausfarm_test_ryegrass.xlsx"
+          ],
+          "SheetNames": [
+            "Sheet1"
+          ],
+          "Name": "ExcelInput",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -295,6 +310,14 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Chemical, Models",
+                  "Thickness": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    150.0,
+                    200.0,
+                    200.0
+                  ],
                   "PH": [
                     5.8,
                     5.9,
@@ -303,22 +326,14 @@
                     7.0,
                     7.1
                   ],
-                  "PHMetadata": null,
                   "PHUnits": 0,
                   "EC": null,
-                  "ECMetadata": null,
                   "ESP": null,
-                  "ESPMetadata": null,
                   "CEC": null,
-                  "Thickness": [
-                    100.0,
-                    100.0,
-                    100.0,
-                    150.0,
-                    200.0,
-                    200.0
-                  ],
+                  "ECMetadata": null,
                   "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "ResourceName": null,
                   "Children": [],
@@ -327,61 +342,6 @@
                 },
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "BD": [
-                    1.22,
-                    1.45,
-                    1.45,
-                    1.45,
-                    1.45,
-                    1.5
-                  ],
-                  "BDMetadata": null,
-                  "AirDry": [
-                    0.022,
-                    0.028,
-                    0.03,
-                    0.032,
-                    0.039,
-                    0.044
-                  ],
-                  "AirDryMetadata": null,
-                  "LL15": [
-                    0.1,
-                    0.13,
-                    0.14,
-                    0.15,
-                    0.19,
-                    0.22
-                  ],
-                  "LL15Metadata": null,
-                  "DUL": [
-                    0.17,
-                    0.19,
-                    0.2,
-                    0.23,
-                    0.27,
-                    0.29
-                  ],
-                  "DULMetadata": null,
-                  "SAT": [
-                    0.51,
-                    0.42,
-                    0.42,
-                    0.42,
-                    0.42,
-                    0.4
-                  ],
-                  "SATMetadata": null,
-                  "KS": null,
-                  "KSMetadata": null,
                   "Thickness": [
                     100.0,
                     100.0,
@@ -390,8 +350,63 @@
                     200.0,
                     200.0
                   ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
                   "Texture": null,
+                  "BD": [
+                    1.22,
+                    1.45,
+                    1.45,
+                    1.45,
+                    1.45,
+                    1.5
+                  ],
+                  "AirDry": [
+                    0.022,
+                    0.028,
+                    0.03,
+                    0.032,
+                    0.039,
+                    0.044
+                  ],
+                  "LL15": [
+                    0.1,
+                    0.13,
+                    0.14,
+                    0.15,
+                    0.19,
+                    0.22
+                  ],
+                  "DUL": [
+                    0.17,
+                    0.19,
+                    0.2,
+                    0.23,
+                    0.27,
+                    0.29
+                  ],
+                  "SAT": [
+                    0.51,
+                    0.42,
+                    0.42,
+                    0.42,
+                    0.42,
+                    0.4
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
                   "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "ResourceName": null,
                   "Children": [
@@ -405,7 +420,6 @@
                         0.19,
                         0.22
                       ],
-                      "LLMetadata": null,
                       "KL": [
                         0.06,
                         0.06,
@@ -414,7 +428,6 @@
                         0.06,
                         0.06
                       ],
-                      "KLMetadata": null,
                       "XF": [
                         1.0,
                         1.0,
@@ -423,6 +436,8 @@
                         1.0,
                         1.0
                       ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "Perennial RyegrassSoil",
                       "ResourceName": null,
@@ -578,213 +593,6 @@
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                  "DirectedGraphInfo": {
-                    "$type": "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared",
-                    "Nodes": [
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "Inert",
-                        "Location": "708, 382",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "FOMLignin",
-                        "Location": "479, 108",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "FOMCellulose",
-                        "Location": "706, 103",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "FOMCarbohydrate",
-                        "Location": "268, 103",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "Microbial",
-                        "Location": "217, 390",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "Humic",
-                        "Location": "449, 379",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "Urea",
-                        "Location": "709, 562",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "NO3",
-                        "Location": "219, 553",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "NH4",
-                        "Location": "456, 551",
-                        "Colour": "86, 180, 233",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "Atmosphere",
-                        "Location": "226, 750",
-                        "Colour": "245, 245, 220",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": true
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
-                        "Name": "SurfaceResidue",
-                        "Location": "65, 105",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "0, 0, 0",
-                        "Transparent": false
-                      }
-                    ],
-                    "Arcs": [
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Microbial",
-                        "Location": "259, 221",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMLignin",
-                        "DestinationName": "Humic",
-                        "Location": "412, 196",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Microbial",
-                        "Location": "395, 235",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMCellulose",
-                        "DestinationName": "Humic",
-                        "Location": "604, 282",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Microbial",
-                        "Location": "187, 227",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "FOMCarbohydrate",
-                        "DestinationName": "Humic",
-                        "Location": "329, 173",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Microbial",
-                        "Location": "340, 471",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "Microbial",
-                        "DestinationName": "Humic",
-                        "Location": "345, 400",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "Humic",
-                        "DestinationName": "Microbial",
-                        "Location": "334, 340",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "Urea",
-                        "DestinationName": "NH4",
-                        "Location": "578, 491",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "NO3",
-                        "DestinationName": "Atmosphere",
-                        "Location": "126, 634",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "NH4",
-                        "DestinationName": "NO3",
-                        "Location": "327, 466",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Microbial",
-                        "Location": "82, 264",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      },
-                      {
-                        "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-                        "SourceName": "SurfaceResidue",
-                        "DestinationName": "Humic",
-                        "Location": "201, 199",
-                        "Colour": "255, 0, 0",
-                        "Name": null
-                      }
-                    ]
-                  },
                   "Name": "Nutrient",
                   "ResourceName": "Nutrient",
                   "Children": [],
@@ -793,6 +601,14 @@
                 },
                 {
                   "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    150.0,
+                    200.0,
+                    200.0
+                  ],
                   "InitialValues": [
                     0.0,
                     0.0,
@@ -802,14 +618,6 @@
                     0.0
                   ],
                   "InitialValuesUnits": 0,
-                  "Thickness": [
-                    100.0,
-                    100.0,
-                    100.0,
-                    150.0,
-                    200.0,
-                    200.0
-                  ],
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
                   "Exco": null,
@@ -826,6 +634,14 @@
                 },
                 {
                   "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    150.0,
+                    200.0,
+                    200.0
+                  ],
                   "InitialValues": [
                     0.0,
                     0.0,
@@ -835,14 +651,6 @@
                     0.0
                   ],
                   "InitialValuesUnits": 0,
-                  "Thickness": [
-                    100.0,
-                    100.0,
-                    100.0,
-                    150.0,
-                    200.0,
-                    200.0
-                  ],
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
                   "Exco": null,
@@ -859,6 +667,14 @@
                 },
                 {
                   "$type": "Models.Soils.Solute, Models",
+                  "Thickness": [
+                    100.0,
+                    100.0,
+                    100.0,
+                    150.0,
+                    200.0,
+                    200.0
+                  ],
                   "InitialValues": [
                     30.0,
                     10.0,
@@ -868,14 +684,6 @@
                     1.5
                   ],
                   "InitialValuesUnits": 0,
-                  "Thickness": [
-                    100.0,
-                    100.0,
-                    100.0,
-                    150.0,
-                    200.0,
-                    200.0
-                  ],
                   "WaterTableConcentration": 0.0,
                   "D0": 0.0,
                   "Exco": null,
@@ -904,7 +712,6 @@
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 0.0,
-              "FractionFaecesAdded": 1.0,
               "Name": "Surface Organic Matter",
               "ResourceName": "SurfaceOrganicMatter",
               "Children": [],
@@ -921,200 +728,6 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
-              "Definitions": [
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "CalciteCA",
-                  "Description": "Ca as finely ground Agricultural Lime",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 1.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "CalciteFine",
-                  "Description": "finely ground Agricultural Lime",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.4
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "Dolomite",
-                  "Description": "finely ground dolomite",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.22
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NO3N",
-                  "Description": "N as nitrate",
-                  "FractionNO3": 1.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4N",
-                  "Description": "N as ammonium",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 1.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4NO3N",
-                  "Description": "ammonium nitrate",
-                  "FractionNO3": 0.5,
-                  "FractionNH4": 0.5,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "DAP",
-                  "Description": "di-ammonium phosphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.18,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "MAP",
-                  "Description": "mono-ammonium phosphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.11,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UAN_N",
-                  "Description": "N as Urea-AmmoniumNitrate",
-                  "FractionNO3": 0.25,
-                  "FractionNH4": 0.25,
-                  "FractionUrea": 0.5,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UreaN",
-                  "Description": "N as urea",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 1.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "UreaNO3",
-                  "Description": "N as urea",
-                  "FractionNO3": 0.5,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.5,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "Urea",
-                  "Description": "Urea fertiliser",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.46,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "NH4SO4N",
-                  "Description": "ammonium sulphate",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 1.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "RockP",
-                  "Description": "Rock phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.8,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 0.2,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "BandedP",
-                  "Description": "Banded phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 1.0,
-                  "FractionLabileP": 0.0,
-                  "FractionCa": 0.0
-                },
-                {
-                  "$type": "Models.FertiliserType, Models",
-                  "Name": "BroadcastP",
-                  "Description": "Broadcast phosphorus",
-                  "FractionNO3": 0.0,
-                  "FractionNH4": 0.0,
-                  "FractionUrea": 0.0,
-                  "FractionRockP": 0.0,
-                  "FractionBandedP": 0.0,
-                  "FractionLabileP": 1.0,
-                  "FractionCa": 0.0
-                }
-              ],
               "Name": "Fertiliser",
               "ResourceName": "Fertiliser",
               "Children": [],
@@ -1136,7 +749,8 @@
                 "[Pasture].LitterDM",
                 "[Pasture].WaterDemand",
                 "[Pasture].WaterDemandSupply",
-                "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha"
+                "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha",
+                "sum([Water].MM) as total_water"
               ],
               "EventNames": [
                 "[Clock].DoReport"
@@ -1239,7 +853,7 @@
                 },
                 {
                   "$type": "Models.Grazplan.DryCohortInitialise, Models",
-                  "Status": "litter",
+                  "Status": "established",
                   "LeafDMD": [
                     0.6
                   ],
@@ -1523,6 +1137,101 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "AvailDM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": 0.0,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Water",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "DailyReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "total_water",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Total",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 3,
+                  "LineThickness": 0,
+                  "TableName": "Sheet1",
+                  "XFieldName": "Date",
+                  "YFieldName": "avail_soil_water",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Total_obs",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
