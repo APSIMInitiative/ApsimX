@@ -3240,7 +3240,7 @@ namespace Models.GrazPlan
                     if (PastureModel.WaterDemand(iComp) > 0.0)
                     {
                         double[] fRootLD = PastureModel.EffRootLengthD(iComp);
-                        if (fRootLD[layer]>0)
+                        if (fRootLD[layer + 1] > 0)
                             rootsInLayer = true;
                     }
                 }
@@ -3250,7 +3250,7 @@ namespace Models.GrazPlan
                     mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]) * soilCropData.KL[layer];
                 else
                     mySoilWaterAvailable[layer] = 0;
-                    //mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer); */
+                //mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer); */
             }
         }
 
