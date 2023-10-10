@@ -2287,7 +2287,7 @@ namespace Models.GrazPlan
                     Seeds.hard_ripe = seedInit.HardRipe;
                     Seeds.hard_unripe = seedInit.HardUnripe;
                     Seeds.soft_ripe = seedInit.SoftRipe;
-                    Seeds.soft_unripe = seedInit.SoftUnripe;                  
+                    Seeds.soft_unripe = seedInit.SoftUnripe;
                 }
             }
 
@@ -2650,6 +2650,9 @@ namespace Models.GrazPlan
             }
         }
 
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        private const double carbonFractionInDM = 0.4;
+
         /// <summary>
         /// Transfer the residues to the soil
         /// </summary>
@@ -2670,8 +2673,10 @@ namespace Models.GrazPlan
             removed.FOM[0] = new OrganicMatter[3];          // surface
             for (int i = 0; i < 3; i++)
                 removed.FOM[0][i] = new OrganicMatter();
+
             for (int Ldx = 2; Ldx <= FNoLayers; Ldx++)
             {
+                // root layers
                 removed.FOM[Ldx - 1] = new OrganicMatter[1];
                 removed.FOM[Ldx-1][0] = new OrganicMatter();
             }
@@ -2691,14 +2696,16 @@ namespace Models.GrazPlan
 
                 // Fill a FOMLayerType and do the Incorp
                 FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[FNoLayers];
-                for (int layer = 0; layer < FNoLayers; layer++)
+
+                // root layers
+                for (int layer = 1; layer < FNoLayers; layer++)
                 {
                     FOMType fomData = new FOMType();
-                    //fomData.amount = removed.FOM[layer][0].Weight + removed.FOM[layer][1].Weight + removed.FOM[layer][2].Weight;
-                    //fomData.N = removed.FOM[layer][0].N + removed.FOM[layer][1].N + removed.FOM[layer][2].N;
-                    //fomData.C = fomData.amount * carbonFractionInDM;
-                    //fomData.P = removed.FOM[layer][0].P + removed.FOM[layer][1].P + removed.FOM[layer][2].P;
-                    //fomData.AshAlk = removed.FOM[layer][0].AshAlk + removed.FOM[layer][1].AshAlk + removed.FOM[layer][2].AshAlk; // ?
+                    fomData.amount = removed.FOM[layer][0].Weight;
+                    fomData.N = removed.FOM[layer][0].N;
+                    fomData.C = fomData.amount * carbonFractionInDM;
+                    fomData.P = removed.FOM[layer][0].P;
+                    fomData.AshAlk = removed.FOM[layer][0].AshAlk;
 
                     FOMLayerLayerType layerData = new FOMLayerLayerType();
                     layerData.FOM = fomData;
@@ -2707,6 +2714,21 @@ namespace Models.GrazPlan
 
                     FOMdataLayer[layer] = layerData;
                 }
+
+                // surface residues into first layer
+                FOMType fom0Data = new FOMType();
+                fom0Data.amount = removed.FOM[0][1].Weight + removed.FOM[0][2].Weight;
+                fom0Data.N = removed.FOM[0][1].N + removed.FOM[0][2].N;
+                fom0Data.C = fom0Data.amount * carbonFractionInDM;
+                fom0Data.P = removed.FOM[0][1].P + removed.FOM[0][2].P;
+                fom0Data.AshAlk = removed.FOM[0][1].AshAlk + removed.FOM[0][2].AshAlk; // ?
+
+                FOMLayerLayerType layer0Data = new FOMLayerLayerType();
+                layer0Data.FOM = fom0Data;
+                layer0Data.CNR = 0.0;        // not used here
+                layer0Data.LabileP = 0.0;    // not used here
+
+                FOMdataLayer[0] = layer0Data;
 
                 FOMLayerType FOMData = new FOMLayerType();
                 FOMData.Type = this.Species;
@@ -2976,7 +2998,7 @@ namespace Models.GrazPlan
                     double fRootPropn = PastureUtil.Div0(fCompRLD[Jdx], fTotalRLD[Jdx]);
                     FTranspiration[Idx][Jdx] = layerWater[Jdx - 1] * fRootPropn;
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -3223,7 +3245,7 @@ namespace Models.GrazPlan
                             rootsInLayer = true;
                     }
                 }
-            
+
 
                 if (rootsInLayer)
                     mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]) * soilCropData.KL[layer];
