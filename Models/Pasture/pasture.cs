@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Grazplan;
 using Models.Interfaces;
 using Models.PMF;
+using Models.PMF.Phen;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
@@ -137,6 +138,9 @@ namespace Models.GrazPlan
         /// <summary>Link to the soil physical properties.</summary>
         [Link]
         private IPhysical soilPhysical = null;
+
+        [Link]
+        private Water water = null;
 
         [Link]
         private Chemical soilChemical = null;
@@ -2553,14 +2557,10 @@ namespace Models.GrazPlan
         private void DoPastureWater()
         {
 
-            // Soil water content profile is obtained BEFORE soil water dynamics calculations are made.
-            Array.Copy(mySoilWaterUptakeAvail, 0, FInputs.Theta, 1, Layers.Length);  // use the uptake values calculated by the arbitrator
-            // TODO: Check that units are in mm/mm - units appear wrong somewhere
-            //for (int l = 1; l <= Layers.Length; l++)
-            //    FInputs.Theta[l] = FInputs.Theta[l] / Layers[l - 1];  // convert to mm/mm
-
             for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
             {
+                // Soil water content profile is obtained BEFORE soil water dynamics calculations are made.
+                FInputs.Theta[Ldx] = water.Volumetric[Ldx - 1];  // converting from 0-based to 1-based array
                 FInputs.ASW[Ldx] = (FInputs.Theta[Ldx] - F_LL15[Ldx]) / (F_DUL[Ldx] - F_LL15[Ldx]);
                 FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
                 FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
@@ -2574,7 +2574,7 @@ namespace Models.GrazPlan
             StoreSoilPropn();
 
             // if this is a monoculture then this can be used
-            PastureModel.ComputeWaterUptake();
+            //PastureModel.ComputeWaterUptake();
 
             setCohortWaterSupply(mySoilWaterUptakeAvail);   // set the water available for each cohort via FTranspiration
 
@@ -2972,13 +2972,19 @@ namespace Models.GrazPlan
         /// <param name="layerWater"></param>
         private void setCohortWaterSupply(double[] layerWater)
         {
+
+            double[] fTotalRLD = PastureModel.EffRootLengthD(sgGREEN);
+
             for (int Idx = stSEEDL; Idx <= stSENC; Idx++)
             {
-                for (int Jdx = 1; Jdx <= layerWater.Length; Jdx++)
-                    FTranspiration[Idx][Jdx] = layerWater[Jdx - 1];
-            }
+                double[] fCompRLD = PastureModel.EffRootLengthD(Idx);
 
-            return;
+                for (int Jdx = 1; Jdx <= layerWater.Length; Jdx++)
+                {
+                    double fRootPropn = PastureUtil.Div0(fCompRLD[Jdx], fTotalRLD[Jdx]);
+                    FTranspiration[Idx][Jdx] = layerWater[Jdx - 1] * fRootPropn;
+                }
+            }            
         }
 
         /// <summary>
@@ -3213,9 +3219,25 @@ namespace Models.GrazPlan
 
             for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
             {
+                bool rootsInLayer = false;
                 myTotalWater[layer] = Math.Max(0.0, myZone.Water[layer]);
-                mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]);
-                //mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer); */
+
+                for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                {
+                    if (PastureModel.WaterDemand(iComp) > 0.0)
+                    {
+                        double[] fRootLD = PastureModel.EffRootLengthD(iComp);
+                        if (fRootLD[layer]>0)
+                            rootsInLayer = true;
+                    }
+                }
+            
+
+                if (rootsInLayer)
+                    mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]) * soilCropData.KL[layer];
+                else
+                    mySoilWaterAvailable[layer] = 0;
+                    //mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer); */
             }
         }
 
