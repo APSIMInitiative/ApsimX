@@ -1132,19 +1132,31 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.PMF.Plant, Models",
+                      "Name": "Wheat",
+                      "ResourceName": "Wheat",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.GrazPlan.Pasture, Models",
-                      "Species": null,
+                      "Species": "Perennial RyeGrass",
                       "Nutrients": "N",
                       "Layers": null,
-                      "MaxRtDep": 1.0,
+                      "MaxRtDep": 650.0,
                       "LaggedDayT": -999.9,
-                      "Phenology": 0.0,
+                      "Phenology": 1.0015,
                       "FlowerLen": 0.0,
                       "FlowerTime": 0.0,
                       "SencIndex": 0.0,
                       "DormIndex": 0,
                       "DormT": -999.9,
-                      "ExtinctCoeff": null,
+                      "ExtinctCoeff": [
+                        0.0,
+                        0.0,
+                        0.55
+                      ],
                       "Green": null,
                       "Dry": null,
                       "Seeds": null,
@@ -1160,15 +1172,79 @@
                       "LAI": 0.0,
                       "Name": "Pasture",
                       "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Plant, Models",
-                      "Name": "Wheat",
-                      "ResourceName": "Wheat",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                          "RootWeight": [
+                            400.0,
+                            400.0
+                          ],
+                          "RootDepth": 650.0,
+                          "Status": "established",
+                          "LeafDMD": [
+                            0.825
+                          ],
+                          "LeafWeight": [
+                            800.0
+                          ],
+                          "LeafNConc": [
+                            0.01
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.825
+                          ],
+                          "StemWeight": [
+                            800.0
+                          ],
+                          "StemNConc": [
+                            0.01
+                          ],
+                          "StemSpecificArea": [
+                            10.0
+                          ],
+                          "Name": "GreenCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                          "Status": "Established",
+                          "LeafDMD": [
+                            0.6
+                          ],
+                          "LeafWeight": [
+                            500.0
+                          ],
+                          "LeafNConc": [
+                            0.0
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.35
+                          ],
+                          "StemWeight": [
+                            1500.0
+                          ],
+                          "StemNConc": [
+                            0.0
+                          ],
+                          "StemSpecificArea": [
+                            80.0
+                          ],
+                          "Name": "DryCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2318,18 +2394,22 @@
                     },
                     {
                       "$type": "Models.GrazPlan.Pasture, Models",
-                      "Species": null,
+                      "Species": "Perennial RyeGrass",
                       "Nutrients": "N",
                       "Layers": null,
-                      "MaxRtDep": 1.0,
+                      "MaxRtDep": 650.0,
                       "LaggedDayT": -999.9,
-                      "Phenology": 0.0,
+                      "Phenology": 1.0015,
                       "FlowerLen": 0.0,
                       "FlowerTime": 0.0,
                       "SencIndex": 0.0,
                       "DormIndex": 0,
                       "DormT": -999.9,
-                      "ExtinctCoeff": null,
+                      "ExtinctCoeff": [
+                        0.0,
+                        0.0,
+                        0.55
+                      ],
                       "Green": null,
                       "Dry": null,
                       "Seeds": null,
@@ -2345,7 +2425,79 @@
                       "LAI": 0.0,
                       "Name": "Pasture",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                          "RootWeight": [
+                            400.0,
+                            400.0
+                          ],
+                          "RootDepth": 650.0,
+                          "Status": "established",
+                          "LeafDMD": [
+                            0.825
+                          ],
+                          "LeafWeight": [
+                            800.0
+                          ],
+                          "LeafNConc": [
+                            0.01
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.825
+                          ],
+                          "StemWeight": [
+                            800.0
+                          ],
+                          "StemNConc": [
+                            0.01
+                          ],
+                          "StemSpecificArea": [
+                            10.0
+                          ],
+                          "Name": "GreenCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                          "Status": "Established",
+                          "LeafDMD": [
+                            0.6
+                          ],
+                          "LeafWeight": [
+                            500.0
+                          ],
+                          "LeafNConc": [
+                            0.0
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.35
+                          ],
+                          "StemWeight": [
+                            1500.0
+                          ],
+                          "StemNConc": [
+                            0.0
+                          ],
+                          "StemSpecificArea": [
+                            80.0
+                          ],
+                          "Name": "DryCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3350,18 +3502,22 @@
                     },
                     {
                       "$type": "Models.GrazPlan.Pasture, Models",
-                      "Species": null,
+                      "Species": "Perennial RyeGrass",
                       "Nutrients": "N",
                       "Layers": null,
-                      "MaxRtDep": 1.0,
+                      "MaxRtDep": 650.0,
                       "LaggedDayT": -999.9,
-                      "Phenology": 0.0,
+                      "Phenology": 1.0015,
                       "FlowerLen": 0.0,
                       "FlowerTime": 0.0,
                       "SencIndex": 0.0,
                       "DormIndex": 0,
                       "DormT": -999.9,
-                      "ExtinctCoeff": null,
+                      "ExtinctCoeff": [
+                        0.0,
+                        0.0,
+                        0.55
+                      ],
                       "Green": null,
                       "Dry": null,
                       "Seeds": null,
@@ -3377,7 +3533,79 @@
                       "LAI": 0.0,
                       "Name": "Pasture",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                          "RootWeight": [
+                            400.0,
+                            400.0
+                          ],
+                          "RootDepth": 650.0,
+                          "Status": "established",
+                          "LeafDMD": [
+                            0.825
+                          ],
+                          "LeafWeight": [
+                            800.0
+                          ],
+                          "LeafNConc": [
+                            0.01
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.825
+                          ],
+                          "StemWeight": [
+                            800.0
+                          ],
+                          "StemNConc": [
+                            0.01
+                          ],
+                          "StemSpecificArea": [
+                            10.0
+                          ],
+                          "Name": "GreenCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                          "Status": "Established",
+                          "LeafDMD": [
+                            0.6
+                          ],
+                          "LeafWeight": [
+                            500.0
+                          ],
+                          "LeafNConc": [
+                            0.0
+                          ],
+                          "LeafSpecificArea": [
+                            430.0
+                          ],
+                          "StemDMD": [
+                            0.35
+                          ],
+                          "StemWeight": [
+                            1500.0
+                          ],
+                          "StemNConc": [
+                            0.0
+                          ],
+                          "StemSpecificArea": [
+                            80.0
+                          ],
+                          "Name": "DryCohortInitialise",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
