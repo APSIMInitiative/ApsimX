@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/10 13:48:11</lastsaved>
+  <lastsaved>2023/10/11 08:49:15</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -1876,13 +1876,13 @@
 <!--[model]-->
 <!-- APSoil: Red Kandosol (Galong)  -->
 <soiltype>standard</soiltype>
-<oc>       1.30   0.60   0.40   0.30   0.30   0.22   0.19   0.17   0.15   0.12  </oc>
-<ph>       5.8    5.9    6.6    6.8    7.0    7.1    7.2    7.3    7.4    7.4   </ph>
-<fbiom>    0.04   0.02   0.02   0.01   0.01   0.01   0.01   0.01   0.01   0.01  </fbiom>
-<finert>   0.50   0.50   0.50   0.60   0.60   0.60   0.80   0.80   0.80   1.00  </finert>
-<ureappm>  0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0   </ureappm>
-<no3ppm>  30.0   10.0    4.0    2.0    1.5    1.5    1.5    1.5    1.5    0.5   </no3ppm>
-<nh4ppm>   0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0    0.0   </nh4ppm>
+<oc>       1.30   0.60   0.40   0.30   0.30   0.22     </oc>
+<ph>       5.8    5.9    6.6    6.8    7.0    7.1       </ph>
+<fbiom>    0.04   0.02   0.02   0.01   0.01   0.01    </fbiom>
+<finert>   0.50   0.50   0.50   0.60   0.60   0.60     </finert>
+<ureappm>  0.0    0.0    0.0    0.0    0.0    0.0       </ureappm>
+<no3ppm>  30.0   10.0    4.0    2.0    1.5    1.5       </no3ppm>
+<nh4ppm>   0.0    0.0    0.0    0.0    0.0    0.0     </nh4ppm>
 <root_cn>      80    </root_cn>
 <root_wt>    2000    </root_wt>
 <soil_cn>      14.5  </soil_cn>
@@ -1973,6 +1973,7 @@
 <cnr>   60.0    60.0     80.0      60.0</cnr>
 <standing_fraction>0.0 0.0 0.0 0.0</standing_fraction>
 </initdata>
+
         </component>
 
 
@@ -2298,7 +2299,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231010134541125.html</val>
+  <val>output_231011083413042.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>
