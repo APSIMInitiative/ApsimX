@@ -825,7 +825,6 @@ namespace Models.GrazPlan
                     PastureModel.MassUnit = sUnit;
                 }
 
-                myWaterDemand = result;
                 return result;
             }
             set
