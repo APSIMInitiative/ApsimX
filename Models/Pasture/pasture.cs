@@ -410,10 +410,6 @@ namespace Models.GrazPlan
             {
                 if (value != null)
                 {
-                    double fractionGreenCover;  // Estimated fraction of sward green cover that can be attributed to this species (0-1). TODO: this needs to be calculated when competing species are probed
-                    double swardGreenCover;     // Estimated green cover of all species combined, for computing photosynthesis (0-1).
-                    double LightExtinctionCoefficient = 0.5;
-
                     InterceptedRadn = 0.0;
                     myLightProfile = value;
                     foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
@@ -423,12 +419,8 @@ namespace Models.GrazPlan
 
                     // stuff required to calculate photosynthesis (using Ecomod approach?)
                     RadiationTopOfCanopy = locWtr.Radn;
-                    fractionGreenCover = 1.0;
-                    swardGreenCover = 0.0;
                     if (InterceptedRadn > 0.0)
                     {
-                        fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
-                        swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * LAI / fractionGreenCover);
 
                         // Get the canopy details for all cohorts of this population
                         // This must be done before the water demand is calculated (for the arbitrator)
