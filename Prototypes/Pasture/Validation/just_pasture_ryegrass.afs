@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/10/10 09:54:49</lastsaved>
+  <lastsaved>2023/10/10 13:48:11</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -267,9 +267,15 @@
               <val>define real padd_soil_layer[10]</val>
               <val>define real padd_soil_water[10]</val>
               <val>define real padd_soil_limit[10]</val>
+              <val>define real padd_nh4[10]</val>
+              <val>define real padd_no3[10]</val>
               <val></val>
               <val>define real avail_soil_water = 0.0             ! soil water level used to trigger irrigation</val>
               <val>define real surface_soil_water = 0.0</val>
+              <val></val>
+              <val>define real total_nh4 = 0.0</val>
+              <val>define real total_no3 = 0.0</val>
+              <val>define real total_n = 0.0</val>
               <val></val>
               <val>! ----------------------------------------------------------</val>
               <val>! check the soil moisture level in the paddock</val>
@@ -278,17 +284,25 @@
               <val>{</val>
               <val>   set padd_soil_layer = @('farm.pasture01.water.model.dlayer')  ! Calculate  soil water in the profile to a nominated depth</val>
               <val>   set padd_soil_water = @('farm.pasture01.water.model.sw_dep')</val>
+              <val>   set padd_nh4 = @('farm.pasture01.nitrogen.model.nh4')</val>
+              <val>   set padd_no3 = @('farm.pasture01.nitrogen.model.no3')</val>
               <val>   set padd_soil_limit = @('farm.pasture01.ryegrass.ll')</val>
               <val></val>
               <val></val>
               <val>   set surface_soil_water = padd_soil_layer[1] * max( 0.0, padd_soil_water[1] - padd_soil_limit[1] )</val>
               <val></val>
               <val>   set avail_soil_water = 0.0</val>
+              <val>   set total_nh4 = 0.0</val>
+              <val>   set total_no3 = 0.0</val>
+              <val>   set total_n = 0.0</val>
               <val>   set cumul_depth = 0.0</val>
               <val></val>
               <val>   for layer = 1 to length(padd_soil_layer)</val>
               <val>   {</val>
               <val>      set avail_soil_water = avail_soil_water + padd_soil_water[layer]</val>
+              <val>      set total_nh4 = total_nh4 + padd_nh4[layer]</val>
+              <val>      set total_no3 = total_no3 + padd_no3[layer]</val>
+              <val>      set total_n = total_nh4 + total_no3</val>
               <val>      set cumul_depth = cumul_depth + padd_soil_layer[layer]</val>
               <val>   }</val>
               <val>}</val>
@@ -853,6 +867,91 @@
                   <val></val>
                 </field>
               </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>total_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val></val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+                <field name="units" kind="string">
+                  <val>kg/ha</val>
+                </field>
+              </element>
             </init>
             <init name="summary_file" kind="string">
               <val></val>
@@ -1027,10 +1126,80 @@
               </element>
               <element>
                 <field name="varname" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_n</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>Manager.total_no3</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
                   <val>farm.pasture01.water.model.sw_dep</val>
                 </field>
                 <field name="alias" kind="string">
                   <val>farm.pasture01.water.model.sw_dep</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.nh4</val>
+                </field>
+                <field name="aggreg" kind="string">
+                  <val>none</val>
+                </field>
+                <field name="decplaces" kind="integer4">
+                  <val>2</val>
+                </field>
+              </element>
+              <element>
+                <field name="varname" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
+                </field>
+                <field name="alias" kind="string">
+                  <val>farm.pasture01.nitrogen.model.no3</val>
                 </field>
                 <field name="aggreg" kind="string">
                   <val>none</val>
@@ -1450,7 +1619,7 @@
               <val>Pasture_component_test</val>
             </init>
             <init name="fwsnam" kind="string">
-              <val>C:\Temp\just_pasture_ryegrass.afs</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass.afs</val>
             </init>
             <init name="runid" kind="integer4">
               <val>1</val>
@@ -1630,6 +1799,7 @@
 <klat></klat>
 <max_pond></max_pond>
 </initdata>
+
         </component>
 
 
@@ -1720,6 +1890,7 @@
 <enr_b_coeff>   0.2  </enr_b_coeff>
 <profile_reduction>off</profile_reduction>
 </initdata>
+
         </component>
 
 
@@ -1930,7 +2101,7 @@
                 <init name="dry" array="T">
                   <element>
                     <field name="status" kind="string">
-                      <val>litter</val>
+                      <val>dead</val>
                     </field>
                     <field name="herbage" array="T">
                       <element>
@@ -2127,13 +2298,14 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231010093923262.html</val>
+  <val>output_231010134541125.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>
  </init>
  <init name="sectionlist" kind="integer4" array="T">
   <val>1</val>
+  <val>6</val>
   <val>3</val>
   <val>4</val>
   <val>5</val>
@@ -3783,6 +3955,249 @@
      </field>
      <field name="colour" kind="string">
       <val>clOlive</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+   </field>
+   <field name="date_format" kind="string">
+    <val>d-m-yyyy</val>
+   </field>
+   <field name="pctiles" kind="double" array="T">
+   </field>
+   <field name="show_grid" kind="string">
+    <val>false</val>
+   </field>
+   <field name="start_date" kind="integer4">
+    <val>257</val>
+   </field>
+   <field name="finish_date" kind="integer4">
+    <val>3103</val>
+   </field>
+   <field name="height" kind="integer4">
+    <val>200</val>
+   </field>
+   <field name="width" kind="integer4">
+    <val>650</val>
+   </field>
+   <field name="valid_classes" kind="string" array="T">
+   </field>
+   <field name="start_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="finish_event">
+    <field name="event" kind="integer4">
+     <val>0</val>
+    </field>
+    <field name="offset" kind="integer4">
+     <val>0</val>
+    </field>
+   </field>
+   <field name="match_scale" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="summrow_usekey" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="tabledata_bycolumn" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="zero_yorigin" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="agg_caption" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="show_vgrid" kind="boolean">
+    <val>false</val>
+   </field>
+  </element>
+  <element>
+   <field name="id" kind="integer4">
+    <val>6</val>
+   </field>
+   <field name="name" kind="string">
+    <val>total_n</val>
+   </field>
+   <field name="descr" kind="string">
+    <val>NO3 and NH4</val>
+   </field>
+   <field name="title" kind="string">
+    <val>Total N</val>
+   </field>
+   <field name="parent_id" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="section_kind" kind="string">
+    <val>chart</val>
+   </field>
+   <field name="prov_index" kind="integer4">
+    <val>0</val>
+   </field>
+   <field name="prov_all" kind="boolean">
+    <val>false</val>
+   </field>
+   <field name="date_time" kind="boolean">
+    <val>true</val>
+   </field>
+   <field name="start" kind="string">
+    <val></val>
+   </field>
+   <field name="finish" kind="string">
+    <val></val>
+   </field>
+   <field name="transform" kind="string">
+    <val>simple</val>
+   </field>
+   <field name="interval" kind="string">
+    <val>days</val>
+   </field>
+   <field name="interval_count" kind="integer4">
+    <val>1</val>
+   </field>
+   <field name="text" kind="string">
+    <val></val>
+   </field>
+   <field name="variables" array="T">
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_n</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_n</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_n</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clNavy</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_nh4</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_nh4</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_nh4</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clSilver</val>
+     </field>
+     <field name="aggreg" kind="string">
+      <val>none</val>
+     </field>
+     <field name="units" kind="string">
+      <val></val>
+     </field>
+     <field name="decpl" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="expr" kind="string">
+      <val></val>
+     </field>
+     <field name="expr_vars" kind="string" array="T">
+     </field>
+     <field name="subfield" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="rightaxis" kind="boolean">
+      <val>false</val>
+     </field>
+    </element>
+    <element>
+     <field name="id" kind="integer4">
+      <val>0</val>
+     </field>
+     <field name="name" kind="string">
+      <val>Manager.total_no3</val>
+     </field>
+     <field name="title" kind="string">
+      <val>Manager.total_no3</val>
+     </field>
+     <field name="descr" kind="string">
+      <val>total_no3</val>
+     </field>
+     <field name="select" kind="boolean">
+      <val>true</val>
+     </field>
+     <field name="parent" kind="integer2">
+      <val>0</val>
+     </field>
+     <field name="series_style" kind="string">
+      <val>line</val>
+     </field>
+     <field name="colour" kind="string">
+      <val>clMoneyGreen</val>
      </field>
      <field name="aggreg" kind="string">
       <val>none</val>
