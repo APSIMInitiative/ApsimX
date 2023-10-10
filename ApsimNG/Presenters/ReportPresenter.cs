@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using ApsimNG.Classes;
+﻿using ApsimNG.Classes;
 using Gtk;
 using Models;
 using Models.Core;
@@ -13,6 +6,13 @@ using Models.Factorial;
 using Models.PMF;
 using Models.Storage;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -750,9 +750,11 @@ namespace UserInterface.Presenters
             var currentReportVariablesLineNumber = this.view.VariableList.CurrentLineNumber;
             string variableCode = commonReportVariables.Rows[reportVariableIndex][1].ToString();
             List<string> lines = view.VariableList.Lines.ToList();
+            lines.Insert(currentReportVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
-            modifiedText += Environment.NewLine + variableCode;
             view.VariableList.Text = modifiedText;
+            // Makes the selected line the newly added variable's line.
+            view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
         }
 
         /// <summary>
