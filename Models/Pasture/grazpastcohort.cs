@@ -1201,10 +1201,10 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Set potential assimilation
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="limits"></param>
+        /// <param name="value">New value</param>
+        /// <param name="limits">Growth limiting factor values</param>
         public void SetPotAssimilation(double value, double[] limits)
         {
             this.FPotAssimilation = value;

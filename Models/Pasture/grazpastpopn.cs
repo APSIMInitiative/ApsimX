@@ -6253,11 +6253,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Get the growth limiting factor value
         /// </summary>
         /// <param name="comp">Herbage component</param>
-        /// <param name="factor"></param>
-        /// <returns></returns>
+        /// <param name="factor">The limiting factor type</param>
+        /// <returns>Value from 0-1</returns>
         public double GrowthLimit(int comp, PastureUtil.TGrowthLimit factor)
         {
             double denom;

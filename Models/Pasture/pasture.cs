@@ -429,6 +429,19 @@ namespace Models.GrazPlan
                     {
                         fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
                         swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * LAI / fractionGreenCover);
+
+                        // Get the canopy details for all cohorts of this population
+                        // This must be done before the water demand is calculated (for the arbitrator)
+                        LightProfile lightProfile = GetLightProfile();      // from ICanopy
+                        if (lightProfile != null)
+                        {
+                            storeLightPropn(lightProfile);                  // with light from ICanopy
+                        }
+                        else
+                        {
+                            // if it fails or no values are available then the model can set light using
+                            PastureModel.SetMonocultureLight();
+                        }
                     }
                 }
 
@@ -2491,19 +2504,6 @@ namespace Models.GrazPlan
 
             PastureModel.BeginTimeStep();
             storePastureCover();
-
-            // Get the canopy details for all cohorts of this population
-            // This must be done before the water demand is calculated (for the arbitrator)
-            LightProfile lightProfile = GetLightProfile();      // from ICanopy
-            if (lightProfile != null)
-            {
-                storeLightPropn(lightProfile);                  // with light from ICanopy
-            }
-            else
-            {
-                // if it fails or no values are available then the model can set light using
-                PastureModel.SetMonocultureLight();
-            }
         }
 
         /// <summary>
@@ -2544,7 +2544,7 @@ namespace Models.GrazPlan
             FInputs.MaxTemp = locWtr.MaxT;
             FInputs.Precipitation = locWtr.Rain;
             FInputs.MinTemp = locWtr.MinT;
-            FInputs.Radiation = locWtr.Radn;        // Will need "radn" when "light_profile" is read later
+            FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
             FInputs.VP_Deficit = locWtr.VPD;
             // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
@@ -2587,7 +2587,7 @@ namespace Models.GrazPlan
             for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
                 if (FInputs.Radiation > 0.0)
-                    PastureModel.SetLightPropn(iComp, FLightAbsorbed[iComp] / FInputs.Radiation);
+                    PastureModel.SetLightPropn(iComp, FLightAbsorbed[iComp] / FInputs.Radiation);   // TODO: or from MicroClimate?
                 else
                     PastureModel.SetLightPropn(iComp, 0.0);
             }
