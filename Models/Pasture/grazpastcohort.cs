@@ -2632,7 +2632,7 @@ namespace Models.GrazPlan
                     {
                         for (layer = 1; layer <= this.FMaxRootLayer; layer++)
                         {
-                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer];
+                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer] / 10; //kg/ha to g/m2
                             uptakeAreaSum += nutrInfo.fUptake[(int)Nutr][area][layer];
                         }
                     }
