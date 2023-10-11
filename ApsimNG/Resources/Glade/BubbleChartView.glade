@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+	<requires lib="gtk+" version="2.24"/>
+	<!-- interface-naming-policy project-wide -->
+	<object class="GtkVPaned" id="main_widget">
+		<property name="visible">True</property>
+		<property name="can_focus">False</property>
+		<child>
+			<object class="GtkHBox" id="chart_box">
+				<property name="visible">True</property>
+				<property name="can_focus">True</property>
+			</object>
+		</child>
+		<child>
+			<object class="GtkHBox" id="settings_box">
+				<property name="visible">True</property>
+				<property name="can_focus">True</property>
+				<object class="GtkHBox" id="rotation_box">
+					<property name="visible">True</property>
+					<property name="can_focus">True</property>
+				</object>
+				<object class="GtkHBox" id="arc_box">
+					<property name="visible">True</property>
+					<property name="can_focus">True</property>
+				</object>
+				<object class="GtkHBox" id="instruction_box">
+					<property name="visible">True</property>
+					<property name="can_focus">True</property>
+				</object>
+			</object>
+		</child>
+	</object>
+</interface>

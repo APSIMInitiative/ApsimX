@@ -10,6 +10,9 @@ using Models.Management;
 using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
+using System.Reflection.Emit;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
 
 namespace UserInterface.Views
 {
@@ -24,7 +27,7 @@ namespace UserInterface.Views
     /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
     /// - should use property presenter rather than manually handle properties like InitialState.
     /// </remarks>
-    public class BubbleChartView : ViewBase, IBubbleChartView
+    public class BubbleChartView : ViewBase//, IBubbleChartView
     {
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler<GraphChangedEventArgs> OnGraphChanged;
@@ -40,12 +43,17 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the user deletes an arc</summary>
         public event EventHandler<DelArcEventArgs> DelArc;
+        
+        private HBox chartBox = null;
+        private HBox settingsBox = null;
+        private DirectedGraphView graphView;
 
+        //OLD
         private Paned vpaned1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 
-        private DirectedGraphView graphView;
+        
         private ContextMenuHelper contextMenuHelper;
         private Frame ctxFrame;
         private Widget arcSelWdgt = null;
@@ -65,7 +73,7 @@ namespace UserInterface.Views
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
         private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
-
+        
         /// <summary>
         /// Properties editor.
         /// </summary>
@@ -73,15 +81,15 @@ namespace UserInterface.Views
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
-            vpaned1 = new VPaned();
-            mainWidget = vpaned1;
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.BubbleChartView.glade");
+            mainWidget = (Widget)builder.GetObject("main_widget");
             mainWidget.Destroyed += OnDestroyed;
 
-            graphView = new DirectedGraphView(this);
-            vpaned1.Pack1(graphView.MainWidget, true, true );
+            chartBox = (Gtk.HBox)builder.GetObject("chart_box");
+            settingsBox = (Gtk.HBox)builder.GetObject("settings_box");
 
-            VBox vbox1 = new VBox(false, 0);
-            ctxBox = new VBox(false, 0);
+            graphView = new DirectedGraphView(this);
+            chartBox.Add(graphView.MainWidget); 
 
             // Arc selection: rules & actions
             VBox arcSelBox = new VBox();
@@ -232,12 +240,12 @@ namespace UserInterface.Views
 
             // Ensure the menu is populated
             Select(null);
-        }
+    }
 
-        /// <summary>
-        /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
-        /// </summary>
-        public List<StateNode> Nodes
+    /// <summary>
+    /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
+    /// </summary>
+    public List<StateNode> Nodes
         {
             get
             {
