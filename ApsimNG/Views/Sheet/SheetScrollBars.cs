@@ -118,6 +118,7 @@ namespace UserInterface.Views
                     verticalScrollbar.ValueChanged -= OnVerticalScrollbarChanged;
                     verticalScrollbar.Value = sheet.NumberHiddenRows;
                     verticalScrollbar.ValueChanged += OnVerticalScrollbarChanged;
+                    sheet.RecalculateColumnWidths();
                 }
             }
         }
@@ -143,6 +144,7 @@ namespace UserInterface.Views
             {
                 sheet.NumberHiddenRows = (int)verticalScrollbar.Value;
                 sheet.Refresh();
+                sheet.RecalculateColumnWidths();
             }
         }
     }
