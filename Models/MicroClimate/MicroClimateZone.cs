@@ -737,7 +737,7 @@ namespace Models
             double numerator = layerSolRad + cropR50;
             double denominator = layerSolRad * Math.Exp(-1.0 * layerK * layerLAI) + cropR50;
             double hyperbolic = Math.Max(1.0, MathUtilities.Divide(numerator, denominator, 0.0));
-            return Math.Max(0.0, MathUtilities.Divide(cropGsMax * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
+            return Math.Max(0.0001, MathUtilities.Divide(cropGsMax * cropLAIfac, layerK, 0.0) * Math.Log(hyperbolic));
         }
 
         /// <summary>
