@@ -2537,7 +2537,7 @@ namespace Models.GrazPlan
             FInputs.MinTemp = locWtr.MinT;
             FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
-            FInputs.VP_Deficit = locWtr.VPD;
+            FInputs.VP_Deficit = locWtr.VPD * 0.1;  // to kPa
             // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
         }
 
