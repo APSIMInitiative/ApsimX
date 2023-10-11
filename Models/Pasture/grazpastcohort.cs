@@ -2632,7 +2632,7 @@ namespace Models.GrazPlan
                     {
                         for (layer = 1; layer <= this.FMaxRootLayer; layer++)
                         {
-                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer] * RLD[layer];
+                            nutrInfo.fUptake[(int)Nutr][area][layer] = supply[(int)Nutr][area][layer];
                             uptakeAreaSum += nutrInfo.fUptake[(int)Nutr][area][layer];
                         }
                     }
@@ -3244,7 +3244,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double[][] NutrUptake(TPlantNutrient nutr)
         {
-            return this.FNutrientInfo[(int)PastureUtil.Nutr2Elem[(int)nutr]].fUptake[(int)nutr];
+            return (double[][]) this.FNutrientInfo[(int)PastureUtil.Nutr2Elem[(int)nutr]].fUptake[(int)nutr].Clone();
         }
 
         /// <summary>
