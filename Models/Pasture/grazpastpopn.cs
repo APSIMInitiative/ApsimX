@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.PostSimulationTools;
+using Models.Soils.Arbitrator;
 using StdUnits;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
@@ -1861,7 +1863,8 @@ namespace Models.GrazPlan
         /// Compute nutrient rates
         /// </summary>
         /// <param name="elem">N, P, S</param>
-        private void ComputeNutrientRates(TPlantElement elem)
+        /// <param name="fSupply"></param>
+        private void ComputeNutrientRates(TPlantElement elem, double[][][] fSupply)
         {
             int iComp;
             int iCohort;
@@ -1887,7 +1890,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                this.ComputeNutrientUptake(iComp, elem);
+                this.ComputeNutrientUptake3(iComp, elem, fSupply);
 
                 for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
                 {
@@ -2059,6 +2062,129 @@ namespace Models.GrazPlan
                 }
             } // if fDemandSum > VERYSMALL
         }
+
+        /// <summary>
+        /// Compute the nutrient uptake
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="elem"></param>
+        /// <param name="myZone"></param>
+        public double[][][] ComputeNutrientUptake2(int comp, TPlantElement elem, ZoneWaterAndN myZone)
+        {
+            int iLastLayer;
+            double[] fTransp_M;
+            double[] fRadii;
+            double[] fRLD;
+            double[][][] fSupply;     // TElemUptakeDistn
+            double fDepth_M;
+            double fRootDistance;
+            double fEffRadius;
+            double fRootLength;
+            double fTortuosity;
+            double fDe;
+            double fRho;
+            double fTau;
+            double fSlope;
+            double fAvailGM2;
+            int iCohort;
+            int iLayer;
+
+            // initialise the 3D array
+            int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
+            fSupply = new double[x][][];
+            for (int i = 0; i < x; i++)
+            {
+                fSupply[i] = new double[MAXNUTRAREAS][];
+                for (int j = 0; j < MAXNUTRAREAS; j++)
+                {
+                    fSupply[i][j] = new double[this.FSoilLayerCount + 1];
+                }
+            }
+
+            iLastLayer = 0;
+            for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, comp))
+                {
+                    iLastLayer = Math.Max(iLastLayer, this.FCohorts[iCohort].FMaxRootLayer);
+                }
+            }
+
+            fRLD = this.EffRootLengthD(comp);                                              // Length density of eff. roots  (m/m^3)
+            fRadii = this.RootRadii(comp);                                                 // Average root radius (m)
+            fTransp_M = this.Transpiration(comp);                                          // Transpiration (m^3/m^2/d)
+            for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
+            {
+                fTransp_M[iLayer] = 0.001 * fTransp_M[iLayer];
+            }
+
+            PastureUtil.Fill3DArray(fSupply, 0.0);
+            for (iLayer = 1; iLayer <= iLastLayer; iLayer++)
+            {
+                if ((fRLD[iLayer] > VERYSMALL)
+                    && (this.Inputs.Theta[iLayer] > VERYSMALL)
+                    && (this.FSoilFract[comp][iLayer] > VERYSMALL))
+                {
+                    fDepth_M = 0.001 * this.SoilLayer_MM[iLayer];                           // Soil layer depth in metres
+                    fTortuosity = 0.45 * Math.Pow(this.Inputs.WFPS[iLayer], 0.3 * this.FCampbellParam[iLayer]);
+                    var values = Enum.GetValues(typeof(TPlantNutrient)).Cast<TPlantNutrient>().ToArray();
+                    foreach (var Nutr in values)
+                    {
+                        if (Nutr2Elem[(int)Nutr] == elem)                                   // Quantities that depend on the nutrient
+                        {
+                            fDe = DiffuseAq[(int)Nutr] * this.Inputs.Theta[iLayer] * fTortuosity;       // Effective diffusivity (m^2/d)
+                            fRootDistance = Math.Sqrt(this.FSoilFract[comp][iLayer] / (Math.PI * fRLD[iLayer])); // Half-distance between roots (m)
+                            fEffRadius = this.Params.NutrEffK[(int)Nutr] * fRadii[iLayer];
+                            fRootLength = fRLD[iLayer] * fDepth_M;                          // Root length in the layer (m/m^2)
+                            fRho = fRootDistance / fEffRadius;                              // Dimensionless distance between roots
+                            if (fRho > 1.0)
+                            {
+                                fTau = -Math.Min(0.4999999,                                 // Dimensionless transpiration
+                                                        fTransp_M[iLayer] / (2.0 * Math.PI * fDe * fRootLength));
+                                fSlope = 0.5 * Math.PI * fRootLength * fDe * (StdMath.Sqr(fRho) - 1.0) / this.G(fRho, fTau);
+                            }
+                            else
+                            {
+                                fSlope = VERYLARGE;
+                            }
+
+                            // fSupply is in units of g/m^2/d of uptake per (m/m^3) of root length
+                            double amountKgHa;
+                            if (Nutr == TPlantNutrient.pnNO3)
+                                amountKgHa = myZone.NO3N[iLayer - 1];
+                            else if (Nutr == TPlantNutrient.pnNH4)
+                                amountKgHa = myZone.NH4N[iLayer - 1];
+                            else
+                                throw new Exception("Invalid element");
+                            double amountPPM = amountKgHa * 100.0 / (this.FSoilLayers[iLayer] * this.FBulkDensity[iLayer]);
+
+                            fAvailGM2 = 0.99999 * (amountKgHa / GM2_KGHA) * this.FSoilFract[comp][iLayer];
+                            double relArea = 1;
+                            fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountPPM, fAvailGM2) * GM2_KGHA;
+                        }
+                    }
+                }
+            }
+            return fSupply;
+        }
+
+        /// <summary>
+        /// Compute the nutrient uptake
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="elem"></param>
+        /// <param name="fSupply"></param>
+        private void ComputeNutrientUptake3(int comp, TPlantElement elem, double[][][] fSupply)
+        {
+            for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                if (this.BelongsIn(iCohort, comp))
+                {
+                    this.FCohorts[iCohort].UptakeNutrients(elem, fSupply);
+                }
+            }
+        }
+
 
         /// <summary>
         ///
@@ -4199,7 +4325,8 @@ namespace Models.GrazPlan
         {
             if ((comp >= stSEEDL) && (comp <= stSENC))
             {
-                this.FTranspireRate[comp] = values;
+                Array.Copy(values, 0, this.FTranspireRate[comp], 0, values.Length);
+                //this.FTranspireRate[comp] = values;
             }
         }
 
@@ -4403,7 +4530,7 @@ namespace Models.GrazPlan
 
             if ((comp >= stSEEDL) && (comp <= stSENC))
             {
-                result = this.FTranspireRate[comp];
+                result = (double[]) this.FTranspireRate[comp].Clone();
             }
             else
             {
@@ -4921,7 +5048,7 @@ namespace Models.GrazPlan
         /// Essentially a control routine. The vast majority of equations appear in
         /// the methods which it calls.
         /// </summary>
-        public void ComputeRates()
+        public void ComputeRates(double[][][] fSupply)
         {
             double fMoistureChange;
             double fDormTempFract;
@@ -5005,7 +5132,7 @@ namespace Models.GrazPlan
             {
                 if (this.FElements.Contains(Elem))
                 {
-                    this.ComputeNutrientRates(Elem);
+                    this.ComputeNutrientRates(Elem, fSupply);
                 }
             }
 

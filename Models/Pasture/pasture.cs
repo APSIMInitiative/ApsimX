@@ -2537,7 +2537,7 @@ namespace Models.GrazPlan
             FInputs.MinTemp = locWtr.MinT;
             FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
-            FInputs.VP_Deficit = locWtr.VPD;
+            FInputs.VP_Deficit = locWtr.VPD * 0.1;  // to kPa
             // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
         }
 
@@ -2624,7 +2624,26 @@ namespace Models.GrazPlan
             // if no other plants with roots in the soil TODO: adjust this code
             // PastureModel.SetMonocultureSoil();
 
-            PastureModel.ComputeRates();    // main growth update function
+            // initialise the 3D array. This is the FSupply calculated by the arbitrator being sent for uptake.
+            int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
+            double[][][] fSupply = new double[x][][];
+            for (int i = 0; i < x; i++)
+            {
+                fSupply[i] = new double[MAXNUTRAREAS][];
+                for (int j = 0; j < MAXNUTRAREAS; j++)
+                {
+                    fSupply[i][j] = new double[this.FNoLayers + 1];
+                }
+
+                for (int layer = 1; layer <= FNoLayers; layer++)
+                {
+                    if (i == (int)TPlantNutrient.pnNO3)
+                        fSupply[i][0][layer] = mySoilNO3UptakeAvail[layer - 1];
+                    else if (i == (int)TPlantNutrient.pnNH4)
+                        fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1];
+                }
+            }
+            PastureModel.ComputeRates(fSupply);    // main growth update function
         }
 
         /// <summary>
@@ -3258,16 +3277,29 @@ namespace Models.GrazPlan
         /// <param name="myZone">The soil information from the zone that contains the roots.</param>
         internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone)
         {
-            double[] thickness = soilPhysical.Thickness;
-            double[] nh4 = myZone.NH4N;     // kg/ha
-            double[] no3 = myZone.NO3N;
-            double depthAtTopOfLayer = 0;
-            for (int layer = 0; layer < FNoLayers; layer++)
-            {
-                this.mySoilNH4Available[layer] = nh4[layer];
-                this.mySoilNO3Available[layer] = no3[layer];
+            //double[] thickness = soilPhysical.Thickness;
+            //double[] nh4 = myZone.NH4N;     // kg/ha
+            //double[] no3 = myZone.NO3N;
+            //double depthAtTopOfLayer = 0;
+            //for (int layer = 0; layer < FNoLayers; layer++)
+            //{
+            //    this.mySoilNH4Available[layer] = nh4[layer];
+            //    this.mySoilNO3Available[layer] = no3[layer];
 
-                depthAtTopOfLayer += thickness[layer];
+            //    depthAtTopOfLayer += thickness[layer];
+            //}
+
+            Array.Clear(this.mySoilNH4Available);
+            Array.Clear(this.mySoilNO3Available);
+
+            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+            {
+                double[][][] fSupply = PastureModel.ComputeNutrientUptake2(iComp, TPlantElement.N, myZone);
+                for (int iLayer = 0; iLayer < FNoLayers; iLayer++)
+                {
+                    this.mySoilNH4Available[iLayer] += fSupply[(int)TPlantNutrient.pnNH4][0][iLayer + 1];
+                    this.mySoilNO3Available[iLayer] += fSupply[(int)TPlantNutrient.pnNO3][0][iLayer + 1];
+                }
             }
         }
 
