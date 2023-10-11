@@ -196,6 +196,8 @@ namespace APSIM.Shared.Utilities
         {
             try
             {
+                if (value2 == 0)
+                    return errVal;
                 return value1 / value2;
             } 
             catch
