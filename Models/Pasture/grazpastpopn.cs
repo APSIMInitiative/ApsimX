@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Models.PostSimulationTools;
 using Models.Soils.Arbitrator;
@@ -2156,11 +2157,11 @@ namespace Models.GrazPlan
                                 amountKgHa = myZone.NH4N[iLayer - 1];
                             else
                                 throw new Exception("Invalid element");
-                            double amountPPM = amountKgHa * 100.0 / (this.FSoilLayers[iLayer] * this.FBulkDensity[iLayer]);
+                            double amountSolN = amountKgHa * 100.0 / this.FSoilLayers[iLayer] / this.Inputs.Theta[iLayer];
 
                             fAvailGM2 = 0.99999 * (amountKgHa / GM2_KGHA) * this.FSoilFract[comp][iLayer];
                             double relArea = 1;
-                            fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountPPM, fAvailGM2) * GM2_KGHA;
+                            fSupply[(int)Nutr][0][iLayer] = Math.Min(relArea * fSlope * amountSolN, fAvailGM2) * GM2_KGHA;
                         }
                     }
                 }
@@ -2176,10 +2177,20 @@ namespace Models.GrazPlan
         /// <param name="fSupply"></param>
         private void ComputeNutrientUptake3(int comp, TPlantElement elem, double[][][] fSupply)
         {
+            double totalMaxDemandAllCohorts = 0;
+            for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
+            {
+                totalMaxDemandAllCohorts += this.FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL];
+            }
+
             for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
             {
                 if (this.BelongsIn(iCohort, comp))
                 {
+                    double maxDemandOfCohort = this.FCohorts[iCohort].FNutrientInfo[(int)elem].fMaxDemand[TOTAL];
+
+                    fSupply[0][0] = MathUtilities.Multiply_Value(fSupply[0][0], maxDemandOfCohort / totalMaxDemandAllCohorts);
+                    fSupply[1][0] = MathUtilities.Multiply_Value(fSupply[1][0], maxDemandOfCohort / totalMaxDemandAllCohorts);
                     this.FCohorts[iCohort].UptakeNutrients(elem, fSupply);
                 }
             }
