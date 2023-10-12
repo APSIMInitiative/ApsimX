@@ -48,6 +48,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Provides the amount of solod intake in diet.
+        /// </summary>
+        public double SolidIntake 
+        {
+            get
+            {
+                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.Amount);
+            }
+        }
+
+        /// <summary>
         /// Get the details of a food resource store identified by feed type 
         /// </summary>
         /// <param name="feedType">Feed type of the required store</param>

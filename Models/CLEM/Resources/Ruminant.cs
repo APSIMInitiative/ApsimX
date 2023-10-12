@@ -48,6 +48,39 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double RelativeSizeForWeightGainPurposes
+        {
+            get
+            {
+                return Math.Min(1 - ((1 - (BreedParams.BirthScalar)) * Math.Exp(-(BreedParams.CN1 * AgeInDays) / Math.Pow(StandardReferenceWeight, BreedParams.CN2))), (HighWeight / StandardReferenceWeight));
+            }
+        }
+
+        /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double SizeFactor1ForGain
+        {
+            get
+            {
+                return 1 / (1 + Math.Exp(-BreedParams.CG4 * (RelativeSizeForWeightGainPurposes - BreedParams.CG5)));
+            }
+        }
+
+        /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double SizeFactor2ForGain
+        {
+            get
+            {
+                return Math.Max(0, Math.Min(((RelativeSizeForWeightGainPurposes - BreedParams.cg6) / (BreedParams.cg7 - BreedParams.cg6)), 1));
+            }
+        }
+
+        /// <summary>
         /// Get the current protein mass of individual
         /// </summary>
         public double ProteinMass { get { return proteinMass; } }
@@ -131,6 +164,12 @@ namespace Models.CLEM.Resources
         /// Energy from intake
         /// </summary>
         public double EnergyFromIntake { get { return Intake.ME; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DPLS { get; set; }
+
 
         /// <summary>
         /// Reset all running stores

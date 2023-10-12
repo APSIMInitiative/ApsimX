@@ -59,6 +59,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public double ME { get { return Details.EnergyContent * Details.Amount; } }
+
+        /// <summary>
         /// Reset running stores
         /// </summary>
         public void Reset()

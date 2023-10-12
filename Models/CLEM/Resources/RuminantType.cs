@@ -197,16 +197,42 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("")]
         public double RumenDegradableProteinShortfallScalar { get; set; }
-        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double BreedEUPFactor1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double BreedEUPFactor2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CN1 { get; set; } = 0.0115;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CN2 { get; set; } = 0.27;
+
+
+
 
         #endregion
 
         #region Lactation SCA version
 
-                /// <summary>
-                /// Energy content of milk (MJ/L)
-                /// </summary>
-                [Description("Energy content of milk")]
+        /// <summary>
+        /// Energy content of milk (MJ/L)
+        /// </summary>
+        [Description("Energy content of milk")]
         public double EnergyContentMilk { get; set; }
 
         /// <summary>
