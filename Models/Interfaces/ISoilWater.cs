@@ -82,6 +82,9 @@ namespace Models.Interfaces
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
         double[] FlowUrea { get; }
 
+        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        double[] FlowCl { get; }
+
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
         double[] Flow { get; }
 
