@@ -1,14 +1,14 @@
-﻿using APSIM.Shared.Utilities;
-using ExcelDataReader;
-using Models.Core;
-using Models.Core.Run;
-using Models.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using ExcelDataReader;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
@@ -181,7 +181,7 @@ namespace Models.PostSimulationTools
             // Creates a status message showing (if any) excel sheets referenced that did not exist in any referenced excel files used the APSIM file.
             foreach (string sheet in SheetNames)
                 if (!sheetNamesUsed.Contains(sheet))
-                    throw new Exception($"The excel file sheet \'{sheet}\' was not found in any excel file in this apsimx file. Referenced in ExcelInput {this.Name}.");
+                    throw new Exception($"The excel file sheet \'{sheet}\' was not found in any excel file in {this.FindAncestor<Simulations>().FileName} file. Sheet name referenced in ExcelInput node: {this.Name}.");
         }
 
         /// <summary>
