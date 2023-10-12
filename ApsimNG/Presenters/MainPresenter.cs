@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using UserInterface.Interfaces;
 using Models.Core;
-using UserInterface.Views;
-using System.Linq;
-using UserInterface.EventArguments;
-using Utility;
-using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
+using Models.Core.ApsimFile;
+using Models.Core.Run;
+using UserInterface.Commands;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -525,6 +527,11 @@ namespace UserInterface.Presenters
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
                     Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
+
+                    // Included to refresh post simulation models in case their external files have changed.
+                    Runner runner = new Runner(presenter.ApsimXFile, runSimulations: false, wait: false);
+                    RunCommand command = new RunCommand("Post-simulation tools", runner, presenter);
+                    command.Do();
                 }
                 catch (Exception err)
                 {

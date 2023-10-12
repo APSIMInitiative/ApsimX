@@ -1,14 +1,14 @@
-﻿using System;
+﻿using APSIM.Shared.Utilities;
+using ExcelDataReader;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using APSIM.Shared.Utilities;
-using ExcelDataReader;
-using Models.Core;
-using Models.Core.Run;
-using Models.Storage;
 
 namespace Models.PostSimulationTools
 {
@@ -59,6 +59,8 @@ namespace Models.PostSimulationTools
         /// </summary>
         private string[] sheetNames;
 
+        private List<string> LastRunSheetNames;
+
         /// <summary>
         /// Gets or sets the list of EXCEL sheet names to read from.
         /// </summary>
@@ -107,10 +109,24 @@ namespace Models.PostSimulationTools
         /// </summary>
         public void Run()
         {
+            List<string> removedSheets = new();
+            if (LastRunSheetNames != null)
+                foreach (string sheetName in LastRunSheetNames)
+                    if (!SheetNames.Contains(sheetName))
+                        removedSheets.Add(sheetName);
+
             foreach (string sheet in SheetNames)
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);
 
+            if (LastRunSheetNames != null)
+                foreach (string sheet in removedSheets)
+                    if (storage.Reader.TableNames.Contains(sheet))
+                        storage.Writer.DeleteTable(sheet);
+
+            LastRunSheetNames = SheetNames.ToList();
+
+            List<string> sheetNamesUsed = new List<string>();
             foreach (string fileName in FileNames)
             {
                 string absoluteFileName = PathUtilities.GetAbsolutePath(fileName.Trim(), storage.FileName);
@@ -136,6 +152,16 @@ namespace Models.PostSimulationTools
                             }
                         });
 
+                        // Used to determine if there are any sheets referenced that are not present in any excel files in the APSIM file.
+                        List<string> tableNames = new();
+                        foreach (DataTable table in dataSet.Tables)
+                            tableNames.Add(table.TableName);
+
+                        foreach (string sheetname in SheetNames)
+                            if (tableNames.Contains(sheetname))
+                                sheetNamesUsed.Add(sheetname);
+
+
                         // Write all sheets that are specified in 'SheetNames' to the data store
                         foreach (DataTable table in dataSet.Tables)
                         {
@@ -152,6 +178,10 @@ namespace Models.PostSimulationTools
                     }
                 }
             }
+            // Creates a status message showing (if any) excel sheets referenced that did not exist in any referenced excel files used the APSIM file.
+            foreach (string sheet in SheetNames)
+                if (!sheetNamesUsed.Contains(sheet))
+                    throw new Exception($"The excel file sheet \'{sheet}\' was not found in any excel file in this apsimx file. Referenced in ExcelInput {this.Name}.");
         }
 
         /// <summary>
