@@ -2561,7 +2561,7 @@ namespace Models.GrazPlan
             FInputs.Radiation = locWtr.Radn;
             FInputs.Windspeed = locWtr.Wind;
             FInputs.VP_Deficit = locWtr.VPD * 0.1;  // to kPa
-            // TODO: FInputs.SurfaceEvap = found in grazplan soilwater
+            // TODO: FInputs.SurfaceEvap = ;    // Evaporation rate of free surface water (including water intercepted on herbage) mm
         }
 
         /// <summary>
@@ -2660,7 +2660,7 @@ namespace Models.GrazPlan
             nh4.AddKgHaDelta(SoluteSetterType.Plant, MathUtilities.Multiply_Value(mySoilNH4UptakeAvail, -1));
             //mySoilWaterAvailable = MathUtilities.Multiply_Value(mySoilWaterAvailable, -1.0);
             waterBalance.RemoveWater(mySoilWaterAvailable);
-            
+
         }
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
