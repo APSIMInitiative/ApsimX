@@ -1,6 +1,7 @@
 ﻿
 using APSIM.Shared.Utilities;
 using CMPServices;
+using Docker.DotNet.Models;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -14,6 +15,7 @@ using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
 using Models.Surface;
+using Models.WaterModel;
 using Newtonsoft.Json;
 using StdUnits;
 using System;
@@ -434,6 +436,13 @@ namespace Models.GrazPlan
                             // if it fails or no values are available then the model can set light using
                             PastureModel.SetMonocultureLight();
                         }
+                    }
+                    for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                    {
+                        if (FInputs.Radiation > 0.0)
+                            PastureModel.SetLightPropn(iComp, FLightAbsorbed[iComp] / FInputs.Radiation);   // TODO: or from MicroClimate?
+                        else
+                            PastureModel.SetLightPropn(iComp, 0.0);
                     }
                 }
 
@@ -2495,6 +2504,20 @@ namespace Models.GrazPlan
 
             PastureModel.BeginTimeStep();
             storePastureCover();
+
+            for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
+            {
+                // Soil water content profile is obtained BEFORE soil water dynamics calculations are made.
+                FInputs.Theta[Ldx] = water.Volumetric[Ldx - 1];  // converting from 0-based to 1-based array
+                FInputs.ASW[Ldx] = (FInputs.Theta[Ldx] - F_LL15[Ldx]) / (F_DUL[Ldx] - F_LL15[Ldx]);
+                FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
+                FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
+            }
+
+            PastureModel.Inputs = FInputs;
+
+            GetSiblingPlants();
+
         }
 
         /// <summary>
@@ -2548,40 +2571,6 @@ namespace Models.GrazPlan
         private void DoPastureWater()
         {
 
-            for (int Ldx = 1; Ldx <= FNoLayers; Ldx++)
-            {
-                // Soil water content profile is obtained BEFORE soil water dynamics calculations are made.
-                FInputs.Theta[Ldx] = water.Volumetric[Ldx - 1];  // converting from 0-based to 1-based array
-                FInputs.ASW[Ldx] = (FInputs.Theta[Ldx] - F_LL15[Ldx]) / (F_DUL[Ldx] - F_LL15[Ldx]);
-                FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
-                FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
-            }
-
-            PastureModel.Inputs = FInputs;
-
-            GetSiblingPlants();
-
-            // Proportion of the soil volume occupied by roots of this plant population
-            StoreSoilPropn();
-
-            // if this is a monoculture then this can be used
-            //PastureModel.ComputeWaterUptake();
-
-            setCohortWaterSupply(mySoilWaterUptakeAvail);   // set the water available for each cohort via FTranspiration
-
-            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
-            {
-                PastureModel.SetSoilPropn(iComp, FSoilPropn[iComp]);
-                PastureModel.SetTranspiration(iComp, FTranspiration[iComp]);
-            }
-
-            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
-            {
-                if (FInputs.Radiation > 0.0)
-                    PastureModel.SetLightPropn(iComp, FLightAbsorbed[iComp] / FInputs.Radiation);   // TODO: or from MicroClimate?
-                else
-                    PastureModel.SetLightPropn(iComp, 0.0);
-            }
         }
 
         /// <summary>
@@ -2666,6 +2655,12 @@ namespace Models.GrazPlan
                     surfaceOrganicMatter.Add(removed.dltCropDM[part], removed.dltDM_N[part], removed.dltDM_P[part], /*removed.DMType[part]*/"pasture", removed.CropType);
                 }
             }
+
+            no3.AddKgHaDelta(SoluteSetterType.Plant, MathUtilities.Multiply_Value(mySoilNO3UptakeAvail, -1));
+            nh4.AddKgHaDelta(SoluteSetterType.Plant, MathUtilities.Multiply_Value(mySoilNH4UptakeAvail, -1));
+            //mySoilWaterAvailable = MathUtilities.Multiply_Value(mySoilWaterAvailable, -1.0);
+            waterBalance.RemoveWater(mySoilWaterAvailable);
+            
         }
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
@@ -2810,7 +2805,7 @@ namespace Models.GrazPlan
                 // [0] is the surface
                 Nutrient.RelAreas[0] = 1.0;
                 Nutrient.AvailKgHa[0][Ldx] = LayerA_mass[Ldx - 1];
-                Nutrient.SolnPPM[0][Ldx] = LayerA_mass[Ldx - 1] * 100.0 / (Layers[Ldx - 1] * F_BulkDensity[Ldx]);
+                Nutrient.SolnPPM[0][Ldx] = LayerA_mass[Ldx - 1] * 100.0 / Layers[Ldx - 1] / FInputs.Theta[Ldx];
             }
         }
 
@@ -3311,8 +3306,12 @@ namespace Models.GrazPlan
             bool IsAlive = true;
             if (IsAlive)
             {
-                double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                // Calculate the demand
+                double maxDemand = 0;
+                double critDemand = 0;
+                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand);
 
+                double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
@@ -3331,10 +3330,6 @@ namespace Models.GrazPlan
 
                 }
 
-                // Calculate the demand
-                double maxDemand = 0;
-                double critDemand = 0;
-                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand);
 
                 // kg/ha
                 mySoilNDemand = maxDemand * GM2_KGHA;
@@ -3378,6 +3373,15 @@ namespace Models.GrazPlan
                     // Note: The uptake is done during computeRates()
                     mySoilWaterUptakeAvail = MathUtilities.Add(mySoilWaterUptakeAvail, zone.Water);
                 }
+            }
+
+            // Proportion of the soil volume occupied by roots of this plant population
+            StoreSoilPropn();
+            setCohortWaterSupply(mySoilWaterUptakeAvail);   // set the water available for each cohort via FTranspiration
+            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+            {
+                PastureModel.SetSoilPropn(iComp, FSoilPropn[iComp]);
+                PastureModel.SetTranspiration(iComp, FTranspiration[iComp]);
             }
         }
 
