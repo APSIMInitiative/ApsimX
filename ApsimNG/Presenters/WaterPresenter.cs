@@ -1,11 +1,11 @@
 ﻿namespace UserInterface.Presenters
 {
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
     using System;
     using System.Globalization;
     using System.Linq;
+    using APSIM.Shared.Graphing;
+    using Commands;
+    using Models.Soils;
     using Views;
 
     /// <summary>A presenter for the water model.</summary>
@@ -175,14 +175,22 @@
         {
             var changeFilledFromTop = new ChangeProperty.Property(water, nameof(water.FilledFromTop), filledFromTopCheckbox.Checked);
 
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
-            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+            if (string.IsNullOrEmpty(percentFullEdit.Text))
+            {
+                ChangeProperty change = new ChangeProperty(new[] { changeFilledFromTop });
+                ChangePropertyValue(change);
+            }
+            else
+            {
+                double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
+                var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
 
-            // Create a single ChangeProperty object with two actual changes.
-            // This will cause both changes to be applied (and be undo-able) in
-            // a single atomic action.
-            ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
-            ChangePropertyValue(changes);
+                // Create a single ChangeProperty object with two actual changes.
+                // This will cause both changes to be applied (and be undo-able) in
+                // a single atomic action.
+                ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
+                ChangePropertyValue(changes);
+            }
         }
 
         /// <summary>Invoked when the relative to drop down is changed.</summary>
@@ -207,6 +215,8 @@
         /// <param name="e">The event arguments.</param>
         private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(depthWetSoilEdit.Text) && Gtk.Application.EventsPending())
+                return;
             double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.CurrentCulture);
             ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
         }
