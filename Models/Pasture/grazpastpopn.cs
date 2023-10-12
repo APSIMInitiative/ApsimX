@@ -705,7 +705,7 @@ namespace Models.GrazPlan
         /// "Potential" (no nutrient or meristem limitation) assimilation rate for each
         /// component and then cohort, i.e. delta-ASS* in the specification document
         /// </summary>
-        public void ComputePotAssimilation()
+        public void ComputePotAssimilation(double pastureWaterDemand)
         {
             double[] fLimitF = new double[(int)TGrowthLimit.gl_S + 1];        // TGLFArray;
             double fPotTR;
@@ -732,7 +732,7 @@ namespace Models.GrazPlan
 
                 fLimitF[(int)TGrowthLimit.glLowT] = PastureUtil.SIG(this.LaggedMeanT, this.Params.LowT_K[1], this.Params.LowT_K[2]); // Temperature limit to assimilation
 
-                fPotTR = this.WaterDemand(iComp);                                                   // Soil moisture limit to assimilation
+                fPotTR = this.WaterDemand(iComp, pastureWaterDemand);                                                   // Soil moisture limit to assimilation
                 fActTR = 0.0;
                 for (iLayer = 1; iLayer <= this.FSoilLayerCount; iLayer++)
                 {
@@ -773,6 +773,8 @@ namespace Models.GrazPlan
                     fTE_Assim = VERYLARGE;
                 }
 
+
+                // This Proportion of day when evap not from free water surfaces - get from MicroClimate
                 if (this.Inputs.PotentialET > 0.0)
                 {
                     fPropnFreeEvap = Math.Min(this.Inputs.SurfaceEvap / this.Inputs.PotentialET, 1.0);      // Proportion of the day with evaporation of free water
@@ -1762,7 +1764,8 @@ namespace Models.GrazPlan
         /// <param name="elem">N, P, S</param>
         /// <param name="maxDemand">The maximum demand is the maximum amount of nutrient that can be acquired through uptake or fixation</param>
         /// <param name="critDemand">The critical demand is the amount below which the plants' net primary production will be restricted</param>
-        public void ComputeNutrientRatesEstimate(TPlantElement elem, ref double maxDemand, ref double critDemand)
+        /// <param name="pastureWaterDemand">Pasture Water Demand</param>
+        public void ComputeNutrientRatesEstimate(TPlantElement elem, ref double maxDemand, ref double critDemand, double pastureWaterDemand)
         {
             maxDemand = 0;
             critDemand = 0;
@@ -1818,7 +1821,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            this.ComputePotAssimilation();
+            this.ComputePotAssimilation(pastureWaterDemand);
 
             for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
             {
@@ -4482,18 +4485,26 @@ namespace Models.GrazPlan
         /// Compute water demand
         /// </summary>
         /// <param name="comp">Herbage component</param>
+        /// <param name="pastureWaterDemand">Sward water demand</param>
         /// <returns></returns>
-        public double WaterDemand(int comp)
+        public double WaterDemand(int comp, double pastureWaterDemand)
         {
-            return this.LightPropn(comp) * (this.Inputs.PotentialET - this.Inputs.SurfaceEvap) * this.CO2_WaterDemand(comp);
+            // Should be the myWaterDemand x proportion for this component
+            //return this.LightPropn(comp) * (this.Inputs.PotentialET - this.Inputs.SurfaceEvap) * this.CO2_WaterDemand(comp);
+            double totalLightFraction = 0;
+            for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
+                totalLightFraction += this.LightPropn(iComp);
+            
+            return MathUtilities.Divide(this.LightPropn(comp),totalLightFraction,0.0) * pastureWaterDemand;
         }
 
         /// <summary>
         /// Compute max water uptake
         /// </summary>
         /// <param name="comp">Herbage component</param>
+        /// <param name="pastureWaterDemand">Pasture water demand</param>
         /// <returns></returns>
-        public double[] WaterMaxSupply(int comp)
+        public double[] WaterMaxSupply(int comp, double pastureWaterDemand)
         {
             double[] result = new double[this.FSoilLayerCount + 1];
             double fRootDepth_;
@@ -4523,7 +4534,7 @@ namespace Models.GrazPlan
             else
             {
                 // ASW-based uptake model
-                this.ComputeWaterUptake_ASW(comp, this.WaterDemand(comp), ref result);
+                this.ComputeWaterUptake_ASW(comp, this.WaterDemand(comp, pastureWaterDemand), ref result);
             }
 
             return result;
@@ -5029,7 +5040,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Water uptake logic (for use in monoculture only)
         /// </summary>
-        public void ComputeWaterUptake()
+        public void ComputeWaterUptake(double pastureWaterDemand)
         {
             double fDemand;
             double[] fUptake = new double[this.FSoilLayerCount + 1];
@@ -5037,7 +5048,7 @@ namespace Models.GrazPlan
 
             for (iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
-                fDemand = this.WaterDemand(iComp);
+                fDemand = this.WaterDemand(iComp, pastureWaterDemand);
                 if (fDemand <= 0.0)
                 {
                     fUptake = new double[this.FSoilLayerCount + 1];
@@ -5059,7 +5070,7 @@ namespace Models.GrazPlan
         /// Essentially a control routine. The vast majority of equations appear in
         /// the methods which it calls.
         /// </summary>
-        public void ComputeRates(double[][][] fSupply)
+        public void ComputeRates(double[][][] fSupply,double pastureWaterDemand)
         {
             double fMoistureChange;
             double fDormTempFract;
@@ -5112,7 +5123,7 @@ namespace Models.GrazPlan
                 }
             }
 
-            this.ComputePotAssimilation();
+            this.ComputePotAssimilation(pastureWaterDemand);
 
             for (iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
             {

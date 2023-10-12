@@ -604,7 +604,7 @@ namespace Models.GrazPlan
             iCount = 0;
             for (iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
-                if (Model.WaterDemand(iComp) > 0.0)
+                if (Model.WaterDemand(iComp, myWaterDemand) > 0.0)
                 {
                     iCount++;
                 }
@@ -616,9 +616,9 @@ namespace Models.GrazPlan
             Jdx = 0;
             for (iComp = stSEEDL; iComp <= stSENC; iComp++)
             {
-                if (Model.WaterDemand(iComp) > 0.0)
+                if (Model.WaterDemand(iComp,myWaterDemand) > 0.0)
                 {
-                    fSupply = Model.WaterMaxSupply(iComp);
+                    fSupply = Model.WaterMaxSupply(iComp, myWaterDemand);
                     fRootLD = Model.EffRootLengthD(iComp);
                     fRootRad = Model.RootRadii(iComp);
 
@@ -626,7 +626,7 @@ namespace Models.GrazPlan
                     result[Jdx - 1] = new WaterInfo();
                     result[Jdx - 1].Name = sCOMPNAME[iComp];
                     result[Jdx - 1].PlantType = "pasture";
-                    result[Jdx - 1].Demand = Model.WaterDemand(iComp);
+                    result[Jdx - 1].Demand = Model.WaterDemand(iComp,myWaterDemand);
                     result[Jdx - 1].Layer = new WaterLayer[iCount];
                     for (Ldx = 1; Ldx <= iCount; Ldx++)
                     {
@@ -820,21 +820,7 @@ namespace Models.GrazPlan
         {
             get
             {
-                double result = 0;
-                if (PastureModel != null)
-                {
-                    string sUnit = PastureModel.MassUnit;
-                    PastureModel.MassUnit = "kg/ha";
-
-                    double fValue = 0.0;
-                    for (int Idx = stSEEDL; Idx <= stSENC; Idx++)
-                        fValue += PastureModel.WaterDemand(Idx);
-                    result = fValue;
-
-                    PastureModel.MassUnit = sUnit;
-                }
-
-                return result;
+                return myWaterDemand;
             }
             set
             {
@@ -2632,7 +2618,7 @@ namespace Models.GrazPlan
                         fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1];
                 }
             }
-            PastureModel.ComputeRates(fSupply);    // main growth update function
+            PastureModel.ComputeRates(fSupply, myWaterDemand);    // main growth update function
         }
 
         /// <summary>
@@ -3251,7 +3237,7 @@ namespace Models.GrazPlan
 
                 for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
                 {
-                    if (PastureModel.WaterDemand(iComp) > 0.0)
+                    if (PastureModel.WaterDemand(iComp,myWaterDemand) > 0.0)
                     {
                         double[] fRootLD = PastureModel.EffRootLengthD(iComp);
                         if (fRootLD[layer + 1] > 0)
@@ -3309,7 +3295,7 @@ namespace Models.GrazPlan
                 // Calculate the demand
                 double maxDemand = 0;
                 double critDemand = 0;
-                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand);
+                PastureModel.ComputeNutrientRatesEstimate(TPlantElement.N, ref maxDemand, ref critDemand, myWaterDemand);
 
                 double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
