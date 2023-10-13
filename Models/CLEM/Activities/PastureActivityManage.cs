@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private ClockCLEM clockCLEM = null;
         [Link]
         private ZoneCLEM zoneCLEM = null;
 
@@ -287,7 +287,7 @@ namespace Models.CLEM.Activities
                     double firstMonthsGrowth = 0;
                     if (pastureDataList != null)
                     {
-                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clockCLEM.APSIMClock.StartDate.Year && a.Month == clockCLEM.APSIMClock.StartDate.Month).FirstOrDefault();
                         firstMonthsGrowth = pasturedata.Growth;
                     }
 
@@ -319,7 +319,7 @@ namespace Models.CLEM.Activities
                 double growth = 0;
 
                 //Get this months pasture data from the pasture data list
-                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clock.Today.Year && a.Month == clock.Today.Month).FirstOrDefault();
+                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clockCLEM.APSIMClock.Today.Year && a.Month == clockCLEM.APSIMClock.Today.Month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
@@ -352,7 +352,7 @@ namespace Models.CLEM.Activities
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
                 Name = this.Name,
-                Status = zoneCLEM.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
+                Status = clockCLEM.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
                 Id = this.UniqueID.ToString(),
             };
         }
@@ -374,9 +374,9 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
-            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (clockCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
-                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, zoneCLEM.EcologicalIndicatorsCalculationInterval, clock.StartDate, zoneCLEM.EcologicalIndicatorsNextDueDate);
+                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, clockCLEM.EcologicalIndicatorsCalculationInterval, clockCLEM.APSIMClock.StartDate, clockCLEM.EcologicalIndicatorsNextDueDate);
                 //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
 
                 // Reset running total for stocking rate
@@ -476,7 +476,7 @@ namespace Models.CLEM.Activities
             // And the month they are updated on each year is whatever the starting month was for the run.
 
             pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
-               LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clock.Today.AddDays(1), zoneCLEM.EcologicalIndicatorsCalculationInterval);
+               LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clockCLEM.APSIMClock.Today.AddDays(1), clockCLEM.EcologicalIndicatorsCalculationInterval);
         }
 
         // Method to listen for land use transactions

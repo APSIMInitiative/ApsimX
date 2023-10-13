@@ -28,11 +28,11 @@ namespace Models.CLEM.Activities
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private ClockCLEM clockCLEM = null;
         [Link]
         private Simulation simulation = null;
-        [Link]
-        private ZoneCLEM zoneCLEM = null;
+        //[Link]
+        //private ZoneCLEM zoneCLEM = null;
 
         private IFileCrop fileCrop;
         private CropActivityManageCrop parentManagementActivity;
@@ -223,9 +223,9 @@ namespace Models.CLEM.Activities
             // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               clock.StartDate, clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+                                                               clockCLEM.APSIMClock.StartDate, clockCLEM.APSIMClock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
-                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clock.StartDate.ToShortDateString()}] and [{clock.EndDate.ToShortDateString()}]", MessageType.Warning);
+                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clockCLEM.APSIMClock.StartDate.ToShortDateString()}] and [{clockCLEM.APSIMClock.EndDate.ToShortDateString()}]", MessageType.Warning);
 
             IsTreeCrop = TreesPerHa != 0;  //using this boolean just makes things more readable.
 
@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
             if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == this.StoreItemName).FirstOrDefault() == this)
             {
                 double firstMonthsGrowth = 0;
-                CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                CropDataType cropData = HarvestData.Where(a => a.Year == clockCLEM.APSIMClock.StartDate.Year && a.Month == clockCLEM.APSIMClock.StartDate.Month).FirstOrDefault();
                 if (cropData != null)
                     firstMonthsGrowth = cropData.AmtKg;
 
@@ -301,7 +301,7 @@ namespace Models.CLEM.Activities
                 harvests.next = harvests.first;
             }
 
-            int clockYrMth = CalculateYearMonth(clock.Today);
+            int clockYrMth = CalculateYearMonth(clockCLEM.APSIMClock.Today);
             if (harvests.previous != null)
                 harvestOffset.previous = clockYrMth - CalculateYearMonth(harvests.previous.HarvestDate) as int?;
             if (harvests.first != null)
@@ -429,9 +429,9 @@ namespace Models.CLEM.Activities
                 stockingRateSummed += PastureActivityManage.CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), StoreItemName, area);
 
                 //If it is time to do yearly calculation
-                if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+                if (clockCLEM.IsEcologicalIndicatorsCalculationMonth())
                 {
-                    PastureActivityManage.CalculateEcologicalIndicators(LinkedResourceItem as GrazeFoodStoreType, null, null, stockingRateSummed, zoneCLEM.EcologicalIndicatorsCalculationInterval, clock.StartDate, zoneCLEM.EcologicalIndicatorsNextDueDate);
+                    PastureActivityManage.CalculateEcologicalIndicators(LinkedResourceItem as GrazeFoodStoreType, null, null, stockingRateSummed, clockCLEM.EcologicalIndicatorsCalculationInterval, clockCLEM.APSIMClock.StartDate, clockCLEM.EcologicalIndicatorsNextDueDate);
 
                     // Reset running total for stocking rate
                     stockingRateSummed = 0;
@@ -458,7 +458,7 @@ namespace Models.CLEM.Activities
 
                     if (limiter != null)
                     {
-                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                        double canBeCarried = limiter.GetAmountAvailable(clockCLEM.APSIMClock.Today.Month);
                         amountToDo = Math.Max(amountToDo, canBeCarried);
                     }
                 }
@@ -520,7 +520,7 @@ namespace Models.CLEM.Activities
             // reduce amount by limiter if present.
             if (limiter != null)
             {
-                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                double canBeCarried = limiter.GetAmountAvailable(clockCLEM.APSIMClock.Today.Month);
                 AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
 
                 if (MathUtilities.IsLessThan(canBeCarried, AmountHarvested))
