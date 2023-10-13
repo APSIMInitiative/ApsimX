@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IValidatableObject
     {
         [Link]
-        private ClockCLEM clockCLEM = null;
+        private readonly CLEMEvents events = null;
 
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
@@ -502,7 +502,7 @@ namespace Models.CLEM.Resources
                 Pools.RemoveAll(a => a.Amount < 0.01);
             }
 
-            if (clockCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (events.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
                 // reset so available is sum of years growth
@@ -563,7 +563,7 @@ namespace Models.CLEM.Resources
             // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
             // This months growth will not be included.
 
-            int month = clockCLEM.APSIMClock.Today.Month;
+            int month = events.Clock.Today.Month;
             int monthCount = 0;
             int includedMonthCount = 0;
             double propBiomass = 1.0;

@@ -30,9 +30,9 @@ namespace Models.CLEM.Activities
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
         [Link]
-        private ClockCLEM clockCLEM = null;
+        private readonly CLEMEvents events = null;
         [Link]
-        private ZoneCLEM zoneCLEM = null;
+        private readonly ZoneCLEM zoneCLEM = null;
 
         private double unitsOfArea2Ha;
         private IFilePasture filePasture = null;
@@ -287,7 +287,7 @@ namespace Models.CLEM.Activities
                     double firstMonthsGrowth = 0;
                     if (pastureDataList != null)
                     {
-                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clockCLEM.APSIMClock.StartDate.Year && a.Month == clockCLEM.APSIMClock.StartDate.Month).FirstOrDefault();
+                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
                         firstMonthsGrowth = pasturedata.Growth;
                     }
 
@@ -319,7 +319,7 @@ namespace Models.CLEM.Activities
                 double growth = 0;
 
                 //Get this months pasture data from the pasture data list
-                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clockCLEM.APSIMClock.Today.Year && a.Month == clockCLEM.APSIMClock.Today.Month).FirstOrDefault();
+                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == events.Clock.Today.Year && a.Month == events.Clock.Today.Month).FirstOrDefault();
 
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
@@ -352,7 +352,7 @@ namespace Models.CLEM.Activities
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
                 Name = this.Name,
-                Status = clockCLEM.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
+                Status = events.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
                 Id = this.UniqueID.ToString(),
             };
         }
@@ -374,9 +374,9 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
-            if (clockCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (events.IsEcologicalIndicatorsCalculationMonth())
             {
-                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, clockCLEM.EcologicalIndicatorsCalculationInterval, clockCLEM.APSIMClock.StartDate, clockCLEM.EcologicalIndicatorsNextDueDate);
+                CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
                 //Get the new Pasture Data using the new Ecological Indicators (ie. GrassBA, LandCon, StRate)
 
                 // Reset running total for stocking rate
@@ -476,7 +476,7 @@ namespace Models.CLEM.Activities
             // And the month they are updated on each year is whatever the starting month was for the run.
 
             pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
-               LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clockCLEM.APSIMClock.Today.AddDays(1), clockCLEM.EcologicalIndicatorsCalculationInterval);
+               LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, events.Clock.Today.AddDays(1), events.EcologicalIndicatorsCalculationInterval);
         }
 
         // Method to listen for land use transactions
