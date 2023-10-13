@@ -6436,6 +6436,35 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.GrazPlan.Supplement, Models",
+                  "SpoilageTime": 0.0,
+                  "Stores": [
+                    {
+                      "$type": "Models.GrazPlan.StoreType, Models",
+                      "Name": "fodder",
+                      "Stored": 0.0,
+                      "IsRoughage": true,
+                      "DMContent": 0.85,
+                      "DMD": 0.0,
+                      "MEContent": 0.0,
+                      "CPConc": 0.0,
+                      "ProtDg": 0.0,
+                      "PConc": 0.0,
+                      "SConc": 0.0,
+                      "EEConc": 0.0,
+                      "ADIP2CP": 0.0,
+                      "AshAlk": 0.0,
+                      "MaxPassage": 0.0
+                    }
+                  ],
+                  "PaddockList": [],
+                  "Name": "Supplement",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
@@ -6473,7 +6502,7 @@
                         "        [Description(\"Cutting Dates:\")]",
                         "        public string[] CuttingDates { get; set; } ",
                         "        ",
-                        "        [Description(\"Fraction of Height to Remove):\")]",
+                        "        [Description(\"Fraction of Height to Remain):\")]",
                         "        public double HeightFraction {get;set;}",
                         "",
                         "        [Description(\"Fraction of Cut Biomass to Gather into Storage):\")]",
@@ -7117,7 +7146,8 @@
                         "[Pasture].LitterDM",
                         "[Pasture].WaterDemand",
                         "[Pasture].WaterDemandSupply",
-                        "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha"
+                        "(sum([Soil].Urea.kgha) + sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as SoilNContent_kgha",
+                        "[Supplement].Stores"
                       ],
                       "EventNames": [
                         "[Clock].DoReport"
