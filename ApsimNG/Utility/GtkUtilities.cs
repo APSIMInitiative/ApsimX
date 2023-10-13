@@ -159,5 +159,39 @@ namespace Utility
                 parent = parent.Parent;
             }
         }
+
+        /// <summary>
+        /// Gets the location of the widget in regards to the graphview
+        /// </summary>
+        public static System.Drawing.Point GetPositionOfWidgetRelativeToAnotherWidget(Widget widget, Widget otherWidget)
+        {
+            System.Drawing.Point firstPos = GtkUtilities.GetPositionOfWidget(widget);
+            System.Drawing.Point secondPos = GtkUtilities.GetPositionOfWidget(otherWidget);
+            return new System.Drawing.Point(firstPos.X - secondPos.X, firstPos.Y - secondPos.Y);
+        }
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the widget.
+        /// </summary>
+        public static System.Drawing.Point GetPositionOfWidget(Widget widget)
+        {
+            if (widget == null)
+                return new System.Drawing.Point(0, 0);
+
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = widget.Allocation;
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            widget.TranslateCoordinates(widget.Toplevel, location.X, location.Y, out int windowX, out int windowY);
+
+            Widget win = widget;
+            while (win.Parent != null)
+                win = win.Parent;
+
+            win.Window.GetOrigin(out int frameX, out int frameY);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY);
+        }
     }
 }

@@ -10,9 +10,6 @@ using Models.Management;
 using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
-using System.Reflection.Emit;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Office2010.PowerPoint;
 
 namespace UserInterface.Views
 {
@@ -27,10 +24,13 @@ namespace UserInterface.Views
     /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
     /// - should use property presenter rather than manually handle properties like InitialState.
     /// </remarks>
-    public class BubbleChartView : ViewBase//, IBubbleChartView
+    public class BubbleChartView : ViewBase, IBubbleChartView
     {
         /// <summary>Invoked when the user changes the selection</summary>
-        public event EventHandler<GraphChangedEventArgs> OnGraphChanged;
+        public event EventHandler<GraphObjectSelectedArgs> GraphObjectSelected;
+
+        /// <summary>Invoked when the user changes the selection</summary>
+        public event EventHandler<GraphChangedEventArgs> GraphChanged;
 
         /// <summary>Invoked when the user adds a node</summary>
         public event EventHandler<AddNodeEventArgs> AddNode;
@@ -43,41 +43,41 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the user deletes an arc</summary>
         public event EventHandler<DelArcEventArgs> DelArc;
-        
+
+        private HPaned topPaned;
         private HBox chartBox = null;
-        private HBox settingsBox = null;
+        private HPaned settingsPaned = null;
+        private VPaned rulesActionsPaned = null;
+        private HBox propertiesBox = null;
+        private HBox nodePropertiesBox = null;
+        private Frame nodePropertiesFrame = null;
+        private HBox arcBox = null;
+        private Frame arcFrame = null;
+        private VBox rulesBox = null;
+        private VBox actionsBox = null;
+        private Label instructionsLabel = null;
         private DirectedGraphView graphView;
 
-        //OLD
-        private Paned vpaned1 = null;
-        private ListStore comboModel = new ListStore(typeof(string));
-        private CellRendererText comboRender = new CellRendererText();
-
-        
-        private ContextMenuHelper contextMenuHelper;
-        private Frame ctxFrame;
-        private Widget arcSelWdgt = null;
-        public IEditorView RuleList { get; private set; } = null;
-        public IEditorView ActionList { get; private set; } = null;
-        private Widget nodeSelWdgt = null;
-        private Entry nameEntry = null;
-        private Entry descEntry = null;
-        private ColorButton colourChooser = null;
-        private Widget infoWdgt = null;
-        private HPaned hpaned1;
-        private HPaned hpaned2;
-
-        private Box ctxBox = null;
         private Menu ContextMenu = new Menu();
+        private ContextMenuHelper contextMenuHelper;
 
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
         private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
-        
+
         /// <summary>
         /// Properties editor.
         /// </summary>
         public IPropertyView PropertiesView { get; private set; }
+        /// <summary>
+        /// Node Properties editor.
+        /// </summary>
+        public IPropertyView NodePropertiesView { get; private set; }
+
+        /// <summary></summary>
+        public IEditorView RuleList { get; private set; } = null;
+        /// <summary></summary>
+        public IEditorView ActionList { get; private set; } = null;
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
@@ -85,152 +85,91 @@ namespace UserInterface.Views
             mainWidget = (Widget)builder.GetObject("main_widget");
             mainWidget.Destroyed += OnDestroyed;
 
+            int topOfWindow = GtkUtilities.GetPositionOfWidget(owner.MainWidget).Y;
+            int bottomOfWindow = ((owner as ExplorerView).Owner as MainView).StatusPanelHeight;
+            int heightOfWindow = bottomOfWindow - topOfWindow;
+            int splitterPosition = (int)(heightOfWindow * 0.7);
+
+            int widthOfWindow = (owner as ExplorerView).MainWidget.AllocatedWidth - (owner as ExplorerView).DividerPosition;
+            int horizontalSplitterPosition = (int)(widthOfWindow * 0.6);
+
+            (mainWidget as VPaned).Position = splitterPosition;
+
+            topPaned = (Gtk.HPaned)builder.GetObject("top_paned");
+            topPaned.Position = horizontalSplitterPosition;
+
             chartBox = (Gtk.HBox)builder.GetObject("chart_box");
-            settingsBox = (Gtk.HBox)builder.GetObject("settings_box");
+            settingsPaned = (Gtk.HPaned)builder.GetObject("settings_paned");
+            settingsPaned.Position = (int)(widthOfWindow * 0.4);
+
+            rulesActionsPaned = (Gtk.VPaned)builder.GetObject("rules_actions_paned");
+            rulesActionsPaned.Position = (int)((bottomOfWindow - splitterPosition - topOfWindow) * 0.5);
+
+            arcBox = (Gtk.HBox)builder.GetObject("arc_box");
+            propertiesBox = (Gtk.HBox)builder.GetObject("properties_box");
+            rulesBox = (Gtk.VBox)builder.GetObject("rules_box");
+            actionsBox = (Gtk.VBox)builder.GetObject("actions_box");
+            nodePropertiesBox = (Gtk.HBox)builder.GetObject("node_properties_box");
+            HBox instructionsBox = (Gtk.HBox)builder.GetObject("instructions_box");
 
             graphView = new DirectedGraphView(this);
-            chartBox.Add(graphView.MainWidget); 
+            chartBox.Add(graphView.MainWidget);
 
-            // Arc selection: rules & actions
-            VBox arcSelBox = new VBox();
+            PropertiesView = new PropertyView(this);
+            Gtk.Frame propertyFrame = new Gtk.Frame(" Properties: ");
+            propertyFrame.LabelXalign = 0.01f;
+            propertyFrame.Add(((ViewBase)PropertiesView).MainWidget);
+            propertiesBox.PackStart(propertyFrame, true, true, 2);
 
-            Label l1 = new Label("Rules");
-            l1.Xalign = 0;
-            arcSelBox.PackStart(l1, true, true, 0);
+            NodePropertiesView = new PropertyView(this);
+            nodePropertiesFrame = new Gtk.Frame("");
+            nodePropertiesFrame.LabelXalign = 0.01f;
+            nodePropertiesFrame.Label = " Node: ";
+            nodePropertiesFrame.Add(((ViewBase)NodePropertiesView).MainWidget);
+            nodePropertiesBox.PackStart(nodePropertiesFrame, true, true, 2);
+
+            //Rules Input
             RuleList = new EditorView(owner);
             RuleList.TextHasChangedByUser += OnRuleChanged;
-            //RuleList.ScriptMode = false;
+            Gtk.Label rulesHeader = new Gtk.Label("Rules:");
+            rulesHeader.Xalign = 0;
+            rulesHeader.Yalign = 0;
+            rulesBox.PackStart(rulesHeader, false, false, 0);
+            rulesBox.PackEnd((RuleList as ViewBase).MainWidget, true, true, 0);
 
-            ScrolledWindow rules = new ScrolledWindow();
-            rules.ShadowType = ShadowType.EtchedIn;
-            rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-
-            rules.Add((RuleList as ViewBase).MainWidget);
-
-            (RuleList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(rules, true, true, 0);
-            rules.Show();
-
-            Label l2 = new Label("Actions");
-            l2.Xalign = 0;
-            arcSelBox.PackStart(l2, true, true, 0);
+            //Actions Input
             ActionList = new EditorView(owner);
             ActionList.TextHasChangedByUser += OnActionChanged;
-            //ActionList.ScriptMode = false;
+            Gtk.Label actionsHeader = new Gtk.Label("Actions:");
+            actionsHeader.Xalign = 0;
+            actionsHeader.Yalign = 0;
+            actionsBox.PackStart(actionsHeader, false, false, 0);
+            actionsBox.PackEnd((ActionList as ViewBase).MainWidget, true, true, 0);
 
-            ScrolledWindow actions = new ScrolledWindow();
-            actions.ShadowType = ShadowType.EtchedIn;
-            actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+            Widget child = arcBox.Children[0];
+            arcBox.Remove(child);
+            arcFrame = new Gtk.Frame(" Arc: ");
+            arcFrame.Add(child);
+            arcFrame.LabelXalign = 0.01f;
+            arcBox.PackStart(arcFrame, true, true, 2);
+            arcBox.Hide();
 
-            actions.Add((ActionList as ViewBase).MainWidget);
-
-            (ActionList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(actions, true, true, 0); actions.Show();
-            arcSelWdgt = arcSelBox as Widget;
-            arcSelWdgt.Hide();
-            ctxBox.PackStart(arcSelWdgt, true, true, 0);
-
-            // Node selection: 
-
-            Grid t1 = new Grid();
-
-            Label l3 = new Label("Name");
-            l3.Xalign = 0;
-            t1.Attach(l3, 0, 0, 1, 1);
-
-            Label l4 = new Label("Description");
-            l4.Xalign = 0;
-            t1.Attach(l4, 0, 1, 1, 1);
-
-            Label l5 = new Label("Colour");
-            l5.Xalign = 0;
-            t1.Attach(l5, 0, 2, 1, 1);
-
-            nameEntry = new Entry();
-            nameEntry.Changed += OnNameChanged;
-            nameEntry.Xalign = 0;
-
-            // Setting the WidthRequest to 350 will effectively
-            // set the minimum size, beyond which it cannot be further
-            // shrunk by dragging the HPaned's splitter.
-            nameEntry.WidthRequest = 350;
-            t1.Attach(nameEntry, 1, 0, 1, 1);
-
-            descEntry = new Entry();
-            descEntry.Xalign = 0;
-            descEntry.Changed += OnDescriptionChanged;
-            descEntry.WidthRequest = 350;
-            t1.Attach(descEntry, 1, 1, 1, 1);
-            colourChooser = new ColorButton();
-            colourChooser.Xalign = 0;
-            colourChooser.ColorSet += OnColourChanged;
-            colourChooser.WidthRequest = 350;
-            t1.Attach(colourChooser, 1, 2, 1, 1);
-            nodeSelWdgt = t1;
-            ctxBox.PackStart(t1, true, true, 0);
-
-            // Info
-            Label l6 = new Label();
-            l6.LineWrap = true;
-            l6.Text = "<left-click>: select a node or arc.\n" +
+            instructionsLabel = new Gtk.Label();
+            instructionsLabel.Text = "<left-click>: select a node or arc.\n" +
             "<right-click>: shows a context-sensitive menu.\n\n" +
             "Once a node/arc is selected, it can be dragged to a new position.\n\n" +
             "Nodes are created by right-clicking on a blank area.\n\n" +
             "Transition arcs are created by firstly selecting a source node,\n" +
             "then right-clicking over a target node.";
-            infoWdgt = l6 as Widget;
-            infoWdgt.ShowAll();
-            l6.Xalign = 0;
-            l6.Yalign = 0;
-            l6.Wrap = false;
-            Alignment infoWdgtWrapper = new Alignment(0, 0, 1, 0);
-            infoWdgtWrapper.Add(infoWdgt);
-            //ctxBox.PackStart(infoWdgt, true, true, 0);
-            //vbox1.PackStart(ctxBox, false, false, 0);
-
-            PropertiesView = new PropertyView(this);
-            ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
-            // settingsBox = new Table(2, 2, false);
-            // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            // combobox1 = new ComboBox();
-            // combobox1.PackStart(comboRender, false);
-            // combobox1.AddAttribute(comboRender, "text", 0);
-            // combobox1.Model = comboModel;
-            // settingsBox.Attach(combobox1, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            // chkVerbose = new CheckButton();
-            // chkVerbose.Toggled += OnToggleVerboseMode;
-            // settingsBox.Attach(new Label("Verbose Mode"), 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            // settingsBox.Attach(chkVerbose, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            hpaned1 = new HPaned();
-            hpaned2 = new HPaned();
-            Frame frame1 = new Frame("Rotation Settings");
-            frame1.Add(((ViewBase)PropertiesView).MainWidget);
-            frame1.ShadowType = ShadowType.In;
-            Frame frame2 = new Frame();
-            frame2.Add(hpaned2);
-            frame2.ShadowType = ShadowType.In;
-            ctxFrame = new Frame();
-            ctxFrame.Add(ctxBox);
-            ctxFrame.ShadowType = ShadowType.In;
-            Frame frame4 = new Frame("Instructions");
-            frame4.Add(infoWdgtWrapper);
-            frame4.ShadowType = ShadowType.In;
-            hpaned1.Pack1(frame1, false, false);
-            hpaned1.Pack2(frame2, true, false);
-            hpaned2.Pack1(ctxFrame, true, false);
-            hpaned2.Pack2(frame4, true, false);
-            hpaned1.ShowAll();
-            Alignment halign = new Alignment(0, 0, 1, 1);
-            halign.Add(hpaned1);
-
-            vpaned1.Pack2(halign, false, false);
-            vpaned1.Show();
+            instructionsLabel.Xalign = 0;
+            instructionsLabel.Yalign = 0;
+            Gtk.Frame instructionsFrame = new Gtk.Frame(" Instructions: ");
+            instructionsFrame.Add(instructionsLabel);
+            instructionsFrame.LabelXalign = 0.01f;
+            instructionsBox.PackEnd(instructionsFrame, true, true, 2);
 
             graphView.OnGraphObjectSelected += OnGraphObjectSelected;
             graphView.OnGraphObjectMoved += OnGraphObjectMoved;
-            //combobox1.Changed += OnComboBox1SelectedValueChanged;
 
             contextMenuHelper = new ContextMenuHelper(graphView.MainWidget);
             contextMenuHelper.ContextMenu += OnPopup;
@@ -284,14 +223,11 @@ namespace UserInterface.Views
             rules.Clear();
             actions.Clear();
             nodeDescriptions.Clear();
-            comboModel.Clear();
             var graph = new DirectedGraph();
 
             nodes.ForEach(node =>
             {
                 graph.AddNode(node);
-                //NodeNames[node.Name] = node.NodeName;
-                comboModel.AppendValues (node.Name);
                 nodeDescriptions[node.Name] = node.Description;
             });
             arcs.ForEach(arc =>
@@ -310,48 +246,40 @@ namespace UserInterface.Views
         /// <param name="objectName">Name of the object to be selected.</param>
         public void Select(string objectName)
         {
-            ctxBox.Foreach(c => ctxBox.Remove(c)); 
-
-            Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
-            if (node != null)
+            if (objectName == null)
             {
-                //ctxLabel.Text = "State";
-                ctxFrame.Label = $"{node.Name} settings";
-                // Need to detach the event handlers before changing the entries.
-                // Otherwise a changed event will fire which we don't really want.
-                nameEntry.Changed -= OnNameChanged;
-                // Setting an entry's text to null doesn't seem to have an effect.
-                nameEntry.Text = objectName ?? "";
-                nameEntry.Changed += OnNameChanged;
-                if (nodeDescriptions.ContainsKey(objectName))
+                arcBox.Hide();
+                nodePropertiesBox.Hide();
+                return;
+            }
+
+            for (int i = 0; i < graphView.DirectedGraph.Nodes.Count; i++)
+            {
+                Node node = graphView.DirectedGraph.Nodes[i];
+                if (node.Name == objectName)
                 {
-                    descEntry.Changed -= OnDescriptionChanged;
-                    descEntry.Text = nodeDescriptions[objectName] ?? "";
-                    descEntry.Changed += OnDescriptionChanged;
+                    //The node property is held by the presenter, which also listens for this event and
+                    //will update the properties being displayed.
+                    nodePropertiesFrame.Label = $" {node.Name} Properties ";
+                    arcBox.Hide();
+                    nodePropertiesBox.Show();
+                    return;
                 }
-                colourChooser.ColorSet -= OnColourChanged;
-
-                colourChooser.Rgba = node.Colour.ToRGBA();
-
-                colourChooser.ColorSet += OnColourChanged;
-
-                ctxBox.PackStart(nodeSelWdgt, true, true, 0);
             }
-            else if (arc != null)
+
+            for (int i = 0; i < graphView.DirectedGraph.Arcs.Count; i++)
             {
-                ctxFrame.Label = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
-                RuleList.Text = String.Join('\n', rules[arc.Name].ToArray()) ;
-                ActionList.Text = String.Join('\n', actions[arc.Name].ToArray());
-                ctxBox.PackStart(arcSelWdgt, true, true, 0);
+                Arc arc = graphView.DirectedGraph.Arcs[i];
+                if (arc.Name == objectName)
+                {
+                    arcFrame.Label = $" {arc.SourceName} to {arc.DestinationName} ";
+                    RuleList.Text = String.Join('\n', rules[arc.Name].ToArray());
+                    ActionList.Text = String.Join('\n', actions[arc.Name].ToArray());
+                    nodePropertiesBox.Hide();
+                    arcBox.Show();
+                    return;
+                }
             }
-            else
-            {
-                //ctxLabel.Text = "Information";
-                //ctxBox.PackStart(infoWdgt, true, true, 0);
-                ctxFrame.Label = "";
-            }
-            ctxBox.ShowAll();
         }
 
         /// <summary>
@@ -425,10 +353,6 @@ namespace UserInterface.Views
                 RuleList.TextHasChangedByUser -= OnRuleChanged;
                 ActionList.TextHasChangedByUser -= OnActionChanged;
 
-                nameEntry.Changed -= OnNameChanged;
-                descEntry.Changed -= OnDescriptionChanged;
-                colourChooser.ColorSet -= OnColourChanged;
-
                 graphView.OnGraphObjectSelected -= OnGraphObjectSelected;
                 graphView.OnGraphObjectMoved -= OnGraphObjectMoved;
 
@@ -438,78 +362,6 @@ namespace UserInterface.Views
                 ContextMenu.Mapped -= OnContextMenuRendered;
                 ContextMenu.Clear();
                 ContextMenu.Dispose();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// User has changed a node name.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        public void OnNameChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(nameEntry.Text))
-                {
-                    // We need to rename the node in the directed graph in order
-                    // for the Nodes property to return the correct name for the
-                    // changed node. We also need to add a description for the new
-                    // name to the dict.
-                    nodeDescriptions[nameEntry.Text] = nodeDescriptions[graphView.SelectedObject.Name];
-                    graphView.SelectedObject.Name = nameEntry.Text;
-                    ctxFrame.Label = $"{nameEntry.Text} settings";
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a node's description.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnDescriptionChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-                    nodeDescriptions[graphView.SelectedObject.Name] = descEntry.Text;
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a node's colour.
-        /// </summary>
-        /// <param name="sender">Sending object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnColourChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObject != null)
-                {
-
-                    var colour = colourChooser.Rgba.ToColour().ToGdk();
-
-                    graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
             }
             catch (Exception err)
             {
@@ -529,7 +381,7 @@ namespace UserInterface.Views
                 if (graphView.SelectedObject != null)
                 {
                     rules[graphView.SelectedObject.Name] = RuleList.Text.Split('\n').ToList();
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
+                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
             catch (Exception err)
@@ -550,7 +402,7 @@ namespace UserInterface.Views
                 if (graphView.SelectedObject != null)
                 {
                     actions[graphView.SelectedObject.Name] = ActionList.Text.Split('\n').ToList();
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
+                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
             catch (Exception err)
@@ -632,7 +484,7 @@ namespace UserInterface.Views
         {
             try
             {
-                OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
+                GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
             }
             catch (Exception err)
             {
@@ -650,6 +502,7 @@ namespace UserInterface.Views
         {
             try
             {
+                this.GraphObjectSelected.Invoke(o, args);
                 Select(args.Object1?.Name);
             }
             catch (Exception err)
@@ -670,7 +523,7 @@ namespace UserInterface.Views
                 // todo: set location to context menu location
                 var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
-                newNode.Location = GetPositionOfWidgetInGraph(sender as Widget);
+                newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }
             catch (Exception err)
@@ -807,7 +660,7 @@ namespace UserInterface.Views
                         graph.AddArc(newArc);
                     }
 
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, nodes));
+                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, nodes));
                 }
             }
             catch (Exception err)
@@ -842,47 +695,13 @@ namespace UserInterface.Views
                     
                     List<RuleAction> arcs = Arcs;
                     arcs.Add(newArc);
-                    OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, Nodes));
+                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(arcs, Nodes));
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Gets the location of the widget in regards to the graphview
-        /// </summary>
-        private System.Drawing.Point GetPositionOfWidgetInGraph(Widget widget)
-        {
-            System.Drawing.Point menuPos = GetPositionOfWidget(widget);
-            System.Drawing.Point graphPos = GetPositionOfWidget(graphView.MainWidget);
-            return new System.Drawing.Point(menuPos.X - graphPos.X, menuPos.Y - graphPos.Y);
-        }
-
-        /// <summary>
-        /// Gets the location (in screen coordinates) of the widget.
-        /// </summary>
-        private System.Drawing.Point GetPositionOfWidget(Widget widget)
-        {
-            if (widget == null)
-                return new System.Drawing.Point(0, 0);
-
-            // Get the location of the cursor. This rectangle's x and y properties will be
-            // the current line and column number.
-            Gdk.Rectangle location = widget.Allocation;
-
-            // Now, convert these coordinates to be relative to the GtkWindow's origin.
-            widget.TranslateCoordinates(widget.Toplevel, location.X, location.Y, out int windowX, out int windowY);
-
-            Widget win = widget;
-            while (win.Parent != null)
-                win = win.Parent;
-
-            win.Window.GetOrigin(out int frameX, out int frameY);
-
-            return new System.Drawing.Point(frameX + windowX, frameY + windowY);
         }
     }
 }

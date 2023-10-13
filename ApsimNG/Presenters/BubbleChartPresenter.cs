@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.EventArguments.DirectedGraph;
@@ -9,13 +10,14 @@ using Models.Management;
 using UserInterface.Views;
 using UserInterface.Interfaces;
 using APSIM.Shared.Graphing;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
     /// <summary>
     /// Presenter for the rotation bubble chart component
     /// </summary>
-    public class BubbleChartPresenter : IPresenter 
+    public class BubbleChartPresenter : IPresenter
     {
         /// <summary>
         /// The view for the manager
@@ -40,7 +42,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private IEditorView currentEditor;
 
+        /// <summary>
+        /// Warpper around the currently selected node in the rotation manager so it can be
+        /// editted in the view.
+        /// </summary>
+        private NodePropertyWrapper currentNode { get; set; }
+
         private PropertyPresenter propertiesPresenter = new PropertyPresenter();
+        private PropertyPresenter nodePropertiesPresenter = new PropertyPresenter();
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
@@ -54,18 +63,20 @@ namespace UserInterface.Presenters
             this.presenter = presenter;
             this.model = model as IBubbleChart;
 
-            this.view.OnGraphChanged += OnViewChanged;
+            this.view.GraphObjectSelected += OnGraphObjectSelected;
+            this.view.GraphChanged += OnViewChanged;
             this.view.AddNode += OnAddNode;
             this.view.DelNode += OnDelNode;
             this.view.AddArc += OnAddArc;
             this.view.DelArc += OnDelArc;
 
             this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
-            //view.RuleList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
 
             propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
-            //view.ActionList.TextHasChangedByUser += OnEventNamesChanged;
+            
+            currentNode = new NodePropertyWrapper();
+            nodePropertiesPresenter.Attach(currentNode, this.view.NodePropertiesView, presenter);
 
             intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -73,6 +84,8 @@ namespace UserInterface.Presenters
             presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             RefreshView();
+
+            this.view.Select(null); //have nothing selected
         }
 
         /// <summary>
@@ -80,7 +93,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            view.OnGraphChanged -= OnViewChanged;
+            view.GraphChanged -= OnViewChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
             view.AddArc -= OnAddArc;
@@ -91,10 +104,6 @@ namespace UserInterface.Presenters
             view.RuleList.ContextItemsNeeded -= OnNeedVariableNames;
             view.ActionList.ContextItemsNeeded -= OnNeedEventNames;
             propertiesPresenter.Detach();
-
-            // Shouldn't need to manually update the model at this point.
-            // All changes are applied immediately upon user input.
-            //OnViewChanged(this, new GraphChangedEventArgs() { Nodes = view.Nodes, Arcs = view.Arcs});
         }
 
         /// <summary>
@@ -120,15 +129,34 @@ namespace UserInterface.Presenters
         /// The user has made changes in the view.
         /// </summary>
         /// <param name="sender">Sender of event</param>
+        /// <param name="args">Event arguments</param>
+        private void OnGraphObjectSelected(object sender, GraphObjectSelectedArgs args)
+        {
+            string objectName = args.Object1?.Name;
+            for (int i = 0; i < model.Nodes.Count; i++)
+            {
+                if (model.Nodes[i].Name == objectName)
+                {
+                    currentNode = new NodePropertyWrapper();
+                    currentNode.node = model.Nodes[i];
+                    nodePropertiesPresenter.RefreshView(currentNode);
+                    return;
+                }
+            }
+            //else do nothing
+            return;
+        }
+
+        /// <summary>
+        /// The user has made changes in the view.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
         private void OnViewChanged(object sender, GraphChangedEventArgs e)
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), e.Arcs));
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), e.Nodes));
-            // todo - update InitialState as well? This function is currently
-            // not used a a callback for initial state being changed, but it
-            // might make sense to update it anyway...
 
             // Check for multiple nodes or arcs with the same name.
             IEnumerable<IGrouping<string, StateNode>> duplicateNodes = e.Nodes.GroupBy(n => n.Name).Where(g => g.Count() > 1);
@@ -250,9 +278,9 @@ namespace UserInterface.Presenters
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender as IEditorView;
-                if (!e.ControlShiftSpace && 
-                     (rules ? 
-                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model , true, false, false, false, e.ControlSpace) :
+                if (!e.ControlShiftSpace &&
+                     (rules ?
+                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, true, false, false, false, e.ControlSpace) :
                         intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, false, true, false, true, e.ControlSpace)))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
@@ -296,7 +324,7 @@ namespace UserInterface.Presenters
             try
             {
                 //fixme if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore.Reader))
-                    intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
+                intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
             {
@@ -319,6 +347,78 @@ namespace UserInterface.Presenters
             {
                 presenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// A wrapper for the currently selected node in rotation manager so that
+        /// it can be used with a PropertyPresenter view.
+        /// 
+        /// Although this uses the model class, it should not be added as a model
+        /// within a simulation file, as by itself it does nothing.
+        /// </summary>
+        [Serializable]
+        public class NodePropertyWrapper : Model
+        {
+            /// <summary>Currently selected node in the Rotation Manager</summary>
+            public StateNode node = null;
+
+            /// <summary>Property wrapper for name</summary>
+            [Description("Name")]
+            [Display(Type = DisplayType.None)]
+            public string NodeName
+            {
+                get
+                {
+                    if (node != null)
+                        return node.Name;
+                    else
+                        return string.Empty;
+                }
+                set
+                {
+                    if (node != null)
+                        node.Name = value;
+                }
+            }
+
+            /// <summary>Property wrapper for description</summary>
+            [Description("Description")]
+            [Display(Type = DisplayType.None)]
+            public string Description
+            {
+                get
+                {
+                    if (node != null)
+                        return node.Description;
+                    else
+                        return string.Empty;
+                }
+                set
+                {
+                    if (node != null)
+                        node.Description = value;
+                }
+            }
+
+            /// <summary>Property wrapper for name</summary>
+            [Description("Name")]
+            [Display(Type = DisplayType.None)]
+            public Color Colour
+            {
+                get
+                {
+                    if (node != null)
+                        return node.Colour;
+                    else
+                        return Color.FromName("Black");
+                }
+                set
+                {
+                    if (node != null)
+                        node.Colour = value;
+                }
+            }
+
         }
     }
 }

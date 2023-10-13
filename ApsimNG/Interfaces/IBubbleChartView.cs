@@ -1,25 +1,20 @@
-// -----------------------------------------------------------------------
-// <copyright file="IRotBubbleChartView.cs" company="UQ">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+using System;
+using Models.Management;
+using System.Collections.Generic;
+using UserInterface.EventArguments.DirectedGraph;
+
 namespace UserInterface.Interfaces
 {
-    using System;
-    using Views;
-    using Models.Management;
-    using System.Collections.Generic;
-    using EventArguments.DirectedGraph;
-
     /// <summary>
     /// This interface defines the API for talking to an bubble chart view.
     /// </summary>
     public interface IBubbleChartView
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        event EventHandler<GraphChangedEventArgs> OnGraphChanged;
+        /// <summary>Invoked when the user changes the selection</summary>
+        public event EventHandler<EventArguments.GraphObjectSelectedArgs> GraphObjectSelected;
+
+        /// <summary>Invoked when the user changes a property</summary>
+        public event EventHandler<GraphChangedEventArgs> GraphChanged;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
@@ -67,10 +62,21 @@ namespace UserInterface.Interfaces
         IPropertyView PropertiesView { get; }
 
         /// <summary>
+        /// Node Properties editor.
+        /// </summary>
+        public IPropertyView NodePropertiesView { get; }
+
+        /// <summary>
         /// Set the graph in the view.
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
         void SetGraph(List<StateNode> nodes, List<RuleAction> arcs);
+
+        /// <summary>
+        /// A graph object has been selected. Make the (middle part of) UI relevant to it
+        /// </summary>
+        /// <param name="objectName">Name of the object to be selected.</param>
+        void Select(string objectName);
     }
 } 
