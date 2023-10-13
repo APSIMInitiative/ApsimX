@@ -3340,6 +3340,11 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Conserve fodder
+        /// </summary>
+        public event Supplement.ConserveSuppDelegate Conserve;
+
+        /// <summary>
         /// Removes all herbage down to a nominated threshold and makes it available for storage as hay.
         /// </summary>
         /// <param name="cutHeight">Height of cutting. mm</param>
@@ -3365,7 +3370,7 @@ namespace Models.GrazPlan
                                   gathered, dmdLoss, dmContent, ref hayFW, ref HayComposition);
 
             // if a Supplement component is found and the storeName is valid then conserve this fodder in the store.
-            if (suppFeed != null)
+            if ((suppFeed != null) && (gathered > 0))
             {
                 ConserveType conserve = new ConserveType();
                 conserve.Name = storeName;
@@ -3377,7 +3382,8 @@ namespace Models.GrazPlan
                 conserve.SConc = HayComposition.Sulphur;
                 conserve.AshAlk = HayComposition.AshAlkalinity;
 
-                // TODO: fix this - suppFeed.OnConserve(conserve);
+                if (Conserve != null)
+                    Conserve.Invoke(conserve);
             }
         }
 
