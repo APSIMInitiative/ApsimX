@@ -946,6 +946,52 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Time steps available 
+    /// </summary>
+    public enum TimeStepTypes
+    {
+        /// <summary>
+        /// Every month
+        /// </summary>
+        Monthly,
+        /// <summary>
+        /// Every fortnight
+        /// </summary>
+        Fortnightly,
+        /// <summary>
+        /// Every week
+        /// </summary>
+        Weekly,
+        /// <summary>
+        /// Everty day
+        /// </summary>
+        Daily,
+        /// <summary>
+        /// Manually specify time-step in days
+        /// </summary>
+        Custom
+    }
+
+    /// <summary>
+    /// Time step offset types
+    /// </summary>
+    public enum TimeStepOffsetTypes
+    {
+        /// <summary>
+        /// Start of time-step
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Middle day of time-step (rounded up)
+        /// </summary>
+        Middle,
+        /// <summary>
+        /// End of time-step
+        /// </summary>
+        End
+    }
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]
