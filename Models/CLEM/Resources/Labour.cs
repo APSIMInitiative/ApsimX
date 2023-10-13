@@ -173,6 +173,7 @@ namespace Models.CLEM.Resources
                         Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
                     };
+                    labour.SetParentResourceBaseWithTransactions(this);
                     labour.Attributes.Add("Group", att);
                     labour.TransactionOccurred += Resource_TransactionOccurred;
                     Items.Add(labour);
@@ -193,6 +194,7 @@ namespace Models.CLEM.Resources
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                             Hired = labourChildModel.Hired
                         };
+                        labour.SetParentResourceBaseWithTransactions(this);
                         labour.Attributes.Add("Group", att);
                         labour.TransactionOccurred += Resource_TransactionOccurred;
                         Items.Add(labour);
@@ -200,8 +202,8 @@ namespace Models.CLEM.Resources
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (this.FindAllChildren<LabourPricing>().Count() > 0)
-                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
+            if (FindAllChildren<LabourPricing>().Count() > 0)
+                PayList = Apsim.Clone(FindAllChildren<LabourPricing>().FirstOrDefault());
         }
 
         /// <summary>
@@ -210,7 +212,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (LabourType childModel in this.FindAllChildren<LabourType>())
+            foreach (LabourType childModel in FindAllChildren<LabourType>())
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
 
             if (Items != null)
