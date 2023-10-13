@@ -1,27 +1,18 @@
 ﻿
 using APSIM.Shared.Utilities;
-using CMPServices;
-using Docker.DotNet.Models;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Models.AgPasture;
 using Models.Core;
 using Models.Grazplan;
 using Models.Interfaces;
-using Models.PMF;
-using Models.PMF.Phen;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
 using Models.Surface;
-using Models.WaterModel;
 using Newtonsoft.Json;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Models.G_Range;
 using static Models.GrazPlan.GrazType;
 using static Models.GrazPlan.PastureUtil;
 
@@ -44,16 +35,6 @@ namespace Models.GrazPlan
 
         /// <summary>Layer thicknesses</summary>
         protected double[] FInputProfile = null;        // [1..
-
-
-        // <summary></summary>
-        //protected double[] FSoilValues = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers] SURFACE = 0
-
-        // <summary></summary>
-        //protected double[] FSoilDepths = new double[GrazType.MaxSoilLayers + 1];        // [SURFACE..MaxSoilLayers]
-
-        // <summary></summary>
-        //protected double[] FLayer2Soil = new double[GrazType.MaxSoilLayers + 1];        // [1..
 
         /// <summary>
         /// Set the layer count and thicknesses
@@ -87,7 +68,8 @@ namespace Models.GrazPlan
     // ========================================================================
 
     /// <summary>
-    /// # Pasture class that models temperate Australian pastures
+    /// # Pasture class that models temperate Australian pastures.
+    /// Encapsulates the GRAZPLAN pasture model
     /// </summary>
     [Serializable]
     [ScopedModel]
@@ -448,28 +430,6 @@ namespace Models.GrazPlan
 
             }
         }
-        #endregion
-
-        #region Child organs
-
-        // Plant parts and state
-        /*
-        /// <summary>Holds info about state of leaves (DM and N).</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public PastureAboveGroundOrgan Leaf { get; set; } = null;
-
-        /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public PastureAboveGroundOrgan Stem { get; set; } = null;
-
-        /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
-        [Link(Type = LinkType.Child)]
-        internal List<PastureBelowGroundOrgan> roots = null;
-
-        /// <summary>Above ground organs.</summary>
-        [Link(Type = LinkType.Child)]
-        public List<PastureAboveGroundOrgan> AboveGroundOrgans { get; private set; }
-        */
         #endregion
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
@@ -2499,11 +2459,6 @@ namespace Models.GrazPlan
                 FInputs.ASW[Ldx] = Math.Max(0.0, Math.Min(FInputs.ASW[Ldx], 1.0));
                 FInputs.WFPS[Ldx] = FInputs.Theta[Ldx] / (1.0 - F_BulkDensity[Ldx] / 2.65);
             }
-
-            PastureModel.Inputs = FInputs;
-
-            GetSiblingPlants();
-
         }
 
         /// <summary>
@@ -2551,8 +2506,6 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Get climate and water = 4000
-        /// Currently called before Arbitrator does nutrient demand. Water arbitration has been done.
         /// </summary>
         private void DoPastureWater()
         {
@@ -2592,12 +2545,6 @@ namespace Models.GrazPlan
             Array.Copy(soilChemical.PH, 0, FInputs.pH, 1, soilChemical.PH.Length);
 
             storePastureCover();   // passes input values to the model
-            //storeWeather();
-
-            PastureModel.Inputs = FInputs;
-
-            // if no other plants with roots in the soil TODO: adjust this code
-            // PastureModel.SetMonocultureSoil();
 
             // initialise the 3D array. This is the FSupply calculated by the arbitrator being sent for uptake.
             int x = Enum.GetNames(typeof(TPlantNutrient)).Length;
@@ -2796,26 +2743,6 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Get the soil occupied by roots
-        /// </summary>
-        /// <returns></returns>
-        private SoilFract[] GetSoilInfo()
-        {
-            SoilFract[] soil = new SoilFract[0];
-
-            // for each plant population
-            WaterInfo[] water_info = WaterDemandSupply;
-            double[] water_params = WaterParams;
-            double[] plant_kl = KL;
-            double[] root_ll = LL;
-
-            // TODO: ....
-
-            return null;
-        }
-
-
-        /// <summary>
         /// Computes the derived values that go to make up the FInputs record for weather
         /// </summary>
         private void storeWeather()
@@ -2867,7 +2794,7 @@ namespace Models.GrazPlan
         /// <returns>The light profile data</returns>
         private LightProfile GetLightProfile()
         {
-            // TODO: This is a rough go at getting a light profile
+            // TODO: Check if this needs to be proportioned for each cohort
             LightProfile lightProfile = null;
             if (microClimate.RadiationInterception != 0)
             {
@@ -2931,52 +2858,6 @@ namespace Models.GrazPlan
                 }
             }
         }
-
-        /*
-        /// <summary>
-        /// Water uptake by plant populations interacting with this module
-        /// </summary>
-        /// <param name="water"></param>
-        /// <exception cref="Exception"></exception>
-        private void storeWaterSupply(WaterUptake[] water)
-        {
-            uint Idx, Jdx;
-            int iComp;
-            WaterPopItem[] popnValue;
-            WaterPopItem compValue;
-
-            if (water != null)
-            {
-                popnValue = null;
-                Idx = 0;
-                while ((Idx < water.Length) && (popnValue == null))
-                {
-                    if (water[Idx].population == this.Name)                //// TODO: check this name
-                        popnValue = water[Idx].element;
-                    else
-                        Idx++;
-                }
-
-                if (FWaterValueReqd && (popnValue == null))
-                {
-                    throw new Exception("Water uptake value not located for module " + this.Name);
-                }
-
-                if (popnValue != null)
-                {
-                    for (Jdx = 0; Jdx < popnValue.Length; Jdx++)                            // One entry per component for which a demand was given
-                    {
-                        compValue = popnValue[Jdx];
-
-                        iComp = stSEEDL;
-                        while ((iComp <= stSENC) && (compValue.name != sCOMPNAME[iComp]))
-                            iComp++;
-                        if (iComp == stSEEDL || iComp == stESTAB || iComp == stSENC)
-                            Layers2LayerArray(compValue.layer, ref FTranspiration[iComp], true);
-                    }
-                }
-            }
-        }*/
 
         /// <summary>
         /// Called when a water arbitrator has calculated water uptakes
@@ -3179,16 +3060,6 @@ namespace Models.GrazPlan
         /// </summary>
         private void StoreSoilPropn()
         {
-            foreach (ICanopy amodel in zone.FindAllDescendants<ICanopy>())
-            {
-                if (amodel != this)
-                {
-                   // TODO: find all the competing root masses and proportion this populations amount of roots
-                }
-            }
-
-            // TODO: implement the proportion calculation correctly taking into account competing crops/pastures
-            // stSEEDL, stESTAB, stSENC
             for (int layer = 1; layer <= soilPhysical.Thickness.Length; layer++)
                 if (mySoilWaterAvailable[layer - 1] > 0)
                     for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
@@ -3209,7 +3080,7 @@ namespace Models.GrazPlan
 
         #endregion
 
-                #region Arbitration functions ==============================================
+        #region Arbitration functions ==============================================
 
         private double myWaterDemand; // Amount of water demanded by the plant(mm)
 
@@ -3258,18 +3129,6 @@ namespace Models.GrazPlan
         /// <param name="myZone">The soil information from the zone that contains the roots.</param>
         internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone)
         {
-            //double[] thickness = soilPhysical.Thickness;
-            //double[] nh4 = myZone.NH4N;     // kg/ha
-            //double[] no3 = myZone.NO3N;
-            //double depthAtTopOfLayer = 0;
-            //for (int layer = 0; layer < FNoLayers; layer++)
-            //{
-            //    this.mySoilNH4Available[layer] = nh4[layer];
-            //    this.mySoilNO3Available[layer] = no3[layer];
-
-            //    depthAtTopOfLayer += thickness[layer];
-            //}
-
             Array.Clear(this.mySoilNH4Available);
             Array.Clear(this.mySoilNO3Available);
 
@@ -3315,7 +3174,6 @@ namespace Models.GrazPlan
                     NSupply += (this.mySoilNH4Available.Sum() + this.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
 
                 }
-
 
                 // kg/ha
                 mySoilNDemand = maxDemand * GM2_KGHA;
@@ -3570,11 +3428,6 @@ namespace Models.GrazPlan
             PastureModel.PassRemoval(HerbageRemoved, SeedRemoved);
         }
 
-        // Other events
-        // add_residue, crop_chopped
-
         #endregion
-
-
     }
 }
