@@ -1203,7 +1203,7 @@ namespace Models.CLEM.Activities
                                     var newindividuals = cohort.CreateIndividuals(null, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedParams);
                                     foreach (var ind in newindividuals)
                                     {
-                                        ind.Location = grazeStoreBreeders;
+                                        ind.Location = grazeStoreSires;
                                         ind.SaleFlag = HerdChangeReason.SirePurchase;
                                         ind.ID = 0;
                                         ind.PurchaseAge = ind.Age;
