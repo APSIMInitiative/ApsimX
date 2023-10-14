@@ -602,6 +602,18 @@ namespace Models.CLEM.Activities
 
             // weight based mortality
             List<Ruminant> died = new();
+
+            died = herd.Where(a => a.Weight == 0).ToList();
+            if (died.Any())
+            {
+                foreach (Ruminant ind in died)
+                {
+                    ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                }
+            }
+
+            died = new();
             if (herd.Any())
             {
                 switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
