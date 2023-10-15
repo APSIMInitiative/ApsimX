@@ -416,7 +416,7 @@ namespace Models.WaterModel
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachCl { get { if (FlowCl == null) return 0; else return FlowCl.Last(); } }  // VOS //public double LeachCl => 0.0;
+        public double LeachCl { get { if (FlowCl == null) return 0; else return FlowCl.Last(); } }  
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -553,15 +553,21 @@ namespace Models.WaterModel
 
             double[] no3Values = no3.kgha;
             double[] ureaValues = urea.kgha;
-            double[] clValues = cl.kgha;
 
             // Calculate solute movement down with water.
             double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(no3Values, no3Down);
             double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency);
             MoveDown(ureaValues, ureaDown);
-            double[] clDown = CalculateSoluteMovementDown(clValues, Water, Flux, SoluteFluxEfficiency);
-            MoveDown(clValues, clDown);
+
+            double[] clValues = null;
+            double[] clDown = null;
+            if (cl != null)
+            {
+                clValues = cl.kgha;
+                clDown = CalculateSoluteMovementDown(clValues, Water, Flux, SoluteFluxEfficiency);
+                MoveDown(clValues, clDown);
+            }
 
             // Calculate evaporation and remove from top layer.
             double es = evaporationModel.Calculate();
@@ -582,18 +588,24 @@ namespace Models.WaterModel
             MoveUp(no3Values, no3Up);
             double[] ureaUp = CalculateNetSoluteMovement(ureaValues, Water, Flow, SoluteFlowEfficiency);
             MoveUp(ureaValues, ureaUp);
-            double[] clUp = CalculateNetSoluteMovement(clValues, Water, Flow, SoluteFlowEfficiency);
-            MoveUp(clValues, clUp);
 
             // Update flow output variables.
             FlowNO3 = MathUtilities.Subtract(no3Down, no3Up);
             FlowUrea = MathUtilities.Subtract(ureaDown, ureaUp);
-            FlowCl = MathUtilities.Subtract(clDown, clUp);
 
             // Set solute state variables.
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
-            cl.SetKgHa(SoluteSetterType.Soil, clValues);
+
+
+            if (cl != null)
+            {
+                double[] clUp = CalculateNetSoluteMovement(clValues, Water, Flow, SoluteFlowEfficiency);
+                MoveUp(clValues, clUp);
+                FlowCl = MathUtilities.Subtract(clDown, clUp);
+                cl.SetKgHa(SoluteSetterType.Soil, clValues);
+            }
+
 
             // Now that we've finished moving water, calculate volumetric water
             waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
