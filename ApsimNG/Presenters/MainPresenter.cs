@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using UserInterface.Interfaces;
 using Models.Core;
-using UserInterface.Views;
-using System.Linq;
-using UserInterface.EventArguments;
-using Utility;
-using Models.Core.ApsimFile;
 using Models.Core.Apsim710File;
+using Models.Core.ApsimFile;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -91,7 +91,7 @@ namespace UserInterface.Presenters
             else if (savedHeight < 10)
                 this.view.StatusPanelHeight = (int)Math.Round(height * 0.1);
             else
-                this.view.StatusPanelHeight = (int)Math.Round(height * (savedHeight/100.0f));
+                this.view.StatusPanelHeight = (int)Math.Round(height * (savedHeight / 100.0f));
 
             int width = this.view.WindowSize.Width;
             int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
@@ -246,7 +246,7 @@ namespace UserInterface.Presenters
         {
             view.HideProgressBar();
         }
-        
+
         /// <summary>
         /// Displays several messages, with a separator between them. 
         /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
@@ -276,7 +276,7 @@ namespace UserInterface.Presenters
         public void ShowError(string error)
         {
             LastError.Clear();
-            view.ShowMessage(error, MessageType.Error, withButton : false);
+            view.ShowMessage(error, MessageType.Error, withButton: false);
         }
 
         /// <summary>
@@ -519,7 +519,7 @@ namespace UserInterface.Presenters
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
                     if (converter.DidConvert)
-                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
+                        this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}", Simulation.MessageType.Information, true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -911,7 +911,7 @@ namespace UserInterface.Presenters
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right.</param>
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {            
+        {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
@@ -959,7 +959,7 @@ namespace UserInterface.Presenters
                 ShowError(e);
                 return null;
             }
-            
+
             //ExplorerView explorerView = new ExplorerView(null);
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -1074,7 +1074,7 @@ namespace UserInterface.Presenters
             // But check to be sure a tab has actually been closed and, if not, remove it now
 
             if (view.PageCount(onLeft) == nPages)
-                view.RemoveTab(index + 1, onLeft);  
+                view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
@@ -1333,7 +1333,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (int)MathF.Round(((float)this.view.StatusPanelHeight / (float)this.view.WindowSize.Height)*100);
+                Utility.Configuration.Settings.StatusPanelHeight = (int)MathF.Round(((float)this.view.StatusPanelHeight / (float)this.view.WindowSize.Height) * 100);
                 if (treeWidth > 0)
                     Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();

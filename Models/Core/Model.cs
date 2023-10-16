@@ -647,9 +647,9 @@ namespace Models.Core
             {
                 foreach (string[] name in eventNames)
                     if (name[0].Contains(filter) == !filterOut)
-                    { 
-                        eventNamesFiltered.Add(name); 
-                    }           
+                    {
+                        eventNamesFiltered.Add(name);
+                    }
             }
             yield return new Paragraph($"Function {functionName} of Model {Name} contains the following Events in the given order.\n");
 

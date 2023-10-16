@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 168; } }
+        public static int LatestVersion { get { return 169; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5302,6 +5302,71 @@ namespace Models.Core.ApsimFile
                 if (changeMade)
                     manager.Save();
             }
+        }
+
+        /// <summary>
+        /// MicroClimate can only be under Simulation not Zone.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="_"></param>
+        private static void UpgradeToVersion169(JObject root, string _)
+        {
+            List<JObject> childrenList = JsonUtilities.ChildrenOfType(root, "MicroClimate");
+            foreach (var microClimate in childrenList)
+            {
+                var parent = JsonUtilities.Parent(microClimate);
+                var grandParent = JsonUtilities.Parent(parent);
+
+                // Remove any duplicate MicroClimates in Simulation nodes.
+                if (JsonUtilities.Type(parent) == "Simulation")
+                {
+                    List<JObject> childList = JsonUtilities.Children((JObject)parent);
+                    List<JObject> microClimateList = new();
+                    foreach (JObject child in childList)
+                    {
+                        if (JsonUtilities.Type(child) == "MicroClimate")
+                            microClimateList.Add(child);
+                    }
+
+                    while (microClimateList.Count > 1)
+                    {
+                        JsonUtilities.RemoveChild((JObject)parent, "MicroClimate");
+                        microClimateList = JsonUtilities.ChildrenOfType((JObject)parent, "MicroClimate");
+                    }
+                }
+
+                // Removes MicroClimate if child of zone after making a copy in the parent Simulation node.
+                if (JsonUtilities.Type(parent) == "Zone" && JsonUtilities.Type(grandParent) == "Simulation")
+                {
+                    // Needed for the AddModel method.
+                    MicroClimate microClimateModel = FileFormat.ReadFromString<MicroClimate>(microClimate.ToString(), e => throw e, false).NewModel as MicroClimate;
+                    List<JObject> grandParentChildList = JsonUtilities.Children((JObject)grandParent);
+                    bool microClimateAlreadyInGrandParent = false;
+
+                    foreach (JObject child in grandParentChildList)
+                    {
+                        if (child["$type"].ToString() == "Models.MicroClimate, Models")
+                            microClimateAlreadyInGrandParent = true;
+                    }
+
+                    if (microClimateAlreadyInGrandParent == false)
+                    {
+                        JsonUtilities.AddModel((JObject)grandParent, microClimateModel);
+                        // Removes MicroClimate from Zone Nodes that contain MicroClimates.
+                        JsonUtilities.RemoveChild((JObject)parent, "MicroClimate");
+                        // Check for duplicates of MicroClimate in parent (Simulation).
+                    }
+                    else JsonUtilities.RemoveChild((JObject)parent, "MicroClimate");
+
+                }
+
+                // Removes MicroClimate node if child of anything other than Zone or Simulation.
+                if (JsonUtilities.Type(parent) != "Zone" && JsonUtilities.Type(parent) != "Simulation")
+                {
+                    JsonUtilities.RemoveChild((JObject)parent, "MicroClimate");
+                }
+            }
+
         }
     }
 }
