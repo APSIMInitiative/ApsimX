@@ -99,6 +99,9 @@ namespace Models.Soils
         public double[] FlowUrea { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
+        public double[] FlowCl { get; set; }
+        ///<summary> Who knows</summary>
+        [JsonIgnore]
         public double[] Flux { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
