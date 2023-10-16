@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -40,6 +40,7 @@
             "[Barley].Leaf.LAI",
             "[Barley].Leaf.Live.NConc",
             "[Barley].Leaf.Live.Wt",
+            "[Barley].Leaf.Wt",
             "[Barley].Leaf.SenescingCohortNo",
             "[Barley].Leaf.SpecificArea",
             "[Barley].Phenology.AccumulatedEmergedTT",
@@ -179,8 +180,8 @@
               "Overrides": [
                 "[Barley].PlantType=Barley",
                 "[Phenology].EarlyFlowering.Target.FixedValue=0",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33"
               ],
               "Name": "ModelOverrides",
               "ResourceName": null,
@@ -311,23 +312,6 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 5",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Boss",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = 4",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
@@ -399,23 +383,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Cellar",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 7.666666667",
                     "[Phenology].CAMP.FLNparams.PpLN = 2.333333333",
                     "[Phenology].CAMP.FLNparams.VrnLN = 4",
@@ -454,23 +421,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "County",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 7.333333333",
                     "[Phenology].CAMP.FLNparams.PpLN = 0.666666667",
                     "[Phenology].CAMP.FLNparams.VrnLN = 5",
@@ -501,40 +451,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
                   ],
                   "Name": "Csirob3",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.76",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2175",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Dash",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Doyen",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -807,45 +723,11 @@
                     "[Phenology].CAMP.FLNparams.PpLN = 3",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0",
                     "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.76",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2175",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Omaka",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
                   ],
                   "Name": "Omaka1",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Optic",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -865,23 +747,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
                   ],
                   "Name": "Oxford",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Pyramid",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1019,23 +884,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Sherwood",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 6",
                     "[Phenology].CAMP.FLNparams.PpLN = 1",
                     "[Phenology].CAMP.FLNparams.VrnLN = 4",
@@ -1066,23 +914,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
                   ],
                   "Name": "Stirling",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Tavern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1164,23 +995,6 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Vortex",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
                     "[Phenology].CAMP.FLNparams.PpLN = -3",
                     "[Phenology].CAMP.FLNparams.VrnLN = 7",
                     "[Phenology].CAMP.FLNparams.VxPLN = -10",
@@ -1210,6 +1024,204 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
                   ],
                   "Name": "Yagan",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "FittedCultivars",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 8.5",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Boss",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Cellar",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 6",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "County",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 6",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Dash",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Doyen",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                    "[Phenology].CAMP.FLNparams.PpLN = 6",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Omaka",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5.5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.5",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Optic",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 8",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Pyramid",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 8",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 78",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.5",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Sherwood",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Tavern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 8",
+                    "[Phenology].CAMP.FLNparams.PpLN = 5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 75",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Vortex",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2427,6 +2439,84 @@
                   "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
                   "X2FieldName": "",
                   "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 3,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "SpecificLeafArea",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "DailyObsPred",
+                  "XFieldName": "Observed.Barley.Leaf.SpecificArea",
+                  "YFieldName": "Predicted.Barley.Leaf.SpecificArea",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -3720,8 +3810,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.AboveGround.Wt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -7641,10 +7731,10 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Leaf.Live.Wt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -9913,7 +10003,7 @@
                               "Parameters": [
                                 {
                                   "Key": "InitialRootDepth",
-                                  "Value": "20"
+                                  "Value": "40"
                                 },
                                 {
                                   "Key": "Cultivar",
@@ -9921,7 +10011,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2011-07-13"
+                                  "Value": "07/13/2011 00:00:00"
                                 }
                               ],
                               "Name": "Sowing",
@@ -10550,43 +10640,14 @@
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
-                          "LineThickness": 1,
-                          "TableName": "DailyReport",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Barley.Structure.LeafTipsAppeared",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Wednesday",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "SD",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Cult",
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Structure.LeafTipsAppeared",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
+                          "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
                           "Filter": null,
@@ -11009,6 +11070,72 @@
                           "CumulativeX": false,
                           "Filter": "[SD]=1",
                           "Name": "ObsLeafSize",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Photoperiod",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SD",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Phenology.Photoperiod",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -12746,12 +12873,12 @@
                               ],
                               "Parameters": [
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": ""
-                                },
-                                {
                                   "Key": "InitialRootDepth",
                                   "Value": "20"
+                                },
+                                {
+                                  "Key": "Cultivar",
+                                  "Value": ""
                                 },
                                 {
                                   "Key": "SowingDate",
@@ -13191,8 +13318,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Soil.Water.Volumetric(1)",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -17047,9 +17174,9 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Barley.Leaf.Live.Wt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "YFieldName": "Barley.Leaf.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -17076,9 +17203,9 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Barley.Leaf.Live.Wt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "YFieldName": "Barley.Leaf.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -17249,8 +17376,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Leaf.LAI",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -17271,15 +17398,15 @@
                           "FactorToVaryColours": "Irr",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 1,
+                          "Marker": 0,
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Leaf.LAI",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -24868,6 +24995,101 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "TotalWt1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Pop",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Sow",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.AboveGround.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Pop",
+                          "FactorToVaryMarkers": "Sow",
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.AboveGround.Wt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -25909,7 +26131,7 @@
                                 "        {",
                                 "            if (Sown == false)",
                                 "            {",
-                                "                Barley.Sow(population: 200, cultivar: Cultivar, depth: 20, rowSpacing: 150, budNumber: 1);",
+                                "                Barley.Sow(population: 200, cultivar: Cultivar, depth: 30, rowSpacing: 150, budNumber: 1);",
                                 "                Sown = true;",
                                 "            }",
                                 "            ",
@@ -25996,6 +26218,452 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowInDocs": false,
+                      "GraphsPerPage": 6,
+                      "Name": "Phenology",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": 0.0,
+                              "Maximum": 180.0,
+                              "Interval": 20.0
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": 0.0,
+                              "Maximum": 180.0,
+                              "Interval": 20.0
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "FlagLeafDAS",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "HarvestObsPred",
+                              "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                              "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": false,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "FloweringDAS",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "HarvestObsPred",
+                              "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
+                              "YFieldName": "Predicted.Barley.Phenology.FloweringDAS",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": false,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowInDocs": false,
+                      "GraphsPerPage": 6,
+                      "Name": "LeafAppearance",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": 5.0,
+                              "Maximum": 10.0,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": 5.0,
+                              "Maximum": 10.0,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LeafTips",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "DailyObsPred",
+                              "XFieldName": "Observed.Barley.Phenology.HaunStage",
+                              "YFieldName": "Predicted.Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": false,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LeafTips Timeseries",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "SD",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Observed",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "LeafTips Boss",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": "SD",
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "DailyReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "Cult = \"Doyen\"",
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "Cult",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "Observed",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": "",
+                              "Name": "Observed",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -26050,206 +26718,9 @@
                       "TableName": "DailyObsPred",
                       "XFieldName": "Observed.Barley.Phenology.HaunStage",
                       "YFieldName": "Predicted.Barley.Phenology.HaunStage",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
                       "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Cult",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 4,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "DailyObsPred",
-                      "XFieldName": "Observed.Barley.Phenology.HaunStage",
-                      "YFieldName": "Predicted.Barley.Structure.LeafTipsAppeared",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Wednesday",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": 180.0,
-                      "Interval": 20.0
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": 180.0,
-                      "Interval": 20.0
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FlagLeafDAS",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Cult",
-                      "FactorToVaryMarkers": "SD",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
-                      "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FloweringDAS",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Cult",
-                      "FactorToVaryMarkers": "SD",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
-                      "YFieldName": "Predicted.Barley.Phenology.FloweringDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
                       "IncludeSeriesNameInLegend": true,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -50369,11 +50840,12 @@
                                 "        [Link] private Plant Barley;",
                                 "        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]",
                                 "        private Phenology phenology;",
+                                "        [Link] Clock clock;",
                                 "",
                                 "        [EventSubscribe(\"DoManagement\")]",
                                 "        private void OnDoManagement(object sender, EventArgs e)",
                                 "        {",
-                                "            if (phenology.CurrentPhase.Name==\"GrainFilling\")",
+                                "            if (clock.Today == clock.EndDate)",
                                 "            {",
                                 "               Barley.Harvest();",
                                 "               Barley.EndCrop();    ",
@@ -50385,7 +50857,7 @@
                                 "}"
                               ],
                               "Parameters": [],
-                              "Name": "HarvestAtFlowering",
+                              "Name": "HarvestAtEndOfExperiment",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -50824,13 +51296,13 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
-                              "ColourArgb": 0,
+                              "ColourArgb": -16777216,
                               "FactorToVaryColours": "Cv",
                               "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 0,
                               "MarkerSize": 0,
-                              "Line": 0,
+                              "Line": 4,
                               "LineThickness": 0,
                               "TableName": "HarvestObsPred",
                               "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
@@ -50844,7 +51316,97 @@
                               "Filter": null,
                               "Name": "Series",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": false,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 3,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "HaunStage",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -16777216,
+                              "FactorToVaryColours": "Treat",
+                              "FactorToVaryMarkers": "Cv",
+                              "FactorToVaryLines": null,
+                              "Marker": 0,
+                              "MarkerSize": 0,
+                              "Line": 4,
+                              "LineThickness": 0,
+                              "TableName": "DailyObsPred",
+                              "XFieldName": "Observed.Barley.Phenology.HaunStage",
+                              "YFieldName": "Predicted.Barley.Phenology.HaunStage",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Regression, Models",
+                                  "ForEachSeries": false,
+                                  "showOneToOne": true,
+                                  "showEquation": true,
+                                  "Name": "Regression",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
