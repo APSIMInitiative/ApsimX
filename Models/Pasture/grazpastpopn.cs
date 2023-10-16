@@ -4273,7 +4273,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Light interception for a monoculture (Used if the MicroClimate calcs fail)
+        /// Light interception for a monoculture
         /// </summary>
         public void SetMonocultureLight()
         {
@@ -4340,7 +4340,6 @@ namespace Models.GrazPlan
             if ((comp >= stSEEDL) && (comp <= stSENC))
             {
                 Array.Copy(values, 0, this.FTranspireRate[comp], 0, values.Length);
-                //this.FTranspireRate[comp] = values;
             }
         }
 
@@ -4494,7 +4493,7 @@ namespace Models.GrazPlan
             double totalLightFraction = 0;
             for (int iComp = stSEEDL; iComp <= stSENC; iComp++)
                 totalLightFraction += this.LightPropn(iComp);
-            
+
             return MathUtilities.Divide(this.LightPropn(comp),totalLightFraction,0.0) * pastureWaterDemand;
         }
 

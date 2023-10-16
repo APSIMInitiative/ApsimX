@@ -221,7 +221,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        ///
+        /// Initialise the pool structure
         /// </summary>
         /// <param name="growthPool"></param>
         private void Zero2D_DMPool(ref DM_Pool[,] growthPool)
@@ -405,8 +405,7 @@ namespace Models.GrazPlan
             return result;
         }
 
-        /*procedure setRootDM(      iAge,  iLayer : Integer;                       fValue : Single );
-        */
+        //public void setRootDM(int iAge, int iLayer, double fValue)
 
         /// <summary>
         ///

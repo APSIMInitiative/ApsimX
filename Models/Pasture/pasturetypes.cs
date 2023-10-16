@@ -262,7 +262,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Each plant population
         /// </summary>
-        public Population[] interception = null;
+        public Population interception = null;
         public double transmission; // MJ/m^2
     }
 
