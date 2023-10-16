@@ -273,16 +273,15 @@ namespace Models.CLEM.Activities
             if (model.parentZone.BuildTransactionCategoryFromTree && model.Parent is CLEMActivityBase)
             {
                 transCatsList.Add((model.Parent as CLEMActivityBase).TransactionCategory);
-                //transCatsList = model.FindAllAncestors<CLEMActivityBase>().Where(a => a != model.Parent).Select(a => model.parentZone.UseModelNameAsTransactionCategory ? ((a.TransactionCategory == "_") ? "" : a.Name) : a.TransactionCategory).Reverse().ToList();
             }
 
             transCatsList.Add(model.parentZone.UseModelNameAsTransactionCategory ? ((model.TransactionCategory == "_") ? "" : model.Name) : model.TransactionCategory);
-            transCatsList = transCatsList.Where(a => a != "").ToList();
+            transCatsList.RemoveAll(a => a == "");
 
             string transCat = (transCatsList.Any()) ? String.Join(".", transCatsList.Where(a => a != null)) : "";
 
             if (transCat.Contains("[RelatesTo]"))
-                transCat.Replace("[RelatesTo]", relatesToValue??"");
+                transCat = transCat.Replace("[RelatesTo]", relatesToValue??"");
 
             return transCat;
         }
@@ -343,13 +342,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Get the IEnumerable(T) of all activity specified companion models by type and identifer
+        /// Get the IEnumerable &lt;T&lt; of all activity specified companion models by type and identifer
         /// </summary>
         /// <typeparam name="T">The companion model type</typeparam>
-        /// <param name="identifier">Identifer label</param>
-        /// <param name="mustBeProvidedByUser">Determines if the parent requesting assumes the user will provide an instance of this child</param>
-        /// <param name="addNewIfEmpty">Create IENumuerable with a new() instance of T</param>
-        /// <returns>IEnumerable of T found</returns>
+        /// <param name="identifier">Identifer label.</param>
+        /// <param name="mustBeProvidedByUser">Flag determines if the parent requesting assumes the user will provide an instance of this child.</param>
+        /// <param name="addNewIfEmpty">Flag to determine is new IENumuerable is created with a new() instance of T.</param>
+        /// <returns>IEnumerable of T found.</returns>
         protected private IEnumerable<T> GetCompanionModelsByIdentifier<T>(bool mustBeProvidedByUser, bool addNewIfEmpty, string identifier = "") where T : IActivityCompanionModel, new()
         {
             if (companionModelsPresent.ContainsKey(typeof(T).Name))
@@ -381,7 +380,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Create a dictionary of groups of components by identifier provided by the parent model
+        /// Create a dictionary of groups of components by identifier provided by the parent model.
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
         /// <returns></returns>
@@ -419,33 +418,33 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Return a error message string for Unknown identifier
+        /// Return a formatted error message for an unknown companion model.
         /// </summary>
-        /// <param name="model">Model throwing the error</param>
-        /// <param name="companionLabels">The details of labels saught</param>
-        /// <returns>Formatted string for exception</returns>
+        /// <param name="model">Model throwing the error.</param>
+        /// <param name="companionLabels">The details of labels saught based on type, identifier and unit.</param>
+        /// <returns>Formatted string for exception.</returns>
         public static string UnknownCompanionModelErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Type [{companionLabels.type}] is not supported by {model.GetType().Name}: [a={model.NameWithParent}]";
         }
 
         /// <summary>
-        /// Return a error message string for Unknown identifier
+        /// Return a formatted error message for an unknown identifier.
         /// </summary>
-        /// <param name="model">Model throwing the error</param>
-        /// <param name="companionLabels">The details of labels saught</param>
-        /// <returns>Formatted string for exception</returns>
+        /// <param name="model">Model throwing the error.</param>
+        /// <param name="companionLabels">The details of labels saught.</param>
+        /// <returns>Formatted string for exception.</returns>
         public static string UnknownIdentifierErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Unknown identifier [{companionLabels.identifier}] used for [{companionLabels.type}] in [{model.GetType().Name}]: [{model.NameWithParent}]";
         }
 
         /// <summary>
-        /// Return a error message string for Unknown identifier
+        /// Return a formatted error message for unknown units.
         /// </summary>
-        /// <param name="model">Model throwing the error</param>
-        /// <param name="companionLabels">The details of labels saught</param>
-        /// <returns>Formatted string for exception</returns>
+        /// <param name="model">Model throwing the error.</param>
+        /// <param name="companionLabels">The details of labels saught.</param>
+        /// <returns>Formatted string for exception.</returns>
         public static string UnknownUnitsErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
             return $"Unknown or invalid units [{((companionLabels.unit == "") ? "Blank" : companionLabels.unit)}] specified by companion component [{companionLabels.type}] {(((companionLabels.identifier ?? "")!="")?$"with the identifier [{companionLabels.identifier}]":"")} in [{model.GetType().Name}]: [a={model.NameWithParent}]";
@@ -453,7 +452,7 @@ namespace Models.CLEM.Activities
 
         #endregion
 
-        /// <summary>A method to arrange clearing status on CLEMStartOfTimeStep event</summary>
+        /// <summary>A method to arrange clearing the activity status on CLEMStartOfTimeStep event.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMStartOfTimeStep")]
@@ -461,7 +460,7 @@ namespace Models.CLEM.Activities
         {
             // clear Resources Required list
             ResourceRequestList = new List<ResourceRequest>();
-            foreach (var key in valuesForCompanionModels.Keys.ToList())
+            foreach (var key in valuesForCompanionModels.Keys)
             {
                 valuesForCompanionModels[key] = null;
             }
@@ -470,16 +469,16 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Add a new message to the list of current status messages
+        /// Add a new message to the list of current status messages.
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">The message to be added.</param>
         public void AddStatusMessage(string message)
         {
             statusMessageList.Add(message);
         }
 
         /// <summary>
-        /// Protected method to cascade calls for activities performed for all dynamically created activities
+        /// Protected method to cascade calls for activities performed for all dynamically created activities.
         /// </summary>
         public void ReportActivityStatus(int level, bool fromSetup = false)
         {
@@ -523,7 +522,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Mathod for parent to call this activity to run and manage transactions
+        /// Method for parent to call this activity to run and manage transactions
         /// </summary>
         public void ManuallyGetResourcesPerformActivity()
         {
@@ -531,10 +530,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Return the current metric value from the parent for a specifie companion model
+        /// Return the current metric value from the parent for a specifie companion model.
         /// </summary>
-        /// <param name="companionModel">Reference to companion model</param>
-        /// <returns>Current metric for the child</returns>
+        /// <param name="companionModel">Reference to companion model.</param>
+        /// <returns>Current metric for the child.</returns>
         public double ValueForCompanionModel(IActivityCompanionModel companionModel)
         {
             if(!valuesForCompanionModels.ContainsKey((companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")))
@@ -546,7 +545,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// The main method to manage an activity based on resources available 
+        /// The main method to manage an activity based on resources available.
         /// </summary>
         protected virtual void ManageActivityResourcesAndTasks(string identifier = "")
         {
@@ -605,7 +604,7 @@ namespace Models.CLEM.Activities
                     // adjust if needed using method supplied by activity
                     AdjustResourcesForTimestep();
 
-                    if (ReportShortfalls(ResourceRequestList, Guid.NewGuid()) == false)
+                    if (ReportShortfalls(ResourceRequestList) == false)
                     {
                         // take resources
                         // if no resources required perform Activity if code is present.
@@ -650,12 +649,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determine the min proportion shortfall for the current resource requests
-        /// Considers those coming from the companion models and this activity
+        /// Determine the minimum proportion shortfall for the current resource requests.
+        /// Considers those coming from the companion models and this activity.
         /// </summary>
-        /// <param name="reduceAllIdentifableShortfalls"></param>
-        /// <returns>Minimum proportion found</returns>
-        public IEnumerable<ResourceRequest> MinimumShortfallProportion(bool reduceAllIdentifableShortfalls = true)
+        /// <returns>Minimum proportion found.</returns>
+        public IEnumerable<ResourceRequest> MinimumShortfallProportion()
         {
             double min = 1;
             if (ResourceRequestList != null && ResourceRequestList.Any())
@@ -676,7 +674,7 @@ namespace Models.CLEM.Activities
             return new List<ResourceRequest>();
         }
 
-        /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
+        /// <summary>A method to arrange the activity to be performed on the specified clock event.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
@@ -731,7 +729,6 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Method to determine the list of resources and amounts needed. 
-        /// Functionality provided in derived classes
         /// </summary>
         public virtual List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
@@ -740,7 +737,6 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Method to adjust activities needed based on shortfalls before they are taken from resource pools. 
-        /// Functionality provided in derived classes
         /// </summary>
         protected virtual void AdjustResourcesForTimestep()
         {
@@ -755,7 +751,6 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Method to perform activity tasks if expected as soon as resources are available
-        /// Functionality provided in derived classes
         /// </summary>
         public virtual void PerformTasksForTimestep(double argument = 0)
         {
@@ -763,9 +758,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine if activity limited based on labour shortfall has been set
+        /// Method to determine if activity limited based on labour shortfall has been set.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Flag indicating if Labour Limit is set</returns>
         public bool IsLabourLimitSet
         {
             get
@@ -777,8 +772,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine resources available and perform transmutation if needed.
         /// </summary>
-        /// <param name="resourceRequests">List of requests</param>
-        /// <param name="uniqueActivityID">Unique id for the activity</param>
+        /// <param name="resourceRequests">List of resource requests</param>
+        /// <param name="uniqueActivityID">The Activity Unique id.</param>
+        /// <returns>Flag indicating if all resources are ok.</returns>
         public bool CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
         {
             if (resourceRequests is null || !resourceRequests.Any())
@@ -819,7 +815,6 @@ namespace Models.CLEM.Activities
                 throw new NotImplementedException($"Unsupported ActivityModel type [{string.Join("]&[", wrongType.Select(a => a.ActivityModel.GetType().ToString()))}] in ResourceRequest for [{NameWithParent}]{Environment.NewLine}Code based error: contact developers");
 
             // get requests needing transmutaion - must be flagged UseResourcesAvailable
-            //IEnumerable<ResourceRequest> shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required) ? (a.ActivityModel as IReportPartialResourceAction).AllowsPartialResourcesAvailable : false);
             IEnumerable<ResourceRequest> shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required));
             if (shortfallsToTransmute.Any())
                 // check what transmutations can occur
@@ -829,12 +824,8 @@ namespace Models.CLEM.Activities
             foreach (var skipped in shortfallsToTransmute.Select(a => a.ActivityModel).OfType<IReportPartialResourceAction>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity))
                 skipped.Status = ActivityStatus.Skipped;
 
-            // check if need to do transmutations
-            //int countTransmutationsSuccessful = shortfallsToTransmute.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
-            //bool allTransmutationsSuccessful = (shortfallsToTransmute.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Any() == false);
-
             // if error and stop on shortfall and shortfalls still occur after any transmutation
-            // racalc shortfalls ignoring any components with skip action
+            // recalculate shortfalls ignoring any components with skip action
             shortfallsToTransmute = resourceRequests.Where(a => MathUtilities.IsNegative(a.Available - a.Required) && (a.ActivityModel as IReportPartialResourceAction).Status != ActivityStatus.Skipped);
             if (shortfallsToTransmute.Any())
             {
@@ -894,11 +885,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Report shortfalls and provide status to undertake tasks
+        /// Report shortfalls and provide status to undertake tasks.
         /// </summary>
-        /// <param name="resourceRequests">List of requests</param>
-        /// <param name="uniqueActivityID">Unique id for the activity</param>
-        public bool ReportShortfalls(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
+        /// <param name="resourceRequests">List of resource requests.</param>
+        /// <returns>Flag indicating if shortfalls were recorded.</returns>
+        public bool ReportShortfalls(IEnumerable<ResourceRequest> resourceRequests)
         {
             bool componentError = false;
             // report any resource defecits here including if activity is skip or shortfall
@@ -943,8 +934,9 @@ namespace Models.CLEM.Activities
         /// Returns true if it was able to take the resources it needed.
         /// Returns false if it was unable to take the resources it needed.
         /// </summary>
-        /// <param name="resourceRequestList"></param>
+        /// <param name="resourceRequestList">A list of resources required</param>
         /// <param name="triggerActivityPerformed"></param>
+        /// <returns>Flag indicating if able to take the resources needed.</returns>
         public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
         {
             // no resources required or this is an Activity folder.
@@ -981,12 +973,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to determine available labour based on filters and take it if requested.
         /// </summary>
-        /// <param name="request">Resource request details</param>
-        /// <param name="removeFromResource">Determines if only calculating available labour or labour removed</param>
-        /// <param name="callingModel">Model calling this method</param>
-        /// <param name="resourceHolder">Location of resource holder</param>
-        /// <param name="allowPartialAction">Does this activity support partial action on resource shortfall</param>
-        /// <returns></returns>
+        /// <param name="request">Resource request details.</param>
+        /// <param name="removeFromResource">Flag determines if only calculating available labour or labour removed.</param>
+        /// <param name="callingModel">Model calling this method.</param>
+        /// <param name="resourceHolder">Location of resource holder.</param>
+        /// <param name="allowPartialAction">Flag to determine if activity supports partial action on resource shortfall.</param>
+        /// <returns>The amount of labour (days) provided.</returns>
         public static double TakeLabour(ResourceRequest request, bool removeFromResource, CLEMModel callingModel, ResourcesHolder resourceHolder, bool allowPartialAction)
         {
             if (request.Required == 0) return 0;
@@ -1138,9 +1130,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method to determine available non-labour resources and take if requested.
         /// </summary>
-        /// <param name="request">Resource request details</param>
-        /// <param name="removeFromResource">Determines if only calculating available labour or labour removed</param>
-        /// <returns></returns>
+        /// <param name="request">Resource request details.</param>
+        /// <param name="removeFromResource">Flag determines if only calculating available labour or labour removed.</param>
+        /// <returns>The amount of labour (days) provided.</returns>
         private double TakeNonLabour(ResourceRequest request, bool removeFromResource)
         {
             // get available resource
@@ -1186,29 +1178,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to trigger an Activity Performed event 
+        /// Method to trigger an Activity Performed event with defined status
         /// </summary>
-        /// <param name="status">The status of this activity to be reported</param>
+        /// <param name="status">The status of the activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
-            //int type = 0;
-            //if (GetType().Name.Contains("ActivityTimer"))
-            //{
-            //    type = 2;
-            //}
-            //if (GetType().Name.Contains("Folder"))
-            //{
-            //    type = 1;
-            //}
             this.Status = status;
             TriggerOnActivityPerformed();
-            //ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
-            //{
-            //    Name = this.Name,
-            //    Status = status,
-            //    Id = this.UniqueID.ToString(),
-            //    ModelType = type
-            //});
         }
     }
 }

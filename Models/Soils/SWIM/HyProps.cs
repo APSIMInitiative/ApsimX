@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Soils
 {
@@ -16,14 +17,30 @@ namespace Models.Soils
         private double[,] m1;
         private double[,] y0;
         private double[,] y1;
+        private double[] microporePowerTerm;
         private double[] microP;
-        private double[] microKs;
+        private double[] microporeKs;
         private double[] kdula;
-        private double[] macroP;
+        private double[] macroporePowerTerm;
         private double[] psid;
-        const double psi_ll15 = -15000.0;
-        const double psiad = -1e6;
-        const double psi0 = -0.6e7;
+        const double psi_ll15 = -15000.0;  // matric potential at 15 Bar
+        const double psiad = -1e6;         // matric potentiral at air dry
+        const double psi0 = -0.6e7;        // matric potential at oven dry
+        const double psiSat = -1.0;        // matric potential at saturation
+
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        public double[] PoreInteractionIndex { 
+            get 
+            { 
+                return microP; 
+            } 
+            set 
+            { 
+                microP = value; 
+
+            } 
+        }
 
         internal void ResizePropfileArrays(int newSize)
         {
@@ -33,10 +50,13 @@ namespace Models.Soils
             m1 = new double[newSize, 5];
             y0 = new double[newSize, 5];
             y1 = new double[newSize, 5];
+            
+            Array.Resize(ref microporePowerTerm, newSize);
             Array.Resize(ref microP, newSize);
-            Array.Resize(ref microKs, newSize);
+            Array.Fill(microP, 1.0);  // give array default value of 1
+            Array.Resize(ref microporeKs, newSize);
             Array.Resize(ref kdula, newSize);
-            Array.Resize(ref macroP, newSize);
+            Array.Resize(ref macroporePowerTerm, newSize);
             Array.Resize(ref psid, newSize);
         }
 
@@ -47,7 +67,7 @@ namespace Models.Soils
             {
                 psid[layer] = psiDul;  //- (p%x(p%n) - p%x(layer))
 
-                delk[layer, 0] = (dul[layer] - sat[layer]) / (Math.Log10(-psid[layer]));
+                delk[layer, 0] = (dul[layer] - sat[layer]) / (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
                 delk[layer, 1] = (ll15[layer] - dul[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 delk[layer, 2] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 delk[layer, 3] = -ll15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
@@ -73,8 +93,8 @@ namespace Models.Soils
                 y0[layer, 0] = sat[layer];
                 y1[layer, 0] = sat[layer];
 
-                m0[layer, 1] = mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
-                m1[layer, 1] = mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
+                m0[layer, 1] = mk[layer, 0] * (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
+                m1[layer, 1] = mk[layer, 1] * (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
                 y0[layer, 1] = sat[layer];
                 y1[layer, 1] = dul[layer];
 
@@ -100,12 +120,12 @@ namespace Models.Soils
             for (int layer = 0; layer <= n; layer++)
             {
                 double b = -Math.Log(psiDul / psi_ll15) / Math.Log(dul[layer] / ll15[layer]);
-                microP[layer] = b * 2.0 + 3.0;
+                microporePowerTerm[layer] = b * 2.0 + 2.0 + microP[layer];
                 kdula[layer] = Math.Min(0.99 * kdul, ks[layer]);
-                microKs[layer] = kdula[layer] / Math.Pow(dul[layer] / sat[layer], microP[layer]);
+                microporeKs[layer] = kdula[layer] / Math.Pow(dul[layer] / sat[layer], microporePowerTerm[layer]);
 
                 double sdul = dul[layer] / sat[layer];
-                macroP[layer] = Math.Log10(kdula[layer] / 99.0 / (ks[layer] - microKs[layer])) / Math.Log10(sdul);
+                macroporePowerTerm[layer] = Math.Log10(kdula[layer] / 99.0 / (ks[layer] - microporeKs[layer])) / Math.Log10(sdul);
             }
         }
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -116,15 +136,14 @@ namespace Models.Soils
             int i;
             double t;
 
-            if (psiValue >= -1.0)
+            if (psiValue >= psiSat)
             {
-                i = 0;
-                t = 0.0;
+                return y0[layer, 0];
             }
             else if (psiValue > psid[layer])
             {
                 i = 1;
-                t = (Math.Log10(-psiValue) - 0.0) / (Math.Log10(-psid[layer]) - 0.0);
+                t = (Math.Log10(-psiValue) - Math.Log10(-psiSat)) / (Math.Log10(-psid[layer]) - Math.Log10(-psiSat));
             }
             else if (psiValue > psi_ll15)
             {
@@ -135,11 +154,11 @@ namespace Models.Soils
             {
                 i = 3;
                 t = (Math.Log10(-psiValue) - Math.Log10(-psi_ll15)) / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                return (1-t) * y0[layer, 3];
             }
             else
             {
-                i = 4;
-                t = 0.0;
+                return 0.0;
             }
 
             double tSqr = t * t;
@@ -162,13 +181,13 @@ namespace Models.Soils
                 simpleK = 1e-100;
             else
             {
-                double microK = microKs[layer] * Math.Pow(s, microP[layer]);
+                double microK = microporeKs[layer] * Math.Pow(s, microporePowerTerm[layer]);
 
-                if (microKs[layer] >= ks[layer])
+                if (microporeKs[layer] >= ks[layer])
                     simpleK = microK;
                 else
                 {
-                    double macroK = (ks[layer] - microKs[layer]) * Math.Pow(s, macroP[layer]);
+                    double macroK = (ks[layer] - microporeKs[layer]) * Math.Pow(s, macroporePowerTerm[layer]);
                     simpleK = microK + macroK;
                 }
             }
@@ -189,8 +208,6 @@ namespace Models.Soils
             //   Calculate the suction for a given water content for a given node.
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
-            const double dpF = 0.01;
-            double psiValue;
 
             if (theta == sat[node])
             {
@@ -201,44 +218,51 @@ namespace Models.Soils
             }
             else
             {
-                if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
-                    if (theta > dul[node])
-                        psiValue = psiDul; // Initial estimate
-                    else if (theta < ll15[node])
-                        psiValue = psi_ll15;
-                    else
-                    {
-                        double pFll15 = Math.Log10(-psi_ll15);
-                        double pFdul = Math.Log10(-psiDul);
-                        double frac = (theta - ll15[node]) / (dul[node] - ll15[node]);
-                        double pFinit = pFll15 + frac * (pFdul - pFll15);
-                        psiValue = -Math.Pow(10, pFinit);
-                    }
-                else
-                    psiValue = _psi[node]; // Initial estimate
+                double est1 = 0;
+                double est2 = 0;
+                double bestest = 0;
+                double besterr = 0;
 
+                if (theta > dul[node])
+                {
+                    est1 = Math.Log10(-psiSat); est2 = Math.Log10(-psiDul);
+                }
+                else if (theta > ll15[node])
+                {
+                    est1 = Math.Log10(-psiDul); est2 = Math.Log10(-psi_ll15);
+                }
+                else
+                {
+                    est1 = Math.Log10(-psi_ll15); est2 = Math.Log10(-psi0);
+                }
+
+                // Use secant method to solve for suction
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
-                    double est = SimpleTheta(node, psiValue);
-                    double pF = 0.000001;
-                    if (psiValue < 0)
-                        pF = Math.Log10(-psiValue);
-                    double pF2 = pF + dpF;
-                    double psiValue2 = -Math.Pow(10, pF2);
-                    double est2 = SimpleTheta(node, psiValue2);
+                    double Y1 = SimpleTheta(node, -Math.Pow(10, est1))-theta;
+                    double Y2 = SimpleTheta(node, -Math.Pow(10, est2))-theta;
 
-                    double m = (est2 - est) / dpF;
+                    double est3 = est2 - Y2 * (est2 - est1)/(Y2 - Y1);
+                    double Y3 = SimpleTheta(node, -Math.Pow(10, est3)) - theta;
 
-                    if (Math.Abs(est - theta) < tolerance)
-                        break;
-                    double pFnew = pF - (est - theta) / m;
-                    if (pFnew > (Math.Log10(-psi0)))
-                        pF += dpF;  // This is not really adequate - just saying...
-                    else
-                        pF = pFnew;
-                    psiValue = -Math.Pow(10, pF);
+
+                    if (Math.Abs(Y3) < tolerance)
+                        return -Math.Pow(10, est3);
+
+                    if (Math.Abs(Y3) < besterr)
+                    {
+                        besterr = Math.Abs(Y3);
+                        bestest = est3;
+                    }
+
+                    est1 = est2;
+                    est2 = est3;
+
+
                 }
-                return psiValue;
+                return -Math.Pow(10, bestest);
+                //throw (new Exception("Soil hydraulic properties model failed to find value of suction for given theta"));
+
             }
         }
     }

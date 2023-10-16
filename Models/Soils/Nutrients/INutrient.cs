@@ -1,4 +1,5 @@
 ﻿using Models.Surface;
+using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -10,31 +11,28 @@ namespace Models.Soils.Nutrients
     public interface INutrient
     {
         /// <summary>The inert pool.</summary>
-        INutrientPool Inert { get; }
+        IOrganicPool Inert { get; }
 
         /// <summary>The microbial pool.</summary>
-        INutrientPool Microbial { get; }
+        IOrganicPool Microbial { get; }
 
         /// <summary>The humic pool.</summary>
-        INutrientPool Humic { get; }
+        IOrganicPool Humic { get; }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
-        INutrientPool FOMCellulose { get; }
+        IOrganicPool FOMCellulose { get; }
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        INutrientPool FOMCarbohydrate { get; }
+        IOrganicPool FOMCarbohydrate { get; }
 
         /// <summary>The fresh organic matter lignin pool.</summary>
-        INutrientPool FOMLignin { get; }
+        IOrganicPool FOMLignin { get; }
 
         /// <summary>The fresh organic matter pool.</summary>
-        INutrientPool FOM { get; }
-
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        INutrientPool SurfaceResidue { get; }
+        IOrganicPool FOM { get; }
 
         /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        INutrientPool Organic { get; }
+        IOrganicPool Organic { get; }
 
         /// <summary>The NO3 pool.</summary>
         ISolute NO3 { get; }
@@ -46,53 +44,50 @@ namespace Models.Soils.Nutrients
         ISolute Urea { get; }
 
         /// <summary>Total C in each soil layer</summary>
-        double[] TotalC { get; }
+        IReadOnlyList<double> TotalC { get; }
 
         /// <summary>Total C lost to the atmosphere</summary>
-        double[] Catm { get; }
+        IReadOnlyList<double> Catm { get; }
 
         /// <summary>Total N lost to the atmosphere</summary>
-        double[] Natm { get; }
+        IReadOnlyList<double> Natm { get; }
 
         /// <summary>Total N2O lost to the atmosphere</summary>
-        double[] N2Oatm { get; }
+        IReadOnlyList<double> N2Oatm { get; }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
-        double[] MineralisedN { get; }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        double[] MineralisedNSurfaceResidue { get; }
+        IReadOnlyList<double> MineralisedN { get; }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
-        double[] DenitrifiedN { get; }
+        IReadOnlyList<double> DenitrifiedN { get; }
 
         /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
-        double[] NitrifiedN { get; }
+        IReadOnlyList<double> NitrifiedN { get; }
 
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
-        double[] HydrolysedN { get; }
+        IReadOnlyList<double> HydrolysedN { get; }
 
         /// <summary>Total Mineral N in each soil layer</summary>
-        double[] MineralN { get; }
+        IReadOnlyList<double> MineralN { get; }
 
         /// <summary>Total N in each soil layer</summary>
-        double[] TotalN { get; }
+        IReadOnlyList<double> TotalN { get; }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter for a given layer</summary>
-        double[] FOMCNRFactor { get; }
+        IReadOnlyList<double> FOMCNRFactor { get; }
 
-        /// <summary>
-        /// Calculate actual decomposition
-        /// </summary>
-        SurfaceOrganicMatterDecompType CalculateActualSOMDecomp();
         /// <summary>
         /// Incorporate FOM
         /// </summary>
         void DoIncorpFOM(FOMLayerType FOMdata);
+
+        /// <summary>Partition the given FOM C and N into fractions in each layer (FOM pools)</summary>
+        /// <param name="FOMPoolData">The in fom pool data.</param>
+        void IncorpFOMPool(FOMPoolType FOMPoolData);
+
         /// <summary>
         /// Reset all Pools
         /// </summary>
         void Reset();
-
     }
 }
