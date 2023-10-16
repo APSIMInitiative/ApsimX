@@ -1173,6 +1173,12 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Indicates that writing to the database has concluded (for the moment).
+        /// Provides a chance to clean up any buffers still in use.
+        /// </summary>
+        public void EndWriting() { }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="value"></param>

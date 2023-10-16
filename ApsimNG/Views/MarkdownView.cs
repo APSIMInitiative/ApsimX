@@ -11,9 +11,9 @@ using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using Pango;
 using UserInterface.Extensions;
 using Utility;
-using Pango;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
@@ -86,7 +86,7 @@ namespace UserInterface.Views
                 helper.Layout.FontDescription = FontDescription.FromString(fontName);
                 for (int i = 32; i < 127; i++)
                 {
-                    helper.Layout.SetText(((char) i).ToString());
+                    helper.Layout.SetText(((char)i).ToString());
                     helper.Layout.GetPixelSize(out var width, out _);
                     fontCharSizes[i] = width;
                 }
@@ -195,7 +195,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if ( (args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
+                if ((args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
                     findView.ShowFor(this);
             }
             catch (Exception err)
@@ -256,7 +256,7 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
@@ -416,7 +416,7 @@ namespace UserInterface.Views
                 if (b is TableRow tr)
                 {
                     cellLengthsByRow[i] = tr
-                        .Select(b => GetCellRawText((TableCell) b))
+                        .Select(b => GetCellRawText((TableCell)b))
                         .Select(MeasureText)
                         .ToList();
                 }

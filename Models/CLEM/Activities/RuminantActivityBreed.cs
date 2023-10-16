@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
+using Models.CLEM.Groupings;
+using System.Xml;
 
 namespace Models.CLEM.Activities
 {
@@ -86,7 +88,6 @@ namespace Models.CLEM.Activities
                 // report conception status changed from those assigned suckling at startup
                 conceptionArgs.Update(ConceptionStatus.Conceived, female, clock.Today);
                 female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                //female.BreedParams.OnConceptionStatusChanged(new ConceptionStatusChangedEventArgs(ConceptionStatus.Conceived, female, clock.Today));
             }
 
             // work out pregnancy status of initial herd
@@ -179,13 +180,13 @@ namespace Models.CLEM.Activities
                                                 female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                                                 //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
-                                                // check for perenatal mortality
+                                                // check for perinatal mortality
                                                 for (int j = i; j < monthsAgoStop; j++)
                                                 {
                                                     DateTime lossDate = clock.Today.AddMonths(i);
                                                     lossDate = new DateTime(lossDate.Year, lossDate.Month, DateTime.DaysInMonth(lossDate.Year, lossDate.Month));
 
-                                                    for (int k = 0; k < female.CarryingCount; i++)
+                                                    for (int k = 0; k < female.CarryingCount; k++)
                                                     {
                                                         if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                                                         {
@@ -283,7 +284,7 @@ namespace Models.CLEM.Activities
         {
             // Reset all activity determined conception rates
             if(useControlledMating)
-                GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsBreeder).Select(a => a.ActivityDeterminedConceptionRate == null);
+                _ = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsBreeder).Select(a => a.ActivityDeterminedConceptionRate == null);
         }
 
         /// <summary>An event handler to perform herd breeding </summary>
@@ -299,15 +300,20 @@ namespace Models.CLEM.Activities
             List<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList();
 
             // determine all fetus and newborn mortality of all pregnant females.
+            bool preglost = false;
+            bool birthoccurred = false;
             foreach (RuminantFemale female in pregnantherd)
             {
+
                 // calculate fetus and newborn mortality
                 // total mortality / (gestation months + 1) to get monthly mortality
                 // done here before births to account for post birth motality as well..
                 // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
                 // needs to be calculated for each offspring carried.
+
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
+                    preglost=true;
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
                     if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
@@ -317,13 +323,13 @@ namespace Models.CLEM.Activities
                             // report conception status changed when last multiple birth dies.
                             conceptionArgs.Update(ConceptionStatus.Failed, female, clock.Today);
                             female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                            //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
                         }
                     }
                 }
 
                 if (female.BirthDue)
                 {
+                    birthoccurred=true;
                     int numberOfNewborn = female.CarryingCount;
                     for (int i = 0; i < numberOfNewborn; i++)
                     {
@@ -357,10 +363,21 @@ namespace Models.CLEM.Activities
                         //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, clock.Today));
                     }
                     female.UpdateBirthDetails();
-                    this.Status = ActivityStatus.Success;
                 }
-
             }
+
+            if (preglost)
+            {
+                AddStatusMessage("Lost pregnancy");
+                this.Status = ActivityStatus.Success;
+            }
+            if (birthoccurred)
+            {
+                AddStatusMessage("Births occurred");
+                this.Status = ActivityStatus.Success;
+            }
+
+            var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersAvailable");
 
             // Perform breeding
             IEnumerable<Ruminant> herd = null;
@@ -385,7 +402,6 @@ namespace Models.CLEM.Activities
                 {
                     conceptionArgs.Update(ConceptionStatus.NotReady, female, clock.Today);
                     female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, clock.Today));
                 }
 
                 int numberPossible = breeders.Sum(a => a.Count());
@@ -393,6 +409,7 @@ namespace Models.CLEM.Activities
                 List<Ruminant> maleBreeders = new List<Ruminant>();
 
                 // for each location where parts of this herd are located
+                bool breedoccurred = false;
                 foreach (var location in breeders)
                 {
                     numberPossible = -1;
@@ -405,7 +422,7 @@ namespace Models.CLEM.Activities
                         if (location.GroupBy(a => a.Sex).Count() == 2)
                         {
                             int maleCount = location.OfType<RuminantMale>().Count();
-                            // get a list of males to provide attributes when incontrolled mating.
+                            // get a list of males to provide attributes when in controlled mating.
                             if(maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
                                 maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
 
@@ -478,7 +495,7 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             numberServiced++;
-                            this.Status = ActivityStatus.Success;
+                            breedoccurred = true;
                         }
 
                         // report change in breeding status
@@ -498,6 +515,11 @@ namespace Models.CLEM.Activities
                         string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
                         Warnings.CheckAndWrite(warning, Summary, this, MessageType.Information);
                     }
+                }
+                if(breedoccurred)
+                {
+                    this.Status = ActivityStatus.Success;
+                    AddStatusMessage("Breeding occurred");
                 }
             }
             // report that this activity was performed as it does not use base GetResourcesRequired

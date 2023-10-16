@@ -24,7 +24,7 @@ namespace Models.PMF.Organs
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001;
-
+        
         /// <summary>The parent plant</summary>
         [Link]
         private Plant parentPlant = null;
@@ -370,6 +370,8 @@ namespace Models.PMF.Organs
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
+            
+            
             // get DM lost by respiration (growth respiration)
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
@@ -482,7 +484,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
                 ClearBiomassFlows();
         }
 
@@ -536,16 +538,11 @@ namespace Models.PMF.Organs
                 }
 
                 // Do maintenance respiration
-                if (maintenanceRespirationFunction.Value() > 0)
-                {
-                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
-                    Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-                    Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
-                }
-                else
-                {
-                    MaintenanceRespiration = 0.0;
-                }
+                double mRrate = Math.Min(1.0, Math.Max(0.0, maintenanceRespirationFunction.Value()));
+
+                MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * mRrate;
+                Live.MetabolicWt *= (1 - mRrate);
+                Live.StorageWt *= (1 - mRrate);
             }
         }
 

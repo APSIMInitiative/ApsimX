@@ -25,6 +25,7 @@
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        void Cleanup();
+        /// <param name="cancelToken">Is cancellation pending?</param>
+        void Cleanup(System.Threading.CancellationTokenSource cancelToken);
     }
 }

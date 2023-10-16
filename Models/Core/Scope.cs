@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Models.Factorial;
 
 namespace Models.Core
 {
@@ -60,6 +61,19 @@ namespace Models.Core
 
             if (!modelsInScope.Contains(scopedParent))
                 modelsInScope.Add(scopedParent); // top level simulation
+
+            //scope may not work for models under experiment (that need to link back to the actual sim)
+            //so first we find models that are in scope (aka, also under the factor), then also return
+            //the descendants of the simulation
+            Experiment exp = relativeTo.FindAncestor<Experiment>();
+            if (exp != null)
+            {
+                Simulation sim = exp.FindChild<Simulation>();
+
+                IEnumerable<IModel> descendants = sim.FindAllDescendants();
+                foreach (IModel result in descendants)
+                    modelsInScope.Add(result);
+            }
 
             // add to cache for next time.
             cache.Add(relativeToFullPath, modelsInScope);
