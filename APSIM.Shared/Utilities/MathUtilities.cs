@@ -192,18 +192,12 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
-        public static double Divide(double value1, double value2, double errVal, double tol = tolerance)
+        public static double Divide(double value1, double value2, double errVal)
         {
-            try
-            {
-                if (value2 == 0)
-                    return errVal;
-                return value1 / value2;
-            } 
-            catch
-            {
+            double returnValue = value1 / value2;
+            if (double.IsInfinity(returnValue) || double.IsNaN(returnValue))
                 return errVal;
-            }
+            return returnValue;
         }
 
         /// <summary>
