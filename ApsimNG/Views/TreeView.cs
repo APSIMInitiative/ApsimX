@@ -104,6 +104,7 @@ namespace UserInterface.Views
             treeview1.RowActivated += OnRowActivated;
             treeview1.FocusInEvent += OnTreeGainFocus;
             treeview1.FocusOutEvent += OnTreeLoseFocus;
+            treeview1.RowExpanded += OnRowExpanded;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -764,6 +765,31 @@ namespace UserInterface.Views
                 e.RetVal = true;
 
                 DoubleClicked?.Invoke(this, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// A row in the tree view has been expanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowExpanded(object sender, RowExpandedArgs e)
+        {
+            try
+            {
+                TreePath path = e.Path.Copy();
+                path.Down();
+                path.Next();
+                path.Next();
+                path.Next();
+                path.Next();
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+                treeview1.Model.GetIter(out TreeIter iter, e.Path);
+                string text = iter.ToString();
             }
             catch (Exception err)
             {
