@@ -44,8 +44,6 @@ namespace UnitTests.Storage
 
         public List<string> TableAndViewNames => mockReader.Object.TableAndViewNames;
 
-        public string BriefColumnName(string tablename, string fullColumnName) => mockReader.Object.BriefColumnName(tablename, fullColumnName);
-
         public List<string> ColumnNames(string tableName) => mockReader.Object.ColumnNames(tableName);
 
         public void ExecuteSql(string sql)

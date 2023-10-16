@@ -116,7 +116,7 @@ namespace Models.Soils
         {
             get
             {
-                return MathUtilities.Multiply_Value(WaterModel.K, 10*24);
+                return MathUtilities.Multiply_Value(WaterModel.K, 10 * 24);
             }
         }
 
@@ -247,12 +247,8 @@ namespace Models.Soils
                     if (MathUtilities.IsGreaterThanOrEqual(prop, 1.0))
                         depthSoFar += Thickness[layer];
                     else
-                    {
                         depthSoFar += Thickness[layer] * prop;
-                        return depthSoFar;
-                    }
                 }
-
                 return depthSoFar;
             }
             set

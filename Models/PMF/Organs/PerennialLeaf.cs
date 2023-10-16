@@ -394,7 +394,7 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
 
-            if (plant.IsAlive || plant.IsEnding)
+            if (plant.IsAlive)
                 ClearBiomassFlows();
         }
         #endregion
