@@ -783,13 +783,17 @@ namespace UserInterface.Views
             {
                 TreePath path = e.Path.Copy();
                 path.Down();
-                path.Next();
-                path.Next();
-                path.Next();
-                path.Next();
+                bool stop = false;
+                while (!stop)
+                {
+                    path.Next();
+                    treeview1.Model.GetIter(out TreeIter iter, path);
+                    var value = treeview1.Model.GetValue(iter, 0);
+                    if (value == null)
+                        stop = true;
+                }
+                path.Prev();
                 treeview1.ScrollToCell(path, null, false, 0, 0);
-                treeview1.Model.GetIter(out TreeIter iter, e.Path);
-                string text = iter.ToString();
             }
             catch (Exception err)
             {
