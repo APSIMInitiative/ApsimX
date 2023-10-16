@@ -71,22 +71,6 @@ namespace Models.Storage
         List<Tuple<string, Type>> GetColumns(string tableName);
 
         /// <summary>
-        /// Gets a "brief" column name for a column
-        /// </summary>
-        /// <param name="tablename"></param>
-        /// <param name="fullColumnName">The "full" name of the column</param>
-        /// <returns>The "brief" name of the column</returns>
-        string BriefColumnName(string tablename, string fullColumnName);
-
-        /// <summary>
-        /// Gets the "full" column name for a column
-        /// </summary>
-        /// <param name="tablename"></param>
-        /// <param name="queryColumnName"></param>
-        /// <returns>The "full" name of the column</returns>
-        string FullColumnName(string tablename, string queryColumnName);
-
-        /// <summary>
         /// Return a checkpoint ID for the specified checkpoint name.
         /// </summary>
         /// <param name="checkpointName">The checkpoint name to look for.</param>

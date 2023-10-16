@@ -276,6 +276,8 @@ namespace UserInterface.Classes
                         plant = model.FindInScope<IPlant>();
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    else
+                        DropDownOptions = new string[] { };
                     break;
                 case DisplayType.SCRUMcropName:
                     DisplayMethod = PropertyType.DropDown;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using APSIM.Shared.Utilities;
 using Gdk;
 using Gtk;
@@ -10,10 +11,9 @@ using Markdig;
 using Markdig.Extensions.Tables;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using Pango;
 using UserInterface.Extensions;
 using Utility;
-using Pango;
-using UserInterface.Classes;
 using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
@@ -38,10 +38,19 @@ namespace UserInterface.Views
 
         private TextView textView;
         private Cursor handCursor;
-		private Cursor regularCursor;
+        private Cursor regularCursor;
         private MarkdownFindView findView;
         private AccelGroup accelerators = new AccelGroup();
         private Menu popupMenu = new Menu();
+
+        /// <summary>Table of font sizes for ASCII characters. Set on attach and reset on attach whenver font has changed.</summary>
+        private static readonly int[] fontCharSizes = new int[128];
+
+        /// <summary>Table of font sizes for unicode symbols not in ascii. Dynamically filled, cleared on attach when font changed.</summary>
+        private static readonly Dictionary<Rune, int> nonASCIICharSizes = new();
+
+        /// <summary>The font name and point size. Used to determine whether or not the font has changed.</summary>
+        private static string fontName = "";
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -69,6 +78,21 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
+
+            if (fontName != Configuration.Settings.FontName)
+            {
+                fontName = Configuration.Settings.FontName;
+                Label helper = new();
+                helper.Layout.FontDescription = FontDescription.FromString(fontName);
+                for (int i = 32; i < 127; i++)
+                {
+                    helper.Layout.SetText(((char)i).ToString());
+                    helper.Layout.GetPixelSize(out var width, out _);
+                    fontCharSizes[i] = width;
+                }
+                nonASCIICharSizes.Clear();
+            }
+
             if (gtkControl is ScrolledWindow scroller)
             {
                 textView = new TextView();
@@ -98,7 +122,7 @@ namespace UserInterface.Views
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
-            
+
             textView.KeyPressEvent += OnTextViewKeyPress;
         }
 
@@ -171,7 +195,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if ( (args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
+                if ((args.Event.Key == Gdk.Key.F || args.Event.Key == Gdk.Key.f) && args.Event.State == ModifierType.ControlMask)
                     findView.ShowFor(this);
             }
             catch (Exception err)
@@ -232,7 +256,7 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
@@ -381,17 +405,35 @@ namespace UserInterface.Views
         /// <param name="indent"></param>
         private void DisplayTable(ref TextIter insertPos, Table table, int indent)
         {
-            int spaceWidth = MeasureText(" ");
+            int spaceWidth = fontCharSizes[' '];
             // Setup tab stops for the table.
-            TabArray tabs = new TabArray(table.ColumnDefinitions.Count(), true);
+            TabArray tabs = new TabArray(table.ColumnDefinitions.Count, true);
             int cumWidth = 0;
-            Dictionary<int, int> columnWidths = new Dictionary<int, int>();
-            for (int i = 0; i < table.ColumnDefinitions.Count(); i++)
+            Dictionary<int, List<int>> cellLengthsByRow = new();
+            for (int i = 0; i < table.Count; i++)
             {
-                // The i-th tab stop will be set to the cumulative column width
-                // of the first i columns (including padding).
-                columnWidths[i] = GetColumnWidth(table, i);
-                cumWidth += columnWidths[i];
+                var b = table[i];
+                if (b is TableRow tr)
+                {
+                    cellLengthsByRow[i] = tr
+                        .Select(b => GetCellRawText((TableCell)b))
+                        .Select(MeasureText)
+                        .ToList();
+                }
+                else
+                    throw new Exception($"Error when processing Markdown table: {b.GetType()} is not a table row.");
+            }
+
+            int[] columnWidths = new int[table.ColumnDefinitions.Count];
+            for (int i = 0; i < table.ColumnDefinitions.Count; i++)
+            {
+                var columnLength = cellLengthsByRow.Values
+                    .Where(l => l.Count > i)
+                    .Select(l => l[i] + tableColumnPadding)
+                    .DefaultIfEmpty(0)
+                    .Max();
+                columnWidths[i] = columnLength;
+                cumWidth += columnLength;
                 tabs.SetTab(i, TabAlign.Left, cumWidth);
             }
 
@@ -405,7 +447,7 @@ namespace UserInterface.Views
             for (int i = 0; i < table.Count; i++)
             {
                 TableRow row = (TableRow)table[i];
-                for (int j = 0; j < Math.Min(table.ColumnDefinitions.Count(), row.Count); j++)
+                for (int j = 0; j < Math.Min(table.ColumnDefinitions.Count, row.Count); j++)
                 {
                     if (row[j] is TableCell cell)
                     {
@@ -424,7 +466,7 @@ namespace UserInterface.Views
                         if (alignment == TableColumnAlign.Center || alignment == TableColumnAlign.Right)
                         {
                             // Calculate the width of the cell contents.
-                            int cellWidth = MeasureText(GetCellRawText(cell));
+                            int cellWidth = cellLengthsByRow[i][j];
 
                             // Number of whitespace characters we can fit will be the
                             // number of spare pixels in the cell (width of cell - width
@@ -459,59 +501,68 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Calculate the width (in pixels) of a column in a table.
-        /// This is the width of the widest cell in the column.
-        /// </summary>
-        /// <param name="table">The table.</param>
-        /// <param name="columnIndex">Index of a column in the table.</param>
-        private int GetColumnWidth(Table table, int columnIndex)
-        {
-            int width = 0;
-            for (int i = 0; i < table.Count; i++)
-            {
-                TableRow row = (TableRow)table[i];
-                if (columnIndex < row.Count)
-                {
-                    if (row[columnIndex] is TableCell cell)
-                    {
-                        string cellText = GetCellRawText(cell);
-                        int cellWidth = MeasureText(cellText);
-                        width = Math.Max(width, cellWidth + tableColumnPadding);
-                    }
-                    else
-                        throw new NotImplementedException($"Unknown cell type {row[columnIndex].GetType().Name}.");
-                }
-            }
-            return width;
-        }
-
-        /// <summary>
         /// Get the raw text in a cell.
         /// </summary>
         /// <param name="cell">The cell.</param>
-        private string GetCellRawText(TableCell cell)
+        private static string GetCellRawText(TableCell cell)
         {
-            TextView tmpView = new TextView();
-            CreateStyles(tmpView);
-            TextIter iter = tmpView.Buffer.StartIter;
-            ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
-            string result = tmpView.Buffer.Text;
-            tmpView.Dispose();
-            return result;
+            StringBuilder sb = new();
+            foreach (var block in cell)
+                ExtractBlockText(block);
+            return sb.ToString();
+
+            void ExtractBlockText(Block block)
+            {
+                if (block is LeafBlock lb)
+                    foreach (var inline in lb.Inline)
+                        ExtractInlineText(inline);
+                else if (block is ContainerBlock cb)
+                    foreach (var innerBlock in cb)
+                        ExtractBlockText(innerBlock);
+                else
+                    throw new NotImplementedException($"Unknown block: {block.GetType()}.");
+            }
+
+            void ExtractInlineText(Inline inline)
+            {
+                if (inline is LiteralInline literal)
+                    sb.Append(literal.Content.AsSpan());
+                else if (inline is ContainerInline ci)
+                    foreach (var il in ci)
+                        ExtractInlineText(il);
+            }
         }
 
         /// <summary>
         /// Measure the width of a string in pixels.
         /// </summary>
         /// <param name="text">The text to be measured.</param>
-        private int MeasureText(string text)
+        private static int MeasureText(string text)
         {
-            Label label = new Label();
+            return text.EnumerateRunes().Sum(MeasureRuneSize);
+        }
 
-            label.Layout.FontDescription = FontDescription.FromString(Utility.Configuration.Settings.FontName);
+        /// <summary>
+        /// Measures the size of a unicode rune in pixels.
+        /// </summary>
+        /// <param name="ch">The rune to measure.</param>
+        private static int MeasureRuneSize(Rune ch)
+        {
+            if (ch.IsAscii)
+                return fontCharSizes[ch.Value];
+            // Non-printing variation selector. Gets a pixel size for some reason.
+            if (0xFE00 <= ch.Value && ch.Value <= 0xFE0F)
+                return 0;
 
-            label.Layout.SetText(text);
-            label.Layout.GetPixelSize(out int width, out _);
+            int width;
+            if (!nonASCIICharSizes.TryGetValue(ch, out width))
+            {
+                Label helper = new();
+                helper.Layout.FontDescription = FontDescription.FromString(fontName);
+                helper.Layout.SetText(ch.ToString());
+                helper.Layout.GetPixelSize(out width, out _);
+                nonASCIICharSizes[ch] = width;
+            }
             return width;
         }
 

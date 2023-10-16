@@ -43,6 +43,12 @@ namespace UserInterface.Views
             menuItem.Dispose();
         }
 
+        /// <summary>Returns the Text Stored in this menuItem</summary>
+        public string GetLabel()
+        {
+            return menuItem.Label;
+        }
+
         private void OnMenuClicked(object sender, EventArgs e)
         {
             try

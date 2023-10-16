@@ -1,19 +1,20 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Utilities;
-    using Commands;
-    using Interfaces;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using Views;
+﻿using APSIM.Shared.Utilities;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     public class ExperimentPresenter : IPresenter
     {
         /// <summary>The Experiment node.</summary>
@@ -44,6 +45,13 @@
             view = viewObject as ExperimentView;
             explorerPresenter = parentPresenter;
 
+            //add playlists to popup menu
+            List<Playlist> playlists = explorerPresenter.ApsimXFile.FindAllDescendants<Playlist>().ToList();
+            foreach (Playlist playlist in playlists)
+            {
+                IMenuItemView item = view.AddMenuItem("Add to " + playlist.Name);
+                item.Clicked += OnAddToPlaylist;
+            }
 
             // Once the simulation is finished, we will need to reset the disabled simulation names.
             //runner.Finished += OnSimulationsCompleted;
@@ -283,6 +291,38 @@
                     throw new Exception(string.Format("Unable to parse max number of simulations: {0}", maxNumSimsString));
 
                 PopulateView();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Adds the selected simulations to the clicked playlist
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnAddToPlaylist(object sender, EventArgs args)
+        {
+            try
+            {
+                List<string> namesToAdd = new List<string>();
+                SimulationDescription[] desc = simulationDescriptions.ToArray();
+
+                int[] indices = view.List.SelectedIndicies;
+                for (int i = 0; i < indices.Length; i++)
+                    namesToAdd.Add(desc[indices[i]].Name);
+
+                //This digs through the menu item that sends the event to see what the text was on the button
+                //This is not good code and will break if the GUI changes
+                MenuItemView itemView = sender as MenuItemView;
+                string itemText = itemView.GetLabel();
+                string playlistName = itemText.Replace("Add to", "").Trim();
+
+                Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+                if (playlist != null)
+                    playlist.AddSimulationNamesToList(namesToAdd.ToArray());
             }
             catch (Exception err)
             {

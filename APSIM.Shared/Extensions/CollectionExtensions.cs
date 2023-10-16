@@ -49,5 +49,37 @@ namespace APSIM.Shared.Extensions.Collections
             for (int i = 0; i < chunkSize && queue.Any(); i++)
                 yield return queue.Dequeue();
         }
+
+        /// <summary>
+        /// Sum an array of arrays.
+        /// </summary>
+        /// <param name="array">The array to sum.</param>
+        /// <returns>Always returns a double[].</returns>
+        public static double[] Sum(this IEnumerable<IReadOnlyList<double>> array)
+        {
+            if (!array.Any())
+                return Array.Empty<double>();
+
+            double[] values = null;
+
+            foreach (double[] vals in array)
+            {
+                Array.Resize(ref values, vals.Length);
+                for (int i = 0; i < vals.Length; i++)
+                    values[i] += vals[i];
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Copy the elements of a read only list to an array.
+        /// </summary>
+        /// <param name="list">The list to copy from.</param>
+        /// <param name="array">The array to copy to.</param>
+        public static void CopyTo<T>(this IReadOnlyList<T> list, T[] array)
+        {
+            for (int i = 0; i < list.Count; i++)
+                array[i] = list[i];
+        }
     }
 }

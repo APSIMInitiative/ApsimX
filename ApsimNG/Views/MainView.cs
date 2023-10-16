@@ -1,20 +1,18 @@
-﻿namespace UserInterface.Views
-{
-    using APSIM.Shared.Utilities;
-    using Gtk;
-    using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using Utility;
+using MessageType = Models.Core.MessageType;
 
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using System.Text;
-    using Utility;
-    using MessageType = Models.Core.MessageType;
+namespace UserInterface.Views
+{
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -131,7 +129,7 @@
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
-            MasterView = this;
+            MasterView = (Interfaces.IMainView)this;
             numberOfButtons = 0;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
@@ -168,9 +166,6 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
-
-            int paneHeight = MainWidget.Screen.RootWindow.Height;
-            vpaned1.Position = (int)Math.Round(paneHeight * 0.8); //set the slider for the pane at about 80% down
 
             // Normally, one would specify the style class in the UI (.glade) file.
             // However, doing so breaks gtk2-compatibility, so for now, we will just
@@ -286,7 +281,7 @@
                 ShowError(err);
             }
         }
-        
+
         /// <summary>
         /// Invoked when an error has been thrown in a view.
         /// </summary>
@@ -329,11 +324,26 @@
         {
             get
             {
-                return hbox1.Allocation.Height;
+                return vpaned1.Position;
             }
             set
             {
-                hbox1.HeightRequest = value;
+                vpaned1.Position = value;
+            }
+        }
+
+        /// <summary>
+        /// Controls the width of the tree panel.
+        /// </summary>
+        public int TreePanelWidth
+        {
+            get
+            {
+                return vpaned1.Position;
+            }
+            set
+            {
+                vpaned1.Position = value;
             }
         }
 
@@ -452,7 +462,7 @@
             {
                 Widget tab = (ownerView as ExplorerView).MainWidget;
                 Notebook notebook = tab.IsAncestor(notebook1) ? notebook1 : notebook2;
-                
+
                 // The top level of the "label" is an EventBox
                 EventBox ebox = (EventBox)notebook.GetTabLabel(tab);
                 ebox.TooltipText = tooltip;
@@ -674,7 +684,7 @@
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
         }
-        
+
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {

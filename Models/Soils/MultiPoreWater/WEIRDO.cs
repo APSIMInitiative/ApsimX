@@ -99,6 +99,9 @@ namespace Models.Soils
         public double[] FlowUrea { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
+        public double[] FlowCl { get; set; }
+        ///<summary> Who knows</summary>
+        [JsonIgnore]
         public double[] Flux { get; set; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
@@ -234,6 +237,14 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] PSI { get { throw new NotImplementedException(); } }
+
+        ///<summary> Who knows</summary>
+        [JsonIgnore]
+        public double[] K { get { throw new NotImplementedException(); } }
+
+        ///<summary> Who knows</summary>
+        [JsonIgnore]
+        public double[] PoreInteractionIndex { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
         ///<summary> this is the layer structure that parameters are entered against for this object</summary>
         public double[] Thickness { get; set; }

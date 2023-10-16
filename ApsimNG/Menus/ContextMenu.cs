@@ -22,6 +22,9 @@ using APSIM.Interop.Documentation;
 using System.Threading.Tasks;
 using System.Threading;
 using APSIM.Server.Sensibility;
+using ApsimNG.Properties;
+using Gtk;
+using Models.CLEM.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -163,6 +166,7 @@ namespace UserInterface.Presenters
                                               typeof(Folder),
                                               typeof(Morris),
                                               typeof(Sobol),
+                                              typeof(Playlist),
                                               typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
@@ -807,23 +811,27 @@ namespace UserInterface.Presenters
                 if (model != null)
                 {
                     //check if model is from a resource, if so, set all children to read only
-                    bool isResource = false;
-                    if (!string.IsNullOrEmpty(model.ResourceName))
-                        isResource = true;
-
-                    var hidden = model.Children.Count == 0 || model.Children.First().IsHidden;
-                    hidden = !hidden; // toggle
-                    foreach (IModel child in model.FindAllDescendants())
+                    var childrenFromResource = Resource.Instance.GetChildModelsThatAreFromResource(model);
+                    if (childrenFromResource != null)
                     {
-                        child.IsHidden = hidden;
-                        if (isResource && !(child is Models.PMF.Cultivar))
-                            child.ReadOnly = true;
+                        var hidden = !(sender as Gtk.CheckMenuItem).Active;
+                        foreach (IModel child in childrenFromResource)
+                        {
+                            child.IsHidden = hidden;
+                            child.ReadOnly = !hidden;
+
+                            // Recursively set the hidden property.
+                            foreach (IModel c in child.FindAllDescendants())
+                                c.ReadOnly = !hidden;
+                        }
+
+                        // Delete hidden models from tree control and refresh tree control.
+                        foreach (IModel child in model.Children)
+                            if (child.IsHidden)
+                                explorerPresenter.Tree.Delete(child.FullPath);
+                        explorerPresenter.PopulateContextMenu(model.FullPath);
+                        explorerPresenter.RefreshNode(model);
                     }
-                    foreach (IModel child in model.Children)
-                        if (child.IsHidden)
-                            explorerPresenter.Tree.Delete(child.FullPath);
-                    explorerPresenter.PopulateContextMenu(model.FullPath);
-                    explorerPresenter.RefreshNode(model);
                 }
             }
             catch (Exception err)
@@ -882,65 +890,12 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for 'Enabled' menu item.
-        /// </summary>
-        [ContextMenu(MenuName = "Read-only", IsToggle = true)]
-        public void ReadOnly(object sender, EventArgs e)
-        {
-            try
-            {
-                IModel model = explorerPresenter.CurrentNode as IModel;
-                if (model == null)
-                    return;
-
-                // Don't allow users to change read-only status of released models.
-                if (!string.IsNullOrEmpty(model.ResourceName))
-                    return;
-
-                // Don't allow users to change read-only status resource children, except for Cultivars
-                if ((model.FindAllAncestors().Any(a => !string.IsNullOrEmpty(a.ResourceName))) && !(model is Models.PMF.Cultivar))
-                    return;
-                    
-
-                bool readOnly = !model.ReadOnly;
-                List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
-                
-                // Toggle read-only on the model and all descendants.
-                changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
-                foreach (IModel child in model.FindAllDescendants())
-                    changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
-
-                // Apply changes.
-                ChangeProperty command = new ChangeProperty(changes);
-                explorerPresenter.CommandHistory.Add(command);
-
-                // Refresh the context menu.
-                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Event handler for checkbox for 'Enabled' menu item.
         /// </summary>
         public bool EnabledChecked()
         {
             IModel model = explorerPresenter.CurrentNode as IModel;
             return model.Enabled;
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'ReadOnly' menu item.
-        /// </summary>
-        /// <returns></returns>
-        public bool ReadOnlyChecked()
-        {
-            IModel model = explorerPresenter.CurrentNode as IModel;
-            return model.ReadOnly;
         }
 
         /// <summary>
@@ -1103,6 +1058,57 @@ namespace UserInterface.Presenters
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        //This menu item is dynamically added by ExplorerPresented based on how many 
+        //Playlists exist within the file.
+        [ContextMenu(MenuName = "Playlist",
+                     ShortcutKey = "",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Simulation),
+                                         typeof(Simulations),
+                                         typeof(Experiment),
+                                         typeof(Folder) })]
+        public void OnAddToPlaylist(object sender, EventArgs e)
+        {
+            List<string> namesToAdd = new List<string>();
+            IModel model = explorerPresenter.CurrentNode;
+
+            if (model is Simulations || model is Folder)
+            {
+                IEnumerable<Simulation> sims = (model as Model).FindAllDescendants<Simulation>();
+                foreach (Simulation sim in sims)
+                    namesToAdd.Add(sim.Name);
+
+                IEnumerable<Experiment> exps = (model as Model).FindAllDescendants<Experiment>();
+                foreach (Experiment exp in exps)
+                    namesToAdd.Add(exp.Name);
+            }
+            else if (model is Simulation || model is Experiment)
+            {
+                namesToAdd.Add((model as Model).Name);
+            }
+
+            //This digs through the menu item that sends the event to see what the text was on the button
+            //This is not good code and will break if the GUI changes
+            MenuItem menuItem = sender as MenuItem;
+            HBox hBox = menuItem.Children[0] as HBox;
+            Label label = hBox.Children[1] as Label;
+            string itemText = label.Text;
+            string playlistName = itemText.Replace("Add to", "").Trim();
+
+            Playlist playlist = explorerPresenter.ApsimXFile.FindDescendant(playlistName) as Playlist;
+            if (playlist != null)
+            {
+                playlist.AddSimulationNamesToList(namesToAdd.ToArray());
+            }
+            else
+            {
+                string outputNames = "";
+                foreach (string simName in namesToAdd)
+                    outputNames += simName + ", ";
+                explorerPresenter.MainPresenter.ShowMessage($"Could not add {outputNames} to Playlist called '{playlistName}'", Simulation.MessageType.Warning);
             }
         }
 

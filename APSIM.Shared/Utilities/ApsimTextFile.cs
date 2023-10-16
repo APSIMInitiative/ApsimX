@@ -604,16 +604,7 @@ namespace APSIM.Shared.Utilities
                     else if (columnTypes[w] == typeof(DateTime))
                     {
                         // Need to get a sanitised date e.g. d/M/yyyy 
-                        string DateFormat = Units[w].ToLower();
-                        DateFormat = StringUtilities.SplitOffBracketedValue(ref DateFormat, '(', ')');
-                        DateFormat = DateFormat.Replace("mmm", "MMM");
-                        DateFormat = DateFormat.Replace("mm", "m");
-                        DateFormat = DateFormat.Replace("dd", "d");
-                        DateFormat = DateFormat.Replace("m", "M");
-                        if (DateFormat == "")
-                            DateFormat = "yyyy-MM-dd";
-                        DateTime Value = DateTime.ParseExact(words[w], DateFormat, CultureInfo.InvariantCulture);
-                        values[w] = Value;
+                        values[w] = DateUtilities.GetDate(words[w]);
                     }
                     else if (columnTypes[w] == typeof(float))
                     {

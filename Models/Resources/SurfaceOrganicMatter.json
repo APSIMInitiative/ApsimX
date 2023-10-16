@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 164,
+  "Version": 168,
   "Name": "Simulations",
   "Children": [
     {
@@ -16,6 +16,78 @@
       "ResourceName": null,
       "Name": "SurfaceOrganicMatter",
       "Children": [
+        {
+          "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+          "C": null,
+          "N": null,
+          "P": null,
+          "LayerFraction": null,
+          "Name": "SurfaceResidue",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Soils.Nutrients.OrganicFlow, Models",
+              "MineralisedN": null,
+              "MineralisedP": null,
+              "Catm": null,
+              "destinationNames": [
+                "Microbial",
+                "Humic"
+              ],
+              "destinationFraction": [
+                0.9,
+                0.1
+              ],
+              "Name": "Decomposition",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The soil nutrient model will attempt to decompose all potentially decomposable surface organic materials.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": true
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Rate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": true
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CO2Efficiency",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": true
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "N2OFraction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": true
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": true
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.Surface.ResidueTypes, Models",
           "ResidueType": [

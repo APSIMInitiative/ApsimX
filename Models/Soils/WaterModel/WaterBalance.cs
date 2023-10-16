@@ -96,7 +96,7 @@ namespace Models.WaterModel
         [Link(ByName = true)]
         ISolute urea = null;
 
-        [Link(ByName = true, IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]  
         ISolute cl = null;
 
         /// <summary>Irrigation information.</summary>
@@ -254,6 +254,27 @@ namespace Models.WaterModel
         [Units("cm")]
         public double[] PSI { get; private set; }
 
+        /// <summary>Hydraulic Conductivity of layer</summary>
+        [Units("cm/h")]
+        public double[] K { get; private set; }
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex
+        {
+            get
+            {
+                return hyprops.PoreInteractionIndex;
+            }
+            set
+            {
+                hyprops.PoreInteractionIndex = value;
+                if (physical.KS != null)
+                    hyprops.SetupKCurve(physical.Thickness.Length, physical.LL15, physical.DUL, physical.SAT, physical.KS, 0.1, PSIDul);
+            }
+        }
+
         /// <summary>Runon (mm).</summary>
         [JsonIgnore]
         public double Runon { get; set; }
@@ -393,9 +414,9 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
 
-        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachCl => 0.0;
+        public double LeachCl { get { if (FlowCl == null) return 0; else return FlowCl.Last(); } }  
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -408,6 +429,11 @@ namespace Models.WaterModel
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double[] FlowUrea { get; private set; }
+
+        /// <summary>Amount of Cl leaching as Cl from each soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double[] FlowCl { get; private set; }
+
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [JsonIgnore]
@@ -528,11 +554,20 @@ namespace Models.WaterModel
             double[] no3Values = no3.kgha;
             double[] ureaValues = urea.kgha;
 
-            // Calcualte solute movement down with water.
+            // Calculate solute movement down with water.
             double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(no3Values, no3Down);
             double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency);
             MoveDown(ureaValues, ureaDown);
+
+            double[] clValues = null;
+            double[] clDown = null;
+            if (cl != null)
+            {
+                clValues = cl.kgha;
+                clDown = CalculateSoluteMovementDown(clValues, Water, Flux, SoluteFluxEfficiency);
+                MoveDown(clValues, clDown);
+            }
 
             // Calculate evaporation and remove from top layer.
             double es = evaporationModel.Calculate();
@@ -562,6 +597,16 @@ namespace Models.WaterModel
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
 
+
+            if (cl != null)
+            {
+                double[] clUp = CalculateNetSoluteMovement(clValues, Water, Flow, SoluteFlowEfficiency);
+                MoveUp(clValues, clUp);
+                FlowCl = MathUtilities.Subtract(clDown, clUp);
+                cl.SetKgHa(SoluteSetterType.Soil, clValues);
+            }
+
+
             // Now that we've finished moving water, calculate volumetric water
             waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
 
@@ -569,7 +614,11 @@ namespace Models.WaterModel
             water.Volumetric = waterVolumetric;
 
             for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+            {
                 PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+                if (soilPhysical.KS != null)
+                   K[i] = hyprops.SimpleK(i, PSI[i], soilPhysical.SAT, soilPhysical.KS);
+            }
         }
 
         /// <summary>Move water down the profile</summary>
@@ -823,6 +872,7 @@ namespace Models.WaterModel
             hyprops.ResizePropfileArrays(n);
             hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
             PSI = new double[n];
+            K = new double[n];
         }
 
         ///<summary>Perform tillage</summary>

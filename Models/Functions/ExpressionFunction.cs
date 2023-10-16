@@ -98,8 +98,13 @@ namespace Models.Functions
                     Array arr = sometypeofobject as Array;
                     symFilled.m_values = new double[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i),
-                                                                 System.Globalization.CultureInfo.InvariantCulture);
+                    {
+                        double val = Convert.ToDouble(arr.GetValue(i), System.Globalization.CultureInfo.InvariantCulture);
+                        if (Double.IsNaN(val))
+                            throw new Exception($"Variable[{i}]: {sym.m_name} in function: {RelativeTo.Name} is not defined or Not a Number");
+                        else
+                            symFilled.m_values[i] = val;
+                    }
                 }
                 else if (sometypeofobject is IFunction)
                     symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
