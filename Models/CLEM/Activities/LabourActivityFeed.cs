@@ -25,6 +25,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
+        [Link]
+        private readonly CLEMEvents events = null;
+
         private int numberToDo;
         private double amountToDo;
         private IEnumerable<LabourFeedGroup> filterGroups;
@@ -124,7 +127,7 @@ namespace Models.CLEM.Activities
         /// <param name="filters">The filter groups to include</param>
         /// <param name="population">the individuals to filter</param>
         /// <returns>A list of unique individuals</returns>
-        public IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<LabourGroup> filters, IEnumerable<T> population) where T : LabourType
+        public static IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<LabourGroup> filters, IEnumerable<T> population) where T : LabourType
         {
             // no filters provided
             if (!filters.Any())
@@ -163,7 +166,7 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
             numberToDo = 0;
             amountToDo = 0;
-            uniqueIndividuals = GetUniqueIndividuals<LabourType>(filterGroups.Cast<LabourGroup>(), population);
+            uniqueIndividuals = GetUniqueIndividuals(filterGroups.Cast<LabourGroup>(), population);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
@@ -181,12 +184,12 @@ namespace Models.CLEM.Activities
                     switch (FeedStyle)
                     {
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                            amountToDo += child.Value * 30.4;
-                            indFed.Add((ind, child.Value * 30.4));
+                            amountToDo += child.Value * events.Interval;
+                            indFed.Add((ind, child.Value * events.Interval));
                             break;
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                            amountToDo += child.Value * ind.AdultEquivalent * 30.4;
-                            indFed.Add((ind, child.Value * ind.AdultEquivalent * 30.4));
+                            amountToDo += child.Value * ind.AdultEquivalent * events.Interval;
+                            indFed.Add((ind, child.Value * ind.AdultEquivalent * events.Interval));
                             break;
                         default:
                             throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));

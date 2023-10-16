@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
         private GrazeFoodStoreType pasture;
         private AnimalFoodStoreType foodstore;
         private ActivityCarryLimiter limiter;
@@ -152,12 +152,12 @@ namespace Models.CLEM.Activities
                     amountToDo += pasture.Amount * Supply;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    amountToDo += Supply * 30.4;
+                    amountToDo += Supply * events.Interval;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.Weight * 30.4;
+                        amountToDo += Supply * ind.Weight * events.Interval;
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
             // reduce amount by limiter if present.
             if (limiter != null)
             {
-                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                double canBeCarried = limiter.GetAmountAvailable(events.Clock.Today.Month);
                 Status = ActivityStatus.Warning;
                 AddStatusMessage("CutCarry limit enforced");
                 amountToDo = Math.Max(amountToDo, canBeCarried);

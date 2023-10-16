@@ -31,6 +31,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
+        [Link]
+        private readonly CLEMEvents events = null;
         private int numberToDo;
         private int numberToSkip;
         private double amountToDo;
@@ -367,11 +369,11 @@ namespace Models.CLEM.Activities
                                 details.Amount *= ind.Weight/totalWeight;
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                details.Amount = iChild.CurrentValue * 30.4;
+                                details.Amount = iChild.CurrentValue * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
-                                details.Amount = iChild.CurrentValue * ind.Weight * 30.4;
+                                details.Amount = iChild.CurrentValue * ind.Weight * events.Interval;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:

@@ -24,6 +24,8 @@ namespace Models.CLEM.Groupings
     {
         [Link]
         private Summary summary = null;
+        [Link]
+        private readonly CLEMEvents events = null;
 
         private RuminantActivityFeed feedActivityParent;
         private ResourceRequest currentFeedRequest;
@@ -189,13 +191,13 @@ namespace Models.CLEM.Groupings
                 switch (feedActivityParent.FeedStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        feedNeeed = value * 30.4;
+                        feedNeeed = value * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        feedNeeed = (value * 30.4) * selectedIndividuals.Count;
+                        feedNeeed = (value * events.Interval) * selectedIndividuals.Count;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        feedNeeed = value * selectedIndividuals.Weight * 30.4;
+                        feedNeeed = value * selectedIndividuals.Weight * events.Interval;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                         feedNeeed = value * selectedIndividuals.PotentialIntake;

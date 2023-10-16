@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using DocumentFormat.OpenXml.Drawing;
 
 namespace Models.CLEM.Activities
 {
@@ -24,7 +25,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Name of Feed to use
@@ -76,7 +77,7 @@ namespace Models.CLEM.Activities
 
             // get feed required
             // zero based month index for array
-            int month = clock.Today.Month - 1;
+            int month = events.Clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
             foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
@@ -90,7 +91,7 @@ namespace Models.CLEM.Activities
                 switch (FeedStyle)
                 {
                     case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-                        amount += group.MonthlyValues[month] * 30.4 * total;
+                        amount += group.MonthlyValues[month] * events.Interval * total;
                         break;
                     case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
                         throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
