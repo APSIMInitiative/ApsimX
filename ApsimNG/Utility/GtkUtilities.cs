@@ -1,7 +1,9 @@
 using Gtk;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection;
+using UserInterface.Views;
 
 namespace Utility
 {
@@ -192,6 +194,28 @@ namespace Utility
             win.Window.GetOrigin(out int frameX, out int frameY);
 
             return new System.Drawing.Point(frameX + windowX, frameY + windowY);
+        }
+
+        /// <summary>
+        /// Returns a rectangle that defines in screen cordinates the edges of the right hand view where content is loaded
+        /// This will only work if the explorer view has been fully loaded.
+        /// Left side is the edge of the tree view
+        /// Right side is the edge of the window
+        /// Bottom is the top of the status window
+        /// Top is the bottom of the menu bar
+        /// </summary>
+        public static System.Drawing.Rectangle GetBorderOfRightHandView(ExplorerView explorerView)
+        {
+            int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
+            int bottom = (explorerView.Owner as MainView).StatusPanelHeight;
+            int left = explorerView.DividerPosition;
+            int right = left + explorerView.MainWidget.AllocatedWidth;
+
+            int width = right - left;
+            int height = bottom - top;
+
+            Rectangle bounds = new Rectangle(left, top, width, height);
+            return bounds;
         }
     }
 }

@@ -10,6 +10,7 @@ using Models.Management;
 using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
+using System.Drawing;
 
 namespace UserInterface.Views
 {
@@ -85,12 +86,16 @@ namespace UserInterface.Views
             mainWidget = (Widget)builder.GetObject("main_widget");
             mainWidget.Destroyed += OnDestroyed;
 
-            int topOfWindow = GtkUtilities.GetPositionOfWidget(owner.MainWidget).Y;
-            int bottomOfWindow = ((owner as ExplorerView).Owner as MainView).StatusPanelHeight;
-            int heightOfWindow = bottomOfWindow - topOfWindow;
+
+            Rectangle explorererBounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
+
+
+            int topOfWindow = explorererBounds.Y;
+            int bottomOfWindow = explorererBounds.Y + explorererBounds.Height;
+            int heightOfWindow = explorererBounds.Height;
             int splitterPosition = (int)(heightOfWindow * 0.7);
 
-            int widthOfWindow = (owner as ExplorerView).MainWidget.AllocatedWidth - (owner as ExplorerView).DividerPosition;
+            int widthOfWindow = explorererBounds.Width;
             int horizontalSplitterPosition = (int)(widthOfWindow * 0.6);
 
             (mainWidget as VPaned).Position = splitterPosition;
