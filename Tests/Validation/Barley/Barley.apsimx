@@ -181,7 +181,14 @@
                 "[Barley].PlantType=Barley",
                 "[Phenology].EarlyFlowering.Target.FixedValue=0",
                 "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33"
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+                "",
+                "",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.End=\"VernalSaturation\"",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.Start=\"VernalSaturation\"",
+                "",
+                "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 230000, 30000, 30000, 30000, 30000, 30000",
+                "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 15000, 15000"
               ],
               "Name": "ModelOverrides",
               "ResourceName": null,
@@ -286,23 +293,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
                   ],
                   "Name": "Biere",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 9",
-                    "[Phenology].CAMP.FLNparams.PpLN = 3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2175",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
-                  ],
-                  "Name": "Booma",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1040,6 +1030,23 @@
               "Name": "FittedCultivars",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.MinLN = 7",
+                    "[Phenology].CAMP.FLNparams.PpLN = 6",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                  ],
+                  "Name": "Booma",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
@@ -6212,7 +6219,7 @@
                       "LegendPosition": 2,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "40_60cm",
                       "ResourceName": null,
@@ -6307,7 +6314,7 @@
                       "LegendPosition": 2,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "60_80cm",
                       "ResourceName": null,
@@ -6402,7 +6409,7 @@
                       "LegendPosition": 2,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "100_120cm",
                       "ResourceName": null,
@@ -6497,7 +6504,7 @@
                       "LegendPosition": 2,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "120_140cm",
                       "ResourceName": null,
@@ -27309,6 +27316,1075 @@
               "Name": "NewZealandHarvestObsPred",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "Name": "Barley",
+              "ResourceName": "Wheat",
+              "Children": [
+                {
+                  "$type": "Models.Core.ModelOverrides, Models",
+                  "Overrides": [
+                    "[Barley].PlantType=Barley",
+                    "[Phenology].EarlyFlowering.Target.FixedValue=0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+                    "",
+                    "",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.End=\"VernalSaturation\"",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.Start=\"VernalSaturation\""
+                  ],
+                  "Name": "ModelOverrides",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "Cultivars1",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -7",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 120.9431217",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.207440505",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Alestar",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = -2",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -6",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 120.3588019",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.23234103",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
+                      ],
+                      "Name": "Banks",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = -2.333333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -3.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 110.9847693",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.261968924",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
+                      ],
+                      "Name": "Bass",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.666666667",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 2",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 69.95241059",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.748224618",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 6"
+                      ],
+                      "Name": "Baudin",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = -2.333333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 118.6729904",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.182591106",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
+                      ],
+                      "Name": "Biere",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2175",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Booma",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Buloke",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Bumpa",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 87.44227888",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.655991185",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5"
+                      ],
+                      "Name": "Capstan",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 11.33333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = -0.33333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 14",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -14.33333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 111.760502",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.154654968",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Cassiopee",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.666666667",
+                        "[Phenology].CAMP.FLNparams.PpLN = 2.333333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -5.666666667",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.92081575",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.369052131",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Commander",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 5",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -5",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 104.3258054",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.246502671",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Compass",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = 0.666666667",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 5",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -3.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 76.78280555",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.619292867",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 90",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 6"
+                      ],
+                      "Name": "Csirob1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 6",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 57.45009872",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.18910351",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
+                      ],
+                      "Name": "Csirob3",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 6",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 7",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -6",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 82.17586355",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.85248787",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Fathom",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90.88228131",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.4688122",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
+                      ],
+                      "Name": "Fleet",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = -2.333333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 5",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -7.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 129.3942158",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.105323488",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Flinders",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 10",
+                        "[Phenology].CAMP.FLNparams.PpLN = -2",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 5",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -7",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 103.9731331",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.195075087",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Franklin",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 10",
+                        "[Phenology].CAMP.FLNparams.PpLN = 0",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -5",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 88.54255431",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.325049926",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
+                      ],
+                      "Name": "Gairdner",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 2",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -3",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 108.6702997",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.190962591",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Granger",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 60",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Grimmett",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.333333333",
+                        "[Phenology].CAMP.FLNparams.PpLN = 2.666666667",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1.333333333",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 86.48989044",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.62631665",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3"
+                      ],
+                      "Name": "Grout",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Hindmarsh",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Hooded",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 6",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 1",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 58.40056656",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.251746574",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Keel",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 6.666666667",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3.333333333",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 10",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -10.666666667",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 97.89121109",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.405093218",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Lockyer",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 1",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 99.85179413",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.253014157",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Mundah",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 5",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -7",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 93.43659898",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.400967405",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Navigator",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Omaka1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9.666666667",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3.666666667",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 3",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -6.666666667",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 139.8064143",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.107968397",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Oxford",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Quench",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Retriever",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 1",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 117.2869488",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.244404645",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 6"
+                      ],
+                      "Name": "Planet",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -9",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 113.0837881",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.350857209",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Rosalind",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 1",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90.27490591",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.517492533",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Schooner",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 2",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 1",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 93.40444263",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.379146059",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5"
+                      ],
+                      "Name": "Scope",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 6",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -9",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 123.1871156",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.106688704",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Shepherd",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 6",
+                        "[Phenology].CAMP.FLNparams.PpLN = 1",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 4",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -4",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.10951301",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.435320697",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 130",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Spartacus",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 76.70827864",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.636329125",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4"
+                      ],
+                      "Name": "Stirling",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 10",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Triumph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 4",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 74.28801183",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.756480172",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Unicorn",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9.666666667",
+                        "[Phenology].CAMP.FLNparams.PpLN = -1.666666667",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 14",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -4.666666667",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 112.8025962",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.103185899",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
+                      ],
+                      "Name": "Urambie",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Valetta",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 9",
+                        "[Phenology].CAMP.FLNparams.PpLN = -3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 7",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -10",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 130.4668887",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.146837949",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1"
+                      ],
+                      "Name": "Westminster",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 3",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 1",
+                        "[Phenology].CAMP.FLNparams.VxPLN = -2",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 99.45937465",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.396778567",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                        "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
+                        "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7"
+                      ],
+                      "Name": "Yagan",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "FittedCultivars",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8.5",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Boss",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Cellar",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 6",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "County",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 6",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Dash",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Doyen",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                        "[Phenology].CAMP.FLNparams.PpLN = 6",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Omaka",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7.5",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5.5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.5",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Optic",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 8",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Pyramid",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 78",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.5",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Sherwood",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 7",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Tavern",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].CAMP.FLNparams.MinLN = 8",
+                        "[Phenology].CAMP.FLNparams.PpLN = 5",
+                        "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                        "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                        "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 75",
+                        "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                        "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                      ],
+                      "Name": "Vortex",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
