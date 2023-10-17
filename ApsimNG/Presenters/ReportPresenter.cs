@@ -171,17 +171,17 @@ namespace UserInterface.Presenters
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
-            InScopeModelNames = explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
+            InScopeModelNames = GetModelScopeNames();//explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
             SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
             // Note: More additions may be needed in future to include other Interface type variables.
             modelsImplementingSpecificInterfaceDictionary.Add("ISoilWater", GetInScopeModelImplementingInterface("ISoilWater"));
             AddInterfaceImplementingTypesToModelScopeNames();
             CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
             CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
-            CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true); // was async
+            CommonReportVariables = GetReportVariables(CommonReportVariablesList, InScopeModelNames, true);
             this.view.CommonReportVariablesList.DataSource = CommonReportVariables;
             this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
-            CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, GetModelScopeNames(), true); // was async
+            CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, InScopeModelNames, true);
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
             (this.view as ReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
@@ -299,7 +299,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, GetModelScopeNames(), true);
+                    CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, InScopeModelNames, true);
                     view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
                 }
             }
@@ -333,11 +333,9 @@ namespace UserInterface.Presenters
                 {
                     DataTable potentialCommonReportVariables = CreateDataTableWithColumns();
                     DataTable scopeFilteredCommonReportVariables = CreateDataTableWithColumns();
-                    //DataTable interfaceFilteredCommonReportVariables = CreateDataTableWithColumns();
 
                     potentialCommonReportVariables = GetReportVariables(CommonReportVariablesList, lineStrings, false);
                     scopeFilteredCommonReportVariables = filterReportVariableByScope(potentialCommonReportVariables);
-                    //interfaceFilteredCommonReportVariables = filterReportVariableByInterfaces(scopeFilteredCommonReportVariables);
 
                     if (scopeFilteredCommonReportVariables.Rows.Count != 0)
                         CommonReportVariables = scopeFilteredCommonReportVariables;
@@ -356,7 +354,7 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true);
+                    CommonReportVariables = GetReportVariables(CommonReportVariablesList, InScopeModelNames, true);
                     view.CommonReportVariablesList.DataSource = CommonReportVariables;
                 }
             }
@@ -371,8 +369,7 @@ namespace UserInterface.Presenters
         private void AddInterfaceImplementingTypesToModelScopeNames()
         {
             foreach (KeyValuePair<string, List<string>> keyValuePair in modelsImplementingSpecificInterfaceDictionary)
-                foreach (string interfaceImplementingModelName in keyValuePair.Value)
-                    InScopeModelNames.Add(interfaceImplementingModelName);
+                InScopeModelNames.Add(keyValuePair.Key);
         }
 
         /// <summary>
@@ -560,19 +557,23 @@ namespace UserInterface.Presenters
                                 break;
                         }
                     }
-                    // TODO needs to use ReportVariable.Node and have it split if it contains multiples and check this to make sure theyre included.
+                    // TODO needs to use ReportVariable.Node and have it split if it contains multiples and check this to make sure they're included.
                     List<string> nodeStrings = reportVariable.Node.ToString().Split(",").ToList();
                     foreach (string nodeString in nodeStrings)
                     {
-                        if (inputStrings.Contains(nodeString))
+                        foreach (string inputString in inputStrings)
                         {
-                            DataRow row = variableDataTable.NewRow();
-                            row["Description"] = reportVariable.Description;
-                            row["Node"] = reportVariable.Node;
-                            row["Code"] = reportVariable.Code;
-                            row["Type"] = reportVariable.Type;
-                            row["Units"] = reportVariable.Units;
-                            variableDataTable.Rows.Add(row);
+                            //if (inputStrings.Contains(inputString))
+                            if (nodeString.Contains(inputString))
+                            {
+                                DataRow row = variableDataTable.NewRow();
+                                row["Description"] = reportVariable.Description;
+                                row["Node"] = reportVariable.Node;
+                                row["Code"] = reportVariable.Code;
+                                row["Type"] = reportVariable.Type;
+                                row["Units"] = reportVariable.Units;
+                                variableDataTable.Rows.Add(row);
+                            }
                         }
                     }
 
