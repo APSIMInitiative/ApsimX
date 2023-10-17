@@ -1,18 +1,21 @@
 ﻿[
   {
     "description": "Harvest",
+    "node": "Plant",
     "code": "[Plant].Harvesting",
     "type": "",
     "units": ""
   },
   {
     "description": "End of Day",
+    "node": "Clock",
     "code": "[Clock].EndOfDay",
     "type": "",
     "units": ""
   },
   {
     "description": "End of Year",
+    "node": "Clock",
     "code": "[Clock].EndOfYear",
     "type": "",
     "units": ""

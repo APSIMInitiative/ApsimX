@@ -1,320 +1,373 @@
 [
   {
+    "node": "Plant",
     "description": "Above ground weight",
     "code": "[Plant].AboveGround.Wt*10 as AboveGroundWtKgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "Plant",
     "description": "Above ground nitrogen",
     "code": "[Plant].AboveGround.N*10 as AboveGroundNKgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "Plant",
     "description": "LAI",
     "code": "[Plant].Leaf.LAI",
     "type": "double",
     "units": "m^2/m^2"
   },
   {
+    "node": "Plant",
     "description": "Grain Number",
     "code": "[Plant].Grain.Number",
     "type": "double",
     "units": "g/m^2"
   },
   {
+    "node": "Plant",
     "description": "Protein",
     "code": "[Plant].Grain.Protein",
     "type": "double",
     "units": "%"
   },
   {
+    "node": "Plant",
     "description": "Yield",
     "code": "[Plant].Grain.Wt*10 as Yieldkgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "Weather",
     "description": "In crop rain",
     "code": "sum of [Weather].Rain from [Plant].Sowing to [Plant].Harvesting as InCropRain",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Gross primary production",
     "code": "[AGPRyegrass].GPP+[AGPWhiteClover].GPP as GPP",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Net primary production",
     "code": "[AGPRyegrass].NPP+[AGPWhiteClover].NPP as NPP",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Above ground weight",
     "code": "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundWtKgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Above ground nitrogen",
     "code": "[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as AboveGroundNKgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Harvested weight",
     "code": "[AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt as HarvestedWtKgha",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Net growth weight",
     "code": "[AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt as NetGrowthWtKgHa",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "LAI green",
     "code": "[AGPRyegrass].LAIGreen + [AGPWhiteClover].LAIGreen as LAIGreen",
     "type": "double",
     "units": "m^2/m^2"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "LAI dead",
     "code": "[AGPRyegrass].LAIDead + [AGPWhiteClover].LAIDead as LAIDead",
     "type": "double",
     "units": "m^2/m^2"
   },
   {
+    "node": "AGPWhiteClover",
     "description": "Fixed nitrogen",
     "code": "[AGPWhiteClover].FixedN as FixedN",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Nitrogen uptake",
     "code": "[AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN as NitrogenUptake",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "AGPRyegrass,AGPWhiteClover",
     "description": "Water uptake",
     "code": "sum([AGPRyegrass].WaterUptake) + Sum([AGPWhiteClover].WaterUptake) as WaterUptake",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "SurfaceOrganicMatter",
     "description": "Surface organic matter cover",
     "code": "[SurfaceOrganicMatter].Cover",
     "type": "double",
-    "units": "%"
+    "units": "0-1"
   },
   {
+    "node": "SurfaceOrganicMatter",
     "description": "Surface organic matter weight",
     "code": "[SurfaceOrganicMatter].Wt",
     "type": "double",
     "units": "kg/ha"
   },
   {
-    "description": "Soil water content layered",
+    "node": "Soil",
+    "description": "Soil water content",
     "code": "[Soil].Water.MM",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm"
   },
   {
+    "node": "Soil",
     "description": "Soil water content profile",
     "code": "sum([Soil].Water.MM) as ProfileWater",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "Soil",
     "description": "Soil water content volumetric",
     "code": "[Soil].Water.Volumetric",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm/mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water evaporation potential",
     "code": "[ISoilWater].Eos",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water evaporation actual",
     "code": "[ISoilWater].Es",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water evapotranspiration potential",
     "code": "[ISoilWater].Eo",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water runoff",
     "code": "[ISoilWater].Runoff",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water infiltration",
     "code": "[ISoilWater].Infiltration",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil water drainage",
     "code": "[ISoilWater].Drainage",
     "type": "double",
     "units": "mm"
   },
   {
+    "node": "Soil",
     "description": "Soil water potential",
     "code": "[Soil].Water.Potential",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kPa"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil NO3 leaching",
     "code": "[ISoilWater].LeachNO3",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil NH4 leaching",
     "code": "[ISoilWater].LeachNH4",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "ISoilWater",
     "description": "Soil CL leaching",
     "code": "[ISoilWater].LeachCl",
     "type": "double",
     "units": "kg/ha"
   },
   {
+    "node": "Soil",
     "description": "Soil plant available water SW-LL15",
     "code": "[Soil].Water.PAW",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm/mm"
   },
   {
+    "node": "Soil",
     "description": "Soil plant available water SW-LL15",
     "code": "[Soil].Water.PAWmm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm"
   },
   {
+    "node": "Physical",
     "description": "Soil plant available water CAPACITY (DUL-LL15)",
     "code": "[Physical].PAWC",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm/mm"
   },
   {
+    "node": "Physical",
     "description": "Soil plant available water CAPACITY (DUL-LL15)",
     "code": "[Physical].PAWCmm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "mm"
   },
   {
+    "node": "OrganicPool",
     "description": "Soil carbon",
     "code": "[OrganicPool].C",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "OrganicPool",
     "description": "Soil carbon lost to the atmosphere",
     "code": "[OrganicPool].Catm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "NFlow",
     "description": "Soil nitrogen lost to the atmosphere",
     "code": "[NFlow].Natm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "NFlow",
     "description": "Soil N2O lost to the atmosphere",
     "code": "[NFlow].N2Oatm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "Denitrification",
     "description": "Soil denitrified nitrogen (N flow from NO3)",
     "code": "[Denitrification].Value + [Denitrification].Natm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "Denitrification",
     "description": "Soil nitrified nitrogen (from NH4 to either NO3 or N2O)",
     "code": "[Nitrification].Value + [Nitrification].Natm",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "Hydrolysis",
     "description": "Soil urea converted to NH4 via hydrolysis",
     "code": "[Hydrolysis].Value",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "OrganicFlow",
     "description": "Soil net nitrogen mineralisation in each soil layer",
     "code": "[OrganicFlow].MineralisedN",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
-    "description": "Soil organic carbon layered, organic and mineral",
+    "node": "OrganicPool",
+    "description": "Soil organic carbon, organic and mineral",
     "code": "[OrganicPool].C",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
-    "description": "Soil organic nitrogen layered, organic and mineral",
+    "node": "OrganicPool",
+    "description": "Soil organic nitrogen, organic and mineral",
     "code": "[OrganicPool].N",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
-    "description": "Soil mineral nitrogen layered",
+    "node": "NO3,NH4,Urea",
+    "description": "Soil mineral nitrogen",
     "code": "[NO3].kgha + [NH4].kgha + [Urea].kgha as MineralN",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
-    "description": "Soil total nitrogen - organic + mineral",
+    "node": "OrganicPool,Urea,NO3,NH4",
+    "description": "Soil total nitrogen (organic + mineral)",
     "code": "[OrganicPool].N + [Urea].kgha + [NO3].kgha + [NH4].kgha as TotalNitrogen",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "NO3",
     "description": "Soil NO3",
     "code": "[NO3].kgha",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "NH4",
     "description": "Soil NH4",
     "code": "[NH4].kgha",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "Urea",
     "description": "Soil Urea",
     "code": "[Urea].kgha",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   },
   {
+    "node": "Cl",
     "description": "Soil Cl",
     "code": "[Cl].kgha",
-    "type": "[]",
+    "type": "Double[]",
     "units": "kg/ha"
   }
 ]

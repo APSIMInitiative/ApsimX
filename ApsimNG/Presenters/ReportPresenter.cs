@@ -79,7 +79,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private List<ReportVariable> commonFrequencyVariableList;
 
+        /// <summary>
+        /// Stores all names of nodes that are of type Plant.
+        /// </summary>
         private List<string> simulationPlantModelNames;
+        /// <summary>
+        /// Stores all names of nodes that are of type ISoilWater.
+        /// </summary>
+        private Dictionary<string, List<string>> modelsImplementingSpecificInterfaceDictionary = new();
 
         /// <summary>Currently selected ReportVariable. </summary>
         private ReportVariable CurrentlySelectedVariable { get; set; }
@@ -92,6 +99,9 @@ namespace UserInterface.Presenters
 
         /// <summary> Common directory path. </summary>
         private readonly string reportVariablesDirectoryPath = "ApsimNG\\Resources\\CommonReportVariables\\";
+
+        /// <summary> All in scope model names of the current apsimx file.</summary>
+        public List<string> InScopeModelNames { get; set; }
 
         // Returns all model names that are of type Plant.
         public List<string> SimulationPlantModelNames
@@ -161,7 +171,11 @@ namespace UserInterface.Presenters
             this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
+            InScopeModelNames = explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
             SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
+            // Note: More additions may be needed in future to include other Interface type variables.
+            modelsImplementingSpecificInterfaceDictionary.Add("ISoilWater", GetInScopeModelImplementingInterface("ISoilWater"));
+            AddInterfaceImplementingTypesToModelScopeNames();
             CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
             CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
             CommonReportVariables = GetReportVariables(CommonReportVariablesList, GetModelScopeNames(), true); // was async
@@ -185,7 +199,7 @@ namespace UserInterface.Presenters
             this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
             this.view.VerticalSplitterChanged += OnVerticalSplitterChanged;
             // Below check required to prevent commonReportVariables/Events
-            // windows from occuping whole screen.
+            // windows from occupying the whole screen.
             if (Configuration.Settings.ReportSplitterVerticalPosition != 0)
                 this.view.VerticalSplitterPosition = Configuration.Settings.ReportSplitterVerticalPosition;
             else
@@ -318,19 +332,24 @@ namespace UserInterface.Presenters
                 if (lineStrings.Count != 0)
                 {
                     DataTable potentialCommonReportVariables = CreateDataTableWithColumns();
+                    DataTable scopeFilteredCommonReportVariables = CreateDataTableWithColumns();
+                    //DataTable interfaceFilteredCommonReportVariables = CreateDataTableWithColumns();
 
                     potentialCommonReportVariables = GetReportVariables(CommonReportVariablesList, lineStrings, false);
-                    if (potentialCommonReportVariables.Rows.Count != 0)
-                        CommonReportVariables = potentialCommonReportVariables;
+                    scopeFilteredCommonReportVariables = filterReportVariableByScope(potentialCommonReportVariables);
+                    //interfaceFilteredCommonReportVariables = filterReportVariableByInterfaces(scopeFilteredCommonReportVariables);
+
+                    if (scopeFilteredCommonReportVariables.Rows.Count != 0)
+                        CommonReportVariables = scopeFilteredCommonReportVariables;
                     else
                     {
-                        DataRow emptyRow = potentialCommonReportVariables.NewRow();
+                        DataRow emptyRow = scopeFilteredCommonReportVariables.NewRow();
                         emptyRow["Description"] = "";
                         emptyRow["Code"] = "";
                         emptyRow["Type"] = "";
                         emptyRow["Units"] = "";
-                        potentialCommonReportVariables.Rows.Add(emptyRow);
-                        CommonReportVariables = potentialCommonReportVariables;
+                        scopeFilteredCommonReportVariables.Rows.Add(emptyRow);
+                        CommonReportVariables = scopeFilteredCommonReportVariables;
                     }
                     view.CommonReportVariablesList.DataSource = CommonReportVariables;
 
@@ -342,6 +361,63 @@ namespace UserInterface.Presenters
                 }
             }
         }
+
+        /// <summary>
+        /// Takes <see cref="modelsImplementingSpecificInterfaceDictionary"/> and makes sure any ReportVariables that have a node as a key of this Dictionary
+        /// get included.
+        /// </summary>
+        /// <param name="scopeFilteredCommonReportVariables"></param>
+        /// <returns> A DataTable of filtered <see cref="ReportVariable"/></returns>
+        private void AddInterfaceImplementingTypesToModelScopeNames()
+        {
+            foreach (KeyValuePair<string, List<string>> keyValuePair in modelsImplementingSpecificInterfaceDictionary)
+                foreach (string interfaceImplementingModelName in keyValuePair.Value)
+                    InScopeModelNames.Add(interfaceImplementingModelName);
+        }
+
+        /// <summary>
+        /// Returns a DataTable with the ReportVariables filtered to only contain ones that match a node in scope.
+        /// </summary>
+        /// <param name="potentialCommonReportVariables"></param>
+        /// <returns></returns>
+        private DataTable filterReportVariableByScope(DataTable potentialCommonReportVariables)
+        {
+            DataTable filteredDataTable = CreateDataTableWithColumns();
+            foreach (DataRow row in potentialCommonReportVariables.Rows)
+            {
+                // Allows the inclusion of ReportVariables with Node columns containing Plant.
+                if (SimulationPlantModelNames.Count > 0)
+                {
+                    if (row["Node"].ToString().Contains(","))
+                    {
+                        List<string> nodeRowStrings = row["Node"].ToString().Split(',').ToList();
+                        foreach (string nodeString in nodeRowStrings)
+                            if (InScopeModelNames.Contains(nodeString) || nodeString.Contains("Plant"))
+                                filteredDataTable.ImportRow(row);
+                    }
+                    else
+                        if (InScopeModelNames.Contains(row["Node"]) || row["Node"].ToString().Contains("Plant"))
+                        filteredDataTable.ImportRow(row);
+                }
+                else
+                {
+                    if (row["Node"].ToString().Contains(","))
+                    {
+                        List<string> nodeRowStrings = row["Node"].ToString().Split(',').ToList();
+                        foreach (string nodeString in nodeRowStrings)
+                            if (InScopeModelNames.Contains(nodeString))
+                                filteredDataTable.ImportRow(row);
+                    }
+                    else
+                    {
+                        if (InScopeModelNames.Contains(row["Node"]))
+                            filteredDataTable.ImportRow(row);
+                    }
+                }
+            }
+            return filteredDataTable;
+        }
+
 
         /// <summary>
         /// Adds the code from the StoredDragObject to the VariableList in the NewReportView.
@@ -452,7 +528,7 @@ namespace UserInterface.Presenters
         /// Creates a DataTable from the reportVariables inside a resource file name. 
         /// </summary>
         /// <param name="variableList"> List of ReportVariables</param>
-        /// <param name="inputStrings">String List containing model names or properties to use as filters.</param>
+        /// <param name="inputStrings"> String List containing model names or properties to use as filters.</param>
         /// <param name="isModelScope"> A flag to determine if GetReportVariables should perform a substring check on the ReportVariable.Description field. 
         /// If inputStrings are model names and isModelScope is false, many duplicates will appear in the common report variables/events lists.
         /// </param>
@@ -484,15 +560,20 @@ namespace UserInterface.Presenters
                                 break;
                         }
                     }
-
-                    if (inputStrings.Contains(reportVariable.ModelName))
+                    // TODO needs to use ReportVariable.Node and have it split if it contains multiples and check this to make sure theyre included.
+                    List<string> nodeStrings = reportVariable.Node.ToString().Split(",").ToList();
+                    foreach (string nodeString in nodeStrings)
                     {
-                        DataRow row = variableDataTable.NewRow();
-                        row["Description"] = reportVariable.Description;
-                        row["Code"] = reportVariable.Code;
-                        row["Type"] = reportVariable.Type;
-                        row["Units"] = reportVariable.Units;
-                        variableDataTable.Rows.Add(row);
+                        if (inputStrings.Contains(nodeString))
+                        {
+                            DataRow row = variableDataTable.NewRow();
+                            row["Description"] = reportVariable.Description;
+                            row["Node"] = reportVariable.Node;
+                            row["Code"] = reportVariable.Code;
+                            row["Type"] = reportVariable.Type;
+                            row["Units"] = reportVariable.Units;
+                            variableDataTable.Rows.Add(row);
+                        }
                     }
 
                     if (!isModelScope)
@@ -505,6 +586,7 @@ namespace UserInterface.Presenters
                             {
                                 DataRow row = variableDataTable.NewRow();
                                 row["Description"] = reportVariable.Description;
+                                row["Node"] = reportVariable.Node;
                                 row["Code"] = reportVariable.Code;
                                 row["Type"] = reportVariable.Type;
                                 row["Units"] = reportVariable.Units;
@@ -518,6 +600,7 @@ namespace UserInterface.Presenters
                     {
                         DataRow row = variableDataTable.NewRow();
                         row["Description"] = reportVariable.Description;
+                        row["Node"] = reportVariable.Node;
                         row["Code"] = reportVariable.Code;
                         row["Type"] = reportVariable.Type;
                         row["Units"] = reportVariable.Units;
@@ -551,14 +634,31 @@ namespace UserInterface.Presenters
         {
             DataTable potentialCommonReportVariables = new DataTable();
             DataColumn descriptionColumn = new DataColumn("Description");
+            DataColumn nodeColumn = new DataColumn("Node");
             DataColumn codeColumn = new DataColumn("Code");
             DataColumn typeColumn = new DataColumn("Type");
             DataColumn unitsColumn = new DataColumn("Units");
             potentialCommonReportVariables.Columns.Add(descriptionColumn);
+            potentialCommonReportVariables.Columns.Add(nodeColumn);
             potentialCommonReportVariables.Columns.Add(codeColumn);
             potentialCommonReportVariables.Columns.Add(typeColumn);
             potentialCommonReportVariables.Columns.Add(unitsColumn);
             return potentialCommonReportVariables;
+        }
+
+        /// <summary> Returns a list of model names of any in scope models that implement a specific interface.</summary>
+        /// <param name="interfaceName"> The name of an Interface.</param>
+        /// <returns>A List of model name strings that implement the interface string.</returns>
+        private List<string> GetInScopeModelImplementingInterface(string interfaceName)
+        {
+            if (!string.IsNullOrWhiteSpace(interfaceName))
+            {
+                List<IModel> implementingModels = explorerPresenter.ApsimXFile.FindAllInScope()
+                    .Where(model => model.GetType().GetInterfaces().ToList().Any(type => type.Name == interfaceName)).ToList();
+                List<string> implementingModelNames = implementingModels.Select(model => model.Name).ToList();
+                return implementingModelNames;
+            }
+            else return new List<string>();
         }
 
         /// <summary>
