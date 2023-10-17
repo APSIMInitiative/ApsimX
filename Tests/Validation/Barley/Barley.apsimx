@@ -59,11 +59,20 @@
             "[Barley].Structure.Height",
             "[Barley].Structure.LeafTipsAppeared",
             "[Barley].Structure.MainStemPopn",
+            "[Barley].Arbitrator.DM.TotalFixationSupply",
+            "[Barley].Arbitrator.DM.TotalPlantDemand",
+            "[Barley].Arbitrator.FN",
+            "[Barley].Leaf.Fw",
             "[Soil].Nutrient.MineralN",
             "[Soil].Water.Volumetric",
             "[Soil].Water.MM",
             "sum([Soil].Nutrient.MineralN) as ProfileN",
-            "sum([Soil].Water.MM) as ProfileWater"
+            "sum([Soil].Water.MM) as ProfileWater",
+            "[Barley].Leaf.DMDemand.Total",
+            "[Barley].Stem.DMDemand.Total",
+            "[Barley].Root.DMDemand.Total",
+            "[Barley].Spike.DMDemand.Total",
+            "[Barley].Grain.DMDemand.Total"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -187,11 +196,12 @@
                 "",
                 "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.End=\"VernalSaturation\"",
                 "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.Start=\"VernalSaturation\"",
-                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.StemFraction.FixedValue=0.3",
-                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.StemFraction.FixedValue=0.8",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.PreStemElongation.StemFraction.FixedValue=0.24",
+                "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.StemElongation.StemFraction.FixedValue=0.64",
                 "",
                 "[Leaf].CohortParameters.SpecificLeafAreaMax.XYPairs.Y= 18000, 20000, 25000, 25000, 25000, 20000",
                 "[Leaf].CohortParameters.SpecificLeafAreaMin.XYPairs.Y= 12000, 15000",
+                "[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y=0.1, 0.5, 1.0, 0.5",
                 "",
                 "[Leaf].InitialLeaves[1].Area=10",
                 "",
@@ -4698,7 +4708,18 @@
                               "Filter": "[Barley.SowingData.Cultivar] = 'Dash'",
                               "Name": "Predicted",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Barley.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -4983,7 +5004,18 @@
                               "Filter": "[Barley.SowingData.Cultivar] = 'Dash'",
                               "Name": "Predicted",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.EventNamesOnGraph, Models",
+                                  "ColumnName": "Barley.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -19598,8 +19630,8 @@
                                 300.0
                               ],
                               "Carbon": [
-                                2.7,
-                                2.5,
+                                3.5,
+                                3.5,
                                 1.45,
                                 0.38,
                                 0.24,
@@ -19639,14 +19671,14 @@
                                 0.96
                               ],
                               "FOM": [
-                                536.9336095200046,
-                                359.91736185153144,
-                                197.52683621638468,
-                                132.40619794584117,
-                                108.4050261563909,
-                                72.66606212364664,
-                                59.493939765704596,
-                                32.65096642049581
+                                536.934,
+                                359.917,
+                                197.527,
+                                132.406,
+                                108.405,
+                                72.666,
+                                59.494,
+                                32.651
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -19704,12 +19736,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                19.51219512195122,
-                                14.423503325942352,
-                                0.6060606060606066,
-                                0.4545454545454534,
-                                0.4545454545454534,
-                                0.3333333333333333
+                                19.512,
+                                14.424,
+                                20.0,
+                                20.0,
+                                20.0,
+                                20.0
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -19737,12 +19769,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                1.1924119241192412,
-                                1.2071938901207195,
-                                0.5454545454545452,
-                                0.4242424242424242,
-                                0.3030303030303029,
-                                0.2727272727272729
+                                1.192,
+                                1.207,
+                                0.545,
+                                0.424,
+                                0.303,
+                                0.273
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -19810,7 +19842,7 @@
                           "Canopies": [],
                           "InitialResidueName": "Barley_stubble",
                           "InitialResidueType": "Barley",
-                          "InitialResidueMass": 1500.0,
+                          "InitialResidueMass": 0.0,
                           "InitialStandingFraction": 0.0,
                           "InitialCPR": 0.0,
                           "InitialCNR": 80.0,
@@ -19913,12 +19945,12 @@
                               ],
                               "Parameters": [
                                 {
-                                  "Key": "InitialRootDepth",
-                                  "Value": "20"
-                                },
-                                {
                                   "Key": "Cultivar",
                                   "Value": ""
+                                },
+                                {
+                                  "Key": "InitialRootDepth",
+                                  "Value": "20"
                                 },
                                 {
                                   "Key": "SowingDate",
@@ -21330,8 +21362,8 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Barley.Ear.Wt",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
@@ -21548,6 +21580,72 @@
                           "$type": "Models.Memo, Models",
                           "Text": "Total biomass data is suspect",
                           "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NStress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Irr",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Arbitrator.FN",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -21950,6 +22048,149 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "Stress",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "NStress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Irr",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Arbitrator.FN",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "WaterStress",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Irr",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Cult",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Barley.Leaf.Fw",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -23254,14 +23495,14 @@
                                 0.96
                               ],
                               "FOM": [
-                                536.9336095200046,
-                                359.91736185153144,
-                                197.52683621638468,
-                                132.40619794584117,
-                                108.4050261563909,
-                                72.66606212364664,
-                                59.493939765704596,
-                                32.65096642049581
+                                536.934,
+                                359.917,
+                                197.527,
+                                132.406,
+                                108.405,
+                                72.666,
+                                59.494,
+                                32.651
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -23323,14 +23564,14 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                24.390243902439025,
-                                6.097560975609756,
-                                3.401360544217689,
-                                3.401360544217687,
-                                3.184713375796179,
-                                1.5772870662460583,
+                                24.39,
+                                6.098,
+                                3.401,
+                                3.401,
+                                3.185,
+                                1.577,
                                 3.125,
-                                1.0414496979795878
+                                1.041
                               ],
                               "InitialValuesUnits": 0,
                               "WaterTableConcentration": 0.0,
@@ -26619,7 +26860,7 @@
                               "InitialValues": [
                                 7.4,
                                 5.85,
-                                3.2333333333333334,
+                                3.233,
                                 0.3,
                                 0.3,
                                 0.3
@@ -60729,6 +60970,1164 @@
               "Name": "Interpretation",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Partitioning",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Core.Simulation, Models",
+              "Descriptors": null,
+              "Name": "Partitioning",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
+                  "FileName": "lincoln.met",
+                  "ExcelWorkSheetName": null,
+                  "Name": "Weather",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Clock, Models",
+                  "Start": "2009-09-01T00:00:00",
+                  "End": "2010-04-01T00:00:00",
+                  "Name": "Clock",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Summary, Models",
+                  "Verbosity": 100,
+                  "Name": "summaryfile",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                  "Name": "Soil Arbitrator",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "Paddock",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils;",
+                        "using System;",
+                        "using Models.Core;",
+                        "using System.Collections.Generic;",
+                        "using System.Text;",
+                        "using Models.PMF;",
+                        "using Models;",
+                        "using System.Xml.Serialization;",
+                        "using APSIM.Shared.Utilities;",
+                        "using System.Data;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable] ",
+                        "    //[System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        ",
+                        "    ",
+                        "        ",
+                        "        ",
+                        "        [Description(\"Days after sowing\")]",
+                        "        public double DAS { get; set; }",
+                        "        ",
+                        "        [EventSubscribe(\"DoInitialSummary\")]",
+                        "        private void OnDoInitialSummary(object sender, EventArgs e)",
+                        "        {",
+                        "            DAS = 0;",
+                        "        }",
+                        "        ",
+                        "        [EventSubscribe(\"DoReportCalculations\")]",
+                        "        private void OnDoReportCalculations(object sender, EventArgs e)",
+                        "        {",
+                        "            DAS += 1;",
+                        "        }",
+                        "    ",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "DAS",
+                          "Value": "0"
+                        }
+                      ],
+                      "Name": "DAS",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Soil, Models",
+                      "RecordNumber": 0,
+                      "ASCOrder": null,
+                      "ASCSubOrder": null,
+                      "SoilType": "NZ_sedementary",
+                      "LocalName": null,
+                      "Site": null,
+                      "NearestTown": null,
+                      "Region": "Plains",
+                      "State": "Canterbury ",
+                      "Country": "New Zealnd",
+                      "NaturalVegetation": null,
+                      "ApsoilNumber": null,
+                      "Latitude": 0.0,
+                      "Longitude": 0.0,
+                      "LocationAccuracy": null,
+                      "YearOfSampling": null,
+                      "DataSource": null,
+                      "Comments": null,
+                      "Name": "Soil",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "PH": [
+                            6.6,
+                            6.2,
+                            5.7,
+                            5.5,
+                            5.5,
+                            5.5
+                          ],
+                          "PHUnits": 0,
+                          "EC": null,
+                          "ESP": null,
+                          "CEC": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
+                          "Name": "Chemical",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            400.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.1,
+                            1.1,
+                            1.3,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2,
+                            1.2
+                          ],
+                          "AirDry": [
+                            0.05,
+                            0.1,
+                            0.08,
+                            0.1,
+                            0.12,
+                            0.12,
+                            0.12,
+                            0.12,
+                            0.12
+                          ],
+                          "LL15": [
+                            0.07,
+                            0.1,
+                            0.08,
+                            0.1,
+                            0.12,
+                            0.12,
+                            0.12,
+                            0.12,
+                            0.12
+                          ],
+                          "DUL": [
+                            0.33,
+                            0.28,
+                            0.26,
+                            0.27,
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.25,
+                            0.25
+                          ],
+                          "SAT": [
+                            0.48,
+                            0.48,
+                            0.4,
+                            0.38,
+                            0.37,
+                            0.36,
+                            0.36,
+                            0.36,
+                            0.36
+                          ],
+                          "KS": [
+                            4832.039,
+                            389.229,
+                            97.0,
+                            97.995,
+                            97.995,
+                            97.995,
+                            98.0,
+                            98.0,
+                            98.0
+                          ],
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.07,
+                                0.1,
+                                0.08,
+                                0.1,
+                                0.12,
+                                0.12,
+                                0.12,
+                                0.12,
+                                0.12
+                              ],
+                              "KL": [
+                                0.1,
+                                0.07,
+                                0.06,
+                                0.05,
+                                0.04,
+                                0.03,
+                                0.03,
+                                0.03,
+                                0.02
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "BarleySoil",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.WaterModel.WaterBalance, Models",
+                          "SummerDate": "1-Nov",
+                          "SummerU": 6.0,
+                          "SummerCona": 2.0,
+                          "WinterDate": "1-Apr",
+                          "WinterU": 9.0,
+                          "WinterCona": 4.4,
+                          "DiffusConst": 0.0,
+                          "DiffusSlope": 0.0,
+                          "Salb": 0.18,
+                          "CN2Bare": 68.0,
+                          "CNRed": 20.0,
+                          "CNCov": 0.8,
+                          "DischargeWidth": 0.0,
+                          "CatchmentArea": 0.0,
+                          "PSIDul": -100.0,
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "SWCON": [
+                            0.9,
+                            0.9,
+                            0.9,
+                            0.9,
+                            0.9,
+                            0.9
+                          ],
+                          "KLAT": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "Name": "SoilWater",
+                          "ResourceName": "WaterBalance",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Organic, Models",
+                          "FOMCNRatio": 20.0,
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "Carbon": [
+                            2.7,
+                            2.5,
+                            1.45,
+                            0.32,
+                            0.24,
+                            0.24
+                          ],
+                          "CarbonUnits": 0,
+                          "SoilCNRatio": [
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0
+                          ],
+                          "FBiom": [
+                            0.025,
+                            0.025,
+                            0.015,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "FInert": [
+                            0.45,
+                            0.6,
+                            0.75,
+                            0.9,
+                            0.96,
+                            0.96
+                          ],
+                          "FOM": [
+                            390.59753892353666,
+                            289.36177378799243,
+                            158.8051084956577,
+                            87.15409141359129,
+                            47.83117950098136,
+                            26.250307878240648
+                          ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
+                          "Name": "Organic",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "Temperature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Water, Models",
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            400.0
+                          ],
+                          "InitialValues": [
+                            0.31,
+                            0.28,
+                            0.26,
+                            0.27,
+                            0.28,
+                            0.28,
+                            0.26,
+                            0.25,
+                            0.25
+                          ],
+                          "InitialPAWmm": 324.0,
+                          "RelativeTo": "LL15",
+                          "FilledFromTop": false,
+                          "Name": "Water",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Solute, Models",
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "InitialValues": [
+                            14.599999999999996,
+                            17.800000000000004,
+                            6.8,
+                            7.6,
+                            10.2,
+                            11.2
+                          ],
+                          "InitialValuesUnits": 0,
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.0,
+                          "Exco": null,
+                          "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
+                          "Name": "NO3",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Solute, Models",
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "InitialValues": [
+                            1.8,
+                            1.9,
+                            1.5,
+                            1.3,
+                            1.3,
+                            0.9
+                          ],
+                          "InitialValuesUnits": 0,
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.0,
+                          "Exco": null,
+                          "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
+                          "Name": "NH4",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Solute, Models",
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "InitialValues": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "InitialValuesUnits": 1,
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.0,
+                          "Exco": null,
+                          "FIP": null,
+                          "DepthConstant": 0.0,
+                          "MaxDepthSoluteAccessible": 0.0,
+                          "RunoffEffectivenessAtMovingSolute": 0.0,
+                          "MaxEffectiveRunoff": 0.0,
+                          "Name": "Urea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Plant, Models",
+                      "Name": "Barley",
+                      "ResourceName": "Barley",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
+                      "Canopies": [],
+                      "InitialResidueName": "Barley_stubble",
+                      "InitialResidueType": "Barley",
+                      "InitialResidueMass": 1500.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 80.0,
+                      "Name": "Surface Organic Matter",
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 1.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Irrigation, Models",
+                      "Name": "Irrigation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Fertiliser, Models",
+                      "Name": "Fertiliser",
+                      "ResourceName": "Fertiliser",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowInDocs": true,
+                      "GraphsPerPage": 6,
+                      "Name": "Manager folder",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Manager, Models",
+                          "CodeArray": [
+                            "using Models.Soils;",
+                            "using System;",
+                            "using Models.Core;",
+                            "using System.Collections.Generic;",
+                            "using System.Text;",
+                            "using Models.PMF;",
+                            "using Models;",
+                            "using System.Xml.Serialization;",
+                            "using APSIM.Shared.Utilities;",
+                            "using System.Data;",
+                            "using Models.PMF.Interfaces;",
+                            "using Models.Surface;",
+                            "",
+                            "namespace Models",
+                            "{",
+                            "    [Serializable] ",
+                            "    //[System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                            "    public class Script : Model",
+                            "    {",
+                            "        [Link] Plant Barley;",
+                            "        [Link] Clock Clock;",
+                            "        [Link] Zone zone;",
+                            "        [Link] Simulation Simulation;",
+                            "        [Link] SurfaceOrganicMatter SurfOM;",
+                            "        ",
+                            "                ",
+                            "        [Description(\"Initial Root Depth\")]",
+                            "        public double InitialRootDepth { get; set; }",
+                            "        [Description(\"Cultivar name\")]",
+                            "        public string Cultivar { get; set; }",
+                            "        [Description(\"Sowing Date\")]",
+                            "        public DateTime SowingDate { get; set; }",
+                            "        ",
+                            "        ",
+                            "        [EventSubscribe(\"DoManagement\")]",
+                            "        private void OnDoManagement(object sender, EventArgs e)",
+                            "        {",
+                            "            if (Clock.Today.Date == SowingDate)",
+                            "            {",
+                            "                Barley.Sow(cultivar: Cultivar, population: 280, depth: InitialRootDepth, rowSpacing: 150);",
+                            "                ",
+                            "            }",
+                            "        }",
+                            "    }",
+                            "}",
+                            "                ",
+                            "    ",
+                            "        "
+                          ],
+                          "Parameters": [
+                            {
+                              "Key": "Cultivar",
+                              "Value": "Booma"
+                            },
+                            {
+                              "Key": "InitialRootDepth",
+                              "Value": "10"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "10/01/2009 00:00:00"
+                            }
+                          ],
+                          "Name": "Sowing",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "Operation": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-11-11",
+                              "Action": "[Irrigation].Apply(20); ",
+                              "Line": "2009-11-11 [Irrigation].Apply(20); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-11-19",
+                              "Action": "[Irrigation].Apply(25); ",
+                              "Line": "2009-11-19 [Irrigation].Apply(25); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-11-26",
+                              "Action": "[Irrigation].Apply(25); ",
+                              "Line": "2009-11-26 [Irrigation].Apply(25); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-12-11",
+                              "Action": "[Irrigation].Apply(20); ",
+                              "Line": "2009-12-11 [Irrigation].Apply(20); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-12-21",
+                              "Action": "[Irrigation].Apply(35); ",
+                              "Line": "2009-12-21 [Irrigation].Apply(35); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-12-29",
+                              "Action": "[Irrigation].Apply(40); ",
+                              "Line": "2009-12-29 [Irrigation].Apply(40); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2010-01-05",
+                              "Action": "[Irrigation].Apply(35); ",
+                              "Line": "2010-01-05 [Irrigation].Apply(35); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2010-01-13",
+                              "Action": "[Irrigation].Apply(30); ",
+                              "Line": "2010-01-13 [Irrigation].Apply(30); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2010-03-02",
+                              "Action": "[Irrigation].Apply(40); ",
+                              "Line": "2010-03-02 [Irrigation].Apply(40); "
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2010-03-03",
+                              "Action": "[Irrigation].Apply(40);",
+                              "Line": "2010-03-03 [Irrigation].Apply(40);"
+                            }
+                          ],
+                          "Name": "IrrigationEvents",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "Operation": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2009-11-23",
+                              "Action": "[Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);",
+                              "Line": "2009-11-23 [Fertiliser].Apply(150, Fertiliser.Types.NO3N,10);"
+                            }
+                          ],
+                          "Name": "FertiliserEvents",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "Operation": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "2010-02-23",
+                              "Action": "[Barley].Harvest();",
+                              "Line": "2010-02-23 [Barley].Harvest();"
+                            }
+                          ],
+                          "Name": "Harvest",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Weather].MeanT",
+                        "[Soil].Water.Volumetric",
+                        "[Soil].Water.MM",
+                        "sum([Soil].Water.MM) as ProfileWater",
+                        "[Barley].AboveGround.N",
+                        "[Barley].AboveGround.Wt",
+                        "[Barley].AboveGroundLive.N",
+                        "[Barley].AboveGroundLive.N*10 as AboveGroundN",
+                        "[Barley].AboveGroundLive.Wt",
+                        "[Barley].AboveGroundDead.N",
+                        "[Barley].AboveGroundDead.Wt",
+                        "[Barley].Arbitrator.DMDemand",
+                        "[Barley].Arbitrator.DM.TotalFixationSupply",
+                        "[Barley].Ear.N",
+                        "[Barley].Ear.Nconc",
+                        "[Barley].Ear.Wt",
+                        "[Barley].Grain.N",
+                        "[Barley].Grain.NConc",
+                        "[Barley].Grain.Number",
+                        "[Barley].Grain.Size",
+                        "[Barley].Grain.Wt",
+                        "[Barley].Grain.Live.Wt",
+                        "[Barley].Leaf.AppearedCohortNo",
+                        "[Barley].Leaf.CoverDead",
+                        "[Barley].Leaf.CoverGreen",
+                        "[Barley].Leaf.CoverTotal",
+                        "[Barley].Leaf.Dead.N",
+                        "[Barley].Leaf.Dead.NConc",
+                        "[Barley].Leaf.Dead.Wt",
+                        "[Barley].Leaf.DeadCohortNo",
+                        "[Barley].Leaf.SenescingCohortNo",
+                        "[Barley].Leaf.ExpandedCohortNo",
+                        "[Barley].Leaf.Fn",
+                        "[Barley].Leaf.Fw",
+                        "[Barley].Leaf.Height",
+                        "[Barley].Leaf.InitialisedCohortNo",
+                        "[Barley].Leaf.LAI",
+                        "[Barley].Leaf.Live.N",
+                        "[Barley].Leaf.Live.NConc",
+                        "[Barley].Leaf.Live.Wt",
+                        "[Barley].Leaf.SpecificArea",
+                        "[Barley].Leaf.Transpiration",
+                        "[Barley].Phenology.CurrentPhase.Name",
+                        "[Barley].Phenology.CurrentStageName",
+                        "[Barley].Phenology.DailyVernalisation",
+                        "[Weather].MeanT",
+                        "[Barley].Phenology.Photoperiod",
+                        "[Barley].Phenology.Stage",
+                        "[Barley].Phenology.ThermalTime",
+                        "[Barley].Phenology.ThermalTime.Value  ",
+                        "[Barley].Phenology.Vrn1",
+                        "[Barley].Phenology.Vrn2",
+                        "[Barley].Phenology.Vrn4",
+                        "[Barley].Phenology.Zadok.Stage",
+                        "[Barley].Root.Depth",
+                        "[Barley].Root.N",
+                        "[Barley].Root.Wt",
+                        "[Barley].Root.Nconc",
+                        "[Barley].Root.WaterUptake",
+                        "[Barley].Spike.N",
+                        "[Barley].Spike.NConc",
+                        "[Barley].Spike.Wt",
+                        "[Barley].Spike.Live.StorageWt",
+                        "[Barley].Stem.N",
+                        "[Barley].Stem.NConc",
+                        "[Barley].Stem.Wt",
+                        "[Barley].Stem.PercentWSC",
+                        "[Barley].Stem.Live.StorageWt",
+                        "[Barley].StemPlusSpike.Wt",
+                        "[Barley].StemPlusSpike.N",
+                        "[Barley].SowingData.Cultivar",
+                        "[Barley].Phenology.HaunStage.ValueTerminalSpikelet",
+                        "[Barley].Phenology.HaunStage",
+                        "[Barley].Structure.Height",
+                        "[Barley].Structure.LeafTipsAppeared",
+                        "[Barley].Phenology.FinalLeafNumber",
+                        "[Barley].Phenology.FinalLeafNumber.ValueToHold.PhotoPLeaves",
+                        "[Barley].Structure.MainStemPopn",
+                        "[Barley].Structure.MeanTillerGrowthRate",
+                        "[Barley].Structure.TotalStemPopn",
+                        "[Barley].Total.N",
+                        "[Barley].Total.Wt",
+                        "[SurfaceOrganicMatter].Wt",
+                        "([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
+                        "sum([Soil].NO3.kgha) as TotalSoilNitrogen",
+                        "[Barley].Phenology.FlagLeafDAS",
+                        "[Barley].Phenology.FloweringDAS",
+                        "[Barley].Phenology.MaturityDAS",
+                        "[Barley].Phenology.PhotoPeriod",
+                        "[Barley].Phenology.PhotoPeriodDeltaFunction",
+                        "[Barley].Phenology.Stage",
+                        "[Barley].Phenology.SoilTemperatureFunction",
+                        "[Barley].Population"
+                      ],
+                      "EventNames": [
+                        "[Clock].DoReport"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "DailyReport",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Barley].Structure.LeafTipsAppeared",
+                        "[Barley].Phenology.FinalLeafNumber",
+                        "[Barley].Phenology.FlagLeafDAS",
+                        "[Barley].Phenology.FloweringDAS",
+                        "[Barley].Phenology.MaturityDAS",
+                        "[Script].CalcVals.SowMonth"
+                      ],
+                      "EventNames": [
+                        "[Clock].EndOfSimulation"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "HarvestReport",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Barley].SowingData.Cultivar"
+                      ],
+                      "EventNames": [
+                        "[Barley].Sowing"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "SowingReport",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Graphs",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": 500.0,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Organ Demands",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Stem.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Stem",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Barley.Phenology.CurrentStageName",
+                          "SimulationName": null,
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Spike.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Spike",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -11094807,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Root.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Root",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Barley.Leaf.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Leaf",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
