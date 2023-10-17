@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Drawing.Charts;
 using Gtk;
 using System;
 using System.Collections.Generic;
