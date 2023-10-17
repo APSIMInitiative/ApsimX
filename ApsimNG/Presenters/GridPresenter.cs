@@ -194,6 +194,7 @@ namespace UserInterface.Presenters
         {
             if (gridTable == null)
             {
+                CleanupSheet();
                 SetupSheet(dataProvider);
                 grid.Sheet.NumberFrozenColumns = frozenColumns;
                 grid.Sheet.NumberFrozenRows = frozenRows;

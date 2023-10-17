@@ -73,27 +73,23 @@ namespace UserInterface.Views
                 selectedColumnIndexRight = Math.Max(selectedColumnIndexRight - 1, selectedColumnIndex);
             else
             {
+                int difference = selectedColumnIndexRight - selectedColumnIndex;
                 base.MoveLeft();
-                selectedColumnIndexRight = selectedColumnIndex;
-                selectedRowIndexBottom = selectedRowIndex;
+                selectedColumnIndexRight = Math.Max(selectedColumnIndexRight - 1, difference);
             }
         }
 
         /// <summary>Moves the selected cell to the right one column.</summary>
         public override void MoveRight(bool shift)
         {
-            if (shift)
-            {
-                selectedColumnIndexRight = Math.Min(selectedColumnIndexRight + 1, sheet.DataProvider.ColumnCount - 1);
-                if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndexRight))
-                    sheet.ScrollRight();
-            }
-            else
-            {
-                base.MoveRight();
-                selectedColumnIndexRight = selectedColumnIndex;
-                selectedRowIndexBottom = selectedRowIndex;
-            }
+            int difference = selectedColumnIndexRight - selectedColumnIndex;
+            selectedColumnIndexRight = Math.Min(selectedColumnIndexRight + 1, sheet.DataProvider.ColumnCount - 1);
+
+            if (!shift)
+                selectedColumnIndex = selectedColumnIndexRight - difference;
+
+            if (!sheet.FullyVisibleColumnIndexes.Contains(selectedColumnIndexRight))
+                sheet.ScrollRight();
         }
 
         /// <summary>Moves the selected cell up one row.</summary>
@@ -103,73 +99,75 @@ namespace UserInterface.Views
                 selectedRowIndexBottom = Math.Max(selectedRowIndexBottom - 1, selectedRowIndex);
             else
             {
+                int difference = selectedRowIndexBottom - selectedRowIndex;
                 base.MoveUp();
-                selectedColumnIndexRight = selectedColumnIndex;
-                selectedRowIndexBottom = selectedRowIndex;
+                selectedRowIndexBottom = Math.Max(selectedRowIndexBottom - 1, sheet.NumberFrozenRows + difference);
             }
         }
 
         /// <summary>Moves the selected cell down one row.</summary>
         public override void MoveDown(bool shift)
         {
-            if (shift)
-            {
-                selectedRowIndexBottom = Math.Min(selectedRowIndexBottom + 1, sheet.RowCount - 1);
-                if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
-                    sheet.ScrollDown();
-            }
-            else
-            {
-                base.MoveDown();
-                selectedColumnIndexRight = selectedColumnIndex;
-                selectedRowIndexBottom = selectedRowIndex;
-            }
+            int difference = selectedRowIndexBottom - selectedRowIndex;
+            selectedRowIndexBottom = Math.Min(selectedRowIndexBottom + 1, sheet.RowCount - 1);
+
+            if (!shift)
+                selectedRowIndex = selectedRowIndexBottom - difference;
+
+            if (!sheet.FullyVisibleRowIndexes.Contains(selectedRowIndex))
+                sheet.ScrollDown();
         }
 
         /// <summary>Moves the selected cell up one page of rows.</summary>
         public override void PageUp()
         {
+            base.PageUp();
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
-            selectedRowIndex = Math.Max(selectedRowIndex - pageSize, sheet.NumberFrozenRows);
             selectedRowIndexBottom = Math.Max(selectedRowIndexBottom - pageSize, sheet.NumberFrozenRows);
-            sheet.ScrollUpPage();
         }
 
         /// <summary>Moves the selected cell down one page of rows.</summary>
         public override void PageDown()
         {
+            base.PageDown();
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
-            selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.RowCount - 1);
-            selectedRowIndexBottom = Math.Min(selectedRowIndexBottom + pageSize, sheet.RowCount - 1);
-            sheet.ScrollDownPage();
+            selectedRowIndexBottom = Math.Min(selectedRowIndexBottom + pageSize, sheet.RowCount-1);
         }
 
         /// <summary>Moves the selected cell to the far right column.</summary>
         public override void MoveToFarRight()
         {
-            selectedColumnIndex = sheet.DataProvider.ColumnCount - 1;
-            sheet.NumberHiddenColumns = sheet.MaximumNumberHiddenColumns;
+            int difference = selectedColumnIndexRight - selectedColumnIndex;
+            base.MoveToFarRight();
+            selectedColumnIndex = sheet.DataProvider.ColumnCount - 1 - difference;
+            selectedColumnIndexRight = sheet.DataProvider.ColumnCount - 1;
         }
 
         /// <summary>Moves the selected cell to the far left column.</summary>
         public override void MoveToFarLeft()
         {
+            int difference = selectedColumnIndexRight - selectedColumnIndex;
+            base.MoveToFarLeft();
             selectedColumnIndex = 0;
-            sheet.NumberHiddenColumns = 0;
+            selectedColumnIndexRight = difference;
         }
 
         /// <summary>Moves the selected cell to bottom row.</summary>
         public override void MoveToBottom()
         {
-            selectedRowIndex = sheet.RowCount - 1;
-            sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
+            int difference = selectedRowIndexBottom - selectedRowIndex;
+            base.MoveToBottom();
+            selectedRowIndex = sheet.RowCount - 1 - difference;
+            selectedRowIndexBottom = sheet.RowCount - 1;
         }
 
         /// <summary>Moves the selected cell to the top row below headings.</summary>
         public override void MoveToTop()
         {
+            int difference = selectedRowIndexBottom - selectedRowIndex;
+            base.MoveToTop();
             selectedRowIndex = sheet.NumberFrozenRows;
-            sheet.NumberHiddenRows = 0;
+            selectedRowIndexBottom = sheet.NumberFrozenRows + difference;
         }
 
         /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
