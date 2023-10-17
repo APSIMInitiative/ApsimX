@@ -506,6 +506,8 @@ namespace UserInterface.Views
         private void CalculateColumnWidths(IDrawContext cr)
         {
             int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
+            if (visibleRows >= DataProvider.RowCount)
+                visibleRows = DataProvider.RowCount - 1;
 
             ColumnWidths = new int[DataProvider.ColumnCount];
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
