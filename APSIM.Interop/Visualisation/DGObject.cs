@@ -13,6 +13,11 @@
         public bool Selected { get; set; }
 
         /// <summary>
+        /// Is the object hovered over?
+        /// </summary>
+        public bool Hover { get; set; }
+
+        /// <summary>
         /// Cartesian location.
         /// </summary>
         public Point Location { get; set; }

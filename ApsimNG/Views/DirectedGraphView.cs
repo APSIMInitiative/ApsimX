@@ -7,14 +7,12 @@
     using Gtk;
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
     using System.Linq;
-    using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
     using APSIM.Interop.Visualisation;
     using APSIM.Shared.Graphing;
     using Utility;
+    using Models.Storage;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -40,6 +38,11 @@
         /// BubbleChartView.
         /// </remarks>
         public DGObject SelectedObject2 { get; private set; }
+
+        /// <summary>
+        /// The currently hovered node.
+        /// </summary>
+        public DGObject HoverObject { get; private set; }
 
         /// <summary>
         /// Keeps track of whether the user is currently dragging an object.
@@ -268,10 +271,14 @@
         {
             try
             {
-                // Get the point clicked by the mouse.
+                // Delselect existing object
+                if (HoverObject != null)
+                    HoverObject.Hover = false;
+
+                // Get the point where the mouse is.
                 Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
-                // If an object is under the mouse then move it
+                // If an object is under the mouse and the mouse is down, then move it
                 if (mouseDown && SelectedObject != null)
                 {
                     //Move connected arcs half the distance the node is moved
@@ -296,7 +303,24 @@
                     isDragging = true;
                     // Redraw area.
                     (o as DrawingArea).QueueDraw();
+                } 
+                else
+                {
+                    //do hover effects
+                    // Look through nodes for the click point
+                    HoverObject = nodes.FindLast(node => node.HitTest(movePoint));
+
+                    // If not found, look through arcs for the click point
+                    if (HoverObject == null)
+                        HoverObject = arcs.FindLast(arc => arc.HitTest(movePoint));
+
+                    // If found object, select it.
+                    if (HoverObject != null)
+                        HoverObject.Hover = true;
                 }
+
+                // Redraw area.
+                (o as DrawingArea).QueueDraw();
             }
             catch (Exception err)
             {

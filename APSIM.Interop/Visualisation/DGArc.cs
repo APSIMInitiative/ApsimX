@@ -12,7 +12,7 @@
     /// </summary>
     public class DGArc : DGObject
     {
-        private int clickTolerence = 3;
+        private int clickTolerence = 20;
         public DGNode Source { get; private set; }= null;
         public DGNode Target { get; private set; }= null;
         private BezierCurve bezCurve = new BezierCurve();
@@ -54,6 +54,8 @@
                 context.NewPath();
                 if (Selected)
                     context.SetColour(Color.Blue);
+                else if (Hover)
+                    context.SetColour(Color.OrangeRed);
                 else
                     context.SetColour(DefaultOutlineColour);
 

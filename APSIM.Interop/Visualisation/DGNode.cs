@@ -57,6 +57,8 @@
             Color outlineColour;
             if (Selected)
                 outlineColour = Color.Blue;
+            else if (Hover)
+                outlineColour = Color.OrangeRed;
             else if (transparent)
                 outlineColour = DefaultBackgroundColour;
             else
