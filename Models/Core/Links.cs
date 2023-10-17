@@ -109,10 +109,6 @@ namespace Models.Core
         /// <param name="throwOnFail">Should all links be considered optional?</param>
         private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
-            if (obj is Models.Management.RotationManager)
-            {
-
-            }
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
                                                      BindingFlags.Instance | BindingFlags.FlattenHierarchy | BindingFlags.NonPublic | BindingFlags.Public,
