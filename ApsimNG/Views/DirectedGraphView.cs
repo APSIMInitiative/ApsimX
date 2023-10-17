@@ -274,6 +274,22 @@
                 // If an object is under the mouse then move it
                 if (mouseDown && SelectedObject != null)
                 {
+                    //Move connected arcs half the distance the node is moved
+                    Point diff = new Point(movePoint.X - lastPos.X, movePoint.Y - lastPos.Y);
+                    for (int i = 0; i < arcs.Count; i++)
+                    {
+                        DGNode source = arcs[i].Source;
+                        DGNode target = arcs[i].Target;
+
+                        if (SelectedObject == source || SelectedObject == target)
+                        {
+                            DGArc arc = arcs[i];
+                            int x = arc.Location.X + (diff.X / 2) + (diff.X / 2);
+                            int y = arc.Location.Y + (diff.Y / 2) + (diff.Y / 2);
+                            arc.Location = new Point(x, y);
+                        }
+                    }
+
                     lastPos.X = movePoint.X;
                     lastPos.Y = movePoint.Y;
                     SelectedObject.Location = movePoint;

@@ -11,6 +11,7 @@ using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
 using System.Drawing;
+using APSIM.Shared.Utilities;
 
 namespace UserInterface.Views
 {
@@ -525,9 +526,14 @@ namespace UserInterface.Views
         {
             try
             {
-                // todo: set location to context menu location
                 var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
+                //randomize colour of node
+                Color[] colours = ColourUtilities.Colours;
+                Random rand = new Random();
+                int randomIndex = rand.Next(colours.Length-1) + 1; //remove black as an option
+                newNode.Colour = colours[randomIndex];
+
                 newNode.Location = GtkUtilities.GetPositionOfWidgetRelativeToAnotherWidget(sender as Widget, graphView.MainWidget);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }
