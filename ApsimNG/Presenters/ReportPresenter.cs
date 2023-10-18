@@ -261,7 +261,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnEventListTextChanged(object sender, EventArgs e) // was using an async keyword
+        private void OnEventListTextChanged(object sender, EventArgs e)
         {
             int frequencyVariableListLineNumber = view.EventList.CurrentLineNumber;
             int lineIndex = frequencyVariableListLineNumber - 1;
@@ -282,18 +282,23 @@ namespace UserInterface.Presenters
 
                 if (lineStrings.Count != 0)
                 {
-                    DataTable potentialCommonFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, lineStrings, false);
-                    if (potentialCommonFrequencyVariables.Rows.Count != 0)
-                        CommonReportFrequencyVariables = potentialCommonFrequencyVariables;
+                    DataTable potentialCommonReportEvents = CreateDataTableWithColumns();
+                    DataTable scopeFilteredCommonEventVariables = CreateDataTableWithColumns();
+
+                    potentialCommonReportEvents = GetReportVariables(CommonFrequencyVariablesList, lineStrings, false);
+                    scopeFilteredCommonEventVariables = filterReportVariableByScope(potentialCommonReportEvents);
+
+                    if (scopeFilteredCommonEventVariables.Rows.Count != 0)
+                        CommonReportFrequencyVariables = scopeFilteredCommonEventVariables;
                     else
                     {
-                        DataRow emptyRow = potentialCommonFrequencyVariables.NewRow();
+                        DataRow emptyRow = scopeFilteredCommonEventVariables.NewRow();
                         emptyRow["Description"] = "";
                         emptyRow["Code"] = "";
                         emptyRow["Type"] = "";
                         emptyRow["Units"] = "";
-                        potentialCommonFrequencyVariables.Rows.Add(emptyRow);
-                        CommonReportFrequencyVariables = potentialCommonFrequencyVariables;
+                        scopeFilteredCommonEventVariables.Rows.Add(emptyRow);
+                        CommonReportFrequencyVariables = scopeFilteredCommonEventVariables;
                     }
                     view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
                 }
@@ -557,13 +562,12 @@ namespace UserInterface.Presenters
                                 break;
                         }
                     }
-                    // TODO needs to use ReportVariable.Node and have it split if it contains multiples and check this to make sure they're included.
+
                     List<string> nodeStrings = reportVariable.Node.ToString().Split(",").ToList();
                     foreach (string nodeString in nodeStrings)
                     {
                         foreach (string inputString in inputStrings)
                         {
-                            //if (inputStrings.Contains(inputString))
                             if (nodeString.Contains(inputString))
                             {
                                 DataRow row = variableDataTable.NewRow();
@@ -573,6 +577,29 @@ namespace UserInterface.Presenters
                                 row["Type"] = reportVariable.Type;
                                 row["Units"] = reportVariable.Units;
                                 variableDataTable.Rows.Add(row);
+                            }
+
+                            if (modelsImplementingSpecificInterfaceDictionary.ContainsKey(reportVariable.Node))
+                            {
+                                foreach (KeyValuePair<string, List<string>> record in modelsImplementingSpecificInterfaceDictionary)
+                                {
+                                    if (record.Key == reportVariable.Node.ToString())
+                                    {
+                                        foreach (string implementingModelName in record.Value)
+                                        {
+                                            if (implementingModelName == inputString)
+                                            {
+                                                DataRow row = variableDataTable.NewRow();
+                                                row["Description"] = reportVariable.Description;
+                                                row["Node"] = reportVariable.Node;
+                                                row["Code"] = reportVariable.Code;
+                                                row["Type"] = reportVariable.Type;
+                                                row["Units"] = reportVariable.Units;
+                                                variableDataTable.Rows.Add(row);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
