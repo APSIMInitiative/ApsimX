@@ -50,7 +50,11 @@ namespace Models.PMF
                 double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
                 if (StorageRequirement > 0.0)
                 {
-                    double StorageAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
+                    double StorageAllocation;
+                    if (MathUtilities.FloatsAreEqual(BAT.TotalStorageDemand, 0.0, 0.000001))
+                        StorageAllocation = 0;
+                    else
+                        StorageAllocation = Math.Min(FirstPassNotallocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
                     BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
                     NotAllocated -= StorageAllocation;
                     TotalAllocated += StorageAllocation;
