@@ -65,6 +65,11 @@
         private Point lastPos;
 
         /// <summary>
+        /// Position of the last moved node.
+        /// </summary>
+        private Point selectOffset;
+
+        /// <summary>
         /// List of nodes. These are currently circles with text in them.
         /// </summary>
         private List<DGNode> nodes = new List<DGNode>();
@@ -237,7 +242,8 @@
                     if (SelectedObject != null)
                     {
                         SelectedObject.Selected = true;
-                        lastPos = clickPoint;
+                        selectOffset = new Point(clickPoint.X - SelectedObject.Location.X, clickPoint.Y - SelectedObject.Location.Y);
+                        lastPos = new Point(SelectedObject.Location.X, SelectedObject.Location.Y);
                         OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(SelectedObject));
                     }
 
@@ -276,7 +282,7 @@
                     HoverObject.Hover = false;
 
                 // Get the point where the mouse is.
-                Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
+                Point movePoint = new Point((int)args.Event.X - selectOffset.X, (int)args.Event.Y - selectOffset.Y);
 
                 // If an object is under the mouse and the mouse is down, then move it
                 if (mouseDown && SelectedObject != null)
