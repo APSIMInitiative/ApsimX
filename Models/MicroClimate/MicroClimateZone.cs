@@ -772,7 +772,7 @@ namespace Models
             double RhoA = CalcRhoA(averageT, airPressure);
             double lambda = CalcLambda(averageT);
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
-            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;    // unitless
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 1e6) + 1.0;    // unitless
             double PETr = MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
             double PETa = MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
             return PETr + PETa;
@@ -848,7 +848,7 @@ namespace Models
             double averageT = CalcAverageT(mint, maxt);
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
-            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 1e6) + 1.0;
             return MathUtilities.Divide(nondQsdT * rn, denominator, 0.0) * 1000.0 / lambda / RhoW;
 
         }
@@ -861,7 +861,7 @@ namespace Models
             double averageT = CalcAverageT(mint, maxt);
             double nondQsdT = CalcNondQsdT(averageT, airPressure);
             double lambda = CalcLambda(averageT);
-            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 0.0) + 1.0;
+            double denominator = nondQsdT + MathUtilities.Divide(Ga, Gc, 1e6) + 1.0;
             double RhoA = CalcRhoA(averageT, airPressure);
             double specificVPD = CalcSpecificVPD(vp, mint, maxt, airPressure);
             return MathUtilities.Divide(RhoA * specificVPD * Ga, denominator, 0.0) * 1000.0 * (day_length * hr2s) / RhoW;
@@ -883,7 +883,7 @@ namespace Models
         private double CalcOmega(double mint, double maxt, double airPressure, double aerodynamicCond, double canopyCond)
         {
             double Non_dQs_dT = CalcNondQsdT((mint + maxt) / 2.0, airPressure);
-            return MathUtilities.Divide(Non_dQs_dT + 1.0, Non_dQs_dT + 1.0 + MathUtilities.Divide(aerodynamicCond, canopyCond, 0.0), 0.0);
+            return MathUtilities.Divide(Non_dQs_dT + 1.0, Non_dQs_dT + 1.0 + MathUtilities.Divide(aerodynamicCond, canopyCond, 1e6), 0.0);
         }
 
         private double AtmosphericPotentialEvaporationRate(double Radn, double MaxT, double MinT, double Salb, double residue_cover, double _cover_green_sum)

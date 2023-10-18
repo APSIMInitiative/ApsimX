@@ -44,7 +44,7 @@ namespace Models.ForageDigestibility
                     {
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
                         var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
-                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0, 0.000000001);
+                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
 
                         yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
                                                            materialParameters);
@@ -91,7 +91,7 @@ namespace Models.ForageDigestibility
                     amountToRemove = harvestableWt;
                     foreach (var material in allMaterial)
                     {
-                        double frac = MathUtilities.Divide(material.Consumable.Wt, harvestableWt, 0.0, 0.000000001);
+                        double frac = MathUtilities.Divide(material.Consumable.Wt, harvestableWt, 0.0);
                         fracRemoving.Add(new FractionDigestibleBiomass(material, frac));
                     }
                 }
@@ -164,8 +164,8 @@ namespace Models.ForageDigestibility
                         throw new Exception("Cannot find associated dead material while removing biomass in SimpleGrazing");
                     }
 
-                    forageModel.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0, 0.000000001)),
-                                              deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0, 0.000000001)));
+                    forageModel.RemoveBiomass(liveToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Total.Wt, 0.0)),
+                                              deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Total.Wt, 0.0)));
                 }
 
                 if (liveMaterial.Count == 0)
@@ -175,7 +175,7 @@ namespace Models.ForageDigestibility
                     {
                         // This can happen for surface organic matter which only has dead material.
                         forageModel.RemoveBiomass(liveToRemove: 0,
-                                                  deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0, 0.000000001)));
+                                                  deadToRemove: Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0)));
                     }
                 }
 
