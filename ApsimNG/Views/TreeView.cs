@@ -986,6 +986,7 @@ namespace UserInterface.Views
         {
             try
             {
+                treeview1.CursorChanged -= OnAfterSelect;
                 nodePathBeforeRename = SelectedNode;
                 // TreeView.ContextMenuStrip = null;
                 // e.CancelEdit = false;
@@ -1016,6 +1017,7 @@ namespace UserInterface.Views
                     if (!args.CancelEdit)
                         previouslySelectedNodePath = args.NodePath;
                 }
+                treeview1.CursorChanged += OnAfterSelect;
             }
             catch (Exception err)
             {
