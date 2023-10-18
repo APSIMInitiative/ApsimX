@@ -1,18 +1,18 @@
-﻿using ApsimNG.Classes;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using ApsimNG.Classes;
 using Gtk;
+using Markdig.Helpers;
 using Models;
 using Models.Core;
 using Models.Factorial;
 using Models.PMF;
 using Models.Storage;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
@@ -33,63 +33,41 @@ namespace UserInterface.Presenters
         /// </summary>
         private object currentEditor;
 
-        /// <summary>
-        /// The report object
-        /// </summary>
+        /// <summary> The report object</summary>
         private Report report;
 
-        /// <summary>
-        /// The report view
-        /// </summary>
+        /// <summary> The report view</summary>
         private IReportView view;
 
-        /// <summary>
-        /// The explorer presenter
-        /// </summary>
+        /// <summary> The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>
-        /// The data storage
-        /// </summary>
+        /// <summary> The data storage</summary>
         private IDataStore dataStore;
 
-        /// <summary>
-        /// The data store presenter object
-        /// </summary>
+        /// <summary> The data store presenter object</summary>
         private DataStorePresenter dataStorePresenter;
 
-        /// <summary>
-        /// The intellisense object.
-        /// </summary>
+        /// <summary> The intellisense object.</summary>
         private IntellisensePresenter intellisense;
 
-        /// <summary>Stores a DataTable of common report frequency variables.</summary>
+        /// <summary> Stores a DataTable of common report frequency variables.</summary>
         private DataTable commonReportFrequencyVariables;
 
-        /// <summary>Stores a DataTable of common report variables.</summary>
+        /// <summary> Stores a DataTable of common report variables.</summary>
         private DataTable commonReportVariables;
 
-        /// <summary>
-        /// Stores a list of  common ReportVariables.
-        /// </summary>
+        /// <summary> Stores a list of  common ReportVariables.</summary>
         private List<ReportVariable> commonReportVariablesList;
 
-        /// <summary>
-        /// Stores a lst of common frequency ReportVariables.
-        /// </summary>
+        /// <summary> Stores a lst of common frequency ReportVariables.</summary>
         private List<ReportVariable> commonFrequencyVariableList;
 
-        /// <summary>
-        /// Stores all names of nodes that are of type Plant.
-        /// </summary>
+        /// <summary> Stores all names of nodes that are of type Plant. </summary>
         private List<string> simulationPlantModelNames;
-        /// <summary>
-        /// Stores all names of nodes that are of type ISoilWater.
-        /// </summary>
-        private Dictionary<string, List<string>> modelsImplementingSpecificInterfaceDictionary = new();
 
-        /// <summary>Currently selected ReportVariable. </summary>
-        private ReportVariable CurrentlySelectedVariable { get; set; }
+        /// <summary> Stores all names of nodes that are of type ISoilWater.</summary>
+        private Dictionary<string, List<string>> modelsImplementingSpecificInterfaceDictionary = new();
 
         /// <summary> File name for reporting variables.</summary>
         private readonly string commonReportVariablesFileName = "CommonReportingVariables.json";
@@ -103,7 +81,7 @@ namespace UserInterface.Presenters
         /// <summary> All in scope model names of the current apsimx file.</summary>
         public List<string> InScopeModelNames { get; set; }
 
-        // Returns all model names that are of type Plant.
+        /// <summary> Returns all model names that are of type Plant. </summary>
         public List<string> SimulationPlantModelNames
         {
             set { simulationPlantModelNames = value; }
@@ -130,14 +108,8 @@ namespace UserInterface.Presenters
             set { commonFrequencyVariableList = value; }
         }
 
-
-        /// <summary>Stores variable name and variable code while being dragged.</summary>
-
-        // Stores ReportDragObject to coping into EditorView.
+        /// <summary> Stores ReportDragObject to coping into EditorView.</summary>
         public ReportDragObject StoredDragObject { get; set; }
-
-        /// <summary> Stores any dragged variables index.</summary>
-        public int DraggedVariableIndex { get; set; }
 
         /// <summary> DataTable for storing common report variables. </summary>
         public DataTable CommonReportVariables
@@ -173,11 +145,10 @@ namespace UserInterface.Presenters
             this.view.EventList.Lines = report.EventNames;
             InScopeModelNames = GetModelScopeNames();//explorerPresenter.ApsimXFile.FindAllInScope<IModel>().Select(m => m.Name).ToList<string>();
             SimulationPlantModelNames = explorerPresenter.ApsimXFile.FindAllInScope<Plant>().Select(m => m.Name).ToList<string>();
-            // Note: More additions may be needed in future to include other Interface type variables.
-            modelsImplementingSpecificInterfaceDictionary.Add("ISoilWater", GetInScopeModelImplementingInterface("ISoilWater"));
-            AddInterfaceImplementingTypesToModelScopeNames();
             CommonReportVariablesList = GetCommonVariables(commonReportVariablesFileName, reportVariablesDirectoryPath);
             CommonFrequencyVariablesList = GetCommonVariables(commonReportFrequencyVariablesFileName, reportVariablesDirectoryPath);
+            FillModelsImplementingSpecificInterfaceDictionary();
+            AddInterfaceImplementingTypesToModelScopeNames();
             CommonReportVariables = GetReportVariables(CommonReportVariablesList, InScopeModelNames, true);
             this.view.CommonReportVariablesList.DataSource = CommonReportVariables;
             this.view.CommonReportVariablesList.DragStart += OnCommonReportVariableListDragStart;
@@ -513,18 +484,6 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
         }
 
-        /// <summary>
-        /// Takes a full DataTable with all columns and removes the Code column
-        /// </summary>
-        /// <param name="dataTable"></param>
-        /// <returns> a DataTable</returns>
-        public DataTable GetCommonReportVariablesWithoutCodeColumn(DataTable dataTable)
-        {
-            //DataTable modifiedDataTable = dataTable.Copy();
-            //modifiedDataTable.Columns.Remove("Code");
-            //return modifiedDataTable;
-            return dataTable;
-        }
 
         /// <summary>
         /// Creates a DataTable from the reportVariables inside a resource file name. 
@@ -690,19 +649,9 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Asynchronous version of GetReportVariables().
+        /// Returns a List of strings with all the model's names that are in scope.
         /// </summary>
-        /// <param name="variablesList"></param>
-        /// <param name="filterStrings"></param>
-        /// <param name="isModelScope"></param>
-        /// <returns></returns>
-        private async Task<DataTable> GetReportVariablesAsync(List<ReportVariable> variablesList, List<string> filterStrings, bool isModelScope)
-        {
-            return await Task.Run(() => GetReportVariables(variablesList, filterStrings, isModelScope));
-
-        }
-
-
+        /// <returns> A list of model name strings.</returns>
         private List<string> GetModelScopeNames()
         {
             List<string> modelNamesInScope = new();
@@ -900,6 +849,42 @@ namespace UserInterface.Presenters
             string modifiedText = string.Join(Environment.NewLine, lines);
             modifiedText += Environment.NewLine + variableCode;
             view.EventList.Text = modifiedText;
+        }
+
+        /// <summary>
+        /// Returns a string list of all interface type names of ReportVariables in both
+        /// CommonReportingVariables.json and CommonFrequencyVariables.json.
+        /// </summary>
+        /// <returns> A list of strings</returns>
+        private List<string> GetAllInterfaceTypesFromCommonReportVariableLists()
+        {
+            List<string> allInterfaceNames = new();
+            List<ReportVariable> combinedReportVariableLists = commonReportVariablesList.Concat(commonFrequencyVariableList).ToList();
+            foreach (ReportVariable reportVariable in combinedReportVariableLists)
+            {
+                List<string> nodeStrings = reportVariable.Node.Split(",").ToList();
+                // Some ReportVariables have multiple names under the node property. 
+                foreach (string nodeString in nodeStrings)
+                    // Tests if the node value matches the signature of an Interface name.
+                    if (nodeString.StartsWith("I") && nodeString[1].IsAlphaUpper())
+                        allInterfaceNames.Add(nodeString);
+            }
+            List<string> uniqueInterfaceName = allInterfaceNames.Distinct().ToList();
+            return uniqueInterfaceName;
+
+        }
+
+        /// <summary>
+        /// Fills the modelsImplementingSpecificInterfaceDictionary property with relevant data.
+        /// </summary>
+        /// <param name="uniqueInterfaceNames"></param>
+        private void FillModelsImplementingSpecificInterfaceDictionary()
+        {
+            List<string> uniqueInterfaceNames = GetAllInterfaceTypesFromCommonReportVariableLists();
+            foreach (string interfaceName in uniqueInterfaceNames)
+            {
+                modelsImplementingSpecificInterfaceDictionary.Add(interfaceName, GetInScopeModelImplementingInterface(interfaceName));
+            }
         }
 
     }
