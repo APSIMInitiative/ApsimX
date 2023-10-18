@@ -238,6 +238,27 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Computes the water filled pore space for the entire profile.
+        /// </summary>
+        /// <param name="sw">Layered sw content.</param>
+        /// <param name="sat">Layered sat.</param>
+        /// <param name="dul">Layered dul.</param>
+        /// <returns>Layered wfps.</returns>
+        public static double[] WFPS(double[] sw, double[] sat, double[] dul)
+        {
+            return sw.Zip(sat, dul).Select(layerWfps).ToArray();
+
+            static double layerWfps((double sw, double sat, double dul) layer)
+            {
+                if (layer.sw < layer.dul)
+                    return 0;
+                if (layer.sw > layer.sat)
+                    return 1;
+                return MathUtilities.Divide(layer.sw - layer.dul, layer.sat - layer.dul, 0.0);
+            }
+        }
+
+        /// <summary>
         /// Convert organic carbon Walkley Black to Total %.
         /// </summary>
         /// <param name="values">Values to convert.</param>
