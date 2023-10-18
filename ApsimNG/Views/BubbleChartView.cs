@@ -12,6 +12,7 @@ using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
 using System.Drawing;
 using APSIM.Shared.Utilities;
+using Gdk;
 
 namespace UserInterface.Views
 {
@@ -88,7 +89,7 @@ namespace UserInterface.Views
             mainWidget.Destroyed += OnDestroyed;
 
 
-            Rectangle explorererBounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
+            System.Drawing.Rectangle explorererBounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
 
 
             int topOfWindow = explorererBounds.Y;
@@ -312,8 +313,7 @@ namespace UserInterface.Views
                 item.Activated += handler;
                 ContextMenu.Append(item);
 
-                string name = graphView.SelectedObject2?.Name ?? graphView.SelectedObject.Name;
-                item = new MenuItem($"Add Arc from {graphView.SelectedObject.Name} to {name}");
+                item = new MenuItem($"Add Arc");
                 handler = OnAddArc;
                 item.Activated += handler;
                 ContextMenu.Append(item);
@@ -529,7 +529,7 @@ namespace UserInterface.Views
                 var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
                 //randomize colour of node
-                Color[] colours = ColourUtilities.Colours;
+                System.Drawing.Color[] colours = ColourUtilities.Colours;
                 Random rand = new Random();
                 int randomIndex = rand.Next(colours.Length-1) + 1; //remove black as an option
                 newNode.Colour = colours[randomIndex];
@@ -567,8 +567,13 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnAddArc(object sender, EventArgs args)
         {
+            mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
+
+
+
             try
             {
+                /*
                 if (graphView.SelectedObject == null)
                     // This is almost certainly indicative of an internal error, NOT user error.
                     throw new Exception("Unable to add arc - at least one node needs to be selected");
@@ -576,13 +581,15 @@ namespace UserInterface.Views
                 Arc newArc = new Arc();
                 newArc.Name = graphView.DirectedGraph.NextArcID();
                 newArc.SourceName = graphView.SelectedObject.Name;
+                
                 if (graphView.SelectedObject2 == null)
                     // Loopback arc
                     newArc.DestinationName = graphView.SelectedObject.Name;
                 else
                     newArc.DestinationName = graphView.SelectedObject2.Name;
-
+                
                 AddArc?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+                */
             }
             catch (Exception err)
             {

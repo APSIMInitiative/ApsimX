@@ -30,16 +30,6 @@
         public DGObject SelectedObject { get; private set; }
 
         /// <summary>
-        /// The currently second selected node/object. (button 3)
-        /// </summary>
-        /// <remarks>
-        /// todo - this maybe shouldn't be public, but that change
-        /// will require refactoring the context menu code in
-        /// BubbleChartView.
-        /// </remarks>
-        public DGObject SelectedObject2 { get; private set; }
-
-        /// <summary>
         /// The currently hovered node.
         /// </summary>
         public DGObject HoverObject { get; private set; }
@@ -252,18 +242,7 @@
                 }
                 else
                 {
-                    if (SelectedObject2 != null)
-                        SelectedObject2.Selected = false;
                     
-                    SelectedObject2 = nodes.FindLast(node => node.HitTest(clickPoint));
-                    if (SelectedObject2 == null)
-                        SelectedObject2 = arcs.FindLast(arc => arc.HitTest(clickPoint));
-                    
-                    // If the user has right-clicked in the middle of nowhere, unselect everything.
-                    if (SelectedObject2 == null)
-                        UnSelect();
-                    else if (SelectedObject2 == SelectedObject)
-                        SelectedObject2 = null;
                 }
             }
             catch (Exception err)
@@ -382,7 +361,6 @@
             nodes.ForEach(node => {  node.Selected = false; });
             arcs.ForEach(arc => { arc.Selected = false; });
             SelectedObject = null;
-            SelectedObject2 = null;
             mouseDown = false;
             isDragging = false;
             // Redraw area.
