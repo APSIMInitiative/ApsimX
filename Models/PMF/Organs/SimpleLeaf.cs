@@ -1096,7 +1096,6 @@ namespace Models.PMF.Organs
             Live.StorageWt -= dryMatter.Retranslocation;
 
             // Set Reallocation DM
-
             ReAllocated.StorageWt = dryMatter.Reallocation * MathUtilities.Divide(Senescing.StorageWt , Senescing.Wt, 0);
             ReAllocated.MetabolicWt = dryMatter.Reallocation * MathUtilities.Divide(Senescing.MetabolicWt , Senescing.Wt, 0);
         }
@@ -1126,10 +1125,8 @@ namespace Models.PMF.Organs
             // Reallocation
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double storageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
-            Live.StorageN -= storageNReallocation;
-            Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
-            Allocated.StorageN -= nitrogen.Reallocation;
+            ReAllocated.StorageN = nitrogen.Reallocation * MathUtilities.Divide(Senescing.StorageN, Senescing.N, 0);
+            ReAllocated.MetabolicN = nitrogen.Reallocation * MathUtilities.Divide(Senescing.MetabolicN, Senescing.N, 0);
         }
 
 
