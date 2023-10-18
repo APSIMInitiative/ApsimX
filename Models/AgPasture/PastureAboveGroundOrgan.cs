@@ -150,11 +150,11 @@ namespace Models.AgPasture
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0, Epsilon); } }
+        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0); } }
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0, Epsilon); } }
+        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
@@ -171,15 +171,15 @@ namespace Models.AgPasture
 
         /// <summary>Average total N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0, Epsilon); } }
+        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0, Epsilon); } }
+        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0, Epsilon); } }
+        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
         public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
@@ -229,7 +229,7 @@ namespace Models.AgPasture
             { 
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
-                                            DMTotal, 0.0, Epsilon);
+                                            DMTotal, 0.0);
             }
         }
 
@@ -240,7 +240,7 @@ namespace Models.AgPasture
             get
             {
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
-                                            DMLive, 0.0, Epsilon);
+                                            DMLive, 0.0);
             }
         }
 
@@ -311,7 +311,7 @@ namespace Models.AgPasture
 
             // Calculate the fraction of DM removed from this organ
             double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
-            removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0, Epsilon);
+            removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0);
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();

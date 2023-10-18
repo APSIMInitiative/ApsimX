@@ -68,7 +68,12 @@ namespace UserInterface.Interfaces
         /// <summary
         /// >Height of the status panel
         /// </summary>
-        int StatusPanelHeight { get; set; }
+        int StatusPanelPosition { get; set; }
+
+        /// <summary>
+        /// Height of the VPaned that holds the view
+        /// </summary>
+        int PanelHeight { get; }
 
         /// <summary>
         /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
