@@ -1,24 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using ApsimNG.Classes;
-using Gtk;
-using Markdig.Helpers;
-using Models;
-using Models.Core;
-using Models.Factorial;
-using Models.PMF;
-using Models.Storage;
-using Newtonsoft.Json;
-using UserInterface.EventArguments;
-using UserInterface.Interfaces;
-using UserInterface.Views;
-using Utility;
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
 
     /// <summary>
@@ -166,15 +146,6 @@ namespace UserInterface.Presenters
             this.view.EventList.TextHasChangedByUser += OnEventNamesChanged;
             this.view.EventList.TextHasChangedByUser += OnEventListTextChanged;
             this.view.GroupByEdit.Changed += OnGroupByChanged;
-            this.view.SplitterChanged += OnSplitterChanged;
-            this.view.SplitterPosition = Configuration.Settings.ReportSplitterPosition;
-            this.view.VerticalSplitterChanged += OnVerticalSplitterChanged;
-            // Below check required to prevent commonReportVariables/Events
-            // windows from occupying the whole screen.
-            if (Configuration.Settings.ReportSplitterVerticalPosition != 0)
-                this.view.VerticalSplitterPosition = Configuration.Settings.ReportSplitterVerticalPosition;
-            else
-                this.view.VerticalSplitterPosition = 800;
             this.explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.CommonReportVariablesList.DoubleClicked += OnCommonReportVariableListDoubleClicked;
             this.view.CommonReportFrequencyVariablesList.DoubleClicked += OnCommonReportFrequencyVariablesListDoubleClicked;
@@ -454,18 +425,6 @@ namespace UserInterface.Presenters
                 StoredDragObject = (ReportDragObject)e;
         }
 
-        private void OnSplitterChanged(object sender, EventArgs e)
-        {
-            Configuration.Settings.ReportSplitterPosition = this.view.SplitterPosition;
-            Configuration.Settings.Save();
-        }
-
-        private void OnVerticalSplitterChanged(object sender, EventArgs e)
-        {
-            Configuration.Settings.ReportSplitterVerticalPosition = this.view.VerticalSplitterPosition;
-            Configuration.Settings.Save();
-        }
-
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
@@ -473,8 +432,6 @@ namespace UserInterface.Presenters
             this.view.VariableList.ContextItemsNeeded -= OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded -= OnNeedEventNames;
             this.view.GroupByEdit.IntellisenseItemsNeeded -= OnNeedVariableNames;
-            this.view.SplitterChanged -= OnSplitterChanged;
-            this.view.VerticalSplitterChanged -= OnVerticalSplitterChanged;
             this.view.VariableList.TextHasChangedByUser -= OnVariableNamesChanged;
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
