@@ -85,8 +85,6 @@ namespace Models.CLEM.Reporting
         [Description("Average pasture age")]
         public bool ReportAge { get; set; }
 
-
-
         /// <summary>
         /// Pools Amount (kg)
         /// </summary>

@@ -197,7 +197,7 @@ namespace UserInterface.Presenters
                     {
                         Parent = labour,
                         Name = lt.Name,
-                        AgeInMonths = lt.InitialAge * 12,
+                        AgeInMonths = lt.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
                         Sex = lt.Sex
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
@@ -372,7 +372,7 @@ namespace UserInterface.Presenters
                     {
                         Parent = labour,
                         Name = lt.Name,
-                        AgeInMonths = lt.InitialAge * 12,
+                        AgeInMonths = lt.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
                         Sex = lt.Sex
                     };
                     IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };

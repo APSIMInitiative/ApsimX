@@ -442,11 +442,13 @@ namespace Models.CLEM.Activities
 
                             while (MathUtilities.IsLessThanOrEqual(restockDone, restockToDo - restockToSkip) && MathUtilities.IsLessThan(sumAE, limitAE) && MathUtilities.IsPositive(aEToBuy))
                             {
-                                Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
+                                Ruminant newIndividual = item.Details.CreateIndividuals(1, null, clock.Today).FirstOrDefault();
                                 newIndividual.Location = pasture.Name;
                                 newIndividual.BreedParams = item.BreedParams;
                                 newIndividual.HerdName = item.BreedParams.Name;
-                                newIndividual.PurchaseAge = newIndividual.Age;
+                                newIndividual.DateOfPurchase = clock.Today;
+                                //newIndividual.DateEnteredSimulation = clock.Today;
+
                                 newIndividual.SaleFlag = HerdChangeReason.RestockPurchase;
 
                                 if (MathUtilities.FloatsAreEqual(newIndividual.Weight, 0))

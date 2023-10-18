@@ -46,9 +46,11 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Breeding female age
         /// </summary>
-        [Description("Breeding age (months)")]
-        [Required, GreaterThanEqualValue(1)]
-        public int BreedingAge { get; set; }
+        [Description("Breeding age")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier BreedingAge { get; set; }
 
         /// <summary>
         /// Use local males for breeding
@@ -94,11 +96,11 @@ namespace Models.CLEM.Activities
         {
             if(this.TimingOK)
             {
-                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
+                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
                 if (!UseLocalMales || malebreeders > 0)
                 {
                     // get number of females
-                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
+                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= BreedingAge.InDays && a.Sex == Sex.Female).Sum(b => b.Number);
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {

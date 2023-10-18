@@ -169,7 +169,7 @@ namespace Models.CLEM.Resources
                     // no price match found.
                     string warningString = warningMessage;
                     if (warningString == "")
-                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.AgeInDays}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
                 return animalPrice;
@@ -427,11 +427,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Maximum age for energy maintenance calculation (yrs)
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(6)]
+        //[System.ComponentModel.DefaultValueAttribute(6)]
         [Category("Advanced", "Growth")]
-        [Description("Maximum age for energy maintenance calculation (yrs)")]
-        [Required, GreaterThanValue(0)]
-        public double EnergyMaintenanceMaximumAge { get; set; }
+        [Description("Maximum age for energy maintenance calculation")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; }
         /// <summary>
         /// Breed factor for maintenence energy
         /// </summary>
@@ -467,8 +469,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
-        [Required]
-        public double NaturalWeaningAge { get; set; }
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier NaturalWeaningAge { get; set; }
 
         /// <summary>
         /// Standard Reference Weight of female
@@ -849,19 +853,23 @@ namespace Models.CLEM.Resources
         [Required]
         public double InterParturitionIntervalCoefficient { get; set; }
         /// <summary>
-        /// Months between conception and parturition
+        /// Days between conception and parturition
         /// </summary>
         [Category("Advanced", "Breeding")]
-        [Description("Months between conception and parturition")]
-        [Required, GreaterThanValue(0)]
-        public double GestationLength { get; set; }
+        [Description("Days from conception to parturition")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier GestationLength { get; set; }
         /// <summary>
         /// Minimum age for 1st mating (months)
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum age for 1st mating (months)")]
-        [Required, GreaterThanValue(0)]
-        public double MinimumAge1stMating { get; set; }
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier MinimumAge1stMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>

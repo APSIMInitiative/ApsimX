@@ -27,6 +27,8 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private ResourcesHolder resources = null;
+        [Link]
+        private Clock clock = null;
 
         private RuminantType ruminantType;
 
@@ -88,7 +90,7 @@ namespace Models.CLEM.Resources
 
             // create example ruminant
             Details.Number = 1;
-            ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
+            ExampleIndividual = Details.CreateIndividuals(null, clock.Today, BreedParams).FirstOrDefault();
         }
 
         #region validation

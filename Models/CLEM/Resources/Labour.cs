@@ -168,7 +168,7 @@ namespace Models.CLEM.Resources
                         Individuals = labourChildModel.Individuals,
                         Parent = this,
                         InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge * 12,
+                        AgeInMonths = labourChildModel.InitialAge.InDays/(double)AgeSpecifier.DaysPerMonth,
                         LabourAvailability = labourChildModel.LabourAvailability,
                         Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
@@ -188,7 +188,7 @@ namespace Models.CLEM.Resources
                             Individuals = 1,
                             Parent = this,
                             InitialAge = labourChildModel.InitialAge,
-                            AgeInMonths = labourChildModel.InitialAge * 12,
+                            AgeInMonths = labourChildModel.InitialAge.InDays / (double)AgeSpecifier.DaysPerMonth,
                             LabourAvailability = labourChildModel.LabourAvailability,
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                             Hired = labourChildModel.Hired

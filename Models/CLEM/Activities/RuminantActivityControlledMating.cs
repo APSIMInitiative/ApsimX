@@ -41,9 +41,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum female age for mating")]
         [Category("General", "All")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(120)]
-        public double MaximumAgeMating { get; set; }
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        //[System.ComponentModel.DefaultValue(120)]
+        public AgeSpecifier MaximumAgeMating { get; set; }
 
         /// <summary>
         /// Number joinings per male before male genetics replaced
@@ -136,7 +138,7 @@ namespace Models.CLEM.Activities
             var fullSetBreeders = milkingTimer != null
                 ? milkingTimer.IndividualsToBreed
                 : CurrentHerd(true).OfType<RuminantFemale>()
-                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
+                    .Where(a => a.IsAbleToBreed & a.AgeInDays <= MaximumAgeMating.InDays);
 
             return fullSetBreeders;
         }

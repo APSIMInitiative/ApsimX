@@ -63,17 +63,17 @@ namespace Models.CLEM.Resources
                     case 0:
                         // first mating
                         //if (female.BreedParams.MinimumAge1stMating >= 24)
-                        if (female.Age >= 24)
+                        if (female.AgeInDays / 30.4 >= 24)
                             // 1st mated at 24 months or older
                             rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
                         //else if (female.BreedParams.MinimumAge1stMating >= 12)
-                        else if (female.Age >= 12)
+                        else if (female.AgeInDays / 30.4 >= 12)
                         {
                             // 1st mated between 12 and 24 months
                             double rate24 = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
                             double rate12 = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[0]));
                             // interpolate, not just average
-                            double propOfYear = (female.Age - 12) / 12;
+                            double propOfYear = female.AgeInYears - 1; //(female.Age - 12) / 12;
                             rate = rate12 + ((rate24 - rate12) * propOfYear);
                         }
                         else

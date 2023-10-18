@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (Age >= BreedParams.MinimumAge1stMating)
+                    if (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)
                     {
                         ReplacementBreeder = false;
                         return true;
@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (Age >= BreedParams.MinimumAge1stMating)
+                    if (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)
                         return true;
                 return false;
             }
@@ -66,8 +66,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale(RuminantType setParams, double setAge, double setWeight)
-            : base(setParams, setAge, setWeight)
+        public RuminantMale(RuminantType setParams, DateTime date, int setAge, double setWeight)
+            : base(setParams, setAge, setWeight, date)
         {
         }
 

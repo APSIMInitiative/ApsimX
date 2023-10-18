@@ -1,3 +1,4 @@
+using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -38,12 +39,24 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
-        /// Starting Age (Months)
+        /// Provides the age in a user friendly format of "years (optional), months (optional), days"
         /// </summary>
-        [Description("Age (months)")]
-        [Required, GreaterThanEqualValue(0)]
-        [Units("months")]
-        public int Age { get; set; }
+        [Description("Age")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        public AgeSpecifier AgeDetails { get; set; } = new AgeSpecifier();
+
+        /// <summary>
+        /// Age in days
+        /// </summary>
+        public int Age 
+        {
+            get
+            {
+                if ((AgeDetails?.Parts??null) is not null)
+                    return AgeDetails.InDays;
+                return 0;
+            }
+        }
 
         /// <summary>
         /// Starting Number
@@ -108,9 +121,10 @@ namespace Models.CLEM.Resources
         /// Create the individual ruminant animals using the Cohort parameterisations.
         /// </summary>
         /// <param name="initialAttributes">The initial attributes found from parent</param>
+        /// <param name="date">The date these individuals are created</param>
         /// <param name="ruminantType">The breed parameters if overwritten</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
+        public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null)
         {
             List<ISetAttribute> localAttributes = new List<ISetAttribute>();
             // add any whole herd attributes
@@ -119,7 +133,7 @@ namespace Models.CLEM.Resources
             // Add any attributes defined at the cohort level
             localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
-            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, date, ruminantType);
         }
 
         /// <summary>
@@ -127,10 +141,11 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="number">The number of individuals to create</param>
         /// <param name="initialAttributes">The initial attributes found from parent and this cohort</param>
+        /// <param name="date">The date these individuals are created</param>
         /// <param name="ruminantType">The breed parameters if overwritten</param>
         /// <param name="getUniqueID">Switch to determine if unique id is assigned. Not needed when added to purchase list</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, RuminantType ruminantType = null, bool getUniqueID = true)
+        public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             List<Ruminant> individuals = new List<Ruminant>();
             if (initialAttributes is null)
@@ -159,7 +174,7 @@ namespace Models.CLEM.Resources
                         weight = Weight + WeightSD * randStdNormal;
                     }
 
-                    Ruminant ruminant = Ruminant.Create(Sex, parent, Age, weight);
+                    Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, weight);
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
@@ -169,15 +184,15 @@ namespace Models.CLEM.Resources
 
                     if (Suckling)
                     {
-                        if (Age >= ((parent.NaturalWeaningAge == 0) ? parent.GestationLength : parent.NaturalWeaningAge))
+                        if (Age >= ((parent.NaturalWeaningAge.InDays == 0) ? parent.GestationLength.InDays : parent.NaturalWeaningAge.InDays))
                         {
-                            string limitstring = (parent.NaturalWeaningAge == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge}]";
+                            string limitstring = (parent.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge.InDays}]";
                             string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                     }
                     else
-                        ruminant.Wean(false, "Initial state");
+                        ruminant.Wean(false, "Initial state", date);
 
                     if (Sire)
                     {
@@ -194,7 +209,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // if weight not provided use normalised weight
-                    ruminant.PreviousWeight = ruminant.Weight;
+                    //ruminant.PreviousWeight = ruminant.Weight;
 
                     if (this.Sex == Sex.Female)
                     {
@@ -267,7 +282,7 @@ namespace Models.CLEM.Resources
 
                     if (rumType != null)
                     {
-                        newInd = Ruminant.Create(Sex, rumType, Age);
+                        newInd = Ruminant.Create(Sex, rumType, new (2000, 1, 1), Age);
                         normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                     }
 
@@ -366,7 +381,7 @@ namespace Models.CLEM.Resources
                         RuminantType rumtype = FindAncestor<RuminantType>();
                         if (rumtype != null)
                         {
-                            var newInd = Ruminant.Create(Sex, rumtype, Age);
+                            var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age);
 
                             string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                             if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
@@ -384,7 +399,7 @@ namespace Models.CLEM.Resources
                             {
                                 var setConceptionFound = this.FindChild<SetPreviousConception>();
                                 if (setConceptionFound != null)
-                                    htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
+                                    htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberDaysPregnant}</span> days</td>");
                                 else
                                     htmlWriter.Write("<td></td>");
                             }
@@ -435,6 +450,30 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Age details for user interface
+    /// </summary>
+    public class AgeClass
+    {
+        /// <summary>
+        /// Years
+        /// </summary>
+        public int Years { get; set; }
+        /// <summary>
+        /// Months
+        /// </summary>
+        public int Months { get; set; }
+        /// <summary>
+        /// Days
+        /// </summary>
+        public int Days { get; set; }
+
+        /// <summary>
+        /// Age in days
+        /// </summary>
+        public int AgeInDays => Convert.ToInt32(Math.Floor((Years * 365) + (Months * 30.4) + Days));
     }
 }
 
