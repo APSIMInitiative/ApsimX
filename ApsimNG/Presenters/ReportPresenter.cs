@@ -1,4 +1,23 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using ApsimNG.Classes;
+using Gtk;
+using Markdig.Helpers;
+using Models;
+using Models.Core;
+using Models.Factorial;
+using Models.PMF;
+using Models.Storage;
+using Newtonsoft.Json;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
 
     /// <summary>
