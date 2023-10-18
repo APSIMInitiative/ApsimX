@@ -177,7 +177,8 @@ namespace UserInterface.Views
         public virtual void MoveToFarRight()
         {
             selectedColumnIndex = sheet.DataProvider.ColumnCount - 1;
-            sheet.NumberHiddenColumns = sheet.MaximumNumberHiddenColumns;
+            if (sheet.MaximumNumberHiddenColumns >= 0)
+                sheet.NumberHiddenColumns = sheet.MaximumNumberHiddenColumns;
         }
 
         /// <summary>Moves the selected cell to the far left column.</summary>
@@ -191,7 +192,8 @@ namespace UserInterface.Views
         public virtual void MoveToBottom()
         {
             selectedRowIndex = sheet.RowCount - 1;
-            sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
+            if (sheet.MaximumNumberHiddenRows >= 0)
+                sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
         }
 
         /// <summary>Moves the selected cell to the top row below headings.</summary>
