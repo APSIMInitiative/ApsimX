@@ -252,7 +252,20 @@ namespace Models.WaterModel
 
         /// <summary>Water potential of layer</summary>
         [Units("cm")]
-        public double[] PSI { get; private set; }
+        public double[] PSI
+        {
+            get
+            {
+                double[] psi = new double[soilPhysical.Thickness.Length];
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                {
+                    psi[i] = hyprops.Suction(i, SW[i], psi, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+                    if (soilPhysical.KS != null)
+                        K[i] = hyprops.SimpleK(i, psi[i], soilPhysical.SAT, soilPhysical.KS);
+                }
+                return psi;
+            }
+        }
 
         /// <summary>Hydraulic Conductivity of layer</summary>
         [Units("cm/h")]
@@ -612,13 +625,6 @@ namespace Models.WaterModel
 
             // Update the variable in the water model.
             water.Volumetric = waterVolumetric;
-
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
-                if (soilPhysical.KS != null)
-                   K[i] = hyprops.SimpleK(i, PSI[i], soilPhysical.SAT, soilPhysical.KS);
-            }
         }
 
         /// <summary>Move water down the profile</summary>
@@ -871,7 +877,6 @@ namespace Models.WaterModel
             int n = soilPhysical.Thickness.Length;
             hyprops.ResizePropfileArrays(n);
             hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
-            PSI = new double[n];
             K = new double[n];
         }
 
