@@ -923,6 +923,25 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// The general type of feed for a feed packet
+    /// </summary>
+    public enum FeedType
+    {
+        /// <summary>
+        /// Forage style feed
+        /// </summary>
+        Forage,
+        /// <summary>
+        /// Concentrate style feed with Ether extract included in metabolisable energy content calculation.
+        /// </summary>
+        Concentrate,
+        /// <summary>
+        /// Milk
+        /// </summary>
+        Milk
+    }
+
+    /// <summary>
     /// Approaches available to calculate additional mortality based on animal condition
     /// </summary>
     public enum ConditionBasedCalculationStyle

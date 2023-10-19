@@ -10,34 +10,34 @@ namespace Models.CLEM.Resources
     /// A food pool of given age
     /// </summary>
     [Serializable]
-    public class GrazeFoodStorePool : IFeedType
+    public class GrazeFoodStorePool : IFeed, IResourceType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units (nominal)")]
-        public string Units { get; set; }
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
 
-        /// <summary>
-        /// Dry Matter (%)
-        /// </summary>
-        [Description("Dry Matter (%)")]
-        [Required, Percentage]
-        public double DryMatter { get; set; }
+        /// <inheritdoc/>
+        public double EnergyContent { get; set; }
 
-        /// <summary>
-        /// Dry Matter Digestibility (%)
-        /// </summary>
-        [Description("Dry Matter Digestibility (%)")]
-        [Required, Percentage]
-        public double DMD { get; set; }
+        /// <inheritdoc/>
+        public double FatContent { get; set; }
 
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        [Description("Nitrogen (%)")]
-        [Required, Percentage]
-        public double Nitrogen { get; set; }
+        /// <inheritdoc/>
+        public double NitrogenContent { get; set; }
+
+        /// <inheritdoc/>
+        public double CPDegradability { get; set; }
+
+        /// <inheritdoc/>
+        public double DryMatterDigestibility { get; set; }
+
+        /// <inheritdoc/>
+        public double RumenDegradableProtein { get; set; }
+
+        /// <inheritdoc/>
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        public double NitrogenToCrudeProteinFactor { get; set; } = 6.25;
 
         /// <summary>
         /// Amount (kg)
@@ -68,33 +68,26 @@ namespace Models.CLEM.Resources
         public double Consumed { get; set; }
 
         /// <summary>
-        /// Amount detached in this time step (kg)
+        /// Amount of growth in this time step (kg)
         /// </summary>
         public double Growth { get; set; }
 
-        /// <summary>
-        /// Name of component
-        /// </summary>
+        /// <inheritdoc/>
         public string Name { get; set; }
 
-        /// <summary>
-        /// pricing
-        /// </summary>
+        /// <inheritdoc/>
+        public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
         {
             return null;
         }
 
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
+        /// <inheritdoc/>
         public double? Value
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
         /// <summary>
@@ -113,9 +106,7 @@ namespace Models.CLEM.Resources
             Growth = 0;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public void Initialise()
         {
             throw new NotImplementedException();
@@ -123,14 +114,7 @@ namespace Models.CLEM.Resources
 
         #region transactions
 
-        /// <summary>
-        /// Add to Resource method.
-        /// This style is not supported in GrazeFoodStoreType
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <inheritdoc/>
         public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
@@ -147,23 +131,18 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DMD != pool.DMD || Nitrogen != pool.Nitrogen)
+                if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenContent != pool.NitrogenContent)
                 {
                     //TODO: run calculation passed others.
-                    DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);
-                    Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
+                    DryMatterDigestibility = ((DryMatterDigestibility * Amount) + (pool.DryMatterDigestibility * pool.Amount)) / (Amount + pool.Amount);
+                    NitrogenContent = ((NitrogenContent * Amount) + (pool.NitrogenContent * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
                 Growth += pool.Growth;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
+        /// <inheritdoc/>
         public double Remove(double removeAmount, CLEMModel activity, string reason)
         {
             removeAmount = Math.Min(this.amount, removeAmount);
@@ -173,19 +152,13 @@ namespace Models.CLEM.Resources
             return removeAmount;
         }
 
-        /// <summary>
-        /// Remove from finance type store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
+        /// <inheritdoc/>
         public void Remove(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="newAmount"></param>
+        /// <inheritdoc/>
         public void Set(double newAmount)
         {
             this.amount = Math.Max(0, newAmount);

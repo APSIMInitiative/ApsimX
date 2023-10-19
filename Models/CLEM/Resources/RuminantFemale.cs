@@ -14,6 +14,25 @@ namespace Models.CLEM.Resources
         public override Sex Sex { get { return Sex.Female; } }
 
         /// <inheritdoc/>
+        public override string BreederClass
+        {
+            get
+            {
+                if (IsPreBreeder)
+                    return "PreBreeder";
+                else
+                {
+                    if(IsSpayed)
+                        return "Spayed";
+                    else if (IsWebbed)
+                        return "Webbed";
+                    else
+                        return "Breeder";
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         [FilterByProperty]
         public override bool Sterilised { get { return (IsWebbed || IsSpayed); } }
 
@@ -123,6 +142,34 @@ namespace Models.CLEM.Resources
         public double WeightAtConception { get; set; }
 
         /// <summary>
+        /// Highest weight achieved when not pregnant
+        /// </summary>
+        public double HighWeightWhenNotPregnant { get; set; }
+
+        /// <summary>
+        /// Track the highest weight of a female when not pregnant
+        /// </summary>
+        /// <param name="weight"></param>
+        public void UpdateHighWeightWhenNotPregnant(double weight)
+        {
+            if(!IsPregnant)
+            {
+                HighWeightWhenNotPregnant = Math.Max(HighWeightWhenNotPregnant, weight);
+            }
+        }
+
+        /// <summary>
+        /// Predicted birth weight of offspring scaled by mother's relative weight
+        /// </summary>
+        public double ScaledBirthWeight 
+        { 
+            get
+            {
+                return (1 - 0.33 + 0.33 * RelativeSize) * BreedParams.BirthScalar * StandardReferenceWeight;
+            }
+        }
+
+        /// <summary>
         /// Previous conception rate
         /// </summary>
         public double PreviousConceptionRate { get; set; }
@@ -200,6 +247,20 @@ namespace Models.CLEM.Resources
             return birthCount;
         }
 
+        /// <summary>
+        /// Indicates if birth is due this month
+        /// Knows whether the fetus(es) have survived
+        /// </summary>
+        public double DaysPregnant
+        {
+            get
+            {
+                if (IsPregnant)
+                    return (Age - AgeAtLastConception) * 30.4;
+                else
+                    return 0;
+            }
+        }
 
         /// <summary>
         /// Indicates if birth is due this month
@@ -227,10 +288,13 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
+
             DateOfLastBirth = date;
-            //AgeAtLastBirth = this.Age;
+            ProportionMilkProductionAchieved = 1;
+            MilkLag = 1;
             CarryingCount = 0;
             MilkingPerformed = false;
+            RelativeConditionAtParturition = RelativeCondition;
         }
 
         /// <summary>
@@ -315,6 +379,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The proportion of the potential milk production achieved in timestep
+        /// </summary>
+        public double ProportionMilkProductionAchieved { get; set; }
+
+        /// <summary>
+        /// The body condition score at birth.
+        /// </summary>
+        public double RelativeConditionAtParturition { get; set; }
+
+        /// <summary>
         /// Calculate the MilkinIndicates if the individual is lactating
         /// </summary>
         public double DaysLactating
@@ -334,6 +408,16 @@ namespace Models.CLEM.Resources
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Lag term for milk production
+        /// </summary>
+        public double MilkLag { get; set; }
+
+        /// <summary>
+        /// Tracks the nutrition after peak lactation for milk production.
+        /// </summary>
+        public double NutritionAfterPeakLactationFactor { get; set; }
 
         /// <summary>
         /// Determines if milking has been performed on individual to increase milk production

@@ -3,6 +3,7 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.PMF.Phen;
+using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,7 +21,161 @@ namespace Models.CLEM.Resources
         private double age;
         private double normalisedWeight;
         private double adultEquivalent;
-        //private int weaned = 0;
+        private int weaned = 0;
+
+        #region All new Grow SCA properties
+
+        //ToDo: ensure these are set at birth and new individual creation.
+        private double proteinMass = 0;
+        private double fatMass = 0;
+
+        /// <summary>
+        /// Relative size based on highest weight achieved (High weight / standard reference weight)
+        /// </summary>
+        [FilterByProperty]
+        public double RelativeSizeByHighWeight
+        {
+            // TODO: check this is right
+            get { return HighWeight / StandardReferenceWeight; }
+        }
+
+        /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double RelativeSizeForWeightGainPurposes
+        {
+            get
+            {
+                return Math.Min(1 - ((1 - (BreedParams.BirthScalar)) * Math.Exp(-(BreedParams.CN1 * AgeInDays) / Math.Pow(StandardReferenceWeight, BreedParams.CN2))), (HighWeight / StandardReferenceWeight));
+            }
+        }
+
+        /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double SizeFactor1ForGain
+        {
+            get
+            {
+                return 1 / (1 + Math.Exp(-BreedParams.CG4 * (RelativeSizeForWeightGainPurposes - BreedParams.CG5)));
+            }
+        }
+
+        /// <summary>
+        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
+        /// </summary>
+        public double SizeFactor2ForGain
+        {
+            get
+            {
+                return Math.Max(0, Math.Min(((RelativeSizeForWeightGainPurposes - BreedParams.cg6) / (BreedParams.cg7 - BreedParams.cg6)), 1));
+            }
+        }
+
+        /// <summary>
+        /// Get the current protein mass of individual
+        /// </summary>
+        public double ProteinMass { get { return proteinMass; } }
+
+        /// <summary>
+        /// Adjust the protein mass of the individual.
+        /// </summary>
+        /// <param name="amount">Amount to change by with sign.</param>
+        public void AdjustProteinMass(double amount)
+        {
+            proteinMass += amount;
+            proteinMass = Math.Max(0, proteinMass);
+        }
+
+        /// <summary>
+        /// Get the current fat mass of individual
+        /// </summary>
+        public double FatMass { get { return fatMass; } }
+
+        /// <summary>
+        /// Add fat mass to individual.
+        /// </summary>
+        /// <param name="amount">Amount to change by with sign.</param>
+        public void AdjustFatMass(double amount)
+        {
+            fatMass += amount;
+            fatMass = Math.Max(0, fatMass);
+        }
+
+        /// <summary>
+        /// Ruminant intake manager
+        /// </summary>
+        public RuminantIntake Intake = new RuminantIntake();
+
+        /// <summary>
+        /// Energy used for wool production
+        /// </summary>
+        public double EnergyForWool { get; set; }
+
+        /// <summary>
+        /// Energy available after wool growth
+        /// </summary>
+        public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyForMaintenance { get; set; }
+
+        /// <summary>
+        /// Energy used for fetal development
+        /// </summary>
+        public double EnergyForFetus { get; set; }
+
+        /// <summary>
+        /// Energy available after accounting for pregnancy
+        /// </summary>
+        public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
+
+        /// <summary>
+        /// Energy used for milk production
+        /// </summary>
+        public double EnergyForLactation { get; set; }
+
+        /// <summary>
+        /// Energy available after lactation demands
+        /// </summary>
+        public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyForGain { get; set; }
+
+        /// <summary>
+        /// Energy available for growth
+        /// </summary>
+        public double EnergyAvailableForGain { get; set; }
+
+        /// <summary>
+        /// Energy from intake
+        /// </summary>
+        public double EnergyFromIntake { get { return Intake.ME; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double DPLS { get; set; }
+
+
+        /// <summary>
+        /// Reset all running stores
+        /// </summary>
+        public void ResetEnergy()
+        {
+            EnergyForMaintenance = 0;
+            EnergyForFetus = 0;
+            EnergyForLactation = 0;
+            EnergyForGain = 0;
+            EnergyForWool = 0;
+        }
+
+        #endregion
 
         /// <summary>
         /// Current animal price group for this individual 
@@ -83,14 +238,6 @@ namespace Models.CLEM.Resources
         public bool IsSucklingWithMother { get { return !Weaned && mother != null; } }
 
         private DateTime dateOfWeaning = default;
-
-        ///// <summary>
-        ///// Method to set the weaned status to unweaned for new born individuals.
-        ///// </summary>
-        //public void SetUnweaned()
-        //{
-        //    weaned = 0;
-        //}
 
         /// <summary>
         /// Weaned individual flag
@@ -195,7 +342,6 @@ namespace Models.CLEM.Resources
         [FilterByProperty]
         public virtual bool IsAbleToBreed { get { return false; } }
 
-
         #endregion
 
         #region Age properties
@@ -293,6 +439,8 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
+                AgeInDays = value * 30.4;
+                if (AgeInDays <= 0) AgeInDays = 1;                
                 normalisedWeight = CalculateNormalisedWeight(age);
             }
         }
@@ -336,7 +484,14 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Number of days since purchased
+        /// Purchase age (Months)
+        /// </summary>
+        /// <units>Months</units>
+        [FilterByProperty]
+        public double PurchaseAge { get; set; }
+
+        /// <summary>
+        /// Number of months since purchased
         /// </summary>
         [FilterByProperty]
         public int DaysSincePurchase
@@ -373,6 +528,9 @@ namespace Models.CLEM.Resources
                 if (HighWeight == 0)
                     HighWeight = weight;
                 HighWeight = Math.Max(HighWeight, weight);
+
+                if(this is RuminantFemale female)
+                    female.UpdateHighWeightWhenNotPregnant(weight);
             }
         }
 
@@ -383,7 +541,7 @@ namespace Models.CLEM.Resources
         /// <returns>Normalised weight (kg)</returns>
         public double CalculateNormalisedWeight(double age)
         {
-            return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
 
         /// <summary>
@@ -438,18 +596,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The current weight as a proportion of Standard Reference Weight
-        /// </summary>
-        [FilterByProperty]
-        public double ProportionOfSRW
-        {
-            get
-            {
-                return Weight / StandardReferenceWeight;
-            }
-        }
-
-        /// <summary>
         /// The current health score -2 to 2 with 0 standard weight
         /// </summary>
         [FilterByProperty]
@@ -470,7 +616,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Sex == Sex.Male)
+                if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
                     return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
                 else
                     return BreedParams.SRWFemale;
@@ -546,6 +692,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Class for Breeder individuals
+        /// </summary>
+        public abstract string BreederClass { get; }
+
+        /// <summary>
         /// Determine the category of this individual
         /// </summary>
         [FilterByProperty]
@@ -553,37 +704,13 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (this.IsSuckling)
+                if (IsSuckling)
                     return "Suckling";
-                else if (this.IsWeaner)
+                else if (IsWeaner)
                     return "Weaner";
                 else
                 {
-                    if (this is RuminantFemale)
-                    {
-                        if ((this as RuminantFemale).IsPreBreeder)
-                            return "PreBreeder";
-                        else
-                            return "Breeder";
-                    }
-                    else
-                    {
-                        if ((this as RuminantMale).IsSire)
-                            return "Sire";
-                        else if ((this as RuminantMale).IsCastrated)
-                            return "Castrate";
-                        else
-                        {
-                            if ((this as RuminantMale).IsWildBreeder)
-                            {
-                                return "Breeder";
-                            }
-                            else
-                            {
-                                return "PreBreeder";
-                            }
-                        }
-                    }
+                    return BreederClass;
                 }
             }
         }
@@ -629,41 +756,6 @@ namespace Models.CLEM.Resources
 
 
         /// <summary>
-        /// Current monthly intake store
-        /// </summary>
-        /// <units>kg/month</units>
-        public double Intake { get; set; }
-
-        /// <summary>
-        /// Current monthly intake of milk
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MilkIntake { get; set; }
-
-        /// <summary>
-        /// Required monthly intake of milk
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MilkPotentialIntake { get; set; }
-
-        /// <summary>
-        /// Percentage nitrogen of current intake
-        /// </summary>
-        public double PercentNOfIntake { get; set; }
-
-        /// <summary>
-        /// Diet dry matter digestibility of current monthly intake store
-        /// </summary>
-        /// <units>percent</units>
-        public double DietDryMatterDigestibility { get; set; }
-
-        /// <summary>
-        /// Current monthly potential intake
-        /// </summary>
-        /// <units>kg/month</units>
-        public double PotentialIntake { get; set; }
-
-        /// <summary>
         /// Return intake as a proportion of the potential inake
         /// This includes milk for sucklings
         /// </summary>
@@ -672,8 +764,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (PotentialIntake + MilkPotentialIntake > 0)
-                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                //TODO: is it right to add kg and L in calculation?
+                if (Intake.Feed.Expected + Intake.Milk.Expected > 0)
+                    return (Intake.Feed.Actual + Intake.Milk.Actual) / (Intake.Feed.Expected + Intake.Milk.Expected);
                 else
                     return 0;
             }
@@ -738,31 +831,6 @@ namespace Models.CLEM.Resources
         public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
 
         /// <summary>
-        /// Energy balance store
-        /// </summary>
-        public double EnergyBalance { get; set; }
-
-        /// <summary>
-        /// Energy used for milk production
-        /// </summary>
-        public double EnergyMilk { get; set; }
-
-        /// <summary>
-        /// Energy used for foetal development
-        /// </summary>
-        public double EnergyFetus { get; set; }
-
-        /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double EnergyMaintenance { get; set; }
-
-        /// <summary>
-        /// Energy from intake
-        /// </summary>
-        public double EnergyIntake { get; set; }
-
-        /// <summary>
         /// Method called on offspring when mother is lost (e.g. dies or sold)
         /// </summary>
         public void MotherLost()
@@ -771,6 +839,16 @@ namespace Models.CLEM.Resources
             {
                 Mother.SucklingOffspringList.Remove(this);
                 Mother = null;
+            }
+        }
+
+        /// <summary>
+        /// Age when individual weaned
+        /// </summary>
+        public double WeaningAge { 
+            get
+            {
+                return MathUtilities.FloatsAreEqual(BreedParams.NaturalWeaningAge.InDays, 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
             }
         }
 
@@ -798,13 +876,10 @@ namespace Models.CLEM.Resources
                 };
                 (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }
-
         }
 
-
-
         /// <summary>
-        /// Milk production currently available from mother
+        /// Milk production currently available for each offspring from mother (L day-1)
         /// </summary>
         public double MothersMilkProductionAvailable
         {
@@ -825,27 +900,13 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// A funtion to add intake and track changes in %N and DietDryMatterDigestibility
-        /// </summary>
-        /// <param name="intake">Feed request containing intake information kg, %N, DMD</param>
-        public void AddIntake(FoodResourcePacket intake)
-        {
-            if (intake.Amount > 0)
-            {
-                // determine the adjusted DMD of all intake
-                this.DietDryMatterDigestibility = ((this.Intake * this.DietDryMatterDigestibility) + (intake.DMD * intake.Amount)) / (this.Intake + intake.Amount);
-                // determine the adjusted percentage N of all intake
-                this.PercentNOfIntake = ((this.Intake * this.PercentNOfIntake) + (intake.PercentN * intake.Amount)) / (this.Intake + intake.Amount);
-                this.Intake += intake.Amount;
-            }
-        }
-
         ///// <summary>
         ///// Method to increase age
         ///// </summary>
-        //public void IncrementAge()
+        ///// <param name="days">Number of days to add</param>
+        //public void IncrementAge(double days = 30.4)
         //{
+        //    AgeInDays += days;
         //    Age++;
         //}
 
@@ -877,10 +938,6 @@ namespace Models.CLEM.Resources
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
             
-            //int ageInt = Convert.ToInt32(Math.Round(Age, 4));
-            //int weanage = Convert.ToInt32(Math.Round((BreedParams.NaturalWeaningAge == 0) ? BreedParams.GestationLength : BreedParams.NaturalWeaningAge, 4));//   Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
-            //this.weaned = (ageInt <= weanage)?ageInt:weanage;
-            //this.weaned = (ageInt < weanage) ? 0 : weanage;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }
@@ -944,7 +1001,6 @@ namespace Models.CLEM.Resources
 
             Attributes.Add(attribute.AttributeName, indAttribute); //.Value.GetInheritedAttribute() as IIndividualAttribute);
         }
-
     }
 
     /// <summary>

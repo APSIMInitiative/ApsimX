@@ -141,7 +141,7 @@ namespace Models.CLEM.Resources
                 switch (pasture.GetType().ToString())
                 {
                     case "AnimalFoodStoreType":
-                        Nitrogen = (pasture as AnimalFoodStoreType).Nitrogen;
+                        Nitrogen = (pasture as AnimalFoodStoreType).NitrogenContent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
                         dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
                         break;
                     case "GrazeFoodStoreType":
-                        Nitrogen = (pasture as GrazeFoodStoreType).Nitrogen;
+                        Nitrogen = (pasture as GrazeFoodStoreType).NitrogenContent;
                         Nitrogen *= NitrogenReductionFromPasture;
                         Nitrogen = Math.Max(MinimumNitrogen, Nitrogen);
                         // calculate DMD from N% 
@@ -257,8 +257,8 @@ namespace Models.CLEM.Resources
                 pool = new GrazeFoodStorePool();
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                 pool.Set(packet.Amount);
-                pool.Nitrogen = packet.PercentN;
-                pool.DMD = packet.DMD;
+                pool.NitrogenContent = packet.NitrogenContent;
+                pool.DryMatterDigestibility = packet.DryMatterDigestibility;
             }
 
             if (pool.Amount > 0)
@@ -277,13 +277,13 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
-            // grazing does not access pools by breed by gets all it needs of this quality common pasture
+            // grazing does not access pools by breed but gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
             FoodResourcePacket additionalDetails = new FoodResourcePacket
             {
-                PercentN = this.Nitrogen,
-                DMD = this.dryMatterDigestibility,
+                NitrogenContent = this.Nitrogen,
+                DryMatterDigestibility = this.dryMatterDigestibility,
                 Amount = request.Required
             };
             request.AdditionalDetails = additionalDetails;

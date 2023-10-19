@@ -163,13 +163,13 @@ namespace Models.CLEM.Activities
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.PotentialIntake;
+                        amountToDo += Supply * ind.Intake.Feed.Expected;
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * (ind.PotentialIntake - ind.Intake);
+                        amountToDo += Supply * (ind.Intake.Feed.Required);
                     }
                     break;
                 default:
@@ -239,8 +239,8 @@ namespace Models.CLEM.Activities
                 FoodResourcePacket packet = new FoodResourcePacket()
                 {
                     Amount = amountToDo - amountToSkip,
-                    PercentN = pasture.Nitrogen,
-                    DMD = pasture.EstimateDMD(pasture.Nitrogen)
+                    NitrogenContent = pasture.NitrogenContent,
+                    DryMatterDigestibility = pasture.EstimateDMD(pasture.NitrogenContent)
                 };
 
                 foodstore.Add(packet, this, null, TransactionCategory);

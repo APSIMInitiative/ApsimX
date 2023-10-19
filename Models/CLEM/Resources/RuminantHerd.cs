@@ -184,7 +184,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // gestation interval at smallest size generalised curve
-                    double minAnimalWeight = herd[0].StandardReferenceWeight - ((1 - herd[0].BreedParams.SRWBirth) * herd[0].StandardReferenceWeight) * Math.Exp(-(herd[0].BreedParams.AgeGrowthRateCoefficient * (herd[0].BreedParams.MinimumAge1stMating.InDays)) / (Math.Pow(herd[0].StandardReferenceWeight, herd[0].BreedParams.SRWGrowthScalar)));
+                    double minAnimalWeight = herd[0].StandardReferenceWeight - ((1 - herd[0].BreedParams.BirthScalar) * herd[0].StandardReferenceWeight) * Math.Exp(-(herd[0].BreedParams.AgeGrowthRateCoefficient * (herd[0].BreedParams.MinimumAge1stMating.InDays)) / (Math.Pow(herd[0].StandardReferenceWeight, herd[0].BreedParams.SRWGrowthScalar)));
                     double minsizeIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (minAnimalWeight / herd[0].StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
                     // restrict minimum period between births
                     minsizeIPI = Math.Max(minsizeIPI, herd[0].BreedParams.GestationLength.InDays + 2);
@@ -265,6 +265,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Remove list of Ruminants from the herd
+        /// </summary>
+        /// <param name="list">List of Ruminants to remove</param>
+        /// <param name="model">Model removing individuals</param>
+        public void RemoveRuminant(IEnumerable<Ruminant> list, IModel model)
+        {
+            foreach (var ind in list.ToList())
+                // report removal
+                RemoveRuminant(ind, model);
+        }
+
+        /// <summary>
         /// Remove individual/cohort from the herd
         /// </summary>
         /// <param name="ind">Individual Ruminant to remove</param>
@@ -339,19 +351,6 @@ namespace Models.CLEM.Resources
             // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
             PurchaseIndividuals?.Clear();
         }
-
-        /// <summary>
-        /// Remove list of Ruminants from the herd
-        /// </summary>
-        /// <param name="list">List of Ruminants to remove</param>
-        /// <param name="model">Model removing individuals</param>
-        public void RemoveRuminant(List<Ruminant> list, IModel model)
-        {
-            foreach (var ind in list)
-                // report removal
-                RemoveRuminant(ind, model);
-        }
-
 
         #region group tracking
 

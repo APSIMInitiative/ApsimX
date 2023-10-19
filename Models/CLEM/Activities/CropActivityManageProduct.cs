@@ -535,7 +535,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             if (CurrentlyManaged)
             {
-                if (this.TimingOK) // && NextHarvest != null)
+                if (this.TimingOK)
                 {
                     Status = ActivityStatus.NotNeeded;
                     if (MathUtilities.IsPositive(AmountHarvested))
@@ -546,7 +546,7 @@ namespace Models.CLEM.Activities
                         // if no nitrogen provided from file
                         if (double.IsNaN(harvests.current.Npct))
                         {
-                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                            if (LinkedResourceItem is GrazeFoodStoreType)
                                 // grazed pasture with no N read assumes the green biomass N content
                                 percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
                         }
@@ -564,10 +564,10 @@ namespace Models.CLEM.Activities
                             FoodResourcePacket packet = new FoodResourcePacket()
                             {
                                 Amount = AmountHarvested,
-                                PercentN = percentN
+                                NitrogenContent = percentN
                             };
-                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                                packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
+                            if (LinkedResourceItem is GrazeFoodStoreType)
+                                packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenContent);
                             LinkedResourceItem.Add(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));

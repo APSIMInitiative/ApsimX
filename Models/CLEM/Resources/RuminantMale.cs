@@ -8,10 +8,32 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantMale : Ruminant
     {
-        /// <summary>
-        /// Sex of individual
-        /// </summary>
+        /// <inheritdoc/>
         public override Sex Sex { get { return Sex.Male; } }
+
+        /// <inheritdoc/>
+        public override string BreederClass
+        {
+            get
+            {
+                if ((this as RuminantMale).IsSire)
+                    return "Sire";
+                else if ((this as RuminantMale).IsCastrated)
+                    return "Castrate";
+                else
+                {
+                    if ((this as RuminantMale).IsWildBreeder)
+                    {
+                        return "Breeder";
+                    }
+                    else
+                    {
+                        return "PreBreeder";
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Indicates if individual is breeding sire

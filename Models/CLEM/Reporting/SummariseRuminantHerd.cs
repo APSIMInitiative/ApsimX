@@ -182,8 +182,8 @@ namespace Models.CLEM
                         NumberPregnant = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count() : 0,
                         NumberLactating = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count() : 0,
                         NumberOfBirths = (group.Key.Item4 == Sex.Female) ? group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep) : 0,
-                        AverageIntakeDMD = group.Average(a => a.DietDryMatterDigestibility),
-                        AverageIntakeN = group.Average(a => a.PercentNOfIntake)
+                        AverageIntakeDMD = group.Average(a => a.Intake.DMD),
+                        AverageIntakeN = group.Average(a => a.Intake.GetStoreDetails(FeedType.Forage).NitrogenContent)
                     }
                 });
 
@@ -219,8 +219,8 @@ namespace Models.CLEM
                             NumberPregnant = group.OfType<RuminantFemale>().Where(a => a.IsPregnant).Count(),
                             NumberLactating = group.OfType<RuminantFemale>().Where(a => a.IsLactating).Count(),
                             NumberOfBirths = group.OfType<RuminantFemale>().Sum(a => a.NumberOfBirthsThisTimestep),
-                            AverageIntakeDMD = group.Average(a => a.DietDryMatterDigestibility),
-                            AverageIntakeN = group.Average(a => a.PercentNOfIntake)
+                            AverageIntakeDMD = group.Average(a => a.Intake.DMD),
+                            AverageIntakeN = group.Average(a => a.Intake.GetStoreDetails(FeedType.Forage).NitrogenContent)
                         }
                     });
                     if (herdResult.Any())
@@ -256,7 +256,7 @@ namespace Models.CLEM
                                     Number = ageGroup.Sum(a => a.Number),
                                     AverageWeight = ageGroup.Average(a => a.Weight),
                                     AverageWeightGain = ageGroup.Average(a => a.WeightGain),
-                                    AverageIntake = ageGroup.Average(a => (a.Intake + a.MilkIntake)), //now daily/30.4;
+                                    AverageIntake = ageGroup.Average(a => (a.Intake.Feed.Actual)), // + a.MilkIntake)), //now daily/30.4;
                                     AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent)
                                 };
                                 if (sexGroup.Key == Sex.Female)

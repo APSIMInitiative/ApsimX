@@ -32,6 +32,297 @@ namespace Models.CLEM.Resources
         private readonly List<string> warningsMultipleEntry = new List<string>();
         private readonly List<string> warningsNotFound = new List<string>();
 
+        #region Growth SCA version
+
+        // TODO: provide summary
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Feed heat production scalar")]
+        public double FHPScalar { get; set; }
+
+        // TODO: provide summary
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Heat production viscera feed level")]
+        public double HPVisceraFL { get; set; }
+
+        /// <summary>
+        /// First intercept of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain intercept number 1")]
+        public double FatGainIntercept1 { get; set; }
+
+        /// <summary>
+        /// Second intercept of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain intercept number 2")]
+        public double FatGainIntercept2 { get; set; }
+
+        /// <summary>
+        /// Slope of equation to determine energy fat mass (MJ day-1)
+        /// </summary>
+        [Description("Fat gain slope")]
+        public double FatGainSlope { get; set; }
+
+        /// <summary>
+        /// Second intercept of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain intercept number 1")]
+        public double ProteinGainIntercept1 { get; set; }
+
+        /// <summary>
+        /// First intercept of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain intercept number 2")]
+        public double ProteinGainIntercept2 { get; set; }
+
+        /// <summary>
+        /// Slope of equation to determine energy protein mass (MJ day-1)
+        /// </summary>
+        [Description("Protein gain slope")]
+        public double ProteinGainSlope { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double FetalNormWeightParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double FetalNormWeightParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightRatio { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusWeightParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyContent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusEnergyParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinContent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinParameter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ConceptusProteinParameter2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double EB2LW { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradabilityIntercept { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradabilitySlope { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradableProteinIntercept { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradableProteinSlope { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradableProteinExponent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradabilityConcentrateSlope { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double RumenDegradableProteinShortfallScalar { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double BreedEUPFactor1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double BreedEUPFactor2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CN1 { get; set; } = 0.0115;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CN2 { get; set; } = 0.27;
+
+
+
+
+        #endregion
+
+        #region Lactation SCA version
+
+        /// <summary>
+        /// Energy content of milk (MJ/L)
+        /// </summary>
+        [Description("Energy content of milk")]
+        public double EnergyContentMilk { get; set; }
+
+        /// <summary>
+        /// Protein content of milk (kg/L)
+        /// </summary>
+        [Description("Protein content of milk")]
+        public double ProteinContentMilk { get; set; }
+
+        /// <summary>
+        /// Lactation energy deficit (Clxx in SCA)
+        /// </summary>
+        [Description("Lactation energy deficit (Clxx)")]
+        public double LactationEnergyDeficit { get; set; }
+        
+        /// <summary>
+        /// Peak yield lactation scalar (Clxx in SCA)
+        /// </summary>
+        [Description("Peak lactation yield scalar (Clxx)")]
+        public double PeakYieldScalar { get; set; }
+
+        /// <summary>
+        /// Potential yield lactation effect 1 (Clxx in SCA)
+        /// </summary>
+        [Description("Potential yield lactation effect 1 (Clxx)")]
+        public double PotentialYieldLactationEffect { get; set; }
+
+        /// <summary>
+        /// Potential yield lactation effect 2 (Clxx in SCA)
+        /// </summary>
+        [Description("Potential yield lactation effect 1 (Clxx)")]
+        public double PotentialYieldLactationEffect2 { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield condition effect 1 (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield condition effect (Clxx)")]
+        public double PotentialYieldConditionEffect { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield condition effect 2 (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield condition effect 2 (Clxx)")]
+        public double PotentialYieldConditionEffect2 { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield MEI effect (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield MEI effect (Clxx)")]
+        public double PotentialYieldMEIEffect { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield (Clxx)")]
+        public double PotentialLactationYieldParameter { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield reduction (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield reduction (Clxx)")]
+        public double PotentialYieldReduction { get; set; }
+
+        /// <summary>
+        /// Potential lactation yield reduction 2 (Clxx in SCA)
+        /// </summary>
+        [Description("Potential lactation yield reduction 2 (Clxx)")]
+        public double PotentialYieldReduction2 { get; set; }
+
+        /// <summary>
+        /// Milk consumption limit 1 (Clxx in SCA)
+        /// </summary>
+        [Description("MilkConsumptionLimit1 (Clxx)")]
+        public double MilkConsumptionLimit1 { get; set; }
+
+        /// <summary>
+        /// Milk consumption limit 2 (Clxx in SCA)
+        /// </summary>
+        [Description("Milk consumption limit 2 (Clxx)")]
+        public double MilkConsumptionLimit2 { get; set; }
+
+        /// <summary>
+        /// Milk consumption limit 3 (Clxx in SCA)
+        /// </summary>
+        [Description("Milk consumption limit 3 (Clxx)")]
+        public double MilkConsumptionLimit3 { get; set; }
+
+
+
+        #endregion
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -496,7 +787,7 @@ namespace Models.CLEM.Resources
         [Units("proportion of female SRW")]
         [Description("Birth mass (proportion of female SRW)")]
         [Required, GreaterThanValue(0)]
-        public double SRWBirth { get; set; }
+        public double BirthScalar { get; set; }
         /// <summary>
         /// Age growth rate coefficient
         /// </summary>

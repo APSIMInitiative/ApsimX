@@ -19,32 +19,56 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an animal food store (e.g. lucerne)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IFeedType, IResourceType
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        public string Units { get; private set; }
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
 
-        /// <summary>
-        /// Dry Matter Digestibility (%)
-        /// </summary>
+        /// <inheritdoc/>
+        public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
+        [Required]
+        [Description("Broad type of feed")]
+        public FeedType TypeOfFeed { get; set; }
+
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(18.4)]
+        [Required, GreaterThanValue(0)]
+        [Description("Gross energy content")]
+        [Units("MJ/kg digestible DM")]
+        public double EnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Description("Fat content (%)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double FatContent { get; set; }
+
+        /// <inheritdoc/>
         [Description("Dry Matter Digestibility (%)")]
         [Required, Percentage, GreaterThanValue(0)]
-        public double DMD { get; set; }
+        public double DryMatterDigestibility { get; set; }
 
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        [Description("Nitrogen (%)")]
-        [Required, Percentage, GreaterThanValue(0)]
-        public double Nitrogen { get; set; }
+        /// <inheritdoc/>
+        [Description("Nitrogen content (%)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenContent { get; set; }
 
-        /// <summary>
-        /// Current store nitrogen (%)
-        /// </summary>
-        [JsonIgnore]
-        public double CurrentStoreNitrogen { get; set; }
+        /// <inheritdoc/>
+        [Description("Degradable protein content (g/g DM)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double RumenDegradableProtein { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Acid detergent insoluable protein")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Nitrogen to Crude protein factor")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenToCrudeProteinFactor { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
@@ -58,15 +82,23 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double Amount { get { return amount; } set { return; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
+
+        /// <summary>
+        /// A packet to pass the current food quality to activities. Allows for mixing of feed into store
+        /// </summary>
+        public FoodResourcePacket CurrentStoreDetails { get; set; }
+
+        /// <summary>
+        /// A packet to store the quality details of this food
+        /// </summary>
+        public FoodResourcePacket StoreDetails { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public AnimalFoodStoreType()
         {
-            Units = "kg";
+            base.SetDefaults();
         }
 
         /// <summary>
@@ -89,6 +121,22 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (StartingAmount > 0)
                 Add(StartingAmount, null, null, "Starting value");
+
+            // initialise the current state and details of this store
+            CurrentStoreDetails = new FoodResourcePacket()
+            {
+                EnergyContent = EnergyContent,
+                DryMatterDigestibility = DryMatterDigestibility,
+                FatContent= FatContent,
+                NitrogenContent = NitrogenContent
+            };
+            StoreDetails = new FoodResourcePacket()
+            {
+                EnergyContent = EnergyContent,
+                DryMatterDigestibility = DryMatterDigestibility,
+                FatContent = FatContent,
+                NitrogenContent = NitrogenContent
+            };
         }
 
         #region Transactions
@@ -98,34 +146,37 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <param name="relatesToResource">Resource the transasction relates to</param>
+        /// <param name="category">Transaction category</param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            double amountAdded;
-            double nAdded;
+            FoodResourcePacket foodPacket;
+            double addAmount;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    amountAdded = (double)resourceAmount;
-                    nAdded = Nitrogen;
+                    foodPacket = StoreDetails;
+                    addAmount = (double)resourceAmount;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    amountAdded = ((FoodResourcePacket)resourceAmount).Amount;
-                    nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
+                    foodPacket = resourceAmount as FoodResourcePacket;
+                    addAmount = foodPacket.Amount;
                     break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type {resourceAmount.GetType()} is not supported Add method in {this.Name}");
             }
 
-            if (amountAdded > 0)
+            if (addAmount > 0)
             {
-                // update N based on new input added
-                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * amountAdded)) / (Amount + amountAdded);
+                // update quality details to allow mixed feed inputs
+                CurrentStoreDetails.NitrogenContent = ((CurrentStoreDetails.NitrogenContent * Amount) + (foodPacket.NitrogenContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * Amount) + (foodPacket.DryMatterDigestibility * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.FatContent = ((CurrentStoreDetails.FatContent * Amount) + (foodPacket.FatContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.EnergyContent = ((CurrentStoreDetails.EnergyContent * Amount) + (foodPacket.EnergyContent * addAmount)) / (Amount + addAmount);
 
-                this.amount += amountAdded;
+                this.amount += addAmount;
 
-                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
+                ReportTransaction(TransactionType.Gain, addAmount, activity, relatesToResource, category, this);
             }
         }
 
@@ -150,20 +201,21 @@ namespace Models.CLEM.Resources
             {
                 this.amount -= amountRemoved;
 
-                FoodResourcePacket additionalDetails = new FoodResourcePacket
-                {
-                    DMD = this.DMD,
-                    PercentN = this.CurrentStoreNitrogen
-                };
-                request.AdditionalDetails = additionalDetails;
+                //FoodResourcePacket additionalDetails = new FoodResourcePacket
+                //{
+                //    DMD = this.DMD,
+                //    PercentN = this.CurrentStoreNitrogen
+                //};
+                request.AdditionalDetails = CurrentStoreDetails;
 
                 request.Provided = amountRemoved;
 
                 // send to market if needed
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                    (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                    FoodResourcePacket marketDetails = CurrentStoreDetails.Clone(amountRemoved * request.MarketTransactionMultiplier);
+                    //additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                    (EquivalentMarketStore as AnimalFoodStoreType).Add(marketDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
                 }
 
                 ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
@@ -171,14 +223,24 @@ namespace Models.CLEM.Resources
             return;
         }
 
-        /// <summary>
-        /// Set amount of animal food available
-        /// </summary>
-        /// <param name="newValue">New value to set food store to</param>
-        public new void Set(double newValue)
-        {
-            this.amount = newValue;
-        }
+        ///// <inheritdoc/>
+        //public new void Set(double newValue)
+        //{
+        //    this.amount = newValue;
+        //}
+
+        ///// <inheritdoc/>
+        //public event EventHandler TransactionOccurred;
+
+        ///// <inheritdoc/>
+        //protected virtual void OnTransactionOccurred(EventArgs e)
+        //{
+        //    TransactionOccurred?.Invoke(this, e);
+        //}
+
+        ///// <inheritdoc/>
+        //[JsonIgnore]
+        //public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
 
@@ -190,9 +252,9 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
-                if (DMD > 0)
-                    htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
+                htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent.ToString("0.###")}%</span>");
+                if (DryMatterDigestibility > 0)
+                    htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility.ToString("0.###")}%</span>");
                 else
                     htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
 
@@ -200,7 +262,7 @@ namespace Models.CLEM.Resources
                 if (StartingAmount > 0)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
+                    htmlWriter.Write($"Simulation starts with <span class=\"setvalue\">{StartingAmount.ToString("#,##0.##")}</span> kg");
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString();

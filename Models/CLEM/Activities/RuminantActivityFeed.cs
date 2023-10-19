@@ -79,10 +79,16 @@ namespace Models.CLEM.Activities
         public bool StopFeedingWhenSatisfied { get; set; }
 
         /// <summary>
-        /// Feed type
+        /// Feed resource
         /// </summary>
         [JsonIgnore]
-        public IFeedType FeedType { get; set; }
+        public IResourceType FeedResource { get; set; }
+
+        /// <summary>
+        /// Feed quality
+        /// </summary>
+        [JsonIgnore]
+        public IFeed FeedDetails { get; set; }
 
         /// <summary>
         /// The list of individuals remaining to be fed in the current timestep
@@ -138,7 +144,8 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
-            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedDetails = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
+            FeedResource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -309,7 +316,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         Required = wasted,
                         Available = wasted,
-                        Resource = FeedType,
+                        Resource = FeedResource,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
@@ -327,7 +334,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         Required = excessFed,
                         Available = excessFed,
-                        Resource = FeedType,
+                        Resource = FeedResource,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
@@ -364,7 +371,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.PotentialIntake * (usingPotentialIntakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake);
+                                details.Amount = ((ind.Intake.Feed.Expected * (usingPotentialIntakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Feed.Actual);
                                 details.Amount *= feedLimit;
                                 details.Amount *= ind.Weight/totalWeight;
                                 break;
@@ -377,11 +384,11 @@ namespace Models.CLEM.Activities
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = iChild.CurrentValue * ind.PotentialIntake;
+                                details.Amount = iChild.CurrentValue * ind.Intake.Feed.Expected;
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = iChild.CurrentValue * (ind.PotentialIntake - ind.Intake);
+                                details.Amount = iChild.CurrentValue * (ind.Intake.Feed.Required);
                                 details.Amount *= feedLimit;
                                 break;
                             default:
@@ -389,9 +396,9 @@ namespace Models.CLEM.Activities
                         }
                         // check amount meets intake limits
                         if (usingPotentialIntakeMultiplier)
-                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake))
-                                details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
-                        ind.AddIntake(details);
+                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Feed.Expected + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual))
+                                details.Amount = (ind.Intake.Feed.Expected + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual;
+                        ind.Intake.AddFeed(details);
                     }
                 }
             }

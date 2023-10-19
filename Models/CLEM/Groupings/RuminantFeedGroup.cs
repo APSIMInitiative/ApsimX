@@ -139,14 +139,14 @@ namespace Models.CLEM.Groupings
             // create food resource packet with details
             FoodResourcePacket foodPacket = new FoodResourcePacket()
             {
-                DMD = feedActivityParent.FeedType.DMD,
-                PercentN = feedActivityParent.FeedType.Nitrogen
+                DryMatterDigestibility = feedActivityParent.FeedDetails.DryMatterDigestibility,
+                NitrogenContent = feedActivityParent.FeedDetails.NitrogenContent
             };
 
             currentFeedRequest = new ResourceRequest()
             {
                 AllowTransmutation = true,
-                Resource = feedActivityParent.FeedType,
+                Resource = feedActivityParent.FeedResource,
                 ResourceType = typeof(AnimalFoodStore),
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,
@@ -181,8 +181,8 @@ namespace Models.CLEM.Groupings
             {
                 Count = countNeeded ? a.Count() : 0,
                 Weight = weightNeeded ? a.Sum(b => b.Weight) : 0,
-                Intake = a.Sum(b => b.Intake),
-                PotentialIntake = a.Sum(b => b.PotentialIntake),
+                Intake = a.Sum(b => b.Intake.Feed.Actual),
+                PotentialIntake = a.Sum(b => b.Intake.Feed.Expected),
                 IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().BreedParams.OverfeedPotentialIntakeModifier : 1
             }).FirstOrDefault();
 
@@ -206,7 +206,7 @@ namespace Models.CLEM.Groupings
                         feedNeeed = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        feedNeeed = value * feedActivityParent.FeedType.Amount;
+                        feedNeeed = value * feedActivityParent.FeedResource.Amount;
                         break;
                     default:
                         break;

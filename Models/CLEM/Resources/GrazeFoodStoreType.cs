@@ -24,27 +24,48 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IValidatableObject
+    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IValidatableObject
     {
         [Link]
         private readonly CLEMEvents events = null;
-
+        private readonly ZoneCLEM zoneCLEM = null;
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
         private double biomassAddedThisYear;
         private double biomassConsumed;
 
-        /// <summary>
-        /// Unit type
-        /// </summary>
+        /// <inheritdoc/>
         [Description("Units (nominal)")]
-        public string Units { get; private set; }
+        public string Units { get; private set; } = "kg";
 
-        /// <summary>
-        /// List of pools available
-        /// </summary>
-        [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
+
+        /// <inheritdoc/>
+        [System.ComponentModel.DefaultValueAttribute(18.4)]
+        [Description("Gross energy content")]
+        [Units("MJ/kg digestible DM")]
+        [Required]
+        public double EnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double RumenDegradableProtein { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double ADIP { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenToCrudeProteinFactor { get; set; }
+
+        /// <inheritdoc/>
+        public double FatContent { get; set; } = 0;
+
+        /// <inheritdoc/>
+        [Description("Crude protein degradability")]
+        public double CPDegradability { get; set; }
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -66,7 +87,7 @@ namespace Models.CLEM.Resources
         /// Nitrogen of new growth (%)
         /// </summary>
         [Category("Basic", "Quality")]
-        [Description("Nitrogen of new growth (%)")]
+        [Description("Nitrogen content of new growth (%)")]
         [Required, Percentage]
         public double GreenNitrogen { get; set; }
 
@@ -139,7 +160,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Initial biomass")]
         [Description("Initial biomass (kg per ha)")]
-        public double InitialBiomass { get; set; }
+        public double StartingAmount { get; set; }
 
         /// <summary>
         /// First month of seasonal growth
@@ -166,6 +187,12 @@ namespace Models.CLEM.Resources
         [Description("Number of months for initial biomass")]
         [System.ComponentModel.DefaultValueAttribute(5)]
         public int NumberMonthsForInitialBiomass { get; set; }
+
+        /// <summary>
+        /// List of pools available
+        /// </summary>
+        [JsonIgnore]
+        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -206,9 +233,8 @@ namespace Models.CLEM.Resources
             {
                 if (index < Pools.Count())
                     return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
-                else
-                    return null;
             }
+            return null;
         }
 
         /// <summary>
@@ -231,8 +257,7 @@ namespace Models.CLEM.Resources
             {
                 if (Manager != null)
                     return Amount / Manager.Area;
-                else
-                    return 0;
+                return 0;
             }
         }
 
@@ -253,31 +278,33 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculated total pasture (all pools) Dry Matter Digestibility (%)
         /// </summary>
-        public double DMD
+        public double DryMatterDigestibility
         {
             get
             {
                 double dmd = 0;
                 if (this.Amount > 0)
-                    dmd = Pools.Sum(a => a.Amount * a.DMD) / this.Amount;
+                    dmd = Pools.Sum(a => a.Amount * a.DryMatterDigestibility) / this.Amount;
 
                 return Math.Max(MinimumDMD, dmd);
             }
+            set { throw new NotImplementedException("GrazeFoodStore DMD is calulated"); }
         }
 
         /// <summary>
         /// Calculated total pasture (all pools) Nitrogen (%)
         /// </summary>
-        public double Nitrogen
+        public double NitrogenContent
         {
             get
             {
                 double n = 0;
                 if (this.Amount > 0)
-                    n = Pools.Sum(a => a.Amount * a.Nitrogen) / this.Amount;
+                    n = Pools.Sum(a => a.Amount * a.NitrogenContent) / this.Amount;
 
                 return Math.Max(MinimumNitrogen, n);
             }
+            set { throw new NotImplementedException("GrazeFoodStore percent nitrogen is calulated"); }
         }
 
         /// <summary>
@@ -354,26 +381,26 @@ namespace Models.CLEM.Resources
                     break;
                 case "Nitrogen":
                     if (age < 0)
-                        return Nitrogen;
+                        return NitrogenContent;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
                         if(pools.Count() == 1)
-                            valueToUse = pools.FirstOrDefault().Nitrogen;
+                            valueToUse = pools.FirstOrDefault().NitrogenContent;
                         else
-                            valueToUse = pools.Sum(a => a.Nitrogen * a.Amount) / pools.Sum(a => a.Amount);
+                            valueToUse = pools.Sum(a => a.NitrogenContent * a.Amount) / pools.Sum(a => a.Amount);
                     }
                     return valueToUse;
                 case "DMD":
                     if (age < 0)
-                        return DMD;
+                        return DryMatterDigestibility;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
                         if (pools.Count() == 1)
-                            valueToUse = pools.FirstOrDefault().DMD;
+                            valueToUse = pools.FirstOrDefault().DryMatterDigestibility;
                         else
-                            valueToUse = pools.Sum(a => a.DMD * a.Amount) / pools.Sum(a => a.Amount);
+                            valueToUse = pools.Sum(a => a.DryMatterDigestibility * a.Amount) / pools.Sum(a => a.Amount);
                     }
                     return valueToUse;
                 case "Age":
@@ -420,7 +447,7 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this.Name
             };
-            grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
+            grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault();
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -491,9 +518,9 @@ namespace Models.CLEM.Resources
                 foreach (var pool in Pools)
                 {
                     // N is a loss of N% (x = x -loss)
-                    pool.Nitrogen = Math.Max(pool.Nitrogen - DecayNitrogen, MinimumNitrogen);
+                    pool.NitrogenContent = Math.Max(pool.NitrogenContent - DecayNitrogen, MinimumNitrogen);
                     // DMD is a proportional loss (x = x*(1-proploss))
-                    pool.DMD = Math.Max(pool.DMD * (1 - DecayDMD), MinimumDMD);
+                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - DecayDMD), MinimumDMD);
 
                     if (pool.Age < 12)
                         pool.Age++;
@@ -555,7 +582,7 @@ namespace Models.CLEM.Resources
             if (NumberMonthsForInitialBiomass <= 0) return;
 
             // Initial biomass
-            double amountToAdd = area * InitialBiomass;
+            double amountToAdd = area * StartingAmount;
             if (amountToAdd <= 0)
                 return;
 
@@ -606,8 +633,8 @@ namespace Models.CLEM.Resources
                     newPools.Add(new GrazeFoodStorePool()
                     {
                         Age = monthCount,
-                        Nitrogen = currentN,
-                        DMD = currentDMD,
+                        NitrogenContent = currentN,
+                        DryMatterDigestibility = currentDMD,
                         StartingAmount = propBiomass
                     });
                     includedMonthCount++;
@@ -655,30 +682,36 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            GrazeFoodStorePool pool;
+            GrazeFoodStorePool pool = new GrazeFoodStorePool()
+            {
+                EnergyContent = EnergyContent,
+                CPDegradability = CPDegradability,
+                FatContent = FatContent,
+                NitrogenContent = 0,
+                DryMatterDigestibility = 0
+            };
+
             switch (resourceAmount)
             {
                 case GrazeFoodStorePool _:
-                    pool = resourceAmount as GrazeFoodStorePool;
+                    // coming from the advanced PastureActivityManage
+                    GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
-                    if (pool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
-                    {
-                        double reduction = grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(pool.Amount / Manager.Area);
-                        pool.Nitrogen = Math.Max(MinimumNitrogen, pool.Nitrogen * reduction);
-                    }
+                    if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                        pool.NitrogenContent = Math.Max(MinimumNitrogen, incomingPool.NitrogenContent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.Amount / Manager.Area));
                     break;
                 case FoodResourcePacket _:
-                    pool = new GrazeFoodStorePool();
+                    // coming from the CropActivityManage
                     FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                     pool.Set(packet.Amount);
-                    pool.Nitrogen = packet.PercentN;
-                    pool.DMD = packet.DMD;
+                    pool.NitrogenContent = packet.NitrogenContent;
+                    pool.DryMatterDigestibility = packet.DryMatterDigestibility;
                     break;
                 case double _:
-                    pool = new GrazeFoodStorePool();
+                    // add amount at current rates
                     pool.Set((double)resourceAmount);
-                    pool.Nitrogen = this.Nitrogen;
-                    pool.DMD = this.EstimateDMD(this.Nitrogen);
+                    pool.NitrogenContent = this.NitrogenContent;
+                    pool.DryMatterDigestibility = DryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
@@ -687,9 +720,7 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 if (pool.Age == 0)
-                {
                     pool.Growth = pool.Amount;
-                }
 
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
@@ -740,8 +771,8 @@ namespace Models.CLEM.Resources
                     // take min of amount in pool, intake*limiter, remaining intake needed
                     double amountToRemove = Math.Min(request.Required * pool.Limit, Math.Min(pool.Pool.Amount, amountRequired));
                     // update DMD and N based on pool utilised
-                    thisBreed.DMD += pool.Pool.DMD * amountToRemove;
-                    thisBreed.N += pool.Pool.Nitrogen * amountToRemove;
+                    thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
+                    thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
 
                     amountRequired -= amountToRemove;
 
@@ -771,8 +802,8 @@ namespace Models.CLEM.Resources
                             amountToRemove = pool.Pool.Amount;
 
                         // update DMD and N based on pool utilised
-                        thisBreed.DMD += pool.Pool.DMD * amountToRemove;
-                        thisBreed.N += pool.Pool.Nitrogen * amountToRemove;
+                        thisBreed.DMD += pool.Pool.DryMatterDigestibility * amountToRemove;
+                        thisBreed.N += pool.Pool.NitrogenContent * amountToRemove;
                         amountTakenDuringSecondTake += amountToRemove;
                         // remove resource from pool
                         pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
@@ -808,8 +839,8 @@ namespace Models.CLEM.Resources
                 {
                     double amountToRemove = pool.Amount * useproportion;
                     amountCollected += amountToRemove;
-                    dryMatterDigestibility += pool.DMD * amountToRemove;
-                    nitrogen += pool.Nitrogen * amountToRemove;
+                    dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
+                    nitrogen += pool.NitrogenContent * amountToRemove;
                     pool.Remove(amountToRemove, this, "Cut and Carry");
                 }
                 request.Provided = amountCollected;
@@ -858,7 +889,7 @@ namespace Models.CLEM.Resources
             else
                 noGrowSeason = ((12 - first) + last <= 1);
 
-            if (InitialBiomass > 0 & noGrowSeason)
+            if (StartingAmount > 0 & noGrowSeason)
             {
                 string[] memberNames = new string[] { "Invalid initial biomass growth season" };
                 results.Add(new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={this.NameWithParent}]", memberNames));
@@ -879,24 +910,24 @@ namespace Models.CLEM.Resources
                 if (this.GreenNitrogen == 0)
                     htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
                 else
-                    htmlWriter.Write("<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogen:0.###}%</span>");
 
                 if (DecayNitrogen > 0)
-                    htmlWriter.Write(" and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>");
+                    htmlWriter.Write($" and will decline by <span class=\"setvalue\">{DecayNitrogen:0.###}%</span> per month to a minimum nitrogen of <span class=\"setvalue\">{MinimumNitrogen:0.###}%</span>");
 
                 htmlWriter.Write("\r\n</div>");
                 if (DecayDMD > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
+                    htmlWriter.Write($"Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">{DecayDMD:0.###}</span> per month to a minimum DMD of <span class=\"setvalue\">{MinimumDMD:0.###}%</span>");
                     htmlWriter.Write("\r\n</div>");
                 }
                 if (DetachRate > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month");
+                    htmlWriter.Write($"Pasture is lost through detachment at a rate of <span class=\"setvalue\">{DetachRate:0.###}</span> per month");
                     if (CarryoverDetachRate > 0)
-                        htmlWriter.Write(" and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                        htmlWriter.Write($" and <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
 
                     htmlWriter.Write("\r\n</div>");
                 }
@@ -905,7 +936,7 @@ namespace Models.CLEM.Resources
                     if (CarryoverDetachRate > 0)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                        htmlWriter.Write($"Pasture is lost through detachement at a rate of <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
                         htmlWriter.Write("\r\n</div>");
                     }
                 }
