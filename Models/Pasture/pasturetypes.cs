@@ -251,6 +251,25 @@ namespace Models.GrazPlan
         /// Mass of hard, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         public double[] hard_ripe;      // kg/ha
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public SeedInit()
+        {
+        }
+
+        /// <summary>
+        /// Construct a seed layer object
+        /// </summary>
+        /// <param name="layers"></param>
+        public SeedInit(int layers)
+        {
+            soft_unripe = new double[layers];
+            soft_ripe = new double[layers];
+            hard_unripe = new double[layers];
+            hard_ripe = new double[layers];
+        }
     }
 
     /// <summary>
