@@ -4050,6 +4050,9 @@ namespace Models.GrazPlan
 
             if (this.Params.bHasSeeds)                                                               // Seeds -------------------------------
             {
+                if (seed == null)
+                    throw new Exception(this.Params.sName + " needs to include a seed component.");
+
                 this.SetSeedMass(GrazType.TOTAL, GrazType.TOTAL, GrazType.TOTAL, 0.0);
 
                 if (seed.soft_unripe.Length > 0)
