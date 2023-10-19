@@ -320,7 +320,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Controls the height of the status panel.
         /// </summary>
-        public int StatusPanelHeight
+        public int StatusPanelPosition
         {
             get
             {
@@ -330,6 +330,14 @@ namespace UserInterface.Views
             {
                 vpaned1.Position = value;
             }
+        }
+
+        /// <summary>
+        /// Height of the VPaned that holds the view
+        /// </summary>
+        public int PanelHeight
+        {
+            get { return vpaned1.AllocatedHeight; }
         }
 
         /// <summary>
