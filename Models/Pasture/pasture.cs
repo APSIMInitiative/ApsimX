@@ -2169,49 +2169,59 @@ namespace Models.GrazPlan
         {
             if (Children.Count == 0)
                 throw new Exception("There must be at least one child pasture cohort initialisation model");
+            int numDry = 0;
+            int numGreen = 0;
+            int idx = 0;
+
+            GreenInit[] green = new GreenInit[0];
+            DryInit[] dry = new DryInit[0];
 
             foreach (var initCohort in Children)
             {
                 if (initCohort is GreenCohortInitialise greenInit)
                 {
-                    GreenInit[] green = new GreenInit[1];
-                    green[0] = new GreenInit();
-                    green[0].root_wt = new double[greenInit.RootWeight.Length][];
+                    Array.Resize(ref green, green.Length + 1);
+                    idx = numGreen;
+                    green[idx] = new GreenInit();
+                    green[idx].root_wt = new double[greenInit.RootWeight.Length][];
                     for (int i = 0; i < greenInit.RootWeight.Length; i++)
-                        green[0].root_wt[i] = new double[] { greenInit.RootWeight[i] };
-                    green[0].status = greenInit.Status;
-                    green[0].rt_dep = greenInit.RootDepth;
-                    green[0].herbage = new Herbage[2]; // leaf and stem
-                    green[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    green[0].herbage[0].dmd = greenInit.LeafDMD;
-                    green[0].herbage[0].weight = greenInit.LeafWeight;
-                    green[0].herbage[0].n_conc = greenInit.LeafNConc;
-                    green[0].herbage[0].spec_area = greenInit.LeafSpecificArea;
+                        green[idx].root_wt[i] = new double[] { greenInit.RootWeight[i] };
+                    green[idx].status = greenInit.Status;
+                    green[idx].rt_dep = greenInit.RootDepth;
+                    green[idx].herbage = new Herbage[2]; // leaf and stem
+                    green[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    green[idx].herbage[0].dmd = greenInit.LeafDMD;
+                    green[idx].herbage[0].weight = greenInit.LeafWeight;
+                    green[idx].herbage[0].n_conc = greenInit.LeafNConc;
+                    green[idx].herbage[0].spec_area = greenInit.LeafSpecificArea;
 
-                    green[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    green[0].herbage[1].dmd = greenInit.StemDMD;
-                    green[0].herbage[1].weight = greenInit.StemWeight;
-                    green[0].herbage[1].n_conc = greenInit.StemNConc;
-                    green[0].herbage[1].spec_area = greenInit.StemSpecificArea;
+                    green[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    green[idx].herbage[1].dmd = greenInit.StemDMD;
+                    green[idx].herbage[1].weight = greenInit.StemWeight;
+                    green[idx].herbage[1].n_conc = greenInit.StemNConc;
+                    green[idx].herbage[1].spec_area = greenInit.StemSpecificArea;
+                    numGreen += 1;
                     this.Green = green;
                 }
                 else if (initCohort is DryCohortInitialise dryInit)
                 {
-                    DryInit[] dry = new DryInit[1];
-                    dry[0] = new DryInit();
-                    dry[0].status = dryInit.Status;
-                    dry[0].herbage = new Herbage[2]; // leaf and stem
-                    dry[0].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    dry[0].herbage[0].dmd = dryInit.LeafDMD;
-                    dry[0].herbage[0].weight = dryInit.LeafWeight;
-                    dry[0].herbage[0].n_conc = dryInit.LeafNConc;
-                    dry[0].herbage[0].spec_area = dryInit.LeafSpecificArea;
+                    Array.Resize(ref dry, dry.Length + 1);
+                    idx = numDry;
+                    dry[idx] = new DryInit();
+                    dry[idx].status = dryInit.Status;
+                    dry[idx].herbage = new Herbage[2]; // leaf and stem
+                    dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[idx].herbage[0].dmd = dryInit.LeafDMD;
+                    dry[idx].herbage[0].weight = dryInit.LeafWeight;
+                    dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
+                    dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
 
-                    dry[0].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
-                    dry[0].herbage[1].dmd = dryInit.StemDMD;
-                    dry[0].herbage[1].weight = dryInit.StemWeight;
-                    dry[0].herbage[1].n_conc = dryInit.StemNConc;
-                    dry[0].herbage[1].spec_area = dryInit.StemSpecificArea;
+                    dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
+                    dry[idx].herbage[1].dmd = dryInit.StemDMD;
+                    dry[idx].herbage[1].weight = dryInit.StemWeight;
+                    dry[idx].herbage[1].n_conc = dryInit.StemNConc;
+                    dry[idx].herbage[1].spec_area = dryInit.StemSpecificArea;
+                    numDry += 1;
                     this.Dry = dry;
                 }
                 else if (initCohort is SeedCohortInitialise seedInit)
@@ -2395,9 +2405,6 @@ namespace Models.GrazPlan
             mySoilWaterAvailable = new double[nLayers];
             myTotalWater = new double[nLayers];
 
-            // check rooting depth
-            // double MaximumPotentialRootingDepth = 750.0;   // TODO: This needs to be set elsewhere and checked
-
             // set some initial values
             Layers = new double[nLayers];
             Array.Copy(soilPhysical.Thickness, Layers, nLayers);
@@ -2415,6 +2422,8 @@ namespace Models.GrazPlan
         private void InitStep()
         {
             resetDrivers();
+
+            FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
 
             GetWtrDrivers();
             storeWeather();
@@ -2497,8 +2506,6 @@ namespace Models.GrazPlan
         /// </summary>
         private void DoPastureGrowth()
         {
-            FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
-
             FFieldGreenDM = PastureModel.GetHerbageMass(sgGREEN, TOTAL, TOTAL);
             FFieldGAI = PastureModel.AreaIndex(sgGREEN);
             FFieldDAI = PastureModel.AreaIndex(sgDRY);
@@ -2544,6 +2551,7 @@ namespace Models.GrazPlan
                         fSupply[i][0][layer] = mySoilNH4UptakeAvail[layer - 1];
                 }
             }
+
             PastureModel.ComputeRates(fSupply, myWaterDemand);    // main growth update function
         }
 
