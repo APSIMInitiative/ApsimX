@@ -427,11 +427,11 @@ namespace Models.PMF.Organs
             // now move the remaining senescing material to the dead pool
             Biomass Loss = new Biomass();
             Loss.StructuralN = StartLive.StructuralN * senescedFrac;
-            Loss.StorageN = StartLive.StorageN * senescedFrac - StorageNReallocation;
-            Loss.MetabolicN = StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation);
+            Loss.StorageN = Math.Min(StartLive.StorageN * senescedFrac - StorageNReallocation,Live.StorageN);
+            Loss.MetabolicN = Math.Min(StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation),Live.MetabolicN);
             Loss.StructuralWt = StartLive.StructuralWt * senescedFrac;
-            Loss.MetabolicWt = StartLive.MetabolicWt * senescedFrac;
-            Loss.StorageWt = StartLive.StorageWt * senescedFrac;
+            Loss.MetabolicWt = Math.Min(StartLive.MetabolicWt * senescedFrac,Live.MetabolicWt);
+            Loss.StorageWt = Math.Min(StartLive.StorageWt * senescedFrac,Live.StorageWt);
             Live.Subtract(Loss);
             Dead.Add(Loss);
             Senesced.Add(Loss);
