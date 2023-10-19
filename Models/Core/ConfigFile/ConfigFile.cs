@@ -88,9 +88,9 @@ namespace Models.Core.ConfigFile
 
                     // If first index item is a string containing "[]" the command is an override...
                     Match firstSplitResult = rxOverrideTargetNode.Match(commandSplits[0]);
-                    //if (commandSplits[0].Contains('['))
                     if (firstSplitResult.Success)
                     {
+                        // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
                         string[] singleLineCommandArray = { command };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         sim = (Simulations)ApplyOverridesToApsimxFile(overrides, sim);
