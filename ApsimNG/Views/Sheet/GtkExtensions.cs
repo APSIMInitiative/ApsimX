@@ -20,6 +20,8 @@ namespace UserInterface.Views
                 keyParams.Key = Keys.PageUp;
             else if (evnt.Key == Gdk.Key.Page_Down)
                 keyParams.Key = Keys.PageDown;
+            else if (evnt.Key == Gdk.Key.period)
+                keyParams.Key = Keys.Period;
             else if (evnt.Key == Gdk.Key.Return || evnt.Key == Gdk.Key.KP_Enter
                 || evnt.Key == Gdk.Key.ISO_Enter || evnt.Key == Key.Key_3270_Enter)
                 // Note: ISO enter is the double-height enter key on ISO and JIS
