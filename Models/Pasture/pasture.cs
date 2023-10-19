@@ -97,7 +97,6 @@ namespace Models.GrazPlan
         private double[][] FSoilPropn = new double[GrazType.stSENC + 1][];      // [stSEEDL..stSENC] - [1..3][1..]
         private double[][] FTranspiration = new double[GrazType.stSENC + 1][];  // [TOTAL..stSENC]   - [0..3][1..]
 
-        //private bool FWaterValueReqd = true;
         private double FIntercepted = 0.0;  // Precipitation intercepted by herbage.  Default is 0.0
 
         private double[] mySoilNH4Available;    // [0..
@@ -317,15 +316,91 @@ namespace Models.GrazPlan
         public DryInit[] Dry { get; set; }
 
         /// <summary>
-        /// Mass of seeds in each soil layer
+        /// Mass of seeds in each soil layer [0..
         /// </summary>
         public SeedInit Seeds { get; set; }
+
+        /// <summary>
+        /// Get the seeds of the specified type over the layers
+        /// </summary>
+        /// <param name="soft">soft/hard</param>
+        /// <param name="ripe">unripe/ripe</param>
+        /// <returns>An array of seed amounts for each layer. kg/ha</returns>
+        private double[] seedLayers(int soft, int ripe)
+        {
+            double[] result = null;
+            if (PastureModel != null)
+            {
+                result = new double[FNoLayers];
+                string sUnit = PastureModel.MassUnit;
+                PastureModel.MassUnit = "kg/ha";
+
+                // fills the zero based array
+                for (int i = 0; i < FNoLayers; i++)
+                {
+                    result[i] = PastureModel.GetSeedMass(soft, ripe, i + 1);
+                }
+
+                PastureModel.MassUnit = sUnit;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Soft unripe seed
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] SeedSoftUnripe
+        {
+            get
+            {
+                return seedLayers(GrazType.SOFT, GrazType.UNRIPE);
+            }
+        }
+
+        /// <summary>
+        /// Hard unripe seed
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] SeedHardUnripe
+        {
+            get
+            {
+                return seedLayers(GrazType.HARD, GrazType.UNRIPE);
+            }
+        }
+
+        /// <summary>
+        /// Hard ripe seed
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] SeedHardRipe
+        {
+            get
+            {
+                return seedLayers(GrazType.HARD, GrazType.RIPE);
+            }
+        }
+
+        /// <summary>
+        /// Soft ripe seed
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] SeedSoftRipe
+        {
+            get
+            {
+                return seedLayers(GrazType.SOFT, GrazType.RIPE);
+            }
+        }
 
         /// <summary>
         /// Time since commencement of embryo dormancy.
         /// Only meaningful if unripe seeds are present. Default is 0.0
         /// d
         /// </summary>
+        [Units("d")]
         public double SeedDormTime { get; set; } = 0;
 
         /// <summary>
@@ -333,6 +408,7 @@ namespace Models.GrazPlan
         /// Only meaningful if the species is modelled with seed pools. Default is 0.0
         /// d
         /// </summary>
+        [Units("d")]
         public double GermIndex { get; set; } = 0;
 
         /// <summary>
@@ -345,6 +421,7 @@ namespace Models.GrazPlan
         /// Minimum water content parameter for the optional Monteith water uptake sub-model
         /// mm/mm
         /// </summary>
+        [Units("mm/mm")]
         public double[] LL { get; set; } // [1..
 
         #endregion
@@ -704,9 +781,9 @@ namespace Models.GrazPlan
         public SoilLayer[] SO4Uptake { get { return NutrUptake(TPlantNutrient.pnSO4); } }
 
         /// <summary>
-        ///
+        /// Nutrient uptake for the specified nutrient
         /// </summary>
-        /// <param name="nutr"></param>
+        /// <param name="nutr">Nutrient. pnNO3...</param>
         /// <returns></returns>
         private SoilLayer[] NutrUptake(TPlantNutrient nutr)
         {
@@ -2324,6 +2401,7 @@ namespace Models.GrazPlan
                     PastureModel.fPlant_LL = F_LL15;
                 }
 
+                // inits are [0.. based arrays
                 PastureModel.ReadStateFromValues(this.LaggedDayT, this.Phenology, this.FlowerLen, this.FlowerTime, this.SencIndex, this.DormIndex, this.DormT, this.ExtinctCoeff, this.Green, this.Dry, this.Seeds, this.SeedDormTime, this.GermIndex);
 
                 FToday = systemClock.Today.Day + (systemClock.Today.Month * 0x100) + (systemClock.Today.Year * 0x10000);    //stddate
