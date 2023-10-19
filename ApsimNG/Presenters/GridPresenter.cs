@@ -8,6 +8,7 @@ using Models.Interfaces;
 using UserInterface.EventArguments;
 using Models.Core;
 using Gtk;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace UserInterface.Presenters
 {
@@ -114,9 +115,8 @@ namespace UserInterface.Presenters
             {
                 IGridView view = v as IGridView;
                 sheetContainer = view.Grid1;
-                view.ShowGrid(1, true);
-                view.ShowGrid(2, false);
-                view.SetLabelText("");
+                view.ShowGrid(1, true, parentPresenter.GetView() as ExplorerView);
+                view.SetDescriptionText("");
                 view.SetLabelHeight(0);
                 AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
@@ -125,7 +125,7 @@ namespace UserInterface.Presenters
                     string text = (model as IGridModel).GetDescription();
                     if (text.Length > 0)
                     {
-                        view.SetLabelText(text);
+                        view.SetDescriptionText(text);
                         view.SetLabelHeight(0.1f);
                     }
                 }

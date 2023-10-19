@@ -19,6 +19,8 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private GridPresenter gridPresenter1;
         private GridPresenter gridPresenter2;
+        private GridPresenter gridPresenter3;
+        private GridPresenter gridPresenter4;
 
         /// <summary>
         /// Attach the model to the view.
@@ -39,7 +41,11 @@ namespace UserInterface.Presenters
 
             string[] contextMenuOptions = new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" };
 
-            view.ShowGrid(2, false);
+            ExplorerView ev = parentPresenter.GetView() as ExplorerView;
+
+            view.ShowGrid(2, false, ev);
+            view.ShowGrid(3, false, ev);
+            view.ShowGrid(4, false, ev);
             if (tables.Count > 0)
             {
                 gridPresenter1 = new GridPresenter();
@@ -47,6 +53,8 @@ namespace UserInterface.Presenters
                 gridPresenter1.AddContextMenuOptions(contextMenuOptions);
                 gridPresenter1.AddIntellisense(model as Model);
                 gridPresenter1.CellChanged += OnCellChanged;
+                view.SetTableLabelText(tables[0].Name, 1);
+                view.ShowGrid(1, true, ev);
             } 
             if (tables.Count > 1)
             {
@@ -55,18 +63,39 @@ namespace UserInterface.Presenters
                 gridPresenter2.AddContextMenuOptions(contextMenuOptions);
                 gridPresenter2.AddIntellisense(model as Model);
                 gridPresenter2.CellChanged += OnCellChanged;
-                view.ShowGrid(2, true);
+                view.SetTableLabelText(tables[1].Name, 2);
+                view.ShowGrid(2, true, ev);
+            }
+            if (tables.Count > 2)
+            {
+                gridPresenter3 = new GridPresenter();
+                gridPresenter3.Attach(tables[2], view.Grid3, presenter);
+                gridPresenter3.AddContextMenuOptions(contextMenuOptions);
+                gridPresenter3.AddIntellisense(model as Model);
+                gridPresenter3.CellChanged += OnCellChanged;
+                view.SetTableLabelText(tables[2].Name, 3);
+                view.ShowGrid(3, true, ev);
+            }
+            if (tables.Count > 3)
+            {
+                gridPresenter4 = new GridPresenter();
+                gridPresenter4.Attach(tables[3], view.Grid4, presenter);
+                gridPresenter4.AddContextMenuOptions(contextMenuOptions);
+                gridPresenter4.AddIntellisense(model as Model);
+                gridPresenter4.CellChanged += OnCellChanged;
+                view.SetTableLabelText(tables[3].Name, 4);
+                view.ShowGrid(4, true, ev);
             }
 
             string text = tableModel.GetDescription();
             if (text.Length > 0)
             {
-                view.SetLabelText(text);
+                view.SetDescriptionText(text);
                 view.SetLabelHeight(0.1f);
             } 
             else
             {
-                view.SetLabelText("");
+                view.SetDescriptionText("");
                 view.SetLabelHeight(0.0f);
             }
         }

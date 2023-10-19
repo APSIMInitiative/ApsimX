@@ -25,9 +25,17 @@
 					</packing>
 				</child>
 				<child>
-					<object class="GtkVPaned" id="vpaned2">
+					<object class="GtkHPaned" id="vpaned2">
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
+						<child>
+							<object class="GtkVPaned" id="vpaned3">
+							</object>
+						</child>
+						<child>
+							<object class="GtkVPaned" id="vpaned4">
+							</object>
+						</child>
 					</object>
 					<packing>
 						<property name="position">1</property>
