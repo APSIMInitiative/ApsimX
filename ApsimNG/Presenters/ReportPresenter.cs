@@ -391,11 +391,20 @@ namespace UserInterface.Presenters
         {
             if (!string.IsNullOrWhiteSpace(StoredDragObject.Code))
             {
+                List<String> plantVariableLines = new();
+                if (StoredDragObject.Code.Contains("[Plant]"))
+                    plantVariableLines = CreatePlantVariableLines(StoredDragObject.Code);
                 List<string> textLinesList = view.VariableList.Lines.ToList();
                 if (view.VariableList.CurrentLineNumber > textLinesList.Count)
-                    textLinesList.Add(StoredDragObject.Code);
+                    if (plantVariableLines.Count > 0)
+                        foreach (String line in plantVariableLines)
+                            textLinesList.Add(line);
+                    else textLinesList.Add(StoredDragObject.Code);
                 else
-                    textLinesList.Insert(view.VariableList.CurrentLineNumber, StoredDragObject.Code);
+                    if (plantVariableLines.Count > 0)
+                    foreach (String line in plantVariableLines)
+                        textLinesList.Insert(view.VariableList.CurrentLineNumber, line);
+                else textLinesList.Insert(view.VariableList.CurrentLineNumber, StoredDragObject.Code);
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.VariableList.Text = modifiedText;
                 StoredDragObject = null;
@@ -411,11 +420,20 @@ namespace UserInterface.Presenters
         {
             if (!string.IsNullOrWhiteSpace(StoredDragObject.Code))
             {
+                List<String> plantVariableLines = new();
+                if (StoredDragObject.Code.Contains("[Plant]"))
+                    plantVariableLines = CreatePlantVariableLines(StoredDragObject.Code);
                 List<string> textLinesList = view.EventList.Lines.ToList();
                 if (view.EventList.CurrentLineNumber > textLinesList.Count)
-                    textLinesList.Add(StoredDragObject.Code);
+                    if (plantVariableLines.Count > 0)
+                        foreach (String line in plantVariableLines)
+                            textLinesList.Add(line);
+                    else textLinesList.Add(StoredDragObject.Code);
                 else
-                    textLinesList.Insert(view.EventList.CurrentLineNumber, StoredDragObject.Code);
+                    if (plantVariableLines.Count > 0)
+                    foreach (String line in plantVariableLines)
+                        textLinesList.Insert(view.EventList.CurrentLineNumber, line);
+                else textLinesList.Insert(view.EventList.CurrentLineNumber, StoredDragObject.Code);
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.EventList.Text = modifiedText;
                 StoredDragObject = null;
@@ -802,16 +820,27 @@ namespace UserInterface.Presenters
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
             var currentReportVariablesLineNumber = this.view.VariableList.CurrentLineNumber;
             string variableCode = commonReportVariables.Rows[reportVariableIndex][2].ToString();
+            List<String> plantVariableLines = new();
+            // If variableCode contains '[Plant]' a line is added for each plant that is in the simulation.
+            if (variableCode.Contains("[Plant"))
+                plantVariableLines = CreatePlantVariableLines(variableCode);
             List<string> lines = view.VariableList.Lines.ToList();
             if (currentReportVariablesLineNumber > lines.Count)
-                lines.Add(variableCode);
+                if (plantVariableLines.Count > 0)
+                    foreach (string line in plantVariableLines)
+                        lines.Add(line);
+                else lines.Add(variableCode);
             else
-                lines.Insert(currentReportVariablesLineNumber, variableCode);
+                if (plantVariableLines.Count > 0)
+                foreach (string line in plantVariableLines)
+                    lines.Insert(currentReportVariablesLineNumber, line);
+            else lines.Insert(currentReportVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
             view.VariableList.Text = modifiedText;
             // Makes the selected line the newly added variable's line.
             view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
         }
+
 
         /// <summary>
         /// Handles the adding of Report Frequency variables to the Report Frequency Variable Editor. 
@@ -825,14 +854,39 @@ namespace UserInterface.Presenters
             var currentReportFrequencyVariablesLineNumber = this.view.EventList.CurrentLineNumber;
             string variableCode = commonReportFrequencyVariables.Rows[reportVariableIndex][2].ToString();
             List<string> lines = view.EventList.Lines.ToList();
+            List<String> plantVariableLines = new();
+            // If variableCode contains '[Plant]' a line is added for each plant that is in the simulation.
+            if (variableCode.Contains("[Plant"))
+                plantVariableLines = CreatePlantVariableLines(variableCode);
             if (currentReportFrequencyVariablesLineNumber > lines.Count)
-                lines.Add(variableCode);
+                if (plantVariableLines.Count > 0)
+                    foreach (string line in plantVariableLines)
+                        lines.Add(line);
+                else lines.Add(variableCode);
             else
-                lines.Insert(currentReportFrequencyVariablesLineNumber, variableCode);
+                if (plantVariableLines.Count > 0)
+                foreach (string line in plantVariableLines)
+                    lines.Insert(currentReportFrequencyVariablesLineNumber, line);
+            else lines.Insert(currentReportFrequencyVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
             view.EventList.Text = modifiedText;
             view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
 
+        }
+
+        /// <summary>
+        /// Creates a list of variable lines for each plant in the simulation.
+        /// </summary>
+        /// <param name="variableCode"></param>
+        /// <returns></returns>
+        private List<string> CreatePlantVariableLines(string variableCode)
+        {
+            List<string> plantCodeLines = new();
+            List<IPlant> zonePlants = report.FindAncestor<Zone>().Plants;
+            string codeStringWithoutPlantSection = variableCode.Split(']')[1];
+            foreach (IPlant plant in zonePlants)
+                plantCodeLines.Add($"[{plant.Name}]{codeStringWithoutPlantSection}");
+            return plantCodeLines;
         }
 
         /// <summary>
