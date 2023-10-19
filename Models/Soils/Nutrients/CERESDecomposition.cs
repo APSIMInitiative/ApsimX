@@ -18,8 +18,8 @@ namespace Models.Functions
         [Link(ByName = true)]
         private IFunction WF = null;
 
-        [Link(Type = LinkType.Ancestor)]
-        private Nutrient nutrient = null;
+        [Link(IsOptional = true, ByName = true, Type = LinkType.Child)]
+        private IFunction CNRF = null;
 
         /// <summary>The potential rate of decomposition</summary>
         [Description("The potential rate of decomposition")]
@@ -29,7 +29,8 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             double rate = PotentialRate * TF.Value(arrayIndex) * WF.Value(arrayIndex);
-            rate *= nutrient.CNRF[arrayIndex];
+            if (CNRF != null)
+                rate *= CNRF.Value(arrayIndex);
             return rate;
         }
     }
