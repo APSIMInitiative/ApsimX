@@ -38,6 +38,8 @@ namespace Models.PMF
             get { return _StorageN; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to StorageN to a negative value");
                 _StorageN = MathUtilities.RoundToZero(value);
             }
         }
@@ -51,6 +53,8 @@ namespace Models.PMF
             get { return _StructuralN; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to StructuralN to a negative value");
                 _StructuralN = MathUtilities.RoundToZero(value);
             }
         }
@@ -64,6 +68,8 @@ namespace Models.PMF
             get { return _StorageWt; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to StorageWt to a negative value");
                 _StorageWt = MathUtilities.RoundToZero(value);
             }
         }
@@ -77,6 +83,8 @@ namespace Models.PMF
             get { return _StructuralWt; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to StructuralWt to a negative value");
                 _StructuralWt = MathUtilities.RoundToZero(value);
             }
         }
@@ -90,6 +98,8 @@ namespace Models.PMF
             get { return _MetabolicWt; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to Metabolic to a negative value");
                 _MetabolicWt = MathUtilities.RoundToZero(value);
             }
         }
@@ -103,6 +113,8 @@ namespace Models.PMF
             get { return _MetabolicN; }
             set
             {
+                if (value < 0)
+                    throw new Exception("Trying to MetabolicN to a negative value");
                 _MetabolicN = MathUtilities.RoundToZero(value);
             }
         }
@@ -195,67 +207,67 @@ namespace Models.PMF
         /// <param name="from">From.</param>
         public Biomass(Biomass from)
         {
-            _StructuralWt = from.StructuralWt;
-            _StorageWt = from.StorageWt;
-            _MetabolicWt = from.MetabolicWt;
-            _StructuralN = from.StructuralN;
-            _StorageN = from.StorageN;
-            _MetabolicN = from.MetabolicN;
+            StructuralWt = from.StructuralWt;
+            StorageWt = from.StorageWt;
+            MetabolicWt = from.MetabolicWt;
+            StructuralN = from.StructuralN;
+            StorageN = from.StorageN;
+            MetabolicN = from.MetabolicN;
         }
 
         /// <summary>Clears this instance.</summary>
         virtual public void Clear()
         {
-            _StructuralWt = 0.0;
-            _StorageWt = 0.0;
-            _MetabolicWt = 0.0;
-            _StructuralN = 0.0;
-            _StorageN = 0.0;
-            _MetabolicN = 0.0;
+            StructuralWt = 0.0;
+            StorageWt = 0.0;
+            MetabolicWt = 0.0;
+            StructuralN = 0.0;
+            StorageN = 0.0;
+            MetabolicN = 0.0;
         }
         /// <summary>Adds the specified a.</summary>
         /// <param name="a">a.</param>
         public void Add(Biomass a)
         {
-            _StructuralWt += a._StructuralWt;
-            _StorageWt += a._StorageWt;
-            _MetabolicWt += a._MetabolicWt;
-            _StructuralN += a._StructuralN;
-            _StorageN += a._StorageN;
-            _MetabolicN += a._MetabolicN;
+            StructuralWt += a._StructuralWt;
+            StorageWt += a._StorageWt;
+            MetabolicWt += a._MetabolicWt;
+            StructuralN += a._StructuralN;
+            StorageN += a._StorageN;
+            MetabolicN += a._MetabolicN;
         }
         /// <summary>Subtracts the specified a.</summary>
         /// <param name="a">a.</param>
         public void Subtract(Biomass a)
         {
-            _StructuralWt -= a._StructuralWt;
-            _StorageWt -= a._StorageWt;
-            _MetabolicWt -= a._MetabolicWt;
-            _StructuralN -= a._StructuralN;
-            _StorageN -= a._StorageN;
-            _MetabolicN -= a._MetabolicN;
+            StructuralWt -= a._StructuralWt;
+            StorageWt -= a._StorageWt;
+            MetabolicWt -= a._MetabolicWt;
+            StructuralN -= a._StructuralN;
+            StorageN -= a._StorageN;
+            MetabolicN -= a._MetabolicN;
         }
         /// <summary>Multiplies a biomass object by a given scalar</summary>
         /// <param name="scalar">a.</param>
         public void Multiply(double scalar)
         {
-            _StructuralWt *= scalar;
-            _StorageWt *= scalar;
-            _MetabolicWt *= scalar;
-            _StructuralN *= scalar;
-            _StorageN *= scalar;
-            _MetabolicN *= scalar;
+            StructuralWt *= scalar;
+            StorageWt *= scalar;
+            MetabolicWt *= scalar;
+            StructuralN *= scalar;
+            StorageN *= scalar;
+            MetabolicN *= scalar;
         }
         /// <summary>Sets to.</summary>
         /// <param name="a">a.</param>
         public void SetTo(Biomass a)
         {
-            _StructuralWt = a.StructuralWt;
-            _StorageWt = a.StorageWt;
-            _MetabolicWt = a.MetabolicWt;
-            _StructuralN = a.StructuralN;
-            _StorageN = a.StorageN;
-            _MetabolicN = a.MetabolicN;
+            StructuralWt = a.StructuralWt;
+            StorageWt = a.StorageWt;
+            MetabolicWt = a.MetabolicWt;
+            StructuralN = a.StructuralN;
+            StorageN = a.StorageN;
+            MetabolicN = a.MetabolicN;
         }
         /// <summary>Implements the operator +.</summary>
         /// <param name="a">a.</param>
