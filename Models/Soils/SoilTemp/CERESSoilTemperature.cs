@@ -199,7 +199,7 @@ namespace Models.Soils
                     throw new Exception("Value for soil_temp is out of range");
             }
 
-            SoilTemperatureChanged(this, EventArgs.Empty);
+            SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private double dlt_temp(double alx)

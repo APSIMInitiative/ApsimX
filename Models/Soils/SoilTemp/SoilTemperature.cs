@@ -402,7 +402,7 @@ namespace Models.Soils.SoilTemp
 
             doProcess();
 
-            SoilTemperatureChanged(this, EventArgs.Empty);
+            SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         } // OnProcess
 
 
