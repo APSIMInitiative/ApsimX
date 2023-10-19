@@ -1,19 +1,16 @@
-﻿namespace UserInterface.Views
-{
-    using Cairo;
-    using Extensions;
-    using EventArguments;
-    using EventArguments.DirectedGraph;
-    using Gtk;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Point = System.Drawing.Point;
-    using APSIM.Interop.Visualisation;
-    using APSIM.Shared.Graphing;
-    using Utility;
-    using Models.Storage;
+﻿using UserInterface.EventArguments;
+using UserInterface.EventArguments.DirectedGraph;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Point = System.Drawing.Point;
+using APSIM.Interop.Visualisation;
+using APSIM.Shared.Graphing;
+using Utility;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -43,6 +40,11 @@
         /// Keeps track of whether the mouse button is currently down.
         /// </summary>
         private bool mouseDown = false;
+
+        /// <summary>
+        /// Keeps track of if an arc is being drawn to screen with the mouse.
+        /// </summary>
+        private bool isDrawingArc = false;
 
         /// <summary>
         /// Drawing area upon which the graph is rendered.

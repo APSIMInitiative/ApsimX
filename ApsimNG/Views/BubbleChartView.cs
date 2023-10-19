@@ -68,6 +68,8 @@ namespace UserInterface.Views
         private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
         private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
 
+        private bool isDrawingArc = false;
+
         /// <summary>
         /// Properties editor.
         /// </summary>
@@ -88,10 +90,7 @@ namespace UserInterface.Views
             mainWidget = (Widget)builder.GetObject("main_widget");
             mainWidget.Destroyed += OnDestroyed;
 
-
             System.Drawing.Rectangle explorererBounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
-
-
             int topOfWindow = explorererBounds.Y;
             int bottomOfWindow = explorererBounds.Y + explorererBounds.Height;
             int heightOfWindow = explorererBounds.Height;
@@ -253,6 +252,17 @@ namespace UserInterface.Views
         /// <param name="objectName">Name of the object to be selected.</param>
         public void Select(string objectName)
         {
+            if (isDrawingArc)
+            {
+                isDrawingArc = false;
+                mainWidget.Window.Cursor = new Cursor(CursorType.Arrow);
+                if (objectName != null)
+                {
+
+                }
+                return;
+            }
+
             if (objectName == null)
             {
                 arcBox.Hide();
@@ -438,20 +448,14 @@ namespace UserInterface.Views
         /// <summary>
         /// Called after the user has selected something in the context menu.
         /// Unselects the currently selected node or arc.
+        /// This is useful when a new node is created from the menu
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
         private void OnContextMenuDeactivated(object sender, EventArgs args)
         {
-            try
-            {
+            if (!isDrawingArc)
                 graphView.UnSelect();
-                //PopulateMenus();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         /// <summary>
@@ -568,7 +572,7 @@ namespace UserInterface.Views
         private void OnAddArc(object sender, EventArgs args)
         {
             mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
-
+            isDrawingArc = true;
 
 
             try
