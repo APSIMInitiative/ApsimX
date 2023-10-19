@@ -3142,7 +3142,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="soft"></param>
         /// <param name="ripe"></param>
-        /// <param name="layer"></param>
+        /// <param name="layer">1-n</param>
         /// <param name="value"></param>
         public void SetSeedMass(int soft, int ripe, int layer, double value)
         {
@@ -3903,7 +3903,7 @@ namespace Models.GrazPlan
         /// <param name="extintc"></param>
         /// <param name="green"></param>
         /// <param name="dry"></param>
-        /// <param name="seed"></param>
+        /// <param name="seed">Array of seeds in layers [0..</param>
         /// <param name="seeddormtime"></param>
         /// <param name="germidx"></param>
         public void ReadStateFromValues(double laggedT, double phen, double flowerlen, double flowertime, double sencidx,
@@ -3920,7 +3920,7 @@ namespace Models.GrazPlan
             string sStatus;
             int iCohort;
             int idx, jdx;
-            uint iLayer;
+            int iLayer;
 
             sPrevUnit = this.MassUnit;
             this.MassUnit = "g/m^2";
@@ -4059,7 +4059,7 @@ namespace Models.GrazPlan
                 {
                     for (iLayer = 0; iLayer < seed.soft_unripe.Length; iLayer++)
                     {
-                        this.SetSeedMass(GrazType.SOFT, GrazType.UNRIPE, (int)iLayer, PastureUtil.ReadMass(seed.soft_unripe[iLayer], "kg/ha"));
+                        this.SetSeedMass(GrazType.SOFT, GrazType.UNRIPE, iLayer+1, PastureUtil.ReadMass(seed.soft_unripe[iLayer], "kg/ha"));
                     }
                 }
 
@@ -4067,7 +4067,7 @@ namespace Models.GrazPlan
                 {
                     for (iLayer = 0; iLayer < seed.soft_ripe.Length; iLayer++)
                     {
-                        this.SetSeedMass(GrazType.SOFT, GrazType.RIPE, (int)iLayer, PastureUtil.ReadMass(seed.soft_ripe[iLayer], "kg/ha"));
+                        this.SetSeedMass(GrazType.SOFT, GrazType.RIPE, iLayer+1, PastureUtil.ReadMass(seed.soft_ripe[iLayer], "kg/ha"));
                     }
                 }
 
@@ -4075,7 +4075,7 @@ namespace Models.GrazPlan
                 {
                     for (iLayer = 0; iLayer < seed.hard_unripe.Length; iLayer++)
                     {
-                        this.SetSeedMass(GrazType.HARD, GrazType.UNRIPE, (int)iLayer, PastureUtil.ReadMass(seed.hard_unripe[iLayer], "kg/ha"));
+                        this.SetSeedMass(GrazType.HARD, GrazType.UNRIPE, iLayer+1, PastureUtil.ReadMass(seed.hard_unripe[iLayer], "kg/ha"));
                     }
                 }
 
@@ -4083,7 +4083,7 @@ namespace Models.GrazPlan
                 {
                     for (iLayer = 0; iLayer < seed.hard_ripe.Length; iLayer++)
                     {
-                        this.SetSeedMass(GrazType.HARD, GrazType.RIPE, (int)iLayer, PastureUtil.ReadMass(seed.hard_ripe[iLayer], "kg/ha"));
+                        this.SetSeedMass(GrazType.HARD, GrazType.RIPE, iLayer+1, PastureUtil.ReadMass(seed.hard_ripe[iLayer], "kg/ha"));
                     }
                 }
 
