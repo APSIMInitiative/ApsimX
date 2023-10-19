@@ -128,8 +128,23 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    Property result = new Property(obj, property);
-                    propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
+                    // determine where to link to the property or use a substitute sub-property for a class-based property.
+                    Property result;
+                    string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
+                    if (subPropertyName.Any())
+                    {
+                        object subObject = property.GetValue(obj);
+                        subObject ??= Activator.CreateInstance(property.PropertyType);
+                        PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
+
+                        result = new Property(subObject, subProperty);
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
+                    }
+                    else
+                    {
+                        result = new Property(obj, property);
+                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
+                    }
                     properties.Add(result);
                 }
             }

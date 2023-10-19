@@ -6,6 +6,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.WaterModel
@@ -44,7 +45,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, ITabularData
+    public class WaterBalance : Model, ISoilWater, IGridModel
     {
         private Physical physical;
         private HyProps hyprops = new HyProps();
@@ -903,14 +904,21 @@ namespace Models.WaterModel
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new TabularData(Name, new TabularData.Column[]
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
-                new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
-            });
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
+                columns.Add(new GridTableColumn("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
+            }
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

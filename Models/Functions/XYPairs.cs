@@ -5,6 +5,9 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
+using Models.Utilities;
+using Newtonsoft.Json;
 using Table = APSIM.Shared.Documentation.Table;
 
 namespace Models.Functions
@@ -17,7 +20,7 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.XYPairsView")]
     [PresenterName("UserInterface.Presenters.XYPairsPresenter")]
     [Description("Returns a y value from the specified xy maxrix corresponding to the current value of the Xproperty")]
-    public class XYPairs : Model, IFunction, IIndexedFunction
+    public class XYPairs : Model, IFunction, IIndexedFunction, IGridModel
     {
         /// <summary>Gets or sets the x.</summary>
         [Description("X")]
@@ -30,6 +33,21 @@ namespace Models.Functions
         /// <summary>The name of the x variable. Used in documentation.</summary>
         [Description("Name of X variable (for documentation)")]
         public string XVariableName { get; set; }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                var columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("X", new VariableProperty(this, GetType().GetProperty("X"))));
+                columns.Add(new GridTableColumn("Y", new VariableProperty(this, GetType().GetProperty("Y"))));
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+                return tables;
+            }
+        }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
