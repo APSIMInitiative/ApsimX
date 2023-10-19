@@ -127,245 +127,231 @@
   },
   {
     "node": "SurfaceOrganicMatter",
-    "description": "Surface organic matter cover",
+    "description": "Cover",
     "code": "[SurfaceOrganicMatter].Cover",
     "type": "double",
     "units": "0-1"
   },
   {
     "node": "SurfaceOrganicMatter",
-    "description": "Surface organic matter weight",
+    "description": "Weight",
     "code": "[SurfaceOrganicMatter].Wt",
     "type": "double",
     "units": "kg/ha"
   },
   {
-    "node": "Soil",
-    "description": "Soil water content",
+    "node": "Water",
+    "description": "Content",
     "code": "[Soil].Water.MM",
     "type": "Double[]",
     "units": "mm"
   },
   {
-    "node": "Soil",
-    "description": "Soil water content profile",
-    "code": "sum([Soil].Water.MM) as ProfileWater",
-    "type": "double",
-    "units": "mm"
-  },
-  {
-    "node": "Soil",
-    "description": "Soil water content volumetric",
+    "node": "Water",
+    "description": "Content (volumetric)",
     "code": "[Soil].Water.Volumetric",
     "type": "Double[]",
     "units": "mm/mm"
   },
   {
+    "node": "Soil",
+    "description": "PAW (SW-LL15)",
+    "code": "[Soil].Water.PAWmm",
+    "type": "Double[]",
+    "units": "mm"
+  },
+  {
+    "node": "Soil",
+    "description": "PAW (volumetric: SW-LL15)",
+    "code": "[Soil].Water.PAW",
+    "type": "Double[]",
+    "units": "mm/mm"
+  },
+  {
     "node": "ISoilWater",
-    "description": "Soil water evaporation potential",
+    "description": "Evaporation potential",
     "code": "[ISoilWater].Eos",
     "type": "double",
     "units": "mm"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil water evaporation actual",
+    "description": "Evaporation actual",
     "code": "[ISoilWater].Es",
     "type": "double",
     "units": "mm"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil water evapotranspiration potential",
+    "description": "Evapotranspiration potential",
     "code": "[ISoilWater].Eo",
     "type": "double",
     "units": "mm"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil water runoff",
+    "description": "Runoff",
     "code": "[ISoilWater].Runoff",
     "type": "double",
     "units": "mm"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil water infiltration",
+    "description": "Infiltration",
     "code": "[ISoilWater].Infiltration",
     "type": "double",
     "units": "mm"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil water drainage",
+    "description": "Drainage",
     "code": "[ISoilWater].Drainage",
     "type": "double",
     "units": "mm"
   },
   {
-    "node": "Soil",
-    "description": "Soil water potential",
-    "code": "[Soil].Water.Potential",
-    "type": "Double[]",
-    "units": "kPa"
-  },
-  {
     "node": "ISoilWater",
-    "description": "Soil NO3 leaching",
+    "description": "Leaching (NO3)",
     "code": "[ISoilWater].LeachNO3",
     "type": "double",
     "units": "kg/ha"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil NH4 leaching",
+    "description": "Leaching (NH4)",
     "code": "[ISoilWater].LeachNH4",
     "type": "double",
     "units": "kg/ha"
   },
   {
     "node": "ISoilWater",
-    "description": "Soil CL leaching",
+    "description": "Leaching (Cl)",
     "code": "[ISoilWater].LeachCl",
     "type": "double",
     "units": "kg/ha"
   },
   {
-    "node": "Soil",
-    "description": "Soil plant available water SW-LL15",
-    "code": "[Soil].Water.PAW",
-    "type": "Double[]",
-    "units": "mm/mm"
-  },
-  {
-    "node": "Soil",
-    "description": "Soil plant available water SW-LL15",
-    "code": "[Soil].Water.PAWmm",
-    "type": "Double[]",
-    "units": "mm"
-  },
-  {
     "node": "Physical",
-    "description": "Soil plant available water CAPACITY (DUL-LL15)",
-    "code": "[Physical].PAWC",
-    "type": "Double[]",
-    "units": "mm/mm"
-  },
-  {
-    "node": "Physical",
-    "description": "Soil plant available water CAPACITY (DUL-LL15)",
+    "description": "PAWC (DUL-LL15)",
     "code": "[Physical].PAWCmm",
     "type": "Double[]",
     "units": "mm"
   },
   {
+    "node": "Physical",
+    "description": "PAWC (volumetric: DUL-LL15)",
+    "code": "[Physical].PAWC",
+    "type": "Double[]",
+    "units": "mm/mm"
+  },
+  {
     "node": "OrganicPool",
-    "description": "Soil carbon",
+    "description": "Carbon",
     "code": "[OrganicPool].C",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "OrganicPool",
-    "description": "Soil carbon lost to the atmosphere",
+    "description": "Carbon lost to the atmosphere",
     "code": "[OrganicPool].Catm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "NFlow",
-    "description": "Soil nitrogen lost to the atmosphere",
+    "description": "Nitrogen lost to the atmosphere",
     "code": "[NFlow].Natm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "NFlow",
-    "description": "Soil N2O lost to the atmosphere",
+    "description": "N2O lost to the atmosphere",
     "code": "[NFlow].N2Oatm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Denitrification",
-    "description": "Soil denitrified nitrogen (N flow from NO3)",
+    "description": "Denitrified nitrogen",
     "code": "[Denitrification].Value + [Denitrification].Natm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
-    "node": "Denitrification",
-    "description": "Soil nitrified nitrogen (from NH4 to either NO3 or N2O)",
+    "node": "Nitrification",
+    "description": "Nitrified nitrogen",
     "code": "[Nitrification].Value + [Nitrification].Natm",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Hydrolysis",
-    "description": "Soil urea converted to NH4 via hydrolysis",
+    "description": "Hydrolysis",
     "code": "[Hydrolysis].Value",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "OrganicFlow",
-    "description": "Soil net nitrogen mineralisation in each soil layer",
+    "description": "Mineralisation",
     "code": "[OrganicFlow].MineralisedN",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "OrganicPool",
-    "description": "Soil organic carbon, organic and mineral",
-    "code": "[OrganicPool].C",
+    "description": "Organic carbon",
+    "code": "sum([OrganicPool].C) as OrganicC",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "OrganicPool",
-    "description": "Soil organic nitrogen, organic and mineral",
-    "code": "[OrganicPool].N",
+    "description": "Organic nitrogen",
+    "code": "sum([OrganicPool].N) as OrganicN",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "NO3,NH4,Urea",
-    "description": "Soil mineral nitrogen",
-    "code": "[NO3].kgha + [NH4].kgha + [Urea].kgha as MineralN",
+    "description": "Mineral nitrogen",
+    "code": "sum([NO3].kgha + [NH4].kgha + [Urea].kgha) as MineralN",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "OrganicPool,Urea,NO3,NH4",
-    "description": "Soil total nitrogen (organic + mineral)",
-    "code": "[OrganicPool].N + [Urea].kgha + [NO3].kgha + [NH4].kgha as TotalNitrogen",
+    "description": "Total nitrogen",
+    "code": "sum([OrganicPool].N + [Urea].kgha + [NO3].kgha + [NH4].kgha) as TotalNitrogen",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "NO3",
-    "description": "Soil NO3",
+    "description": "NO3",
     "code": "[NO3].kgha",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "NH4",
-    "description": "Soil NH4",
+    "description": "NH4",
     "code": "[NH4].kgha",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Urea",
-    "description": "Soil Urea",
+    "description": "Urea",
     "code": "[Urea].kgha",
     "type": "Double[]",
     "units": "kg/ha"
   },
   {
     "node": "Cl",
-    "description": "Soil Cl",
+    "description": "Cl",
     "code": "[Cl].kgha",
     "type": "Double[]",
     "units": "kg/ha"
