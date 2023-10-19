@@ -326,22 +326,25 @@ namespace Models.Core.ConfigFile
                 if (lineString.Contains('='))
                 {
                     string correctedLine = "";
-                    lineSections = lineString.Split('=').ToList();
+                    char[] delimiters = new char[] { '=' };
+                    lineSections = lineString.Split(delimiters).ToList();
                     foreach (string section in lineSections)
                     {
                         string fixedSection;
                         if (section.Contains(' '))
                         {
                             string trimmedSection = section.TrimEnd();
-                            int indexOfSpace = trimmedSection.IndexOf(' ');
-                            if (indexOfSpace != -1)
-                            {
-                                string tempSection = trimmedSection.Insert(indexOfSpace - 1, "@");
-                                int newIndexOfSpace = tempSection.IndexOf(" ");
-                                fixedSection = tempSection.Remove(indexOfSpace, 1);
-                                correctedLine += fixedSection;
-                            }
-                            else correctedLine += trimmedSection;
+                            //int indexOfSpace = trimmedSection.IndexOf(' ');
+                            //if (indexOfSpace != -1)
+                            //{
+                            //    string tempSection = trimmedSection.Insert(indexOfSpace, "@");
+                            //    int newIndexOfSpace = tempSection.IndexOf(" ");
+                            //    fixedSection = tempSection.Remove(indexOfSpace, 1);
+                            //    correctedLine += fixedSection;
+                            //}
+                            //else correctedLine += trimmedSection;
+                            fixedSection = trimmedSection.Replace(' ', '@');
+                            correctedLine += fixedSection;
                         }
                         else if (section == lineSections.Last())
                             correctedLine += section;
