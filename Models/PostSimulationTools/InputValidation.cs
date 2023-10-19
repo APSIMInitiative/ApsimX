@@ -28,6 +28,10 @@ namespace Models.PostSimulationTools
             /// <summary></summary>
             public string ColumnName;
             /// <summary></summary>
+            public string InputName;
+            /// <summary></summary>
+            public string TableName;
+            /// <summary></summary>
             public string Message;
             /// <summary></summary>
             public bool Error;
@@ -52,11 +56,15 @@ namespace Models.PostSimulationTools
                 List<GridTableColumn> columns;
 
                 columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("InputName", new VariableProperty(this, GetType().GetProperty("Errors"))));
+                columns.Add(new GridTableColumn("TableName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("ColumnName", new VariableProperty(this, GetType().GetProperty("Successes"))));
                 columns.Add(new GridTableColumn("Message", new VariableProperty(this, GetType().GetProperty("Successes"))));
                 tables.Add(new GridTable("Successes", columns, this));
 
                 columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("InputName", new VariableProperty(this, GetType().GetProperty("Errors"))));
+                columns.Add(new GridTableColumn("TableName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("ColumnName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("Message", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 tables.Add(new GridTable("Errors", columns, this));
@@ -85,20 +93,28 @@ namespace Models.PostSimulationTools
         public void Run()
         {
             List<string> tableNames = new List<string>();
+            List<string> inputNames = new List<string>();
             Model model = dataStore as Model;
             List<ExcelInput> excelInputs = model.FindAllChildren<ExcelInput>().ToList();
 
             Simulations sims = model.FindAncestor<Simulations>();
 
             foreach (ExcelInput input in excelInputs)
+            {
                 foreach (string name in input.SheetNames)
+                {
                     tableNames.Add(name);
+                    inputNames.Add(input.Name);
+                }
+            }
 
             List<ValidationResult> newErrors = new List<ValidationResult>();
             List<ValidationResult> newGood = new List<ValidationResult>();
             for (int i = 0; i < tableNames.Count; i++)
             {
                 string tableName = tableNames[i];
+                string inputName = inputNames[i];
+
                 List<string> columnNames = dataStore.Reader.ColumnNames(tableName);
                 for (int j = 0; j < columnNames.Count; j++)
                 {
@@ -106,6 +122,8 @@ namespace Models.PostSimulationTools
                     if (NameIsAPSIMFormat(columnName))
                     {
                         ValidationResult result = NameMatchesAPSIMModel(columnName, sims);
+                        result.TableName = tableName;
+                        result.InputName = inputName;
                         if (result.Error)
                             newErrors.Add(result);
                         else
@@ -115,7 +133,9 @@ namespace Models.PostSimulationTools
                     {
                         ValidationResult result = new ValidationResult();
                         result.ColumnName = columnName;
-                        result.Message = $"{columnName} is not considered an APSIM variable by this validation.";
+                        result.TableName = tableName;
+                        result.InputName = inputName;
+                        result.Message = $"{columnName} is not considered an APSIM variable";
                         result.Error = false;
                         newErrors.Add(result);
                     }
