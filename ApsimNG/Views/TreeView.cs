@@ -104,6 +104,7 @@ namespace UserInterface.Views
             treeview1.RowActivated += OnRowActivated;
             treeview1.FocusInEvent += OnTreeGainFocus;
             treeview1.FocusOutEvent += OnTreeLoseFocus;
+            treeview1.RowExpanded += OnRowExpanded;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -772,6 +773,35 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// A row in the tree view has been expanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowExpanded(object sender, RowExpandedArgs e)
+        {
+            try
+            {
+                TreePath path = e.Path.Copy();
+                path.Down();
+                bool stop = false;
+                while (!stop)
+                {
+                    path.Next();
+                    treeview1.Model.GetIter(out TreeIter iter, path);
+                    var value = treeview1.Model.GetValue(iter, 0);
+                    if (value == null)
+                        stop = true;
+                }
+                path.Prev();
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -986,6 +1016,7 @@ namespace UserInterface.Views
         {
             try
             {
+                treeview1.CursorChanged -= OnAfterSelect;
                 nodePathBeforeRename = SelectedNode;
                 // TreeView.ContextMenuStrip = null;
                 // e.CancelEdit = false;
@@ -1016,6 +1047,7 @@ namespace UserInterface.Views
                     if (!args.CancelEdit)
                         previouslySelectedNodePath = args.NodePath;
                 }
+                treeview1.CursorChanged += OnAfterSelect;
             }
             catch (Exception err)
             {

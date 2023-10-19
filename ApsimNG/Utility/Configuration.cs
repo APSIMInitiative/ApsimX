@@ -45,19 +45,19 @@ namespace Utility
 
         /// <summary>The previous height of the status panel</summary>
         /// <remarks>Percentage 0-100</remarks>
-        public int StatusPanelHeight { get; set; }
+        public double StatusPanelHeight { get; set; }
 
         /// <summary>
         /// The position of the splitter between the variables
         /// and frequency text editors in the report UI.
         /// </summary>
-        public int ReportSplitterPosition { get; set; }
+        public double ReportSplitterPosition { get; set; }
 
         /// <summary>
         /// The position of the splitter between the variables/event text editors
         /// and the common report/event ListViews.
         /// </summary>
-        public int ReportSplitterVerticalPosition { get; set; }
+        public double ReportSplitterVerticalPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
