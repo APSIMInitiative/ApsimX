@@ -370,9 +370,8 @@ namespace Models.PMF.Organs
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-
-            if (dryMatter.Reallocation > StartLive.StorageWt)
-                throw new Exception("Problem Here");
+            
+            
             // get DM lost by respiration (growth respiration)
             // GrowthRespiration with unit CO2 
             // GrowthRespiration is calculated as 
@@ -428,11 +427,11 @@ namespace Models.PMF.Organs
             // now move the remaining senescing material to the dead pool
             Biomass Loss = new Biomass();
             Loss.StructuralN = StartLive.StructuralN * senescedFrac;
-            Loss.StorageN = Math.Max(StartLive.StorageN * senescedFrac - StorageNReallocation,Live.StorageN);
-            Loss.MetabolicN = Math.Max(StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation),Live.MetabolicN);
+            Loss.StorageN = StartLive.StorageN * senescedFrac - StorageNReallocation;
+            Loss.MetabolicN = StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation);
             Loss.StructuralWt = StartLive.StructuralWt * senescedFrac;
-            Loss.MetabolicWt = Math.Max(StartLive.MetabolicWt * senescedFrac,Live.MetabolicWt);
-            Loss.StorageWt = Math.Max(StartLive.StorageWt * senescedFrac,Live.StorageWt);
+            Loss.MetabolicWt = StartLive.MetabolicWt * senescedFrac;
+            Loss.StorageWt = StartLive.StorageWt * senescedFrac;
             Live.Subtract(Loss);
             Dead.Add(Loss);
             Senesced.Add(Loss);
@@ -544,8 +543,6 @@ namespace Models.PMF.Organs
                 MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * mRrate;
                 Live.MetabolicWt *= (1 - mRrate);
                 Live.StorageWt *= (1 - mRrate);
-
-
             }
         }
 

@@ -54,11 +54,11 @@ namespace Models.PMF
 
             double storageRetranslocation = Math.Min(genOrgan.Live.StorageN, nitrogen.Retranslocation);
             genOrgan.Live.StorageN -= storageRetranslocation;
-            //genOrgan.Allocated.StorageN -= storageRetranslocation;
+            genOrgan.Allocated.StorageN -= storageRetranslocation;
 
             double metabolicRetranslocation = nitrogen.Retranslocation - storageRetranslocation;
             genOrgan.Live.MetabolicN -= metabolicRetranslocation;
-            //genOrgan.Allocated.MetabolicN -= metabolicRetranslocation;
+            genOrgan.Allocated.MetabolicN -= metabolicRetranslocation;
 
         }
 

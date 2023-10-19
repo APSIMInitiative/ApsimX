@@ -1120,7 +1120,7 @@ namespace Models.PMF.Organs
             double storageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             Live.StorageN -= storageNRetranslocation;
             Live.MetabolicN -= (nitrogen.Retranslocation - storageNRetranslocation);
-            //Allocated.StorageN -= nitrogen.Retranslocation;
+            Allocated.StorageN -= nitrogen.Retranslocation;
 
             // Reallocation
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
