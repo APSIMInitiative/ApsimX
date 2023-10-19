@@ -33,8 +33,6 @@ namespace Models.CLEM
     {
         [Link]
         private readonly Summary summary = null;
-        [Link]
-        private readonly IClock clock = null;
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -58,22 +56,6 @@ namespace Models.CLEM
         public int ClimateRegion { get; set; }
 
         /// <summary>
-        /// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(12)]
-        [Description("Ecological indicators calculation interval (in months, 1 monthly, 12 annual)")]
-        [Required, GreaterThanValue(0)]
-        public int EcologicalIndicatorsCalculationInterval { get; set; }
-
-        /// <summary>
-        /// End of month to calculate ecological indicators
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(7)]
-        [Description("End of first month to calculate ecological indicators")]
-        [Required, Month]
-        public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
-
-        /// <summary>
         /// Include in overall Descriptive Summary (HTML)
         /// </summary>
         [Description("Include in simulation descriptive summary (HTML)")]
@@ -93,12 +75,6 @@ namespace Models.CLEM
         [Description("Use component name as TransactionCategory")]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool UseModelNameAsTransactionCategory { get; set; }
-
-        /// <summary>
-        /// Month this cecological indicators calculation is next due.
-        /// </summary>
-        [JsonIgnore]
-        public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
         // ignore zone base class properties
 
@@ -170,26 +146,6 @@ namespace Models.CLEM
             }
         }
 
-
-        /// <summary>
-        /// Method to determine if this is the month to calculate ecological indicators
-        /// </summary>
-        /// <returns></returns>
-        public bool IsEcologicalIndicatorsCalculationMonth()
-        {
-            return EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
-        }
-
-        /// <summary>Data stores to clear at start of month</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
-        {
-            if (IsEcologicalIndicatorsCalculationMonth())
-                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-        }
-
         #region validation
 
         /// <summary>
@@ -200,40 +156,38 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (clock.StartDate.ToShortDateString() == "1/01/0001")
+
+            // Check that CLEMEvents component is present under Clock
+            int componentCount = this.FindAllChildren<CLEMEvents>().Count();
+            if (componentCount == 0)
             {
-                string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("Invalid start date {0}", clock.StartDate.ToShortDateString()), memberNames));
+                string[] memberNames = new string[] { "CLEM.Resources" };
+                results.Add(new ValidationResult("A simulation using CLEM must contain a CLEMEvents component as a child of Clock", memberNames));
             }
-            if (clock.EndDate.ToShortDateString() == "1/01/0001")
+            if (componentCount > 1)
             {
-                string[] memberNames = new string[] { "Clock.EndDate" };
-                results.Add(new ValidationResult(String.Format("Invalid end date {0}", clock.EndDate.ToShortDateString()), memberNames));
-            }
-            if (clock.StartDate.Day != 1)
-            {
-                string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", clock.StartDate.ToShortDateString()), memberNames));
+                string[] memberNames = new string[] { "CLEM.Resources" };
+                results.Add(new ValidationResult("CLEM simulations must contain only one (1) CLEMEvents component as a child of the single APSIM Clock", memberNames));
             }
             // check that one resources and on activities are present.
-            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
-            if (holderCount == 0)
+            componentCount = this.FindAllChildren<ResourcesHolder>().Count();
+            if (componentCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain a Resources Holder to manage resources", memberNames));
             }
-            if (holderCount > 1)
+            if (componentCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
-            if (holderCount == 0)
+            componentCount = this.FindAllChildren<ActivitiesHolder>().Count();
+            if (componentCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain an Activities Holder to manage activities", memberNames));
             }
-            if (holderCount > 1)
+            if (componentCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Activities Holder to manage activities", memberNames));
@@ -257,23 +211,6 @@ namespace Models.CLEM
             // not all errors will be reported in validation so perform in two steps
             Validate(this, "", this, summary);
             ReportInvalidParameters(this);
-
-            if (clock.StartDate.Year > 1) // avoid checking if clock not set.
-            {
-                if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
-                {
-                    DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
-                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
-                    EcologicalIndicatorsNextDueDate = trackDate;
-                }
-                else
-                {
-                    EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                    while (clock.StartDate > EcologicalIndicatorsNextDueDate)
-                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-                }
-            }
         }
 
         /// <summary>
@@ -291,7 +228,6 @@ namespace Models.CLEM
 
             // get all other errors
             ReportErrors(model, summary.GetMessages(simulation.Name)?.Where(a => a.Severity == MessageType.Error && !a.Text.StartsWith("Invalid parameter ")));
-
         }
 
         /// <summary>
@@ -314,7 +250,6 @@ namespace Models.CLEM
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
-
 
         /// <summary>
         /// Internal method to iterate through all children in CLEM and report any parameter setting errors
@@ -515,16 +450,16 @@ namespace Models.CLEM
                     }
                 }
 
-                if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Ecological indicators will be calculated every ");
-                    if (EcologicalIndicatorsCalculationInterval <= 0)
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span> months");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval == 1) ? "" : "s")}");
-                    htmlWriter.Write($" starting at the end of {EcologicalIndicatorsCalculationMonth}</div>");
-                }
+                //if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
+                //{
+                //    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                //    htmlWriter.Write("Ecological indicators will be calculated every ");
+                //    if (EcologicalIndicatorsCalculationInterval <= 0)
+                //        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span> months");
+                //    else
+                //        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval == 1) ? "" : "s")}");
+                //    htmlWriter.Write($" starting at the end of {EcologicalIndicatorsCalculationMonth}</div>");
+                //}
 
                 if (AutoCreateDescriptiveSummary)
                 {

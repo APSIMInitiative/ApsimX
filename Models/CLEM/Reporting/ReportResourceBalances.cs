@@ -211,7 +211,7 @@ namespace Models.CLEM.Reporting
             VariableNames = variableNames.ToArray();
             // Subscribe to events.
             if (EventNames == null || !EventNames.Where(a => a.Trim() != "").Any())
-                EventNames = new string[] { "[Clock].CLEMFinalizeTimeStep" };
+                EventNames = new string[] { "[CLEMEvents].CLEMFinalizeTimeStep" };
 
             SubscribeToEvents();
         }

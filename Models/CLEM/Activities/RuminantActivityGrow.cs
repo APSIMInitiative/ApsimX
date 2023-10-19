@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -164,8 +164,8 @@ namespace Models.CLEM.Activities
                 if (MathUtilities.IsLessThan(ind.MilkIntake, ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion))
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
 
-                ind.MilkIntake *= 30.4;
-                ind.MilkPotentialIntake *= 30.4;
+                ind.MilkIntake *= events.Interval;
+                ind.MilkPotentialIntake *= events.Interval;
             }
             else
             {
@@ -221,7 +221,7 @@ namespace Models.CLEM.Activities
 
             }
             // get monthly intake
-            potentialIntake *= 30.4;
+            potentialIntake *= events.Interval;
             ind.PotentialIntake = potentialIntake;
         }
 
@@ -258,7 +258,7 @@ namespace Models.CLEM.Activities
 
             // set milk production in lactating females for consumption.
             ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
-            ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
+            ind.MilkCurrentlyAvailable = ind.MilkProduction * events.Interval;
 
             // returns the energy required for milk production
 
@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = ruminantHerd.Herd;
 
-            int cmonth = clock.Today.Month;
+            int cmonth = events.Clock.Today.Month;
 
             // grow individuals
 
@@ -381,7 +381,7 @@ namespace Models.CLEM.Activities
                 if (methaneEmissions != null)
                 {
                     // g per day -> total kg
-                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed, TransactionCategory);
+                    methaneEmissions.Add(totalMethane * events.Interval / 1000, this, breed, TransactionCategory);
                 }
             }
         }
@@ -417,7 +417,7 @@ namespace Models.CLEM.Activities
             // all energy calculations are per day and multiplied at end to give monthly weight gain
 
             // ind.MetabolicIntake is the inake received adjusted by any crude protein shortfall in AnimalWeightGain()
-            double intakeDaily = ind.MetabolicIntake / 30.4;
+            double intakeDaily = ind.MetabolicIntake / events.Interval;
 
             // Sme 1 for females and castrates
             double sme = 1;
@@ -442,11 +442,11 @@ namespace Models.CLEM.Activities
 
                 // calculate engergy and growth from milk intake
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable * 30.4);
+                ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable * events.Interval);
 
                 if (ind.Mother != null)
                     ind.Mother.TakeMilk(ind.MilkIntake, MilkUseReason.Suckling);
-                double milkIntakeDaily = ind.MilkIntake / 30.4;
+                double milkIntakeDaily = ind.MilkIntake / events.Intake;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
@@ -507,7 +507,7 @@ namespace Models.CLEM.Activities
                         // Potential birth weight
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
-                        double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
+                        double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * events.Interval;
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
                     }
@@ -516,7 +516,7 @@ namespace Models.CLEM.Activities
                 //TODO: add draft individual energy requirement
 
                 // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
-                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
+                double maintenanceAge = Math.Min(ind.Age * events.Interval, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
 
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
@@ -546,7 +546,7 @@ namespace Models.CLEM.Activities
                     // Reference: from Hirata model
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * km * ind.EnergyBalance / (0.8 * energyEmptyBodyGain);
             }
-            energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
+            energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
             ind.PreviousWeight = ind.Weight;
 
