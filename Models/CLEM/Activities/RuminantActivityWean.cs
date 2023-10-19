@@ -47,9 +47,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Weaning age (months)
         /// </summary>
-        [Description("Weaning age (months)")]
-        [Required, GreaterThanEqualValue(0)]
-        public double WeaningAge { get; set; }
+        [Description("Weaning age")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+
+        public AgeSpecifier WeaningAge { get; set; }
 
         /// <summary>
         /// Weaning weight (kg)
@@ -152,7 +155,7 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
-            numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
+            numberToDo = uniqueIndividuals.Where(a => (a.AgeInDays >= WeaningAge.InDays && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -213,11 +216,11 @@ namespace Models.CLEM.Activities
                     switch (Style)
                     {
                         case WeaningStyle.AgeOrWeight:
-                            readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
-                            reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
+                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays || ind.Weight >= WeaningWeight);
+                            reason = (ind.AgeInDays >= WeaningAge.InDays) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
                             break;
                         case WeaningStyle.AgeOnly:
-                            readyToWean = (ind.Age >= WeaningAge);
+                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays);
                             reason = "Age";
                             break;
                         case WeaningStyle.WeightOnly:
@@ -228,7 +231,7 @@ namespace Models.CLEM.Activities
 
                     if (readyToWean)
                     {
-                        ind.Wean(true, reason);
+                        ind.Wean(true, reason, clock.Today);
 
                         // leave where weaned or move to specified location
                         if (GrazeFoodStoreName != "Leave at current location")
@@ -238,7 +241,7 @@ namespace Models.CLEM.Activities
                                 ind.Location = grazeStore;
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, clock.Today, - 1, 999) { ID = ind.MotherID }, clock.Today, ind);
                         ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;
@@ -283,7 +286,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
                 {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge)} months");
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge.InDays)} days");
                     if (Style == WeaningStyle.AgeOrWeight)
                         htmlWriter.Write(" or  ");
                 }

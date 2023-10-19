@@ -992,6 +992,37 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Types of time spans available for Ruminant
+    /// </summary>
+    public enum RuminantTimeSpanTypes
+    {
+        /// <summary>
+        /// Time since individual's birth 
+        /// </summary>
+        Birth,
+        /// <summary>
+        /// Time since weaning
+        /// </summary>
+        Weaned,
+        /// <summary>
+        /// Entered simulation
+        /// </summary>
+        EnteredSimulation,
+        /// <summary>
+        /// Purchased
+        /// </summary>
+        Purchased,
+        /// <summary>
+        /// Time since last breeder conception
+        /// </summary>
+        Conceived,
+        /// <summary>
+        /// Time since last breeder birth
+        /// </summary>
+        GaveBirth
+    }
+
+    /// <summary>
     /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]

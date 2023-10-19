@@ -50,12 +50,12 @@ namespace Models.CLEM.Resources
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
         /// <returns>A list of ruminants</returns>
-        public List<Ruminant> CreateIndividuals()
+        public List<Ruminant> CreateIndividuals(DateTime date)
         {
             List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
-                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList()));
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList(), date));
 
             return individuals;
         }

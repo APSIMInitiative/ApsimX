@@ -26,11 +26,17 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
-        /// Age (Months)
+        /// Initial age
         /// </summary>
-        [Description("Age (months)")]
-        [Units("Months")]
-        [Required, GreaterThanEqualValue(0)]
+        [Description("Age")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier AgeDetails { get; set; }
+
+        /// <summary>
+        /// Current age
+        /// </summary>
         public int Age { get; set; }
 
         /// <summary>

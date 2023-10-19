@@ -62,16 +62,20 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age when individuals become adults for feeding and breeding rates
         /// </summary>
-        [Description("Age when adult (months)")]
-        [Required]
-        public double AgeWhenAdult { get; set; }
+        [Description("Age when adult")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier AgeWhenAdult { get; set; }
 
         /// <summary>
         /// Age when individuals die
         /// </summary>
-        [Description("Maximum age before death (months)")]
-        [Required]
-        public double MaxAge { get; set; }
+        [Description("Maximum age before death")]
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier MaxAge { get; set; }
 
         /// <summary>
         /// Initialise resource type

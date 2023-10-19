@@ -428,15 +428,28 @@ namespace Models.CLEM
             "Invalid number of values supplied";
 
         /// <summary>
-        /// 
+        /// Test for set number of itesma in array
         /// </summary>
         /// <param name="arrayItems"></param>
         public ArrayItemCountAttribute(int arrayItems)
         {
-            numberOfArrayItems = arrayItems;
+            minNumberOfArrayItems = arrayItems;
+            maxNumberOfArrayItems = arrayItems;
         }
 
-        private int numberOfArrayItems { get; set; }
+        /// <summary>
+        /// Test for set number of itesma in array
+        /// </summary>
+        /// <param name="minArrayItems">The minimum number of array items allowed</param>
+        /// <param name="maxArrayItems">The maximum number of array items allowed</param>
+        public ArrayItemCountAttribute(int minArrayItems, int maxArrayItems)
+        {
+            minNumberOfArrayItems = minArrayItems;
+            maxNumberOfArrayItems = maxArrayItems;
+        }
+
+        private int minNumberOfArrayItems { get; set; }
+        private int maxNumberOfArrayItems { get; set; }
 
         /// <summary>
         /// 
@@ -446,12 +459,19 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            DefaultErrorMessage += $" (expecting {numberOfArrayItems} values)";
+            if (minNumberOfArrayItems == maxNumberOfArrayItems)
+            {
+                DefaultErrorMessage += $" (expecting {minNumberOfArrayItems} values)";
+            }
+            else
+            {
+                DefaultErrorMessage += $" (expecting between {minNumberOfArrayItems} and {maxNumberOfArrayItems} values)";
+            }
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if (value.GetType().IsArray)
             {
-                if ((value as Array).Length == numberOfArrayItems)
+                if ((value as Array).Length >= minNumberOfArrayItems && (value as Array).Length <= maxNumberOfArrayItems)
                     return ValidationResult.Success;
                 else
                     return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);

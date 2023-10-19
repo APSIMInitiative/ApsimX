@@ -226,7 +226,7 @@ namespace Models.CLEM.Reporting
             // if not valid report NAN that is filtered out in calculations below 
             var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
-                (a.Sex == Sex.Female && a.Age - (a as RuminantFemale).AgeAtLastConception <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
+                (a.Sex == Sex.Female && a.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
             if (values.Count() == 0)
                 return listStatistics;

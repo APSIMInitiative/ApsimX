@@ -27,9 +27,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number of months pregnant
         /// </summary>
-        [Description("Number of months pregnant")]
+        [Description("Number of days pregnant")]
         [GreaterThanValue(0)]
-        public int NumberMonthsPregnant { get; set; }
+        public int NumberDaysPregnant { get; set; }
 
         /// <summary>
         /// constructor
@@ -46,14 +46,14 @@ namespace Models.CLEM.Resources
         public void SetConceptionDetails(RuminantFemale female)
         {
             // if female can breed
-            if (NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
+            if (NumberDaysPregnant < female.BreedParams.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.BreedParams.MinimumAge1stMating.InDays)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
                 if (offspring > 0)
                 {
-                    female.UpdateConceptionDetails(offspring, 1, -1 * NumberMonthsPregnant);
+                    female.UpdateConceptionDetails(offspring, 1, -1 * NumberDaysPregnant, clock.Today);
                     // report conception status changed
-                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddMonths(-1 * NumberMonthsPregnant)));
+                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddDays(-1 * NumberDaysPregnant)));
                 }
             }
         }
@@ -81,13 +81,13 @@ namespace Models.CLEM.Resources
 
                     if (ruminantType != null)
                     {
-                        if (NumberMonthsPregnant < ruminantType.GestationLength)
+                        if (NumberDaysPregnant < ruminantType.GestationLength.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            results.Add(new ValidationResult($"The number of months pregant [{NumberMonthsPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.GestationLength}]", memberNames));
+                            results.Add(new ValidationResult($"The number of months pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.GestationLength}]", memberNames));
                         }
                         // get the individual to check female and suitable age for conception supplied.
-                        if (ruminantCohort.Age - NumberMonthsPregnant >= ruminantType.MinimumAge1stMating)
+                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.MinimumAge1stMating.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
                             results.Add(new ValidationResult($"The individual specified must be at least [{ruminantType.MinimumAge1stMating}] month old at the time of conception [r=SetPreviousConception]", memberNames));
@@ -124,22 +124,22 @@ namespace Models.CLEM.Resources
                     {
                         htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
                         htmlWriter.Write($"These individuals will be ");
-                        if (NumberMonthsPregnant == 0)
+                        if (NumberDaysPregnant == 0)
                             htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
                         else
-                            htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                        htmlWriter.Write($" months pregnant</div>");
+                            htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
+                        htmlWriter.Write($" dayss pregnant</div>");
                     }
                 }
                 else
                 {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"Set last conception age to make these females ");
-                    if (NumberMonthsPregnant == 0)
+                    if (NumberDaysPregnant == 0)
                         htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
                     else
-                        htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                    htmlWriter.Write($" months pregnant</div>");
+                        htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
+                    htmlWriter.Write($" days pregnant</div>");
                 }
                 return htmlWriter.ToString();
             }

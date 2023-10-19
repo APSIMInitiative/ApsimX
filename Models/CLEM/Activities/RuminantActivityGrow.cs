@@ -95,16 +95,16 @@ namespace Models.CLEM.Activities
             // Natural weaning takes place here before animals eat or take milk from mother.
             foreach (var ind in herd.Where(a => a.Weaned == false))
             {
-                double weaningAge = ind.BreedParams.NaturalWeaningAge;
-                if(MathUtilities.FloatsAreEqual(weaningAge, 0))
-                    weaningAge = ind.BreedParams.GestationLength;
+                int weaningAge = ind.BreedParams.NaturalWeaningAge.InDays;
+                if(weaningAge == 0)
+                    weaningAge = ind.BreedParams.GestationLength.InDays;
 
-                if (MathUtilities.IsGreaterThan(ind.Age, weaningAge))
+                if (ind.AgeInDays >= weaningAge)
                 {
-                    ind.Wean(true, "Natural");
+                    ind.Wean(true, "Natural", clock.Today);
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, clock.Today, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
                     ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
                 int unfed = 0;
                 int unfedcalves = 0;
                 double totalMethane = 0;
-                foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
+                foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.AgeInDays))
                 {
                     ind.MetabolicIntake = ind.Intake;
                     this.Status = ActivityStatus.Success;
@@ -462,7 +462,7 @@ namespace Models.CLEM.Activities
                 // limit suckling intake of milk per day
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
-                energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
+                energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.AgeInDays == 0) ? 0.03 : ind.AgeInDays/30.4)));
                 ind.EnergyBalance = energyMilkConsumed + energyMetabolicFromIntake - energyMaintenance;
                 ind.EnergyIntake = energyMilkConsumed + energyMetabolicFromIntake;
                 ind.EnergyFetus = 0;
@@ -507,7 +507,8 @@ namespace Models.CLEM.Activities
                         // Potential birth weight
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
-                        double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * events.Interval;
+                        double fetusAge = femaleind.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays;
+
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
                     }
@@ -516,7 +517,7 @@ namespace Models.CLEM.Activities
                 //TODO: add draft individual energy requirement
 
                 // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
-                double maintenanceAge = Math.Min(ind.Age * events.Interval, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
+                double maintenanceAge = Math.Min(ind.AgeInDays, ind.BreedParams.EnergyMaintenanceMaximumAge.InDays);
 
                 // Reference: SCA p.24
                 // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
@@ -548,7 +549,7 @@ namespace Models.CLEM.Activities
             }
             energyPredictedBodyMassChange *= events.Interval;  // Convert to monthly
 
-            ind.PreviousWeight = ind.Weight;
+            //ind.PreviousWeight = ind.Weight;
 
             //double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
             //double maxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
@@ -578,7 +579,7 @@ namespace Models.CLEM.Activities
         {
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
-                ind.IncrementAge();
+                ind.SetCurrentDate(clock.Today);
         }
 
         /// <summary>Function to determine which animlas have died and remove from the population</summary>

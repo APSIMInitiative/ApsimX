@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Models.CLEM.Timers
     [Description("This timer controls breeding and female selection for best continuous milk production")]
     [HelpUri(@"Content/Features/Timers/ActivityTimerBreedForMilking.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -118,7 +119,7 @@ namespace Models.CLEM.Timers
             int numberNeeded = 0;
             IndividualsToBreed = null;
 
-            int breedingSpreadMonths = 2;
+            //int breedingSpreadMonths = 2;
 
             // get all breeders currently in the population
             // TODO: remove oftype when sex determination fixed
@@ -126,11 +127,11 @@ namespace Models.CLEM.Timers
 
             var breedersList = females.Where(r => r.IsBreeder);
 
-            double tooOldToMate = double.PositiveInfinity;
+            int tooOldToMate = int.MaxValue;
             if (controlledMatingParent != null)
-                tooOldToMate = controlledMatingParent.MaximumAgeMating;
+                tooOldToMate = controlledMatingParent.MaximumAgeMating.InDays;
 
-            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= tooOldToMate);
+            var breedersNotTooOldToMate = breedersList.Where(a => a.AgeInDays <= tooOldToMate);
             if (!breedersNotTooOldToMate.Any())
             {
                 return;
@@ -142,7 +143,7 @@ namespace Models.CLEM.Timers
 
             // get females currently lactating            
             var lactatingList = females.Where(f => f.IsLactating);
-            if (lactatingList.Any() && lactatingList.Max(a => a.Age - a.AgeAtLastBirth) < startBreedCycleGestationOffsett)
+            if (lactatingList.Any() && lactatingList.Max(a => a.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays) < startBreedCycleGestationOffsett)
             {
                 // the max lactation period of lactating females is less than the time to start breeding for future cycle
                 // return with no individuals in the IndividualsToBreed list
@@ -155,12 +156,12 @@ namespace Models.CLEM.Timers
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
 
-            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
-            if (firstCycleList.Count > 0 && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
-            {
-                // if where less than the spread months from the max pregnancy found
-                numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
-            }
+            //var firstCycleList = pregnantList.Where(a => a.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
+            //if (firstCycleList.Count > 0 && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
+            //{
+            //    // if where less than the spread months from the max pregnancy found
+            //    numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
+            //}
 
             if (numberNeeded > 0)
             {
@@ -203,6 +204,18 @@ namespace Models.CLEM.Timers
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
+
+        ///<inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            string[] memberNames = new string[] { "Ruminant Milking Timer" };
+            results.Add(new ValidationResult($"Milking timer has not been updated after time-set and daily ruminant age changes", memberNames));
+            return results;
+        }
+
+        #endregion
 
         #region descriptive summary
 

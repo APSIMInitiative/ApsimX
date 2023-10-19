@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
                 double total = 0;
                 foreach (var item in group.Filter(group.SelectedOtherAnimalsType.Cohorts))
                 {
-                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
+                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult.InDays) ? 0.1 : 1);
                 }
                 allIndividuals += total;
                 switch (FeedStyle)

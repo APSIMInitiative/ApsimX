@@ -146,7 +146,7 @@ namespace Models.CLEM
                         groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.AgeInWholeYears.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeMonths:
-                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Age.ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
+                        groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.Breed, a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, Math.Truncate(a.AgeInDays/30.4).ToString())) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
                         break;
                     case SummarizeRuminantHerdStyle.ByAgeYearsClass:
                         groups = herd.GroupBy(a => new Tuple<string, string, string, Sex, string>(a.AgeInWholeYears.ToString(), a.HerdName, (AddGroupByLocation) ? a.Location : "", a.Sex, a.Class )) as IEnumerable<IGrouping<Tuple<string, string, string, Sex, string>, Ruminant>>;
@@ -170,7 +170,7 @@ namespace Models.CLEM
                         Location = group.Key.Item3,
                         Group = (GroupStyle == SummarizeRuminantHerdStyle.BySexClass | GroupStyle == SummarizeRuminantHerdStyle.ByAgeYearsClass) ? $"{group.Key.Item4}.{group.Key.Item5}" : group.Key.Item5,
                         Number = group.Count(),
-                        Age = group.Average(a => a.Age),
+                        Age = group.Average(a => a.AgeInDays),
                         AgeInYears = group.Average(a => a.AgeInWholeYears),
                         AverageWeight = group.Average(a => a.Weight),
                         AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
@@ -207,7 +207,7 @@ namespace Models.CLEM
                             Sex = "All",
                             Group = group.Key,
                             Number = group.Count(),
-                            Age = group.Average(a => a.Age),
+                            Age = group.Average(a => a.AgeInDays),
                             AgeInYears = group.Average(a => a.AgeInWholeYears),
                             AverageWeight = group.Average(a => a.Weight),
                             AverageProportionOfHighWeight = group.Average(a => a.ProportionOfHighWeight),
@@ -244,7 +244,7 @@ namespace Models.CLEM
                         foreach (var sexGroup in herdGroup.GroupBy(a => a.Sex))
                         {
                             // weaned
-                            foreach (var ageGroup in sexGroup.OrderBy(a => a.Age).GroupBy(a => Math.Truncate(a.Age / 12.0)))
+                            foreach (var ageGroup in sexGroup.OrderBy(a => a.AgeInDays).GroupBy(a => a.AgeInWholeYears))
                             {
                                 ReportDetails = new HerdReportItemGeneratedEventArgs
                                 {

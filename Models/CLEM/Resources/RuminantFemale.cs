@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
+                return Weaned && (AgeInDays >= BreedParams.MinimumAge1stMating.InDays) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
             }
         }
 
@@ -48,30 +48,40 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception && (!IsWebbed && !IsSpayed));
+                return (this.IsBreeder && !this.IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception && (!IsWebbed && !IsSpayed));
             }
         }
 
         /// <summary>
-        /// The age of female at last birth
+        /// Date of last birth
         /// </summary>
-        public double AgeAtLastBirth { get; set; }
+        public DateTime DateOfLastBirth { get; set; }
 
         /// <summary>
-        /// The time (months) passed since last birth
-        /// Returns 0 for pre-first birth females
+        /// Date of last conception
         /// </summary>
-        [FilterByProperty]
-        public double MonthsSinceLastBirth
-        {
-            get
-            {
-                if (AgeAtLastBirth > 0)
-                    return Age - AgeAtLastBirth;
-                else
-                    return 0;
-            }
-        }
+        public DateTime DateLastConceived { get; set; }
+
+        ///// <summary>
+        ///// The age of female at last birth
+        ///// </summary>
+        //public double AgeAtLastBirth { get { return TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays; } }
+
+        ///// <summary>
+        ///// The time (months) passed since last birth
+        ///// Returns 0 for pre-first birth females
+        ///// </summary>
+        //[FilterByProperty]
+        //public double MonthsSinceLastBirth
+        //{
+        //    get
+        //    {
+        //        if (AgeAtLastBirth > 0)
+        //            return Age - AgeAtLastBirth;
+        //        else
+        //            return 0;
+        //    }
+        //}
 
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
@@ -102,10 +112,10 @@ namespace Models.CLEM.Resources
         /// </summary>
         public int NumberOfBirthsThisTimestep { get; set; }
 
-        /// <summary>
-        /// The age at last conception
-        /// </summary>
-        public double AgeAtLastConception { get; set; }
+        ///// <summary>
+        ///// The age at last conception
+        ///// </summary>
+        //public double AgeAtLastConception { get { return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays; } }
 
         /// <summary>
         /// Weight at time of conception
@@ -117,16 +127,16 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double PreviousConceptionRate { get; set; }
 
-        /// <summary>
-        /// Months since minimum breeding age or entering the population
-        /// </summary>
-        public double NumberOfBreedingMonths
-        {
-            get
-            {
-                return Age - Math.Max(this.BreedParams.MinimumAge1stMating, this.AgeEnteredSimulation);
-            }
-        }
+        ///// <summary>
+        ///// Months since minimum breeding age or entering the population
+        ///// </summary>
+        //public double NumberOfBreedingMonths
+        //{
+        //    get
+        //    {
+        //        return Age - Math.Max(this.BreedParams.MinimumAge1stMating, this.AgeEnteredSimulation);
+        //    }
+        //}
 
         /// <summary>
         /// Store for the style of mating
@@ -200,7 +210,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
+                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays >= BreedParams.GestationLength.InDays;
                 else
                     return false;
             }
@@ -209,7 +219,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to handle birth changes
         /// </summary>
-        public void UpdateBirthDetails()
+        public void UpdateBirthDetails(DateTime date)
         {
             if (CarryingCount > 0)
             {
@@ -217,7 +227,8 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
-            AgeAtLastBirth = this.Age;
+            DateOfLastBirth = date;
+            //AgeAtLastBirth = this.Age;
             CarryingCount = 0;
             MilkingPerformed = false;
         }
@@ -247,11 +258,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to remove one offspring that dies between conception and death
         /// </summary>
-        public void OneOffspringDies()
+        public void OneOffspringDies(DateTime date)
         {
             CarryingCount--;
             if (CarryingCount <= 0)
-                AgeAtLastBirth = this.Age;
+                DateOfLastBirth = date;
         }
 
         /// <summary>
@@ -261,24 +272,27 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return this.AgeAtLastBirth - this.AgeAtLastConception == this.BreedParams.GestationLength;
+                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).TotalDays == this.BreedParams.GestationLength.InDays;
             }
         }
 
         /// <summary>
         /// Method to handle conception changes
         /// </summary>
-        public void UpdateConceptionDetails(int number, double rate, int ageOffset)
+        public void UpdateConceptionDetails(int number, double rate, int ageOffset, DateTime date)
         {
             // if she was dry breeder remove flag as she has become pregnant.
+
             if (SaleFlag == HerdChangeReason.DryBreederSale)
                 SaleFlag = HerdChangeReason.None;
 
             PreviousConceptionRate = rate;
             CarryingCount = number;
-            AgeAtLastConception = this.Age + ageOffset;
+            //ToDo: Chech this is correct
+            DateLastConceived = date.AddDays(ageOffset);
+            //AgeAtLastConception = this.Age + ageOffset;
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(AgeAtLastConception) : this.Weight;
+            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays) : this.Weight;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -296,7 +310,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
+                return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= this.BreedParams.MilkingDays);
             }
         }
 
@@ -307,14 +321,17 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (IsLactating)
+                if (SucklingOffspringList.Any() | MilkingPerformed)
                 {
-                    double dl = (((this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays) ? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
-                    // add half a timestep
-                    return dl + 15;
+                    double dl = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
+                    // ToDo: CLOCK add half a timestep
+                    if (dl + 15 <= this.BreedParams.MilkingDays)
+                        return dl + 15;
+                    //double dl = (((this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays) ? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
+                    //return dl + 15;
                 }
-                else
-                    return 0;
+                //else
+                return 0;
             }
         }
 
@@ -384,8 +401,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(RuminantType setParams, double setAge, double setWeight)
-            : base(setParams, setAge, setWeight)
+        public RuminantFemale(RuminantType setParams, DateTime date, int setAge, double setWeight)
+            : base(setParams, setAge, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();
         }

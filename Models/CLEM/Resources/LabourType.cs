@@ -37,11 +37,13 @@ namespace Models.CLEM.Resources
         public string Units { get { return "NA"; } }
 
         /// <summary>
-        /// Age in years.
+        /// Initial age of individuals.
         /// </summary>
         [Description("Initial Age")]
-        [Required, GreaterThanEqualValue(0)]
-        public double InitialAge { get; set; }
+        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Units("years, months, days")]
+        [Required, ArrayItemCount(1, 3)]
+        public AgeSpecifier InitialAge { get; set; }
 
         /// <summary>
         /// Male or Female

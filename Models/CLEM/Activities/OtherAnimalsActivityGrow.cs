@@ -51,11 +51,11 @@ namespace Models.CLEM.Activities
         {
             // grow all individuals
             foreach (OtherAnimalsTypeCohort cohort in animalType.Cohorts.OfType<OtherAnimalsTypeCohort>())
-                cohort.Age++;
+                cohort.Age++; //Todo: Add clock increnement here
 
             // death from old age
-            while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).Count() > 0)
-                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this, "Died");
+            while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge.InDays).Count() > 0)
+                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge.InDays).FirstOrDefault(), this, "Died");
 
         }
 

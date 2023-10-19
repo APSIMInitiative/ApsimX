@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.CLEM.Resources;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
@@ -23,7 +25,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 168; } }
+        public static int LatestVersion { get { return 169; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5302,6 +5304,60 @@ namespace Models.Core.ApsimFile
                 if (changeMade)
                     manager.Save();
             }
+        }
+
+
+        /// <summary>
+        /// Change CLEM to work with Ruminant AgeInDays rather than months
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion169(JObject root, string _)
+        {
+            var propertyUpdates = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
+                new Tuple<string, string>("RuminantType", "GestationLength"),
+                new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
+                new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
+                new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
+                new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
+            };
+
+            foreach (var item in propertyUpdates)
+            {
+                var node = JsonUtilities.DescendantOfType(root, item.Item1);
+                node[item.Item2] = Convert.ToInt32(Math.Floor(node.Value<float>(item.Item2) *30.4)).ToString();
+            }
+
+            foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
+            {
+                AgeSpecifier ageSpecifier = new();
+                var months = node.Value<float>("Age");
+                if (months > 0)
+                {
+                    if (months == Math.Floor(months))
+                        ageSpecifier.Parts = new int[] { Convert.ToInt32(months), 0 };
+                    else
+                        ageSpecifier.Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30*(months- Convert.ToInt32(months))) };
+                }
+                node.Add(new JProperty("AgeDetails", JToken.FromObject(ageSpecifier)));
+            }
+            foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
+            {
+                node["PropertyOfIndividual"] = "AgeObject";
+                node["Value"] = $"0,{Convert.ToInt32(node.Value<float>("Value"))},0";
+            }
+
+            // int age -> Age specifier
+            // BreederAge - OtherAnimalsActivityBreed
+
+
+
         }
     }
 }
