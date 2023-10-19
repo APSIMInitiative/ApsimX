@@ -91,7 +91,8 @@ namespace Models.Core.ConfigFile
                     if (firstSplitResult.Success)
                     {
                         // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
-                        string[] singleLineCommandArray = { command };
+                        //string[] singleLineCommandArray = { string.Join<string>(' ', commandSplits) };
+                        string[] singleLineCommandArray = { string.Join('=', commandSplits) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         sim = (Simulations)ApplyOverridesToApsimxFile(overrides, sim);
                     }
