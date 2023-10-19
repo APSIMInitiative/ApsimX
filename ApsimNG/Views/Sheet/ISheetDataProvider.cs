@@ -25,5 +25,9 @@ namespace UserInterface.Views
         /// <summary>Is the column readonly?</summary>
         /// <param name="colIndex">Column index of cell.</param>
         bool IsColumnReadonly(int colIndex);
+
+        /// <summary>Get the Units assigned to this column</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public string GetColumnUnits(int colIndex);
     }
 }

@@ -15,7 +15,6 @@ namespace UserInterface.Views
         /// <summary>Number of heading rows.</summary>
         private int numHeadingRows;
 
-
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="colIndex">The index of the column that was changed.</param>
@@ -79,16 +78,19 @@ namespace UserInterface.Views
             if (!IsColumnReadonly(colIndex))
             {
                 int i = rowIndex - numHeadingRows;
-                while (i >= Data.Rows.Count)
-                    Data.Rows.Add(Data.NewRow());
-
-                var existingValue = Data.Rows[i][colIndex];
-                if (existingValue != null && value == null ||
-                    existingValue == null && value != null ||
-                    existingValue.ToString() != value.ToString())
+                if (i >= 0)
                 {
-                    Data.Rows[i][colIndex] = value;
-                    CellChanged?.Invoke(this, colIndex, rowIndex);
+                    while (i >= Data.Rows.Count)
+                        Data.Rows.Add(Data.NewRow());
+
+                    var existingValue = Data.Rows[i][colIndex];
+                    if (existingValue != null && value == null ||
+                        existingValue == null && value != null ||
+                        existingValue.ToString() != value.ToString())
+                    {
+                        Data.Rows[i][colIndex] = value;
+                        CellChanged?.Invoke(this, colIndex, rowIndex);
+                    }
                 }
             }
         }
@@ -98,6 +100,16 @@ namespace UserInterface.Views
         public bool IsColumnReadonly(int colIndex)
         {
             return Data.Columns[colIndex].ReadOnly;
+        }
+
+        /// <summary>Get the Units assigned to this column</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public string GetColumnUnits(int colIndex)
+        {
+            if (units == null)
+                return "";
+            else
+                return units[colIndex];
         }
     }
 }
