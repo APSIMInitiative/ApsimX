@@ -36,6 +36,8 @@ namespace UserInterface.Views
         /// <summary>Stores how many rows were drawn last draw. We have to re-initialise if this changes</summary>
         private int prevNumRows = -1;
 
+        private bool recalculateWidths = true;
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -256,6 +258,7 @@ namespace UserInterface.Views
         public void ScrollUp(int numRows = 1)
         {
             NumberHiddenRows = Math.Max(NumberHiddenRows - numRows, 0);
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet down one row.</summary>
@@ -265,6 +268,7 @@ namespace UserInterface.Views
             var bottomFullyVisibleRowIndex = FullyVisibleRowIndexes.Last();
             if (bottomFullyVisibleRowIndex < DataProvider.RowCount - 1)
                 NumberHiddenRows++;
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet down one page of rows.</summary>
@@ -273,6 +277,7 @@ namespace UserInterface.Views
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
             if (NumberHiddenRows + pageSize < DataProvider.RowCount - 1)
                 NumberHiddenRows += pageSize;
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet up one page of rows.</summary>
@@ -280,6 +285,13 @@ namespace UserInterface.Views
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
             NumberHiddenRows = Math.Max(NumberHiddenRows - pageSize, 0);
+            RecalculateColumnWidths();
+        }
+
+        /// <summary>After this is called, the next time the view is drawn, columns widths will be recalculated</summary>
+        public void RecalculateColumnWidths()
+        {
+            recalculateWidths = true;
         }
 
         /// <summary>Return true if a xy pixel coordinates are in a specified cell.</summary>
@@ -320,6 +332,15 @@ namespace UserInterface.Views
                 // Do initialisation
                 if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
+
+                if (recalculateWidths)
+                {
+                    if (cr != null)
+                    {
+                        CalculateColumnWidths(cr);
+                        recalculateWidths = false;
+                    }
+                }
 
                 prevNumColumns = DataProvider.ColumnCount;
                 prevNumRows = DataProvider.RowCount;
@@ -484,18 +505,16 @@ namespace UserInterface.Views
         /// <param name="cr">The current draing context.</param>
         private void CalculateColumnWidths(IDrawContext cr)
         {
+            int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
+            if (visibleRows >= DataProvider.RowCount)
+                visibleRows = DataProvider.RowCount - 1;
+
             ColumnWidths = new int[DataProvider.ColumnCount];
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
             {
-                int columnWidth = 0;
-                for (int rowIndex = 0; rowIndex < Math.Min(NumberFrozenRows + 1, DataProvider.RowCount); rowIndex++)
+                int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
+                for (int rowIndex = NumberHiddenRows; rowIndex < visibleRows; rowIndex++)
                     columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
-
-                // Look at middle row.
-                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount / 2));
-
-                // Look at last row.
-                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount-1));
 
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }

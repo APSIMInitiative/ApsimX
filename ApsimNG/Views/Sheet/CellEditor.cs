@@ -140,6 +140,7 @@ namespace UserInterface.Views
                 fix.Remove(entry);
                 entry = null;
                 sheet.Refresh();
+                sheet.RecalculateColumnWidths();
                 sheetWidget.GrabFocus();
             }
         }

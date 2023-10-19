@@ -107,13 +107,13 @@ namespace Models.Utilities
 
                         DataTableUtilities.AddColumn(data, Name, values, startingRow, values.Length);
                     }
-                    else if (propertyValue is IEnumerable<object> list)
+                    else if (propertyValue is IEnumerable)
                     {
                         List<string> values = new List<string>();
 
                         PropertyInfo propInfo = null;
                         FieldInfo fieldInfo = null;
-                        foreach (object obj in list)
+                        foreach (var obj in (propertyValue as IEnumerable))
                         {
                             object val = null;
                             if (VariableIsPrimitive(obj))

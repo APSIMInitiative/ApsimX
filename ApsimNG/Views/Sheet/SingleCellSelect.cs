@@ -158,7 +158,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell up one page of rows.</summary>
-        private void PageUp()
+        public virtual void PageUp()
         {
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
             selectedRowIndex = Math.Max(selectedRowIndex - pageSize, sheet.NumberFrozenRows);
@@ -166,7 +166,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell down one page of rows.</summary>
-        private void PageDown()
+        public virtual void PageDown()
         {
             int pageSize = sheet.FullyVisibleRowIndexes.Count() - sheet.NumberFrozenRows;
             selectedRowIndex = Math.Min(selectedRowIndex + pageSize, sheet.RowCount-1);
@@ -174,28 +174,30 @@ namespace UserInterface.Views
         }
 
         /// <summary>Moves the selected cell to the far right column.</summary>
-        private void MoveToFarRight()
+        public virtual void MoveToFarRight()
         {
             selectedColumnIndex = sheet.DataProvider.ColumnCount - 1;
-            sheet.NumberHiddenColumns = sheet.MaximumNumberHiddenColumns;
+            if (sheet.MaximumNumberHiddenColumns >= 0)
+                sheet.NumberHiddenColumns = sheet.MaximumNumberHiddenColumns;
         }
 
         /// <summary>Moves the selected cell to the far left column.</summary>
-        private void MoveToFarLeft()
+        public virtual void MoveToFarLeft()
         {
             selectedColumnIndex = 0;
             sheet.NumberHiddenColumns = 0;
         }
 
         /// <summary>Moves the selected cell to bottom row.</summary>
-        private void MoveToBottom()
+        public virtual void MoveToBottom()
         {
             selectedRowIndex = sheet.RowCount - 1;
-            sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
+            if (sheet.MaximumNumberHiddenRows >= 0)
+                sheet.NumberHiddenRows = sheet.MaximumNumberHiddenRows;
         }
 
         /// <summary>Moves the selected cell to the top row below headings.</summary>
-        private void MoveToTop()
+        public virtual void MoveToTop()
         {
             selectedRowIndex = sheet.NumberFrozenRows;
             sheet.NumberHiddenRows = 0;
