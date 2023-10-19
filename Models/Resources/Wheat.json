@@ -1673,7 +1673,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "divide(([Grain].Live.N + [Grain].Dead.N),([Grain].Live.Wt + [Grain].Dead.Wt)) * 100 * 5.71",
+              "Expression": "([Grain].Live.N + [Grain].Dead.N)/([Grain].Live.Wt + [Grain].Dead.Wt) * 100 * 5.71",
               "Name": "Protein",
               "ResourceName": null,
               "Children": [],
