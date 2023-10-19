@@ -1,12 +1,12 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using Gtk;
+using UserInterface.Intellisense;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Drawing;
-    using System.Collections.Generic;
-    using Intellisense;
-    using Extensions;
 
     /// <summary>
     /// View for a small intellisense window which displays the 

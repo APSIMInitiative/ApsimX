@@ -234,7 +234,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.unit)

@@ -593,6 +593,7 @@ namespace Models.CLEM.Activities
 
             // Calculated by
             // critical weight OR
+            // relative condition
             // Body condition score and additional mortality rate &&
             // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
@@ -600,17 +601,35 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died;
+            List<Ruminant> died = new List<Ruminant>();
             if (herd.Any())
             {
-                if (herd.FirstOrDefault().BreedParams.ProportionOfMaxWeightToSurvive >= 0)
-                    died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
-                else
-                    // body condition score based mortality 
-                    died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.BodyConditionScoreForMortality) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
-                // set died flag
-                died.ForEach(c => c.SaleFlag = HerdChangeReason.DiedUnderweight);
-                ruminantHerd.RemoveRuminant(died, this);
+                switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
+                {
+                    case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight, a.HighWeight*a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.RelativeCondition:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.BodyConditionScore:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.None:
+                        break;
+                    default:
+                        break;
+                }
+
+                if(died.Any())
+                {
+                    foreach (Ruminant ind in died)
+                    {
+                        ind.Died = true;
+                        ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                    }
+                    ruminantHerd.RemoveRuminant(died, this);
+                }
             }
 
             // base mortality adjusted for condition

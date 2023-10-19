@@ -1,7 +1,9 @@
 using Gtk;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection;
+using UserInterface.Views;
 
 namespace Utility
 {
@@ -37,7 +39,7 @@ namespace Utility
             FieldInfo beforeHandler = typeof(GLib.Signal).GetField("before_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             if (signals != null && afterHandler != null && beforeHandler != null)
             {
-                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>) signals.GetValue(widget);
+                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>)signals.GetValue(widget);
                 foreach (KeyValuePair<string, GLib.Signal> signal in widgetSignals)
                 {
                     if (signal.Key != "destroy")
@@ -90,13 +92,14 @@ namespace Utility
                     }
                 }
             }
-            return result;    }
+            return result;
+        }
 
         /// <summary>
         /// Remove all items from a Menu, ensuring that their handlers are detached 
         /// </summary>
         /// <param name="menu">The menu</param>
-        public static void Clear (this Menu menu)
+        public static void Clear(this Menu menu)
         {
             foreach (Widget w in menu)
             {
@@ -158,6 +161,62 @@ namespace Utility
                 yield return parent;
                 parent = parent.Parent;
             }
+        }
+
+        /// <summary>
+        /// Gets the location of the widget in regards to the graphview
+        /// </summary>
+        public static System.Drawing.Point GetPositionOfWidgetRelativeToAnotherWidget(Widget widget, Widget otherWidget)
+        {
+            System.Drawing.Point firstPos = GtkUtilities.GetPositionOfWidget(widget);
+            System.Drawing.Point secondPos = GtkUtilities.GetPositionOfWidget(otherWidget);
+            return new System.Drawing.Point(firstPos.X - secondPos.X, firstPos.Y - secondPos.Y);
+        }
+
+        /// <summary>
+        /// Gets the location (in screen coordinates) of the widget.
+        /// </summary>
+        public static System.Drawing.Point GetPositionOfWidget(Widget widget)
+        {
+            if (widget == null)
+                return new System.Drawing.Point(0, 0);
+
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = widget.Allocation;
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            widget.TranslateCoordinates(widget.Toplevel, location.X, location.Y, out int windowX, out int windowY);
+
+            Widget win = widget;
+            while (win.Parent != null)
+                win = win.Parent;
+
+            win.Window.GetOrigin(out int frameX, out int frameY);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY);
+        }
+
+        /// <summary>
+        /// Returns a rectangle that defines in screen cordinates the edges of the right hand view where content is loaded
+        /// This will only work if the explorer view has been fully loaded.
+        /// Left side is the edge of the tree view
+        /// Right side is the edge of the window
+        /// Bottom is the top of the status window
+        /// Top is the bottom of the menu bar
+        /// </summary>
+        public static System.Drawing.Rectangle GetBorderOfRightHandView(ExplorerView explorerView)
+        {
+            int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
+            int bottom = (explorerView.Owner as MainView).StatusPanelPosition;
+            int left = explorerView.DividerPosition;
+            int right = explorerView.MainWidget.AllocatedWidth;
+
+            int width = right - left;
+            int height = bottom - top;
+
+            Rectangle bounds = new Rectangle(left, top, width, height);
+            return bounds;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
 {
 
     ///<summary>
-    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
+    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -35,7 +35,7 @@ namespace Models.PMF.Organs
         [Link]
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
-        /// <summary>The RootShape model</summary> 
+        /// <summary>The RootShape model</summary>
         [Link(Type = LinkType.Child, ByName = false)]
         public IRootShape RootShape = null;
 
@@ -139,7 +139,7 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remobilisationCost = null;
 
-        /// <summary>The proportion of biomass respired each day</summary> 
+        /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
@@ -250,6 +250,25 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < PlantZone.Physical.Thickness.Length; i++)
                     value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.Physical.Thickness[i];
                 return value;
+            }
+        }
+
+        /// <summary>
+        /// The wet root fraction. Profile water filled pore space average weighted by root length.
+        /// </summary>
+        [Units("0-1")]
+        public double WetRootFraction
+        {
+            get
+            {
+                var rootLength = LengthDensity.Zip(PlantZone.Physical.Thickness, (rld, th) => rld * th).ToArray();
+                var rootSum = rootLength.Sum();
+                if (rootSum == 0.0)
+                    return 0.0;
+                return SoilUtilities
+                    .WFPS(PlantZone.WaterBalance.SWmm, PlantZone.Physical.SATmm, PlantZone.Physical.DULmm)
+                    .Zip(rootLength, (wfps, rl) => wfps * rl / rootSum)
+                    .Sum();
             }
         }
 
@@ -1087,7 +1106,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
                 ClearBiomassFlows();
         }
 

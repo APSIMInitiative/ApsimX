@@ -6,16 +6,11 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Xml.Linq;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Office.Word;
-using DocumentFormat.OpenXml.Presentation;
 using Models.Climate;
 using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
-using Models.PMF.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json.Linq;
 
@@ -215,7 +210,7 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    
+
 
                     return res;
                 }
@@ -4949,7 +4944,7 @@ namespace Models.Core.ApsimFile
                     // Find all biomass removal fractions.
                     var matches = manager.FindRegexMatches(@$" +{declarationInstanceName}.SetFractionTo(\w+)\(""(\w+)""\s*,\s*([\w\d.,\(\)+\-*]+)(?:\s*,\s*""(\w+)"")*\);[\s\r]*\n")
                                          .Where(man => !manager.PositionIsCommented(man.Index));
-                    List <OrganFractions> organs = new List<OrganFractions>();
+                    List<OrganFractions> organs = new List<OrganFractions>();
 
                     foreach (Match match in matches)
                     {
@@ -5117,7 +5112,7 @@ namespace Models.Core.ApsimFile
                         if (enabled)
                             if (operation[i]["Date"] != null)
                                 dateStr = DateTime.Parse(operation[i]["Date"].ToString()).ToString("yyyy-MM-dd");
-                        
+
                         operation[i]["Line"] = commentChar + dateStr + " " + operation[i]["Action"];
                     }
                 }
@@ -5134,8 +5129,14 @@ namespace Models.Core.ApsimFile
             foreach (var soilNitrogen in JsonUtilities.ChildrenOfType(root, "SoilNitrogen"))
             {
                 var parent = JsonUtilities.Parent(soilNitrogen);
-                var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
-                nutrient["ResourceName"] = "Nutrient";
+                // check for an existing Nutrient node. If it exists, do not add another one.
+                JObject parentObject = parent.ToObject<JObject>();
+                var existingNutrient = JsonUtilities.ChildrenOfType(parentObject, "Nutrient");
+                if (existingNutrient == null)
+                {
+                    var nutrient = JsonUtilities.CreateNewChildModel(parent, "Nutrient", "Models.Soils.Nutrients.Nutrient");
+                    nutrient["ResourceName"] = "Nutrient";
+                }
                 soilNitrogen.Remove();
             }
 
@@ -5161,7 +5162,7 @@ namespace Models.Core.ApsimFile
                     if (declaration.TypeName == "SoilNitrogenNO3" || declaration.TypeName == "SoilNitrogenNH4" || declaration.TypeName == "SoilNitrogenUrea")
                     {
                         declaration.TypeName = "Solute";
-                        var linkAttributeIndex= declaration.Attributes.IndexOf("[Link]");
+                        var linkAttributeIndex = declaration.Attributes.IndexOf("[Link]");
                         if (linkAttributeIndex != -1)
                         {
                             declaration.Attributes[linkAttributeIndex] = "[Link(Path=\"[NO3]\")]";
@@ -5197,7 +5198,7 @@ namespace Models.Core.ApsimFile
                 changeMade = manager.Replace("SoilNitrogen.Denitrification", "Nutrient.Natm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.n2o_atm", "Nutrient.N2Oatm") || changeMade;
                 changeMade = manager.Replace("SoilNitrogen.dlt_n_min_res", "ResidueDecomposition.MineralisedN") || changeMade;
-                
+
                 if (changeMade)
                 {
                     manager.AddDeclaration("Nutrient", "Nutrient", new string[] { "[Link]" });
