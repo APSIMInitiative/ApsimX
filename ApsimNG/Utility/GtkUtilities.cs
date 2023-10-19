@@ -1,8 +1,8 @@
-using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using Gtk;
 using UserInterface.Views;
 
 namespace Utility
@@ -209,8 +209,8 @@ namespace Utility
         {
             int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
             int bottom = (explorerView.Owner as MainView).StatusPanelPosition;
-            int left = explorerView.DividerPosition;
-            int right = explorerView.MainWidget.AllocatedWidth;
+            int left = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).X;
+            int right = explorerView.MainWidget.AllocatedWidth + left;
 
             int width = right - left;
             int height = bottom - top;

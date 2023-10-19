@@ -63,7 +63,6 @@ namespace UserInterface.Views
 
             reportVariablesVPaned.AddNotification(OnVariablesPanePropertyNotified);
             reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
-            panel.AddNotification(OnPanelPositionPropertyNotified);
 
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
@@ -92,9 +91,6 @@ namespace UserInterface.Views
 
             double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition;
             int verticalPos = (int)Math.Round(bounds.Height * 0.7);
-            if (verticalSplitter != null)
-                if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
-                    verticalPos = (int)(bounds.Width * verticalSplitter);
             panel.Position = verticalPos;
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
@@ -138,7 +134,7 @@ namespace UserInterface.Views
                 Configuration.Settings.ReportSplitterPosition = percentage;
                 Configuration.Settings.Save();
             }
-                
+
         }
 
         /// <summary> Updates The position of either common variable listView.</summary>
@@ -152,22 +148,6 @@ namespace UserInterface.Views
                 Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
                 double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
                 Configuration.Settings.ReportSplitterPosition = percentage;
-                Configuration.Settings.Save();
-            }
-        }
-
-        /// <summary>
-        /// Called whenever a property of vpaned1 is modified.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnPanelPositionPropertyNotified(object sender, NotifyArgs args)
-        {
-            if (args.Property == "position")
-            {
-                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner as ExplorerView);
-                double percentage = (double)panel.Position / (double)bounds.Height;
-                Configuration.Settings.ReportSplitterVerticalPosition = percentage;
                 Configuration.Settings.Save();
             }
         }

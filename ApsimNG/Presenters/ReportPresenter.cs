@@ -801,9 +801,12 @@ namespace UserInterface.Presenters
             RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
             var currentReportVariablesLineNumber = this.view.VariableList.CurrentLineNumber;
-            string variableCode = commonReportVariables.Rows[reportVariableIndex][1].ToString();
+            string variableCode = commonReportVariables.Rows[reportVariableIndex][2].ToString();
             List<string> lines = view.VariableList.Lines.ToList();
-            lines.Insert(currentReportVariablesLineNumber, variableCode);
+            if (currentReportVariablesLineNumber > lines.Count)
+                lines.Add(variableCode);
+            else
+                lines.Insert(currentReportVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
             view.VariableList.Text = modifiedText;
             // Makes the selected line the newly added variable's line.
@@ -820,11 +823,16 @@ namespace UserInterface.Presenters
             RowActivatedArgs rowActivatedArgs = args as RowActivatedArgs;
             int reportVariableIndex = rowActivatedArgs.Path.Indices[0];
             var currentReportFrequencyVariablesLineNumber = this.view.EventList.CurrentLineNumber;
-            string variableCode = commonReportFrequencyVariables.Rows[reportVariableIndex][1].ToString();
+            string variableCode = commonReportFrequencyVariables.Rows[reportVariableIndex][2].ToString();
             List<string> lines = view.EventList.Lines.ToList();
+            if (currentReportFrequencyVariablesLineNumber > lines.Count)
+                lines.Add(variableCode);
+            else
+                lines.Insert(currentReportFrequencyVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
-            modifiedText += Environment.NewLine + variableCode;
             view.EventList.Text = modifiedText;
+            view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
+
         }
 
         /// <summary>
