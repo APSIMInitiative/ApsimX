@@ -1115,18 +1115,24 @@ namespace Models.PMF.Organs
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - nitrogen.Reallocation))
-                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double storageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            Live.StorageN -= storageNRetranslocation;
-            Live.MetabolicN -= (nitrogen.Retranslocation - storageNRetranslocation);
-            Allocated.StorageN -= nitrogen.Retranslocation;
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, NSupply.ReTranslocation))
+                throw new Exception("N retranslocation exceeds Retranslocation supply organ: " + Name);
+            double retranslocatedStorageN = nitrogen.Retranslocation * startLive.StorageN / (startLive.StorageN + startLive.MetabolicN);
+            Live.StorageN -= retranslocatedStorageN;
+            Allocated.StorageN -= retranslocatedStorageN;
+            double retranslocatedMetabolicN = nitrogen.Retranslocation * startLive.MetabolicN / (startLive.StorageN + startLive.MetabolicN);
+            Live.MetabolicN -= retranslocatedMetabolicN;
+            Allocated.MetabolicN -= retranslocatedMetabolicN;
 
             // Reallocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
-                throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            ReAllocated.StorageN = nitrogen.Reallocation * MathUtilities.Divide(Senescing.StorageN, Senescing.N, 0);
-            ReAllocated.MetabolicN = nitrogen.Reallocation * MathUtilities.Divide(Senescing.MetabolicN, Senescing.N, 0);
+            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, NSupply.ReAllocation))
+                throw new Exception("N retranslocation exceeds Retranslocation supply organ: " + Name);
+            ReAllocated.StorageN = nitrogen.Reallocation * startLive.StorageN / (startLive.StorageN + startLive.MetabolicN);
+            Live.StorageN -= ReAllocated.StorageN;
+            Allocated.StorageN -= ReAllocated.StorageN;
+            ReAllocated.MetabolicN = nitrogen.Reallocation * startLive.MetabolicN / (startLive.StorageN + startLive.MetabolicN);
+            Live.MetabolicN -= ReAllocated.MetabolicN;
+            Allocated.MetabolicN -= ReAllocated.MetabolicN;
         }
 
 
