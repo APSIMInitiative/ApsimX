@@ -210,7 +210,7 @@ namespace Utility
             int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
             int bottom = (explorerView.Owner as MainView).StatusPanelPosition;
             int left = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).X;
-            int right = explorerView.MainWidget.AllocatedWidth + explorerView.DividerPosition;
+            int right = explorerView.MainWidget.AllocatedWidth + left;
 
             int width = right - left;
             int height = bottom - top;

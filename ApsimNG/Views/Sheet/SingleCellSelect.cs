@@ -86,6 +86,8 @@ namespace UserInterface.Views
                     PageUp();
                 else if (evnt.Key == Keys.Delete)
                     Delete();
+                else if (evnt.Key == Keys.Period)
+                    sheet.CellEditor.Edit('.');
                 sheet.Refresh();
             }
             else if (sheet.CellEditor != null && evnt.KeyValue > 0 && evnt.KeyValue < 255)
