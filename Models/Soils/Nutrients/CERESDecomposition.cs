@@ -12,14 +12,14 @@ namespace Models.Functions
     [ValidParent(ParentType = typeof(Nutrient))]
     public class CERESDecomposition : Model, IFunction
     {
-        [Link(ByName = true, Type = LinkType.Child)]
+        [Link(ByName = true)]
         private IFunction TF = null;
 
         [Link(ByName = true)]
         private IFunction WF = null;
 
-        [Link(IsOptional = true, ByName = true, Type = LinkType.Child)]
-        private IFunction CNRF = null;
+        [Link(Type = LinkType.Ancestor)]
+        private Nutrient nutrient = null;
 
         /// <summary>The potential rate of decomposition</summary>
         [Description("The potential rate of decomposition")]
@@ -29,8 +29,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             double rate = PotentialRate * TF.Value(arrayIndex) * WF.Value(arrayIndex);
-            if (CNRF != null)
-                rate *= CNRF.Value(arrayIndex);
+            rate *= nutrient.CNRF[arrayIndex];
             return rate;
         }
     }

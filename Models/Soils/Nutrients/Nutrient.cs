@@ -36,6 +36,7 @@ namespace Models.Soils.Nutrients
         private readonly double CinFOM = 0.4;      // Carbon content of FOM
         private double[] totalOrganicN;
         private double[] fomCNRFactor;
+        private double[] cnrf;
         private double[] catm;
         private double[] natm;
         private double[] n2oatm;
@@ -151,6 +152,9 @@ namespace Models.Soils.Nutrients
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter used by low level functions.</summary>
         public IReadOnlyList<double> FOMCNRFactor => fomCNRFactor;
+
+        /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter used by low level functions.</summary>
+        public IReadOnlyList<double> CNRF => cnrf;
 
         /// <summary>Total Mineral N in each soil layer</summary>
         [Units("kg/ha")]
@@ -278,6 +282,7 @@ namespace Models.Soils.Nutrients
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             fomCNRFactor = new double[soilPhysical.Thickness.Length];
+            cnrf = new double[soilPhysical.Thickness.Length];
             totalOrganicN = new double[soilPhysical.Thickness.Length];
             catm = new double[soilPhysical.Thickness.Length];
             natm = new double[soilPhysical.Thickness.Length];
@@ -315,8 +320,13 @@ namespace Models.Soils.Nutrients
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
             for (int layer = 0; layer < fomCNRFactor.Length; layer++)
+            {
                 fomCNRFactor[layer] = MathUtilities.Divide(FOMCarbohydrate.C[layer] + FOMCellulose.C[layer] + FOMLignin.C[layer],
                                                      FOMCarbohydrate.N[layer] + FOMCellulose.N[layer] + FOMLignin.N[layer] + NH4.kgha[layer] + NO3.kgha[layer], 0.0);
+
+                cnrf[layer] = Math.Exp(-0.693 * (fomCNRFactor[layer] - 25) / 25);
+                cnrf[layer] = MathUtilities.Bound(cnrf[layer], 0, 1);
+            }
 
             // Perform all flows.
             foreach (var pool in nutrientPools)
