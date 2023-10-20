@@ -8,7 +8,7 @@ ZMQ+Msgpack - uses [0MQ](https://zeromq.org/) and [msgpack](https://github.com/m
 
 Todo:
 - test harness in python
-- exercise msgpack data types (int, double, string, arrays, structs)
+- structs in msgpack data packets? 
 - error handling/recovery
 - events (eg sow, irrigate etc)
 - 

@@ -77,20 +77,39 @@ poll_zmq2 <- function(socket) {
 
       sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
       reply1 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+
+      sendCommand(socket, "get", "[Nutrient].NO3.kgha")
+      reply1 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      #cat("r1 = ", reply1, "\n")
       
-      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
+      # This is working, but not ideal
+      #sendCommand(socket, "setNO3", 42.0)
+      #msg <- receive.string(socket)
+
+      # This is the same but a bit better
+      sendCommand(socket, "set", list("[Nutrient].NO3.kgha", 2 * reply1))
       msg <- receive.string(socket)
 
-      sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
+      sendCommand(socket, "get", "[Nutrient].NO3.kgha")
       reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
-      #cat("r1 = ", reply1,"r2 = ", reply2, "\n")
-      stopifnot(reply1 != reply2)
+      #cat("r2 = ", reply2, "\n")
 
-      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", reply1))
+      sendCommand(socket, "set", list("[Nutrient].NO3.kgha", reply1))
       msg <- receive.string(socket)
+
+      #sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
+      #msg <- receive.string(socket)
+
+      #sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
+      #reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      #cat("r1 = ", reply1,"r2 = ", reply2, "\n")
+      #stopifnot(reply1 != reply2)
+
+      #sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", reply1))
+      #msg <- receive.string(socket)
       
-      sendCommand(socket, "set", list("[Manager].Script.DummyDoubleVar", 42.42))
-      msg <- receive.string(socket)
+      #sendCommand(socket, "set", list("[Manager].Script.DummyDoubleVar", 42.42))
+      #msg <- receive.string(socket)
       # cat("set result = ", msg, "\n")
       
       # resume the simulation and come back tomorrow
