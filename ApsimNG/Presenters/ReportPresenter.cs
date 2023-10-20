@@ -155,8 +155,8 @@ namespace UserInterface.Presenters
             CommonReportFrequencyVariables = GetReportVariables(CommonFrequencyVariablesList, InScopeModelNames, true);
             this.view.CommonReportFrequencyVariablesList.DataSource = CommonReportFrequencyVariables;
             this.view.CommonReportFrequencyVariablesList.DragStart += OnCommonReportFrequencyVariableListDragStart;
-            (this.view as ReportView).VariableList.VariableDragDataReceived += VariableListVariableDrop;
-            (this.view as ReportView).EventList.VariableDragDataReceived += EventListVariableDrop;
+            (this.view as ReportView).VariableList.VariableDragDataReceived += OnVariableListVariableDrop;
+            (this.view as ReportView).EventList.VariableDragDataReceived += OnEventListVariableDrop;
             this.view.GroupByEdit.Text = report.GroupByVariableName;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
             this.view.EventList.ContextItemsNeeded += OnNeedEventNames;
@@ -388,7 +388,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void VariableListVariableDrop(object sender, EventArgs e)
+        private void OnVariableListVariableDrop(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(StoredDragObject.Code))
             {
@@ -409,6 +409,7 @@ namespace UserInterface.Presenters
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.VariableList.Text = modifiedText;
                 StoredDragObject = null;
+                // TODO: Highlighted line needs to be correctly set.
             }
         }
 
@@ -417,7 +418,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EventListVariableDrop(object sender, EventArgs e)
+        private void OnEventListVariableDrop(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(StoredDragObject.Code))
             {
@@ -437,7 +438,10 @@ namespace UserInterface.Presenters
                 else textLinesList.Insert(view.EventList.CurrentLineNumber, StoredDragObject.Code);
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.EventList.Text = modifiedText;
-                StoredDragObject = null;
+                if (plantVariableLines.Count > 0)
+                    // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
+                    view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber + (plantVariableLines.Count - 1), X = StoredDragObject.Code.Length }; // TODO: Highlighted line needs to be correctly set.
+                else view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber, X = StoredDragObject.Code.Length }; StoredDragObject = null;
             }
         }
 
@@ -839,7 +843,10 @@ namespace UserInterface.Presenters
             string modifiedText = string.Join(Environment.NewLine, lines);
             view.VariableList.Text = modifiedText;
             // Makes the selected line the newly added variable's line.
-            view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
+            if (plantVariableLines.Count > 0)
+                // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
+                view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
+            else view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
         }
 
 
@@ -871,8 +878,10 @@ namespace UserInterface.Presenters
             else lines.Insert(currentReportFrequencyVariablesLineNumber, variableCode);
             string modifiedText = string.Join(Environment.NewLine, lines);
             view.EventList.Text = modifiedText;
-            view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
-
+            if (plantVariableLines.Count > 0)
+                // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
+                view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
+            else view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
         }
 
         /// <summary>
