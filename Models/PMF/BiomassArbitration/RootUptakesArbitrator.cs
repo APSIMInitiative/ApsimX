@@ -165,7 +165,7 @@ namespace Models.PMF
             }
 
             // Calculate the fraction of water demand that has been given to us.
-            double fraction = 1;
+            //double fraction = 1;
             if (WDemand > 0)
                 WSDRatio = Math.Min(1.0, WSupply / WDemand);
 

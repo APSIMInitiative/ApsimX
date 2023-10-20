@@ -17,7 +17,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
-    public class NitrogenDeficitFunction : Model, IFunction, ICustomDocumentation
+    public class NitrogenDeficitFunction : Model, IFunction
     {
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
@@ -111,26 +111,23 @@ namespace Models.PMF
         /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // add a heading
+            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // get description of this class
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // write memos
+            foreach (IModel memo in this.FindAllChildren<Memo>())
+                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                parentOrgan = FindParentOrgan(this.Parent);
+            parentOrgan = FindParentOrgan(this.Parent);
 
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
-                    + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
-                    + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
-            }
+            // add a description of the equation for this function
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+                + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
+            tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
+                + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
         }
     }
 }

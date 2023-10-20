@@ -70,9 +70,8 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction DeadAreaIndex = null;
 
-        /// <summary>The water demanded by the canopy</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction WaterDemandFunction = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction WaterDemandFunction = null;
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.PlantType + "_" + this.Parent.Name; } }
@@ -169,8 +168,8 @@ namespace Models.PMF
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            if (WaterDemandFunction != null)
-                return WaterDemandFunction.Value();
+            //if (WaterDemandFunction != null)
+            //    return WaterDemandFunction.Value();
             return WaterDemand;
         }
         /// <summary>Gets the transpiration.</summary>
