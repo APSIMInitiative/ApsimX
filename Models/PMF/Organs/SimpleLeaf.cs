@@ -844,6 +844,7 @@ namespace Models.PMF.Organs
                 LAIDead = laiDead.Value();
 
                 // Do senescence
+                senescedFrac = senescenceRate.Value();
                 if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
                 Senescing = Live * senescedFrac;
