@@ -1,5 +1,5 @@
 ---
-title: "Command Line Usage"
+title: "Command Line Info"
 draft: false
 ---
 
