@@ -1,18 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using UserInterface.Commands;
+using Models.Soils;
+using System;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Views;
+using Models.Interfaces;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the water model.</summary>
     public class WaterPresenter : IPresenter
     {
         /// <summary>The grid presenter.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -54,9 +55,13 @@
         {
             water = model as Water;
             view = v as ViewBase;
+
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
+
             this.explorerPresenter = explorerPresenter;
-            gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, v, explorerPresenter);
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");
@@ -175,14 +180,22 @@
         {
             var changeFilledFromTop = new ChangeProperty.Property(water, nameof(water.FilledFromTop), filledFromTopCheckbox.Checked);
 
-            double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
-            var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
+            if (string.IsNullOrEmpty(percentFullEdit.Text))
+            {
+                ChangeProperty change = new ChangeProperty(new[] { changeFilledFromTop });
+                ChangePropertyValue(change);
+            }
+            else
+            {
+                double fractionFull = Convert.ToDouble(percentFullEdit.Text, CultureInfo.CurrentCulture) / 100;
+                var changeFractionFull = new ChangeProperty.Property(water, nameof(water.FractionFull), fractionFull);
 
-            // Create a single ChangeProperty object with two actual changes.
-            // This will cause both changes to be applied (and be undo-able) in
-            // a single atomic action.
-            ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
-            ChangePropertyValue(changes);
+                // Create a single ChangeProperty object with two actual changes.
+                // This will cause both changes to be applied (and be undo-able) in
+                // a single atomic action.
+                ChangeProperty changes = new ChangeProperty(new[] { changeFilledFromTop, changeFractionFull });
+                ChangePropertyValue(changes);
+            }
         }
 
         /// <summary>Invoked when the relative to drop down is changed.</summary>
@@ -207,6 +220,8 @@
         /// <param name="e">The event arguments.</param>
         private void OnDepthWetSoilChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(depthWetSoilEdit.Text) && Gtk.Application.EventsPending())
+                return;
             double depthWetSoil = Convert.ToDouble(depthWetSoilEdit.Text, CultureInfo.CurrentCulture);
             ChangePropertyValue(nameof(water.DepthWetSoil), depthWetSoil);
         }

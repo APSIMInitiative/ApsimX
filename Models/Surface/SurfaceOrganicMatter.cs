@@ -601,7 +601,10 @@ namespace Models.Surface
 
             for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
                 InitialResidueC += potentialDecomposition.Pool[i].FOM.C;
-            FinalResidueC = surfaceResidue.C[0];
+
+            for (int i = 0; i < surfaceResidue.C.Count; i++)
+                FinalResidueC += surfaceResidue.C[i];
+
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
             if (FractionDecomposed < 1)
             { }

@@ -5,10 +5,11 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
+using SkiaSharp;
+using static Models.Core.ScriptCompiler;
 
 namespace Models.Storage
 {
-
     /// <summary>
     /// A class for reading from a database connection.
     /// </summary>
@@ -107,34 +108,6 @@ namespace Models.Storage
         public List<Tuple<string, Type>> GetColumns(string tableName)
         {
             return Connection.GetColumns(tableName);
-        }
-
-        /// <summary>
-        /// Gets a "brief" column name for a column
-        /// </summary>
-        /// <param name="tablename"></param>
-        /// <param name="fullColumnName">The "full" name of the column</param>
-        /// <returns>The "brief" name of the column</returns>
-        public string BriefColumnName(string tablename, string fullColumnName)
-        {
-            if (Connection is Firebird)
-                return (Connection as Firebird).GetShortColumnName(tablename, fullColumnName);
-            else
-                return fullColumnName;
-        }
-
-        /// <summary>
-        /// Gets the "full" column name for a column
-        /// </summary>
-        /// <param name="tablename"></param>
-        /// <param name="queryColumnName"></param>
-        /// <returns>The "full" name of the column</returns>
-        public string FullColumnName(string tablename, string queryColumnName)
-        {
-            if (Connection is Firebird)
-                return (Connection as Firebird).GetLongColumnName(tablename, queryColumnName);
-            else
-                return queryColumnName;
         }
 
         /// <summary>Returns a list of table names</summary>
@@ -237,7 +210,7 @@ namespace Models.Storage
 
             // Add checkpointID to filter.
             if (fieldNamesInTable.Contains("CheckpointID") && checkpointIDs.ContainsKey(checkpointName))
-                filter = AddToFilter(filter, $"CheckpointID={checkpointIDs[checkpointName].ID}");
+                filter = AddToFilter(filter, $"\"CheckpointID\"={checkpointIDs[checkpointName].ID}");
 
             filter = RemoveSimulationNameFromFilter(filter);
 
@@ -246,24 +219,24 @@ namespace Models.Storage
 
             // Add simulationIDs to filter
             if (simulationNames != null)
-                filter = AddToFilter(filter, $"SimulationID in ({ToSimulationIDs(simulationNames).Join(",")})");
-
-            // Calculate Firebird bits
-            if (Connection is Firebird)
             {
-                fieldNames = ConvertFieldNameToFirebird(fieldNames, tableName);
+                string simulationIDsCSV = ToSimulationIDs(simulationNames).Join(",");
+                // Firebird "IN" predicates are limited to 1500 items. If more, we need a different approach
+                if (simulationNames.Count() > 1499 && Connection is Firebird)
+                {
+                    List<object[]> Ids = simulationIDsCSV.Split(',').Select(c => new object[1] { Convert.ToInt32(c) }).ToList();
+                    Connection.ExecuteNonQuery("RECREATE GLOBAL TEMPORARY TABLE \"_SelectIDs\" (\"simID\" integer) ON COMMIT PRESERVE ROWS");
+                    Connection.InsertRows("_SelectIDs", new List<string> { "simID" }, Ids);
+                    filter = AddToFilter(filter, $"\"SimulationID\" in (SELECT \"simID\" FROM \"_SelectIDs\")");
+                }
+                else
+                    filter = AddToFilter(filter, $"\"SimulationID\" in ({simulationIDsCSV})");
+            }
+            // Calculate Firebird bits
+            if (filter != null && Connection is Firebird)
+            {
                 if (count > 0)
                     firebirdFirstStatement = $"FIRST {count} SKIP {from}";
-
-                var output = filter.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
-                foreach (string field in output)
-                {
-                    var shortName = (Connection as Firebird).GetShortColumnName(tableName, field);
-                    if (!string.IsNullOrEmpty(shortName))
-                    {
-                        filter = filter.Replace("[" + field + "]", "[" + shortName + "]");
-                    }
-                }
             }
 
             // Get orderby fields
@@ -280,13 +253,22 @@ namespace Models.Storage
                       $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
+            sql += " ORDER BY ";
             if (orderByFields.Count > 0)
-                sql += $" ORDER BY {orderByFields.Enclose("\"", "\"").Join(",")}";
+                sql += $"{orderByFields.Enclose("\"", "\"").Join(",")}" + ",";
+            sql += "\"rowid\"";
             if (Connection is SQLite && count > 0)
                 sql += $" LIMIT {count} OFFSET {from}";
 
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);
+
+            if (Connection is Firebird)
+            {
+                // Clean up the temporary table, if we created one
+                if (Connection.TableExists("_SelectIDs"))
+                    Connection.DropTable("_SelectIDs");
+            }
 
             if (result.Rows.Count > 0)
             {
@@ -315,22 +297,6 @@ namespace Models.Storage
 
                         row["CheckpointName"] = checkpointName;
                         row["SimulationName"] = simulationName;
-                    }
-                }
-            }
-
-            // For Firebird, we need to recover the full names of the data columns
-            if (Connection is Firebird && !tableName.StartsWith("_"))
-            {
-                foreach (DataColumn dataCol in result.Columns)
-                {
-                    if (dataCol.ColumnName.StartsWith("COL_"))
-                    {
-                        int colNo;
-                        if (Int32.TryParse(dataCol.ColumnName.Substring(4), out colNo))
-                        {
-                            dataCol.ColumnName = (Connection as Firebird).GetLongColumnName(tableName, colNo);
-                        }
                     }
                 }
             }
@@ -372,16 +338,6 @@ namespace Models.Storage
                     return filter + " AND " + filterClause;
             }
             return filter;
-        }
-
-        /// <summary>Convert field names to Firebird format.</summary>
-        /// <param name="fieldNames">The field names.</param>
-        /// <param name="tableName">The table name.</param>
-        private IEnumerable<string> ConvertFieldNameToFirebird(IEnumerable<string> fieldNames, string tableName)
-        {
-
-            foreach (var fieldName in fieldNames)
-                yield return $"COL_{(Connection as Firebird).GetColumnNumber(tableName, fieldName)}";
         }
 
         /// <param name="sql">The SQL.</param>

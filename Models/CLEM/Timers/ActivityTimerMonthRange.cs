@@ -33,6 +33,8 @@ namespace Models.CLEM.Timers
     {
         [Link]
         private IClock clock = null;
+        private DateTime lastCheck = DateTime.MinValue;
+        private bool lastReturn = false;
 
         private int startMonth;
         private int endMonth;
@@ -76,7 +78,12 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                return IsMonthInRange(clock.Today);
+                if(clock.Today != lastCheck)
+                {
+                    lastCheck = clock.Today;
+                    lastReturn = IsMonthInRange(clock.Today);
+                }
+                return lastReturn;
             }
         }
 

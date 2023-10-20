@@ -2,31 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.IO;
-    using Views;
-    using Interfaces;
-    using Intellisense;
-    using EventArguments;
-    using Models.Core;
-    using System.Globalization;
     using System.Drawing;
+    using System.Globalization;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using System.Threading;
-
-
+    using System.Threading.Tasks;
+    using EventArguments;
+    using Intellisense;
+    using Interfaces;
     using Microsoft.CodeAnalysis;
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis.Completion;
     using Microsoft.CodeAnalysis.Host.Mef;
     using Microsoft.CodeAnalysis.Text;
-    using System.Threading.Tasks;
-    using Microsoft.CodeAnalysis.Recommendations;
+    using Models.Core;
+    using Models.Storage;
+    using Views;
 
 
 
@@ -258,6 +249,9 @@
         public bool GenerateGridCompletions(string cellContents, int offset, IModel model, bool properties, bool methods, bool publishedEvents, bool subscribedEvents, bool controlSpace = false)
         {
             // TODO : Perhaps there should be a separate intellisense class for grid completions?
+            if (string.IsNullOrEmpty(cellContents))
+                throw new Exception("Unable to generate grid completions for Intellisense as cell contents was null.");
+
             string contentsToCursor = cellContents.Substring(0, offset);
 
             // Remove any potential trailing period.
@@ -353,20 +347,20 @@
         public bool GenerateSeriesCompletions(string text, int offset, string tableName, IStorageReader storage)
         {
             triggerWord = text?.Substring(0, offset).Split(' ').Last().Replace("[", "").Replace("]", "");
-            
+
             List<string> columnNames = storage.ColumnNames(tableName).ToList();
             List<NeedContextItemsArgs.ContextItem> intellisenseOptions = new List<NeedContextItemsArgs.ContextItem>();
             foreach (string columnName in columnNames)
             {
                 if (string.IsNullOrEmpty(triggerWord) || string.IsNullOrEmpty(triggerWord.Replace("[", "").Replace("]", "")) || columnName.StartsWith(triggerWord.Replace("[", "").Replace("]", "")))
-                intellisenseOptions.Add(new NeedContextItemsArgs.ContextItem()
-                {
-                    Name = columnName,
-                    Units = string.Empty,
-                    TypeName = string.Empty,
-                    Descr = string.Empty,
-                    ParamString = string.Empty
-                });
+                    intellisenseOptions.Add(new NeedContextItemsArgs.ContextItem()
+                    {
+                        Name = columnName,
+                        Units = string.Empty,
+                        TypeName = string.Empty,
+                        Descr = string.Empty,
+                        ParamString = string.Empty
+                    });
             }
             if (intellisenseOptions.Any())
                 view.Populate(intellisenseOptions);
@@ -404,7 +398,7 @@
             string currentLine = contentsToCursor.Split(Environment.NewLine.ToCharArray()).Last().Trim();
             // Set the trigger word for later use.
             triggerWord = GetTriggerWord(currentLine);
-            
+
             // Ignore everything before most recent model name in square brackets.
             // I'm assuming that model/node names cannot start with a number.
             string modelNamePattern = @"\[([A-Za-z]+[A-Za-z0-9]*)\]";
@@ -531,7 +525,7 @@
                 camelCaseMatch = CamelCaseMatch(itemText, query);
                 if (camelCaseMatch == true) return 4;
             }
-            
+
             if (itemText.IndexOf(query, StringComparison.InvariantCulture) >= 0)
                 return 3;
             if (itemText.IndexOf(query, StringComparison.InvariantCultureIgnoreCase) >= 0)

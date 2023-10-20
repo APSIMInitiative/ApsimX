@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Models.Factorial;
 
 namespace Models.Core
 {
@@ -11,7 +12,7 @@ namespace Models.Core
     /// </summary>
     public class ScopingRules
     {
-        private Dictionary<string, List<IModel>> cache = new Dictionary<string, List<IModel>>();
+        private Dictionary<IModel, List<IModel>> cache = new Dictionary<IModel, List<IModel>>();
 
         /// <summary>
         /// Return a list of models in scope to the one specified.
@@ -19,10 +20,13 @@ namespace Models.Core
         /// <param name="relativeTo">The model to base scoping rules on</param>
         public IModel[] FindAll(IModel relativeTo)
         {
-            string relativeToFullPath = relativeTo.FullPath;
+            IModel scopedParent = FindScopedParentModel(relativeTo);
+            if (scopedParent == null)
+                throw new Exception("No scoping model found relative to: " + relativeTo.FullPath);
+
             // Try the cache first.
             List<IModel> modelsInScope;
-            if (cache.TryGetValue(relativeToFullPath, out modelsInScope))
+            if (cache.TryGetValue(scopedParent, out modelsInScope))
                 return modelsInScope.ToArray();
 
             // The algorithm is to find the parent scoped model of the specified model.
@@ -31,19 +35,16 @@ namespace Models.Core
             // child of the parents of the scoped model, we also return its descendants
             // if it is not a scoped model.
 
-            IModel scopedParent = FindScopedParentModel(relativeTo);
-            if (scopedParent == null)
-                throw new Exception("No scoping model found relative to: " + relativeTo.FullPath);
-
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
             modelsInScope.Add(scopedParent);
             modelsInScope.AddRange(scopedParent.FindAllDescendants());
-            while (scopedParent.Parent != null)
+            IModel m = scopedParent;
+            while (m.Parent != null)
             {
-                scopedParent = scopedParent.Parent;
-                modelsInScope.Add(scopedParent);
-                foreach (IModel child in scopedParent.Children)
+                m = m.Parent;
+                modelsInScope.Add(m);
+                foreach (IModel child in m.Children)
                 {
                     if (!modelsInScope.Contains(child))
                     {
@@ -58,11 +59,24 @@ namespace Models.Core
                 }
             }
 
-            if (!modelsInScope.Contains(scopedParent))
-                modelsInScope.Add(scopedParent); // top level simulation
+            if (!modelsInScope.Contains(m))
+                modelsInScope.Add(m); // top level simulation
+
+            //scope may not work for models under experiment (that need to link back to the actual sim)
+            //so first we find models that are in scope (aka, also under the factor), then also return
+            //the descendants of the simulation
+            Experiment exp = relativeTo.FindAncestor<Experiment>();
+            if (exp != null)
+            {
+                Simulation sim = exp.FindChild<Simulation>();
+
+                IEnumerable<IModel> descendants = sim.FindAllDescendants();
+                foreach (IModel result in descendants)
+                    modelsInScope.Add(result);
+            }
 
             // add to cache for next time.
-            cache.Add(relativeToFullPath, modelsInScope);
+            cache.Add(scopedParent, modelsInScope);
             return modelsInScope.ToArray();
         }
 
