@@ -138,7 +138,7 @@ namespace Models.Soils
         /// <summary>Invoked to perform solute daily processes</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("DoSolute")]
         private void OnDoSolute(object sender, EventArgs e)
         {
             if (D0 > 0)
