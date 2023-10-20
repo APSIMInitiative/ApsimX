@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Shared.Extensions;
 using ApsimNG.Classes;
 using Gtk;
 using Markdig.Helpers;
@@ -651,7 +652,7 @@ namespace UserInterface.Presenters
             List<string> modelNamesInScope = new();
             Simulations simulations = explorerPresenter.ApsimXFile;
             List<IModel> modelInScope = simulations.FindAllInScope<IModel>().ToList();
-            modelNamesInScope = modelInScope.Select(x => x.Name).Distinct<string>().ToList();
+            modelNamesInScope = modelInScope.Select(x => x.GetType().GetFriendlyName()).Distinct<string>().ToList();
             return modelNamesInScope;
         }
 
@@ -882,10 +883,22 @@ namespace UserInterface.Presenters
         private List<string> CreatePlantVariableLines(string variableCode)
         {
             List<string> plantCodeLines = new();
-            List<IPlant> zonePlants = report.FindAncestor<Zone>().Plants;
-            string codeStringWithoutPlantSection = variableCode.Split(']')[1];
-            foreach (IPlant plant in zonePlants)
-                plantCodeLines.Add($"[{plant.Name}]{codeStringWithoutPlantSection}");
+            List<IPlant> areaPlants = new();
+            if (report.FindAncestor<Folder>() != null)
+                areaPlants = explorerPresenter.ApsimXFile.FindAllInScope<IPlant>().ToList();
+            else areaPlants = report.FindAncestor<Zone>().Plants;
+            // Make sure plantsNames only has unique names. If under replacements you'll may have many many plants of the same name.
+            areaPlants = areaPlants.GroupBy(plant => plant.Name).Select(plant => plant.First()).ToList();
+            foreach (IPlant plant in areaPlants)
+                if (variableCode.Contains(" as "))
+                {
+                    string newVariableCode = variableCode.Replace("[Plant]", $"[{plant.Name}]");
+                    List<string> variableCodeSplits = newVariableCode.Split(' ').ToList();
+                    string updatedAliasString = plant.Name + variableCodeSplits.Last();
+                    variableCodeSplits[variableCodeSplits.Count - 1] = updatedAliasString;
+                    plantCodeLines.Add(string.Join(' ', variableCodeSplits));
+                }
+                else plantCodeLines.Add(variableCode.Replace("[Plant]", $"[{plant.Name}]"));
             return plantCodeLines;
         }
 
