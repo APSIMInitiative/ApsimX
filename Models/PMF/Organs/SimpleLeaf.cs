@@ -247,6 +247,12 @@ namespace Models.PMF.Organs
         private const double biomassToleranceValue = 0.0000000001;
 
         /// <summary>
+        /// The Fraction Senesced each day
+        /// </summary>
+        private double senescedFrac { get; set; }
+
+
+        /// <summary>
         /// The live biomass state at start of the computation round.
         /// </summary>
         private Biomass startLive = null;
@@ -838,7 +844,6 @@ namespace Models.PMF.Organs
                 LAIDead = laiDead.Value();
 
                 // Do senescence
-                double senescedFrac = senescenceRate.Value();
                 if (Live.Wt * (1.0 - senescedFrac) < biomassToleranceValue)
                     senescedFrac = 1.0;  // remaining amount too small, senesce all
                 Senescing = Live * senescedFrac;
@@ -851,11 +856,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.ReAllocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            NSupply.ReAllocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescedFrac * nReallocationFactor.Value());
             if (MathUtilities.IsNegative(NSupply.ReAllocation))
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.ReTranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            NSupply.ReTranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescedFrac) * nRetranslocationFactor.Value());
             if (MathUtilities.IsNegative(NSupply.ReTranslocation))
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
