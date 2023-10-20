@@ -43,7 +43,7 @@ namespace Models.ForageDigestibility
                 columns.Add(new GridTableColumn("MinimumAmount", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
                 List<GridTable> tables = new List<GridTable>();
-                tables.Add(new GridTable(Name, columns, this));
+                tables.Add(new GridTable("", columns, this));
 
                 if (Parameters == null)
                     GetParametersAsGrid();
@@ -95,7 +95,7 @@ namespace Models.ForageDigestibility
 
                 //check if another row with the same name exists
                 for (int i = 1; i < dt.Rows.Count && row2 == null; i++)
-                    if (dt.Rows[i]["Name"] == row["Name"])
+                    if (dt.Rows[i]["Name"].ToString() == row["Name"].ToString())
                         if (dt.Rows[i]["IsLive"] != row["IsLive"])
                             row2 = dt.Rows[i];
 
@@ -106,6 +106,9 @@ namespace Models.ForageDigestibility
                     row = row2;
                     row2 = temp;
                 }
+
+                if (row2 == null)
+                    throw new Exception($"Cannot find the dead component for {row["Name"]}.");
 
                 DataRow newRow = data.NewRow();
                 newRow[0] = row["Name"];

@@ -513,7 +513,7 @@ namespace UserInterface.Views
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
             {
                 int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
-                for (int rowIndex = NumberHiddenRows; rowIndex < visibleRows; rowIndex++)
+                for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
                     columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
 
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
