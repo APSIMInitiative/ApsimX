@@ -40,6 +40,10 @@ namespace Models.Agroforestry
         [JsonIgnore]
         public double MinT { get { return weather.MinT; } set { weather.MinT = value; } }
 
+        /// <summary>Pan evaporation</summary>
+        [JsonIgnore]
+        public double PanEvap { get { return weather.PanEvap; } set{ weather.PanEvap = value; } }
+
         /// <summary>
         /// Daily Mean temperature (oC)
         /// </summary>

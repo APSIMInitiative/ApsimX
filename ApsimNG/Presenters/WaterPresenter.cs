@@ -1,18 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Graphing;
-    using Commands;
-    using Models.Soils;
-    using Views;
+﻿using APSIM.Shared.Graphing;
+using UserInterface.Commands;
+using Models.Soils;
+using System;
+using System.Globalization;
+using System.Linq;
+using UserInterface.Views;
+using Models.Interfaces;
 
+namespace UserInterface.Presenters
+{
     /// <summary>A presenter for the water model.</summary>
     public class WaterPresenter : IPresenter
     {
         /// <summary>The grid presenter.</summary>
-        private NewGridPresenter gridPresenter;
+        private GridPresenter gridPresenter;
 
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
@@ -54,9 +55,13 @@
         {
             water = model as Water;
             view = v as ViewBase;
+
+            ContainerView gridContainer = view.GetControl<ContainerView>("grid");
+
             this.explorerPresenter = explorerPresenter;
-            gridPresenter = new NewGridPresenter();
-            gridPresenter.Attach(model, v, explorerPresenter);
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach((model as IGridModel).Tables[0], gridContainer, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             percentFullEdit = view.GetControl<EditView>("percentFullEdit");
             filledFromTopCheckbox = view.GetControl<CheckBoxView>("filledFromTopCheckbox");

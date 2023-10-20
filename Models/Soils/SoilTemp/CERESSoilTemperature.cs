@@ -1,5 +1,6 @@
 ﻿using System;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.Core;
 using Models.Interfaces;
 
@@ -26,6 +27,9 @@ namespace Models.Soils
         /// <summary>Access the soil physical properties.</summary>
         [Link]
         private IPhysical soilPhysical = null;
+
+        /// <summary>Invoke when the soil temperature has changed.</summary>
+        public event EventHandler SoilTemperatureChanged;
 
         #region Parameters and inputs provided by the user or APSIM
 
@@ -194,6 +198,8 @@ namespace Models.Soils
                 if (st[layer] < -50.0 || st[layer] > 80.0)
                     throw new Exception("Value for soil_temp is out of range");
             }
+
+            SoilTemperatureChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private double dlt_temp(double alx)

@@ -46,7 +46,7 @@ namespace UserInterface.Views
         private int headerHeight = 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GridView" /> class.
+        /// Initializes a new instance of the _ class.
         /// </summary>
         public ActivityLedgerGridView(ViewBase owner) : base(owner)
         {
