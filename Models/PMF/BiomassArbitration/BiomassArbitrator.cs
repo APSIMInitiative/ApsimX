@@ -78,6 +78,11 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientsDelta Nitrogen { get; private set; }
 
+        /// <summary>Gets the n supply relative to N demand.</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        public double FN { get { return Nitrogen == null ? 1 : MathUtilities.Divide(Nitrogen.TotalPlantSupply, Nitrogen.TotalPlantDemand, 1); } }
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 

@@ -389,8 +389,8 @@ namespace Models.PMF
                     NutrientPoolsState ReAllocatedC = new NutrientPoolsState(Carbon.SuppliesAllocated.ReAllocation);
                     NutrientPoolsState ReAllocatedN = new NutrientPoolsState(Nitrogen.SuppliesAllocated.ReAllocation);
                     ReAllocated = new OrganNutrientsState(ReAllocatedC, ReAllocatedN, new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
-                    Senesced = new OrganNutrientsState(Senesced - ReAllocated, Cconc);
-                    Dead = new OrganNutrientsState(Dead + Senesced, Cconc);
+                    //Senesced = new OrganNutrientsState(Senesced - ReAllocated, Cconc);
+                    Dead = new OrganNutrientsState(Dead + Senesced - ReAllocated, Cconc);
                 }
 
                 //Retranslocate from live pools
@@ -460,12 +460,12 @@ namespace Models.PMF
             double respired = (double)(this.FindByPath("Respired." + element).Value);
             double detached = (double)(this.FindByPath("Detached." + element).Value);
 
-            double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
+            double liveBal = Math.Abs(live - (startLive + allocated - senesced
                                                         - reTranslocated - liveRemoved - respired));
             if (liveBal > tolerence)
                 throw new Exception(element + " mass balance violation in live biomass of " + this.Name);
 
-            double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
+            double deadBal = Math.Abs(dead - (startDead + senesced - reAllocated - deadRemoved - detached));
             if (deadBal > tolerence)
                 throw new Exception(element + " mass balance violation in dead biomass");
 
