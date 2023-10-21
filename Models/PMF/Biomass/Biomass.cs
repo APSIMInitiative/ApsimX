@@ -192,6 +192,18 @@ namespace Models.PMF
         public Biomass() { }
 
         /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
+        public Biomass(double structuralWt, double metabolicWt, double storageWt,
+                       double structuralN, double metabolicN, double storageN) 
+        {
+            _StructuralWt = structuralWt;
+            _StorageWt = storageWt;
+            _MetabolicWt = metabolicWt;
+            _StructuralN = structuralN;
+            _StorageN = storageN;
+            _MetabolicN = metabolicN;
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         /// <param name="from">From.</param>
         public Biomass(Biomass from)
         {

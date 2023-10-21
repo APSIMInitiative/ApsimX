@@ -137,7 +137,7 @@ namespace Models.PMF
             ConcentrationOrFraction = concentrationOrFractionFunction.ConcentrationsOrFractionss;
             if (this.Name == "Carbon")
                 if ((ConcentrationOrFraction.Total > 1.01) || (ConcentrationOrFraction.Total < 0.99))
-                    throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
+                    throw new Exception("Concentrations of Carbon in "+organ.Name+" must add to 1 to keep demands entire");
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>

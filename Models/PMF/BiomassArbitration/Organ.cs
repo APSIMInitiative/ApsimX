@@ -5,6 +5,7 @@ using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
+using Models.PMF.Library;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -18,7 +19,7 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model
+    public class Organ : Model, IHasDamageableBiomass
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -117,6 +118,22 @@ namespace Models.PMF
         /// </summary>
         ///  [JsonIgnore]
         public RootNetwork RootNetworkObject { get; set; }
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                Biomass rLive = new Biomass(Live.Weight.Structural, Live.Weight.Metabolic, Live.Weight.Storage,
+                                            Live.Nitrogen.Structural, Live.Nitrogen.Metabolic, Live.Nitrogen.Structural);
+                Biomass rDead = new Biomass(Dead.Weight.Structural, Dead.Weight.Metabolic, Dead.Weight.Storage,
+                                            Dead.Nitrogen.Structural, Dead.Nitrogen.Metabolic, Dead.Nitrogen.Structural);
+
+
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", rLive, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", rDead, false);
+            }
+        }
 
         /// <summary>The Carbon concentration of the organ</summary>
         [Description("Carbon concentration")]
@@ -230,9 +247,25 @@ namespace Models.PMF
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public virtual double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
-            return 0;
+            LiveRemoved = Live * (liveToRemove + liveToRemove);
+            DeadRemoved = Dead * (deadToRemove + deadToResidue);
+
+            OrganNutrientsState ToResidues = Live * liveToResidue + Dead * deadToResidue;
+
+            UpdateProperties();
+
+            if (RootNetworkObject != null)
+            {
+                surfaceOrganicMatter.Add(ToResidues.Wt * 10.0, ToResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
+            }
+            else
+            {
+                //To Do add removed DM to soil for root organs
+            }
+
+            return DeadRemoved.Wt + LiveRemoved.Wt;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -430,7 +463,7 @@ namespace Models.PMF
             double liveBal = Math.Abs(live - (startLive + allocated - senesced - reAllocated
                                                         - reTranslocated - liveRemoved - respired));
             if (liveBal > tolerence)
-                throw new Exception(element + " mass balance violation in live biomass");
+                throw new Exception(element + " mass balance violation in live biomass of " + this.Name);
 
             double deadBal = Math.Abs(dead - (startDead + senesced - deadRemoved - detached));
             if (deadBal > tolerence)

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 165,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -146,8 +146,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "FodderBeet",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "FodderBeet",
           "ResourceName": null,
           "Children": [
