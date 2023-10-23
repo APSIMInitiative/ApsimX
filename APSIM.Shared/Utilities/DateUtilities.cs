@@ -271,8 +271,12 @@ namespace APSIM.Shared.Utilities
         /// <returns>true if within date window</returns>
         public static bool WithinDates(string ddMMM_start, DateTime today, string ddMMM_end)
         {
-            DateTime start = GetDate(ddMMM_start, today.Year);
-            DateTime end = GetDate(ddMMM_end, today.Year);
+            var year = today.Year;
+            // Avoid subtracting from year 1.
+            if (year == 1)
+                year = 1900;
+            DateTime start = GetDate(ddMMM_start, year);
+            DateTime end = GetDate(ddMMM_end, year);
 
             //if start after end (spans end-of-year boundary)
             if (start.CompareTo(end) > 0)
