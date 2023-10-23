@@ -127,7 +127,7 @@ namespace Models.WaterModel
             double cona = waterBalance.WinterCona;
             summerStartDate = DateUtilities.GetDate(waterBalance.SummerDate, 1900).AddDays(1); // AddDays(1) - to reproduce behaviour of DateUtilities.WithinDate
             winterStartDate = DateUtilities.GetDate(waterBalance.WinterDate, 1900);
-            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
+            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, clock.StartDate, waterBalance.SummerDate);
 
             if (IsSummer)
             {
