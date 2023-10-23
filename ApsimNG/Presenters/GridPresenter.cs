@@ -130,30 +130,12 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            
+
             //Create the sheet widget here.
-            grid = new SheetWidget();
-            grid.Sheet = new Sheet();
             SetupSheet(dataProvider);
-            if (gridTable != null)
-            {
-                if (gridTable.HasUnits())
-                    grid.Sheet.NumberFrozenRows = 2;
-                else
-                    grid.Sheet.NumberFrozenRows = 1;
-            } 
-            //Add the sheet's scrollbar widget to the view. (sheet sits within the scrollbar objects)
-            sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
-            grid.Sheet.RedrawNeeded += OnRedraw;
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-
-            contextMenu = new MenuView();
-            contextMenuHelper = new ContextMenuHelper(grid);
-            contextMenuHelper.ContextMenu += OnContextMenuPopup;
-            if (contextMenuOptions == null)
-                contextMenuOptions = new List<string>(); //this will be populated by a presenter
 
             //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
@@ -183,6 +165,37 @@ namespace UserInterface.Presenters
             
         }
 
+        public void SetupSheet(ISheetDataProvider dataProvider)
+        {
+            grid = new SheetWidget();
+            grid.Sheet = new Sheet();
+            grid.Sheet.DataProvider = dataProvider;
+            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
+            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
+            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
+            //we don't want an editor on grids that are linked to a dataProvider instead of a model
+            if (dataProvider == null)
+                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
+
+            if (gridTable != null)
+            {
+                if (gridTable.HasUnits())
+                    grid.Sheet.NumberFrozenRows = 2;
+                else
+                    grid.Sheet.NumberFrozenRows = 1;
+            }
+
+            //Add the sheet's scrollbar widget to the view. (sheet sits within the scrollbar objects)
+            sheetContainer.Add(grid.Sheet.ScrollBars.MainWidget);
+            grid.Sheet.RedrawNeeded += OnRedraw;
+
+            contextMenu = new MenuView();
+            contextMenuHelper = new ContextMenuHelper(grid);
+            contextMenuHelper.ContextMenu += OnContextMenuPopup;
+            if (contextMenuOptions == null)
+                contextMenuOptions = new List<string>(); //this will be populated by a presenter
+        }
+
         /// <summary>
         /// Provide a new data provider to populate the table with.
         /// Used by presentors that are displaying data instead of editting a model. (eg DataStore)
@@ -196,6 +209,7 @@ namespace UserInterface.Presenters
             {
                 CleanupSheet();
                 SetupSheet(dataProvider);
+                grid.Sheet.ScrollBars.SetScrollbarAdjustments(dataProvider.ColumnCount, dataProvider.RowCount);
                 grid.Sheet.NumberFrozenColumns = frozenColumns;
                 grid.Sheet.NumberFrozenRows = frozenRows;
             }
@@ -278,22 +292,6 @@ namespace UserInterface.Presenters
             intellisense = new IntellisensePresenter(sheetContainer as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
             grid.Sheet.CellEditor.ShowIntellisense += OnIntellisenseNeedContextItems;
-        }
-
-        /// <summary>
-        /// Adds cell selection, cell editing, scrollbars and the cell painter
-        /// Update this function as more customisation is required
-        /// </summary>
-        private void SetupSheet(ISheetDataProvider dataProvider)
-        {
-            grid.Sheet.DataProvider = dataProvider;
-            grid.Sheet.CellSelector = new MultiCellSelect(grid.Sheet, grid);
-            grid.Sheet.ScrollBars = new SheetScrollBars(grid.Sheet, grid);
-            grid.Sheet.CellPainter = new DefaultCellPainter(grid.Sheet, grid);
-
-            //we don't want an editor on grids that are linked to a dataProvider instead of a model
-            if (dataProvider == null)
-                grid.Sheet.CellEditor = new CellEditor(grid.Sheet, grid);
         }
 
         /// <summary>

@@ -283,7 +283,14 @@ namespace Utility
         /// <summary>Finalizes an instance of the <see cref="Configuration"/> class.</summary>
         ~Configuration()
         {
-            Save();
+            try
+            {
+                Save();
+            }
+            catch
+            {
+                // An uncaught exception could crash APSIM from the GC thread.
+            }
         }
 
         /// <summary>Gets the configuration settings.</summary>

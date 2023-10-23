@@ -100,11 +100,16 @@ namespace UserInterface.Views
             vpaned4.Pack2(Grid4Box, true, true);
 
             //hide all except first grid
-            ShowGrid(1, false, owner as ExplorerView);
-            ShowGrid(2, false, owner as ExplorerView);
-            ShowGrid(3, false, owner as ExplorerView);
-            ShowGrid(4, false, owner as ExplorerView);
-
+            
+            while (!(owner is ExplorerView) && owner.Owner != null)
+                owner = owner.Owner;
+            if (owner != null)
+            {
+                ShowGrid(1, false, owner as ExplorerView);
+                ShowGrid(2, false, owner as ExplorerView);
+                ShowGrid(3, false, owner as ExplorerView);
+                ShowGrid(4, false, owner as ExplorerView);
+            }
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
