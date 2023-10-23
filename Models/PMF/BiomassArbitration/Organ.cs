@@ -35,12 +35,12 @@ namespace Models.PMF
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        public IFunction senescenceRateFunction = null;
+        public IFunction senescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        private IFunction detachmentRateFunction = null;
+        private IFunction detachmentRate = null;
 
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -192,11 +192,11 @@ namespace Models.PMF
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
-        public double senescenceRate { get; private set; }
+        public double senescenceRateToday { get; private set; }
 
         /// <summary>the detachment rate for the day</summary>
         [JsonIgnore]
-        public double detachmentRate { get; private set; }
+        public double detachmentRateToday { get; private set; }
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
@@ -230,7 +230,7 @@ namespace Models.PMF
         /// <summary>
         /// Gets the nitrogen factor.
         /// </summary>
-        public double Fn { get; private set; }
+        public double FN { get; private set; }
 
         /// <summary>
         /// Gets the metabolic N concentration factor.
@@ -363,8 +363,8 @@ namespace Models.PMF
                 startDeadC = Dead.C;
                 startLiveWt = Live.Wt;
                 startDeadWt = Dead.Wt;
-                senescenceRate = senescenceRateFunction.Value();
-                detachmentRate = detachmentRateFunction.Value();
+                senescenceRateToday = senescenceRate.Value();
+                detachmentRateToday = detachmentRate.Value();
                 setNconcs();
                 Carbon.SetSuppliesAndDemands();
             }
@@ -380,9 +380,9 @@ namespace Models.PMF
             if (parentPlant.IsEmerged)
             {
                 //Calculate biomass to be lost from senescene
-                if (senescenceRate > 0)
+                if (senescenceRateToday > 0)
                 {
-                    Senesced = new OrganNutrientsState(Live * senescenceRate, Cconc);
+                    Senesced = new OrganNutrientsState(Live * senescenceRateToday, Cconc);
                     Live = new OrganNutrientsState(Live - Senesced, Cconc);
 
                     //Catch the bits that were reallocated and add the bits that wernt into dead.
@@ -406,11 +406,11 @@ namespace Models.PMF
                 Live = new OrganNutrientsState(Live + Allocated, Cconc);
 
                 // Do detachment
-                if ((detachmentRate > 0) && (Dead.Wt > 0))
+                if ((detachmentRateToday > 0) && (Dead.Wt > 0))
                 {
-                    if (Dead.Weight.Total * (1.0 - detachmentRate) < 0.00000001)
-                        detachmentRate = 1.0;  // remaining amount too small, detach all
-                    Detached = new OrganNutrientsState(Dead * detachmentRate, Cconc);
+                    if (Dead.Weight.Total * (1.0 - detachmentRateToday) < 0.00000001)
+                        detachmentRateToday = 1.0;  // remaining amount too small, detach all
+                    Detached = new OrganNutrientsState(Dead * detachmentRateToday, Cconc);
                     Dead = new OrganNutrientsState(Dead - Detached, Cconc);
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
@@ -496,7 +496,7 @@ namespace Models.PMF
             Wt = Live.Wt + Dead.Wt;
             N = Live.Nitrogen.Total + Dead.Nitrogen.Total;
             Nconc = Wt > 0.0 ? N / Wt : 0.0;
-            Fn = Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
+            FN = Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
             FNmetabolic = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
         }
 

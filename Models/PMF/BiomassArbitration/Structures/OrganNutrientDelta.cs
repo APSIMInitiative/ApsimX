@@ -146,7 +146,7 @@ namespace Models.PMF
             Clear();
             setConcentrationsOrProportions();
             Supplies.ReAllocation = ThrowIfNegative(supplyFunctions.ReAllocation);
-            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRate);
+            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRateToday);
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
             Supplies.Uptake = ThrowIfNegative(supplyFunctions.Uptake);
 

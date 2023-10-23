@@ -153,7 +153,7 @@ namespace Models.PMF
 
         private void AllocationMade()
         {
-            Fw = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
+            FW = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
         }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
@@ -219,7 +219,7 @@ namespace Models.PMF
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        public double Fw { get; private set; }
+        public double FW { get; private set; }
 
 
         /// <summary>Clears this instance.</summary>
