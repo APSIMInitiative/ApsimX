@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
 {
 
     /// <summary>
-    /// This presenter class provides the functionality behind a TabbedExplorerView 
+    /// This presenter class provides the functionality behind a TabbedExplorerView
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
     /// then has an ExplorerPresenter and ExplorerView created when the tab is
     /// created.
@@ -242,9 +242,9 @@ namespace UserInterface.Presenters
         {
             view.HideProgressBar();
         }
-        
+
         /// <summary>
-        /// Displays several messages, with a separator between them. 
+        /// Displays several messages, with a separator between them.
         /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
@@ -300,7 +300,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// Displays several error messages in the status bar. Each error will have an associated
         /// </summary>
         /// <param name="errors"></param>
         /// <param name="overwrite"></param>
@@ -515,7 +515,7 @@ namespace UserInterface.Presenters
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
                     if (converter.DidConvert)
-                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
+                        this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -900,14 +900,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Returns the ExplorerPresenter for the specified file name, 
+        /// Returns the ExplorerPresenter for the specified file name,
         /// or null if the file is not currently open.
         /// </summary>
         /// <param name="fileName">The file name being sought.</param>
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right.</param>
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {            
+        {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
@@ -955,7 +955,7 @@ namespace UserInterface.Presenters
                 ShowError(e);
                 return null;
             }
-            
+
             //ExplorerView explorerView = new ExplorerView(null);
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -1068,10 +1068,10 @@ namespace UserInterface.Presenters
             // But check to be sure a tab has actually been closed and, if not, remove it now
 
             if (view.PageCount(onLeft) == nPages)
-                view.RemoveTab(index + 1, onLeft);  
+                view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
-            // This is a good time to force garbage collection 
+            // This is a good time to force garbage collection
             GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
