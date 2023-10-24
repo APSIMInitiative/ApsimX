@@ -1,10 +1,8 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using APSIM.Shared.Utilities;
-using Models.Aqua;
 using Models.Core;
 using Models.Core.Run;
 using Models.Interfaces;
@@ -36,6 +34,8 @@ namespace Models.PostSimulationTools
             /// <summary></summary>
             public string SimulationName;
             /// <summary></summary>
+            public string Filename;
+            /// <summary></summary>
             public string Rule;
             /// <summary></summary>
             public string Message;
@@ -59,11 +59,11 @@ namespace Models.PostSimulationTools
                 List<GridTableColumn> columns;
 
                 columns = new List<GridTableColumn>();
-                columns.Add(new GridTableColumn("InputName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("TableName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("ColumnName", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("Rule", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 columns.Add(new GridTableColumn("Message", new VariableProperty(this, GetType().GetProperty("Errors"))));
+                columns.Add(new GridTableColumn("Filename", new VariableProperty(this, GetType().GetProperty("Errors"))));
                 tables.Add(new GridTable("Errors", columns, this));
 
                 return tables;
@@ -93,10 +93,11 @@ namespace Models.PostSimulationTools
             Model model = dataStore as Model;
             Simulations sims = model.FindAncestor<Simulations>();
             List<ValidationResult> newErrors = new List<ValidationResult>();
-
             List<ExcelInput> excelInputs = model.FindAllChildren<ExcelInput>().ToList();
+          
             List<string> tableNames = new List<string>();
             List<string> inputNames = new List<string>();
+
             foreach (ExcelInput input in excelInputs)
             {
                 if (input.Enabled == true) {
@@ -148,6 +149,7 @@ namespace Models.PostSimulationTools
                 {
                     int count = 0;
                     string columnName = columnsNames[j];
+
                     if (columnName.Contains(".Cover")) {
                         for (int k = 0; k < dt.Rows.Count; k++)
                         {
@@ -159,6 +161,7 @@ namespace Models.PostSimulationTools
                                 if (num < 0 || num >= 1)
                                 {
                                     ValidationResult result = new ValidationResult();
+                                    result.Filename = dt.Rows[k]["ExcelInputFilename"].ToString();
                                     result.TableName = tableName;
                                     result.InputName = inputName;
                                     result.SimulationName = count.ToString();
@@ -192,6 +195,7 @@ namespace Models.PostSimulationTools
                 {
                     int count = 0;
                     string columnName = columnsNames[j];
+                    List<string> filenames = new List<string>();
 
                     for (int k = 0; k < dt.Rows.Count; k++)
                     {
@@ -202,6 +206,7 @@ namespace Models.PostSimulationTools
                             if (value.Length == 0)
                             {
                                 ValidationResult result = new ValidationResult();
+                                result.Filename = dt.Rows[k]["ExcelInputFilename"].ToString();
                                 result.TableName = tableName;
                                 result.InputName = inputName;
                                 result.SimulationName = count.ToString();
@@ -212,6 +217,9 @@ namespace Models.PostSimulationTools
                             }
                             if (value == "0")
                             {
+                                string file = dt.Rows[k]["ExcelInputFilename"].ToString();
+                                if (!filenames.Contains(file))
+                                    filenames.Add(file);
                                 count += 1;
                             }
                         }
@@ -219,13 +227,17 @@ namespace Models.PostSimulationTools
 
                     if (count > 0)
                     {
+                        string file = "";
+                        foreach (string f in filenames)
+                            file += f + ", ";
                         ValidationResult result = new ValidationResult();
+                        result.Filename = file;
                         result.TableName = tableName;
                         result.InputName = inputName;
                         result.SimulationName = count.ToString();
                         result.ColumnName = columnName;
                         result.Rule = "0 Value";
-                        result.Message = $"A value of '0' was found in column {columnName}";
+                        result.Message = $"A value of '0' was found in column {columnName}, {count} times.";
                         errors.Add(result);
                     }
                 }
@@ -251,6 +263,7 @@ namespace Models.PostSimulationTools
                 {
                     int count = 0;
                     string columnName = columnsNames[j];
+                    List<string> filenames = new List<string>();
 
                     //0: no type, 1: date, 2: int, 3: double, 4: string
                     bool error = false;
@@ -288,6 +301,10 @@ namespace Models.PostSimulationTools
                                 type = ValidDataTypes.String;
 
                             typesCount[(int)type] += 1;
+
+                            string file = dt.Rows[k]["ExcelInputFilename"].ToString();
+                            if (!filenames.Contains(file))
+                                filenames.Add(file);
                         }
 
                     }
@@ -299,6 +316,10 @@ namespace Models.PostSimulationTools
 
                     if (errorCount > 1)
                     {
+                        string file = "";
+                        foreach (string f in filenames)
+                            file += f + ", ";
+
                         string message = $"Column {columnName} has data of different types.";
                         foreach (ValidDataTypes type in Enum.GetValues(typeof(ValidDataTypes)))
                             if (typesCount[(int)type] > 0)
@@ -306,6 +327,7 @@ namespace Models.PostSimulationTools
 
                         error = true;
                         ValidationResult result = new ValidationResult();
+                        result.Filename = file;
                         result.TableName = tableName;
                         result.InputName = inputName;
                         result.SimulationName = count.ToString();
@@ -365,6 +387,7 @@ namespace Models.PostSimulationTools
                     if (columnNamesRead.Contains(columnName))
                     {
                         ValidationResult result = new ValidationResult();
+                        result.Filename = "";
                         result.TableName = tableName;
                         result.InputName = inputName;
                         result.SimulationName = "All";
@@ -380,6 +403,7 @@ namespace Models.PostSimulationTools
                     if (NameIsAPSIMFormat(columnName))
                     {
                         ValidationResult result = NameMatchesAPSIMModel(columnName, sims);
+                        result.Filename = "";
                         result.TableName = tableName;
                         result.InputName = inputName;
                         result.SimulationName = "All";
@@ -394,6 +418,7 @@ namespace Models.PostSimulationTools
                     else
                     {
                         ValidationResult result = new ValidationResult();
+                        result.Filename = "";
                         result.ColumnName = columnName;
                         result.TableName = tableName;
                         result.InputName = inputName;

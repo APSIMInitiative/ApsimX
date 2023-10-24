@@ -143,6 +143,10 @@ namespace Models.PostSimulationTools
                             {
                                 TruncateDates(table);
 
+                                DataColumn col = table.Columns.Add("ExcelInputFilename", typeof(string));
+                                for (int i = 0; i < table.Rows.Count; i++)
+                                    table.Rows[i][col] = fileName;
+
                                 // Don't delete previous data existing in this table. Doing so would
                                 // cause problems when merging sheets from multiple excel files.
                                 storage.Writer.WriteTable(table, false);
