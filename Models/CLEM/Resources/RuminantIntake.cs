@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Docker.DotNet.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;

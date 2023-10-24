@@ -222,6 +222,29 @@ namespace Models.CLEM.Resources
         [Description("")]
         public double CN2 { get; set; } = 0.27;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double GrowthEnergySlope1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double GrowthEnergySlope2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ProteinGainSlope1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double ProteinGainSlope2 { get; set; }
 
 
 
