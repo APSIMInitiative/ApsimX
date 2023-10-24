@@ -256,7 +256,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return (Age - AgeAtLastConception) * 30.4;
+                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays;
                 else
                     return 0;
             }
@@ -276,6 +276,21 @@ namespace Models.CLEM.Resources
                     return false;
             }
         }
+
+        /// <summary>
+        /// Proportion of pregnancy achieved
+        /// </summary>
+        public double ProportionOfPregnancy
+        {
+            get
+            {
+                if (IsPregnant)
+                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays/BreedParams.GestationLength.InDays;
+                else
+                    return 0;
+            }
+        }
+
 
         /// <summary>
         /// Method to handle birth changes
@@ -377,6 +392,11 @@ namespace Models.CLEM.Resources
                 return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= this.BreedParams.MilkingDays);
             }
         }
+
+        /// <summary>
+        /// Lactation information
+        /// </summary>
+        public RuminantLactationInfo Milk { get; set; } = new RuminantLactationInfo();
 
         /// <summary>
         /// The proportion of the potential milk production achieved in timestep
