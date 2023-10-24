@@ -21,13 +21,25 @@ namespace Models.CLEM.Resources
         private double age;
         private double normalisedWeight;
         private double adultEquivalent;
-        private int weaned = 0;
 
         #region All new Grow SCA properties
 
         //ToDo: ensure these are set at birth and new individual creation.
         private double proteinMass = 0;
         private double fatMass = 0;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Ruminant()
+        {
+            Energy = new RuminantEnergyInfo(this);
+        }
+
+        /// <summary>
+        /// Store for tracking energy use
+        /// </summary>
+        public RuminantEnergyInfo Energy { get; set; }
 
         /// <summary>
         /// Relative size based on highest weight achieved (High weight / standard reference weight)
@@ -108,72 +120,9 @@ namespace Models.CLEM.Resources
         public RuminantIntake Intake = new RuminantIntake();
 
         /// <summary>
-        /// Energy used for wool production
-        /// </summary>
-        public double EnergyForWool { get; set; }
-
-        /// <summary>
-        /// Energy available after wool growth
-        /// </summary>
-        public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
-
-        /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double EnergyForMaintenance { get; set; }
-
-        /// <summary>
-        /// Energy used for fetal development
-        /// </summary>
-        public double EnergyForFetus { get; set; }
-
-        /// <summary>
-        /// Energy available after accounting for pregnancy
-        /// </summary>
-        public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
-
-        /// <summary>
-        /// Energy used for milk production
-        /// </summary>
-        public double EnergyForLactation { get; set; }
-
-        /// <summary>
-        /// Energy available after lactation demands
-        /// </summary>
-        public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
-
-        /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double EnergyForGain { get; set; }
-
-        /// <summary>
-        /// Energy available for growth
-        /// </summary>
-        public double EnergyAvailableForGain { get; set; }
-
-        /// <summary>
-        /// Energy from intake
-        /// </summary>
-        public double EnergyFromIntake { get { return Intake.ME; } }
-
-        /// <summary>
         /// 
         /// </summary>
         public double DPLS { get; set; }
-
-
-        /// <summary>
-        /// Reset all running stores
-        /// </summary>
-        public void ResetEnergy()
-        {
-            EnergyForMaintenance = 0;
-            EnergyForFetus = 0;
-            EnergyForLactation = 0;
-            EnergyForGain = 0;
-            EnergyForWool = 0;
-        }
 
         #endregion
 
