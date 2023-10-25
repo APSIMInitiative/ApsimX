@@ -81,7 +81,16 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
-        public double FN { get { return Nitrogen == null ? 1 : MathUtilities.Divide(Nitrogen.TotalPlantSupply, Nitrogen.TotalPlantDemand, 1); } }
+        public double FN 
+        { 
+            get 
+            {
+                double fn = 1.0;
+                if (Nitrogen != null)
+                    fn = Math.Min(1,MathUtilities.Divide(Nitrogen.TotalPlantSupply, Nitrogen.TotalPlantDemand, 1));
+                return fn;
+            } 
+        }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
