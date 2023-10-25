@@ -279,10 +279,13 @@ namespace Models.PostSimulationTools
                         if (value.Length > 0)
                         {
                             //try parsing to date
-                            bool dateResult = DateTime.TryParse(value, out DateTime date);
-                            if (dateResult == true)
+                            string dateString = DateUtilities.ValidateDateString(value);
+                            if (dateString != null)
+                            {
+                                DateTime date = DateUtilities.GetDate(value);
                                 if (DateUtilities.CompareDates("1900/01/01", date) >= 0)
                                     type = ValidDataTypes.Date;
+                            }
 
                             //try parsing to int
                             //try parsing to double

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -610,8 +611,17 @@ namespace APSIM.Shared.Utilities
         {
             if (rxDay.Match(dayString).Success)
             {
-                errorMsg = "";
-                return int.Parse(dayString);
+                int day = int.Parse(dayString);
+                if (day < 1 || day > 31)
+                {
+                    errorMsg = $"Date {fullDate} has {dayString} for day. Day must be between 1 and 31.";
+                    return 0;
+                } else
+                {
+                    errorMsg = "";
+                    return day;
+                }
+                
             }
             else
             {
@@ -642,6 +652,11 @@ namespace APSIM.Shared.Utilities
             if (rxMonthNum.Match(monthLowerString).Success)
             {
                 index = int.Parse(monthLowerString);
+                if (index < 1 || index > 12)
+                {
+                    errorMsg = $"Date {fullDate} has {index} for month. Month must be a number between 1 and 12.";
+                    return 0;
+                }
             }
             else
             {
