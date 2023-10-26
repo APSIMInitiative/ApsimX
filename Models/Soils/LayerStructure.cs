@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -11,7 +13,7 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class LayerStructure : Model, ITabularData
+    public class LayerStructure : Model, IGridModel
     {
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Summary]
@@ -27,12 +29,19 @@ namespace Models.Soils
         public double[] Thickness { get; set; }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new TabularData(Name, new TabularData.Column[]
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly:false)
-            });
+                var columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth")), readOnly: false));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
+            }
         }
     }
 }

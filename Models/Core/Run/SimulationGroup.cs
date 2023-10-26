@@ -122,7 +122,22 @@ namespace Models.Core.Run
         /// I'm not sure that this really belongs here, but since this class
         /// handles the running of post-simulation tools, it kind of has to be here.
         /// </remarks>
-        public string Status { get; private set; }
+        public string Status {
+            get
+            { 
+                if (_status.StartsWith("Waiting for datastore"))
+                {
+                    return _status + " - " + storage.Writer.CommandCount().ToString() + " operations remaining";
+                }
+                return _status; 
+            }
+            private set 
+            { 
+                _status = value; 
+            }
+        }
+
+        private string _status;
 
         /// <summary>
         /// List all simulation names beneath a given model.

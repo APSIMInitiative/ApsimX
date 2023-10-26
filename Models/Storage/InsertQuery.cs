@@ -18,6 +18,8 @@ namespace Models.Storage
         /// </summary>
         private DataTable dataTable;
 
+        // static private object fbMessageQuery = null;
+
         /// <summary>
         /// Constructor
         /// </summary>

@@ -16,7 +16,7 @@ namespace UserInterface.Presenters
 {
 
     /// <summary>
-    /// This presenter class provides the functionality behind a TabbedExplorerView 
+    /// This presenter class provides the functionality behind a TabbedExplorerView
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
     /// then has an ExplorerPresenter and ExplorerView created when the tab is
     /// created.
@@ -84,23 +84,19 @@ namespace UserInterface.Presenters
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
 
-            int height = this.view.WindowSize.Height;
-            int savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
-            if (savedHeight > 90)
-                this.view.StatusPanelHeight = (int)Math.Round(height * 0.9);
-            else if (savedHeight < 10)
-                this.view.StatusPanelHeight = (int)Math.Round(height * 0.1);
+            int height = this.view.PanelHeight;
+            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            if (savedHeight > 0.9 || savedHeight < 0.1)
+                this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
-                this.view.StatusPanelHeight = (int)Math.Round(height * (savedHeight/100.0f));
+                this.view.StatusPanelPosition = (int)Math.Round(height * savedHeight);
 
-            int width = this.view.WindowSize.Width;
+            double width = this.view.WindowSize.Width;
             int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
-            if (savedWidth > 90)
-                this.view.SplitScreenPosition = (int)Math.Round(width * 0.9);
-            else if (savedWidth < 10)
-                this.view.SplitScreenPosition = (int)Math.Round(width * 0.1);
+            if (savedHeight > 0.9 || savedHeight < 0.1)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
             else
-                this.view.SplitScreenPosition = (int)Math.Round(width * (savedWidth / 100.0f));
+                this.view.SplitScreenPosition = (int)Math.Round(width * savedWidth);
 
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
@@ -246,9 +242,9 @@ namespace UserInterface.Presenters
         {
             view.HideProgressBar();
         }
-        
+
         /// <summary>
-        /// Displays several messages, with a separator between them. 
+        /// Displays several messages, with a separator between them.
         /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
@@ -304,7 +300,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// Displays several error messages in the status bar. Each error will have an associated
         /// </summary>
         /// <param name="errors"></param>
         /// <param name="overwrite"></param>
@@ -519,7 +515,7 @@ namespace UserInterface.Presenters
                     this.ShowMessage("", Simulation.MessageType.Information, true);
 
                     if (converter.DidConvert)
-                        this.ShowMessage($"Simualation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
+                        this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -904,14 +900,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Returns the ExplorerPresenter for the specified file name, 
+        /// Returns the ExplorerPresenter for the specified file name,
         /// or null if the file is not currently open.
         /// </summary>
         /// <param name="fileName">The file name being sought.</param>
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right.</param>
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {            
+        {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
@@ -959,7 +955,7 @@ namespace UserInterface.Presenters
                 ShowError(e);
                 return null;
             }
-            
+
             //ExplorerView explorerView = new ExplorerView(null);
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -979,13 +975,11 @@ namespace UserInterface.Presenters
             if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
                 int width = this.view.WindowSize.Width;
-                int savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
-                if (savedWidth > 90)
+                double savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
+                if ((savedWidth > 0.9) || (savedWidth < 0.1))
                     ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.9);
-                else if (savedWidth < 10)
-                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.1);
                 else
-                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * (savedWidth / 100.0f));
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * savedWidth);
             }
             return newPresenter;
         }
@@ -1074,10 +1068,10 @@ namespace UserInterface.Presenters
             // But check to be sure a tab has actually been closed and, if not, remove it now
 
             if (view.PageCount(onLeft) == nPages)
-                view.RemoveTab(index + 1, onLeft);  
+                view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
-            // This is a good time to force garbage collection 
+            // This is a good time to force garbage collection
             GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
@@ -1329,11 +1323,11 @@ namespace UserInterface.Presenters
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round(((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width) * 100);
+                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width);
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (int)MathF.Round(((float)this.view.StatusPanelHeight / (float)this.view.WindowSize.Height)*100);
+                Utility.Configuration.Settings.StatusPanelHeight = (double)this.view.StatusPanelPosition / (double)this.view.PanelHeight;
                 if (treeWidth > 0)
                     Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();

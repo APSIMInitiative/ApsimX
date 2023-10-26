@@ -568,10 +568,6 @@ namespace Models.Soils
             }
         }
 
-        /// <summary>Turn vapour conductivity on?</summary>
-        [JsonIgnore]
-        public bool WaterVapourConductivityOn { get; set; }
-
         /// <summary>Pond depth.</summary>
         [Units("mm")]
         public double Pond => _h * 10.0;
@@ -842,7 +838,7 @@ namespace Models.Soils
             //   summary file.
 
             //+  Constant Values
-            const int num_psio = 8;
+            const int num_psio = 13;
 
             double[,] tho = new double[n + 1, num_psio];
             double[,] hklo = new double[n + 1, num_psio];
@@ -851,7 +847,7 @@ namespace Models.Soils
             double hklgd;
 
             //+  Initial Data Values
-            double[] psio = new double[num_psio] { -0.01, -10.0, -25.0, -100.0, -1000.0, -15000.0, -1.0e6, -1.0e7 };
+            double[] psio = new double[num_psio] { -0.01, -1, -10.0, -25.0, -100.0, -330.0, -1000.0, -3000.0, -15000.0, -1.0e5, -5.0e5, -1.0e6, -6.0e6 };
 
             summary.WriteMessage(this, "APSIM Soil Profile", MessageType.Diagnostic);
 
@@ -881,30 +877,30 @@ namespace Models.Soils
                 }
             }
 
-            summary.WriteMessage(this, "Soil Moisture Characteristics", MessageType.Diagnostic);
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "Soil Moisture Characteristics (volumetric water content)", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
-            summary.WriteMessage(this, "    x       0      10      25    100   1000  15000   10^6   10^7", MessageType.Diagnostic);
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0       1      10      25    100    330   1000   3000  15000  1.0e5  5.0e5  1.0e6  6.0e6", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
-                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,6:F4} {2,6:F4} {3,6:F4} {4,6:F4} {5,6:F4} {6,6:F4} {7,6:F4} {8,6:F4}",
-                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7]), MessageType.Diagnostic);
+                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,6:F4} {2,6:F4} {3,6:F4} {4,6:F4} {5,6:F4} {6,6:F4} {7,6:F4} {8,6:F4} {9,6:F4} {10,6:F4} {11,6:F4} {12,6:F4} {13,6:F4}",
+                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7], tho[j, 8], tho[j, 9], tho[j, 10], tho[j, 11], tho[j, 12]), MessageType.Diagnostic);
             }
 
-            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "Soil Hydraulic Conductivity", MessageType.Diagnostic);
-            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
             summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
-            summary.WriteMessage(this, "    x       0        10       25       100     1000    15000     10^6", MessageType.Diagnostic);
-            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0       1      10      25    100    330   1000   3000  15000  1.0e5  5.0e5  1.0e6  6.0e6", MessageType.Diagnostic);
+            summary.WriteMessage(this, "----------------------------------------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
-                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,8:G3} {2,8:G3} {3,8:G3} {4,8:G3} {5,8:G3} {6,8:G3} {7,8:G3}",
+                summary.WriteMessage(this, String.Format("{0,6:F1} | {1,8:G3} {2,8:G3} {3,8:G3} {4,8:G3} {5,8:G3} {6,8:G3} {7,8:G3} {8,8:G3} {9,8:G3} {10,8:G3} {11,8:G3} {12,8:G3} {13,8:G3}",
                     x[j] * 10.0, hko[j, 0] * 24.0 * 10.0, hko[j, 1] * 24.0 * 10.0, hko[j, 2] * 24.0 * 10.0, hko[j, 3] * 24.0 * 10.0,
-                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0), MessageType.Diagnostic);
+                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0 , hko[j, 7] * 24.0 * 10.0 , hko[j, 8] * 24.0 * 10.0 , hko[j, 9] * 24.0 * 10.0 , hko[j, 10] * 24.0 * 10.0 , hko[j, 11] * 24.0 * 10.0, hko[j, 12] * 24.0 * 10.0), MessageType.Diagnostic);
             }
 
             summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
@@ -1921,7 +1917,7 @@ namespace Models.Soils
 
                 double tot_rain = SWIMRainAmt[SWIMRainAmt.Length - 1] - SWIMRainAmt[start];
 
-                double fraction = MathUtilities.Divide(amount, tot_rain, 1e6, divideTolerance);
+                double fraction = MathUtilities.Divide(amount, tot_rain, 1e6);
                 if (fraction > 1.0)
                     throw new Exception("Interception > Rainfall");
                 else
@@ -2168,7 +2164,7 @@ namespace Models.Soils
                 double eqrain = 0.0;
                 double amount = (SWIMRainAmt[counter] - SWIMRainAmt[counter - 1]) / 10.0;
                 double duration = SWIMRainTime[counter] - SWIMRainTime[counter - 1];
-                double avinten = MathUtilities.Divide(amount, duration, 0.0, divideTolerance);
+                double avinten = MathUtilities.Divide(amount, duration, 0.0);
 
                 if (avinten > 0.0)
                     eqrain = (1.0 + effpar * Math.Log(avinten / 2.5)) * amount;
@@ -2288,20 +2284,20 @@ namespace Models.Soils
 
             // reduce CN2 for the day due to cover effect
 
-            double cover_fract = MathUtilities.Divide(CoverSurfaceRunoff, CNCov, 0.0, divideTolerance);
+            double cover_fract = MathUtilities.Divide(CoverSurfaceRunoff, CNCov, 0.0);
             cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
 
             double cn2_new = CN2Bare - (CNRed * cover_fract);
 
             cn2_new = MathUtilities.Bound(cn2_new, 0.0, 100.0);
 
-            double cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0, divideTolerance);
-            double cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0, divideTolerance);
+            double cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
+            double cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
             double cn = cn1 + (cn3 - cn1) * cnpd;
 
             //! curve number will be decided from scs curve number table ??dms
 
-            double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0, divideTolerance) - 1.0);
+            double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
             double xpb = rain - 0.2 * s;
             xpb = Math.Max(xpb, 0.0);
 
@@ -2740,7 +2736,7 @@ namespace Models.Soils
                         }
                         qmax = Math.Max(qmax, Math.Abs(q[n + 1]));
                         if (qmax > 0.0)
-                            _dt = MathUtilities.Divide(MaxWaterIncrement, qmax, 0.0, divideTolerance);
+                            _dt = MathUtilities.Divide(MaxWaterIncrement, qmax, 0.0);
                     }
 
                     _dt = Math.Min(_dt, timestepRemaining);
@@ -2962,7 +2958,7 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current g%hmin.
 
-                double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0, divideTolerance);
+                double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0);
 
                 if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
@@ -3004,7 +3000,7 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current conductance.
 
-                double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0, divideTolerance);
+                double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0);
 
                 if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
@@ -3818,7 +3814,7 @@ namespace Models.Soils
                 {
                     //There is no adsorption:
 
-                    Cw = MathUtilities.Divide(Ctot, th[node], 0.0, divideTolerance);
+                    Cw = MathUtilities.Divide(Ctot, th[node], 0.0);
                     solved = true;
                 }
 
@@ -3834,7 +3830,7 @@ namespace Models.Soils
                 {
                     // Linear adsorption:
 
-                    Cw = MathUtilities.Divide(Ctot, th[node] + ex[solnum][node], 0.0, divideTolerance);
+                    Cw = MathUtilities.Divide(Ctot, th[node] + ex[solnum][node], 0.0);
                     solved = true;
                 }
                 else
@@ -3842,7 +3838,7 @@ namespace Models.Soils
                     // Non linear isotherm:
 
                     // take initial guess for Cw
-                    Cw = Math.Pow(MathUtilities.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0, divideTolerance), (1.0 / fip[solnum][node]));
+                    Cw = Math.Pow(MathUtilities.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0), (1.0 / fip[solnum][node]));
                     if (Cw < 0.0)            // test added by RCichota 09/Jul/2010
                     {
                         string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: 0",
@@ -3885,7 +3881,7 @@ namespace Models.Soils
                         {
 
                             // next value for Cw
-                            Cw = Cw - MathUtilities.Divide(error_amount, 2 * dfdCw, 0.0, divideTolerance);
+                            Cw = Cw - MathUtilities.Divide(error_amount, 2 * dfdCw, 0.0);
                             if (Cw < 0.0)             // test added by RCichota 09/Jul/2010
                             {
                                 string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: {3}",
@@ -4072,7 +4068,7 @@ namespace Models.Soils
                 double TD_Eo = CEvap(end_of_day) - CEvap(start_of_day);
 
                 for (int j = 0; j < nveg; j++)
-                    rtp[j] = MathUtilities.Divide(pep[j], TD_Eo, 0.0, divideTolerance) * rep;
+                    rtp[j] = MathUtilities.Divide(pep[j], TD_Eo, 0.0) * rep;
 
                 // pot soil evap rate is not linked to apsim timestep
                 tresp = sep / _dt;
@@ -4231,7 +4227,7 @@ namespace Models.Soils
             //if (thsat == 0.0)
             //    thsat = _sat[ix];
 
-            if (WaterVapourConductivityOn)
+            if (VC)
             {
                 //        add vapour conductivity hkv
                 double phi = thsat / 0.93 - tth;

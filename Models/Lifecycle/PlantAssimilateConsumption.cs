@@ -15,14 +15,6 @@ namespace Models.LifeCycle
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantAssimilateConsumption : Model
     {
-        /// <summary>Returns the potential damage that an individual can cause per day</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g")]
-        private IFunction RateOfPlantAssimilateConsumptionPerIndividual = null;
-
-        [Link(Type = LinkType.Ancestor)]
-        private LifeCyclePhase ParentStage = null;
-
         /// <summary> Select host plant that Pest/Disease may bother </summary>
         [Description("Select host plant that Pest/Disease may bother")]
         [Display(Type = DisplayType.Model, ModelType = typeof(IPlantDamage))]
@@ -31,7 +23,7 @@ namespace Models.LifeCycle
         [EventSubscribe("DoPestDiseaseDamage")]
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
-            HostPlant.RemoveAssimilate(ParentStage.TotalPopulation * RateOfPlantAssimilateConsumptionPerIndividual.Value());
+            throw new NotImplementedException("Removal of assimilate is not implemented");
         }
     }
 }

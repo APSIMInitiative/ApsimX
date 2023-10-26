@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
-using System.IO;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using Models.Core;
 
 namespace Utility
@@ -47,13 +45,19 @@ namespace Utility
 
         /// <summary>The previous height of the status panel</summary>
         /// <remarks>Percentage 0-100</remarks>
-        public int StatusPanelHeight { get; set; }
+        public double StatusPanelHeight { get; set; }
 
         /// <summary>
         /// The position of the splitter between the variables
         /// and frequency text editors in the report UI.
         /// </summary>
-        public int ReportSplitterPosition { get; set; }
+        public double ReportSplitterPosition { get; set; }
+
+        /// <summary>
+        /// The position of the splitter between the variables/event text editors
+        /// and the common report/event ListViews.
+        /// </summary>
+        public double ReportSplitterVerticalPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
@@ -62,7 +66,7 @@ namespace Utility
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
         [Input("Autosave on run")]
         [Tooltip("Should the file be automatically saved to disk before running simulations?")]
-        public bool AutoSave { get; set;} = true;
+        public bool AutoSave { get; set; } = true;
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
@@ -279,7 +283,14 @@ namespace Utility
         /// <summary>Finalizes an instance of the <see cref="Configuration"/> class.</summary>
         ~Configuration()
         {
-            Save();
+            try
+            {
+                Save();
+            }
+            catch
+            {
+                // An uncaught exception could crash APSIM from the GC thread.
+            }
         }
 
         /// <summary>Gets the configuration settings.</summary>
@@ -350,7 +361,7 @@ namespace Utility
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
         }
-    
+
         /// <summary>
         /// This will be called whenever the 'dark mode' option is toggled.
         /// It will change the default editor style to something.
