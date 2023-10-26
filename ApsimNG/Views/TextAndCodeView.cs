@@ -1,7 +1,9 @@
 ﻿using Gtk;
 using System;
+using System.Drawing;
 using System.Reflection.Emit;
 using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -37,11 +39,12 @@ namespace UserInterface.Views
             ScrolledWindow sw = (ScrolledWindow)builder.GetObject("scrolledwindow2");
             sw.Add((editorView as ViewBase).MainWidget);
 
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
             box1 = (VPaned)builder.GetObject("vpaned1");
-            box1.Position = (int)Math.Round(this.owner.MainWidget.AllocatedHeight * 0.8);
+            box1.Position = (int)Math.Round(bounds.Height * 0.8);
 
             box2 = (HPaned)builder.GetObject("hpaned2");
-            box2.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.5);
+            box2.Position = (int)Math.Round(bounds.Width * 0.5);
         }
 
         /// <summary></summary>

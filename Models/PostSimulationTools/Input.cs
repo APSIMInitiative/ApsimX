@@ -6,7 +6,9 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
+using Models.Interfaces;
 using Models.Storage;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.PostSimulationTools
@@ -26,7 +28,7 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridModel
     {
         /// <summary>
         /// The DataStore.
@@ -63,6 +65,35 @@ namespace Models.PostSimulationTools
             }
         }
 
+        /// <summary>
+        /// Gets or sets the table of values.
+        /// </summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                return new List<GridTable>() { new GridTable(Name, new List<GridTableColumn>(), this) };
+            }
+        }
+
+        /// <summary>
+        /// Combines the live and dead forages into a single row for display and renames columns
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            return GetTable();
+        }
+
+        /// <summary>
+        /// Breaks the lines into the live and dead parts and changes headers to match class
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            //since Input is not an input in the GUI, we don't want to actualy change the model.
+            return new DataTable();
+        }
+
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
@@ -93,6 +124,18 @@ namespace Models.PostSimulationTools
                     storage.Writer.WriteTable(data);
                 }
             }
+        }
+
+        /// <summary>
+        /// Return a datatable for this input file. Returns null if no data.
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetTable()
+        {
+            if (FullFileNames.Length > 0)
+                if (!String.IsNullOrEmpty(FullFileNames[0])) 
+                    return GetTable(FullFileNames[0]);
+            return null;
         }
 
         /// <summary>

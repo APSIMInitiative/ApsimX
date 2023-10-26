@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using GLib;
 using Gtk;
 using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -13,11 +15,11 @@ namespace UserInterface.Views
     {
 
         private Notebook notebook1 = null;
-        private Paned reportVariablesBox = null;
-        private Paned reportFrequencyBox = null;
+        private HPaned reportVariablesVPaned = null;
+        private HPaned reportFrequencyVPaned = null;
         private Box variablesBox = null;
-        private Box commonVariablesBox = null;
         private Box frequencyBox = null;
+        private Box commonVariablesBox = null;
         private Box commonFrequencyBox = null;
         private Alignment alignment1 = null;
 
@@ -31,14 +33,6 @@ namespace UserInterface.Views
         private Button submitButton;
 
         /// <summary>
-        /// Invoked when the user moves the vertical splitter
-        /// between the two text editors.
-        /// </summary>
-        public event EventHandler SplitterChanged;
-
-        public event EventHandler VerticalSplitterChanged;
-
-        /// <summary>
         /// Invoked when the selected tab is changed.
         /// </summary>
         public event EventHandler TabChanged;
@@ -46,13 +40,13 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public ReportView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.NewReportView.glade");
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ReportView.glade");
             notebook1 = (Notebook)builder.GetObject("notebook1");
-            reportVariablesBox = (Paned)builder.GetObject("reportVariablesBox");
+            reportVariablesVPaned = (HPaned)builder.GetObject("reportVariablesBox");
+            reportFrequencyVPaned = (HPaned)builder.GetObject("reportFrequencyBox");
             variablesBox = (Box)builder.GetObject("variablesBox");
-            commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
-            reportFrequencyBox = (Paned)builder.GetObject("reportFrequencyBox");
             frequencyBox = (Box)builder.GetObject("frequencyBox");
+            commonVariablesBox = (Box)builder.GetObject("commonVariablesBox");
             commonFrequencyBox = (Box)builder.GetObject("commonFrequencyBox");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             submitButton = (Button)builder.GetObject("submitBtn");
@@ -60,7 +54,6 @@ namespace UserInterface.Views
 
             panel = (VPaned)builder.GetObject("vpaned1");
             panel.Events |= Gdk.EventMask.PropertyChangeMask;
-            panel.AddNotification(OnPropertyNotified);
 
             groupByEdit = new EditView(owner,
                                       (Entry)builder.GetObject("groupByEdit"));
@@ -68,8 +61,9 @@ namespace UserInterface.Views
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
 
-            reportVariablesBox.AddNotification(OnVariablesPanePropertyNotified);
-            reportFrequencyBox.AddNotification(OnFrequencyPanePropertyNotified);
+            reportVariablesVPaned.AddNotification(OnVariablesPanePropertyNotified);
+            reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
+            panel.AddNotification(OnPanelPositionPropertyNotified);
 
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
@@ -87,18 +81,27 @@ namespace UserInterface.Views
             commonReportFrequencyVariableList.DoubleClicked += OnCommonReportFrequencyVariableListDoubleClicked;
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
 
-            // Set the position of the divider to 80% of the width of the Paned gtk object.
-            reportVariablesBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
-            reportFrequencyBox.Position = (int)Math.Round(this.owner.MainWidget.AllocatedWidth * 0.7);
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+            double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition;
+            int horizontalPos = (int)Math.Round(bounds.Width * 0.7);
+            if (horizontalSplitter != null)
+                if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
+                    horizontalPos = (int)(bounds.Width * horizontalSplitter);
+            reportVariablesVPaned.Position = horizontalPos;
+            reportFrequencyVPaned.Position = horizontalPos;
+
+            double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition;
+            int verticalPos = (int)Math.Round(bounds.Height * 0.7);
+            if (verticalSplitter != null)
+                if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
+                    verticalPos = (int)(bounds.Height * verticalSplitter);
+            panel.Position = verticalPos;
 
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             alignment1.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
-
-
-
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -127,9 +130,15 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
         {
-            this.reportVariablesBox.Position = reportFrequencyBox.Position;
+            this.reportVariablesVPaned.Position = reportFrequencyVPaned.Position;
             if (args.Property == "position")
-                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
+            {
+                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+                double percentage = (double)reportVariablesVPaned.Position / (double)bounds.Width;
+                Configuration.Settings.ReportSplitterPosition = percentage;
+                Configuration.Settings.Save();
+            }
+                
         }
 
         /// <summary> Updates The position of either common variable listView.</summary>
@@ -137,32 +146,29 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
         {
-            this.reportFrequencyBox.Position = reportVariablesBox.Position;
+            this.reportFrequencyVPaned.Position = reportVariablesVPaned.Position;
             if (args.Property == "position")
-                VerticalSplitterChanged?.Invoke(this, EventArgs.Empty);
+            {
+                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+                double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
+                Configuration.Settings.ReportSplitterPosition = percentage;
+                Configuration.Settings.Save();
+            }
         }
 
         /// <summary>
         /// Called whenever a property of vpaned1 is modified.
-        /// We use this to trap when the user moves the handle
-        /// which separates the two text editors. Unfortunately,
-        /// this is called many times per second as long as the
-        /// user is dragging the handle. I couldn't find a better
-        /// event to trap - the MoveHandle event only fires when
-        /// the handle is moved via keypresses.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnPropertyNotified(object sender, NotifyArgs args)
+        private void OnPanelPositionPropertyNotified(object sender, NotifyArgs args)
         {
-            try
+            if (args.Property == "position")
             {
-                if (args.Property == "position")
-                    SplitterChanged?.Invoke(this, EventArgs.Empty);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
+                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+                double percentage = (double)panel.Position / (double)bounds.Height;
+                Configuration.Settings.ReportSplitterVerticalPosition = percentage;
+                Configuration.Settings.Save();
             }
         }
 
@@ -191,7 +197,6 @@ namespace UserInterface.Views
         {
             try
             {
-                panel.RemoveNotification(OnPropertyNotified);
                 variableEditor.StyleChanged -= OnStyleChanged;
                 notebook1.SwitchPage -= OnSwitchPage;
                 frequencyEditor.StyleChanged -= OnStyleChanged;
@@ -245,40 +250,6 @@ namespace UserInterface.Views
             get { return notebook1.CurrentPage; }
             set { notebook1.CurrentPage = value; }
         }
-
-        /// <summary>
-        /// Position of the splitter between the variable and
-        /// frequency text editors. Larger number means further
-        /// down.
-        /// </summary>
-        public int SplitterPosition
-        {
-            get
-            {
-                return panel.Position;
-            }
-            set
-            {
-                panel.Position = value;
-            }
-        }
-
-        /// <summary>
-        /// Position of the splitter between both the common variable/event list and report variable/event text editors.
-        /// Larger number means further to the end.
-        /// </summary>
-        public int VerticalSplitterPosition
-        {
-            get
-            {
-                return reportVariablesBox.Position;
-            }
-            set
-            {
-                reportVariablesBox.Position = value;
-            }
-        }
-
     }
 
 }

@@ -69,6 +69,15 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Set the resource base with transaction parent of the resource type
+        /// </summary>
+        /// <param name="resourceBaseParent"></param>
+        public void SetParentResourceBaseWithTransactions(ResourceBaseWithTransactions resourceBaseParent)
+        {
+            parent = resourceBaseParent;
+        }
+
+        /// <summary>
         /// Does pricing exist for this type
         /// </summary>
         public bool PricingExists(PurchaseOrSalePricingStyleType priceType)
