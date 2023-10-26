@@ -232,12 +232,6 @@ namespace Models.PMF
         /// </summary>
         public double FN { get; private set; }
 
-        /// <summary>
-        /// Gets the metabolic N concentration factor.
-        /// </summary>
-        public double FNmetabolic { get; private set; }
-
-
         ///6. Public methods
         /// --------------------------------------------------------------------------------------------------
 
@@ -496,8 +490,7 @@ namespace Models.PMF
             Wt = Live.Wt + Dead.Wt;
             N = Live.Nitrogen.Total + Dead.Nitrogen.Total;
             Nconc = Wt > 0.0 ? N / Wt : 0.0;
-            FN = Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
-            FNmetabolic = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
+            FN = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
         }
 
         private void setNconcs()
