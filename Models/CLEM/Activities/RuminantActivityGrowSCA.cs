@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
             ind.Intake.Feed.Expected *= events.Interval;
         }
 
-        /// <summary>Function to calculate growth of herd for the monthly timestep</summary>
+        /// <summary>Function to calculate growth of herd for the timestep</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalWeightGain")]
@@ -226,23 +226,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
-        {
-            // alert user to unfed animals in the month as this should not happen
-            if (unfed > 0)
-            {
-                string warn = $"individuals of [r={breed.Key}] not fed";
-                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
-            if (unfedcalves > 0)
-            {
-                string warn = $"calves of [r={breed.Key}] not fed";
-                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-            }
-        }
-
         /// <summary>
         /// Function to calculate energy from intake and subsequent growth
         /// </summary>
@@ -261,7 +244,7 @@ namespace Models.CLEM.Activities
             MP2 = 0;
 
             // The feed quality measures are now provided in IFeedType and FoodResourcePackets
-            // The individual tracks the quality of mixed feed types based on broad type (supplement or forage) in Intake
+            // The individual tracks the quality of mixed feed types based on broad type (concentrate, forage, or milk) in Intake
             // Energy metabolic - have DMD, fat content % CP% as inputs from ind as supplement and forage, do not need ether extract (fat) for forage
             // We can move these calculations to the RuminantIntake and calculate as they arrive or 
 
@@ -479,7 +462,7 @@ namespace Models.CLEM.Activities
 
                 if (!ind.Weaned)
                     // ToDo: this maint doesn't include the intake energy or is that kml?
-                    ind.Energy.ForMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * ind.AgeInDays / 365);
+                    ind.Energy.ForMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * ind.AgeInYears);
                 else
                     ind.Energy.ForMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.FHPScalar * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * Math.Min(ind.AgeInYears, 6)) + (ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake);
 
@@ -836,6 +819,23 @@ namespace Models.CLEM.Activities
             //}
 
             ruminantHerd.RemoveRuminant(died, this);
+        }
+
+`        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
+        {
+            // alert user to unfed animals in the month as this should not happen
+            if (unfed > 0)
+            {
+                string warn = $"individuals of [r={breed.Key}] not fed";
+                string warnfull = $"Some individuals of [r={breed.Key}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+            }
+            if (unfedcalves > 0)
+            {
+                string warn = $"calves of [r={breed.Key}] not fed";
+                string warnfull = $"Some calves of [r={breed.Key}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+            }
         }
 
         #region descriptive summary
