@@ -68,7 +68,12 @@ namespace Models.PMF
 
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
-        /// <summary>The dry matter potentially being allocated</summary>
+
+        /// <summary>Name of the organ and nutrient represented by this instance</summary>
+        /// 
+        [JsonIgnore]
+        public string OrganAndNutrientNames
+        { get { return organ.Name + this.Name; } }
 
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]

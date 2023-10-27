@@ -28,6 +28,10 @@ namespace Models.PMF
         //private OrganNutrientDelta dCarbon = null;
         //private OrganNutrientDelta dNitrogen = null;
 
+        /// <summary>Name of the organ and nutrient represented by this instance</summary>
+        public string OrganAndNutrient
+        { get { return parentOrgan.Name+dNutrient.Name; } }
+
         // Declare a delegate type for calculating the IFunction return value:
         private delegate double DeficitCalculation();
         private DeficitCalculation CalcDeficit;
@@ -115,12 +119,14 @@ namespace Models.PMF
 
         private double calcStructuralNitrogenDemand()
         {
-            return dNutrient.DemandsAllocated.Total / parentOrgan.Cconc * dNutrient.ConcentrationOrFraction.Structural;
+            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            return Carbon.DemandsAllocated.Total / parentOrgan.Cconc * dNutrient.ConcentrationOrFraction.Structural;
         }
 
         private double calcDeficitForNitrogenPool(double currentAmount, double upperConc, double LowerConc)
         {
-            double PotentialWt = (parentOrgan.Live.Carbon.Total + dNutrient.DemandsAllocated.Total) / parentOrgan.Cconc;
+            OrganNutrientDelta Carbon = parentOrgan.FindChild("Carbon") as OrganNutrientDelta;
+            double PotentialWt = (parentOrgan.Live.Carbon.Total + Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
             double targetAmount = (PotentialWt * upperConc) - (PotentialWt * LowerConc);
             return targetAmount - currentAmount;
         }
