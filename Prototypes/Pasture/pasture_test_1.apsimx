@@ -849,6 +849,10 @@
                     400.0
                   ],
                   "RootDepth": 650.0,
+                  "EstIndex": 0.0,
+                  "StressIndex": 0.0,
+                  "StemReloc": 0.0,
+                  "Frosts": 0,
                   "Status": "established",
                   "LeafDMD": [
                     0.825

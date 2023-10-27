@@ -650,12 +650,12 @@
                         0.07,
                         0.07,
                         0.07,
-                        0.07,
-                        0.05,
-                        0.05,
-                        0.05,
-                        0.03,
-                        0.03
+                        0.06,
+                        0.04,
+                        0.02,
+                        0.02,
+                        0.02,
+                        0.02
                       ],
                       "XF": [
                         1.0,
@@ -1123,7 +1123,7 @@
               "Layers": null,
               "MaxRtDep": 550.0,
               "LaggedDayT": -999.9,
-              "Phenology": 3.015,
+              "Phenology": 4.0,
               "FlowerLen": 0.0,
               "FlowerTime": 0.0,
               "SencIndex": 0.0,
@@ -1233,16 +1233,16 @@
                 {
                   "$type": "Models.Grazplan.SeedCohortInitialise, Models",
                   "SoftUnripe": [
-                    75.0
+                    467.0
                   ],
                   "HardUnripe": [
-                    75.0
+                    545.0
                   ],
                   "HardRipe": [
-                    250.0
+                    121.0
                   ],
                   "SoftRipe": [
-                    0.0
+                    14.58
                   ],
                   "Name": "SeedCohortInitialise",
                   "ResourceName": null,
@@ -1261,7 +1261,7 @@
               "Layers": null,
               "MaxRtDep": 650.0,
               "LaggedDayT": -999.9,
-              "Phenology": 4.0,
+              "Phenology": 3.015,
               "FlowerLen": 0.0,
               "FlowerTime": 0.0,
               "SencIndex": 0.0,
@@ -2482,6 +2482,101 @@
                           "Line": 3,
                           "LineThickness": 0,
                           "TableName": "CloverMasses",
+                          "XFieldName": "Date",
+                          "YFieldName": "green_dm",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "GreenDM_obs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "Minimum": 0.0,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Dry matter_Obs-ryegrass",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Ryegrass.GreenDM",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "GreenDM",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 3,
+                          "LineThickness": 0,
+                          "TableName": "RyegrassMasses",
                           "XFieldName": "Date",
                           "YFieldName": "green_dm",
                           "X2FieldName": null,

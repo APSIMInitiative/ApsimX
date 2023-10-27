@@ -2233,7 +2233,7 @@
                           "CrossesAtZero": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
-                          "Interval": null
+                          "Interval": 10.0
                         },
                         {
                           "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
