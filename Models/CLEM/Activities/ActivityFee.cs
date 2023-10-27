@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Bank account to use
         /// </summary>
-        [Description("Bank account to use")]
+        [Description("Resource to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance), typeof(AnimalFoodStore), typeof(Equipment), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type required")]
         public string BankAccountName { get; set; }
