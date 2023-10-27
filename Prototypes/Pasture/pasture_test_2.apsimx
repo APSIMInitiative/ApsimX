@@ -1157,14 +1157,14 @@
                   "SoftUnripe": [
                     75.0
                   ],
-                  "SoftRipe": [
-                    0.0
-                  ],
                   "HardUnripe": [
                     75.0
                   ],
                   "HardRipe": [
                     250.0
+                  ],
+                  "SoftRipe": [
+                    0.0
                   ],
                   "Name": "SeedCohortInitialise",
                   "ResourceName": null,
