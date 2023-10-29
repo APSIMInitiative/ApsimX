@@ -1039,7 +1039,7 @@ namespace Models.GrazPlan
         [Units("g/g")]
         public double GreenS { get { return GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.S); } }
 
-        /// <summary>Total dry weight of dry herbage</summary>
+        /// <summary>Total dry weight of dry herbage including litter</summary>
         [Units("kg/ha")]
         public double DryDM { get { return GetDM(GrazType.sgDRY, GrazType.TOTAL); } }
 
@@ -2244,6 +2244,8 @@ namespace Models.GrazPlan
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // Initialise the pasture model with green and dry cohorts that are
+            // found as children of this component.
             if (Children.Count == 0)
                 throw new Exception("There must be at least one child pasture cohort initialisation model");
             int numDry = 0;
@@ -2265,13 +2267,20 @@ namespace Models.GrazPlan
                         green[idx].root_wt[i] = new double[] { greenInit.RootWeight[i] };
                     green[idx].status = greenInit.Status;
                     green[idx].rt_dep = greenInit.RootDepth;
+                    green[idx].estab_index = greenInit.EstIndex;
+                    green[idx].stem_reloc = greenInit.StemReloc;
+                    green[idx].stress_index = greenInit.StressIndex;
+                    green[idx].frosts = greenInit.Frosts;
                     green[idx].herbage = new Herbage[2]; // leaf and stem
+
+                    // leaf
                     green[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                     green[idx].herbage[0].dmd = greenInit.LeafDMD;
                     green[idx].herbage[0].weight = greenInit.LeafWeight;
                     green[idx].herbage[0].n_conc = greenInit.LeafNConc;
                     green[idx].herbage[0].spec_area = greenInit.LeafSpecificArea;
 
+                    // stem
                     green[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                     green[idx].herbage[1].dmd = greenInit.StemDMD;
                     green[idx].herbage[1].weight = greenInit.StemWeight;
@@ -2287,12 +2296,15 @@ namespace Models.GrazPlan
                     dry[idx] = new DryInit();
                     dry[idx].status = dryInit.Status;
                     dry[idx].herbage = new Herbage[2]; // leaf and stem
+
+                    // leaf
                     dry[idx].herbage[0] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                     dry[idx].herbage[0].dmd = dryInit.LeafDMD;
                     dry[idx].herbage[0].weight = dryInit.LeafWeight;
                     dry[idx].herbage[0].n_conc = dryInit.LeafNConc;
                     dry[idx].herbage[0].spec_area = dryInit.LeafSpecificArea;
 
+                    // stem
                     dry[idx].herbage[1] = new Herbage(1, new TPlantElement[] { TPlantElement.N });
                     dry[idx].herbage[1].dmd = dryInit.StemDMD;
                     dry[idx].herbage[1].weight = dryInit.StemWeight;

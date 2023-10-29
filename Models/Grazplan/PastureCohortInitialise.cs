@@ -20,6 +20,23 @@ namespace Models.Grazplan
         /// <summary>Rooot depth (mm)</summary>
         [Description("Root depth (mm)")]
         public double RootDepth { get; set; } = 650;
+
+        /// <summary>Establishment index. 0,1.0-KZ1. The index follows the ratio of the current shoot mass of the cohort
+        /// to the shoot mass of its plants at germination – a surrogate for relative plant size.</summary>
+        [Description("Seedling establishment index")]
+        public double EstIndex { get; set; } = 0.0;
+
+        /// <summary>Seedling stress index</summary>
+        [Description("Seedling stress index (0-1)")]
+        public double StressIndex { get; set; } = 0.0;
+
+        /// <summary>Maximum amount of stem tissue to be relocated to seed.</summary>
+        [Description("Stem relocation kg/ha")]
+        public double StemReloc { get; set; } = 0.0;
+
+        /// <summary> Number of frosts experienced by this herbage cohort during its lifetime</summary>
+        [Description("Number of frosts")]
+        public int Frosts { get; set; } = 0;
     }
 
     /// <summary>
@@ -47,8 +64,8 @@ namespace Models.Grazplan
         [Description("Leaf nitrogen concentration (kg/ha)")]
         public double[] LeafNConc { get; set; } = new double[] { 0.01 };
 
-        /// <summary>Leaf specific nitrogen (cm^2/g)</summary>
-        [Description("Leaf specific nitrogen (cm^2/g)")] 
+        /// <summary>Leaf specific area (cm^2/g)</summary>
+        [Description("Leaf specific area (cm^2/g)")]
         public double[] LeafSpecificArea { get; set; } = new double[] { 430.0 };
 
         /// <summary>Stem dry matter digestibility (0-1)</summary>
@@ -63,8 +80,8 @@ namespace Models.Grazplan
         [Description("Stem nitrogen concentration (kg/ha)")]
         public double[] StemNConc { get; set; } = new double[] { 0.01 };
 
-        /// <summary>Stem specific nitrogen (cm^2/g)</summary>
-        [Description("Stem specific nitrogen (cm^2/g)")]
+        /// <summary>Stem specific area (cm^2/g)</summary>
+        [Description("Stem specific area (cm^2/g)")]
         public double[] StemSpecificArea { get; set; } = new double[] { 10.0 };
     }
 
@@ -82,20 +99,23 @@ namespace Models.Grazplan
         /// </summary>
         [Description("Mass of soft, unripe seeds (kg/ha")]
         public double[] SoftUnripe { get; set; }    // kg/ha
-        /// <summary>
-        /// Mass of soft, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
-        /// </summary>
-        [Description("Mass of soft, ripe seeds (kg/ha")]
-        public double[] SoftRipe { get; set; }      // kg/ha
+
         /// <summary>
         /// Mass of hard, unripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         [Description("Mass of hard, unripe seeds (kg/ha")]
         public double[] HardUnripe { get; set; }    // kg/ha
+
         /// <summary>
         /// Mass of hard, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
         /// </summary>
         [Description("Mass of hard, ripe seeds (kg/ha")]
         public double[] HardRipe { get; set; }      // kg/ha
+
+        /// <summary>
+        /// Mass of soft, ripe seeds. If only a single element is given, all seeds are placed in the first soil layer
+        /// </summary>
+        [Description("Mass of soft, ripe seeds (kg/ha")]
+        public double[] SoftRipe { get; set; }      // kg/ha
     }
 }
