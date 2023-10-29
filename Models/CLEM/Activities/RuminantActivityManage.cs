@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 2, 0, "Implements event based activity control")]
     [Version(1, 1, 1, "Improved custom filtering of task individuals")]
     [Version(1, 1, 0, "Allow all tasks to be controlled and cleaned up logic")]
-    [Version(1, 0, 10, "Allows control order individuals are identified for removal and keeping")]
+    [Version(1, 0, 10, "Allows control of the order individuals are identified for removal and keeping")]
     [Version(1, 0, 9, "Allows details of breeders and sires for purchase to be specified")]
     [Version(1, 0, 8, "Reworking of rules to better allow small herd management")]
     [Version(1, 0, 7, "Added ability to turn on/off marking max age breeders and sires and age/weight males for sale and allow this action in other activities")]
@@ -52,6 +52,7 @@ namespace Models.CLEM.Activities
         private RuminantType breedParams;
         private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
         private double mortalityRate = 0;
+        private IEnumerable<Ruminant> selectHerdAvailable = null;
 
         private int numberMaleSiresInHerd = 0;
         private int numberMaleSiresInPurchases = 0;
@@ -677,6 +678,11 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
+            if (FindAllChildren<RuminantActivityGroup>().Any())
+            {
+                selectHerdAvailable = new List<Ruminant>();
+            }
+
             // get the mortality rate for the herd if available or assume zero
             mortalityRate = breedParams.MortalityBase;
 
@@ -755,6 +761,13 @@ namespace Models.CLEM.Activities
             excessBreeders = 0;
             sufficientFoodBreeders = true;
             sufficientFoodSires = true;
+
+            // if this activity has determined where is a RuminantFilterGroup apply the rules to define individuals available this time-step
+            // this allows a filter to determine what individuals are available to manage e.g. incomplete muster.
+            if (selectHerdAvailable != null)
+            {
+                selectHerdAvailable = GetIndividuals<Ruminant>();
+            }
 
             // calculate numbers for current herd
             if (ManageFemaleBreederNumbers | ManageMaleBreederNumbers)
@@ -1024,8 +1037,6 @@ namespace Models.CLEM.Activities
 
             }
 
-            //maleBreedersRequired = 0;
-            //femaleBreedersRequired = 0;
             this.Status = ActivityStatus.NotNeeded;
 
             // select old females for sale
@@ -1192,7 +1203,7 @@ namespace Models.CLEM.Activities
                                     var newindividuals = cohort.CreateIndividuals(null, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedParams);
                                     foreach (var ind in newindividuals)
                                     {
-                                        ind.Location = grazeStoreBreeders;
+                                        ind.Location = grazeStoreSires;
                                         ind.SaleFlag = HerdChangeReason.SirePurchase;
                                         ind.ID = 0;
                                         ind.PurchaseAge = ind.Age;
@@ -1310,7 +1321,7 @@ namespace Models.CLEM.Activities
                                 foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age >= a.BreedParams.MinimumAge1stMating) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired).ToList())
                                 {
                                     female.Attributes.Remove("GrowOut");
-                                    if (!female.IsBreeder)
+                                    if (!female.IsBreeder && !female.Sterilised)
                                         female.ReplacementBreeder = true;
                                     female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
@@ -1422,7 +1433,7 @@ namespace Models.CLEM.Activities
                                     foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired- numberOfReplacements).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut");
-                                        if (!female.IsBreeder)
+                                        if (female.IsPreBreeder)
                                             female.ReplacementBreeder = true;
                                         female.Location = grazeStoreBreeders;
                                         numberOfReplacements++;
@@ -1453,7 +1464,7 @@ namespace Models.CLEM.Activities
                                         // keep by removing any tag for sale.
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
-                                        if (!(female as RuminantFemale).IsBreeder)
+                                        if (!female.IsBreeder)
                                             female.ReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
@@ -1466,7 +1477,7 @@ namespace Models.CLEM.Activities
                                         female.Attributes.Remove("GrowOut");
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
-                                        if (!(female as RuminantFemale).IsBreeder)
+                                        if (!female.IsBreeder)
                                             female.ReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
@@ -1676,8 +1687,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // unknown entries
-                var unknownPurchases = purchaseDetails
-                .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
+                var unknownPurchases = purchaseDetails.Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
 
                 if (unknownPurchases.Any())
                     foreach (var item in unknownPurchases)

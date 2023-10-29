@@ -680,7 +680,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Survival")]
         [Description("Probability of death below condition-based cut-off")]
         [System.ComponentModel.DefaultValue(1)]
-        [Required]
+        [Required, GreaterThanValue(0)]
         public double ConditionBasedMortalityProbability { get; set; }
 
         /// <summary>
@@ -905,6 +905,15 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
+
+        /// <summary>
+        /// Proportion of wet mother's with no offspring accepting orphan
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion suitable fmeales accpeting orphan")]
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Required, Proportion]
+        public double ProportionAcceptingSurrogate { get; set; } = 0;
 
         #endregion
 
