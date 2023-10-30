@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             task = "available";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>(); 
             ManageActivityResourcesAndTasks("labour available");
         }
 
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             task = "used";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>();
             ManageActivityResourcesAndTasks("labour used");
         }
 
@@ -120,7 +120,7 @@ namespace Models.CLEM.Activities
             amountToDo = totaldays;
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {

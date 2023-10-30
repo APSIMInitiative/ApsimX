@@ -1,19 +1,17 @@
+using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Timers;
+using UserInterface.Interfaces;
+using Utility;
+using TreeModel = Gtk.ITreeModel;
+
 namespace UserInterface.Views
 {
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Serialization;
-    using System.Timers;
-    using Utility;
-    using TreeModel = Gtk.ITreeModel;
-
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -38,6 +36,7 @@ namespace UserInterface.Views
         private CellRendererText textRender;
         private const string modelMime = "application/x-model-component";
         private Timer timer = new Timer();
+        private bool isEdittingNodeLabel = false;
 
         /// <summary>
         /// Keep track of whether the accelerator group is attached to the toplevel window.
@@ -77,7 +76,7 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            treeview1 = (Gtk.TreeView) gtkControl;
+            treeview1 = (Gtk.TreeView)gtkControl;
             mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -106,6 +105,7 @@ namespace UserInterface.Views
             treeview1.RowActivated += OnRowActivated;
             treeview1.FocusInEvent += OnTreeGainFocus;
             treeview1.FocusOutEvent += OnTreeLoseFocus;
+            treeview1.RowExpanded += OnRowExpanded;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -539,8 +539,8 @@ namespace UserInterface.Views
                 result = "." + (string)treemodel.GetValue(iter, 0);
                 for (int i = 1; i < ilist.Length; i++)
                 {
-                   treemodel.IterNthChild(out iter, iter, ilist[i]);
-                   result += "." + (string)treemodel.GetValue(iter, 0);
+                    treemodel.IterNthChild(out iter, iter, ilist[i]);
+                    result += "." + (string)treemodel.GetValue(iter, 0);
                 }
             }
             return result;
@@ -774,6 +774,35 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// A row in the tree view has been expanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowExpanded(object sender, RowExpandedArgs e)
+        {
+            try
+            {
+                TreePath path = e.Path.Copy();
+                path.Down();
+                bool stop = false;
+                while (!stop)
+                {
+                    path.Next();
+                    treeview1.Model.GetIter(out TreeIter iter, path);
+                    var value = treeview1.Model.GetValue(iter, 0);
+                    if (value == null)
+                        stop = true;
+                }
+                path.Prev();
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -962,9 +991,9 @@ namespace UserInterface.Views
 
                         dropArgs.DragObject = dragDropData;
                         Gdk.DragAction action = e.Context.SelectedAction;
-                        if ( (action & Gdk.DragAction.Move) == Gdk.DragAction.Move)
+                        if ((action & Gdk.DragAction.Move) == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
-                        else if ( (action & Gdk.DragAction.Copy) == Gdk.DragAction.Copy)
+                        else if ((action & Gdk.DragAction.Copy) == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
                         else
                             dropArgs.Linked = true;
@@ -988,16 +1017,19 @@ namespace UserInterface.Views
         {
             try
             {
-                nodePathBeforeRename = SelectedNode;
-                // TreeView.ContextMenuStrip = null;
-                // e.CancelEdit = false;
+                if (isEdittingNodeLabel == false)
+                {
+                    isEdittingNodeLabel = true;
+                    treeview1.CursorChanged -= OnAfterSelect;
+                    nodePathBeforeRename = SelectedNode;
+                }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
         }
-        
+
         /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The EventArgs instance containing the event data.</param>
@@ -1005,18 +1037,23 @@ namespace UserInterface.Views
         {
             try
             {
-                textRender.Editable = false;
-                // TreeView.ContextMenuStrip = this.PopupMenu;
-                if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
+                if (isEdittingNodeLabel == true)
                 {
-                    NodeRenameArgs args = new NodeRenameArgs()
+                    isEdittingNodeLabel = false;
+                    textRender.Editable = false;
+                    // TreeView.ContextMenuStrip = this.PopupMenu;
+                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
                     {
-                        NodePath = this.nodePathBeforeRename,
-                        NewName = e.NewText
-                    };
-                    Renamed(this, args);
-                    if (!args.CancelEdit)
-                        previouslySelectedNodePath = args.NodePath;
+                        NodeRenameArgs args = new NodeRenameArgs()
+                        {
+                            NodePath = this.nodePathBeforeRename,
+                            NewName = e.NewText
+                        };
+                        Renamed(this, args);
+                        if (!args.CancelEdit)
+                            previouslySelectedNodePath = args.NodePath;
+                    }
+                    treeview1.CursorChanged += OnAfterSelect;
                 }
             }
             catch (Exception err)

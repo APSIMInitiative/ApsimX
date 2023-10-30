@@ -334,6 +334,15 @@ namespace UserInterface.Views
             return false;
         }
 
+        /// <summary>Get the Units assigned to this column</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        public string GetColumnUnits(int colIndex)
+        {
+            if (units == null)
+                return "";
+            else
+                return units[colIndex];
+        }
 
         /// <summary>
         ///  Encapsulates a page of DataTable rows.

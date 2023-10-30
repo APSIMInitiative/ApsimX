@@ -121,7 +121,7 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
-        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get { return N == null ? 1 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 1); } }
 
 
         /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>

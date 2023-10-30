@@ -593,6 +593,7 @@ namespace Models.CLEM.Activities
 
             // Calculated by
             // critical weight OR
+            // relative condition
             // Body condition score and additional mortality rate &&
             // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
@@ -600,21 +601,50 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died;
+            List<Ruminant> died = new();
+
+            died = herd.Where(a => a.Weight == 0).ToList();
+            if (died.Any())
+            {
+                foreach (Ruminant ind in died)
+                {
+                    ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                }
+            }
+
+            died = new();
             if (herd.Any())
             {
-                if (herd.FirstOrDefault().BreedParams.ProportionOfMaxWeightToSurvive >= 0)
-                    died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
-                else
-                    // body condition score based mortality 
-                    died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.BodyConditionScoreForMortality) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
-                // set died flag
-                died.ForEach(c => c.SaleFlag = HerdChangeReason.DiedUnderweight);
-                ruminantHerd.RemoveRuminant(died, this);
+                switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
+                {
+                    case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight, a.HighWeight*a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.RelativeCondition:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.BodyConditionScore:
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        break;
+                    case ConditionBasedCalculationStyle.None:
+                        break;
+                    default:
+                        break;
+                }
+
+                if(died.Any())
+                {
+                    foreach (Ruminant ind in died)
+                    {
+                        ind.Died = true;
+                        ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                    }
+                }
             }
 
             // base mortality adjusted for condition
-            foreach (var ind in ruminantHerd.Herd)
+            foreach (var ind in ruminantHerd.Herd.Where(a => !a.Died))
             {
                 double mortalityRate = 0;
                 if (!ind.Weaned)
@@ -635,16 +665,19 @@ namespace Models.CLEM.Activities
 
                 // convert mortality from annual (calculated) to monthly (applied).
                 if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), mortalityRate/12))
+                {
                     ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedMortality;
+                }
             }
 
-            died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died = herd.Where(a => a.Died).ToList();
             //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
             IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {
@@ -654,7 +687,7 @@ namespace Models.CLEM.Activities
                     {
                         foreach (var suckling in deadMother.SucklingOffspringList)
                         {
-                            if(wetMothersAssigned < wetMothersAvailable.Count)
+                            if(wetMothersAssigned < wetMothersAvailable.Count && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), suckling.BreedParams.ProportionAcceptingSurrogate))
                             {
                                 suckling.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;

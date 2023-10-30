@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
                 inds.RemoveAll(a => filteredInd.Contains(a));
             }
 
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
 

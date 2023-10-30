@@ -1,11 +1,11 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using Utility;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using Models;
-    using Models.Core;
-    using Utility;
-    using Interfaces;
-    using Views;
+    
 
     /// <summary>
     /// Attaches an Input model to an Input View.
@@ -20,7 +20,12 @@
         /// <summary>
         /// The input view
         /// </summary>
-        private IInputView view;
+        private InputView view;
+
+        /// <summary>
+        /// The Explorer
+        /// </summary>
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// The Explorer
@@ -36,7 +41,12 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.input = model as Models.PostSimulationTools.Input;
-            this.view = view as IInputView;
+            this.view = view as InputView;
+
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach(input.Tables[0], this.view.Grid, explorerPresenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+
             this.explorerPresenter = explorerPresenter;
             this.view.BrowseButtonClicked += this.OnBrowseButtonClicked;
 
@@ -87,9 +97,6 @@
         {
             if (input.FullFileNames != null)
                 view.FileName = string.Join(", ", input.FullFileNames);
-
-            if (input.FullFileNames != null && input.FullFileNames.Length > 0)
-            this.view.GridView.DataSource = this.input.GetTable(input.FullFileNames[0]);
         }
     }
 }
