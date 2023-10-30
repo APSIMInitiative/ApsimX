@@ -82,7 +82,7 @@ namespace UserInterface.Views
             commonFrequencyBox.PackStart((commonReportFrequencyVariableList as ViewBase).MainWidget, true, true, 0);
 
             Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
-            double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition;
+            double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition / 100.0;
             int horizontalPos = (int)Math.Round(bounds.Width * 0.7);
             if (horizontalSplitter != null)
                 if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
@@ -90,7 +90,7 @@ namespace UserInterface.Views
             reportVariablesVPaned.Position = horizontalPos;
             reportFrequencyVPaned.Position = horizontalPos;
 
-            double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition;
+            double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition / 100.0;
             int verticalPos = (int)Math.Round(bounds.Height * 0.7);
             if (verticalSplitter != null)
                 if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
@@ -135,7 +135,7 @@ namespace UserInterface.Views
             {
                 Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
                 double percentage = (double)reportVariablesVPaned.Position / (double)bounds.Width;
-                Configuration.Settings.ReportSplitterPosition = percentage;
+                Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
                 Configuration.Settings.Save();
             }
                 
@@ -151,7 +151,7 @@ namespace UserInterface.Views
             {
                 Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
                 double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
-                Configuration.Settings.ReportSplitterPosition = percentage;
+                Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
                 Configuration.Settings.Save();
             }
         }
@@ -167,7 +167,7 @@ namespace UserInterface.Views
             {
                 Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
                 double percentage = (double)panel.Position / (double)bounds.Height;
-                Configuration.Settings.ReportSplitterVerticalPosition = percentage;
+                Configuration.Settings.ReportSplitterVerticalPosition = (int)(percentage * 100);
                 Configuration.Settings.Save();
             }
         }
