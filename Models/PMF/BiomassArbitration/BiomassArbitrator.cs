@@ -92,6 +92,17 @@ namespace Models.PMF
             } 
         }
 
+        /// <summary>Gets the Amount of C not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        public double UnallocatedC { get; private set; }
+
+        /// <summary>Gets the Amount of N not allocated</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        public double UnallocatedN { get; private set; }
+
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -212,6 +223,9 @@ namespace Models.PMF
                     }
 
                 NutrientConstrainedDMAllocation();
+
+                UnallocatedC = Math.Max(0, Carbon.TotalFixationSupply + Carbon.TotalReAllocationSupply - Carbon.TotalPlantDemandsAllocated);
+                UnallocatedN = Math.Max(0, Nitrogen.TotalUptakeSupply + Nitrogen.TotalReAllocationSupply + Nitrogen.TotalFixationSupply - Nitrogen.TotalPlantDemandsAllocated);
             }
         }
 
@@ -263,8 +277,8 @@ namespace Models.PMF
         }
 
         /// <summary>Relatives the allocation.</summary>
-        /// <param name="TotalSupply">The Allocation process</param>
-        /// <param name="PRS">The bat.</param>
+        /// <param name="TotalSupply">The amount of nutrient to allocate</param>
+        /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
             double totalAllocated = 0;
