@@ -82,7 +82,8 @@
                 "[Maize].Grain.Total.Wt",
                 "[Maize].Grain.Total.N",
                 "[Maize].Total.Wt",
-                "[Maize].Structure.FinalLeafNumber"
+                "[Maize].Structure.FinalLeafNumber",
+                "[Maize]."
               ],
               "EventNames": [
                 "[Maize].Harvesting"

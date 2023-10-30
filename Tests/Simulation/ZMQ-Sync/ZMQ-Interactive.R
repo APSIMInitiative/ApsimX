@@ -67,7 +67,7 @@ poll_zmq2 <- function(socket) {
       reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       stopifnot(class(reply) == "numeric")
 
-      sendCommand(socket, "get", "[Wheat].Phenology.Zadok.Stage")
+      sendCommand(socket, "get", "[Maize].Phenology.Zadok")
       reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       stopifnot(class(reply) == "numeric")
       
@@ -93,25 +93,27 @@ poll_zmq2 <- function(socket) {
       sendCommand(socket, "get", "[Nutrient].NO3.kgha")
       reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       #cat("r2 = ", reply2, "\n")
-
+      
       sendCommand(socket, "set", list("[Nutrient].NO3.kgha", reply1))
       msg <- receive.string(socket)
 
-      #sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
-      #msg <- receive.string(socket)
+      sendCommand(socket, "get", "[Nutrient].NO3.kgha")
+      reply3 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      #cat("r3 = ", reply3, "\n")
+      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
+      msg <- receive.string(socket)
 
-      #sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
-      #reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
-      #cat("r1 = ", reply1,"r2 = ", reply2, "\n")
-      #stopifnot(reply1 != reply2)
+      sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
+      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
 
-      #sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", reply1))
-      #msg <- receive.string(socket)
+      reply1 <- paste(sample(LETTERS, nchar(reply)), collapse="")
+
+      sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", reply1))
+      msg <- receive.string(socket)
       
-      #sendCommand(socket, "set", list("[Manager].Script.DummyDoubleVar", 42.42))
-      #msg <- receive.string(socket)
+      sendCommand(socket, "set", list("[Manager].Script.DummyDoubleVar", 42.42))
+      msg <- receive.string(socket)
       # cat("set result = ", msg, "\n")
-      
       # resume the simulation and come back tomorrow
       sendCommand(socket, "resume")
     } else if (msg == "finished") {
