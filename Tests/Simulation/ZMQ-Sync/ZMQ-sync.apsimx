@@ -1041,10 +1041,11 @@
                 "        [EventSubscribe(\"StartOfSimulation\")]",
                 "        private void OnSimulationCommencing(object sender, EventArgs e)",
                 "        {",
+                "           if (Identifier == \"<undefined>\") {",
+                "               throw new Exception(\"Need an endpoint to connect to\");",
+                "           }",
                 "           Identifier = \"tcp://\" + Identifier;",
-                "           Console.WriteLine(\"StartOfSimulation, id = \" + Identifier);",
                 "           connection = new RequestSocket(Identifier);",
-                "",
                 "           connection.SendFrame(\"connect\");",
                 "           var msg = connection.ReceiveFrameString(); ",
                 "           if (msg != \"ok\") { throw new Exception(\"Expected ok\"); }",
@@ -1191,7 +1192,7 @@
               "Parameters": [
                 {
                   "Key": "Identifier",
-                  "Value": ""
+                  "Value": "<undefined>"
                 }
               ],
               "Name": "Synchroniser",
