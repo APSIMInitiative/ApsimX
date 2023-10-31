@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
             this.view.Show();
 
             int height = this.view.PanelHeight;
-            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
             if (savedHeight > 0.9 || savedHeight < 0.1)
                 this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
@@ -1327,7 +1327,7 @@ namespace UserInterface.Presenters
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = (double)this.view.StatusPanelPosition / (double)this.view.PanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
                 if (treeWidth > 0)
                     Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();
