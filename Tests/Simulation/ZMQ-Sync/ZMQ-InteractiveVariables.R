@@ -52,7 +52,7 @@ sendCommand <- function(socket, command, args = NULL) {
 }
 # The response loop. When the simulation connects we tell it what to do.
 # connect -> ok
-# paused -> resume/get/set
+# paused -> resume/get/set/do
 # finished -> ok
 poll_zmq2 <- function(socket) {
   while (TRUE) {
@@ -165,6 +165,40 @@ poll_zmq2 <- function(socket) {
       sendCommand(socket, "get", "[Soil].SoilWater.SW") 
       reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       cat("sw=", reply, "\n") # Probably better looking at ESW/PAW 
+
+      sendCommand(socket, "get", "[Clock].Today.day")
+      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      cat("day=", reply, "\n")
+      if (reply == 2) {
+         sendCommand(socket, "do", list("addFertiliser", "amount", 40))
+         reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+         cat("do reply=", reply, "\n")
+      }
+
+      if (reply == 3) {
+         sendCommand(socket, "do", list("sowCrop", "cropName", "Maize", "cultivarName", "sc501"))
+         reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+         cat("do reply=", reply, "\n")
+      }
+
+      if (reply == 4) {
+         sendCommand(socket, "do", list("tillage", "type", "disc"))
+         reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+         cat("do reply=", reply, "\n")
+      }
+
+      if (reply == 5) {
+         sendCommand(socket, "do", list("applyIrrigation", "amount", 42))
+         reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+         cat("do reply=", reply, "\n")
+      }
+
+      if (reply == 6) {
+         sendCommand(socket, "do", list("terminate"))
+         reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+         cat("do reply=", reply, "\n")
+      }
+
 
       # resume the simulation and come back tomorrow
       sendCommand(socket, "resume")
