@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 166,
+  "Version": 168,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -282,8 +282,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "SCRUM",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "SCRUM",
           "ResourceName": null,
           "Children": [
@@ -4473,16 +4471,6 @@
               "Legume": true,
               "WaterStress": false,
               "Name": "Legume",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Climate.GetTempSum, Models",
-              "FileName": null,
-              "ExcelWorkSheetName": null,
-              "Name": "GetTempSum",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -13903,7 +13891,7 @@
                     "        private IPhysical soilPhysical;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
-                    "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                     "        [Link]",
                     "        private Nutrient Nutrient;",
                     "        ",
@@ -18433,7 +18421,7 @@
                     "        private IPhysical soilPhysical;",
                     "        [Link]",
                     "        private ISoilWater waterBalance;",
-                    "        [Link(Type=LinkType.Path, Path=\"[Nutrient].SurfaceResidue.Decomposition\")] private CarbonFlow ResidueDecomposition;",
+                    "        [Link(Type=LinkType.Path, Path=\"[SurfaceOrganicMatter].SurfaceResidue.Decomposition\")] private OrganicFlow ResidueDecomposition;",
                     "        [Link]",
                     "        private Nutrient Nutrient;",
                     "        ",
