@@ -95,11 +95,13 @@ namespace Models.PMF
         /// <summary>Gets the Amount of C not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
+        [Units("gC/m2")]
         public double UnallocatedC { get; private set; }
 
         /// <summary>Gets the Amount of N not allocated</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
+        [Units("gN/m2")]
         public double UnallocatedN { get; private set; }
 
 
