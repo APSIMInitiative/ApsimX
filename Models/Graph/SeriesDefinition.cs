@@ -397,7 +397,13 @@ namespace Models
                 foreach (var descriptor in Descriptors)
                 {
                     if (fieldsThatExist.Contains(descriptor.Name))
-                        filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
+                    {
+                        if (string.IsNullOrEmpty(descriptor.Value))
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] IS NULL");
+                        else
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
+                    }
+                        
                 }
             }
             if (!string.IsNullOrEmpty(userFilter))
