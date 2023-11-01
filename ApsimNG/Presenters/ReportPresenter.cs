@@ -1,4 +1,11 @@
-﻿using ApsimNG.Classes;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using ApsimNG.Classes;
 using Gtk;
 using Models;
 using Models.Core;
@@ -6,17 +13,9 @@ using Models.Factorial;
 using Models.PMF;
 using Models.Storage;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -91,7 +90,7 @@ namespace UserInterface.Presenters
         private readonly string commonReportFrequencyVariablesFileName = "CommonFrequencyVariables.json";
 
         /// <summary> Common directory path. </summary>
-        private readonly string reportVariablesDirectoryPath = "ApsimNG\\Resources\\CommonReportVariables\\";
+        private readonly string reportVariablesDirectoryPath = Path.Combine(new string[] { "ApsimNG", "Resources", "CommonReportVariables" });
 
         // Returns all model names that are of type Plant.
         public List<string> SimulationPlantModelNames
