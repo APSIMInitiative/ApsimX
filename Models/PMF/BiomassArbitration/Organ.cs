@@ -19,15 +19,8 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IHasDamageableBiomass, IOrgan
+    public class Organ : Model, IHasDamageableBiomass
     {
-        /// IOrganInterface needs to be done properly
-        public double Harvest() { return 0; }
-        /// <summary>
-        /// Maintenance respiration.
-        /// </summary>
-        public double MaintenanceRespiration { get { return 0; } }
-
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
 
@@ -79,18 +72,12 @@ namespace Models.PMF
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 2e-12;
 
-        /// <summary>The mass of Live C at the start of the day </summary>
-        public double startLiveC { get; private set; }
-        /// <summary>The mass of Dead C at the start of the day </summary>
-        public double startDeadC { get; private set; }
-        /// <summary>The mass of Live N at the start of the day </summary>
-        public double startLiveN { get; private set; }
-        /// <summary>The mass of Dead N at the start of the day </summary>
-        public double startDeadN { get; private set; }
-        /// <summary>The live mass of the organ at the start of the day </summary>
-        public double startLiveWt { get; private set; }
-        /// <summary>The dead mass of the organ at the start of the day </summary>
-        public double startDeadWt { get; private set; }
+        private double startLiveC { get; set; }
+        private double startDeadC { get; set; }
+        private double startLiveN { get; set; }
+        private double startDeadN { get; set; }
+        private double startLiveWt { get; set; }
+        private double startDeadWt { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------

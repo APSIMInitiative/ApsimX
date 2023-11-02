@@ -52,6 +52,8 @@ namespace Models.PMF
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
         private double tolerence = 1e-12;
+        private double StartN { get; set; }
+        private double StartC { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -236,6 +238,51 @@ namespace Models.PMF
 
                 UnallocatedC = Math.Max(0, Carbon.TotalFixationSupply + Carbon.TotalReAllocationSupply - Carbon.TotalPlantDemandsAllocated);
                 UnallocatedN = Math.Max(0, Nitrogen.TotalUptakeSupply + Nitrogen.TotalReAllocationSupply + Nitrogen.TotalFixationSupply - Nitrogen.TotalPlantDemandsAllocated);
+            }
+        }
+
+        /// <summary>Event from sequencer telling us to do our potential growth.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            StartC = 0;
+            StartN = 0;
+            foreach (Organ o in PlantOrgans)
+            {
+                StartC += o.C;
+                StartN += o.N;
+            }
+        }
+
+            /// <summary>
+            /// Event from clock when biomass partitioning is complete
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            [EventSubscribe("PartitioningComplete")]
+        private void OnPartitioningComplete(object sender, EventArgs e)
+        {
+            if (plant.IsEmerged)
+            {
+                double checkc = StartC + Carbon.TotalPlantDemandsAllocated;
+                double checkn = StartN + Nitrogen.TotalPlantDemandsAllocated;
+
+                double endC = 0;
+                double endN = 0;
+                foreach (Organ o in PlantOrgans)
+                {
+                    endC += o.C;
+                    endN += o.N;
+                }
+
+                double cdiff = Math.Abs(checkc - endC);
+                if (cdiff > 1e-12)
+                    throw new Exception("Mass balance violation in Carbon");
+                double ndiff = Math.Abs(checkn - endN);
+                if (ndiff > 1e-12)
+                    throw new Exception("Mass balance violation in Nitrogen");
             }
         }
 
