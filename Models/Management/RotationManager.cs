@@ -61,6 +61,13 @@ namespace Models.Management
         public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
 
         /// <summary>
+        /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
+        /// </summary>
+        [Description("Top Level")]
+        [Tooltip("When enabled, this component will control other management components, if not it does nothing")]
+        public bool TopLevel { get; set; }
+
+        /// <summary>
         /// Initial state of the rotation.
         /// </summary>
         [Description("Initial State")]
@@ -133,6 +140,8 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            if (! TopLevel) { return; }
+
             bool more = true;
             while (more)
             {
@@ -178,6 +187,13 @@ namespace Models.Management
                     more = true;
                 }
             }
+        }
+        /// <summary>
+        /// Do our rule evaluation when asked by method call
+        /// </summary>
+        public void DoManagement() 
+        {
+            OnDoManagement(null, null);
         }
 
         /// <summary>
