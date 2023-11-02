@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing;
 using Models.Core;
 using Models.Interfaces;
 using Newtonsoft.Json;
@@ -103,6 +104,13 @@ namespace Models.PMF
         [JsonIgnore]
         [Units("gN/m2")]
         public double UnallocatedN { get; private set; }
+
+        /// <summary>The amount of C not allocated because supply was insufficient to maintain minimum N conc</summary>
+        /// <value>The n supply.</value>
+        [JsonIgnore]
+        [Units("gN/m2")]
+        public double CUnallocatedDueToNLimitation { get; private set; }
+
 
 
         ///6. Public methods
@@ -261,6 +269,8 @@ namespace Models.PMF
                         Math.Min(C.DemandsAllocated.Storage, N.MaxCDelta * StorageProportion));
                 }
             }
+
+            CUnallocatedDueToNLimitation = PreNStressDMAllocation - Carbon.TotalPlantDemandsAllocated;
         }
 
 
@@ -283,6 +293,7 @@ namespace Models.PMF
         /// <param name="PRS">The supply and demand info for that nutrient</param>
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
+            double initialDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
             double totalAllocated = 0;
             if (TotalSupply > tolerence)
             {
@@ -309,7 +320,7 @@ namespace Models.PMF
                 double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
                 if (RemainingDemand < -tolerence) //Throw if really negative
                     throw new Exception(FullPath + ".Storage was set to negative value");
-                else  // if negative in floating point tollerence, zero the pool
+                if (RemainingDemand < 0)  // if negative in floating point tollerence, zero the pool
                     RemainingDemand = 0.0;
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)

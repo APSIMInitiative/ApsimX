@@ -19,8 +19,15 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IHasDamageableBiomass
+    public class Organ : Model, IHasDamageableBiomass, IOrgan
     {
+        /// IOrganInterface needs to be done properly
+        public double Harvest() { return 0; }
+        /// <summary>
+        /// Maintenance respiration.
+        /// </summary>
+        public double MaintenanceRespiration { get { return 0; } }
+
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
 
@@ -72,12 +79,18 @@ namespace Models.PMF
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 2e-12;
 
-        private double startLiveC { get; set; }
-        private double startDeadC { get; set; }
-        private double startLiveN { get; set; }
-        private double startDeadN { get; set; }
-        private double startLiveWt { get; set; }
-        private double startDeadWt { get; set; }
+        /// <summary>The mass of Live C at the start of the day </summary>
+        public double startLiveC { get; private set; }
+        /// <summary>The mass of Dead C at the start of the day </summary>
+        public double startDeadC { get; private set; }
+        /// <summary>The mass of Live N at the start of the day </summary>
+        public double startLiveN { get; private set; }
+        /// <summary>The mass of Dead N at the start of the day </summary>
+        public double startDeadN { get; private set; }
+        /// <summary>The live mass of the organ at the start of the day </summary>
+        public double startLiveWt { get; private set; }
+        /// <summary>The dead mass of the organ at the start of the day </summary>
+        public double startDeadWt { get; private set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -217,6 +230,11 @@ namespace Models.PMF
         [JsonIgnore]
         [Units("g/m^2")]
         public double Wt { get; private set; }
+
+        /// <summary>Gets the total (live + dead) carbon weight (g/m2)</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double C { get; private set; }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
@@ -489,6 +507,7 @@ namespace Models.PMF
         {
             Wt = Live.Wt + Dead.Wt;
             N = Live.Nitrogen.Total + Dead.Nitrogen.Total;
+            C = Live.Carbon.Total + Dead.Carbon.Total;
             Nconc = Wt > 0.0 ? N / Wt : 0.0;
             FN = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
         }

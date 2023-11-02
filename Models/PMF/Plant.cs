@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
@@ -49,7 +50,7 @@ namespace Models.PMF
 
         /// <summary>The arbitrator</summary>
         [Link(IsOptional = true)]
-        public IArbitrator Arbitrator = null;
+        public BiomassArbitrator Arbitrator = null;
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
@@ -83,6 +84,9 @@ namespace Models.PMF
 
         /// <summary>Current cultivar.</summary>
         private Cultivar cultivarDefinition = null;
+
+        private double StartN { get; set; }
+        private double StartC { get; set; }
 
 
         /// <summary>Gets a list of cultivar names</summary>
@@ -264,6 +268,15 @@ namespace Models.PMF
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            StartC = 0;
+            StartN = 0;
+            foreach (Organ o in Organs)
+            {
+                StartC += o.C;
+                StartN += o.N;
+            }
+
+            
             //Reduce plant population in case of mortality
             if (Population > 0.0)
                 Population -= Population * mortalityRate.Value();
@@ -271,6 +284,37 @@ namespace Models.PMF
             // Seed mortality
             if (!IsEmerged && SowingData != null && SowingData.Seeds > 0)
                 Population -= Population * seedMortalityRate.Value();
+        }
+
+
+        /// <summary>
+        /// Event from clock when biomass partitioning is complete
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("PartitioningComplete")]
+        private void OnPartitioningComplete(object sender, EventArgs e)
+        {
+            if (IsEmerged)
+            {
+                double checkc = StartC + Arbitrator.Carbon.TotalPlantDemandsAllocated;
+                double checkn = StartN + Arbitrator.Nitrogen.TotalPlantDemandsAllocated;
+
+                double endC = 0;
+                double endN = 0;
+                foreach (Organ o in Organs)
+                {
+                    endC += o.C;
+                    endN += o.N;
+                }
+
+                double cdiff = Math.Abs(checkc - endC);
+                if (cdiff > 1e-12)
+                   throw new Exception("Mass balance violation in Carbon");
+                double ndiff = Math.Abs(checkn - endN);
+                if (ndiff > 1e-12)
+                   throw new Exception("Mass balance violation in Nitrogen");
+            }
         }
 
         /// <summary>Sow the crop with the specified parameters.</summary>
