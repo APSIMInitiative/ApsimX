@@ -193,7 +193,11 @@ namespace Models.Management
         /// </summary>
         public void DoManagement() 
         {
-            OnDoManagement(null, null);
+            bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
+            TopLevel = true;
+            OnDoManagement(null, new EventArgs());
+            TopLevel = oldState;
+
         }
 
         /// <summary>

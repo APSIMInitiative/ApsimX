@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 168,
+  "Version": 169,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -52,7 +52,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "/home/uqpdevo1/src/ApsimX/Examples/WeatherFiles/Dalby.met",
+          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -1865,9 +1865,8 @@
             "            foreach (var paddock in myPaddockNames) {",
             "                currentPaddock = paddock;",
             "                RotationManager.CurrentState = currentState[paddock];",
-            "                //Summary.WriteMessage(this, $\"Publishing {currentPaddock}\", MessageType.Diagnostic);",
-            "                // fixme. This goes out to every subscriber, we want it to be just the rotation manager 2 lines above..",
-            "                myEvents.Publish(\"DoManagement\", new object[] { this, EventArgs.Empty  });",
+            "                //Summary.WriteMessage(this, $\"Calling DoManagement for {currentPaddock}\", MessageType.Diagnostic);",
+            "                RotationManager.DoManagement();",
             "                currentState[paddock] = RotationManager.CurrentState;",
             "            }",
             "            currentPaddock = \"\";",
@@ -2076,6 +2075,7 @@
               "Name": "Arc 4"
             }
           ],
+          "TopLevel": false,
           "InitialState": "initial",
           "Verbose": false,
           "Name": "RotationManager",
