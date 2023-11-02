@@ -80,7 +80,7 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { get; private set; }
+        public string CurrentState { get; set; }
 
         /// <summary>
         /// All dynamic events published by the rotation manager.
