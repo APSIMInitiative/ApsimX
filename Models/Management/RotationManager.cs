@@ -142,6 +142,7 @@ namespace Models.Management
         {
             if (! TopLevel) { return; }
 
+            MadeAChange = false;
             bool more = true;
             while (more)
             {
@@ -153,9 +154,17 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
                     {
-                        object value = FindByPath(testCondition)?.Value;
-                        if (value == null)
-                            throw new Exception($"Test condition '{testCondition}' returned nothing");
+                        object value;
+                        try 
+                        { 
+                           value = FindByPath(testCondition)?.Value;
+                           if (value == null)
+                              throw new Exception("Test condition returned nothing");
+                        }
+                        catch (Exception ex) 
+                        {
+                            throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
+                        }
                         score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
                     }
 
@@ -185,19 +194,23 @@ namespace Models.Management
                 {
                     TransitionTo(bestArc);
                     more = true;
+                    MadeAChange = true;
                 }
             }
         }
+        
+        private bool MadeAChange;
+
         /// <summary>
         /// Do our rule evaluation when asked by method call
         /// </summary>
-        public void DoManagement() 
+        public bool DoManagement() 
         {
             bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
             TopLevel = true;
             OnDoManagement(null, new EventArgs());
             TopLevel = oldState;
-
+            return(MadeAChange);
         }
 
         /// <summary>
