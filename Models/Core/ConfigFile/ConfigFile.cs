@@ -61,7 +61,7 @@ namespace Models.Core.ConfigFile
             try
             {
                 // TODO: Important regex for nodes needs to be updated to include dashes.
-                // TODO: Need to test if override nodes with spaces in names also work. Do 01/08/2023.
+                // TODO: Need to test if override nodes with spaces in names also work.
                 Regex rxAddLocalCommand = new Regex(@"(add)\s(\[){1}(\w)*(\]){1}\s(\w)*");
                 Regex rxAddFromOtherFileCommand = new Regex(@"(add)\s(\[){1}(\w)+([\w\s])*(\]){1}\s([a-zA-Z0-9]){1}([\:\-\w\\\/])*(\.){1}(apsimx){1}(;){1}(\[){1}([\w\s])*(\]){1}");
                 Regex rxCopyCommand = new Regex(@"(copy)\s(\[){1}(\w)*(\]){1}\s(\[){1}(\w)*(\]){1}");
@@ -335,15 +335,6 @@ namespace Models.Core.ConfigFile
                         if (section.Contains(' '))
                         {
                             string trimmedSection = section.TrimEnd();
-                            //int indexOfSpace = trimmedSection.IndexOf(' ');
-                            //if (indexOfSpace != -1)
-                            //{
-                            //    string tempSection = trimmedSection.Insert(indexOfSpace, "@");
-                            //    int newIndexOfSpace = tempSection.IndexOf(" ");
-                            //    fixedSection = tempSection.Remove(indexOfSpace, 1);
-                            //    correctedLine += fixedSection;
-                            //}
-                            //else correctedLine += trimmedSection;
                             fixedSection = trimmedSection.Replace(' ', '@');
                             correctedLine += fixedSection;
                         }
