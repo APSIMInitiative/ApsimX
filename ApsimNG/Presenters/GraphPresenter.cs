@@ -128,6 +128,9 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
+                if (definitions.Count() == 0)
+                    explorerPresenter.MainPresenter.ShowMessage("No data matches the properties and filter set for this graph", Simulation.MessageType.Warning, true);
+
                 foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
