@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -452,6 +450,27 @@ namespace Models.Surface
                          Manure, "");
         }
 
+        /// <summary>
+        /// Adds excreta to the SOM
+        /// This version is callable from an operation
+        /// </summary>
+        /// <param name="organicC">Organic C</param>
+        /// <param name="organicN">Organic N</param>
+        /// <param name="no3N">NO3 N</param>
+        /// <param name="nh4N">NH4 N</param>
+        /// <param name="p">P</param>
+        public void AddFaeces(double organicC, double organicN, double no3N, double nh4N, double p)
+        {
+            this.FractionFaecesAdded = 1.0;
+            AddFaecesType data = new AddFaecesType();
+            data.OMWeight = organicC / 0.4;     // because the OM is 40% C
+            data.OMN = organicN;
+            data.NH4N = nh4N;
+            data.NO3N = no3N;
+            data.OMP = p;
+            this.AddFaeces(data);
+        }
+        
         /// <summary>
         /// "cover1" and "cover2" are numbers between 0 and 1 which
         /// indicate what fraction of sunlight is intercepted by the
