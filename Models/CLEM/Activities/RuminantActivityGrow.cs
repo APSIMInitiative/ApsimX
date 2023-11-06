@@ -601,7 +601,19 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = new List<Ruminant>();
+            List<Ruminant> died = new();
+
+            died = herd.Where(a => a.Weight == 0).ToList();
+            if (died.Any())
+            {
+                foreach (Ruminant ind in died)
+                {
+                    ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedUnderweight;
+                }
+            }
+
+            died = new();
             if (herd.Any())
             {
                 switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
@@ -628,12 +640,11 @@ namespace Models.CLEM.Activities
                         ind.Died = true;
                         ind.SaleFlag = HerdChangeReason.DiedUnderweight;
                     }
-                    ruminantHerd.RemoveRuminant(died, this);
                 }
             }
 
             // base mortality adjusted for condition
-            foreach (var ind in ruminantHerd.Herd)
+            foreach (var ind in ruminantHerd.Herd.Where(a => !a.Died))
             {
                 double mortalityRate = 0;
                 if (!ind.Weaned)
@@ -654,16 +665,19 @@ namespace Models.CLEM.Activities
 
                 // convert mortality from annual (calculated) to monthly (applied).
                 if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), mortalityRate/12))
+                {
                     ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedMortality;
+                }
             }
 
-            died = herd.Where(a => a.Died).Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
+            died = herd.Where(a => a.Died).ToList();
             //died.Select(a => { a.SaleFlag = HerdChangeReason.DiedMortality; return a; }).ToList();
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
             IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {
@@ -673,7 +687,7 @@ namespace Models.CLEM.Activities
                     {
                         foreach (var suckling in deadMother.SucklingOffspringList)
                         {
-                            if(wetMothersAssigned < wetMothersAvailable.Count)
+                            if(wetMothersAssigned < wetMothersAvailable.Count && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), suckling.BreedParams.ProportionAcceptingSurrogate))
                             {
                                 suckling.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;

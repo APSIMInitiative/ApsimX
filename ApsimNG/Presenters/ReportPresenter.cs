@@ -76,7 +76,7 @@ namespace UserInterface.Presenters
         private readonly string commonReportFrequencyVariablesFileName = "CommonFrequencyVariables.json";
 
         /// <summary> Common directory path. </summary>
-        private readonly string reportVariablesDirectoryPath = "ApsimNG\\Resources\\CommonReportVariables\\";
+        private readonly string reportVariablesDirectoryPath = Path.Combine(new string[] { "ApsimNG", "Resources", "CommonReportVariables" });
 
         /// <summary> All in scope model names of the current apsimx file.</summary>
         public List<string> InScopeModelNames { get; set; }

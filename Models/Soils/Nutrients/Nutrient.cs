@@ -379,6 +379,7 @@ namespace Models.Soils.Nutrients
             }
 
             organic.Calculate();
+            (FOM as CompositeNutrientPool).Calculate();
         }
     }
 }

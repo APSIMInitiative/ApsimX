@@ -40,7 +40,7 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Survival")]
         [Description("Probability of conception when above cut-off")]
         [System.ComponentModel.DefaultValue(1)]
-        [Required, Proportion]
+        [Required, Proportion, GreaterThanValue(0)]
         public double ConditionBasedConceptionProbability { get; set; }
 
         /// <summary>

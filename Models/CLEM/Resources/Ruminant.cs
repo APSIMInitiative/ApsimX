@@ -341,8 +341,10 @@ namespace Models.CLEM.Resources
                     {
                         if ((this as RuminantFemale).IsPreBreeder)
                             return "PreBreeder";
-                        else
+                        else if ((this as RuminantFemale).IsBreeder)
                             return "Breeder";
+                        else
+                            return "Sterilized";
                     }
                     else
                     {

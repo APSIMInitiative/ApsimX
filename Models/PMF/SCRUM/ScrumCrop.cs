@@ -1,5 +1,8 @@
 ﻿using Models.Climate;
 using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
@@ -90,7 +93,7 @@ namespace Models.PMF.Scrum
         private Phenology phenology = null;
 
         [Link]
-        private GetTempSum ttSum = null;
+        Weather weather = null;
 
         [Link]
         private Clock clock = null;
@@ -133,6 +136,7 @@ namespace Models.PMF.Scrum
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
+            {"InvertedRelativeMaturity","[SCRUM].TotalDMAtHarvest.InvertedRelativeMaturityAtHarvest.FixedValue = " },
             {"ExpectedYield","[Product].ExpectedYield.FixedValue = "},
             {"HarvestIndex","[Product].HarvestIndex.FixedValue = "},
             {"DryMatterContent","[Product].DryMatterContent.FixedValue = "},
@@ -209,6 +213,7 @@ namespace Models.PMF.Scrum
             else
                 cropParams["WaterStressSens"] += "1.0";
 
+            cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
             double dmc = (100 - this.MoisturePc) / 100;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
@@ -249,7 +254,7 @@ namespace Models.PMF.Scrum
             ttEmergeToHarv = 0.0;
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
             {
-                ttEmergeToHarv = ttSum.GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
+                ttEmergeToHarv = GetTtSum(management.EstablishDate, (DateTime)management.HarvestDate, this.BaseT, this.OptT, this.MaxT);
                 ttEmergeToHarv -= emergeTt; //Subtract out emergence tt
             }
             else
@@ -259,7 +264,7 @@ namespace Models.PMF.Scrum
 
             if ((management.HarvestDate == DateTime.MinValue)||(management.HarvestDate == null))
             {
-                this.HarvestDate = ttSum.GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
+                this.HarvestDate = GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
             }
             else
             {
@@ -319,6 +324,56 @@ namespace Models.PMF.Scrum
                 scrum.EndCrop();
                 scrum.Children.Remove(crop);
             }
+        }
+
+        /// <summary>
+        /// Calculates the accumulated thermal time between two dates
+        /// </summary>
+        /// <param name="start">Start Date</param>
+        /// <param name="end">End Date</param>
+        /// <param name="BaseT">Base temperature</param>
+        /// <param name="OptT">Optimal temperature</param>
+        /// <param name="MaxT">Maximum temperature</param>
+        public double GetTtSum(DateTime start, DateTime end, double BaseT, double OptT, double MaxT)
+        {
+            double[] xs = new double[] { BaseT, OptT, MaxT };
+            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            XYPairs TtResponse = new XYPairs() { X = xs, Y = ys };
+
+            double TtSum = 0;
+            for (DateTime d = start; d <= end; d = d.AddDays(1))
+            {
+                DailyMetDataFromFile TodaysMetData = weather.GetMetData(d); // Read another line ahead to get tomorrows data
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
+            }
+
+            return TtSum;
+        }
+
+        /// <summary>
+        /// Calculates the accumulated thermal time between two dates
+        /// </summary>
+        /// <param name="start">Start Date</param>
+        /// <param name="HarvTt">Thermal time from establishment to Harvest</param>
+        /// <param name="BaseT">Base Temperature</param>
+        /// <param name="OptT">Optimum temperature</param>
+        /// <param name="MaxT">Maximum Temperautre</param>
+        public DateTime GetHarvestDate(DateTime start, double HarvTt, double BaseT, double OptT, double MaxT)
+        {
+            double[] xs = new double[] { BaseT, OptT, MaxT };
+            double[] ys = new double[] { 0, OptT - BaseT, 0 };
+            XYPairs TtResponse = new XYPairs { X = xs, Y = ys };
+
+            double TtSum = 0;
+            DateTime d = start;
+            while (TtSum < HarvTt)
+            {
+                DailyMetDataFromFile TodaysMetData = weather.GetMetData(d); // Read another line ahead to get tomorrows data
+                TtSum += TtResponse.ValueIndexed((TodaysMetData.MinT + TodaysMetData.MaxT) / 2);
+                d = d.AddDays(1);
+            }
+
+            return d;
         }
     }
 }
