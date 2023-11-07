@@ -445,7 +445,12 @@
                 series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 else
                     series.ToolTip = title;
 
@@ -558,7 +563,12 @@
             {
                 var series = new ColumnXYSeries();
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.StrokeColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -608,7 +618,12 @@
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
             if (showOnLegend)
-                series.Title = title;
+            {
+                if (String.IsNullOrEmpty(title))
+                    series.Title = "null";
+                else
+                    series.Title = title;
+            }
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -799,7 +814,13 @@
                 BoxPlotSeries series = new BoxPlotSeries();
                 series.Items = GetBoxPlotItems(x, y, xAxisType, yAxisType);
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
+                    
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))

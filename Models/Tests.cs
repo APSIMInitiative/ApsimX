@@ -8,6 +8,7 @@ using Models.Core;
 using Models.Interfaces;
 using Models.PostSimulationTools;
 using Models.Storage;
+using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models
@@ -16,10 +17,10 @@ namespace Models
     /// Test interface.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.GridMultiPresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, IModelAsTable
+    public class Tests : Model, ITestable, IGridModel
     {
         /// <summary>
         /// data table
@@ -45,9 +46,28 @@ namespace Models
         public string POName { get; set; }
 
         /// <summary>
-        /// Implementation of IModelAsTable - required for UI to work properly.
+        /// Implement IGridTable so that this can be shown in the GUI
         /// </summary>
-        public List<DataTable> Tables { get { return new List<DataTable>() { Table }; } }
+        public List<GridTable> Tables { 
+            get { return new List<GridTable>() { new GridTable("Tests", new List<GridTableColumn>(), this) }; } 
+        }
+
+        /// <summary>
+        /// Use our stored DataTable instead
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            return Table;
+        }
+
+        /// <summary>
+        /// Store the data table and just pass an empty one back to the gridtable
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            Table = dt;
+            return new DataTable();
+        }
 
         /// <summary>
         /// Run tests

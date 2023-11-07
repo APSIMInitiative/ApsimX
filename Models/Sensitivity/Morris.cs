@@ -23,10 +23,10 @@ namespace Models
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Morris : Model, ISimulationDescriptionGenerator, IModelAsTable, IPostSimulationTool
+    public class Morris : Model, ISimulationDescriptionGenerator, IGridModel, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -124,59 +124,28 @@ namespace Models
             allCombinations = new List<List<CompositeFactor>>();
         }
 
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
+        /// <summary>Have the values of the parameters changed?</summary>
+        public bool ParametersHaveChanged { get; set; } = false;
+
+        /// <summary>Tabular data. Called by GUI.</summary>
         [JsonIgnore]
-        public List<DataTable> Tables
+        public List<GridTable> Tables
         {
             get
             {
-                List<DataTable> tables = new List<DataTable>();
+                List<GridTableColumn> columns = new List<GridTableColumn>();
 
-                // Add a parameter table
-                DataTable table = new DataTable();
-                table.Columns.Add("Name", typeof(string));
-                table.Columns.Add("Path", typeof(string));
-                table.Columns.Add("LowerBound", typeof(double));
-                table.Columns.Add("UpperBound", typeof(double));
+                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
 
-                foreach (Parameter param in Parameters)
-                {
-                    DataRow row = table.NewRow();
-                    row["Name"] = param.Name;
-                    row["Path"] = param.Path;
-                    row["LowerBound"] = param.LowerBound;
-                    row["UpperBound"] = param.UpperBound;
-                    table.Rows.Add(row);
-                }
-                tables.Add(table);
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
 
                 return tables;
             }
-            set
-            {
-                ParametersHaveChanged = true;
-                Parameters.Clear();
-                foreach (DataRow row in value[0].Rows)
-                {
-                    Parameter param = new Parameter();
-                    if (!Convert.IsDBNull(row["Name"]))
-                        param.Name = row["Name"].ToString();
-                    if (!Convert.IsDBNull(row["Path"]))
-                        param.Path = row["Path"].ToString();
-                    if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
-                    if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
-                    if (param.Name != null || param.Path != null)
-                        Parameters.Add(param);
-                }
-            }
         }
-
-        /// <summary>Have the values of the parameters changed?</summary>
-        public bool ParametersHaveChanged { get; set; } = false;
 
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()

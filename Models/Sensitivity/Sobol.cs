@@ -23,10 +23,10 @@ namespace Models
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyAndGridView")]
-    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndGridPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationDescriptionGenerator, IModelAsTable, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, IGridModel, IPostSimulationTool
     {
         [Link]
         private IDataStore dataStore = null;
@@ -90,68 +90,6 @@ namespace Models
         {
             Parameters = new List<Parameter>();
             allCombinations = new List<List<CompositeFactor>>();
-        }
-
-        /// <summary>
-        /// Gets or sets the table of values.
-        /// </summary>
-        [JsonIgnore]
-        public List<DataTable> Tables
-        {
-            get
-            {
-                List<DataTable> tables = new List<DataTable>();
-
-                // Add a constant table.
-                DataTable constant = new DataTable();
-                constant.Columns.Add("Property", typeof(string));
-                constant.Columns.Add("Value", typeof(int));
-                DataRow constantRow = constant.NewRow();
-                constantRow["Property"] = "Number of paths:";
-                constantRow["Value"] = NumPaths;
-                constant.Rows.Add(constantRow);
-
-                //tables.Add(constant);
-
-                // Add a parameter table
-                DataTable table = new DataTable();
-                table.Columns.Add("Name", typeof(string));
-                table.Columns.Add("Path", typeof(string));
-                table.Columns.Add("LowerBound", typeof(double));
-                table.Columns.Add("UpperBound", typeof(double));
-
-                foreach (Parameter param in Parameters)
-                {
-                    DataRow row = table.NewRow();
-                    row["Name"] = param.Name;
-                    row["Path"] = param.Path;
-                    row["LowerBound"] = param.LowerBound;
-                    row["UpperBound"] = param.UpperBound;
-                    table.Rows.Add(row);
-                }
-                tables.Add(table);
-
-                return tables;
-            }
-            set
-            {
-                ParametersHaveChanged = true;
-                Parameters.Clear();
-                foreach (DataRow row in value[0].Rows)
-                {
-                    Parameter param = new Parameter();
-                    if (!Convert.IsDBNull(row["Name"]))
-                        param.Name = row["Name"].ToString();
-                    if (!Convert.IsDBNull(row["Path"]))
-                        param.Path = row["Path"].ToString();
-                    if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
-                    if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
-                    if (param.Name != null || param.Path != null)
-                        Parameters.Add(param);
-                }
-            }
         }
 
         /// <summary>Have the values of the parameters changed?</summary>
@@ -432,6 +370,27 @@ namespace Models
                     string msg = StringUtilities.BuildString(errorsFromR.ToArray(), Environment.NewLine);
                     throw new Exception(msg);
                 }
+            }
+        }
+
+        /// <summary>Tabular data. Called by GUI.</summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+
+                columns.Add(new GridTableColumn("Name", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("Path", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("LowerBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+                columns.Add(new GridTableColumn("UpperBound", new VariableProperty(this, GetType().GetProperty("Parameters"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
             }
         }
 

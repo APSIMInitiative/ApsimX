@@ -231,6 +231,7 @@ namespace Models.Climate
             YesterdaysMetData.MaxT = MaxT;
             YesterdaysMetData.MinT = MinT;
             YesterdaysMetData.VP = VP;
+            YesterdaysMetData.PanEvap = PanEvap;
             TomorrowsMetData = YesterdaysMetData;
         }
 

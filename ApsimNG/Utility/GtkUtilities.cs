@@ -39,7 +39,7 @@ namespace Utility
             FieldInfo beforeHandler = typeof(GLib.Signal).GetField("before_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             if (signals != null && afterHandler != null && beforeHandler != null)
             {
-                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>) signals.GetValue(widget);
+                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>)signals.GetValue(widget);
                 foreach (KeyValuePair<string, GLib.Signal> signal in widgetSignals)
                 {
                     if (signal.Key != "destroy")
@@ -92,13 +92,14 @@ namespace Utility
                     }
                 }
             }
-            return result;    }
+            return result;
+        }
 
         /// <summary>
         /// Remove all items from a Menu, ensuring that their handlers are detached 
         /// </summary>
         /// <param name="menu">The menu</param>
-        public static void Clear (this Menu menu)
+        public static void Clear(this Menu menu)
         {
             foreach (Widget w in menu)
             {
@@ -204,12 +205,21 @@ namespace Utility
         /// Bottom is the top of the status window
         /// Top is the bottom of the menu bar
         /// </summary>
-        public static System.Drawing.Rectangle GetBorderOfRightHandView(ExplorerView explorerView)
+        public static System.Drawing.Rectangle GetBorderOfRightHandView(ViewBase view)
         {
-            int top = GtkUtilities.GetPositionOfWidget(explorerView.MainWidget).Y;
-            int bottom = (explorerView.Owner as MainView).StatusPanelHeight;
-            int left = explorerView.DividerPosition;
-            int right = left + explorerView.MainWidget.AllocatedWidth;
+            ViewBase mainView = view;
+            while (mainView as MainView == null)
+            {
+                if (mainView == null) //return a box if this could not compute correctly.
+                    return new Rectangle(0, 0, 100, 100);
+                else
+                    mainView = mainView.Owner;
+            }                
+
+            int top = GtkUtilities.GetPositionOfWidget(view.MainWidget).Y;
+            int bottom = (mainView as MainView).StatusPanelPosition;
+            int left = GtkUtilities.GetPositionOfWidget(view.MainWidget).X;
+            int right = view.MainWidget.AllocatedWidth + left;
 
             int width = right - left;
             int height = bottom - top;
