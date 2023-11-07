@@ -29,7 +29,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<AddArcEventArgs> AddArc;
+        event EventHandler<AddArcEventArgs> AddArcEnd;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart

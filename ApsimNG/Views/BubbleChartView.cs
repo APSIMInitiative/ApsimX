@@ -10,7 +10,6 @@ using Models.Management;
 using Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
-using System.Drawing;
 using APSIM.Shared.Utilities;
 using Gdk;
 
@@ -42,7 +41,7 @@ namespace UserInterface.Views
         public event EventHandler<DelNodeEventArgs> DelNode;
 
         /// <summary>Invoked when the user adds an arc</summary>
-        public event EventHandler<AddArcEventArgs> AddArc;
+        public event EventHandler<AddArcEventArgs> AddArcEnd;
 
         /// <summary>Invoked when the user deletes an arc</summary>
         public event EventHandler<DelArcEventArgs> DelArc;
@@ -120,6 +119,7 @@ namespace UserInterface.Views
 
             graphView = new DirectedGraphView(this);
             chartBox.Add(graphView.MainWidget);
+            graphView.AddArc += OnAddArcEnd;
 
             PropertiesView = new PropertyView(this);
             Gtk.Frame propertyFrame = new Gtk.Frame(" Properties: ");
@@ -324,7 +324,7 @@ namespace UserInterface.Views
                 ContextMenu.Append(item);
 
                 item = new MenuItem($"Add Arc");
-                handler = OnAddArc;
+                handler = OnAddArcStart;
                 item.Activated += handler;
                 ContextMenu.Append(item);
 
@@ -569,7 +569,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnAddArc(object sender, EventArgs args)
+        private void OnAddArcStart(object sender, EventArgs args)
         {
             mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
             isDrawingArc = true;
@@ -577,7 +577,35 @@ namespace UserInterface.Views
 
             try
             {
+                graphView.isDrawingArc = true;
+
+                Node cursorNode = new Node();
+                cursorNode.Name = "_cursor_";
+                cursorNode.Location = graphView.lastPos;
+
+                Node startNode = new Node();
+                startNode.Name = graphView.SelectedObject.Name;
+                startNode.Location = graphView.SelectedObject.Location;
+
+                List<DGNode> nodes = new List<DGNode>();
+                nodes.Add(new DGNode(startNode));
+                nodes.Add(new DGNode(cursorNode));
+
+                Arc arc = new Arc();
+                arc.Name = "";
+                arc.SourceName = graphView.SelectedObject.Name;
+                arc.DestinationName = "_cursor_";
+                arc.Location = startNode.Location;
+
+                graphView.tempArc = new DGArc(arc, nodes);
+
                 /*
+                Arc newArc = new Arc();
+                newArc.Name = graphView.DirectedGraph.NextArcID();
+                newArc.SourceName = graphView.SelectedObject.Name;
+                newArc.DestinationName = graphView.SelectedObject.Name;
+
+                
                 if (graphView.SelectedObject == null)
                     // This is almost certainly indicative of an internal error, NOT user error.
                     throw new Exception("Unable to add arc - at least one node needs to be selected");
@@ -594,6 +622,8 @@ namespace UserInterface.Views
                 
                 AddArc?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
                 */
+
+
             }
             catch (Exception err)
             {
@@ -602,11 +632,31 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Callback for when an arc is added to the graph
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnAddArcEnd(object sender, EventArgs args)
+        {
+            if (graphView.SelectedObject == null)
+                // This is almost certainly indicative of an internal error, NOT user error.
+                throw new Exception("Unable to add arc - at least one node needs to be selected");
+
+            Arc newArc = new Arc();
+            newArc.Name = graphView.DirectedGraph.NextArcID();
+            newArc.SourceName = graphView.tempArc.Source.Name;
+            newArc.DestinationName = graphView.SelectedObject.Name;
+            newArc.Location = graphView.tempArc.Location;
+
+            AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+        }
+
+        /// <summary>
         /// Callback for the 'delete arc' context menu option.
         /// </summary>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnDeleteArc(object sender, EventArgs args)
+            private void OnDeleteArc(object sender, EventArgs args)
         {
             try
             {

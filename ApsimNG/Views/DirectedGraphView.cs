@@ -44,7 +44,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Keeps track of if an arc is being drawn to screen with the mouse.
         /// </summary>
-        private bool isDrawingArc = false;
+        public bool isDrawingArc = false;
+
+        /// <summary>
+        /// A temporary arc to draw when an arc is being created.
+        /// </summary>
+        public DGArc tempArc = null;
 
         /// <summary>
         /// Drawing area upon which the graph is rendered.
@@ -54,7 +59,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Position of the last moved node.
         /// </summary>
-        private Point lastPos;
+        public Point lastPos;
 
         /// <summary>
         /// Position of the last moved node.
@@ -81,6 +86,11 @@ namespace UserInterface.Views
         /// moving the object (e.g. on mouse up).
         /// </summary>
         public event EventHandler<ObjectMovedArgs> OnGraphObjectMoved;
+
+        /// <summary>
+        /// Called when an arc is finished being placed
+        /// </summary>
+        public event EventHandler<EventArgs> AddArc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectedGraphView" /> class.
@@ -196,7 +206,12 @@ namespace UserInterface.Views
 #pragma warning restore 0612
 
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
+
+                if (isDrawingArc)
+                    arcs.Add(tempArc);
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
+                if (isDrawingArc)
+                    arcs.Remove(tempArc);
 
                 ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
@@ -215,7 +230,7 @@ namespace UserInterface.Views
                 // Get the point clicked by the mouse.
                 Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
                 
-                if (args.Event.Button == 1)
+                if (args.Event.Button == 1 || args.Event.Button == 3)
                 {
                     mouseDown = true;
 
@@ -237,6 +252,10 @@ namespace UserInterface.Views
                         selectOffset = new Point(clickPoint.X - SelectedObject.Location.X, clickPoint.Y - SelectedObject.Location.Y);
                         lastPos = new Point(SelectedObject.Location.X, SelectedObject.Location.Y);
                         OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(SelectedObject));
+
+                        if (isDrawingArc)
+                            if (SelectedObject is DGNode)
+                                AddArc?.Invoke(this, args);
                     }
 
                     // Redraw area.
@@ -246,6 +265,8 @@ namespace UserInterface.Views
                 {
                     
                 }
+
+                isDrawingArc = false;
             }
             catch (Exception err)
             {
@@ -265,11 +286,18 @@ namespace UserInterface.Views
                 // Get the point where the mouse is.
                 Point movePoint = new Point((int)args.Event.X - selectOffset.X, (int)args.Event.Y - selectOffset.Y);
 
-                // If an object is under the mouse and the mouse is down, then move it
-                if (mouseDown && SelectedObject != null)
+                //Move connected arcs half the distance the node is moved
+                Point diff = new Point(movePoint.X - lastPos.X, movePoint.Y - lastPos.Y);
+
+                if (isDrawingArc)
                 {
-                    //Move connected arcs half the distance the node is moved
-                    Point diff = new Point(movePoint.X - lastPos.X, movePoint.Y - lastPos.Y);
+                    int x = tempArc.Location.X + (diff.X / 2);
+                    int y = tempArc.Location.Y + (diff.Y / 2);
+                    tempArc.Location = new Point(x, y);
+                    tempArc.Target.Location = new Point((int)args.Event.X, (int)args.Event.Y);
+                } 
+                else if (mouseDown && SelectedObject != null) // If an object is under the mouse and the mouse is down, then move it
+                {
                     for (int i = 0; i < arcs.Count; i++)
                     {
                         DGNode source = arcs[i].Source;
@@ -278,14 +306,12 @@ namespace UserInterface.Views
                         if (SelectedObject == source || SelectedObject == target)
                         {
                             DGArc arc = arcs[i];
-                            int x = arc.Location.X + (diff.X / 2) + (diff.X / 2);
-                            int y = arc.Location.Y + (diff.Y / 2) + (diff.Y / 2);
+                            int x = arc.Location.X + (diff.X / 2);
+                            int y = arc.Location.Y + (diff.Y / 2);
                             arc.Location = new Point(x, y);
                         }
                     }
-
-                    lastPos.X = movePoint.X;
-                    lastPos.Y = movePoint.Y;
+                    
                     SelectedObject.Location = movePoint;
                     isDragging = true;
                     // Redraw area.
@@ -305,6 +331,9 @@ namespace UserInterface.Views
                     if (HoverObject != null)
                         HoverObject.Hover = true;
                 }
+
+                lastPos.X = movePoint.X;
+                lastPos.Y = movePoint.Y;
 
                 // Redraw area.
                 (o as DrawingArea).QueueDraw();

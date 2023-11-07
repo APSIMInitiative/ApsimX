@@ -67,7 +67,7 @@ namespace UserInterface.Presenters
             this.view.GraphChanged += OnViewChanged;
             this.view.AddNode += OnAddNode;
             this.view.DelNode += OnDelNode;
-            this.view.AddArc += OnAddArc;
+            this.view.AddArcEnd += OnAddArc;
             this.view.DelArc += OnDelArc;
 
             this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
@@ -96,7 +96,7 @@ namespace UserInterface.Presenters
             view.GraphChanged -= OnViewChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
-            view.AddArc -= OnAddArc;
+            view.AddArcEnd -= OnAddArc;
             view.DelArc -= OnDelArc;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
