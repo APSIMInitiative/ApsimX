@@ -63,7 +63,6 @@ namespace UserInterface.Views
 
             reportVariablesVPaned.AddNotification(OnVariablesPanePropertyNotified);
             reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
-            panel.AddNotification(OnPanelPositionPropertyNotified);
 
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
@@ -138,7 +137,7 @@ namespace UserInterface.Views
                 Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
                 Configuration.Settings.Save();
             }
-                
+
         }
 
         /// <summary> Updates The position of either common variable listView.</summary>
@@ -152,22 +151,6 @@ namespace UserInterface.Views
                 Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
                 double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
                 Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
-                Configuration.Settings.Save();
-            }
-        }
-
-        /// <summary>
-        /// Called whenever a property of vpaned1 is modified.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void OnPanelPositionPropertyNotified(object sender, NotifyArgs args)
-        {
-            if (args.Property == "position")
-            {
-                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
-                double percentage = (double)panel.Position / (double)bounds.Height;
-                Configuration.Settings.ReportSplitterVerticalPosition = (int)(percentage * 100);
                 Configuration.Settings.Save();
             }
         }
