@@ -78,12 +78,19 @@ namespace UserInterface.Presenters
 
         }
 
-
         private void OnVerbosityChanged(object sender, EventArgs e)
         {
             MessageType newValue = summaryView.VerbosityDropDown.SelectedEnumValue;
             ICommand command = new ChangeProperty(summaryModel, nameof(summaryModel.Verbosity), newValue);
             explorerPresenter.CommandHistory.Add(command);
+        }
+
+        /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnSimulationNameChanged(object sender, EventArgs e)
+        {
+            UpdateView();
         }
 
         private void SetSimulationNamesInView()
@@ -147,129 +154,29 @@ namespace UserInterface.Presenters
                     initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
                 IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
+
                 // Initial condition tables list for solutes.
                 List<InitialConditionsTable> soluteTables = new List<InitialConditionsTable>();
                 List<InitialConditionsTable> tablesWithoutSolutes = new List<InitialConditionsTable>();
-                // Custom data table for solutes.
-                DataTable soluteTable = new()
-                {
-                    TableName = "Solutes"
-                };
-                foreach (InitialConditionsTable table in initialTables)
-                {
-                    // Required to get the solutes arranged into a single table.
-                    if (table.Model is Models.Soils.Solute)
-                    {
-                        soluteTables.Add(table);
-                    }
-                    else
-                    {
-                        tablesWithoutSolutes.Add(table);
-                    }
-                }
-                // Print out a set of initial conditions without the solutes.
-                markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
-                // Now arrange solutes into a nice markdown table.
+                DataTable soluteTable = new() { TableName = "Solutes" };
+
+                OrganiseInitialConditionTables(initialTables, soluteTables, tablesWithoutSolutes);
+                AppendInitialConditionsToMarkdown(markdown, tablesWithoutSolutes);
                 StringBuilder soluteMarkdownTable = new StringBuilder();
-                if (soluteTables.Count > 0)
-                    soluteMarkdownTable.AppendLine("### Solutes");
+                CreateSoluteMarkDownTable(soluteTables, soluteMarkdownTable);
+                CreateSoluteTableHeadings(soluteTables, soluteMarkdownTable);
                 soluteMarkdownTable.AppendLine();
                 soluteMarkdownTable.Append("|");
-
-
-                // Table headings
-                bool isFirstTableNamePrinted = false;
-                foreach (InitialConditionsTable table in soluteTables)
-                {
-                    if (!isFirstTableNamePrinted)
-                    {
-                        soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
-                        isFirstTableNamePrinted = true;
-                    }
-                    else
-                        soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);
-                }
-
+                CreateSoluteTableHeadingDividers(soluteTables, soluteMarkdownTable);
                 soluteMarkdownTable.AppendLine();
-                soluteMarkdownTable.Append("|");
-                // Dividers for headings.
-                bool isFirstSoluteTablePrinted = false;
-                foreach (InitialConditionsTable table in soluteTables)
-                {
-                    if (!isFirstSoluteTablePrinted)
-                    {
-                        soluteMarkdownTable.AppendFormat("---|---:|---:|");
-                        isFirstSoluteTablePrinted = true;
-                    }
-                    else
-                        soluteMarkdownTable.AppendFormat("---:|---:|");
-                }
-
-                soluteMarkdownTable.AppendLine();
-                if (!soluteTables.IsNullOrEmpty<InitialConditionsTable>())
-                {
-                    soluteMarkdownTable.Append("|**Depth(mm)**|");
-                }
-
-                // Value columns
-                foreach (InitialConditionsTable table in soluteTables)
-                {
-                    IEnumerable<string> units = table.Conditions.Select(i => i.Units);
-                    List<string> unitStrings = units.ToList();
-                    if (unitStrings[1] == "ppm")
-                        soluteMarkdownTable.Append($"**{unitStrings[1]}**|**kg/ha**|");
-                    else
-                        soluteMarkdownTable.Append($"**{unitStrings[1]}**|**ppm**|");
-                }
+                CreateSoluteTableSubHeadings(soluteTables, soluteMarkdownTable);
 
                 List<List<InitialCondition>> allInitialConditionsLists = new();
-
-                // List for storing new condition value lists.
                 List<List<string>> tempValueLists = new();
-                foreach (InitialConditionsTable table in soluteTables)
-                {
-                    // Temp storage for each condition for allInitialConditionsLists.
-                    List<InitialCondition> conditions = new List<InitialCondition>();
-                    foreach (InitialCondition condition in table.Conditions)
-                    {
-                        string stringToBeList = condition.Value;
-                        List<string> newConditionValueList = stringToBeList.Split(", ").ToList();
-                        tempValueLists.Add(newConditionValueList);
-                        conditions.Add(condition);
-                    }
-                    allInitialConditionsLists.Add(conditions);
-                }
-
-                // Print the values line-by-line for each condition.
+                CreateInitialConditionLists(soluteTables, allInitialConditionsLists, tempValueLists);
                 soluteMarkdownTable.AppendLine();
-                // Gets the list length of one of the InitialCondition value lists.
-                int valueCount = 0;
-                if (tempValueLists.Count > 0)
-                {
-                    valueCount = tempValueLists[0].Count;
-                }
-                // Create a markdown table row for each value in the list.
-                for (int i = 0; i < valueCount; i++)
-                {
-                    soluteMarkdownTable.Append("| ");
-                    // Put the actual value in the markdown table.
-                    bool depthPrinted = false;
-                    foreach (List<string> valueList in tempValueLists)
-                    {
-                        double convertedValue = 0.0;
-                        bool canConvert = double.TryParse(valueList[i], out convertedValue);
-                        if (canConvert)
-                            soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
-                        else if (!depthPrinted && !canConvert)
-                        {
-                            soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
-                            depthPrinted = true;
-                        }
-                    }
-                    soluteMarkdownTable.AppendLine();
-                }
+                CreateSoluteValueRows(soluteMarkdownTable, tempValueLists);
                 markdown.Append(soluteMarkdownTable.ToString());
-
             }
 
             // Fetch messages from the model for this simulation name.
@@ -323,12 +230,118 @@ namespace UserInterface.Presenters
             return Enumerable.Empty<Message>();
         }
 
-        /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnSimulationNameChanged(object sender, EventArgs e)
+        private void OrganiseInitialConditionTables(IEnumerable<InitialConditionsTable> initialTables, List<InitialConditionsTable> soluteTables, List<InitialConditionsTable> tablesWithoutSolutes)
         {
-            UpdateView();
+            foreach (InitialConditionsTable table in initialTables)
+            {
+                // Required to get the solutes arranged into a single table.
+                if (table.Model is Models.Soils.Solute)
+                    soluteTables.Add(table);
+                else tablesWithoutSolutes.Add(table);
+            }
+        }
+
+        private void AppendInitialConditionsToMarkdown(StringBuilder markdown, List<InitialConditionsTable> tablesWithoutSolutes)
+        {
+            markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
+        }
+
+        private void CreateSoluteMarkDownTable(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        {
+            if (soluteTables.Count > 0)
+                soluteMarkdownTable.AppendLine("### Solutes");
+            soluteMarkdownTable.AppendLine();
+            soluteMarkdownTable.Append("|");
+        }
+
+        private void CreateSoluteTableHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        {
+            bool isFirstTableNamePrinted = false;
+            foreach (InitialConditionsTable table in soluteTables)
+            {
+                if (!isFirstTableNamePrinted)
+                {
+                    soluteMarkdownTable.AppendFormat("{0}|   |   |", table.Model.Name);
+                    isFirstTableNamePrinted = true;
+                }
+                else soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);
+            }
+        }
+
+        private void CreateSoluteTableHeadingDividers(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        {
+            bool isFirstSoluteTablePrinted = false;
+            foreach (InitialConditionsTable table in soluteTables)
+            {
+                if (!isFirstSoluteTablePrinted)
+                {
+                    soluteMarkdownTable.AppendFormat("---|---:|---:|");
+                    isFirstSoluteTablePrinted = true;
+                }
+                else soluteMarkdownTable.AppendFormat("---:|---:|");
+            }
+        }
+
+        private void CreateSoluteTableSubHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        {
+            if (!soluteTables.IsNullOrEmpty())
+                soluteMarkdownTable.Append("|**Depth(mm)**|");
+
+            foreach (InitialConditionsTable table in soluteTables)
+            {
+                IEnumerable<string> units = table.Conditions.Select(i => i.Units);
+                List<string> unitStrings = units.ToList();
+                if (unitStrings[1] == "ppm")
+                    soluteMarkdownTable.Append($"**{unitStrings[1]}**|**kg/ha**|");
+                else
+                    soluteMarkdownTable.Append($"**{unitStrings[1]}**|**ppm**|");
+            }
+        }
+
+        private void CreateInitialConditionLists(List<InitialConditionsTable> soluteTables, List<List<InitialCondition>> allInitialConditionsLists, List<List<string>> tempValueLists)
+        {
+            foreach (InitialConditionsTable table in soluteTables)
+            {
+                // Temp storage for each condition for allInitialConditionsLists.
+                List<InitialCondition> conditions = new List<InitialCondition>();
+                foreach (InitialCondition condition in table.Conditions)
+                {
+                    string stringToBeList = condition.Value;
+                    List<string> newConditionValueList = stringToBeList.Split(", ").ToList();
+                    tempValueLists.Add(newConditionValueList);
+                    conditions.Add(condition);
+                }
+                allInitialConditionsLists.Add(conditions);
+            }
+        }
+
+        private void CreateSoluteValueRows(StringBuilder soluteMarkdownTable, List<List<string>> tempValueLists)
+        {
+            int valueCount = 0;
+            if (tempValueLists.Count > 0)
+            {
+                valueCount = tempValueLists[0].Count;
+            }
+            // Create a markdown table row for each value in the list.
+            for (int i = 0; i < valueCount; i++)
+            {
+                soluteMarkdownTable.Append("| ");
+                // Put the actual value in the markdown table.
+                bool depthPrinted = false;
+                foreach (List<string> valueList in tempValueLists)
+                {
+                    double convertedValue = 0.0;
+                    bool canConvert = double.TryParse(valueList[i], out convertedValue);
+                    if (canConvert)
+                        soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
+                    else if (!depthPrinted && !canConvert)
+                    {
+                        soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
+                        depthPrinted = true;
+                    }
+                }
+                soluteMarkdownTable.AppendLine();
+            }
         }
     }
 }
