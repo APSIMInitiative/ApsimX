@@ -43,10 +43,11 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net6.0/apsim-server.dll",
+            "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
-                "-vkrf",
-                "Examples/Potato.apsimx",
+                "-v", "-a", "127.0.0.1", 
+                "-p", "57220", "-P", "interactive",
+                "-f", "/home/uqpdevo1/src/ApsimX-ZMQ/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
