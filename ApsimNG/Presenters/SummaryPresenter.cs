@@ -11,7 +11,6 @@ using Models.Core.Run;
 using Models.Factorial;
 using Models.Logging;
 using UserInterface.Commands;
-using UserInterface.EventArguments;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -50,11 +49,7 @@ namespace UserInterface.Presenters
             summaryView = view as ISummaryView;
 
             // Populate the messages filter dropdown.
-            summaryView.MessagesFilter.SelectedEnumValue = MessageType.All;
             summaryView.VerbosityDropDown.SelectedEnumValue = summaryModel.Verbosity;
-
-            // Show initial conditions table by default.
-            summaryView.ShowInitialConditions.Checked = true;
 
             SetSimulationNamesInView();
 
@@ -78,20 +73,11 @@ namespace UserInterface.Presenters
             // Trap the verbosity level change event.
             summaryView.VerbosityDropDown.Changed += OnVerbosityChanged;
 
-            // Trap the message filter level change event.
-            summaryView.MessagesFilter.Changed += OnFilterChanged;
-
             // Subscribe to the simulation name changed event.
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
-            // Trap the 'show initial conditions' checkbox's changed event.
-            summaryView.ShowInitialConditions.Changed += OnFilterChanged;
         }
 
-        private void OnFilterChanged(object sender, EventArgs e)
-        {
-            UpdateView();
-        }
 
         private void OnVerbosityChanged(object sender, EventArgs e)
         {
@@ -142,8 +128,6 @@ namespace UserInterface.Presenters
             summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
             //summaryView.SummaryDisplay.Copy -= OnCopy;
             summaryView.VerbosityDropDown.Changed -= OnVerbosityChanged;
-            summaryView.MessagesFilter.Changed -= OnFilterChanged;
-            summaryView.ShowInitialConditions.Changed -= OnFilterChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
@@ -156,13 +140,12 @@ namespace UserInterface.Presenters
             StringBuilder markdown = new StringBuilder();
 
             // Show Initial Conditions.
-            if (summaryView.ShowInitialConditions.Checked)
+            if (summaryView.VerbosityDropDown.SelectedEnumValue >= MessageType.Information)
             {
                 // Fetch initial conditions from the model for this simulation name.
                 if (!initialConditions.ContainsKey(simulationName))
                     initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
-                //markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
                 IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
                 // Initial condition tables list for solutes.
                 List<InitialConditionsTable> soluteTables = new List<InitialConditionsTable>();
@@ -333,7 +316,7 @@ namespace UserInterface.Presenters
             if (messages.ContainsKey(simulationName))
             {
                 IEnumerable<Message> result = messages[simulationName];
-                result = result.Where(m => m.Severity <= summaryView.MessagesFilter.SelectedEnumValue);
+                //result = result.Where(m => m.Severity <= summaryView.MessagesFilter.SelectedEnumValue);
 
                 return result;
             }
@@ -346,16 +329,6 @@ namespace UserInterface.Presenters
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
             UpdateView();
-        }
-
-        /// <summary>
-        /// Event handler for the view's copy event.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnCopy(object sender, CopyEventArgs e)
-        {
-            this.explorerPresenter.SetClipboardText(e.Text, "CLIPBOARD");
         }
     }
 }
