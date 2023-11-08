@@ -530,7 +530,8 @@ namespace UserInterface.Views
         {
             try
             {
-                var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
+                Node node = new Node();
+                node.Name = null;
                 StateNode newNode = new StateNode(node);
                 //randomize colour of node
                 System.Drawing.Color[] colours = ColourUtilities.Colours;
@@ -598,32 +599,6 @@ namespace UserInterface.Views
                 arc.Location = startNode.Location;
 
                 graphView.tempArc = new DGArc(arc, nodes);
-
-                /*
-                Arc newArc = new Arc();
-                newArc.Name = graphView.DirectedGraph.NextArcID();
-                newArc.SourceName = graphView.SelectedObject.Name;
-                newArc.DestinationName = graphView.SelectedObject.Name;
-
-                
-                if (graphView.SelectedObject == null)
-                    // This is almost certainly indicative of an internal error, NOT user error.
-                    throw new Exception("Unable to add arc - at least one node needs to be selected");
-
-                Arc newArc = new Arc();
-                newArc.Name = graphView.DirectedGraph.NextArcID();
-                newArc.SourceName = graphView.SelectedObject.Name;
-                
-                if (graphView.SelectedObject2 == null)
-                    // Loopback arc
-                    newArc.DestinationName = graphView.SelectedObject.Name;
-                else
-                    newArc.DestinationName = graphView.SelectedObject2.Name;
-                
-                AddArc?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
-                */
-
-
             }
             catch (Exception err)
             {
@@ -643,7 +618,7 @@ namespace UserInterface.Views
                 throw new Exception("Unable to add arc - at least one node needs to be selected");
 
             Arc newArc = new Arc();
-            newArc.Name = graphView.DirectedGraph.NextArcID();
+            newArc.Name = null;
             newArc.SourceName = graphView.tempArc.Source.Name;
             newArc.DestinationName = graphView.SelectedObject.Name;
             newArc.Location = graphView.tempArc.Location;
@@ -691,7 +666,8 @@ namespace UserInterface.Views
                     // Create a copy of the existing node.
                     StateNode newNode = new StateNode(node.ToNode());
                     newNode.Location = new System.Drawing.Point(newNode.Location.X + node.Width / 2, newNode.Location.Y);
-                    newNode.Name = graphView.DirectedGraph.NextNodeID();
+                    newNode.ID = graphView.DirectedGraph.NextNodeID();
+                    newNode.Name = graphView.DirectedGraph.NextNodeName(newNode.ID);
                     if (nodeDescriptions.ContainsKey(node.Name))
                         newNode.Description = nodeDescriptions[node.Name];
 
@@ -702,7 +678,8 @@ namespace UserInterface.Views
                     foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.SourceName == node.Name))
                     {
                         RuleAction newArc = new RuleAction(arc);
-                        newArc.Name = graph.NextArcID();
+                        newArc.ID = graph.NextArcID();
+                        newArc.Name = graph.NextArcName(newArc.ID);
                         newArc.SourceName = newNode.Name;
                         if (rules.ContainsKey(arc.Name))
                             newArc.Conditions = rules[arc.Name];
@@ -718,7 +695,8 @@ namespace UserInterface.Views
                     foreach (var arc in graphView.DirectedGraph.Arcs.FindAll(arc => arc.DestinationName == graphView.SelectedObject.Name))
                     {
                         RuleAction newArc = new RuleAction(arc);
-                        newArc.Name = graph.NextArcID();
+                        newArc.ID = graph.NextArcID();
+                        newArc.Name = graph.NextArcName(newArc.ID);
                         newArc.DestinationName = newNode.Name;
                         if (rules.ContainsKey(arc.Name))
                             newArc.Conditions = rules[arc.Name];
@@ -756,7 +734,8 @@ namespace UserInterface.Views
                 if (graphView.SelectedObject is DGArc arc)
                 {
                     RuleAction newArc = new RuleAction(arc.ToArc());
-                    newArc.Name = graphView.DirectedGraph.NextArcID();
+                    newArc.ID = graphView.DirectedGraph.NextArcID();
+                    newArc.Name = graphView.DirectedGraph.NextArcName(newArc.ID);
                     newArc.Location = new System.Drawing.Point(newArc.Location.X + 10, newArc.Location.Y);
 
                     // Copy across rules and actions from selected arc.

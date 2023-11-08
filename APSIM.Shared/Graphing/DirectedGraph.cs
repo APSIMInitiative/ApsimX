@@ -1,14 +1,17 @@
-﻿namespace APSIM.Shared.Graphing
-{
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System;
-    using System.Linq;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System;
+using DocumentFormat.OpenXml.EMMA;
 
+namespace APSIM.Shared.Graphing
+{
     /// <summary>Encapsulates a node on a directed graph</summary>
     [Serializable]
     public class Node
     {
+        /// <summary>ID for Node</summary>
+        public int ID { get; set; }
+
         /// <summary>Name of node</summary>
         public string Name { get; set; }
 
@@ -44,6 +47,7 @@
             OutlineColour = x.OutlineColour;
             Location = x.Location;
             Name = x.Name;
+            ID = x.ID;
             Transparent = x.Transparent;
         }
 
@@ -82,6 +86,9 @@
         /// <summary>Text to show on arc</summary>
         public string Name { get; set; }
 
+        /// <summary>ID for arc</summary>
+        public int ID { get; set; }
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -105,11 +112,12 @@
         /// <param name="x">An <see cref="Arc" />.</param>
         public void CopyFrom(Arc x)
         {
+            ID = x.ID;
+            Name = x.Name;
             SourceName = x.SourceName;
             DestinationName = x.DestinationName;
             Location = x.Location;
             Colour = x.Colour;
-            Name = x.Name;
         }
     }
 
@@ -118,9 +126,6 @@
     public class DirectedGraph
     {
         private Point nextNodePosition = new Point(50, 50);
-        private List<Node> nodesToKeep = new List<Node>();
-        private List<Arc> arcsToKeep = new List<Arc>();
-
 
         /// <summary>A collection of nodes</summary>
         public List<Node> Nodes { get; set; }
@@ -138,21 +143,22 @@
         /// <summary>Begin constrction of graph</summary>
         public void Begin()
         {
-            nodesToKeep.Clear();
-            arcsToKeep.Clear();
+            Nodes.Clear();
+            Arcs.Clear();
         }
 
         /// <summary>End constrction of graph</summary>
         public void End()
         {
             // Remove unwanted nodes and arcs.
-            Nodes.RemoveAll(node => !nodesToKeep.Contains(node));
-            Arcs.RemoveAll(arc => !arcsToKeep.Contains(arc));
+            //Nodes.RemoveAll(node => !nodesToKeep.Contains(node));
+            //Arcs.RemoveAll(arc => !arcsToKeep.Contains(arc));
         }
 
         /// <summary>Add a new node to the graph</summary>
         public void AddTransparentNode(string name)
         {
+            /*
             Node newNode = Nodes.Find(node => node.Name == name);
             if (newNode == null)
             {
@@ -169,15 +175,24 @@
             newNode.Name = name;
             newNode.Transparent = true;
             nodesToKeep.Add(newNode);
+            */
         }
 
         /// <summary>Add a new node to the graph</summary>
-        public void AddNode(string name, Color colour, Color outlineColour, Point location = new Point())
+        public void AddNode(int id, string name, Color colour, Color outlineColour, Point? location = null)
         {
-            Node newNode = Nodes.Find(node => node.Name == name);
-            if (newNode == null)
+            Node newNode = new Node();
+            newNode.ID = id;
+            if (newNode.ID == 0)
+                newNode.ID = NextNodeID();
+            newNode.Name = name;
+            if (newNode.Name == null)
+                newNode.Name = NextNodeName(newNode.ID);
+            newNode.Colour = colour;
+            newNode.OutlineColour = outlineColour;
+            
+            if (location == null)
             {
-                newNode = new Node();
                 newNode.Location = nextNodePosition;
                 nextNodePosition.X += 150;
                 if (nextNodePosition.X > 500)
@@ -185,13 +200,13 @@
                     nextNodePosition.X = 50;
                     nextNodePosition.Y = nextNodePosition.Y + 150;
                 }
-                Nodes.Add(newNode);
+            } 
+            else
+            {
+                newNode.Location = (Point)location;
             }
-            newNode.Name = name;
-            newNode.Colour = colour;
-            newNode.Location = location;
-            newNode.OutlineColour = outlineColour;
-            nodesToKeep.Add(newNode);
+            
+            Nodes.Add(newNode);
         }
 
         /// <summary>
@@ -200,7 +215,7 @@
         /// <param name="node"></param>
         public void AddNode(Node node)
         {
-            AddNode(node.Name, node.Colour, node.OutlineColour, node.Location);
+            AddNode(node.ID, node.Name, node.Colour, node.OutlineColour, node.Location);
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -209,7 +224,6 @@
             Node nodeToDelete = Nodes.Find(node => node.Name == name);
             if (nodeToDelete != null)
             {
-                nodesToKeep.Remove(nodeToDelete);
                 Nodes.Remove(nodeToDelete);
             }
         }
@@ -217,24 +231,28 @@
         /// <summary>Add a new arc to the graph</summary>
         public void AddArc(Arc arc)
         {
-            AddArc(arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
+            AddArc(arc.ID, arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
         }
 
         /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(string text, string source, string destination, Color colour, Point location = new Point())
+        public void AddArc(int id, string text, string source, string destination, Color colour, Point? location = null)
         {
-            Arc newArc = Arcs.Find(arc => arc.SourceName == source && arc.DestinationName == destination && arc.Name == text);
-            if (newArc == null)
-            {
-                newArc = new Arc();
-                newArc.Name = text;
-                newArc.SourceName = source;
-                newArc.DestinationName = destination;
-                Arcs.Add(newArc);
-            }
+            Arc newArc = new Arc();
+            newArc.ID = id;
+            if (newArc.ID == 0)
+                newArc.ID = NextNodeID();
+            newArc.Name = text;
+            if (newArc.Name == null)
+                newArc.Name = NextNodeName(newArc.ID);
+            newArc.SourceName = source;
+            newArc.DestinationName = destination;
             newArc.Colour = colour;
-            newArc.Location = location;
-            arcsToKeep.Add(newArc);
+            if (location == null)
+                newArc.Location = new Point();
+            else
+                newArc.Location = (Point)location;
+
+            Arcs.Add(newArc);
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -243,7 +261,6 @@
             Arc arcToDelete = Arcs.Find(arc => arc.Name == name);
             if (arcToDelete != null)
             {
-                arcsToKeep.Remove(arcToDelete);
                 Arcs.Remove(arcToDelete);
             }
         }
@@ -252,24 +269,60 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        public string NextArcID()
+        public string NextArcName(int id)
         {
-            int i = 1;
-            while (Arcs.Any(a => a.Name == $"Arc {i}"))
-                i++;
-            return $"Arc {i}";
+            return $"Arc {id}";
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string NextNodeID()
+        public string NextNodeName(int id)
         {
-            int i = 1;
-            while (Nodes.Any(a => a.Name == $"Node {i}"))
-                i++;
-            return $"Node {i}";
+            return $"Node {id}";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int NextArcID()
+        {
+            int id = 0;
+            bool found = true;
+            while(found)
+            {
+                id += 1;
+                found = false;
+                for (int i = 0; i < Arcs.Count; i++)
+                {
+                    if (id == Arcs[i].ID)
+                        found = true;
+                }
+            }
+            return id;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public int NextNodeID()
+        {
+            int id = 0;
+            bool found = true;
+            while (found)
+            {
+                id += 1;
+                found = false;
+                for (int i = 0; i < Nodes.Count; i++)
+                {
+                    if (id == Nodes[i].ID)
+                        found = true;
+                }
+            }
+            return id;
         }
     }
 }
