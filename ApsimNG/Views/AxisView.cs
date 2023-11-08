@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Gtk;
-using UserInterface.Interfaces;
 using OxyPlot.Axes;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
@@ -62,13 +62,17 @@ namespace UserInterface.Views
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             mainWidget = table1;
             entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
+            entryTitle.TextInserted += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
             entryMax.FocusOutEvent += OnMaximumChanged;
             entryInterval.FocusOutEvent += OnIntervalChanged;
             entryTitle.Activated += TitleTextBox_TextChanged;
             entryMin.Activated += OnMinimumChanged;
+            entryMin.TextInserted += OnMinimumChanged;
             entryMax.Activated += OnMaximumChanged;
+            entryMax.TextInserted += OnMaximumChanged;
             entryInterval.Activated += OnIntervalChanged;
+            entryInterval.TextInserted += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -98,12 +102,12 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
-       
+
         /// <summary>
         /// Invoked when the user has changed the crosses at zero field
         /// </summary>
         public event EventHandler CrossesAtZeroChanged;
-       
+
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
@@ -157,7 +161,7 @@ namespace UserInterface.Views
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
-        { 
+        {
             get
             {
                 if (string.IsNullOrEmpty(entryMin.Text))
@@ -191,7 +195,7 @@ namespace UserInterface.Views
                 else
                     return Convert.ToDouble(entryMax.Text, CultureInfo.InvariantCulture);
             }
-            
+
             set
             {
                 if (double.IsNaN(value))
