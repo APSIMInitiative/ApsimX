@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <AssemblyName>apsim-server</AssemblyName>
-    <BaseOutputPath>../bin</BaseOutputPath>
+    <BaseOutputPath>../../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <SelfContained>false</SelfContained>
   </PropertyGroup>
@@ -14,8 +14,8 @@
   </PropertyGroup>  
 
   <ItemGroup>
-    <ProjectReference Include="../Models/Models.csproj" />
-    <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
+    <ProjectReference Include="../../Models/Models.csproj" />
+    <ProjectReference Include="../../APSIM.Shared/APSIM.Shared.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="KubernetesClient" Version="9.0.38" />
   </ItemGroup>
