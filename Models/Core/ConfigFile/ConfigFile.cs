@@ -61,7 +61,7 @@ namespace Models.Core.ConfigFile
             try
             {
                 // TODO: Important regex for nodes needs to be updated to include dashes.
-                // TODO: Need to test if override nodes with spaces in names also work. Do 01/08/2023.
+                // TODO: Need to test if override nodes with spaces in names also work.
                 Regex rxAddLocalCommand = new Regex(@"(add)\s(\[){1}(\w)*(\]){1}\s(\w)*");
                 Regex rxAddFromOtherFileCommand = new Regex(@"(add)\s(\[){1}(\w)+([\w\s])*(\]){1}\s([a-zA-Z0-9]){1}([\:\-\w\\\/])*(\.){1}(apsimx){1}(;){1}(\[){1}([\w\s])*(\]){1}");
                 Regex rxCopyCommand = new Regex(@"(copy)\s(\[){1}(\w)*(\]){1}\s(\[){1}(\w)*(\]){1}");
@@ -88,10 +88,11 @@ namespace Models.Core.ConfigFile
 
                     // If first index item is a string containing "[]" the command is an override...
                     Match firstSplitResult = rxOverrideTargetNode.Match(commandSplits[0]);
-                    //if (commandSplits[0].Contains('['))
                     if (firstSplitResult.Success)
                     {
-                        string[] singleLineCommandArray = { command };
+                        // TODO: Needs fixing to make sure overrides with encoded spaces (@) are handled correctly.
+                        //string[] singleLineCommandArray = { string.Join<string>(' ', commandSplits) };
+                        string[] singleLineCommandArray = { string.Join('=', commandSplits) };
                         var overrides = Overrides.ParseStrings(singleLineCommandArray);
                         sim = (Simulations)ApplyOverridesToApsimxFile(overrides, sim);
                     }
@@ -326,22 +327,16 @@ namespace Models.Core.ConfigFile
                 if (lineString.Contains('='))
                 {
                     string correctedLine = "";
-                    lineSections = lineString.Split('=').ToList();
+                    char[] delimiters = new char[] { '=' };
+                    lineSections = lineString.Split(delimiters).ToList();
                     foreach (string section in lineSections)
                     {
                         string fixedSection;
                         if (section.Contains(' '))
                         {
                             string trimmedSection = section.TrimEnd();
-                            int indexOfSpace = trimmedSection.IndexOf(' ');
-                            if (indexOfSpace != -1)
-                            {
-                                string tempSection = trimmedSection.Insert(indexOfSpace - 1, "@");
-                                int newIndexOfSpace = tempSection.IndexOf(" ");
-                                fixedSection = tempSection.Remove(indexOfSpace, 1);
-                                correctedLine += fixedSection;
-                            }
-                            else correctedLine += trimmedSection;
+                            fixedSection = trimmedSection.Replace(' ', '@');
+                            correctedLine += fixedSection;
                         }
                         else if (section == lineSections.Last())
                             correctedLine += section;

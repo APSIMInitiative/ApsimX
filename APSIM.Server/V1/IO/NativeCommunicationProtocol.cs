@@ -112,7 +112,9 @@ namespace APSIM.Server.IO
                         ValidateResponse(ReadString(), ack);
                         foreach (string param in reader.Parameters)
                         {
-                            Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                            var data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                            var dataType = data.GetValue(0).GetType();
+                            SendString(dataType.ToString());
                             SendArray(data);
                             ValidateResponse(ReadString(), ack);
                         }
