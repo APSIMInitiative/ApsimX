@@ -314,8 +314,8 @@ namespace UserInterface.Presenters
                         LineThickness.Normal, MarkerSize.Normal, 1, true);
             }
 
-            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false);
+            graph.FormatAxis(AxisPosition.Top, "Volumetric water (mm/mm)", inverted: false, double.NaN, double.NaN, double.NaN, false, false);
+            graph.FormatAxis(AxisPosition.Left, "Depth (mm)", inverted: true, 0, double.NaN, double.NaN, false, false);
             graph.FormatLegend(LegendPosition.RightBottom, LegendOrientation.Vertical);
             graph.Refresh();
         }

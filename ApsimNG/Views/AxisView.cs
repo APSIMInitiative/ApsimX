@@ -47,6 +47,11 @@ namespace UserInterface.Views
         private CheckButton checkbutton2 = null;
 
         /// <summary>
+        /// Single line label
+        /// </summary>
+        private CheckButton checkbutton3 = null;
+
+        /// <summary>
         /// The constructor
         /// </summary>
         /// <param name="owner">The owning view</param>
@@ -60,6 +65,7 @@ namespace UserInterface.Views
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
+            checkbutton3 = (CheckButton)builder.GetObject("checkbutton3");
             mainWidget = table1;
             entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
             entryTitle.TextInserted += TitleTextBox_TextChanged;
@@ -75,6 +81,8 @@ namespace UserInterface.Views
             entryInterval.TextInserted += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
+            checkbutton3.Toggled += OnLabelOnOneLineChanged;
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -107,6 +115,11 @@ namespace UserInterface.Views
         /// Invoked when the user has changed the crosses at zero field
         /// </summary>
         public event EventHandler CrossesAtZeroChanged;
+
+        /// <summary>
+        /// Invoked when the user has changed the single line label field
+        /// </summary>
+        public event EventHandler LabelOnOneLineChanged;
 
         /// <summary>
         /// Gets or sets the title.
@@ -154,6 +167,22 @@ namespace UserInterface.Views
             set
             {
                 checkbutton2.Active = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating if the axis label should be shown on one line.
+        /// </summary>
+        public bool LabelOnOneLine
+        {
+            get
+            {
+                return checkbutton3.Active;
+            }
+
+            set
+            {
+                checkbutton3.Active = value;
             }
         }
 
@@ -347,6 +376,24 @@ namespace UserInterface.Views
             {
                 if (CrossesAtZeroChanged != null)
                     CrossesAtZeroChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the single line label check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnLabelOnOneLineChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (LabelOnOneLineChanged != null)
+                    LabelOnOneLineChanged(this, e);
             }
             catch (Exception err)
             {

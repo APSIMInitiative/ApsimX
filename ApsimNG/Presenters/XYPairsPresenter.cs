@@ -79,13 +79,13 @@ namespace UserInterface.Presenters
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false, false);
             }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false, false);
             }
 
             xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);
