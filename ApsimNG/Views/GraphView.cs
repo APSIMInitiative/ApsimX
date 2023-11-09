@@ -1074,6 +1074,7 @@
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
+        /// <param name="labelOnOneLine">Show Axis Label on one line</param>
         public void FormatAxis(
             APSIM.Shared.Graphing.AxisPosition axisType,
             string title,
@@ -1081,7 +1082,8 @@
             double minimum,
             double maximum,
             double interval,
-            bool crossAtZero)
+            bool crossAtZero,
+            bool labelOnOneLine)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
 
@@ -1101,6 +1103,12 @@
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
                 oxyAxis.PositionAtZeroCrossing = crossAtZero;
+
+                if (labelOnOneLine)
+                {
+                    string newline = Environment.NewLine;
+                    oxyAxis.Title = oxyAxis.Title.Replace(newline, ", ");
+                }
 
                 if (inverted)
                 {

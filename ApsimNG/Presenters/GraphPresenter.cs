@@ -542,10 +542,13 @@
                 }
 
                 // Create a default title by appending all 'names' together.
-                title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
+                if (axis.LabelOnOneLine)
+                    title = StringUtilities.BuildString(titles.ToArray(), ", ");
+                else
+                    title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
-            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero);
+            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero, axis.LabelOnOneLine);
         }
         
         /// <summary>The graph model has changed.</summary>
