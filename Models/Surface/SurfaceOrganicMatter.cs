@@ -447,7 +447,9 @@ namespace Models.Surface
             Add((double)(data.OMWeight * fractionFaecesAdded),
                          (double)(data.OMN * fractionFaecesAdded),
                          (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "");
+                         Manure, "", 0,
+                         (double)(data.NO3N * fractionFaecesAdded),
+                         (double)(data.NH4N * fractionFaecesAdded));
         }
 
         /// <summary>
@@ -1205,7 +1207,9 @@ namespace Models.Surface
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
         /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
-        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0)
+        /// <param name="no3">The amount of no3 added (kg/ha).</param>
+        /// <param name="nh4">The amount of nh4 added (kg/ha).</param>
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0, double no3 = -1, double nh4 = -1)
         {
             if (mass > 0 || N > 0 || P > 0)
             {
@@ -1217,8 +1221,16 @@ namespace Models.Surface
                 summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                if (no3 < 0)
+                    SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].no3 += no3;
+
+                if (nh4 != 0)
+                    SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].nh4 += nh4;
+
                 SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
                 for (int i = 0; i < maxFr; i++)
