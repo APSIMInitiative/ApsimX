@@ -233,14 +233,16 @@ namespace UserInterface.Views
 
             nodes.ForEach(node =>
             {
-                graph.AddNode(node);
+                Node n = graph.AddNode(node);
+                node.CopyFrom(n);
                 nodeDescriptions[node.Name] = node.Description;
             });
             arcs.ForEach(arc =>
             {
                 rules[arc.Name] = arc.Conditions;
                 actions[arc.Name] = arc.Actions;
-                graph.AddArc(arc);
+                Arc a = graph.AddArc(arc);
+                arc.CopyFrom(a);
             });
             graphView.DirectedGraph = graph;
             graphView.MainWidget.QueueDraw();

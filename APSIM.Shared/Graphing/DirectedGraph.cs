@@ -179,7 +179,7 @@ namespace APSIM.Shared.Graphing
         }
 
         /// <summary>Add a new node to the graph</summary>
-        public void AddNode(int id, string name, Color colour, Color outlineColour, Point? location = null)
+        public Node AddNode(int id, string name, Color colour, Color outlineColour, Point? location = null)
         {
             Node newNode = new Node();
             newNode.ID = id;
@@ -207,15 +207,16 @@ namespace APSIM.Shared.Graphing
             }
             
             Nodes.Add(newNode);
+            return newNode;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="node"></param>
-        public void AddNode(Node node)
+        public Node AddNode(Node node)
         {
-            AddNode(node.ID, node.Name, node.Colour, node.OutlineColour, node.Location);
+            return AddNode(node.ID, node.Name, node.Colour, node.OutlineColour, node.Location);
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -229,21 +230,21 @@ namespace APSIM.Shared.Graphing
         }
 
         /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(Arc arc)
+        public Arc AddArc(Arc arc)
         {
-            AddArc(arc.ID, arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
+            return AddArc(arc.ID, arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
         }
 
         /// <summary>Add a new arc to the graph</summary>
-        public void AddArc(int id, string text, string source, string destination, Color colour, Point? location = null)
+        public Arc AddArc(int id, string text, string source, string destination, Color colour, Point? location = null)
         {
             Arc newArc = new Arc();
             newArc.ID = id;
             if (newArc.ID == 0)
-                newArc.ID = NextNodeID();
+                newArc.ID = NextArcID();
             newArc.Name = text;
             if (newArc.Name == null)
-                newArc.Name = NextNodeName(newArc.ID);
+                newArc.Name = NextArcName(newArc.ID);
             newArc.SourceName = source;
             newArc.DestinationName = destination;
             newArc.Colour = colour;
@@ -253,6 +254,7 @@ namespace APSIM.Shared.Graphing
                 newArc.Location = (Point)location;
 
             Arcs.Add(newArc);
+            return newArc;
         }
 
         /// <summary>Remove a node from the graph</summary>
@@ -295,7 +297,7 @@ namespace APSIM.Shared.Graphing
             {
                 id += 1;
                 found = false;
-                for (int i = 0; i < Arcs.Count; i++)
+                for (int i = 0; i < Arcs.Count && !found; i++)
                 {
                     if (id == Arcs[i].ID)
                         found = true;
@@ -316,7 +318,7 @@ namespace APSIM.Shared.Graphing
             {
                 id += 1;
                 found = false;
-                for (int i = 0; i < Nodes.Count; i++)
+                for (int i = 0; i < Nodes.Count && !found; i++)
                 {
                     if (id == Nodes[i].ID)
                         found = true;
