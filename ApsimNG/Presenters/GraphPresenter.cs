@@ -15,6 +15,7 @@
     using Models.Storage;
     using Views;
     using APSIM.Shared.Graphing;
+    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// A presenter for a graph.
@@ -129,7 +130,7 @@
             if (graph != null && graph.Series != null)
             {
                 if (definitions.Count() == 0)
-                    explorerPresenter.MainPresenter.ShowMessage("No data matches the properties and filter set for this graph", Simulation.MessageType.Warning, true);
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No data matches the properties and filters set for this graph", Simulation.MessageType.Warning, false);
 
                 foreach (SeriesDefinition definition in definitions)
                 {
@@ -155,6 +156,67 @@
                         axis.Maximum += tolerance / 2;
                         FormatAxis(axis);
                     }
+                }
+
+                int pointsOutsideAxis = 0;
+                int pointsInsideAxis = 0;
+                foreach (SeriesDefinition definition in definitions)
+                {
+                    double xMin = graphView.AxisMinimum(definition.XAxis);
+                    double xMax = graphView.AxisMaximum(definition.XAxis);
+                    bool isOutside = false;
+                    foreach (var x in definition.X)
+                    {
+                        double xDouble = 0;
+                        if (x is DateTime)
+                            xDouble = ((DateTime)x).ToOADate();
+                        else
+                            xDouble = Convert.ToDouble(x);
+
+                        if (xMin != double.NaN)
+                            if (xDouble < xMin)
+                                isOutside = true;
+                        if (xMax != double.NaN)
+                            if (xDouble > xMax)
+                                isOutside = true;
+                    }
+                    double yMin = graphView.AxisMinimum(definition.YAxis);
+                    double yMax = graphView.AxisMaximum(definition.YAxis);
+                    foreach (var y in definition.Y)
+                    {
+                        double yDouble = 0;
+                        if (y is DateTime)
+                            yDouble = ((DateTime)y).ToOADate();
+                        else
+                            yDouble = Convert.ToDouble(y);
+
+                        if (yMin != double.NaN)
+                            if (yDouble < yMin)
+                                isOutside = true;
+                        if (yMax != double.NaN)
+                            if (yDouble > yMax)
+                                isOutside = true;
+                    }
+                    if (isOutside)
+                        pointsOutsideAxis += 1;
+                    else
+                        pointsInsideAxis += 1;
+                }
+
+                if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values. Axis minimum and maximums have been reset.", Simulation.MessageType.Warning, false);
+                    for (int i = 0; i < graph.Axis.Count; i++)
+                    {
+                        graph.Axis[i].Minimum = Double.NaN;
+                        graph.Axis[i].Maximum = Double.NaN;
+                        FormatAxis(graph.Axis[i]);
+                    }
+                    DrawGraph();
+                } 
+                else if (pointsOutsideAxis > 0)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
                 }
 
                 // Get a list of series annotations.
