@@ -177,8 +177,8 @@ namespace Models
         /// <summary>Puts the regression line and 1:1 line on graph.</summary>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
-        /// <param name="colour">The colour of the regresion line.</param>
-        /// <param name="title">The title to put in the legen.</param>
+        /// <param name="colour">The colour of the regression line.</param>
+        /// <param name="title">The title to put in the legend.</param>
         private SeriesDefinition PutRegressionLineOnGraph(IEnumerable x, IEnumerable y, Color colour, string title)
         {
             MathUtilities.RegrStats stat = MathUtilities.CalcRegressionStats(title, y, x);
@@ -190,10 +190,7 @@ namespace Models
                 double minimumY = MathUtilities.Min(y);
                 double maximumY = MathUtilities.Max(y);
 
-                // Add padding to end of line so that it goes through final point for readability
-                double padding = Math.Abs(maximumX - minimumX) * 0.1;
-                minimumX -= padding;
-                maximumX += padding;
+                //AddPaddingToRegressionLines(ref minimumX, ref maximumX);
 
                 double lowestAxisScale = Math.Min(minimumX, minimumY);
                 double largestAxisScale = Math.Max(maximumX, maximumY);
@@ -205,6 +202,7 @@ namespace Models
                 return regressionDefinition;
             }
             throw new Exception($"Unable to generate regression line for series {title} - there is no data");
+
         }
 
         /// <summary>Puts the 1:1 line on graph.</summary>
@@ -313,6 +311,19 @@ namespace Models
                 regressionLines.Add(regressionSeries);
                 equationColours.Add(seriesDefinitionColor);
             }
+        }
+
+        /// <summary>
+        /// Adds padding to regression lines.
+        /// </summary>
+        /// <param name="minimumX"></param>
+        /// <param name="maximumX"></param>
+        private void AddPaddingToRegressionLines(ref double minimumX, ref double maximumX)
+        {
+            // Add padding to end of line so that it goes through final point for readability
+            double padding = Math.Abs(maximumX - minimumX) * 0.1;
+            minimumX -= padding;
+            maximumX += padding;
         }
     }
 }
