@@ -8,6 +8,7 @@ using Point = System.Drawing.Point;
 using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
+using Models.Storage;
 
 namespace UserInterface.Views
 {
@@ -40,6 +41,9 @@ namespace UserInterface.Views
         /// Keeps track of whether the mouse button is currently down.
         /// </summary>
         private bool mouseDown = false;
+
+        private Point selectionPoint;
+        private DGRectangle selectionRectangle;
 
         /// <summary>
         /// Keeps track of if an arc is being drawn to screen with the mouse.
@@ -153,17 +157,17 @@ namespace UserInterface.Views
             }
             set
             {
-                string selectedObjectName = SelectedObject?.Name;
+                int? selectedObjectID = SelectedObject?.ID;
                 SelectedObject = null;
                 nodes.Clear();
                 arcs.Clear();
                 value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
                 value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
-                if (!string.IsNullOrEmpty(selectedObjectName))
+                if (selectedObjectID != null)
                 {
-                    SelectedObject = nodes?.Find(n => n.Name == selectedObjectName);
+                    SelectedObject = nodes?.Find(n => n.ID == selectedObjectID);
                     if (SelectedObject == null)
-                        SelectedObject = arcs?.Find(a => a.Name == selectedObjectName);
+                        SelectedObject = arcs?.Find(a => a.ID == selectedObjectID);
                     if (SelectedObject != null)
                         SelectedObject.Selected = true;
                 }
@@ -209,7 +213,7 @@ namespace UserInterface.Views
 
                 if (isDrawingArc)
                     arcs.Add(tempArc);
-                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
+                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
                 if (isDrawingArc)
                     arcs.Remove(tempArc);
 
@@ -229,7 +233,7 @@ namespace UserInterface.Views
             {
                 // Get the point clicked by the mouse.
                 Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
-                
+
                 if (args.Event.Button == 1 || args.Event.Button == 3)
                 {
                     mouseDown = true;
@@ -256,6 +260,13 @@ namespace UserInterface.Views
                         if (isDrawingArc)
                             if (SelectedObject is DGNode)
                                 AddArc?.Invoke(this, args);
+                    } 
+                    else if (args.Event.Button == 1) //drawing a selection box
+                    {
+                        mouseDown = true;
+                        selectionPoint = clickPoint;
+                        selectionRectangle = new DGRectangle(selectionPoint.X, selectionPoint.Y, 1, 1);
+                        SelectedObject = null;
                     }
 
                     // Redraw area.
@@ -265,7 +276,7 @@ namespace UserInterface.Views
                 {
                     
                 }
-
+                
                 isDrawingArc = false;
             }
             catch (Exception err)
@@ -296,27 +307,48 @@ namespace UserInterface.Views
                     tempArc.Location = new Point(x, y);
                     tempArc.Target.Location = new Point((int)args.Event.X, (int)args.Event.Y);
                 } 
-                else if (mouseDown && SelectedObject != null) // If an object is under the mouse and the mouse is down, then move it
+                else if (mouseDown)
                 {
-                    for (int i = 0; i < arcs.Count; i++)
+                    if (SelectedObject != null) // If an object is under the mouse and the mouse is down, then move it
                     {
-                        DGNode source = arcs[i].Source;
-                        DGNode target = arcs[i].Target;
-
-                        if (SelectedObject == source || SelectedObject == target)
+                        for (int i = 0; i < arcs.Count; i++)
                         {
-                            DGArc arc = arcs[i];
-                            int x = arc.Location.X + (diff.X / 2);
-                            int y = arc.Location.Y + (diff.Y / 2);
-                            arc.Location = new Point(x, y);
+                            DGNode source = arcs[i].Source;
+                            DGNode target = arcs[i].Target;
+
+                            if (SelectedObject == source || SelectedObject == target)
+                            {
+                                DGArc arc = arcs[i];
+                                int x = arc.Location.X + (diff.X / 2);
+                                int y = arc.Location.Y + (diff.Y / 2);
+                                arc.Location = new Point(x, y);
+                            }
                         }
+
+                        SelectedObject.Location = movePoint;
+                        isDragging = true;
+                        // Redraw area.
+                        (o as DrawingArea).QueueDraw();
                     }
-                    
-                    SelectedObject.Location = movePoint;
-                    isDragging = true;
-                    // Redraw area.
-                    (o as DrawingArea).QueueDraw();
-                } 
+                    else
+                    {
+                        int xLower = selectionPoint.X;
+                        int xUpper = (int)args.Event.X;
+                        if (xUpper < xLower)
+                        {
+                            xLower = (int)args.Event.X;
+                            xUpper = selectionPoint.X;
+                        }
+                        int yLower = selectionPoint.Y;
+                        int yUpper = (int)args.Event.Y;
+                        if (yUpper < yLower)
+                        {
+                            yLower = (int)args.Event.Y;
+                            yUpper = selectionPoint.Y;
+                        }
+                        selectionRectangle = new DGRectangle(xLower, yLower, xUpper-xLower, yUpper-yLower);
+                    }
+                }
                 else
                 {
                     //do hover effects
@@ -355,7 +387,27 @@ namespace UserInterface.Views
                 if (args.Event.Button == 1)
                 {
                     if (isDragging)
+                    {
                         OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(SelectedObject));
+                    } 
+                    else if (selectionRectangle != null)
+                    {
+                        UnSelect();
+
+                        DGObject clickedObject = nodes.FindLast(node => node.HitTest(selectionRectangle.GetRectangle()));
+
+                        // If not found, look through arcs for the click point
+                        if (clickedObject == null)
+                            clickedObject = arcs.FindLast(arc => arc.HitTest(selectionRectangle.GetRectangle()));
+
+                        if (clickedObject != null)
+                        {
+                            clickedObject.Selected = true;
+                            OnGraphObjectSelected?.Invoke(this, new GraphObjectSelectedArgs(clickedObject));
+                        }
+                            
+                        selectionRectangle = null;
+                    }
                     else
                     {
                         Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);

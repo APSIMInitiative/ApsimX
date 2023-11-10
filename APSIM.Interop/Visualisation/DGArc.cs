@@ -22,21 +22,23 @@
         /// <summary>Constrcutor</summary>
         /// <param name="directedGraphArc">The arc information to use</param>
         /// <param name="allNodes">A list of all nodes</param>
-        public DGArc(Arc directedGraphArc, IEnumerable<DGNode> allNodes) : base(directedGraphArc.Name, directedGraphArc.Colour, directedGraphArc.Location)
+        public DGArc(Arc directedGraphArc, IEnumerable<DGNode> allNodes) : base(directedGraphArc.ID, directedGraphArc.Name, directedGraphArc.Colour, directedGraphArc.Location)
         {
-            Source = allNodes.FirstOrDefault(node => node.Name == directedGraphArc.SourceName);
-            Target = allNodes.FirstOrDefault(node => node.Name == directedGraphArc.DestinationName);
+            Source = allNodes.FirstOrDefault(node => node.ID == directedGraphArc.SourceID);
+            Target = allNodes.FirstOrDefault(node => node.ID == directedGraphArc.DestinationID);
         }
 
         /// <summary>Get a DirectedGraph arc from this instance.</summary>
         public Arc ToArc()
         {
             Arc a = new Arc();
+            a.ID = ID;
             a.Location = new System.Drawing.Point((int)Location.X, (int)Location.Y);
             if (Source != null)
-                a.SourceName = Source.Name;
+                a.SourceID = Source.ID;
             if (Target != null)
-                a.DestinationName = Target.Name;
+                a.DestinationID = Target.ID;
+
             a.Name = Name;
             a.Colour = System.Drawing.Color.FromArgb(Colour.A, Colour.R, Colour.B);
             return a;
@@ -131,6 +133,23 @@
                     if (p.Y > clickPoint.Y - clickTolerence && p.Y < clickPoint.Y + clickTolerence)
                         return true;
                 }
+            }
+            return false;
+        }
+
+        /// <summary>Return true if the clickPoint is on this object</summary>
+        /// <param name="clickPoint"></param>
+        public override bool HitTest(Rectangle selection)
+        {
+            foreach (Point p in bezPoints)
+            {
+                double minX = selection.X - clickTolerence;
+                double maxX = selection.X + clickTolerence;
+                double minY = selection.Y - clickTolerence;
+                double maxY = selection.Y + clickTolerence;
+
+                if (minX < p.X && p.X < maxX && minY < p.Y && p.Y < maxY)
+                    return true;
             }
             return false;
         }

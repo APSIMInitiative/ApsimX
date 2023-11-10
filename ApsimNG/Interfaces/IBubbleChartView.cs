@@ -76,7 +76,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// A graph object has been selected. Make the (middle part of) UI relevant to it
         /// </summary>
-        /// <param name="objectName">Name of the object to be selected.</param>
-        void Select(string objectName);
+        /// <param name="objectID">ID of the object to be selected.</param>
+        void Select(int objectID);
     }
 } 

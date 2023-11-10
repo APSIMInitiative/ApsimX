@@ -76,9 +76,9 @@ namespace UserInterface.Presenters
                 model.DirectedGraphInfo = new DirectedGraph();
 
             model.DirectedGraphInfo.Begin();
-
+            /*
             bool needAtmosphereNode = false;
-
+            
             IModel nutrient = model as IModel;
             foreach (OrganicPool pool in nutrient.FindAllInScope<OrganicPool>())
             {
@@ -132,13 +132,15 @@ namespace UserInterface.Presenters
 
                     model.DirectedGraphInfo.AddArc(view.DirectedGraph.NextArcID(), null, nitrogenFlow.SourceName, destName, Color.Black, location);
                 }
-            }
+                
+        }
 
             if (needAtmosphereNode)
                 model.DirectedGraphInfo.AddTransparentNode("Atmosphere");
 
 
             model.DirectedGraphInfo.End();
+            */
         }
 
     }

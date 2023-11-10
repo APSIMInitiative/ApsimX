@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 169; } }
+        public static int LatestVersion { get { return 170; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5314,6 +5314,49 @@ namespace Models.Core.ApsimFile
             foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
             {
                 rotationManager["TopLevel"] = true;
+            }
+        }
+
+        /// <summary>
+        /// Change name based system to id based system in directed graphs
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion170(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
+            {
+                //give each node an id
+                int id = 0;
+                foreach (var node in rotationManager["Nodes"])
+                {
+                    id += 1;
+                    node["ID"] = id;
+                }
+
+                //give each arc an id
+                id = 0;
+                foreach (var arc in rotationManager["Arcs"])
+                {
+                    id += 1;
+                    arc["ID"] = id;
+
+                    //connect up arc source/dest with ids instead of names
+                    string sourceName = arc["SourceName"].ToString();
+                    int sourceID = 0;
+                    foreach (var node in rotationManager["Nodes"])
+                        if (node["Name"].ToString() == sourceName)
+                            sourceID = (int)node["ID"];
+
+                    string destinationName = arc["DestinationName"].ToString();
+                    int destinationID = 0;
+                    foreach (var node in rotationManager["Nodes"])                               
+                        if (node["Name"].ToString() == destinationName)
+                            destinationID = (int)node["ID"];
+
+                    arc["SourceID"] = sourceID;
+                    arc["DestinationID"] = destinationID;
+                }
             }
         }
     }

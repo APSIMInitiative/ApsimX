@@ -23,6 +23,11 @@
         public Point Location { get; set; }
 
         /// <summary>
+        /// ID of the object.
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
         /// Name of the object.
         /// </summary>
         public string Name { get; set; }
@@ -43,8 +48,9 @@
         public static Color DefaultBackgroundColour { get; set; } = Color.White;
 
         /// <summary>Constructor</summary>
-        public DGObject(string name, Color colour, Point location)
+        public DGObject(int id, string name, Color colour, Point location)
         {
+            ID = id;
             Name = name;
             Colour = colour;
             Location = new Point(location.X, location.Y);
@@ -57,6 +63,8 @@
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>
         public abstract bool HitTest(Point clickPoint);
+
+        public abstract bool HitTest(Rectangle selection);
 
         /// <summary>Return a distance between the two points</summary>
         /// <param name="point1">The first point.</param>

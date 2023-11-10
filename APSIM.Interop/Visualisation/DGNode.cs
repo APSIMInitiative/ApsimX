@@ -32,7 +32,7 @@
         private bool transparent;
 
         /// <summary>Constructor</summary>
-        public DGNode(Node directedGraphNode) : base(directedGraphNode.Name, directedGraphNode.Colour, directedGraphNode.Location)
+        public DGNode(Node directedGraphNode) : base(directedGraphNode.ID, directedGraphNode.Name, directedGraphNode.Colour, directedGraphNode.Location)
         {
             ForegroundColour = directedGraphNode.OutlineColour;
             transparent = directedGraphNode.Transparent;
@@ -42,6 +42,7 @@
         public Node ToNode()
         {
             Node n = new Node();
+            n.ID = ID;
             n.Name = Name;
             n.Location = new System.Drawing.Point((int)Location.X, (int)Location.Y);
             n.Colour = System.Drawing.Color.FromArgb(Colour.R, Colour.G, Colour.B);
@@ -91,6 +92,21 @@
         {
             double dist = GetDistance(Location, clickPoint);
             return dist < (Width / 2);
+        }
+
+        /// <summary>Return true if the clickPoint is on this object</summary>
+        /// <param name="clickPoint"></param>
+        public override bool HitTest(Rectangle selection)
+        {
+            double minX = selection.X - (Width / 2);
+            double maxX = selection.X + selection.Width + (Width / 2);
+            double minY = selection.Y - (Width / 2);
+            double maxY = selection.Y + selection.Height + (Width / 2);
+
+            if (minX < Location.X && Location.X < maxX && minY < Location.Y && Location.Y < maxY)
+                return true;
+            else
+                return false;
         }
     }
 }

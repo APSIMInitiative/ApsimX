@@ -85,7 +85,7 @@ namespace UserInterface.Presenters
 
             RefreshView();
 
-            this.view.Select(null); //have nothing selected
+            this.view.Select(0); //have nothing selected
         }
 
         /// <summary>
@@ -159,10 +159,10 @@ namespace UserInterface.Presenters
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), e.Nodes));
 
             // Check for multiple nodes or arcs with the same name.
-            IEnumerable<IGrouping<string, StateNode>> duplicateNodes = e.Nodes.GroupBy(n => n.Name).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<int, StateNode>> duplicateNodes = e.Nodes.GroupBy(n => n.ID).Where(g => g.Count() > 1);
             if (duplicateNodes.Any())
                 throw new Exception($"Unable to apply changes - duplicate node name found: {duplicateNodes.First().Key}");
-            IEnumerable<IGrouping<string, RuleAction>> duplicateArcs = e.Arcs.GroupBy(n => n.Name).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<int, RuleAction>> duplicateArcs = e.Arcs.GroupBy(a => a.ID).Where(g => g.Count() > 1);
             if (duplicateArcs.Any())
                 throw new Exception($"Unable to apply changes - duplicate arc name found: {duplicateArcs.First().Key}");
 
@@ -195,13 +195,13 @@ namespace UserInterface.Presenters
             
             List<StateNode> newNodes = new List<StateNode>();
             newNodes.AddRange(model.Nodes);
-            newNodes.RemoveAll(n => n.Name == e.nodeNameToDelete);
+            newNodes.RemoveAll(n => n.ID == e.nodeIDToDelete);
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
 
             // Need to also delete any arcs going to/from this node.
             List<RuleAction> newArcs = new List<RuleAction>();
             newArcs.AddRange(model.Arcs);
-            newArcs.RemoveAll(a => a.DestinationName == e.nodeNameToDelete || a.SourceName == e.nodeNameToDelete);
+            newArcs.RemoveAll(a => a.DestinationID == e.nodeIDToDelete || a.SourceID == e.nodeIDToDelete);
             changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
 
             ICommand removeNode = new ChangeProperty(changes);
@@ -217,13 +217,13 @@ namespace UserInterface.Presenters
         {
             // Ensure that existing source/dest nodes exist.
             // todo - does this belong inside RotationManager??
-            if (model.Nodes.Find(n => n.Name == e.Arc.SourceName) == null ||
-                model.Nodes.Find(n => n.Name == e.Arc.DestinationName) == null)
+            if (model.Nodes.Find(n => n.ID == e.Arc.SourceID) == null ||
+                model.Nodes.Find(n => n.ID == e.Arc.DestinationID) == null)
                 throw new Exception("Target empty in arc");
 
             List<RuleAction> newArcs = new List<RuleAction>();
             newArcs.AddRange(model.Arcs);
-            RuleAction existingArc = newArcs.Find(a => a.Name == e.Arc.Name);
+            RuleAction existingArc = newArcs.Find(a => a.ID == e.Arc.ID);
             if (existingArc == null)
                 newArcs.Add(new RuleAction(e.Arc));
             else
@@ -243,7 +243,7 @@ namespace UserInterface.Presenters
             // fixme - not undoable
             List<RuleAction> newArcs = new List<RuleAction>();
             newArcs.AddRange(model.Arcs);
-            newArcs.RemoveAll(delegate (RuleAction a) { return (a.Name == e.arcNameToDelete); });
+            newArcs.RemoveAll(delegate (RuleAction a) { return (a.ID == e.arcIDToDelete); });
             ICommand deleteArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(deleteArc);
         }

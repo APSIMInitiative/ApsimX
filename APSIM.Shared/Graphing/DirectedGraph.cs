@@ -72,10 +72,10 @@ namespace APSIM.Shared.Graphing
     public class Arc
     {
         /// <summary>Source node (where arc starts)</summary>
-        public string SourceName { get; set; }
+        public int SourceID { get; set; }
 
         /// <summary>Destination node (where arc finishes)</summary>
-        public string DestinationName { get; set; }
+        public int DestinationID { get; set; }
 
         /// <summary>Location of arc (centre/control point)</summary>
         public Point Location { get; set; }
@@ -114,8 +114,8 @@ namespace APSIM.Shared.Graphing
         {
             ID = x.ID;
             Name = x.Name;
-            SourceName = x.SourceName;
-            DestinationName = x.DestinationName;
+            SourceID = x.SourceID;
+            DestinationID = x.DestinationID;
             Location = x.Location;
             Colour = x.Colour;
         }
@@ -232,11 +232,11 @@ namespace APSIM.Shared.Graphing
         /// <summary>Add a new arc to the graph</summary>
         public Arc AddArc(Arc arc)
         {
-            return AddArc(arc.ID, arc.Name, arc.SourceName, arc.DestinationName, arc.Colour, arc.Location);
+            return AddArc(arc.ID, arc.Name, arc.SourceID, arc.DestinationID, arc.Colour, arc.Location);
         }
 
         /// <summary>Add a new arc to the graph</summary>
-        public Arc AddArc(int id, string text, string source, string destination, Color colour, Point? location = null)
+        public Arc AddArc(int id, string text, int source, int destination, Color colour, Point? location = null)
         {
             Arc newArc = new Arc();
             newArc.ID = id;
@@ -245,8 +245,8 @@ namespace APSIM.Shared.Graphing
             newArc.Name = text;
             if (newArc.Name == null)
                 newArc.Name = NextArcName(newArc.ID);
-            newArc.SourceName = source;
-            newArc.DestinationName = destination;
+            newArc.SourceID = source;
+            newArc.DestinationID = destination;
             newArc.Colour = colour;
             if (location == null)
                 newArc.Location = new Point();

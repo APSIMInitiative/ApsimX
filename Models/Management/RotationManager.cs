@@ -87,7 +87,7 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { get; set; }
+        public int CurrentState { get; set; }
 
         /// <summary>
         /// All dynamic events published by the rotation manager.
@@ -127,7 +127,11 @@ namespace Models.Management
         [EventSubscribe("Commencing")]
         private void OnCommence(object sender, EventArgs e)
         {
-            CurrentState = InitialState;
+            CurrentState = 0;
+            for (int i = 0; i < Nodes.Count && CurrentState == 0; i++)
+                if (Nodes[i].Name == InitialState)
+                    CurrentState = Nodes[i].ID;
+
             if (Verbose)
                 summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
@@ -149,7 +153,7 @@ namespace Models.Management
                 more = false;
                 double bestScore = -1.0;
                 RuleAction bestArc = null;
-                foreach (var arc in Arcs.FindAll(arc => arc.SourceName == CurrentState))
+                foreach (var arc in Arcs.FindAll(arc => arc.ID == CurrentState))
                 {
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
@@ -163,14 +167,14 @@ namespace Models.Management
                         }
                         catch (Exception ex) 
                         {
-                            throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
+                            throw new AggregateException($"Error while evaluating transition from {arc.ID} to {arc.ID} - rule '{testCondition}': " + ex.Message );
                         }
                         score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
                     }
 
                     if (Verbose)
                     {
-                        string arcName = $"Transition from {arc.SourceName} to {arc.DestinationName}";
+                        string arcName = $"Transition from {arc.ID} to {arc.ID}";
                         string message;
                         if (score > 0)
                         {
@@ -222,12 +226,12 @@ namespace Models.Management
             try
             {
                 if (Verbose)
-                    summary.WriteMessage(this, $"Transitioning from {transition.SourceName} to {transition.DestinationName}", MessageType.Diagnostic);
+                    summary.WriteMessage(this, $"Transitioning from {transition.ID} to {transition.ID}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentState}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
 
-                CurrentState = transition.DestinationName;
+                CurrentState = transition.ID;
 
                 foreach (string action in transition.Actions)
                 {

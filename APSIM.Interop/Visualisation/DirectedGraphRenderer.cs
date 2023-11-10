@@ -53,7 +53,7 @@ namespace APSIM.Interop.Visualisation
         {
             IEnumerable<DGNode> dgNodes = nodes.Select(n => new DGNode(n)).ToList();
             IEnumerable<DGArc> dgArcs = arcs.Select(a => new DGArc(a, dgNodes));
-            Draw(context, dgArcs, dgNodes);
+            Draw(context, dgArcs, dgNodes, null);
         }
 
         /// <summary>
@@ -62,12 +62,14 @@ namespace APSIM.Interop.Visualisation
         /// <param name="context">A drawing context.</param>
         /// <param name="arcs">The arcs in the directed graph.</param>
         /// <param name="nodes">The nodes in the directed graph.</param>
-        public static void Draw(IDrawContext context, IEnumerable<DGArc> arcs, IEnumerable<DGNode> nodes)
+        public static void Draw(IDrawContext context, IEnumerable<DGArc> arcs, IEnumerable<DGNode> nodes, DGRectangle rectangle)
         {
             foreach (DGArc tmpArc in arcs)
                 tmpArc.Paint(context);
             foreach (DGNode tmpNode in nodes)
                 tmpNode.Paint(context);
+            if (rectangle != null)
+                rectangle.Paint(context);
         }
     }
 }
