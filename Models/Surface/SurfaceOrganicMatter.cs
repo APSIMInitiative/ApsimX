@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp;
 using Models.Core;
-using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
@@ -449,9 +447,32 @@ namespace Models.Surface
             Add((double)(data.OMWeight * fractionFaecesAdded),
                          (double)(data.OMN * fractionFaecesAdded),
                          (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "");
+                         Manure, "", 0,
+                         (double)(data.NO3N * fractionFaecesAdded),
+                         (double)(data.NH4N * fractionFaecesAdded));
         }
 
+        /// <summary>
+        /// Adds excreta to the SOM
+        /// This version is callable from an operation
+        /// </summary>
+        /// <param name="organicC">Organic C</param>
+        /// <param name="organicN">Organic N</param>
+        /// <param name="no3N">NO3 N</param>
+        /// <param name="nh4N">NH4 N</param>
+        /// <param name="p">P</param>
+        public void AddFaeces(double organicC, double organicN, double no3N, double nh4N, double p)
+        {
+            this.FractionFaecesAdded = 1.0;
+            AddFaecesType data = new AddFaecesType();
+            data.OMWeight = organicC / 0.4;     // because the OM is 40% C
+            data.OMN = organicN;
+            data.NH4N = nh4N;
+            data.NO3N = no3N;
+            data.OMP = p;
+            this.AddFaeces(data);
+        }
+        
         /// <summary>
         /// "cover1" and "cover2" are numbers between 0 and 1 which
         /// indicate what fraction of sunlight is intercepted by the
@@ -1186,7 +1207,9 @@ namespace Models.Surface
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
         /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
-        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0)
+        /// <param name="no3">The amount of no3 added (kg/ha).</param>
+        /// <param name="nh4">The amount of nh4 added (kg/ha).</param>
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0, double no3 = -1, double nh4 = -1)
         {
             if (mass > 0 || N > 0 || P > 0)
             {
@@ -1198,8 +1221,16 @@ namespace Models.Surface
                 summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                if (no3 < 0)
+                    SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].no3 += no3;
+
+                if (nh4 != 0)
+                    SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].nh4 += nh4;
+
                 SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
                 for (int i = 0; i < maxFr; i++)

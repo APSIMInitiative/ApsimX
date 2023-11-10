@@ -52,6 +52,7 @@
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
+            this.view.LabelOnOneLineChanged += OnLabelOnOneLineChanged;
         }
 
 
@@ -70,6 +71,7 @@
             view.MaximumChanged -= OnMaximumChanged;
             view.IntervalChanged -= OnIntervalChanged;
             view.CrossesAtZeroChanged -= OnCrossesAtZeroChanged;
+            view.LabelOnOneLineChanged -= OnLabelOnOneLineChanged;
         }
 
         /// <summary>
@@ -80,6 +82,7 @@
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
+            view.LabelOnOneLine = axis.LabelOnOneLine;
             view.SetMinimum(axis.Minimum ?? double.NaN, false/*axis.DateTimeAxis*/);
             view.SetMaximum(axis.Maximum ?? double.NaN, false/*axis.DateTimeAxis*/);
             view.SetInterval(axis.Interval ?? double.NaN, false/*axis.DateTimeAxis*/);
@@ -193,6 +196,23 @@
             try
             {
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "CrossesAtZero", view.CrossesAtZero));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// User has changed the LabelOnOneLine checkbox,
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnLabelOnOneLineChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(axis, "LabelOnOneLine", view.LabelOnOneLine));
             }
             catch (Exception err)
             {
