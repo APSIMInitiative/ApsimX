@@ -70,7 +70,7 @@
 
             // Draw circle
             context.SetColour(outlineColour);
-            context.SetLineWidth(3);
+            context.SetLineWidth(5);
             context.NewPath();
             context.Arc(Location.X, Location.Y, Width/2, 0, 2 * Math.PI);
             context.StrokePreserve();

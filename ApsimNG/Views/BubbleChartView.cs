@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UserInterface.Interfaces;
-using UserInterface.EventArguments;
-using UserInterface.EventArguments.DirectedGraph;
 using APSIM.Interop.Visualisation;
 using Gtk;
 using Models.Management;
@@ -12,6 +10,7 @@ using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
 using APSIM.Shared.Utilities;
 using Gdk;
+using ApsimNG.EventArguments.DirectedGraph;
 
 namespace UserInterface.Views
 {
@@ -29,7 +28,7 @@ namespace UserInterface.Views
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
         /// <summary>Invoked when the user changes the selection</summary>
-        public event EventHandler<GraphObjectSelectedArgs> GraphObjectSelected;
+        public event EventHandler<GraphObjectsArgs> GraphObjectSelected;
 
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler<GraphChangedEventArgs> GraphChanged;
@@ -38,13 +37,13 @@ namespace UserInterface.Views
         public event EventHandler<AddNodeEventArgs> AddNode;
 
         /// <summary>Invoked when the user deletes a node</summary>
-        public event EventHandler<DelNodeEventArgs> DelNode;
+        public event EventHandler<GraphObjectsArgs> DelNode;
 
         /// <summary>Invoked when the user adds an arc</summary>
         public event EventHandler<AddArcEventArgs> AddArcEnd;
 
         /// <summary>Invoked when the user deletes an arc</summary>
-        public event EventHandler<DelArcEventArgs> DelArc;
+        public event EventHandler<GraphObjectsArgs> DelArc;
 
         private HPaned topPaned;
         private HBox chartBox = null;
@@ -305,7 +304,7 @@ namespace UserInterface.Views
             ContextMenu.Foreach(mi => ContextMenu.Remove(mi));
             MenuItem item;
             EventHandler handler;
-            if (graphView.SelectedObject == null)
+            if (graphView.SelectedObjects.Count == 0)
             {
                 // User has right-clicked in empty space.
                 item = new MenuItem("Add Node");
@@ -313,36 +312,40 @@ namespace UserInterface.Views
                 item.Activated += handler;
                 ContextMenu.Append(item);
             }
-            else if (graphView.SelectedObject is DGNode)
+            else if (graphView.SelectedObjects.Count == 1)
             {
-                // User has right-clicked on a node.
-                item = new MenuItem($"Duplicate {graphView.SelectedObject.Name}");
-                handler = OnDuplicateNode;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                DGObject selectedObj = graphView.SelectedObjects[0];
+                if (selectedObj is DGNode)
+                {
+                    // User has right-clicked on a node.
+                    item = new MenuItem($"Duplicate {selectedObj.Name}");
+                    handler = OnDuplicateNode;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
 
-                item = new MenuItem($"Add Arc");
-                handler = OnAddArcStart;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                    item = new MenuItem($"Add Arc");
+                    handler = OnAddArcStart;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
 
-                item = new MenuItem($"Delete {graphView.SelectedObject.Name}");
-                handler = OnDeleteNode;
-                item.Activated += handler;
-                ContextMenu.Append(item);
-            }
-            else if (graphView.SelectedObject is DGArc arc)
-            {
-                // User has right-clicked on an arc.
-                item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Target.Name}");
-                handler = OnDuplicateArc;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                    item = new MenuItem($"Delete {selectedObj.Name}");
+                    handler = OnDeleteNode;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
+                }
+                else if (selectedObj is DGArc arc)
+                {
+                    // User has right-clicked on an arc.
+                    item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Target.Name}");
+                    handler = OnDuplicateArc;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
 
-                item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Target.Name}");
-                handler = OnDeleteArc;
-                item.Activated += handler;
-                ContextMenu.Append(item);
+                    item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Target.Name}");
+                    handler = OnDeleteArc;
+                    item.Activated += handler;
+                    ContextMenu.Append(item);
+                }
             }
 
             // Make the context items visible. This won't actually
@@ -392,9 +395,9 @@ namespace UserInterface.Views
         {
             try
             {
-                if (graphView.SelectedObject != null)
+                if (graphView.SelectedObjects.Count == 1)
                 {
-                    rules[graphView.SelectedObject.ID] = RuleList.Text.Split('\n').ToList();
+                    rules[graphView.SelectedObjects[0].ID] = RuleList.Text.Split('\n').ToList();
                     GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -413,9 +416,9 @@ namespace UserInterface.Views
         {
             try
             {
-                if (graphView.SelectedObject != null)
+                if (graphView.SelectedObjects.Count == 1)
                 {
-                    actions[graphView.SelectedObject.ID] = ActionList.Text.Split('\n').ToList();
+                    actions[graphView.SelectedObjects[0].ID] = ActionList.Text.Split('\n').ToList();
                     GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -488,7 +491,7 @@ namespace UserInterface.Views
         /// <remarks>This is called from the directed graph code (not directly by gtk).</remarks>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnGraphObjectMoved(object sender, ObjectMovedArgs args)
+        private void OnGraphObjectMoved(object sender, GraphObjectsArgs args)
         {
             try
             {
@@ -506,13 +509,13 @@ namespace UserInterface.Views
         /// <remarks>This is called from the directed graph code.</remarks>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnGraphObjectSelected(object o, GraphObjectSelectedArgs args)
+        private void OnGraphObjectSelected(object o, GraphObjectsArgs args)
         {
             try
             {
                 this.GraphObjectSelected.Invoke(o, args);
-                if (args.Object1 != null)
-                    Select(args.Object1.ID);
+                if (args.Objects.Count == 1)
+                    Select(args.Objects[0].ID);
                 else 
                     Select(0);
             }
@@ -558,7 +561,7 @@ namespace UserInterface.Views
         {
             try
             {
-                DelNode?.Invoke(this, new DelNodeEventArgs { nodeIDToDelete = graphView.SelectedObject.ID });
+                DelNode?.Invoke(this, new GraphObjectsArgs(graphView.SelectedObjects));
             }
             catch (Exception err)
             {
@@ -573,12 +576,11 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnAddArcStart(object sender, EventArgs args)
         {
-            mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
-            isDrawingArc = true;
-
-
-            try
+            if (graphView.SelectedObjects.Count == 0)
             {
+                mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
+                isDrawingArc = true;
+
                 graphView.isDrawingArc = true;
 
                 Node cursorNode = new Node();
@@ -587,9 +589,9 @@ namespace UserInterface.Views
                 cursorNode.Location = graphView.lastPos;
 
                 Node startNode = new Node();
-                startNode.ID = graphView.SelectedObject.ID;
-                startNode.Name = graphView.SelectedObject.Name;
-                startNode.Location = graphView.SelectedObject.Location;
+                startNode.ID = graphView.SelectedObjects[0].ID;
+                startNode.Name = graphView.SelectedObjects[0].Name;
+                startNode.Location = graphView.SelectedObjects[0].Location;
 
                 List<DGNode> nodes = new List<DGNode>();
                 nodes.Add(new DGNode(startNode));
@@ -598,15 +600,11 @@ namespace UserInterface.Views
                 Arc arc = new Arc();
                 arc.ID = 0;
                 arc.Name = "";
-                arc.SourceID = graphView.SelectedObject.ID;
+                arc.SourceID = graphView.SelectedObjects[0].ID;
                 arc.DestinationID = 0;
                 arc.Location = startNode.Location;
 
                 graphView.tempArc = new DGArc(arc, nodes);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
             }
         }
 
@@ -617,18 +615,17 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnAddArcEnd(object sender, EventArgs args)
         {
-            if (graphView.SelectedObject == null)
-                // This is almost certainly indicative of an internal error, NOT user error.
-                throw new Exception("Unable to add arc - at least one node needs to be selected");
+            if (graphView.SelectedObjects.Count == 0)
+            {
+                Arc newArc = new Arc();
+                newArc.ID = graphView.DirectedGraph.NextArcID();
+                newArc.Name = null;
+                newArc.SourceID = graphView.tempArc.Source.ID;
+                newArc.DestinationID = graphView.SelectedObjects[0].ID;
+                newArc.Location = graphView.tempArc.Location;
 
-            Arc newArc = new Arc();
-            newArc.ID = graphView.DirectedGraph.NextArcID();
-            newArc.Name = null;
-            newArc.SourceID = graphView.tempArc.Source.ID;
-            newArc.DestinationID = graphView.SelectedObject.ID;
-            newArc.Location = graphView.tempArc.Location;
-
-            AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+                AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+            }
         }
 
         /// <summary>
@@ -638,17 +635,7 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnDeleteArc(object sender, EventArgs args)
         {
-            try
-            {
-                if (!(graphView.SelectedObject is DGArc))
-                    // This is almost certainly indicative of an internal error, NOT user error.
-                    throw new Exception("Unable to add arc - no arc is selected");
-                DelArc?.Invoke(this, new DelArcEventArgs { arcIDToDelete = graphView.SelectedObject.ID });
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+            DelArc?.Invoke(this, new GraphObjectsArgs(graphView.SelectedObjects));
         }
 
         /// <summary>
@@ -661,6 +648,7 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnDuplicateNode(object sender, EventArgs args)
         {
+            /*
             try
             {
                 if (graphView.SelectedObject is DGNode node)
@@ -721,7 +709,7 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
-            }
+            }*/
         }
 
         /// <summary>
@@ -734,6 +722,7 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnDuplicateArc(object sender, EventArgs args)
         {
+            /*
             try
             {
                 if (graphView.SelectedObject is DGArc arc)
@@ -758,6 +747,7 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+            */
         }
     }
 }

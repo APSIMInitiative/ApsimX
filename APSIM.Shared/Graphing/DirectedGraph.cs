@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System;
-using DocumentFormat.OpenXml.EMMA;
 
 namespace APSIM.Shared.Graphing
 {
@@ -297,6 +296,11 @@ namespace APSIM.Shared.Graphing
             {
                 id += 1;
                 found = false;
+                for (int i = 0; i < Nodes.Count && !found; i++)
+                {
+                    if (id == Nodes[i].ID)
+                        found = true;
+                }
                 for (int i = 0; i < Arcs.Count && !found; i++)
                 {
                     if (id == Arcs[i].ID)
@@ -321,6 +325,11 @@ namespace APSIM.Shared.Graphing
                 for (int i = 0; i < Nodes.Count && !found; i++)
                 {
                     if (id == Nodes[i].ID)
+                        found = true;
+                }
+                for (int i = 0; i < Arcs.Count && !found; i++)
+                {
+                    if (id == Arcs[i].ID)
                         found = true;
                 }
             }

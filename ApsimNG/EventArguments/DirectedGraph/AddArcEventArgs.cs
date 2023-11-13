@@ -1,7 +1,7 @@
 ﻿using System;
 using Models.Management;
 
-namespace UserInterface.EventArguments.DirectedGraph
+namespace ApsimNG.EventArguments.DirectedGraph
 {
     public class AddArcEventArgs : EventArgs
     {

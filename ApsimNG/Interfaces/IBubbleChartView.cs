@@ -1,7 +1,7 @@
 using System;
 using Models.Management;
 using System.Collections.Generic;
-using UserInterface.EventArguments.DirectedGraph;
+using ApsimNG.EventArguments.DirectedGraph;
 
 namespace UserInterface.Interfaces
 {
@@ -11,7 +11,7 @@ namespace UserInterface.Interfaces
     public interface IBubbleChartView
     {
         /// <summary>Invoked when the user changes the selection</summary>
-        public event EventHandler<EventArguments.GraphObjectSelectedArgs> GraphObjectSelected;
+        public event EventHandler<GraphObjectsArgs> GraphObjectSelected;
 
         /// <summary>Invoked when the user changes a property</summary>
         public event EventHandler<GraphChangedEventArgs> GraphChanged;
@@ -24,7 +24,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<DelNodeEventArgs> DelNode;
+        event EventHandler<GraphObjectsArgs> DelNode;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
@@ -34,7 +34,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<DelArcEventArgs> DelArc;
+        event EventHandler<GraphObjectsArgs> DelArc;
         /// <summary>
         /// Editor for inputting rules.
         /// </summary>

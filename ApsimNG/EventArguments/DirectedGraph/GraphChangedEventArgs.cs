@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Models.Management;
 
-namespace UserInterface.EventArguments.DirectedGraph
+namespace ApsimNG.EventArguments.DirectedGraph
 {
     public class GraphChangedEventArgs : EventArgs
     {
