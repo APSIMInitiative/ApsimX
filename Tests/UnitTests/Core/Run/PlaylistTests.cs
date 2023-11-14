@@ -137,5 +137,33 @@ namespace UnitTests.Core
                 
             }           
         }
+
+        /// <summary>Testing a number of variations of playlist text to make sure they run correctly.</summary>
+        [Test]
+        public void RunSimulationsWithPlaylistCheckCaching()
+        {
+            string[] expectedSimulations1 = new string[4] { "Sim", "Sim2", "Sim3", "Sim4" };
+            string[] expectedSimulations2 = new string[3] { "Sim", "Sim2", "Sim4" };
+
+            //read in our base test that we'll use for this
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.PlaylistTests.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
+            Playlist playlist = sims.FindChild<Playlist>();
+            playlist.Text = "Sim*\n";
+
+            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
+
+            //now change the name of one of the simulations without clearing the cache,
+            //should give the same 4 names if reading from cache correctly.
+            sims.FindChild("Sim3").Name = "DifferentName";
+            Assert.AreEqual(expectedSimulations1, playlist.GenerateListOfSimulations());
+
+            //now clear the cache and run again, should only get 3 sims this time.
+            playlist.ClearSearchCache();
+            Assert.AreEqual(expectedSimulations2, playlist.GenerateListOfSimulations());
+
+            //Check that GetListOfSimulations is working, should return the previous result again.
+            Assert.AreEqual(expectedSimulations2, playlist.GetListOfSimulations());
+        }
     }
 }

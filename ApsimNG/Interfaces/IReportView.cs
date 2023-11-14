@@ -24,18 +24,6 @@ namespace UserInterface.Interfaces
         IListView CommonReportFrequencyVariablesList { get; set; }
 
         /// <summary>
-        /// Invoked when the user moves the vertical splitter
-        /// between the two text editors.
-        /// </summary>
-        event EventHandler SplitterChanged;
-
-        /// <summary>
-        /// Invoked when the user moves the horizontal splitter
-        /// between the Report ListViews and TextEditors.
-        /// </summary>
-        event EventHandler VerticalSplitterChanged;
-
-        /// <summary>
         /// Invoked when the selected tab is changed.
         /// </summary>
         event EventHandler TabChanged;
@@ -44,19 +32,5 @@ namespace UserInterface.Interfaces
         /// Indicates the index of the currently active tab
         /// </summary>
         int TabIndex { get; set; }
-
-        /// <summary>
-        /// Position of the splitter between the variable and
-        /// frequency text editors. Larger number means further
-        /// down.
-        /// </summary>
-        int SplitterPosition { get; set; }
-
-        /// <summary>
-        /// Position of the splitter between both the common variable/event list and report variable/event text editors.
-        /// Larger number means further to the start (left).
-        /// </summary>
-        int VerticalSplitterPosition { get; set; }
-
     }
 }

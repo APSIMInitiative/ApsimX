@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
 
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // locate a cut and carry limiter associarted with this event.
+            // locate a cut and carry limiter associated with this event.
             limiter = ActivityCarryLimiter.Locate(this);
         }
 
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
-                ManageActivityResourcesAndTasks();
+            ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
                         manureStore.Collect(msu.Name, propCollected, this);
                     }
                 }
-                limiter.AddWeightCarried(amountToDo - amountToSkip);
+                limiter?.AddWeightCarried(amountToDo - amountToSkip);
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }

@@ -29,6 +29,11 @@ namespace APSIM.Shared.Graphing
         public bool CrossesAtZero { get; set; }
 
         /// <summary>
+        /// Make the axis label display all on one line.
+        /// </summary>
+        public bool LabelOnOneLine { get; set; }
+
+        /// <summary>
         /// Axis minimum (optional). Will be automatically calculated if null.
         /// </summary>
         public double? Minimum { get; set; }
@@ -60,7 +65,8 @@ namespace APSIM.Shared.Graphing
         /// <param name="min">Axis minimum (optional). Will be automatically calculated if null.</param>
         /// <param name="max">Axis maximum (optional). Will be automatically calculated if null.</param>
         /// <param name="interval">Axis tick interval (optional). Will be automatically calculated if null.</param>
-        public Axis(string title, AxisPosition position, bool inverted, bool crossesZero, double? min = null, double? max = null, double? interval = null)
+        /// <param name="labelOnOneLine">Make the axis label display all on one line.</param>
+        public Axis(string title, AxisPosition position, bool inverted, bool crossesZero, double? min = null, double? max = null, double? interval = null, bool labelOnOneLine = false)
         {
             Inverted = inverted;
             CrossesAtZero = crossesZero;
@@ -69,6 +75,7 @@ namespace APSIM.Shared.Graphing
             Interval = interval;
             Title = title;
             Position = position;
+            LabelOnOneLine = labelOnOneLine;
         }
 
         /// <summary>

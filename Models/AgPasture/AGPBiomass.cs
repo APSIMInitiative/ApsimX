@@ -19,7 +19,7 @@ namespace Models.AgPasture
 
         /// <summary>N concentration.</summary>
         [Units("kg/ha")]
-        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0, 0.000000001); } }
+        public double NConc { get { return MathUtilities.Divide(N, Wt, 0.0); } }
 
         /// <summary>Digestibility of biomass.</summary>
         [Units("kg/kg")]

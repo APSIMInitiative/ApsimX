@@ -36,6 +36,7 @@ namespace UserInterface.Views
         private CellRendererText textRender;
         private const string modelMime = "application/x-model-component";
         private Timer timer = new Timer();
+        private bool isEdittingNodeLabel = false;
 
         /// <summary>
         /// Keep track of whether the accelerator group is attached to the toplevel window.
@@ -104,6 +105,7 @@ namespace UserInterface.Views
             treeview1.RowActivated += OnRowActivated;
             treeview1.FocusInEvent += OnTreeGainFocus;
             treeview1.FocusOutEvent += OnTreeLoseFocus;
+            treeview1.RowExpanded += OnRowExpanded;
 
             TargetEntry[] target_table = new TargetEntry[] {
                new TargetEntry(modelMime, TargetFlags.App, 0)
@@ -772,6 +774,35 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// A row in the tree view has been expanded
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnRowExpanded(object sender, RowExpandedArgs e)
+        {
+            try
+            {
+                TreePath path = e.Path.Copy();
+                path.Down();
+                bool stop = false;
+                while (!stop)
+                {
+                    path.Next();
+                    treeview1.Model.GetIter(out TreeIter iter, path);
+                    var value = treeview1.Model.GetValue(iter, 0);
+                    if (value == null)
+                        stop = true;
+                }
+                path.Prev();
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Displays the popup menu when the right mouse button is released
         /// </summary>
         /// <param name="sender"></param>
@@ -986,9 +1017,12 @@ namespace UserInterface.Views
         {
             try
             {
-                nodePathBeforeRename = SelectedNode;
-                // TreeView.ContextMenuStrip = null;
-                // e.CancelEdit = false;
+                if (isEdittingNodeLabel == false)
+                {
+                    isEdittingNodeLabel = true;
+                    treeview1.CursorChanged -= OnAfterSelect;
+                    nodePathBeforeRename = SelectedNode;
+                }
             }
             catch (Exception err)
             {
@@ -1003,18 +1037,23 @@ namespace UserInterface.Views
         {
             try
             {
-                textRender.Editable = false;
-                // TreeView.ContextMenuStrip = this.PopupMenu;
-                if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
+                if (isEdittingNodeLabel == true)
                 {
-                    NodeRenameArgs args = new NodeRenameArgs()
+                    isEdittingNodeLabel = false;
+                    textRender.Editable = false;
+                    // TreeView.ContextMenuStrip = this.PopupMenu;
+                    if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
                     {
-                        NodePath = this.nodePathBeforeRename,
-                        NewName = e.NewText
-                    };
-                    Renamed(this, args);
-                    if (!args.CancelEdit)
-                        previouslySelectedNodePath = args.NodePath;
+                        NodeRenameArgs args = new NodeRenameArgs()
+                        {
+                            NodePath = this.nodePathBeforeRename,
+                            NewName = e.NewText
+                        };
+                        Renamed(this, args);
+                        if (!args.CancelEdit)
+                            previouslySelectedNodePath = args.NodePath;
+                    }
+                    treeview1.CursorChanged += OnAfterSelect;
                 }
             }
             catch (Exception err)

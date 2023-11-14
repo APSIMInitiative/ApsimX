@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 168; } }
+        public static int LatestVersion { get { return 169; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5301,6 +5301,19 @@ namespace Models.Core.ApsimFile
 
                 if (changeMade)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Set TopLevel flag in any Rotation managers
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion169(JObject root, string _)
+        {
+            foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
+            {
+                rotationManager["TopLevel"] = true;
             }
         }
     }

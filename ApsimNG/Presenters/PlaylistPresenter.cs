@@ -2,12 +2,10 @@
 using UserInterface.Views;
 using System;
 using System.Collections.Generic;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Factorial;
 using System.Linq;
 using System.Threading.Tasks;
-using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
@@ -54,6 +52,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
             playlistModel = model as Playlist;
+            playlistModel.ClearSearchCache();
 
             explorerPresenter = parentPresenter;
             explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
@@ -133,32 +132,43 @@ namespace UserInterface.Presenters
         {
             playlistView.SetOutputText("Matching Simulations:\nSearching...");
 
-            searchCounter += 1;
-            int id = searchCounter;
+            if (searchCounter >= 1)
+            {
+                searchCounter = 2;
+                return;
+            } 
+            else
+            {
+                searchCounter = 1;
+            }
 
             string[] names = (await GetSimNamesAsync());
 
-            //when the await returns, this will check against the search counter,
-            //and only allow the output field to update if this request is the latest.
-            if (id == searchCounter)
+            string output = $"Matching Simulations: {names.Length}\n";
+            if (names != null)
             {
-                string output = $"Matching Simulations: {names.Length}\n";
-                if (names != null)
-                {
-                    output += string.Join(", ", names);
-                }
-                else
-                {
-                    output += "[No Matches Found]";
-                }
-                playlistView.SetOutputText(output);
+                output += string.Join(", ", names);
+            }
+            else
+            {
+                output += "[No Matches Found]";
+            }
+            playlistView.SetOutputText(output);
+
+            if (searchCounter == 2) //if we have had another search pending
+            {
+                searchCounter = 0;
+                UpdateListOfSimulations();
+            } else
+            {
+                searchCounter = 0;
             }
         }
 
         /// <summary>Async wrapper around GetListOfSimulations</summary>
         private async Task<string[]> GetSimNamesAsync()
         {
-            return await Task.Run(() => playlistModel.GetListOfSimulations(simNameCache, expNameCache));
+            return await Task.Run(() => playlistModel.GenerateListOfSimulations(simNameCache, expNameCache));
         }
 
         /// <summary>Detach the model from the view.</summary>

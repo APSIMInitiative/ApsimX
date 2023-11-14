@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using Models.Core;
 using Models.Factorial;
-using Models.PostSimulationTools;
+using Newtonsoft.Json;
 
 namespace Models
 {
@@ -20,13 +18,42 @@ namespace Models
     [ValidParent(ParentType = typeof(Simulations))]
     public class Playlist : Model
     {
+        private class PlaylistPrevSearch
+        {
+            public string searchString = null;
+            public string[] results = null;
+        }
+
         /// <summary>Link to simulations</summary>
         [Link]
         private Simulations Simulations = null;
 
+        /// <summary>Link to simulations</summary>
+        [JsonIgnore]
+        private List<PlaylistPrevSearch> searchCache = new List<PlaylistPrevSearch>();
+
+        [JsonIgnore]
+        private string[] lastSearch = null;
+
         /// <summary>The Playlist text that is used for comparisions</summary>
         [Description("Text of the playlist")]
         public string Text { get; set; }
+
+        /// <summary>
+        /// Returns the last generated list of simulation names.
+        /// If that list has not been searched yet, this will generate the list.
+        /// </summary>
+        /// <returns>
+        /// An array of simulation and simulation variations names that were found during the last search. 
+        /// Will return an empty array if no matches are found.
+        /// </returns>
+        public string[] GetListOfSimulations()
+        {
+            if (lastSearch == null)
+                return GenerateListOfSimulations();
+            else
+                return lastSearch;
+        }
 
         /// <summary>
         /// Returns the name of all simulations that match the text
@@ -40,7 +67,7 @@ namespace Models
         /// An array of simulation and simulation variations names that match the text of this playlist. 
         /// Will return an empty array if no matches are found.
         /// </returns>
-        public string[] GetListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
+        public string[] GenerateListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
         {
             if (Simulations == null)
                 Simulations = this.FindAncestor<Simulations>();
@@ -74,7 +101,10 @@ namespace Models
 
                 foreach (string part in parts)
                 {
-                    string expression = cleanString(part);
+                    List<string> resultsForThisPart = new List<string>();
+                    string cleanPart = cleanString(part);
+
+                    string expression = cleanPart;
                     
                     //convert our wildcard to regex symbol
                     expression = expression.Replace("*", "[\\s\\S]*");
@@ -82,40 +112,77 @@ namespace Models
                     expression = "^" + expression + "$";
                     Regex regex = new Regex(expression);
 
-                    foreach (Simulation sim in allSimulations)
+                    bool inCache = false;
+                    foreach (PlaylistPrevSearch search in searchCache)
                     {
-                        if (regex.IsMatch(sim.Name.ToLower()))
-                            if (sim.FindAncestor<Experiment>() == null) //don't add if under experiment
-                                if (names.Contains(sim.Name) == false)
-                                    names.Add(sim.Name);
+                        if (cleanPart == search.searchString)
+                        {
+                            inCache = true;
+                            for (int i = 0; i < search.results.Length; i++)
+                                names.Add(search.results[i]);
+                        }
                     }
 
-                    foreach (Experiment exp in allExperiments)
+                    if(!inCache)
                     {
-                        List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
-                        //match experiment name
-                        if (regex.IsMatch(exp.Name.ToLower()))
+                        foreach (Simulation sim in allSimulations)
                         {
-                            if (names.Contains(exp.Name) == false)
+                            if (regex.IsMatch(sim.Name.ToLower()))
+                            {
+                                if (sim.FindAncestor<Experiment>() == null)//don't add if under experiment
+                                {
+                                    if (names.Contains(sim.Name) == false)
+                                    {
+                                        names.Add(sim.Name);
+                                        resultsForThisPart.Add(sim.Name);
+                                    }
+                                }
+                            }      
+                        }
+
+                        foreach (Experiment exp in allExperiments)
+                        {
+                            List<Core.Run.SimulationDescription> expNames = exp.GetSimulationDescriptions().ToList();
+                            //match experiment name
+                            if (regex.IsMatch(exp.Name.ToLower()))
+                            {
+                                if (names.Contains(exp.Name) == false)
+                                {
+                                    foreach (Core.Run.SimulationDescription expN in expNames)
+                                    {
+                                        if (names.Contains(expN.Name) == false)
+                                        {
+                                            names.Add(expN.Name);
+                                            resultsForThisPart.Add(expN.Name);
+                                        }
+                                    }
+                                }        
+                            }
+                            else
+                            {
+                                //match against the experiment variations
                                 foreach (Core.Run.SimulationDescription expN in expNames)
-                                    if (names.Contains(expN.Name) == false)
-                                        names.Add(expN.Name);
+                                {
+                                    if (regex.IsMatch(expN.Name.ToLower()))
+                                    {
+                                        if (names.Contains(expN.Name) == false)
+                                        {
+                                            names.Add(expN.Name);
+                                            resultsForThisPart.Add(expN.Name);
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        else
-                        {
-                            //match against the experiment variations
-                            foreach (Core.Run.SimulationDescription expN in expNames)
-                                if (regex.IsMatch(expN.Name.ToLower()))
-                                    if (names.Contains(expN.Name) == false)
-                                        names.Add(expN.Name);
-                        }
+                        PlaylistPrevSearch search = new PlaylistPrevSearch();
+                        search.searchString = cleanPart;
+                        search.results = resultsForThisPart.ToArray();
+                        searchCache.Add(search);
                     }
                 }
             }
-            if (names.Count == 0)
-                return names.ToArray();
-            else
-                return names.ToArray();
+            lastSearch = names.ToArray();
+            return lastSearch;
         }
 
         /// <summary>
@@ -130,6 +197,14 @@ namespace Models
 
             foreach (string line in lines)
                 Text += line + "\n";
+        }
+
+        /// <summary>
+        /// Clears the previous search cache so that new results can be searched for.
+        /// </summary>
+        public void ClearSearchCache()
+        {
+            searchCache = new List<PlaylistPrevSearch>();
         }
 
         private string cleanString(string input)
