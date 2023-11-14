@@ -261,8 +261,6 @@ namespace UserInterface.Views
                         }
                     }
 
-
-
                     if (!isDragging && args.Event.Button == 1) //drawing a selection box
                     {
                         selectionPoint = clickPoint;
@@ -271,20 +269,24 @@ namespace UserInterface.Views
                     }
                     else
                     {
-                        if (!objClicked.Selected) {
-                            DGRectangle rect = new DGRectangle(clickPoint.X, clickPoint.Y, 1, 1);
-                            Select(rect, true);
-
-                            // If found object, select it.
-                            if (SelectedObjects.Count == 1)
+                        if (objClicked != null)
+                        {
+                            if (!objClicked.Selected)
                             {
-                                selectOffset = new Point(clickPoint.X - SelectedObjects[0].Location.X, clickPoint.Y - SelectedObjects[0].Location.Y);
-                                lastPos = new Point(SelectedObjects[0].Location.X, SelectedObjects[0].Location.Y);
-                                OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
+                                DGRectangle rect = new DGRectangle(clickPoint.X, clickPoint.Y, 1, 1);
+                                Select(rect, true);
 
-                                if (isDrawingArc)
-                                    if (SelectedObjects[0] is DGNode)
-                                        AddArc?.Invoke(this, new EventArgs());
+                                // If found object, select it.
+                                if (SelectedObjects.Count == 1)
+                                {
+                                    selectOffset = new Point(clickPoint.X - SelectedObjects[0].Location.X, clickPoint.Y - SelectedObjects[0].Location.Y);
+                                    lastPos = new Point(SelectedObjects[0].Location.X, SelectedObjects[0].Location.Y);
+                                    OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
+
+                                    if (isDrawingArc)
+                                        if (SelectedObjects[0] is DGNode)
+                                            AddArc?.Invoke(this, new EventArgs());
+                                }
                             }
                         }
                     }
@@ -335,22 +337,25 @@ namespace UserInterface.Views
                         {
                             for (int i = 0; i < SelectedObjects.Count; i++)
                             {
+                                int x = SelectedObjects[i].Location.X + diff.X;
+                                int y = SelectedObjects[i].Location.Y + diff.Y;
+                                SelectedObjects[i].Location = new Point(x, y);
+
                                 if (SelectedObjects[i] is DGNode)
                                 {
-                                    int x = SelectedObjects[i].Location.X + diff.X;
-                                    int y = SelectedObjects[i].Location.Y + diff.Y;
-                                    SelectedObjects[i].Location = new Point(x, y);
-
                                     for (int j = 0; j < arcs.Count; j++)
                                     {
-                                        DGNode source = arcs[j].Source;
-                                        DGNode target = arcs[j].Target;
-
-                                        if ((SelectedObjects[i] as DGNode) == source || (SelectedObjects[i] as DGNode) == target)
+                                        if (arcs[j].Selected == false)
                                         {
-                                            x = arcs[j].Location.X + (diff.X / 2);
-                                            y = arcs[j].Location.Y + (diff.Y / 2);
-                                            arcs[j].Location = new Point(x, y);
+                                            DGNode source = arcs[j].Source;
+                                            DGNode target = arcs[j].Target;
+
+                                            if ((SelectedObjects[i] as DGNode) == source || (SelectedObjects[i] as DGNode) == target)
+                                            {
+                                                x = arcs[j].Location.X + (diff.X / 2);
+                                                y = arcs[j].Location.Y + (diff.Y / 2);
+                                                arcs[j].Location = new Point(x, y);
+                                            }
                                         }
                                     }
                                 }

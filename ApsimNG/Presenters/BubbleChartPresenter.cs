@@ -11,6 +11,7 @@ using UserInterface.Interfaces;
 using APSIM.Shared.Graphing;
 using Models.Core;
 using ApsimNG.EventArguments.DirectedGraph;
+using APSIM.Interop.Visualisation;
 
 namespace UserInterface.Presenters
 {
@@ -132,17 +133,20 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments</param>
         private void OnGraphObjectSelected(object sender, GraphObjectsArgs args)
         {
-            if (args.Objects.Count == 1)
+            if (args.Objects != null)
             {
-                string objectName = args.Objects[0].Name;
-                for (int i = 0; i < model.Nodes.Count; i++)
+                if (args.Objects.Count == 1)
                 {
-                    if (model.Nodes[i].Name == objectName)
+                    string objectName = args.Objects[0].Name;
+                    for (int i = 0; i < model.Nodes.Count; i++)
                     {
-                        currentNode = new NodePropertyWrapper();
-                        currentNode.node = model.Nodes[i];
-                        nodePropertiesPresenter.RefreshView(currentNode);
-                        return;
+                        if (model.Nodes[i].Name == objectName)
+                        {
+                            currentNode = new NodePropertyWrapper();
+                            currentNode.node = model.Nodes[i];
+                            nodePropertiesPresenter.RefreshView(currentNode);
+                            return;
+                        }
                     }
                 }
             }
@@ -195,21 +199,22 @@ namespace UserInterface.Presenters
         private void OnDelNode(object sender, GraphObjectsArgs e)
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            List<RuleAction> newArcs = new List<RuleAction>(model.Arcs);
+            List<StateNode> newNodes = new List<StateNode>(model.Nodes);
             foreach (var obj in e.Objects)
             {
                 int idToDelete = obj.ID;
 
-                List<StateNode> newNodes = new List<StateNode>();
-                newNodes.AddRange(model.Nodes);
-                newNodes.RemoveAll(n => n.ID == idToDelete);
-                changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
+                for(int i = newNodes.Count-1; i >= 0; i--)
+                    if (newNodes[i].ID == idToDelete)
+                        newNodes.Remove(newNodes[i]);
 
-                // Need to also delete any arcs going to/from this node.
-                List<RuleAction> newArcs = new List<RuleAction>();
-                newArcs.AddRange(model.Arcs);
-                newArcs.RemoveAll(a => a.DestinationID == idToDelete || a.SourceID == idToDelete);
-                changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
+                for (int i = newArcs.Count-1; i >= 0; i--)
+                    if (newArcs[i].ID == idToDelete || newArcs[i].SourceID == idToDelete || newArcs[i].DestinationID == idToDelete)
+                        newArcs.Remove(newArcs[i]);               
             }
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), newNodes));
+            changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
             ICommand removeNode = new ChangeProperty(changes);
             presenter.CommandHistory.Add(removeNode);
         }

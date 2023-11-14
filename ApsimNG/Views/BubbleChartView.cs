@@ -346,6 +346,13 @@ namespace UserInterface.Views
                     item.Activated += handler;
                     ContextMenu.Append(item);
                 }
+            } 
+            else
+            {
+                item = new MenuItem($"Delete Selected");
+                handler = OnDeleteNode;
+                item.Activated += handler;
+                ContextMenu.Append(item);
             }
 
             // Make the context items visible. This won't actually
@@ -511,17 +518,13 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnGraphObjectSelected(object o, GraphObjectsArgs args)
         {
-            try
+            if (args.Objects != null)
             {
                 this.GraphObjectSelected.Invoke(o, args);
                 if (args.Objects.Count == 1)
                     Select(args.Objects[0].ID);
-                else 
+                else
                     Select(0);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
             }
         }
 
@@ -576,7 +579,7 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnAddArcStart(object sender, EventArgs args)
         {
-            if (graphView.SelectedObjects.Count == 0)
+            if (graphView.SelectedObjects.Count == 1)
             {
                 mainWidget.Window.Cursor = new Cursor(CursorType.DiamondCross);
                 isDrawingArc = true;
@@ -615,7 +618,7 @@ namespace UserInterface.Views
         /// <param name="args">Event data.</param>
         private void OnAddArcEnd(object sender, EventArgs args)
         {
-            if (graphView.SelectedObjects.Count == 0)
+            if (graphView.SelectedObjects.Count == 1)
             {
                 Arc newArc = new Arc();
                 newArc.ID = graphView.DirectedGraph.NextArcID();

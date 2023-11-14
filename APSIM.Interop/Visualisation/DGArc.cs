@@ -144,9 +144,9 @@
             foreach (Point p in bezPoints)
             {
                 double minX = selection.X - clickTolerence;
-                double maxX = selection.X + clickTolerence;
+                double maxX = selection.X + clickTolerence + selection.Width;
                 double minY = selection.Y - clickTolerence;
-                double maxY = selection.Y + clickTolerence;
+                double maxY = selection.Y + clickTolerence + selection.Height;
 
                 if (minX < p.X && p.X < maxX && minY < p.Y && p.Y < maxY)
                     return true;
