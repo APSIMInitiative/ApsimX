@@ -41,6 +41,10 @@ namespace Models.Management
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
 
+        /// <summary>detailed logging component</summary>
+        [Link(Type = LinkType.Child)]
+        public rotationRugplot detailedLogger = null;
+
         /// <summary>
         /// Events service. Used to publish events when transitioning
         /// between stages/nodes.
@@ -165,7 +169,9 @@ namespace Models.Management
                         {
                             throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
                         }
-                        score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        detailedLogger?.DoRuleEvaluation(testCondition, result);
+                        score *= result;
                     }
 
                     if (Verbose)
@@ -192,6 +198,7 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
+                    detailedLogger?.DoTransition(bestArc.Name);
                     TransitionTo(bestArc);
                     more = true;
                     MadeAChange = true;
