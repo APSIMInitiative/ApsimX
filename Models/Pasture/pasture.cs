@@ -428,6 +428,9 @@ namespace Models.GrazPlan
 
 
         #region ICanopy implementation
+
+        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
+        public string CanopyType { get { return "Pasture"; } }
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
         public double Albedo { get; set; } = GrazEnv.HERBAGE_ALBEDO;
