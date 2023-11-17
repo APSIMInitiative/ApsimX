@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 
     // OK, let's try and kick off a simulation run.
     // We will be mofifying the juvenile TT target.
-    char* path = "Sand.Water";
+    char* path = "[Sand].Water";
     double value[] = {0.090, 0.100, 0.187, 0.197, 0.169, 0.196};
     for (int iter = 0; iter < n_iter; iter++) {
 		if (iter != 0) {
@@ -78,7 +78,7 @@ int main(int argc, char** argv)
         char* table = "Report";
         uint32_t nparams = 1;
         char* params[nparams];
-        params[0] = "Wheat.Grain.Total";
+        params[0] = "[Wheat].Grain.Total";
         // params[1] = "Sorghum.AboveGround.Wt";
         // params[2] = "Sorghum.Leaf.LAI";
         double t = get_wall_time();
