@@ -4,6 +4,8 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    
+
         {
             "name": ".NET Core Launch (GUI)",
             "type": "coreclr",
@@ -46,8 +48,8 @@
             "program": "${workspaceFolder}/bin/Debug/net6.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1", 
-                "-p", "57220", "-P", "interactive",
-                "-f", "/home/uqpdevo1/src/ApsimX-ZMQ/Tests/Simulation/ZMQ-Sync/ZMQ-sync.apsimx"
+                "-p", "57220", // "-P", "interactive",
+                "-f", "${workspaceRoot}/Examples/Sorghum.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",

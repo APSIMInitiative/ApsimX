@@ -26,17 +26,15 @@ int main(int argc, char** argv)
     double start_time = get_wall_time();
 
     // This is the name of the pipe as defined in the C# server code.
-    char *pipeName = "testpipe";
-    // char* ipAddress = argc > 1 ? argv[1] : "127.0.0.1";
-    // uint16_t port = 27746;
-    /*
+    // char *pipeName = "testpipe";
+    char* ipAddress = argc > 1 ? argv[1] : "127.0.0.1";
+    uint16_t port = 57220;
     if (argc > 2) {
         int portNo = atoi(argv[2]);
         assert(portNo <= UINT16_MAX);
         assert(portNo >= 0);
         port = (uint16_t)portNo;
     }
-    */
     int n_iter = 1;
     if (argc > 3) {
         int iter = atoi(argv[3]);
@@ -45,28 +43,21 @@ int main(int argc, char** argv)
     }
 
     // Connect to the socket.
-    fprintf(stdout, "Connecting to server on %s...", pipeName);
-    int sock = connectToServer(pipeName);
+    fprintf(stdout, "Connecting to server on %s:%u...", ipAddress, port);
+    int sock = connectToRemoteServer(ipAddress, port);
     fprintf(stdout, "connected\n");
 
     // OK, let's try and kick off a simulation run.
     // We will be mofifying the juvenile TT target.
-    char* path = "[Sand].Water";
-    double value[] = {0.090, 0.100, 0.187, 0.197, 0.169, 0.196};
+    char* path = "[Sorghum].Phenology.Juvenile.Target.FixedValue";
+    double minValue = 120;
+    double maxValue = 300;
+    double increment = (maxValue - minValue) / n_iter;
     for (int iter = 0; iter < n_iter; iter++) {
-		if (iter != 0) {
-	    	value[0] = 0.095;
-	    	value[1] = 0.105; 
-	    	value[2] = 0.192;
-	    	value[3] = 0.202;
-	    	value[4] = 0.174; 
-	    	value[5] = 0.201;
-		}
-//        double value = minValue + iter * increment;
-        replacement_t* change = createDoubleArrayReplacement(path, value, 6);
+        double value = minValue + iter * increment;
+        replacement_t* change = createDoubleReplacement(path, value);
         fprintf(stdout, "Running sims with the following changes:\n");
-        fprintf(stdout, "  %s = [%.3f, %.3f, %.3f, %.3f, %.3f, %.3f]\n", path, 
-        	value[0], value[1], value[2], value[3], value[4], value[5]);
+        fprintf(stdout, "  %s = %.2f\n", path, value);
         double run_clock = get_wall_time();
         runWithChanges(sock, &change, 1);
         run_clock = get_wall_time() - run_clock;
@@ -78,7 +69,7 @@ int main(int argc, char** argv)
         char* table = "Report";
         uint32_t nparams = 1;
         char* params[nparams];
-        params[0] = "[Wheat].Grain.Total";
+        params[0] = "Yield";
         // params[1] = "Sorghum.AboveGround.Wt";
         // params[2] = "Sorghum.Leaf.LAI";
         double t = get_wall_time();

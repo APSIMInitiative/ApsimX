@@ -43,6 +43,7 @@ namespace APSIM.ZMQServer
         /// </summary>
         public virtual void Run()
         {
+        	Console.WriteLine("ApsimZMQServer; Run; YAY");
             try
             {
                 if (options.Protocol == "oneshot")
@@ -51,7 +52,7 @@ namespace APSIM.ZMQServer
                     conn = new InteractiveComms(options);
                 else 
                     throw new Exception("Unknown comms protocol '" + options.Protocol + "'");
-
+                Console.WriteLine("ApsimZMQServer; Run; pre-doCommands; YAY");
                 conn.doCommands(apsimBlob);
             }
             catch (IOException)

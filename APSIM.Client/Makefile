@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 CFLAGS= -g -Wall -Werror -pedantic -fPIC
 LDFLAGS=-lapsimclient
+# LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/mwmaster/Documents/oasis_sim/APSIM.Client/
 INCLUDES=src/
 CHECKFLAGS=`pkg-config --cflags --libs check`
 OUTPUT=libapsimclient.so
