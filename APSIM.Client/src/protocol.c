@@ -48,8 +48,9 @@ uint32_t readFromServer(int sock, uint32_t expected_length, char* resp) {
 
         // Exit now if server has sent nothing.
         // fixme: resp may not have been initialized at this point.
-        if (err == 0)
-            break;
+        if (err == 0) {
+        	break;
+        }
     }
 
     return total_read;
