@@ -10,7 +10,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Store of Ruminant energy for the time-step
     /// </summary>
-    internal class RuminantEnergyInfo
+    public class RuminantEnergyInfo
     {
         private readonly Ruminant ruminant;
 
