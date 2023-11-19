@@ -7,32 +7,32 @@ using System.Text;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// A store for a particular type of animal food used to track details as multiple instances are mixed in the diet
+    /// A store for a particular type of animal food used to track details as multiple instances are mixed in the diet.
     /// </summary>
     public class FoodResourceStore
     {
         /// <summary>
-        /// Store quality and quantity details
+        /// Store quality and quantity details.
         /// </summary>
         public FoodResourcePacket Details { get; set; } = new FoodResourcePacket();
 
         /// <summary>
-        /// Total crude protein in the store
+        /// Total crude protein in the store.
         /// </summary>
         public double CrudeProtein { get; set; }
         /// <summary>
-        /// Total rumen degradable crude protein in the store
+        /// Total rumen degradable crude protein in the store.
         /// </summary>
         public double DegradableCrudeProtein { get; set; }
         /// <summary>
-        /// Total rumen undegradable crude protein in the store
+        /// Total rumen undegradable crude protein in the store.
         /// </summary>
         public double UndegradableCrudeProtein { get { return CrudeProtein - DegradableCrudeProtein; } }
 
         /// <summary>
-        /// Adds a FoodResourcePacket to this store and adjusts pool qualtities
+        /// Adds a FoodResourcePacket to this store and adjusts pool qualtities.
         /// </summary>
-        /// <param name="packet">Packet to add</param>
+        /// <param name="packet">Packet to add.</param>
         public void Add(FoodResourcePacket packet)
         {
             Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (Details.Amount + packet.Amount);
@@ -49,22 +49,41 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Reduce the rumen degradable protein by a proportion provided
+        /// Reduce the rumen degradable protein by a proportion provided.
         /// </summary>
-        /// <param name="factor">The reduction factor</param>
+        /// <param name="factor">The reduction factor.</param>
         public void ReduceDegradableProtein(double factor)
         {
-            DegradableCrudeProtein = factor * (DegradableCrudeProtein * Math.Min(0.84 * Details.DryMatterDigestibility + 0.33, 1.0));
+            DegradableCrudeProtein *= factor;
             CrudeProtein = Details.CrudeProtein;
         }
 
         /// <summary>
-        /// 
+        /// Digestibility undegradable protein.
+        /// </summary>
+        public double DUDP
+        {
+            get
+            {
+                switch (Details.TypeOfFeed)
+                {
+                    case FeedType.Forage:
+                        return Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85));
+                    case FeedType.Concentrate:
+                        return 0.9 * (1 - ((Details.ADIP / Details.UndegradableCrudeProteinContent)));
+                    default:
+                        return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Metabolisable energy.
         /// </summary>
         public double ME { get { return Details.EnergyContent * Details.Amount; } }
 
         /// <summary>
-        /// Reset running stores
+        /// Reset running stores.
         /// </summary>
         public void Reset()
         {

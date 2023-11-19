@@ -120,9 +120,71 @@ namespace Models.CLEM.Resources
         public RuminantIntake Intake = new RuminantIntake();
 
         /// <summary>
-        /// 
+        /// Energy used for wool production
+        /// </summary>
+        public double EnergyForWool { get; set; }
+
+        /// <summary>
+        /// Energy available after wool growth
+        /// </summary>
+        public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyForMaintenance { get; set; }
+
+        /// <summary>
+        /// Energy used for fetal development
+        /// </summary>
+        public double EnergyForFetus { get; set; }
+
+        /// <summary>
+        /// Energy available after accounting for pregnancy
+        /// </summary>
+        public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
+
+        /// <summary>
+        /// Energy used for milk production
+        /// </summary>
+        public double EnergyForLactation { get; set; }
+
+        /// <summary>
+        /// Energy available after lactation demands
+        /// </summary>
+        public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double EnergyForGain { get; set; }
+
+        /// <summary>
+        /// Energy available for growth
+        /// </summary>
+        public double EnergyAvailableForGain { get; set; }
+
+        /// <summary>
+        /// Energy from intake
+        /// </summary>
+        public double EnergyFromIntake { get { return Intake.ME; } }
+
+        /// <summary>
+        /// Digestible protein leaving the stomach
         /// </summary>
         public double DPLS { get; set; }
+
+        /// <summary>
+        /// Reset all running stores
+        /// </summary>
+        public void ResetEnergy()
+        {
+            EnergyForMaintenance = 0;
+            EnergyForFetus = 0;
+            EnergyForLactation = 0;
+            EnergyForGain = 0;
+            EnergyForWool = 0;
+        }
 
         #endregion
 
