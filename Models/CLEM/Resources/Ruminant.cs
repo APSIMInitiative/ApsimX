@@ -166,10 +166,9 @@ namespace Models.CLEM.Resources
         public double EnergyFromIntake { get { return Intake.ME; } }
 
         /// <summary>
-        /// 
+        /// Digestible protein leaving the stomach
         /// </summary>
         public double DPLS { get; set; }
-
 
         /// <summary>
         /// Reset all running stores

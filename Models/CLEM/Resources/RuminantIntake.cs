@@ -9,26 +9,26 @@ using System.Text;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// Manages tracking of Ruminant intake quality and quantity
+    /// Manages tracking of Ruminant intake quality and quantity.
     /// </summary>
     public  class RuminantIntake
     {
         private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new Dictionary<FeedType, FoodResourceStore>();
 
         /// <summary>
-        /// The potential and actual milk intake of the individual
+        /// The potential and actual milk intake of the individual.
         /// </summary>
         public ExpectedActualContainer Milk { get; private set; }
 
         /// <summary>
-        /// The potential and actual feed intake of the individual
+        /// The potential and actual feed intake of the individual.
         /// </summary>
         public ExpectedActualContainer Feed { get; private set; }
 
         /// <summary>
-        /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy
+        /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.
         /// </summary>
-        /// <param name="packet">Feed packet containing intake information kg, %N, DMD</param>
+        /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
         public void AddFeed(FoodResourcePacket packet)
         {
             if (packet.Amount > 0)
@@ -48,7 +48,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Provides the amount of solod intake in diet.
+        /// Provides the amount of solid intake in diet.
         /// </summary>
         public double SolidIntake 
         {
@@ -59,20 +59,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Get the details of a food resource store identified by feed type 
+        /// Get the details of a food resource store identified by feed type .
         /// </summary>
-        /// <param name="feedType">Feed type of the required store</param>
-        /// <returns>The food resource store or null if not found</returns>
+        /// <param name="feedType">Feed type of the required store.</param>
+        /// <returns>The food resource store or null if not found.</returns>
         public FoodResourcePacket GetStoreDetails(FeedType feedType)
         {
             return GetStore(feedType)?.Details;
         }
 
         /// <summary>
-        /// Get the food resource store identified by feed type 
+        /// Get the food resource store identified by feed type.
         /// </summary>
-        /// <param name="feedType">Feed type of the required store</param>
-        /// <returns>The food resource packet containing feed store details</returns>
+        /// <param name="feedType">Feed type of the required store.</param>
+        /// <returns>The food resource packet containing feed store details.</returns>
         public FoodResourceStore GetStore(FeedType feedType)
         {
             if (feedTypeStoreDict.TryGetValue(feedType, out FoodResourceStore frs))
@@ -81,7 +81,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Reset all intake values
+        /// Reset all intake values.
         /// </summary>
         public void Reset()
         {
@@ -94,7 +94,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Total degradable protein (kg/timestep)
+        /// Total degradable protein (kg/timestep).
         /// </summary>
         public double DegradableProtein 
         {
@@ -105,7 +105,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Total crude protein (kg/timestep)
+        /// Total crude protein (kg/timestep).
         /// </summary>
         public double CrudeProtein
         {
@@ -116,7 +116,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Metabolisable energy from intake
+        /// Metabolisable energy from intake.
         /// </summary>
         public double ME
         {
@@ -127,7 +127,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Dry matter digestibility of solid (non-milk) intake
+        /// Metabolisable energy density from solids intake.
+        /// </summary>
+        public double MDSolid
+        {
+            get
+            {
+                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.EnergyContent * a.Value.Details.Amount)/SolidIntake;
+            }
+        }
+
+        /// <summary>
+        /// Dry matter digestibility of solid (non-milk) intake.
         /// </summary>
         public double DMD
         {
@@ -151,10 +162,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        /// Adjust intake by a reduction factor.
         /// </summary>
-        /// <param name="reductionFactor"></param>
-        /// <returns></returns>
+        /// <param name="reductionFactor">factor (0-1) to adjust by.</param>
+        /// <returns>Boolen indicating whether any adjustment was made.</returns>
         public bool AdjustIntakeByRumenProteinRequired(double reductionFactor)
         {
             if (reductionFactor >= 1) return false;
@@ -174,10 +185,53 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Reduce the rumen degradable protein by a proportion provided
+        /// Rumen Degradable Protein.
         /// </summary>
-        /// <param name="feedType">The type of feed this applies to</param>
-        /// <param name="factor">The reduction factor</param>
+        public double RDP
+        {
+            get
+            {
+                double sumAmount = 0;
+                foreach (var item in feedTypeStoreDict)
+                {
+                    sumAmount += item.Value.DegradableCrudeProtein;
+                }
+                return sumAmount;
+            }
+        }
+
+        /// <summary>
+        /// Rumen Undegradable Protein (RUP = UDP).
+        /// </summary>
+        public double UDP {
+            get
+            {
+                return CrudeProtein - RDP;
+            }
+        }
+
+        /// <summary>
+        /// Indigestible undegradable protein.
+        /// </summary>
+        public double IndigestibleUDP
+        {
+            get
+            {
+                double sumAmount = 0;
+                foreach (var item in feedTypeStoreDict)
+                {
+                    sumAmount += (1-item.Value.DUDP) * item.Value.UndegradableCrudeProtein;
+                }
+                return sumAmount;
+            }
+        }
+
+
+        /// <summary>
+        /// Reduce the rumen degradable protein by a proportion provided.
+        /// </summary>
+        /// <param name="feedType">The type of feed this applies to.</param>
+        /// <param name="factor">The reduction factor.</param>
         public void ReduceDegradableProtein(FeedType feedType, double factor)
         {
             if (feedTypeStoreDict.TryGetValue(feedType, out FoodResourceStore frs))
