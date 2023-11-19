@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 166,
+  "Version": 170,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -23,8 +23,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "STRUM",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "STRUM",
           "ResourceName": null,
           "Children": [
@@ -3496,6 +3494,7 @@
                                   "Position": 0,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -3506,6 +3505,7 @@
                                   "Position": 3,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -3598,6 +3598,7 @@
                                   "Position": 0,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": null,
                                   "Maximum": null,
                                   "Interval": null
@@ -3608,6 +3609,7 @@
                                   "Position": 3,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": null,
                                   "Maximum": null,
                                   "Interval": null
@@ -3765,6 +3767,7 @@
                                   "Position": 0,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -3775,6 +3778,7 @@
                                   "Position": 3,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -3945,6 +3949,7 @@
                                   "Position": 0,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -3955,6 +3960,7 @@
                                   "Position": 3,
                                   "Inverted": false,
                                   "CrossesAtZero": false,
+                                  "LabelOnOneLine": false,
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": null
@@ -4682,7 +4688,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PMF.Scrum.StrumTree, Models",
+          "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
           "AgeAtSimulationStart": 5,
           "YearsToMaxDimension": 6,
           "TrunkMassAtMaxDimension": 12.0,
@@ -4739,6 +4745,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": 2.0
@@ -4749,6 +4756,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -4817,6 +4825,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": "NaN"
@@ -4827,6 +4836,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -4895,6 +4905,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -4905,6 +4916,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -4973,6 +4985,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -4983,6 +4996,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -5051,6 +5065,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -5061,6 +5076,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -5820,8 +5836,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "PlantType": null,
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "Name": "STRUM",
                   "ResourceName": null,
                   "Children": [],
@@ -5829,7 +5843,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Scrum.StrumTree, Models",
+                  "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                   "AgeAtSimulationStart": 1,
                   "YearsToMaxDimension": 6,
                   "TrunkMassAtMaxDimension": 12.0,
@@ -7770,6 +7784,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -7780,6 +7795,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -7894,6 +7910,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -7904,6 +7921,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -7989,6 +8007,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -7999,6 +8018,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -8142,6 +8162,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -8152,6 +8173,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -8299,6 +8321,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8309,6 +8332,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8394,6 +8418,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8404,6 +8429,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8576,6 +8602,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8586,6 +8613,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8596,6 +8624,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -8739,6 +8768,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8749,6 +8779,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8892,6 +8923,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8902,6 +8934,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8987,6 +9020,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -8997,6 +9031,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9089,6 +9124,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9099,6 +9135,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9184,6 +9221,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9194,6 +9232,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9250,6 +9289,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9260,6 +9300,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9316,6 +9357,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9326,6 +9368,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9382,6 +9425,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9392,6 +9436,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9448,6 +9493,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9458,6 +9504,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9514,6 +9561,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9524,6 +9572,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9580,6 +9629,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9590,6 +9640,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -9650,6 +9701,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9660,6 +9712,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -9745,6 +9798,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9755,6 +9809,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9956,6 +10011,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9966,6 +10022,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -9976,6 +10033,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -10130,6 +10188,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10140,6 +10199,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10283,6 +10343,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10293,6 +10354,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10436,6 +10498,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10446,6 +10509,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10647,6 +10711,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -10657,6 +10722,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -14396,8 +14462,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": null,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "STRUM",
                       "ResourceName": null,
                       "Children": [],
@@ -15154,7 +15218,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.Scrum.StrumTree, Models",
+                      "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                       "AgeAtSimulationStart": 6,
                       "YearsToMaxDimension": 6,
                       "TrunkMassAtMaxDimension": 12.0,
@@ -15482,6 +15546,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -15492,6 +15557,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -15577,6 +15643,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -15587,6 +15654,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -15686,6 +15754,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -15696,6 +15765,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -15810,6 +15880,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -15820,6 +15891,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -15905,6 +15977,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -15915,6 +15988,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -16058,6 +16132,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -16068,6 +16143,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -16215,6 +16291,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16225,6 +16302,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16310,6 +16388,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16320,6 +16399,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16492,6 +16572,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16502,6 +16583,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16512,6 +16594,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -16655,6 +16738,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16665,6 +16749,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16808,6 +16893,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16818,6 +16904,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16903,6 +16990,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -16913,6 +17001,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17005,6 +17094,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17015,6 +17105,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17100,6 +17191,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17110,6 +17202,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17166,6 +17259,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17176,6 +17270,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17232,6 +17327,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17242,6 +17338,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17298,6 +17395,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17308,6 +17406,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17364,6 +17463,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17374,6 +17474,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17430,6 +17531,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17440,6 +17542,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17496,6 +17599,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17506,6 +17610,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -17566,6 +17671,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17576,6 +17682,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -17661,6 +17768,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17671,6 +17779,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17872,6 +17981,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17882,6 +17992,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -17892,6 +18003,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -18046,6 +18158,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18056,6 +18169,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18199,6 +18313,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18209,6 +18324,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18352,6 +18468,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18362,6 +18479,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18563,6 +18681,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -18573,6 +18692,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -21590,8 +21710,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": null,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "STRUM",
                       "ResourceName": null,
                       "Children": [],
@@ -22430,7 +22548,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.Scrum.StrumTree, Models",
+                      "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                       "AgeAtSimulationStart": 6,
                       "YearsToMaxDimension": 6,
                       "TrunkMassAtMaxDimension": 12.0,
@@ -22539,6 +22657,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22549,6 +22668,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22634,6 +22754,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22644,6 +22765,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22729,6 +22851,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22739,6 +22862,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -22838,6 +22962,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -22848,6 +22973,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -22962,6 +23088,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -22972,6 +23099,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -23057,6 +23185,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -23067,6 +23196,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -23210,6 +23340,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -23220,6 +23351,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -23367,6 +23499,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23377,6 +23510,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23462,6 +23596,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23472,6 +23607,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23644,6 +23780,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23654,6 +23791,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23664,6 +23802,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -23807,6 +23946,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23817,6 +23957,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23960,6 +24101,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -23970,6 +24112,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -24055,6 +24198,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -24065,6 +24209,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -24157,6 +24302,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24167,6 +24313,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24252,6 +24399,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24262,6 +24410,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24318,6 +24467,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24328,6 +24478,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24384,6 +24535,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24394,6 +24546,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24450,6 +24603,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24460,6 +24614,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24516,6 +24671,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24526,6 +24682,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24582,6 +24739,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24592,6 +24750,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24648,6 +24807,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24658,6 +24818,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -24718,6 +24879,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -24728,6 +24890,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -24813,6 +24976,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -24823,6 +24987,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25024,6 +25189,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25034,6 +25200,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25044,6 +25211,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -25198,6 +25366,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25208,6 +25377,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25351,6 +25521,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25361,6 +25532,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25504,6 +25676,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25514,6 +25687,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25715,6 +25889,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -25725,6 +25900,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -26527,8 +26703,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "PlantType": null,
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "Name": "STRUM",
                   "ResourceName": null,
                   "Children": [],
@@ -26536,7 +26710,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Scrum.StrumTree, Models",
+                  "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                   "AgeAtSimulationStart": 6,
                   "YearsToMaxDimension": 6,
                   "TrunkMassAtMaxDimension": 12.0,
@@ -28612,6 +28786,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -28622,6 +28797,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -28714,6 +28890,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -28724,6 +28901,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": 0.5021356443691809,
                       "Interval": null
@@ -28809,6 +28987,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -28819,6 +28998,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -28904,6 +29084,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -28914,6 +29095,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -28999,6 +29181,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -29009,6 +29192,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": 0.5008870000000002,
                       "Interval": null
@@ -29094,6 +29278,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -29104,6 +29289,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": 0.5020155000000001,
                       "Interval": null
@@ -29189,6 +29375,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -29199,6 +29386,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": 0.54829,
                       "Interval": null
@@ -29284,6 +29472,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -29294,6 +29483,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -29354,6 +29544,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 39711.97,
                   "Maximum": 40735.03,
                   "Interval": null
@@ -29364,6 +29555,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -29458,6 +29650,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 39619.05,
                   "Maximum": 40735.95,
                   "Interval": null
@@ -29468,6 +29661,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": -0.07973608040302863,
                   "Maximum": 12.0,
                   "Interval": null
@@ -29582,6 +29776,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 39619.05,
                   "Maximum": 40735.95,
                   "Interval": null
@@ -29592,6 +29787,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": "NaN",
                   "Interval": null
@@ -29691,6 +29887,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -29701,6 +29898,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -29815,6 +30013,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -29825,6 +30024,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -29910,6 +30110,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -29920,6 +30121,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -30063,6 +30265,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -30073,6 +30276,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -30216,6 +30420,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -30226,6 +30431,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -30286,6 +30492,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30296,6 +30503,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30381,6 +30589,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30391,6 +30600,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30563,6 +30773,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30573,6 +30784,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30583,6 +30795,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -30726,6 +30939,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30736,6 +30950,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30879,6 +31094,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30889,6 +31105,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30974,6 +31191,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -30984,6 +31202,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31076,6 +31295,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31086,6 +31306,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31171,6 +31392,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31181,6 +31403,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31237,6 +31460,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31247,6 +31471,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31303,6 +31528,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31313,6 +31539,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31369,6 +31596,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31379,6 +31607,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31435,6 +31664,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31445,6 +31675,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31501,6 +31732,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31511,6 +31743,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31567,6 +31800,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31577,6 +31811,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -31637,6 +31872,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31647,6 +31883,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -31732,6 +31969,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31742,6 +31980,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31943,6 +32182,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31953,6 +32193,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -31963,6 +32204,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -32117,6 +32359,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32127,6 +32370,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32270,6 +32514,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32280,6 +32525,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32423,6 +32669,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32433,6 +32680,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32634,6 +32882,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32644,6 +32893,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32798,6 +33048,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32808,6 +33059,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32864,6 +33116,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32874,6 +33127,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32930,6 +33184,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -32940,6 +33195,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -34098,7 +34354,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Scrum.StrumTree, Models",
+                  "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                   "AgeAtSimulationStart": 6,
                   "YearsToMaxDimension": 6,
                   "TrunkMassAtMaxDimension": 12.0,
@@ -34137,8 +34393,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "PlantType": null,
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "Name": "STRUM",
                   "ResourceName": null,
                   "Children": [],
@@ -35297,6 +35551,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -35307,6 +35562,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -35399,6 +35655,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -35409,6 +35666,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -35494,6 +35752,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -35504,6 +35763,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -35589,6 +35849,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -35599,6 +35860,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -35684,6 +35946,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 39619.05,
                       "Maximum": 40735.95,
                       "Interval": null
@@ -35694,6 +35957,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -35783,6 +36047,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 39711.97,
                   "Maximum": 40735.03,
                   "Interval": null
@@ -35793,6 +36058,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": -31.7515923566879,
                   "Maximum": 2500.0,
                   "Interval": null
@@ -35916,6 +36182,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 39619.05,
                   "Maximum": 40735.95,
                   "Interval": null
@@ -35926,6 +36193,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -36025,6 +36293,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36035,6 +36304,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36149,6 +36419,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36159,6 +36430,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36244,6 +36516,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36254,6 +36527,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36397,6 +36671,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36407,6 +36682,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -36554,6 +36830,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36564,6 +36841,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36649,6 +36927,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36659,6 +36938,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36831,6 +37111,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36841,6 +37122,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -36851,6 +37133,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -36994,6 +37277,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37004,6 +37288,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37147,6 +37432,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37157,6 +37443,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37242,6 +37529,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37252,6 +37540,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37344,6 +37633,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37354,6 +37644,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37439,6 +37730,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37449,6 +37741,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37505,6 +37798,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37515,6 +37809,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37571,6 +37866,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37581,6 +37877,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37637,6 +37934,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37647,6 +37945,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37703,6 +38002,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37713,6 +38013,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37769,6 +38070,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37779,6 +38081,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37835,6 +38138,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37845,6 +38149,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -37905,6 +38210,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -37915,6 +38221,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -38000,6 +38307,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38010,6 +38318,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38211,6 +38520,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38221,6 +38531,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38231,6 +38542,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -38385,6 +38697,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38395,6 +38708,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38538,6 +38852,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38548,6 +38863,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38691,6 +39007,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38701,6 +39018,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38902,6 +39220,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -38912,6 +39231,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39066,6 +39386,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39076,6 +39397,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39132,6 +39454,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39142,6 +39465,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39198,6 +39522,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39208,6 +39533,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -39279,6 +39605,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": 2.0
@@ -39289,6 +39616,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39357,6 +39685,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN"
@@ -39367,6 +39696,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39435,6 +39765,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39445,6 +39776,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39513,6 +39845,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39523,6 +39856,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39591,6 +39925,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39601,6 +39936,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -39669,6 +40005,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN"
@@ -39679,6 +40016,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -41300,8 +41638,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": null,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "STRUM",
                       "ResourceName": null,
                       "Children": [],
@@ -41543,7 +41879,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.Scrum.StrumTree, Models",
+                      "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                       "AgeAtSimulationStart": 0,
                       "YearsToMaxDimension": 0,
                       "TrunkMassAtMaxDimension": "NaN",
@@ -42650,6 +42986,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -42660,6 +42997,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -42745,6 +43083,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -42755,6 +43094,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -42854,6 +43194,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -42864,6 +43205,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -42978,6 +43320,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -42988,6 +43331,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43073,6 +43417,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43083,6 +43428,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43168,6 +43514,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43178,6 +43525,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43263,6 +43611,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43273,6 +43622,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -43420,6 +43770,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43430,6 +43781,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43515,6 +43867,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43525,6 +43878,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43697,6 +44051,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43707,6 +44062,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43717,6 +44073,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -43860,6 +44217,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -43870,6 +44228,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44013,6 +44372,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44023,6 +44383,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44108,6 +44469,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44118,6 +44480,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44210,6 +44573,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44220,6 +44584,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44305,6 +44670,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44315,6 +44681,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44371,6 +44738,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44381,6 +44749,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44437,6 +44806,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44447,6 +44817,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44503,6 +44874,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44513,6 +44885,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44569,6 +44942,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44579,6 +44953,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44635,6 +45010,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44645,6 +45021,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44701,6 +45078,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44711,6 +45089,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -44771,6 +45150,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44781,6 +45161,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -44837,6 +45218,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -44847,6 +45229,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45048,6 +45431,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45058,6 +45442,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45068,6 +45453,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -45222,6 +45608,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45232,6 +45619,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45375,6 +45763,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45385,6 +45774,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45528,6 +45918,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45538,6 +45929,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45739,6 +46131,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45749,6 +46142,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -45896,6 +46290,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -45906,6 +46301,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -45962,6 +46358,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -45972,6 +46369,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -47487,8 +47885,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": null,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "STRUM",
                       "ResourceName": null,
                       "Children": [],
@@ -47664,7 +48060,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.Scrum.StrumTree, Models",
+                      "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                       "AgeAtSimulationStart": 0,
                       "YearsToMaxDimension": 0,
                       "TrunkMassAtMaxDimension": "NaN",
@@ -48676,6 +49072,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -48686,6 +49083,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -48771,6 +49169,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -48781,6 +49180,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -48880,6 +49280,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -48890,6 +49291,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49004,6 +49406,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49014,6 +49417,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49099,6 +49503,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49109,6 +49514,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49194,6 +49600,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49204,6 +49611,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49289,6 +49697,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49299,6 +49708,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -49446,6 +49856,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49456,6 +49867,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49541,6 +49953,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49551,6 +49964,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49723,6 +50137,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49733,6 +50148,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49743,6 +50159,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -49886,6 +50303,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -49896,6 +50314,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50039,6 +50458,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50049,6 +50469,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50134,6 +50555,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50144,6 +50566,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50236,6 +50659,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50246,6 +50670,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50331,6 +50756,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50341,6 +50767,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50397,6 +50824,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50407,6 +50835,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50463,6 +50892,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50473,6 +50903,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50529,6 +50960,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50539,6 +50971,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50595,6 +51028,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50605,6 +51039,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50661,6 +51096,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50671,6 +51107,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50727,6 +51164,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50737,6 +51175,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -50797,6 +51236,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50807,6 +51247,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -50863,6 +51304,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -50873,6 +51315,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51074,6 +51517,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51084,6 +51528,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51094,6 +51539,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -51248,6 +51694,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51258,6 +51705,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51401,6 +51849,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51411,6 +51860,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51554,6 +52004,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51564,6 +52015,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51765,6 +52217,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51775,6 +52228,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -51922,6 +52376,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -51932,6 +52387,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -51988,6 +52444,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -51998,6 +52455,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52054,6 +52512,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52064,6 +52523,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52124,6 +52584,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": 31527.54999,
               "Maximum": 32083.45001,
               "Interval": null
@@ -52134,6 +52595,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -52197,6 +52659,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": 2.0
@@ -52207,6 +52670,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52275,6 +52739,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN"
@@ -52285,6 +52750,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52353,6 +52819,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52363,6 +52830,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52431,6 +52899,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52441,6 +52910,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52509,6 +52979,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52519,6 +52990,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -52587,6 +53059,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN"
@@ -52597,6 +53070,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -53877,8 +54351,6 @@
                     {
                       "$type": "Models.PMF.Plant, Models",
                       "PlantType": null,
-                      "IsEnding": false,
-                      "DaysAfterEnding": 0,
                       "Name": "STRUM",
                       "ResourceName": null,
                       "Children": [],
@@ -53886,7 +54358,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.Scrum.StrumTree, Models",
+                      "$type": "Models.PMF.SimplePlantModels.StrumTree, Models",
                       "AgeAtSimulationStart": 6,
                       "YearsToMaxDimension": 6,
                       "TrunkMassAtMaxDimension": 12.0,
@@ -55035,6 +55507,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55045,6 +55518,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55101,6 +55575,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55111,6 +55586,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55178,6 +55654,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55188,6 +55665,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55255,6 +55733,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55265,6 +55744,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55361,6 +55841,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55371,6 +55852,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN"
@@ -55427,6 +55909,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55437,6 +55920,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55493,6 +55977,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55503,6 +55988,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN"
@@ -55570,6 +56056,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55580,6 +56067,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55636,6 +56124,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55646,6 +56135,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55702,6 +56192,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55712,6 +56203,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55768,6 +56260,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55778,6 +56271,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55845,6 +56339,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55855,6 +56350,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55911,6 +56407,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55921,6 +56418,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55977,6 +56475,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -55987,6 +56486,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56043,6 +56543,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56053,6 +56554,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56109,6 +56611,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56119,6 +56622,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56175,6 +56679,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56185,6 +56690,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56252,6 +56758,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56262,6 +56769,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56376,6 +56884,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56386,6 +56895,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56471,6 +56981,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56481,6 +56992,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56624,6 +57136,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56634,6 +57147,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -56781,6 +57295,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -56791,6 +57306,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -56963,6 +57479,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -56973,6 +57490,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -56983,6 +57501,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.0099177025295098,
                       "Maximum": 1.0016879554804898,
                       "Interval": null
@@ -57126,6 +57645,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57136,6 +57656,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57279,6 +57800,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57289,6 +57811,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57374,6 +57897,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57384,6 +57908,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57394,6 +57919,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -3.65,
                       "Maximum": 368.65,
                       "Interval": null
@@ -57548,6 +58074,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57558,6 +58085,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57701,6 +58229,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57711,6 +58240,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57854,6 +58384,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -57864,6 +58395,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -58065,6 +58597,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -58075,6 +58608,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -58225,6 +58759,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58235,6 +58770,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": 0.5021356443691809,
                           "Interval": null
@@ -58320,6 +58856,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58330,6 +58867,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -58415,6 +58953,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58425,6 +58964,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -58510,6 +59050,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58520,6 +59061,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": 0.5008870000000002,
                           "Interval": null
@@ -58605,6 +59147,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58615,6 +59158,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": 0.5020155000000001,
                           "Interval": null
@@ -58700,6 +59244,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58710,6 +59255,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": 0.54829,
                           "Interval": null
@@ -58795,6 +59341,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": 39619.05,
                           "Maximum": 40735.95,
                           "Interval": null
@@ -58805,6 +59352,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": null
@@ -58865,6 +59413,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null
@@ -58875,6 +59424,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": null

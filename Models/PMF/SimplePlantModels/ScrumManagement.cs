@@ -6,9 +6,9 @@ using Models.Interfaces;
 using System;
 using System.Linq;
 using System.Text.Json.Serialization;
-using static Models.PMF.Scrum.ScrumCrop;
+using static Models.PMF.SimplePlantModels.ScrumCrop;
 
-namespace Models.PMF.Scrum
+namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
     /// Data structure that contains information for a specific planting of scrum

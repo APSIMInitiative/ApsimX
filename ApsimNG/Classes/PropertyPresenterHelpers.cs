@@ -7,7 +7,7 @@ namespace UserInterface.Classes
     using Models.LifeCycle;
     using Models.PMF;
     using Models.PMF.Phen;
-    using Models.PMF.Scrum;
+    using Models.PMF.SimplePlantModels;
 
     /// <summary>
     /// Helper functions for the property presenter. Most involve
