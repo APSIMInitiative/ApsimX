@@ -627,16 +627,8 @@ namespace Models.Surface
                 FinalResidueC += surfaceResidue.C[i];
 
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
-            if (FractionDecomposed < 1)
-            { }
-            SurfaceOrganicMatterDecompType actualDecomposition = ReflectionUtilities.Clone(potentialDecomposition) as SurfaceOrganicMatterDecompType;
-            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
-            {
-                actualDecomposition.Pool[i].FOM.C = potentialDecomposition.Pool[i].FOM.C * FractionDecomposed;
-                actualDecomposition.Pool[i].FOM.N = potentialDecomposition.Pool[i].FOM.N * FractionDecomposed;
-            }
-            if (actualDecomposition != null)
-                DecomposeSurfom(actualDecomposition);
+
+            DecomposeSurfom(potentialDecomposition, FractionDecomposed);
 
             Canopies = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
@@ -921,10 +913,11 @@ namespace Models.Surface
         }
 
         /// <summary>Decomposes the surfom.</summary>
-        /// <param name="SOMDecomp">The som decomp.</param>
-        private void DecomposeSurfom(SurfaceOrganicMatterDecompType SOMDecomp)
+        /// <param name="potSOMDecomp">The potential som decomp.</param>
+        /// <param name="fraction">Fraction of potential to decompose.</param>
+        private void DecomposeSurfom(SurfaceOrganicMatterDecompType potSOMDecomp, double fraction)
         {
-            int numSurfom = SOMDecomp.Pool.Length;          // local surfom counter from received event;
+            int numSurfom = potSOMDecomp.Pool.Length;          // local surfom counter from received event;
             int residue_no;                                 // Index into the global array;
             double[] cPotDecomp = new double[numSurfom];  // pot amount of C to decompose (kg/ha)
             double[] nPotDecomp = new double[numSurfom];  // pot amount of N to decompose (kg/ha)
@@ -942,10 +935,10 @@ namespace Models.Surface
 
             for (int counter = 0; counter < numSurfom; counter++)
             {
-                totCDecomp = SOMDecomp.Pool[counter].FOM.C;
-                totNDecomp = SOMDecomp.Pool[counter].FOM.N;
+                totCDecomp = potSOMDecomp.Pool[counter].FOM.C * fraction;
+                totNDecomp = potSOMDecomp.Pool[counter].FOM.N * fraction;
 
-                residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
+                residue_no = GetResidueNumber(potSOMDecomp.Pool[counter].Name);
 
                 if (MathUtilities.IsLessThan(totNDecomp, 0.0) || MathUtilities.IsGreaterThan(totNDecomp, nPotDecomp[residue_no]))
                     summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}",
