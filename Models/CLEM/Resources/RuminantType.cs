@@ -246,6 +246,114 @@ namespace Models.CLEM.Resources
         [Description("")]
         public double ProteinGainSlope2 { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CL5 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CL6 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CG12 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double EBW2LW { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double Prt2NMilk { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double Prt2NTissue { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CA5 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CA7 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CA8 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CH1 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CH2 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CH3 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CH4 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CH5 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CG4 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CG5 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CG6 { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("")]
+        public double CG7 { get; set; }
+
 
 
         #endregion
@@ -744,7 +852,7 @@ namespace Models.CLEM.Resources
         //[System.ComponentModel.DefaultValueAttribute(6)]
         [Category("Advanced", "Growth")]
         [Description("Maximum age for energy maintenance calculation")]
-        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; }
@@ -783,7 +891,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
-        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier NaturalWeaningAge { get; set; }
@@ -1171,7 +1279,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Description("Days from conception to parturition")]
-        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier GestationLength { get; set; }
@@ -1180,7 +1288,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Breeding")]
         [Description("Minimum age for 1st mating (months)")]
-        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier MinimumAge1stMating { get; set; }

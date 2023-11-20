@@ -34,12 +34,19 @@ namespace Models.CLEM.Resources
         public Ruminant()
         {
             Energy = new RuminantEnergyInfo(this);
+            Output = new RuminantOutputInfo();
         }
 
         /// <summary>
         /// Store for tracking energy use
         /// </summary>
         public RuminantEnergyInfo Energy { get; set; }
+
+        /// <summary>
+        /// Store for tracking energy use
+        /// </summary>
+        public RuminantOutputInfo Output { get; set; }
+
 
         /// <summary>
         /// Relative size based on highest weight achieved (High weight / standard reference weight)
@@ -80,7 +87,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Math.Max(0, Math.Min(((RelativeSizeForWeightGainPurposes - BreedParams.cg6) / (BreedParams.cg7 - BreedParams.cg6)), 1));
+                return Math.Max(0, Math.Min(((RelativeSizeForWeightGainPurposes - BreedParams.CG6) / (BreedParams.CG7 - BreedParams.CG6)), 1));
             }
         }
 

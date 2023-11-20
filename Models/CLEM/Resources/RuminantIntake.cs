@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     public  class RuminantIntake
     {
         private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new Dictionary<FeedType, FoodResourceStore>();
+        private double dpls = 0;
 
         /// <summary>
         /// The potential and actual milk intake of the individual.
@@ -198,6 +199,45 @@ namespace Models.CLEM.Resources
                     sumAmount += item.Value.DegradableCrudeProtein;
                 }
                 return sumAmount;
+            }
+        }
+
+        /// <summary>
+        /// Method to calculate the digestible protein leaving the stomach based on RDP required.
+        /// </summary>
+        /// <param name="rdpRequired">The Rumen Digestible Protein requirement</param>
+        /// <returns></returns>
+        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired)
+        {
+            RDPRequired = rdpRequired;
+            dpls = 0;
+            foreach (var item in feedTypeStoreDict)
+            {
+                if(item.Key != FeedType.Milk)
+                {
+                    dpls += 0.92 * item.Value.CrudeProtein;
+                }
+                else
+                {
+                    dpls += item.Value.DUDP * item.Value.UndegradableCrudeProtein;
+                }
+            }
+            dpls += (0.6 * RDPRequired);
+        }
+
+        /// <summary>
+        /// Rumen Digestible Protein Required
+        /// </summary>
+        public double RDPRequired { get; set; }
+
+        /// <summary>
+        /// Digestible Protein Leaving the Sotmach.
+        /// </summary>
+        public double DPLS
+        {
+            get
+            {
+                return dpls;
             }
         }
 

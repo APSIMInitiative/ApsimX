@@ -218,10 +218,10 @@ namespace Models.CLEM.Activities
                     // Adjusting potential intake for digestability of fodder is now done in RuminantActivityGrazePasture.
                     // ToDo: check that the new protein requirements don't provide this functionality. 
 
-                    CalculateEnergy(ind, out double methane);
+                    CalculateEnergy(ind);
 
                     // Sum and produce one event for breed at end of loop
-                    totalMethane += methane;
+                    totalMethane += ind.Output.Methane;
                 }
 
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
@@ -239,8 +239,7 @@ namespace Models.CLEM.Activities
         /// Energy and body mass change are based on SCA - Nutrient Requirements of Domesticated Ruminants, CSIRO
         /// </remarks>
         /// <param name="ind">Indivudal ruminant for calculation.</param>
-        /// <param name="methaneProduced">Output parameter for methane produced.</param>
-        private void CalculateEnergy(Ruminant ind, out double methaneProduced)
+        private void CalculateEnergy(Ruminant ind)
         {
             double intakeDaily = ind.Intake.Feed.Actual / 30.4;
             double feedingLevel = 0;
@@ -271,7 +270,7 @@ namespace Models.CLEM.Activities
                 // TODO: rename params.EMainIntercept ->  HPVisceraFL  HeatProduction FeedLevel
                 // TODO: rename params.EMainCoefficient ->  FHPScalar
 
-                CalculateMaintenanceEnergy(ind, km, ref feedingLevel, sme);
+                CalculateMaintenanceEnergy(ind, km, sme);
 
                 if (ind is RuminantFemale indFemale)
                 {
@@ -282,7 +281,7 @@ namespace Models.CLEM.Activities
                     // look for milk production calculated before offspring may have been weaned
                     // recalculate milk production based on DMD and MEContent of food provided
                     // MJ / time step
-                    ind.Energy.ForLactation = CalculateLactationEnergy(indFemale, true);
+                    ind.Energy.ForLactation = CalculateLactationEnergy(indFemale, true, ref milkProtein);
                 }
 
                 // we implemented this in the equation above, but this uses a parameter. Can we delete this parameter and assume fixed 6 years for all ruminants?
@@ -329,10 +328,9 @@ namespace Models.CLEM.Activities
                 milkPacket.Amount = Math.Min(ind.BreedParams.MilkIntakeMaximum, milkIntakeDaily)*30.4;
                 ind.Intake.AddFeed(milkPacket);
 
-                CalculateMaintenanceEnergy(ind, kml, ref feedingLevel, sme);
-
-                feedingLevel = ind.EnergyFromIntake / ind.EnergyForMaintenance;
+                CalculateMaintenanceEnergy(ind, kml, sme);
             }
+            feedingLevel = ind.EnergyFromIntake / ind.EnergyForMaintenance;
 
             // Wool production
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
@@ -349,7 +347,7 @@ namespace Models.CLEM.Activities
             // digestible protein leaving stomach from milk
             double DPLSmilk = milkStore.CrudeProtein * 0.92;
             // efficiency of using DPLS
-            double kDPLS = (ind.Weaned)? 0.7: 0.7 / (1 + ((0.7 / 0.8)-1)*(DPLSmilk / ind.DPLS) ); //EQn 103
+            double kDPLS = (ind.Weaned)? 0.7: 0.7 / (1 + ((0.7 / 0.8)-1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
 
             double emptyBodyGain = 0;
@@ -362,7 +360,7 @@ namespace Models.CLEM.Activities
 
             while (recalculate)
             {
-                proteinGain1 = kDPLS * (ind.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
+                proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
                 // mj/kg gain
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 - ind.SizeFactor1ForGain * (ind.BreedParams.GrowthEnergyIntercept2 - (ind.BreedParams.GrowthEnergySlope1 * (feedingLevel - 1))) + ind.SizeFactor2ForGain * (ind.BreedParams.GrowthEnergySlope2 * (ind.RelativeCondition - 1));
@@ -410,37 +408,38 @@ namespace Models.CLEM.Activities
 
             double energyPredictedBodyMassChange = ind.BreedParams.EBW2LW * emptyBodyGain;
             
-            ind.PreviousWeight = ind.Weight;
             // update weight based on the time-step
-            ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange * 30.4);
+            ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange * events.Interval);
 
             double kgProteinChange = Math.Min(proteinGain1, proteinContentOfGain * emptyBodyGain);
             double MJProteinChange = 23.8 * kgProteinChange;
 
             // protein mass on protein basis not mass of lean tissue mass. use conversvion XXXX for weight to perform checksum.
-            ind.AdjustProteinMass(MJProteinChange * 30.4);
+            ind.AdjustProteinMass(MJProteinChange * events.Interval);
 
             double MJFatChange = netEnergyAvailableForGain - MJProteinChange;
             double kgFatChange = MJFatChange / 39.6;
-            ind.AdjustFatMass(kgFatChange * 30.4);
+            ind.AdjustFatMass(kgFatChange * events.Interval);
 
             // N balance = 
+            // ToDo: not currently used
             double Nbal =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.BreedParams.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.BreedParams.Prt2NTissue);
 
             // Total fecal protein
-            double TFP = ind.Intake.IndigestibleUDP + ind.BreedParams.CA7 * ind.BreedParams.CA8 * MicrobialCP + (1 - ind.BreedParams.CA5) * ProteinIntakeMilk + EndogenousFecalProtein;
+            double TFP = ind.Intake.IndigestibleUDP + ind.BreedParams.CA7 * ind.BreedParams.CA8 * ind.Intake.RDPRequired + (1 - ind.BreedParams.CA5) * milkStore.CrudeProtein + EndogenousFecalProtein;
 
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + kgProteinChange) - TFP - DermalProtein;
+            // ToDo: not currently used
             double NExcreted = TFP + TUP;
 
-            ind.UrineN = TUP / 6.25;
-            ind.FecalN = TFP / 6.25;
+            ind.Output.NitrogenUrine = TUP / 6.25;
+            ind.Output.NitrogenFaecal = TFP / 6.25;
 
             // Nbal should be close ish to TFP + TUP
 
             // Blaxter and Claperton 1965
-            ind.Methane = CH1 * (ind.Intake.Feed) * ((CH2 + CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (CH4 + CH5 * ind.Intake.MDSolid));
+            //ind.Output.Methane = ind.BreedParams.CH1 * (ind.Intake.Feed.Actual) * ((ind.BreedParams.CH2 + ind.BreedParams.CH3 * ind.Intake.MDSolid) + (feedingLevel + 1) * (ind.BreedParams.CH4 + ind.BreedParams.CH5 * ind.Intake.MDSolid));
 
             // Function to calculate approximate methane produced by animal, based on feed intake based on Freer spreadsheet
             // methaneproduced is  0.02 * intakeDaily * ((13 + 7.52 * energyMetabolic) + energyMetablicFromIntake / energyMaintenance * (23.7 - 3.36 * energyMetabolic)); // MJ per day
@@ -448,7 +447,11 @@ namespace Models.CLEM.Activities
 
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             // per day at this point.
-            methaneProduced = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
+            ind.Output.Methane = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
+
+            // manure
+            ind.Output.Manure = ind.Intake.Feed.Actual * (100 - ind.Intake.DMD) / 100;
+
         }
 
         /// <summary>
@@ -456,9 +459,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">The individual ruminant.</param>
         /// <param name="km"></param>
-        /// <param name="feedingLevel"></param>
         /// <param name="sme"></param>
-        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, ref double feedingLevel, double sme)
+        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sme)
         {
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
@@ -475,9 +477,7 @@ namespace Models.CLEM.Activities
                 else
                     ind.Energy.ForMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.FHPScalar * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * Math.Min(ind.AgeInYears, 6)) + (ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake);
 
-                feedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
-
-                cp_out = CalculateCrudeProtein(ind, feedingLevel);
+                cp_out = CalculateCrudeProtein(ind, (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1);
                 if (cp_out.reduction < 1 & recalculate == 0)
                     ind.Intake.AdjustIntakeByRumenProteinRequired(cp_out.reduction);
                 else
@@ -487,21 +487,23 @@ namespace Models.CLEM.Activities
             }
             while (recalculate < 2);
 
-            ind.DPLS = CalculateDigestibleProteinLeavingStomach(ind, cp_out.RDPReq);
+            ind.Intake.CalculateDigestibleProteinLeavingStomach(cp_out.RDPReq);
         }
 
-        private static double CalculateDigestibleProteinLeavingStomach(Ruminant ind, double RDPRequired)
-        {
-            FoodResourceStore forage = ind.Intake.GetStore(FeedType.Forage);
-            FoodResourceStore concentrate = ind.Intake.GetStore(FeedType.Concentrate);
-            FoodResourceStore milk = ind.Intake.GetStore(FeedType.Milk);
+        // ToDo: moved to ind.Intake
+        //private static double CalculateDigestibleProteinLeavingStomach(Ruminant ind, double RDPRequired)
+        //{
+        //    FoodResourceStore forage = ind.Intake.GetStore(FeedType.Forage);
+        //    FoodResourceStore concentrate = ind.Intake.GetStore(FeedType.Concentrate);
+        //    FoodResourceStore milk = ind.Intake.GetStore(FeedType.Milk);
 
-            // digestibility of undegradable protein for each feet type
-            //double forageDUDP = Math.Max(0.05, Math.Min(5.5 * forage.Details.CrudeProteinContent - 0.178, 0.85));
-            //double concentrateDUDP = 0.9 * (1 - ((concentrate.Details.ADIP / concentrate.Details.UndegradableCrudeProteinContent));
+        //    // digestibility of undegradable protein for each feet type
+        //    //double forageDUDP = Math.Max(0.05, Math.Min(5.5 * forage.Details.CrudeProteinContent - 0.178, 0.85));
+        //    //double concentrateDUDP = 0.9 * (1 - ((concentrate.Details.ADIP / concentrate.Details.UndegradableCrudeProteinContent));
 
-            return forage.DUDP * forage.UndegradableCrudeProtein + concentrate.DUDP * concentrate.UndegradableCrudeProtein + (0.92 * milk.CrudeProtein) + (0.6 * RDPRequired);
-        }
+        //    return forage.DUDP * forage.UndegradableCrudeProtein + concentrate.DUDP * concentrate.UndegradableCrudeProtein + (0.92 * milk.CrudeProtein) + (0.6 * RDPRequired);
+        //}
+
         private static (double reduction, double RDPReq) CalculateCrudeProtein(Ruminant ind, double feedingLevel)
         {
             // 1. calc RDP intake. Rumen Degradable Protein
@@ -518,10 +520,9 @@ namespace Models.CLEM.Activities
             }
 
             // Crude protein has been adjusted in previous loop if feeding level > 0
-            double RDPIntake = ind.Intake.RDP;  //forage?.DegradableCrudeProtein??0 + concentrate?.DegradableCrudeProtein??0; //Eq.(50)
 
             // 2. calc UDP intake by difference(CPI-RDPI)
-
+            // now a property of intake
             // double UDPIntake = ind.Intake.CrudeProtein - RDPIntake;
 
             // 3.calculate RDP requirement
@@ -533,9 +534,9 @@ namespace Models.CLEM.Activities
             double RDPReq = (ind.BreedParams.RumenDegradableProteinIntercept + ind.BreedParams.RumenDegradableProteinSlope * (1 - Math.Exp(-ind.BreedParams.RumenDegradableProteinExponent *
                 (feedingLevel + 1)))) * (forage?.Details.EnergyContent??0 + fermentableSupplementMEI);
 
-            if(RDPReq > RDPIntake)
+            if(RDPReq > ind.Intake.RDP)
             {
-                return ((RDPIntake / RDPReq) * ind.BreedParams.RumenDegradableProteinShortfallScalar, RDPReq);
+                return ((ind.Intake.RDP / RDPReq) * ind.BreedParams.RumenDegradableProteinShortfallScalar, RDPReq);
             }
             return (1, RDPReq);
         }
@@ -658,6 +659,7 @@ namespace Models.CLEM.Activities
                 return 0;
             }
 
+            // Todo: this is not used and was commented out at the end of conceptus Weight
             double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.BreedParams.FetalNormWeightParameter * (1 - Math.Exp(ind.BreedParams.FetalNormWeightParameter2 * (1 - ind.ProportionOfPregnancy))));
 
             //ToDo: Fix fetus weight parameter
@@ -672,8 +674,6 @@ namespace Models.CLEM.Activities
             // kg protein per day
             double conceptusProteinReq = ind.BreedParams.ConceptusProteinContent * (ind.NumberOfOffspring * ind.BreedParams.ConceptusWeightRatio * ind.ScaledBirthWeight) * relativeConditionFoet * 
                 (ind.BreedParams.ConceptusProteinParameter * ind.BreedParams.ConceptusProteinParameter2 / (ind.BreedParams.GestationLength.InDays)) * Math.Exp(ind.BreedParams.ConceptusProteinParameter2 * (1 - ind.ProportionOfPregnancy) + ind.BreedParams.ConceptusProteinParameter * (1 - Math.Exp(ind.BreedParams.ConceptusProteinParameter2 * (1 - ind.ProportionOfPregnancy))));
-
-            //ind.Weight / ind.HighWeightWhenNotPregnant
 
             conceptusProtein = conceptusProteinReq * conceptusWeight;
             conceptusFat = (conceptusME - (conceptusProtein * 23.6)) / 39.3;
@@ -690,12 +690,12 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCalculateManure")]
         private void OnCLEMCalculateManure(object sender, EventArgs e)
         {
-            if (manureStore != null)
+            if (manureStore is not null)
             {
-                // sort by animal location
+                // sort by animal location to ensure coreect deposit location.
                 foreach (var groupInds in ruminantHerd.Herd.GroupBy(a => a.Location))
                 {
-                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Intake.Feed.Actual * (100 - a.Intake.DMD) / 100));
+                    manureStore.AddUncollectedManure(groupInds.Key ?? "", groupInds.Sum(a => a.Output.Manure));
                 }
             }
         }
@@ -832,7 +832,7 @@ namespace Models.CLEM.Activities
             ruminantHerd.RemoveRuminant(died, this);
         }
 
-`        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
+        private void ReportUnfedIndividualsWarning(IGrouping<string, Ruminant> breed, int unfed, int unfedcalves)
         {
             // alert user to unfed animals in the month as this should not happen
             if (unfed > 0)
