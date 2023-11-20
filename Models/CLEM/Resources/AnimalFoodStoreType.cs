@@ -58,7 +58,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         [Description("Degradable protein content (g/g DM)")]
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double RumenDegradableProtein { get; set; }
+        public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
         [Description("Acid detergent insoluable protein")]

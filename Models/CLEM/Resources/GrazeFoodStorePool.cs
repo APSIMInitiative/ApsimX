@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         public double DryMatterDigestibility { get; set; }
 
         /// <inheritdoc/>
-        public double RumenDegradableProtein { get; set; }
+        public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
         public double ADIP { get; set; }

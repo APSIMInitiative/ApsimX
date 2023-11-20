@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
         [Category("Destock", "Breeding females")]
         [Description("Maximum female breeder age (months) before removal")]
         //[System.ComponentModel.DefaultValueAttribute(120)]
-        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubPropertyToUse = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
 
@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
         //[Required, GreaterThanEqualValue(0)]
         //[Core.Display(EnabledCallback = "EnableOldMaleSellProperties")]
         //[System.ComponentModel.DefaultValueAttribute(120)]
-        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubPropertyToUse = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
 
@@ -305,7 +305,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Males")]
         [Description("Grow out male selling age (months)")]
         //[System.ComponentModel.DefaultValueAttribute(24)]
-        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubPropertyToUse = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
 
@@ -334,7 +334,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling age (months)")]
         //[System.ComponentModel.DefaultValueAttribute(24)]
-        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubPropertyToUse = "AgeParts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
 

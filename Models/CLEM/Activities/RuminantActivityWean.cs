@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         /// Weaning age (months)
         /// </summary>
         [Description("Weaning age")]
-        [Core.Display(SubPropertyToUse = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
         [Required, ArrayItemCount(1, 3)]
 

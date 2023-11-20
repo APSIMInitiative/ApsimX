@@ -28,7 +28,6 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private readonly CLEMEvents events = null;
-        private readonly ZoneCLEM zoneCLEM = null;
         private IPastureManager manager;
         private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
         private double biomassAddedThisYear;
@@ -50,7 +49,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double RumenDegradableProtein { get; set; }
+        public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
