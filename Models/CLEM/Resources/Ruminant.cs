@@ -174,24 +174,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy from intake
         /// </summary>
-        public double EnergyFromIntake { get { return Intake.ME; } }
+        public double EnergyFromIntake { get; set; }
 
         /// <summary>
         /// Digestible protein leaving the stomach
         /// </summary>
         public double DPLS { get; set; }
-
-        /// <summary>
-        /// Reset all running stores
-        /// </summary>
-        public void ResetEnergy()
-        {
-            EnergyForMaintenance = 0;
-            EnergyForFetus = 0;
-            EnergyForLactation = 0;
-            EnergyForGain = 0;
-            EnergyForWool = 0;
-        }
 
         #endregion
 

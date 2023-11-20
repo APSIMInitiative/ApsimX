@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate the potential intake.
+        /// Method to calculate the potential intake for the time step.
         /// </summary>
         /// <param name="ind">Individual for which potential intake is determined.</param>
         private void CalculatePotentialIntake(Ruminant ind)
@@ -242,7 +242,6 @@ namespace Models.CLEM.Activities
         private void CalculateEnergy(Ruminant ind)
         {
             double intakeDaily = ind.Intake.Feed.Actual / 30.4;
-            double feedingLevel = 0;
             kl = 0;
             MP2 = 0;
 
@@ -330,7 +329,7 @@ namespace Models.CLEM.Activities
 
                 CalculateMaintenanceEnergy(ind, kml, sme);
             }
-            feedingLevel = ind.EnergyFromIntake / ind.EnergyForMaintenance;
+            double feedingLevel = ind.EnergyFromIntake / ind.EnergyForMaintenance;
 
             // Wool production
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
