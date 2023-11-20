@@ -12,22 +12,22 @@ namespace Models.CLEM.Resources
     public class RuminantOutputInfo
     {
         /// <summary>
-        /// Enteric methane
+        /// Enteric methane emitted
         /// </summary>
         public double Methane { get; set; }
 
         /// <summary>
-        /// Nitrogen excreeted in urine
+        /// Nitrogen excreted in urine
         /// </summary>
         public double NitrogenUrine { get; set; }
 
         /// <summary>
-        /// Nitrogen excreeted in faeces
+        /// Nitrogen excreted in faeces
         /// </summary>
         public double NitrogenFaecal { get; set; }
 
         /// <summary>
-        /// manure
+        /// Manure
         /// </summary>
         public double Manure { get; set; }
 

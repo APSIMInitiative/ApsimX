@@ -38,12 +38,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Ruminant intake manager
+        /// </summary>
+        public RuminantIntake Intake = new();
+
+        /// <summary>
         /// Store for tracking energy use
         /// </summary>
         public RuminantEnergyInfo Energy { get; set; }
 
         /// <summary>
-        /// Store for tracking energy use
+        /// Store for tracking ruminant outputs
         /// </summary>
         public RuminantOutputInfo Output { get; set; }
 
@@ -92,7 +97,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Get the current protein mass of individual
+        /// The protein mass of the individual
         /// </summary>
         public double ProteinMass { get { return proteinMass; } }
 
@@ -107,7 +112,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Get the current fat mass of individual
+        /// The fat mass of individual
         /// </summary>
         public double FatMass { get { return fatMass; } }
 
@@ -121,58 +126,54 @@ namespace Models.CLEM.Resources
             fatMass = Math.Max(0, fatMass);
         }
 
-        /// <summary>
-        /// Ruminant intake manager
-        /// </summary>
-        public RuminantIntake Intake = new RuminantIntake();
+
+        ///// <summary>
+        ///// Energy used for wool production
+        ///// </summary>
+        //public double EnergyForWool { get; set; }
+
+        ///// <summary>
+        ///// Energy available after wool growth
+        ///// </summary>
+        //public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
+
+        ///// <summary>
+        ///// Energy used for maintenance
+        ///// </summary>
+        //public double EnergyForMaintenance { get; set; }
+
+        ///// <summary>
+        ///// Energy used for fetal development
+        ///// </summary>
+        //public double EnergyForFetus { get; set; }
+
+        ///// <summary>
+        ///// Energy available after accounting for pregnancy
+        ///// </summary>
+        //public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
+
+        ///// <summary>
+        ///// Energy used for milk production
+        ///// </summary>
+        //public double EnergyForLactation { get; set; }
+
+        ///// <summary>
+        ///// Energy available after lactation demands
+        ///// </summary>
+        //public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
+
+        ///// <summary>
+        ///// Energy used for maintenance
+        ///// </summary>
+        //public double EnergyForGain { get; set; }
+
+        ///// <summary>
+        ///// Energy available for growth
+        ///// </summary>
+        //public double EnergyAvailableForGain { get; set; }
 
         /// <summary>
-        /// Energy used for wool production
-        /// </summary>
-        public double EnergyForWool { get; set; }
-
-        /// <summary>
-        /// Energy available after wool growth
-        /// </summary>
-        public double EnergyAfterWool { get { return EnergyFromIntake - EnergyForWool; } }
-
-        /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double EnergyForMaintenance { get; set; }
-
-        /// <summary>
-        /// Energy used for fetal development
-        /// </summary>
-        public double EnergyForFetus { get; set; }
-
-        /// <summary>
-        /// Energy available after accounting for pregnancy
-        /// </summary>
-        public double EnergyAfterPregnancy { get { return EnergyAfterWool - EnergyForMaintenance - EnergyForFetus; } }
-
-        /// <summary>
-        /// Energy used for milk production
-        /// </summary>
-        public double EnergyForLactation { get; set; }
-
-        /// <summary>
-        /// Energy available after lactation demands
-        /// </summary>
-        public double EnergyAfterLactation { get { return EnergyAfterPregnancy - EnergyForLactation; } }
-
-        /// <summary>
-        /// Energy used for maintenance
-        /// </summary>
-        public double EnergyForGain { get; set; }
-
-        /// <summary>
-        /// Energy available for growth
-        /// </summary>
-        public double EnergyAvailableForGain { get; set; }
-
-        /// <summary>
-        /// Energy from intake
+        /// Energy from intake (used in RuminantActivityGrow V1)
         /// </summary>
         public double EnergyFromIntake { get; set; }
 
@@ -602,7 +603,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// The current health score -2 to 2 with 0 standard weight
+        /// A simple health score
         /// </summary>
         [FilterByProperty]
         public int HealthScore
@@ -762,8 +763,8 @@ namespace Models.CLEM.Resources
 
 
         /// <summary>
-        /// Return intake as a proportion of the potential inake
-        /// This includes milk for sucklings
+        /// Return intake as a proportion of the potential intake.
+        /// This includes milk for sucklings.
         /// </summary>
         [FilterByProperty]
         public double ProportionOfPotentialIntakeObtained
@@ -779,7 +780,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Current monthly metabolic intake after crude protein adjustment
+        /// Current monthly metabolic intake after crude protein adjustment (Grow v1)
         /// </summary>
         /// <units>kg/month</units>
         public double MetabolicIntake { get; set; }
@@ -849,7 +850,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Age when individual weaned
+        /// Age when individual must be weaned
         /// </summary>
         public double WeaningAge { 
             get

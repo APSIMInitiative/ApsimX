@@ -19,7 +19,8 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd)")]
-    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
+    [Version(1, 0, 5, "Parameters moved to individual child models")]
+    [Version(1, 0, 4, "Added parameter for overfeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
@@ -27,10 +28,10 @@ namespace Models.CLEM.Resources
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         private RuminantHerd parentHerd = null;
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-        private List<string> mandatoryAttributes = new List<string>();
-        private readonly List<string> warningsMultipleEntry = new List<string>();
-        private readonly List<string> warningsNotFound = new List<string>();
+        private List<AnimalPriceGroup> priceGroups = new();
+        private readonly List<string> mandatoryAttributes = new();
+        private readonly List<string> warningsMultipleEntry = new();
+        private readonly List<string> warningsNotFound = new();
 
         #region Growth SCA version
 
@@ -354,8 +355,6 @@ namespace Models.CLEM.Resources
         [Description("")]
         public double CG7 { get; set; }
 
-
-
         #endregion
 
         #region Lactation SCA version
@@ -450,14 +449,11 @@ namespace Models.CLEM.Resources
         [Description("Milk consumption limit 3 (Clxx)")]
         public double MilkConsumptionLimit3 { get; set; }
 
-
-
         #endregion
 
         /// <summary>
         /// Unit type
         /// </summary>
-        [Description("Units (nominal)")]
         public string Units { get { return "NA"; } }
 
         /// <summary>
@@ -491,11 +487,10 @@ namespace Models.CLEM.Resources
             parentHerd = this.Parent as RuminantHerd;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (this.FindAllChildren<AnimalPricing>().Count() > 0)
+            if (FindAllChildren<AnimalPricing>().Any())
             {
                 PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
                 // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
-
                 priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
             }
 
@@ -523,7 +518,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count > 0); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
@@ -761,7 +756,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Returns the most recent conception status
+        /// Arguments for the recent conception status change for OnConceptionStatusChanged
         /// </summary>
         [JsonIgnore]
         public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
