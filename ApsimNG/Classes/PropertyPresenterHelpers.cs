@@ -141,12 +141,12 @@ namespace UserInterface.Classes
         /// <returns>A list of phases.</returns>
         public static string[] GetSCRUMcropNames(Zone zone)
         {
-            List<ScrumCrop> crops = zone.FindAllInScope<ScrumCrop>().ToList();
+            List<ScrumCropInstance> crops = zone.FindAllInScope<ScrumCropInstance>().ToList();
             if (crops.Count > 0)
             {
                 string[] Namelist = new string[crops.Count];
                 int i = 0;
-                foreach (ScrumCrop c in crops)
+                foreach (ScrumCropInstance c in crops)
                 {
                     Namelist[i] = c.Name;
                     i++;
