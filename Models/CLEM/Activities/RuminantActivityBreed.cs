@@ -82,6 +82,20 @@ namespace Models.CLEM.Activities
             // set up pre start conception status of breeders
             IEnumerable<Ruminant> herd = CurrentHerd(true);
 
+            // report sucklings birth and conception for startup mothers.
+            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any()))
+            {
+                // report conception status changed from those identified suckling at startup
+                DateTime dte = clock.StartDate.AddMonths(Convert.ToInt32(female.AgeAtLastConception - female.Age));
+                dte = new DateTime(dte.Year, dte.Month, DateTime.DaysInMonth(dte.Year, dte.Month));
+                conceptionArgs.Update(ConceptionStatus.Conceived, female, dte, calculateFromAge:false);
+                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                //dte = clock.StartDate.AddDays(-1).AddMonths(Convert.ToInt32(female.AgeAtLastBirth - female.Age));
+                //dte = new DateTime(dte.Year, dte.Month, DateTime.DaysInMonth(dte.Year, dte.Month));
+                conceptionArgs.Update(ConceptionStatus.Birth, female, dte, calculateFromAge: false);
+                female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+            }
+
             // report previous pregnancies as conceptions
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsPregnant))
             {
@@ -179,7 +193,6 @@ namespace Models.CLEM.Activities
 
                                                 conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
                                                 female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                                                //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                 // check for perinatal mortality
                                                 // Todo: match functionality of controlled below that was made to work with i and j to give month
@@ -198,7 +211,6 @@ namespace Models.CLEM.Activities
                                                                 // report conception status changed when last multiple birth dies.
                                                                 conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate, null, false);
                                                                 female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                                                                //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
                                                             }
                                                         }
                                                     }
@@ -241,7 +253,6 @@ namespace Models.CLEM.Activities
                                                     // report conception status changed
                                                     conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
                                                     female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                                                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                     // check for perenatal mortality
                                                     for (int j = i+1; j < monthsAgoStop; j++)
@@ -259,7 +270,6 @@ namespace Models.CLEM.Activities
                                                                     // report conception status changed when last multiple birth dies.
                                                                     conceptionArgs.Update(ConceptionStatus.Failed, female, lossDate, null, false);
                                                                     female.BreedParams.OnConceptionStatusChanged(conceptionArgs);
-                                                                    //female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
                                                                 }
                                                             }
                                                         }
