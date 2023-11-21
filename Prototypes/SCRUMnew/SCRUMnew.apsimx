@@ -25888,8 +25888,8 @@
               "Inverted": false,
               "CrossesAtZero": false,
               "LabelOnOneLine": false,
-              "Minimum": -0.3114999961853027,
-              "Maximum": 31.461499614715578,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
               "Interval": null
             },
             {
