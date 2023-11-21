@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Models.PMF.Scrum
+namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
     /// Dynamic Environmental Response Of Phenology And Potential Yield

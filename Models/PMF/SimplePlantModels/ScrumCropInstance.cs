@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Models.PMF.Scrum
+namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
     /// Data structure that contains information for a specific planting of scrum
