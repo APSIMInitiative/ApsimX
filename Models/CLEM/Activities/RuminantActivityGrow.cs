@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
                 if(MathUtilities.FloatsAreEqual(weaningAge, 0))
                     weaningAge = ind.BreedParams.GestationLength;
 
-                if (MathUtilities.IsGreaterThan(ind.Age, weaningAge))
+                if (MathUtilities.IsGreaterThanOrEqual(ind.Age, weaningAge))
                 {
                     ind.Wean(true, "Natural");
 
@@ -243,7 +243,7 @@ namespace Models.CLEM.Activities
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
-            if (ind.SucklingOffspringList.Count() == 0)
+            if (ind.SucklingOffspringList.Count == 0)
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
             else // no milking
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
@@ -257,7 +257,7 @@ namespace Models.CLEM.Activities
                 adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
 
             // set milk production in lactating females for consumption.
-            ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
+            ind.MilkProduction = Math.Min(ind.MilkProductionPotential, Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk)));
             ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
 
             // returns the energy required for milk production
@@ -484,23 +484,22 @@ namespace Models.CLEM.Activities
             {
                 double energyMilk = 0;
                 double energyFetus = 0;
+                ind.EnergyIntake = energyMetabolicFromIntake;
+
+                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
+                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
+                // Reference: SCA p.24
+                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
+                // 0.000082 is -0.03 Age in Years/365 for days
+                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
+                ind.EnergyMaintenance = energyMaintenance;
+                ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance; // milk will be zero for non lactating individuals.
 
                 if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
-                    // calculate energy for lactation
-                    // look for milk production calculated before offspring may have been weaned
-
-                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
-                    {
-                        // recalculate milk production based on DMD of food provided
-                        energyMilk = CalculateMilkProduction(femaleind);
-                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
-                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
-                    }
-
-                    // Determine energy required for foetal development
+                    // Determine energy required for fetal development
                     if (femaleind.IsPregnant)
                     {
                         double standardReferenceWeight = ind.StandardReferenceWeight;
@@ -510,19 +509,24 @@ namespace Models.CLEM.Activities
                         double fetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
                         //TODO: Check fetus age correct
                         energyFetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * fetusAge - 349.16 * Math.Exp(-0.000058 * fetusAge)) / 0.13;
+                        ind.EnergyBalance -= energyFetus;
+                    }
+
+                    // calculate energy for lactation
+                    // look for milk production calculated before offspring may have been weaned
+
+                    if (femaleind.IsLactating | MathUtilities.IsPositive(femaleind.MilkProductionPotential))
+                    {
+                        // recalculate milk production based on DMD of food provided
+                        energyMilk = CalculateMilkProduction(femaleind);
+                        ind.EnergyBalance -= energyMilk;
+                        // reset this. It was previously determined in potential intake as a measure of milk available. This is now the correct calculation
+                        femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
                 }
 
                 //TODO: add draft individual energy requirement
 
-                // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
-                double maintenanceAge = Math.Min(ind.Age * 30.4, ind.BreedParams.EnergyMaintenanceMaximumAge * 365);
-
-                // Reference: SCA p.24
-                // Reference p19 (1.20). Does not include MEgraze or Ecold, also skips M,
-                // 0.000082 is -0.03 Age in Years/365 for days
-                energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
-                ind.EnergyBalance = energyMetabolicFromIntake - energyMaintenance - energyMilk - energyFetus; // milk will be zero for non lactating individuals.
                 double feedingValue;
                 ind.EnergyIntake = energyMetabolicFromIntake;
                 ind.EnergyFetus = energyFetus;
