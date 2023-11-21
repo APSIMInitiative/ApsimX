@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Models.PMF.Scrum
+namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
     /// Data structure that contains information for a specific crop type in Scrum
