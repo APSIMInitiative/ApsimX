@@ -827,8 +827,6 @@ namespace UserInterface.Views
         {
             try
             {
-                if (textRender.Editable) // If the node to be dragged is open for editing (renaming), close it now.
-                    textRender.StopEditing(true);
                 DragStartArgs args = new DragStartArgs();
                 args.NodePath = SelectedNode; // FullPath(e.Item as TreeNode);
                 if (DragStarted != null)
@@ -856,6 +854,14 @@ namespace UserInterface.Views
         {
             try
             {
+                if (textRender.Editable)// If the node to be dragged is open for editing (renaming), close it now.
+                {
+                    textRender.StopEditing(true);
+                    isEdittingNodeLabel = false;
+                    treeview1.CursorChanged += OnAfterSelect;
+                    nodePathBeforeRename = "";
+                }
+
                 if (dragSourceHandle.IsAllocated)
                 {
                     dragSourceHandle.Free();
