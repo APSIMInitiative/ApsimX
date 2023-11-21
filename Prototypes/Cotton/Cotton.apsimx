@@ -1,7 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 273,
-  "Version": 162,
+  "Version": 169,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -20,6 +19,61 @@
       "Name": "TitlePage",
       "ResourceName": null,
       "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "Observed\\Observed.xlsx"
+          ],
+          "SheetNames": [
+            "CottonObserved"
+          ],
+          "Name": "Observed",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "DailyReport",
+          "ObservedTableName": "CottonObserved",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Clock.Today",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": true,
+          "Name": "PredictedObserved",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "HarvestReport",
+          "ObservedTableName": "CottonObserved",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "SimulationID",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "PredictedObservedHarvest",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -50,6 +104,9 @@
             "[Cotton].Arbitrator.N.TotalPlantDemand",
             "[Cotton].Arbitrator.N.TotalPlantSupply",
             "sum([Cotton].Arbitrator.N.Fixation) as NFixed",
+            "[Cotton].WholePlantGrowthRate",
+            "[Cotton].AboveGroundGrowthRate",
+            "[Cotton].PotentialBollGrowthRate",
             "[Cotton].NitrogenUptake",
             "[Cotton].Phenology.Stage",
             "[Cotton].Phenology.ThermalTime",
@@ -81,6 +138,7 @@
             "[Cotton].Leaf.Live.MetabolicWt",
             "[Cotton].Leaf.Allocated.MetabolicWt",
             "[Cotton].Leaf.Allocated.StructuralWt",
+            "[Cotton].Leaf.DMDemand.Total",
             "[Cotton].Leaf.Dead.StructuralWt",
             "[Cotton].Leaf.Dead.MetabolicWt",
             "[Cotton].Leaf.Live.N",
@@ -109,9 +167,16 @@
             "[Cotton].Lint.Nconc",
             "[Cotton].Lint.Bales as Bales",
             "[Cotton].Lint.Allocated.Wt",
+            "[Cotton].Bur.HarvestIndex",
+            "[Cotton].Bur.PotentialHarvestIndex",
+            "[Cotton].Lint.HarvestIndex",
+            "[Cotton].Lint.PotentialHarvestIndex",
+            "[Cotton].Seed.HarvestIndex",
+            "[Cotton].Seed.PotentialHarvestIndex",
             "[Cotton].Lint.DMDemand.Total",
             "[Cotton].Leaf.DMDemand.Total",
             "[Cotton].Bur.DMDemand.Total",
+            "[Cotton].Seed.DMDemand.Total",
             "[Cotton].Stem.DMDemand.Total",
             "([Cotton].Bur.DMDemand.Total+[Cotton].Lint.DMDemand.Total+[Cotton].Seed.DMDemand.Total) as BollDemand",
             "([Cotton].Stem.DMDemand.Total+[Cotton].Leaf.DMDemand.Total) as VegetativeDemand",
@@ -262,8 +327,6 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "PlantType": "Soybean",
-          "IsEnding": false,
-          "DaysAfterEnding": 0,
           "Name": "Cotton",
           "ResourceName": null,
           "Children": [
@@ -1001,7 +1064,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 320.0,
+                      "FixedValue": 350.0,
                       "Units": null,
                       "Name": "Target",
                       "ResourceName": null,
@@ -2738,34 +2801,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3609,34 +3651,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4226,42 +4247,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "FillingDuration",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EarlyFlowering.Target",
-                      "Name": "EarlyFloweringDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].BollFilling.Target",
-                      "Name": "BollFillingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Maturing.Target",
-                      "Name": "MaturingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "ResourceName": null,
@@ -4285,7 +4270,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "HIPodDemand",
+                                  "Name": "HIDemand",
                                   "ResourceName": null,
                                   "Children": [
                                     {
@@ -4298,38 +4283,84 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.DivideFunction, Models",
-                                      "Name": "HarvestIndexIncrease",
+                                      "$type": "Models.Functions.MinimumFunction, Models",
+                                      "Name": "HIIncrease",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Bur].PotentialHarvestIndex",
-                                          "Name": "PotentialHarvestIndex",
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
+                                          "Name": "DailyRate",
                                           "ResourceName": null,
-                                          "Children": [],
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Boll].DailyHIIncrease",
+                                              "Name": "HIIncrease",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Boll].BurFraction",
+                                              "Name": "BollBurFraction",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Bur].FillingDuration",
-                                          "Name": "FillingDuration",
+                                          "$type": "Models.Functions.MaximumFunction, Models",
+                                          "Name": "HIRemaining",
                                           "ResourceName": null,
-                                          "Children": [],
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "Calculation",
+                                              "ResourceName": null,
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Bur].PotentialHarvestIndex",
+                                                  "Name": "PotentialHI",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Bur].HarvestIndex",
+                                                  "Name": "CurrentHI",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 0.0,
+                                              "Units": null,
+                                              "Name": "Zero",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].ThermalTime",
-                                      "Name": "ThermalTime",
-                                      "ResourceName": null,
-                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -4643,34 +4674,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 1.0,
+                  "HarvestFractionDeadToResidue": 1.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4911,6 +4921,33 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "HarvestIndex",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Bur].Wt",
+                      "Name": "BurWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[AboveGround].Wt",
+                      "Name": "AboveGroundWt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -4946,42 +4983,6 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "FillingDuration",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EarlyFlowering.Target",
-                      "Name": "EarlyFloweringDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].BollFilling.Target",
-                      "Name": "BollFillingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Maturing.Target",
-                      "Name": "MaturingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DMDemandFunction",
                   "ResourceName": null,
@@ -4995,7 +4996,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "HILintDemand",
+                          "Name": "HIDemand",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5008,21 +5009,66 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "HarvestIndexIncrease",
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "HIIncrease",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "OutstandingHarvestIndexIncrease",
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "DailyRate",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Seed].PotentialHarvestIndex - [Seed].HarvestIndex",
-                                      "Name": "Increase",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].DailyHIIncrease",
+                                      "Name": "HIIncrease",
                                       "ResourceName": null,
                                       "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].SeedFraction",
+                                      "Name": "BollSeedFraction",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "HIRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "Calculation",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Seed].PotentialHarvestIndex",
+                                          "Name": "PotentialHI",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Seed].HarvestIndex",
+                                          "Name": "CurrentHI",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -5039,44 +5085,8 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TTRemaining",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].EarlyFlowering.Target+[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
-                                      "Name": "ReproductiveTT",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase+[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
-                                      "Name": "ReproductiveTTComplete",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "ThermalTime",
-                              "ResourceName": null,
-                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -5170,34 +5180,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 1.0,
+                  "HarvestFractionDeadToRemove": 1.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 1.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -5446,42 +5435,6 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "FillingDuration",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EarlyFlowering.Target",
-                      "Name": "EarlyFloweringDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].BollFilling.Target",
-                      "Name": "BollFillingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Maturing.Target",
-                      "Name": "MaturingDuration",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DMDemandFunction",
                   "ResourceName": null,
@@ -5495,7 +5448,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "HILintDemand",
+                          "Name": "HIDemand",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5508,21 +5461,66 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "HarvestIndexIncrease",
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "HIIncrease",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "OutstandingHarvestIndexIncrease",
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "DailyRate",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Lint].PotentialHarvestIndex - [Lint].HarvestIndex",
-                                      "Name": "Increase",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].DailyHIIncrease",
+                                      "Name": "HIIncrease",
                                       "ResourceName": null,
                                       "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].LintFraction",
+                                      "Name": "BollBurFraction",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "HIRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.SubtractFunction, Models",
+                                      "Name": "Calculation",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Lint].PotentialHarvestIndex",
+                                          "Name": "PotentialHI",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Lint].HarvestIndex",
+                                          "Name": "CurrentHI",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -5539,44 +5537,8 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "TTRemaining",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].EarlyFlowering.Target+[Phenology].BollFilling.Target+[Phenology].Maturing.Target",
-                                      "Name": "ReproductiveTT",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase+[Phenology].BollFilling.ProgressThroughPhase+[Phenology].Maturing.ProgressThroughPhase",
-                                      "Name": "ReproductiveTTComplete",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "ThermalTime",
-                              "ResourceName": null,
-                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -5670,34 +5632,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 1.0,
+                  "HarvestFractionDeadToRemove": 1.0,
+                  "HarvestFractionLiveToResidue": 0.0,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 1.0,
-                      "FractionDeadToRemove": 1.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 1.0,
-                      "FractionDeadToResidue": 1.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6293,43 +6234,13 @@
                 },
                 {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "HarvestFractionLiveToRemove": 0.0,
+                  "HarvestFractionDeadToRemove": 0.0,
+                  "HarvestFractionLiveToResidue": 0.2,
+                  "HarvestFractionDeadToResidue": 0.0,
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Default values for biomass removals for Root are only estimates with no data behind them.\r\nThey are just to consider potential root senescence in response to damage.",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.2,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6845,7 +6756,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.6,
+                  "FixedValue": 0.23,
                   "Units": null,
                   "Name": "BurFraction",
                   "ResourceName": null,
@@ -6865,7 +6776,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.6,
+                  "FixedValue": 0.47,
                   "Units": null,
                   "Name": "SeedFraction",
                   "ResourceName": null,
@@ -6875,9 +6786,19 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
+                  "FixedValue": 0.3,
                   "Units": null,
                   "Name": "LintFraction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.03,
+                  "Units": null,
+                  "Name": "DailyHIIncrease",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -7036,63 +6957,68 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MovingAverageFunction, Models",
+              "NumberOfDays": 7,
+              "StageToStartMovingAverage": "Emergence",
+              "Name": "WholePlantGrowthRate",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Arbitrator].TotalDMFixationSupply",
+                  "Name": "DailyRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MovingAverageFunction, Models",
+              "NumberOfDays": 7,
+              "StageToStartMovingAverage": "Emergence",
+              "Name": "AboveGroundGrowthRate",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Allocated.Wt + [Stem].Allocated.Wt + [Bur].Allocated.Wt + [Seed].Allocated.Wt + [Lint].Allocated.Wt",
+                  "Name": "DailyRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MovingAverageFunction, Models",
+              "NumberOfDays": 7,
+              "StageToStartMovingAverage": "Emergence",
+              "Name": "PotentialBollGrowthRate",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Bur].DMDemand.Total + [Seed].DMDemand.Total + [Lint].DMDemand.Total",
+                  "Name": "DailyRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
-            "Observed\\Observed.xlsx"
-          ],
-          "SheetNames": [
-            "CottonObserved"
-          ],
-          "Name": "Observed",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "DailyReport",
-          "ObservedTableName": "CottonObserved",
-          "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": "Clock.Today",
-          "FieldName3UsedForMatch": null,
-          "FieldName4UsedForMatch": null,
-          "AllColumns": true,
-          "Name": "PredictedObserved",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "HarvestReport",
-          "ObservedTableName": "CottonObserved",
-          "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": "SimulationID",
-          "FieldName3UsedForMatch": null,
-          "FieldName4UsedForMatch": null,
-          "AllColumns": false,
-          "Name": "PredictedObservedHarvest",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
@@ -7205,7 +7131,54 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        \r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "CodeArray": [
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Utilities;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        [Link] Summary Summary;",
+                    "        [Link] Soil Soil;",
+                    "        ",
+                    "        [Description(\"Crop\")]",
+                    "        public IPlant Crop { get; set; }",
+                    "",
+                    "        [Description(\"Sowing date (d-mmm)\")]",
+                    "        public string SowDate { get; set; }",
+                    "",
+                    "        [Display(Type = DisplayType.CultivarName)]",
+                    "        [Description(\"Cultivar to be sown\")]",
+                    "        public string CultivarName { get; set; }",
+                    "",
+                    "        [Description(\"Sowing depth (mm)\")]",
+                    "        public double SowingDepth { get; set; }",
+                    "",
+                    "        [Description(\"Row spacing (mm)\")]",
+                    "        public double RowSpacing { get; set; }",
+                    "",
+                    "        [Description(\"Plant population (/m2)\")]",
+                    "        public double Population { get; set; }",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
+                    "            {",
+                    "                Crop.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "Crop",
@@ -7251,9 +7224,10 @@
                   "Operation": [
                     {
                       "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2006-08-22",
                       "Action": "[Fertiliser].Apply(200, Fertiliser.Types.UreaN,10);",
-                      "Enabled": true
+                      "Line": "2006-08-22 [Fertiliser].Apply(200, Fertiliser.Types.UreaN,10);"
                     }
                   ],
                   "Name": "FertiliserEvents",
@@ -7272,7 +7246,179 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                  "CodeArray": [
+                    "using Newtonsoft.Json;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Interfaces;",
+                    "",
+                    "",
+                    "",
+                    "        ",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] private ISummary summary;",
+                    "        [Link] private Irrigation Irrigation;",
+                    "        [Link] private Clock Clock;",
+                    "        [Link] private Soil Soil;",
+                    "        [Link(IsOptional = true)] private IPlant existingCrop;",
+                    "        private DateTime StartDate;",
+                    "        private DateTime EndDate;",
+                    "        private double TopDUL;",
+                    "        private double TopLL;",
+                    "        private int nLayers;",
+                    "        [Link]",
+                    "        private IPhysical soilPhysical;",
+                    "        [Link]",
+                    "        private ISoilWater waterBalance;",
+                    "        //Communication to other modules",
+                    "       ",
+                    "        //User inputs from properties tab",
+                    "        [Description(\"Turn irrigation on?\")]",
+                    "        public bool allowIrrigation { get; set; }",
+                    "        [Description(\"Start of irrigation season (dd-MMM)\")]",
+                    "        public string seasonStart { get; set; }",
+                    "        [Description(\"End of irrigation season (dd-MMM)\")]",
+                    "        public string seasonEnd { get; set; }",
+                    "        [Description(\"Season allocation (mm)\")]",
+                    "        public double seasonsAllocation { get; set; }",
+                    "        [Description(\"Deficit to trigger irrigation (% PAWC)\")]",
+                    "        public double triggerDeficit { get; set; }",
+                    "        [Description(\"Deficit to stop irrigaton (% PAWC)\")]",
+                    "        public double targetDeficit { get; set; }",
+                    "        [Description(\"Minimum days for irrigation to return\")]",
+                    "        public double returndays { get; set; }",
+                    "        [Description(\"Maximum irrigation application (mm/day)\")]",
+                    "        public double maximumAmount { get; set; }",
+                    "        [Description(\"Depth to calculate PAWC (mm)\")]",
+                    "        public double depthPAWC { get; set; }",
+                    "",
+                    "        //Class members",
+                    "        [JsonIgnore] public double TopSWdeficit { get; set; }",
+                    "        [JsonIgnore] public double TopSWC { get; set; }",
+                    "        [JsonIgnore] public double DaysSinceIrrigation { get; set; }",
+                    "        [JsonIgnore] public double AmountToApply { get; set; }",
+                    "        [JsonIgnore] public double SeasonAppliedAmount { get; set; }",
+                    "        ",
+                    "        private bool IrrigationIsAllowed { get; set; }",
+                    "        private bool SeasonIsOpen { get; set; }",
+                    "        private bool CropIsActive { get; set; }",
+                    "        private bool IrrigatorIsAvailable { get; set; }",
+                    "        private bool SoilIsDry { get; set; }",
+                    "",
+                    "    ",
+                    "        //Calculate static soil variables",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnStartOfSimulation(object sender, EventArgs e)",
+                    "        {   ",
+                    "            //Set the season dates",
+                    "            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());",
+                    "            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());",
+                    "            ",
+                    "            //Can we irrigate at all?",
+                    "            IrrigationIsAllowed = false; ",
+                    "            if (allowIrrigation)",
+                    "                IrrigationIsAllowed = true; ",
+                    "",
+                    "            //Calculate soil water variables",
+                    "            double depthFromSurface = 0.0;",
+                    "            double fracLayer = 0.0;",
+                    "            nLayers = soilPhysical.Thickness.Length;",
+                    "            for (int layer = 0; layer < nLayers; layer++)",
+                    "            {",
+                    "                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);",
+                    "                TopLL += soilPhysical.LL15mm[layer] * fracLayer;",
+                    "                TopDUL += soilPhysical.DULmm[layer] * fracLayer;",
+                    "                depthFromSurface += soilPhysical.Thickness[layer];",
+                    "                if (depthFromSurface >= depthPAWC)",
+                    "                    layer = nLayers;",
+                    "            }",
+                    "        }",
+                    "             ",
+                    "        //Determine daily requirement for irrigation",
+                    "        [EventSubscribe(\"StartOfDay\")]",
+                    "        private void OnStartOfDay(object sender, EventArgs e)",
+                    "        {",
+                    "            //Can we irrigate today?          ",
+                    "            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);",
+                    "            if (!SeasonIsOpen)",
+                    "                SeasonAppliedAmount = 0;",
+                    "",
+                    "            //Is there a crop in the ground that needs irrigation?",
+                    "            CropIsActive = false;",
+                    "            if ((existingCrop != null) && (existingCrop.IsAlive))",
+                    "                CropIsActive = true;",
+                    "            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))",
+                    "          ",
+                    "            //Is the irrigator available?",
+                    "            IrrigatorIsAvailable = false;",
+                    "            DaysSinceIrrigation += 1;",
+                    "            if (DaysSinceIrrigation >= returndays)",
+                    "                IrrigatorIsAvailable = true;",
+                    "          ",
+                    "            //Is the soil dry enough to require irrigation?",
+                    "            SoilIsDry = false;",
+                    "            double depthFromSurface = 0.0;",
+                    "            double fracLayer = 0.0;",
+                    "            TopSWC = 0.0;",
+                    "            for (int layer = 0; layer < nLayers; layer++)",
+                    "            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)",
+                    "            {",
+                    "                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);",
+                    "                TopSWC += waterBalance.SWmm[layer] * fracLayer;",
+                    "                depthFromSurface += soilPhysical.Thickness[layer];",
+                    "                if (depthFromSurface >= depthPAWC)",
+                    "                    layer = nLayers;",
+                    "            }",
+                    "            ",
+                    "            TopSWdeficit = TopSWC - TopDUL;",
+                    "            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)",
+                    "                SoilIsDry = true;",
+                    "                ",
+                    "            //Are all the conditions ratifying irrigation",
+                    "            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)",
+                    "            {",
+                    "                //Lets bloody well irrigate then!!!!",
+                    "                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;",
+                    "                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));",
+                    "                AmountToApply = Math.Min(AmountToApply,maximumAmount);",
+                    "                Irrigation.Apply(AmountToApply);",
+                    "                DaysSinceIrrigation = 0;",
+                    "                SeasonAppliedAmount += AmountToApply;",
+                    "            }",
+                    "        }",
+                    "        ",
+                    "        ///Checks whether theDate is between iniDate and endDate (non-year specific)",
+                    "        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)",
+                    "        {",
+                    "            bool result = false;",
+                    "            if (iniDate.DayOfYear < endDate.DayOfYear)",
+                    "            {",
+                    "                // period is within one year, ex: summer in the northern hemisphere",
+                    "                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))",
+                    "                    result = true;",
+                    "            }",
+                    "            else",
+                    "            {",
+                    "                // period goes over the end of the year, ex: summer in the southern hemisphere",
+                    "                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))",
+                    "                    result = true;",
+                    "            }",
+                    "            ",
+                    "            return result;",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "allowIrrigation",
@@ -7319,7 +7465,103 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "// Applies irrigation into the second soil layer after a crop has been sown(lateral inflow from furrow into adjacent beds)\n// Irrigation is applied on a deficit defined by the number of soil layers (depth) and a deficit value [0-1]\n// Water is inserted lateral using \"inflow\" as would be expected under furrow irrigation of a crop on raised beds\n// Water applied is not reported as irrigation and requires a local variable to track applied irrigation\n// Local variable returned and available for reporting is: applied_furrow_irrigation\n\nusing Models.Interfaces;\nusing System;\nusing System.Linq;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        // Links\n        [Link] Clock clock;\n        [Link] Irrigation Irrigation;\n        [Link] Soil Soil;\n        [Link] IPhysical soilPhysical;\n        [Link] ISoilWater waterBalance;\n\n        // Fields\n        public double SW_now;\n        public double CLL_now;\n        public double SW_full;\n\n        // Properties\n        [Description(\"Number of soil layers used in calculating SW deficit\")]\n        public int asw_depth { get; set; } // Change to int for layer count\n        [Description(\"Fraction of ASW below which irrigation is applied (0-1.0)\")]\n        public double crit_fr_asw { get; set; } // Critical fraction of available soil water before applying irrigation\n        [Description(\"The earliest date irrigation will be applied (dd-MMM)\")]\n        public string IrrigStart { get; set; } // No irrigation will be applied before this date\n        [Description(\"The latest date irrigation will be applied (dd-MMM)\")]\n        public string IrrigEnd { get; set; } // No irrigation will be applied after this date\n\n        // Output variables\n        public double[] inflow_lat { get; set; }\n        public double applied_furrow_irrigation { get; set; }\n\n        // Methods\n\n        // Calculate static soil variables\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            // Initialize inflow_lat array\n            inflow_lat = new double[soilPhysical.DULmm.Length];\n        }\n\n        // Determine daily requirement for irrigation\n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n            // Is today within the irrigation window?\n            if (DateUtilities.WithinDates(IrrigStart, clock.Today, IrrigEnd))\n            {\n                // Calculate soil water variables\n                double[] SW_add = new double[soilPhysical.DULmm.Length];\n                for (int layer = 0; layer < asw_depth; layer++)\n                {\n                    SW_now += waterBalance.SWmm[layer];\n                    CLL_now += soilPhysical.LL15mm[layer];\n                    SW_full += (soilPhysical.DULmm[layer] - soilPhysical.LL15mm[layer]);\n                    SW_add[layer] = soilPhysical.DULmm[layer] - waterBalance.SWmm[layer];\n                }\n\n                // Is the soil water deficit greater than the critical SW fraction?\n                if ((SW_now - CLL_now) <= (SW_full * crit_fr_asw))\n                {\n                    // Calculate irrigation and apply it\n                    for (int layer = 1; layer < asw_depth; layer++)\n                    {\n                        inflow_lat[layer] = SW_add[layer] + (SW_add[0] / (asw_depth - 1));\n                        applied_furrow_irrigation += inflow_lat[layer];\n                        Irrigation.Apply(inflow_lat[layer], depth: soilPhysical.Thickness[layer]);\n                    }\n                }\n                else\n                {\n                  for (int layer = 0; layer < soilPhysical.DULmm.Length; layer++)\n                  {\n                  inflow_lat[layer] = 0;\n                  applied_furrow_irrigation = 0;            \n        }\n    }\n}}}}\n",
+                  "CodeArray": [
+                    "// Applies irrigation into the second soil layer after a crop has been sown(lateral inflow from furrow into adjacent beds)",
+                    "// Irrigation is applied on a deficit defined by the number of soil layers (depth) and a deficit value [0-1]",
+                    "// Water is inserted lateral using \"inflow\" as would be expected under furrow irrigation of a crop on raised beds",
+                    "// Water applied is not reported as irrigation and requires a local variable to track applied irrigation",
+                    "// Local variable returned and available for reporting is: applied_furrow_irrigation",
+                    "",
+                    "using Models.Interfaces;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Core;",
+                    "using System.Collections.Generic;",
+                    "using System.Text;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using System.Xml.Serialization;",
+                    "using APSIM.Shared.Utilities;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        // Links",
+                    "        [Link] Clock clock;",
+                    "        [Link] Irrigation Irrigation;",
+                    "        [Link] Soil Soil;",
+                    "        [Link] IPhysical soilPhysical;",
+                    "        [Link] ISoilWater waterBalance;",
+                    "",
+                    "        // Fields",
+                    "        public double SW_now;",
+                    "        public double CLL_now;",
+                    "        public double SW_full;",
+                    "",
+                    "        // Properties",
+                    "        [Description(\"Number of soil layers used in calculating SW deficit\")]",
+                    "        public int asw_depth { get; set; } // Change to int for layer count",
+                    "        [Description(\"Fraction of ASW below which irrigation is applied (0-1.0)\")]",
+                    "        public double crit_fr_asw { get; set; } // Critical fraction of available soil water before applying irrigation",
+                    "        [Description(\"The earliest date irrigation will be applied (dd-MMM)\")]",
+                    "        public string IrrigStart { get; set; } // No irrigation will be applied before this date",
+                    "        [Description(\"The latest date irrigation will be applied (dd-MMM)\")]",
+                    "        public string IrrigEnd { get; set; } // No irrigation will be applied after this date",
+                    "",
+                    "        // Output variables",
+                    "        public double[] inflow_lat { get; set; }",
+                    "        public double applied_furrow_irrigation { get; set; }",
+                    "",
+                    "        // Methods",
+                    "",
+                    "        // Calculate static soil variables",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnStartOfSimulation(object sender, EventArgs e)",
+                    "        {",
+                    "            // Initialize inflow_lat array",
+                    "            inflow_lat = new double[soilPhysical.DULmm.Length];",
+                    "        }",
+                    "",
+                    "        // Determine daily requirement for irrigation",
+                    "        [EventSubscribe(\"StartOfDay\")]",
+                    "        private void OnStartOfDay(object sender, EventArgs e)",
+                    "        {",
+                    "            // Is today within the irrigation window?",
+                    "            if (DateUtilities.WithinDates(IrrigStart, clock.Today, IrrigEnd))",
+                    "            {",
+                    "                // Calculate soil water variables",
+                    "                double[] SW_add = new double[soilPhysical.DULmm.Length];",
+                    "                for (int layer = 0; layer < asw_depth; layer++)",
+                    "                {",
+                    "                    SW_now += waterBalance.SWmm[layer];",
+                    "                    CLL_now += soilPhysical.LL15mm[layer];",
+                    "                    SW_full += (soilPhysical.DULmm[layer] - soilPhysical.LL15mm[layer]);",
+                    "                    SW_add[layer] = soilPhysical.DULmm[layer] - waterBalance.SWmm[layer];",
+                    "                }",
+                    "",
+                    "                // Is the soil water deficit greater than the critical SW fraction?",
+                    "                if ((SW_now - CLL_now) <= (SW_full * crit_fr_asw))",
+                    "                {",
+                    "                    // Calculate irrigation and apply it",
+                    "                    for (int layer = 1; layer < asw_depth; layer++)",
+                    "                    {",
+                    "                        inflow_lat[layer] = SW_add[layer] + (SW_add[0] / (asw_depth - 1));",
+                    "                        applied_furrow_irrigation += inflow_lat[layer];",
+                    "                        Irrigation.Apply(inflow_lat[layer], depth: soilPhysical.Thickness[layer]);",
+                    "                    }",
+                    "                }",
+                    "                else",
+                    "                {",
+                    "                  for (int layer = 0; layer < soilPhysical.DULmm.Length; layer++)",
+                    "                  {",
+                    "                  inflow_lat[layer] = 0;",
+                    "                  applied_furrow_irrigation = 0;            ",
+                    "        }",
+                    "    }",
+                    "}}}}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "asw_depth",
@@ -7346,7 +7588,54 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Cotton;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Cotton].Phenology\")]\r\n        private Phenology phenology;\r\n                    \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Cotton.Harvest();\r\n                Cotton.EndCrop();\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                  "CodeArray": [
+                    "using Models.PMF.Phen;",
+                    "using APSIM.Shared.Utilities;",
+                    "using System.Xml.Serialization;",
+                    "using Models;",
+                    "using Models.PMF;",
+                    "using Models.Soils;",
+                    "using System.Text;",
+                    "using System.Collections.Generic;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using Models.Soils.Nutrients;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable] ",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] private Plant Cotton;",
+                    "        [Link] private Zone zone;",
+                    "        [Link(Type = LinkType.Path, Path = \"[Cotton].Phenology\")]",
+                    "        private Phenology phenology;",
+                    "                    ",
+                    "        ",
+                    "        [EventSubscribe(\"StartOfSimulation\")]",
+                    "        private void OnSimulationCommencing(object sender, EventArgs e)",
+                    "        {",
+                    "        }",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")",
+                    "            {",
+                    "                Cotton.Harvest();",
+                    "                Cotton.EndCrop();",
+                    "            }",
+                    "        }",
+                    "        ",
+                    "        [EventSubscribe(\"DoManagementCalculations\")]",
+                    "        private void OnDoManagementCalculations(object sender, EventArgs e)",
+                    "        {",
+                    "            ",
+                    "        }",
+                    "    }",
+                    "}",
+                    "       "
+                  ],
                   "Parameters": [],
                   "Name": "Harvesting",
                   "ResourceName": null,
@@ -7880,7 +8169,68 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Wheat;\r\n        [Link] private ISoilWater SoilWater;\r\n        [Link] private Nutrient nutrient;\r\n        [Link] private SurfaceOrganicMatter SOM;\r\n        [Link] private Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "CodeArray": [
+                    "using Models.Soils.Nutrients;",
+                    "using APSIM.Shared.Utilities;",
+                    "using Models.Surface;",
+                    "using Models.Utilities;",
+                    "using Models.Soils.Nutrients;",
+                    "using Models.Soils;",
+                    "using Models.PMF;",
+                    "using Models.Core;",
+                    "using System;",
+                    "using System.Linq;",
+                    "using Models.Interfaces;",
+                    "",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] private Clock Clock;",
+                    "        [Link] private Plant Wheat;",
+                    "        [Link] private ISoilWater SoilWater;",
+                    "        [Link] private Nutrient nutrient;",
+                    "        [Link] private SurfaceOrganicMatter SOM;",
+                    "        [Link] private Summary Summary;",
+                    "",
+                    "        [Description(\"Date to reset on:\")]",
+                    "        public string ResetDate {get;set;}",
+                    "",
+                    "        [Description(\"Reset Water? (Yes or No)\")]",
+                    "        public string ResetWater {get;set;}",
+                    "",
+                    "        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]",
+                    "        public string ResetNutrients {get;set;}",
+                    "",
+                    "        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]",
+                    "        public string ResetSOM {get;set;}",
+                    "",
+                    "        [EventSubscribe(\"DoManagement\")]",
+                    "        private void OnDoManagement(object sender, EventArgs e)",
+                    "        {",
+                    "            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))",
+                    "            {",
+                    "                if (ResetWater == \"Yes\")",
+                    "                {",
+                    "                    Summary.WriteMessage(this, \"Reset Water\", MessageType.Diagnostic);",
+                    "                    SoilWater.Reset();",
+                    "                }",
+                    "                if (ResetNutrients == \"Yes\")",
+                    "                {",
+                    "                    Summary.WriteMessage(this, \"Reset Nitrogen\", MessageType.Diagnostic);",
+                    "                    nutrient.Reset();",
+                    "                }",
+                    "                if (ResetSOM == \"Yes\")",
+                    "                {",
+                    "                    Summary.WriteMessage(this, \"Reset Surface OM\", MessageType.Diagnostic);",
+                    "                    SOM.Reset();",
+                    "                }",
+                    "            }",
+                    "        }",
+                    "    }",
+                    "}"
+                  ],
                   "Parameters": [
                     {
                       "Key": "ResetDate",
@@ -7908,8 +8258,6 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "PlantType": "Cotton",
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "Name": "Cotton",
                   "ResourceName": "Cotton",
                   "Children": [],
@@ -8143,6 +8491,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 25.482574257425743,
                       "Maximum": 78.26,
                       "Interval": null
@@ -8153,6 +8502,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 25.482574257425743,
                       "Maximum": 78.26,
                       "Interval": null
@@ -8221,8 +8571,9 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 34.79351485148515,
-                      "Maximum": 106.855,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
                       "Interval": null
                     },
                     {
@@ -8231,8 +8582,9 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 34.79351485148515,
-                      "Maximum": 106.855,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
                       "Interval": null
                     }
                   ],
@@ -8299,6 +8651,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 56.84574257425743,
                       "Maximum": 174.58,
                       "Interval": null
@@ -8309,6 +8662,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 56.84574257425743,
                       "Maximum": 174.58,
                       "Interval": null
@@ -8377,6 +8731,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 120.0,
                       "Maximum": 170.0,
                       "Interval": null
@@ -8387,6 +8742,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 120.0,
                       "Maximum": 170.0,
                       "Interval": null
@@ -8455,8 +8811,9 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 79.8780693069307,
-                      "Maximum": 245.315,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
                       "Interval": null
                     },
                     {
@@ -8465,8 +8822,9 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 79.8780693069307,
-                      "Maximum": 245.315,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
                       "Interval": null
                     }
                   ],
@@ -8537,6 +8895,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": null
@@ -8547,6 +8906,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 100.0,
                   "Interval": null
@@ -8643,6 +9003,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38999.0,
                   "Maximum": 39200.0,
                   "Interval": null
@@ -8653,6 +9014,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 3.5,
                   "Interval": null
@@ -8663,6 +9025,7 @@
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 1.0,
                   "Interval": null
@@ -8795,6 +9158,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -8805,6 +9169,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 250.0,
                       "Interval": null
@@ -8901,6 +9266,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -8911,8 +9277,9 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
-                      "Maximum": 450.0,
+                      "Maximum": "NaN",
                       "Interval": null
                     }
                   ],
@@ -9007,6 +9374,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -9017,6 +9385,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 1000.0,
                       "Interval": null
@@ -9296,6 +9665,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -9306,6 +9676,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -15.512119222422948,
                       "Maximum": 1566.7240414647179,
                       "Interval": null
@@ -9406,6 +9777,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38936.48,
                   "Maximum": 39193.52,
                   "Interval": null
@@ -9416,6 +9788,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 1000.0,
                   "Interval": null
@@ -9561,69 +9934,111 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": 38948.6,
-                  "Maximum": 39193.4,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": -0.005961662390478952,
-                  "Maximum": 0.602127901438374,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "HarvestIndex",
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "HarvestIndices",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": "SimulationName",
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "DailyReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Cotton.Boll.HarvestIndex",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": 38948.6,
+                      "Maximum": 39193.4,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Boll",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.EventNamesOnGraph, Models",
-                      "ColumnName": "Cotton.Phenology.CurrentStageName",
-                      "SimulationName": "NAR0607Ir80",
-                      "Name": "EventNamesOnGraph",
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Boll.HarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir80",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "CottonObserved",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Fruit.HarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9634,31 +10049,226 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": "SimulationName",
-                  "FactorToVaryLines": null,
-                  "Marker": 0,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "CottonObserved",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Cotton.Fruit.HarvestIndex",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": false,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Observed",
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": 38948.6,
+                      "Maximum": 39193.4,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Components",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Bur.HarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Bur",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir80",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Seed.HarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Seed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Lint.HarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Lint",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 1,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Bur.PotentialHarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "PotentialBur",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 1,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Seed.PotentialHarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "PotentialSeed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 1,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Lint.PotentialHarvestIndex",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "PotentialLint",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -9683,6 +10293,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38948.6,
                       "Maximum": 39193.4,
                       "Interval": null
@@ -9693,6 +10304,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 300.0,
                       "Interval": null
@@ -9789,6 +10401,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38948.6,
                       "Maximum": 39193.4,
                       "Interval": null
@@ -9799,6 +10412,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 50.0,
                       "Interval": "NaN"
@@ -9857,7 +10471,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -1663232,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": "SimulationName",
                       "FactorToVaryLines": "SimulationName",
@@ -9886,36 +10500,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "SimulationName",
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "DailyReport",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "BollDemand",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": true,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Boll",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -11094807,
+                      "ColourArgb": -16777216,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": "SimulationName",
                       "FactorToVaryLines": "SimulationName",
@@ -9934,6 +10519,309 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16747854,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Bur.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Bur",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Lint.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Lint",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -990142,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Lint.DMDemand.Total",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Seed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": 38948.6,
+                      "Maximum": 39193.4,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": 0.0,
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "WholePlant",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.Arbitrator.DM.TotalFixationSupply",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Daily",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir80",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.WholePlantGrowthRate",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Average",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": 100.0,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Cuttout Functions",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.AboveGroundGrowthRate",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "AboveGroundGrowth",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir80",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -1663232,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "SimulationName",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Cotton.PotentialBollGrowthRate",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "BollDemand",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9964,6 +10852,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -9974,6 +10863,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -2.9507336311125236,
                       "Maximum": 54.63905346601758,
                       "Interval": null
@@ -10070,6 +10960,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10080,6 +10971,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 50.0,
                       "Interval": null
@@ -10176,6 +11068,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10186,6 +11079,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.2402487355911,
                       "Maximum": 24.265122294701097,
                       "Interval": null
@@ -10282,6 +11176,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10292,6 +11187,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.20090515485616686,
                       "Maximum": 20.29142064047285,
                       "Interval": null
@@ -10388,6 +11284,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10398,6 +11295,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.2057523054682659,
                       "Maximum": 20.780982852294855,
                       "Interval": null
@@ -10494,6 +11392,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10504,6 +11403,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.211493256902454,
                       "Maximum": 21.360818947147852,
                       "Interval": null
@@ -10600,6 +11500,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10610,6 +11511,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.44675,
                       "Maximum": 45.12175,
                       "Interval": null
@@ -10706,6 +11608,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10716,6 +11619,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.32559999999999995,
                       "Maximum": 32.8856,
                       "Interval": null
@@ -10812,6 +11716,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -10822,6 +11727,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -0.31999999999999995,
                       "Maximum": 32.31999999999999,
                       "Interval": null
@@ -10918,6 +11824,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.072,
                       "Maximum": 39193.928,
                       "Interval": null
@@ -10928,6 +11835,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": -4.909015943321719,
                       "Maximum": 252.4255669991463,
                       "Interval": null
@@ -10938,6 +11846,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 200.0,
                       "Interval": null
@@ -11096,6 +12005,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 107.81386845298489,
                   "Maximum": 253.48689575759417,
                   "Interval": null
@@ -11106,6 +12016,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 107.81386845298489,
                   "Maximum": 253.48689575759417,
                   "Interval": null
@@ -11181,6 +12092,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -11191,6 +12103,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 1.0090322582183346,
                       "Interval": null
@@ -11201,6 +12114,7 @@
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 10.788614873754964,
                       "Maximum": 13.974714636977321,
                       "Interval": null
@@ -11297,6 +12211,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -11307,6 +12222,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": 1.0,
                       "Interval": null
@@ -11374,6 +12290,7 @@
                       "Position": 3,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 38936.48,
                       "Maximum": 39193.52,
                       "Interval": null
@@ -11384,6 +12301,7 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN"
@@ -11455,6 +12373,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38948.6,
                   "Maximum": 39193.4,
                   "Interval": null
@@ -11465,6 +12384,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 30.0,
                   "Interval": null
@@ -11475,6 +12395,7 @@
                   "Position": 2,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 1.6,
                   "Interval": null
@@ -11600,6 +12521,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38948.6,
                   "Maximum": 39193.4,
                   "Interval": null
@@ -11610,6 +12532,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 20.0,
                   "Interval": null
@@ -11677,6 +12600,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38948.6,
                   "Maximum": 39193.4,
                   "Interval": null
@@ -11687,6 +12611,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": -8.0,
                   "Maximum": 808.0,
                   "Interval": null
@@ -11783,8 +12708,9 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": 38998.09,
-                  "Maximum": 39192.91,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 },
                 {
@@ -11793,8 +12719,9 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": 0.0,
-                  "Maximum": 1500.0,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 }
               ],
@@ -11860,6 +12787,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 38948.6,
                   "Maximum": 39193.4,
                   "Interval": null
@@ -11870,6 +12798,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 15.0,
                   "Interval": null
@@ -11966,6 +12895,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 180.0,
                   "Interval": null
@@ -11976,6 +12906,7 @@
                   "Position": 0,
                   "Inverted": false,
                   "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
                   "Minimum": 0.0,
                   "Maximum": 2.0,
                   "Interval": null
