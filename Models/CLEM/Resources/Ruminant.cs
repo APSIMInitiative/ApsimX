@@ -1,12 +1,9 @@
-using DocumentFormat.OpenXml.Wordprocessing;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
-using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -242,7 +239,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Individual is suckling, still with mother and not weaned
         /// </summary>
-        public bool IsSucklingWithMother { get { return !Weaned && mother != null; } }
+        public bool IsSucklingWithMother { get { return !Weaned && mother is not null; } }
 
         private DateTime dateOfWeaning = default;
 
@@ -275,7 +272,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (Weaned && age <= 365);
+                return (Weaned && age <= (DateTime.IsLeapYear(DateOfBirth.Year)?366:365));
             }
         }
 
@@ -335,7 +332,7 @@ namespace Models.CLEM.Resources
         /// Has the individual been sterilised (webbed, spayed or castrated)
         /// </summary>
         [FilterByProperty]
-        public abstract bool Sterilised { get; }
+        public abstract bool IsSterilised { get; }
 
         /// <summary>
         /// Marked as a replacement breeder
@@ -446,8 +443,8 @@ namespace Models.CLEM.Resources
             private set
             {
                 age = value;
-                AgeInDays = value * 30.4;
-                if (AgeInDays <= 0) AgeInDays = 1;                
+                //AgeInDays = value * 30.4;
+                if (age <= 0) age = 1;                
                 normalisedWeight = CalculateNormalisedWeight(age);
             }
         }
@@ -886,7 +883,46 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+<<<<<<< HEAD
         /// Milk production currently available for each offspring from mother (L day-1)
+=======
+        /// Method to set the weaned status to unweaned for new born individuals.
+        /// </summary>
+        public void SetUnweaned()
+        {
+            weaned = 0;
+        }
+
+        /// <summary>
+        /// Weaned individual flag
+        /// </summary>
+        [FilterByProperty]
+        public bool Weaned { get { return weaned > 0; } }
+
+        /// <summary>
+        /// Weaned individual flag
+        /// </summary>
+        [FilterByProperty]
+        public bool IsWeaned { get { return weaned > 0; } }
+
+        /// <summary>
+        /// Number of months since weaned
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSinceWeaned
+        {
+            get
+            {
+                if (weaned > 0)
+                    return Convert.ToInt32(Math.Round(Age - weaned, 4));
+                else
+                    return 0;
+            }
+        }
+
+        /// <summary>
+        /// Milk production currently available from mother
+>>>>>>> dce17a516d7cdc906f1a294c4be119801e268dcb
         /// </summary>
         public double MothersMilkProductionAvailable
         {

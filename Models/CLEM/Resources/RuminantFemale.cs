@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [FilterByProperty]
-        public override bool Sterilised { get { return (IsWebbed || IsSpayed); } }
+        public override bool IsSterilised { get { return (IsWebbed || IsSpayed); } }
 
         /// <summary>
         /// Is the female webbed
@@ -49,14 +49,14 @@ namespace Models.CLEM.Resources
         public bool IsSpayed { get { return Attributes.Exists("Spayed"); } }
 
         /// <summary>
-        /// Is female weaned and of minimum breeding age and weight 
+        /// Is female weaned and of minimum breeding age and weight and not sterilised 
         /// </summary>
         [FilterByProperty]
         public bool IsBreeder
         {
             get
             {
-                return Weaned && (AgeInDays >= BreedParams.MinimumAge1stMating.InDays) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
+                return Weaned && !IsPreBreeder && !IsSterilised;
             }
         }
 
@@ -67,7 +67,39 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.IsBreeder && !this.IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception && (!IsWebbed && !IsSpayed));
+                return (this.IsBreeder && !this.IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a heifer
+        /// Heifer equals less than min breed age and no offspring
+        /// </summary>
+        [FilterByProperty]
+        public bool IsHeifer
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (Weaned && NumberOfBirths == 0);
+            }
+        }
+
+        /// <summary>
+        /// Indicates if this female is a weaned but less than age at first mating 
+        /// </summary>
+        [FilterByProperty]
+        public bool IsPreBreeder
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                return (Weaned && ((HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)) == false);
             }
         }
 
@@ -181,7 +213,7 @@ namespace Models.CLEM.Resources
         //{
         //    get
         //    {
-        //        return Age - Math.Max(this.BreedParams.MinimumAge1stMating, this.AgeEnteredSimulation);
+        //        return Age - Math.Max(BreedParams.MinimumAge1stMating, AgeEnteredSimulation);
         //    }
         //}
 
@@ -192,50 +224,17 @@ namespace Models.CLEM.Resources
         public MatingStyle LastMatingStyle { get; set; }
 
         /// <summary>
-        /// Indicates if this female is a heifer
-        /// Heifer equals less than min breed age and no offspring
-        /// </summary>
-        [FilterByProperty]
-        public bool IsHeifer
-        {
-            get
-            {
-                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
-                return (this.Weaned && this.NumberOfBirths == 0);
-            }
-        }
-
-        /// <summary>
-        /// Indicates if this female is a weaned but less than age at first mating 
-        /// </summary>
-        [FilterByProperty]
-        public bool IsPreBreeder
-        {
-            get
-            {
-                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
-                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
-                //return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
-                return (this.Weaned && !this.IsBreeder);
-            }
-        }
-
-
-        /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates
         /// </summary>
         /// <returns></returns>
         public int CalulateNumberOfOffspringThisPregnancy()
         {
             int birthCount = 1;
-            if (this.BreedParams.MultipleBirthRate != null)
+            if (BreedParams.MultipleBirthRate != null)
             {
                 double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
-                foreach (double i in this.BreedParams.MultipleBirthRate)
+                foreach (double i in BreedParams.MultipleBirthRate)
                 {
                     birthCount++;
                     birthProb += i;
@@ -303,7 +302,6 @@ namespace Models.CLEM.Resources
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
-
             DateOfLastBirth = date;
             ProportionMilkProductionAchieved = 1;
             MilkLag = 1;
@@ -367,6 +365,7 @@ namespace Models.CLEM.Resources
 
             PreviousConceptionRate = rate;
             CarryingCount = number;
+
             //ToDo: Chech this is correct
             DateLastConceived = date.AddDays(ageOffset);
             //AgeAtLastConception = this.Age + ageOffset;
@@ -409,24 +408,20 @@ namespace Models.CLEM.Resources
         public double RelativeConditionAtParturition { get; set; }
 
         /// <summary>
-        /// Calculate the MilkinIndicates if the individual is lactating
+        /// Calculate the the number of days lacating for the individual
         /// </summary>
-        public double DaysLactating
+        /// <param name="halfIntervalOffset">Number of days to offset (e.g. half time step)</param>
+        public double DaysLactating(double halfIntervalOffset)
         {
-            get
+            if(SucklingOffspringList.Any() || MilkingPerformed)
             {
-                if (SucklingOffspringList.Any() | MilkingPerformed)
+                double milkdays = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays + halfIntervalOffset;
+                if (milkdays <= BreedParams.MilkingDays)
                 {
-                    double dl = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
-                    // ToDo: CLOCK add half a timestep
-                    if (dl + 15 <= this.BreedParams.MilkingDays)
-                        return dl + 15;
-                    //double dl = (((this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays) ? (this.Age - this.AgeAtLastBirth) * 30.4 : 0);
-                    //return dl + 15;
+                    return milkdays;
                 }
-                //else
-                return 0;
             }
+            return 0;
         }
 
         /// <summary>
