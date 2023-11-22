@@ -14,8 +14,6 @@ namespace Models.PMF.SimplePlantModels
     /// Data structure that contains information for a specific planting of scrum
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Folder))]
-    [ValidParent(ParentType = typeof(Manager))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
