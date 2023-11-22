@@ -103,8 +103,8 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum LAI of mature tree prior to pruning (m2/m2)</summary>
-        [Description("Maximum LAI of mature tree prior to pruning (m2/m2)")]
+        /// <summary>Maximum LAI of mature tree prior to Leaf Fall (m2/m2)</summary>
+        [Description("Maximum LAI of mature tree prior to Leaf Fall (m2/m2)")]
         public double MaxLAI { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
@@ -143,6 +143,12 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum Size </summary>
         [Description("Max Size (Days After Winter Solstice)")]
         public int DAWSMaxSize { get; set; }
+
+        /// <summary>Cutting Event</summary>
+        public event EventHandler<EventArgs> PhenologyHarvest;
+
+        /// <summary>Grazing Event</summary>
+        public event EventHandler<EventArgs> PhenologyPrune;
 
 
         /// <summary>The plant</summary>
@@ -340,15 +346,12 @@ namespace Models.PMF.SimplePlantModels
         private void OnDoManagement(object sender, EventArgs e)
         {
             if (weather.DaysSinceWinterSolstice == harvestDAWS)
-                strum.Harvest();
+            {
+                PhenologyHarvest?.Invoke(this, new EventArgs());
+            }
             if (weather.DaysSinceWinterSolstice == pruneDAWS)
             {
-                var leaf = strum.FindChild<IHasDamageableBiomass>("Leaf");
-                var trunk = strum.FindChild<IHasDamageableBiomass>("Trunk");
-                var fruit = strum.FindChild<IHasDamageableBiomass>("Fruit");
-                leaf.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
-                trunk.RemoveBiomass(liveToResidue: 0.3, deadToResidue: 0.9);
-                fruit.RemoveBiomass(liveToResidue: 1.0, deadToResidue: 1.0);
+                PhenologyPrune?.Invoke(this, new EventArgs());
             }
         }
 
