@@ -1,33 +1,29 @@
 ﻿namespace UserInterface.Views
 {
+    using APSIM.Interop.Graphing.CustomSeries;
+    using APSIM.Interop.Graphing.Extensions;
+    using APSIM.Shared.Graphing;
+    using APSIM.Shared.Utilities;
+    using EventArguments;
+    using Gtk;
+    using Interfaces;
+    using MathNet.Numerics.Statistics;
+    using OxyPlot;
+    using OxyPlot.Annotations;
+    using OxyPlot.Axes;
+    using OxyPlot.GtkSharp;
+    using OxyPlot.Series;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using Gtk;
-    using Interfaces;
-    using Models;
-    using OxyPlot;
-    using OxyPlot.Annotations;
-    using OxyPlot.Axes;
-    using OxyPlot.Series;
-    using OxyPlot.GtkSharp;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
-    using System.Linq;
     using System.Globalization;
-    using MathNet.Numerics.Statistics;
-    using Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Interop.Graphing.Extensions;
-    using APSIM.Interop.Graphing.CustomSeries;
+    using System.IO;
+    using System.Linq;
     using Utility;
-
-    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
     using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
 
 
     /// <summary>
@@ -388,7 +384,7 @@
 
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
-         
+
             this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
@@ -449,7 +445,12 @@
                 series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 else
                     series.ToolTip = title;
 
@@ -562,14 +563,19 @@
             {
                 var series = new ColumnXYSeries();
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.StrokeColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
 
-                
+
                 // By default, clicking on a datapoint (a bar) of a bar graph
                 // will create a pop-up showing the x/y values at the beginning
                 // and end of the bar. We override this here, so that it only
@@ -612,7 +618,12 @@
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
             if (showOnLegend)
-                series.Title = title;
+            {
+                if (String.IsNullOrEmpty(title))
+                    series.Title = "null";
+                else
+                    series.Title = title;
+            }
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -803,7 +814,13 @@
                 BoxPlotSeries series = new BoxPlotSeries();
                 series.Items = GetBoxPlotItems(x, y, xAxisType, yAxisType);
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
+                    
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -857,7 +874,7 @@
             }
         }
 
-        private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
+        private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data,
                                                   APSIM.Shared.Graphing.AxisPosition xAxisType,
                                                   APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
@@ -891,7 +908,7 @@
                     xValue = index;
                 }
             }
-            
+
             EnsureAxisExists(yAxisType, typeof(double));
 
             return new List<BoxPlotItem>() { new BoxPlotItem(xValue, min, lowerQuartile, median, upperQuartile, max) };
@@ -1057,6 +1074,7 @@
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
+        /// <param name="labelOnOneLine">Show Axis Label on one line</param>
         public void FormatAxis(
             APSIM.Shared.Graphing.AxisPosition axisType,
             string title,
@@ -1064,7 +1082,8 @@
             double minimum,
             double maximum,
             double interval,
-            bool crossAtZero)
+            bool crossAtZero,
+            bool labelOnOneLine)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
 
@@ -1085,6 +1104,12 @@
                 oxyAxis.AxisTitleDistance = 10;
                 oxyAxis.PositionAtZeroCrossing = crossAtZero;
 
+                if (labelOnOneLine)
+                {
+                    string newline = Environment.NewLine;
+                    oxyAxis.Title = oxyAxis.Title.Replace(newline, ", ");
+                }
+
                 if (inverted)
                 {
                     oxyAxis.StartPosition = 1;
@@ -1099,7 +1124,7 @@
                     oxyAxis.Minimum = minimum;
                 if (!double.IsNaN(maximum))
                     oxyAxis.Maximum = maximum;
-                
+
                 if (oxyAxis is DateTimeAxis)
                 {
                     DateTimeIntervalType intervalType = double.IsNaN(interval) ? DateTimeIntervalType.Auto : (DateTimeIntervalType)interval;
@@ -1107,7 +1132,7 @@
                     (oxyAxis as DateTimeAxis).MinorIntervalType = intervalType - 1;
                     (oxyAxis as DateTimeAxis).StringFormat = "dd/MM/yyyy";
                 }
-                else if(!double.IsNaN(interval) && interval > 0)
+                else if (!double.IsNaN(interval) && interval > 0)
                     oxyAxis.MajorStep = interval;
             }
         }
@@ -1223,7 +1248,7 @@
             Widget editor = editorObj as Widget;
             if (editor != null)
             {
-                expander1.Foreach(delegate(Widget widget) 
+                expander1.Foreach(delegate (Widget widget)
                 {
                     if (widget != label2)
                     {
@@ -1244,18 +1269,14 @@
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="r">Desired image size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
+        public void Export(out Gdk.Pixbuf bitmap, Rectangle r, bool legendOutside)
         {
             MemoryStream stream = new MemoryStream();
             PngExporter pngExporter = new PngExporter();
             pngExporter.Width = r.Width;
             pngExporter.Height = r.Height;
             pngExporter.Export(plot1.Model, stream);
-            using (Graphics gfx = Graphics.FromImage(bitmap))
-            {
-                Bitmap newBitmap = new Bitmap(stream);
-                gfx.DrawImage(newBitmap, r);
-            }
+            bitmap = new Gdk.Pixbuf(stream);
         }
 
         /// <summary>
@@ -1264,7 +1285,7 @@
         public void ExportToClipboard()
         {
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
-            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
+            PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B / 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
             cb.Image = new Gdk.Pixbuf(fileName);
         }
@@ -1406,8 +1427,8 @@
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
                 }
 
-                if (axis.PlotModel.Series[0] is BoxPlotSeries && 
-                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom && 
+                if (axis.PlotModel.Series[0] is BoxPlotSeries &&
+                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom &&
                     axis.PlotModel.Series?.Count > 0)
                 {
                     // Need to put a bit of extra space on the x axis.

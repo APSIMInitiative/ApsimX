@@ -122,6 +122,14 @@ namespace Models.CLEM.Groupings
         public object Value { get; set; }
 
         /// <summary>
+        /// Modified value to use 
+        /// </summary>
+        public virtual object ModifiedValueToUse
+        {
+            get { return Value; }
+        }
+
+        /// <summary>
         /// Takes the conditions set by the user and converts them to a logical test as a lambda expression
         /// </summary>
         public abstract Func<T, bool> Compile<T>() where T:IFilterable;

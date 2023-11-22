@@ -1,13 +1,12 @@
 ﻿using Models.Core;
 using Newtonsoft.Json;
-using System;
 
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// Interface for feet types
     /// </summary>
-    public interface IFeedType: IResourceType
+    public interface IFeedType : IResourceType
     {
         /// <summary>
         /// Dry Matter Digestibility (%)

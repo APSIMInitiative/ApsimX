@@ -1,12 +1,15 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Extensions.Collections;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Models.Soils.Nutrients;
+using Models.Surface;
+
 namespace Models.Soils.NutrientPatching
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Soils.Nutrients;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Encapsulates a cohort of Nutrient models i.e. patching.
@@ -18,11 +21,11 @@ namespace Models.Soils.NutrientPatching
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         [Link]
         private IPhysical soilPhysical = null;
-        
+
         [Link]
         private ISummary summary = null;
 
@@ -59,33 +62,30 @@ namespace Models.Soils.NutrientPatching
         /// <summary>Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).</summary>
         [Units("mm")]
         public double LayerForNPartition { get; set; } = -99;
-        
+
         /// <summary>The inert pool.</summary>
-        public INutrientPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
+        public IOrganicPool Inert { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Inert)); } }
 
         /// <summary>The microbial pool.</summary>
-        public INutrientPool Microbial { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Microbial)); } }
+        public IOrganicPool Microbial { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Microbial)); } }
 
         /// <summary>The humic pool.</summary>
-        public INutrientPool Humic { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Humic)); } }
+        public IOrganicPool Humic { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.Humic)); } }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
-        public INutrientPool FOMCellulose { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCellulose)); } }
+        public IOrganicPool FOMCellulose { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCellulose)); } }
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
-        public INutrientPool FOMCarbohydrate { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCarbohydrate)); } }
+        public IOrganicPool FOMCarbohydrate { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMCarbohydrate)); } }
 
         /// <summary>The fresh organic matter lignin pool.</summary>
-        public INutrientPool FOMLignin { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMLignin)); } }
+        public IOrganicPool FOMLignin { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOMLignin)); } }
 
         /// <summary>The fresh organic matter pool.</summary>
-        public INutrientPool FOM { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOM)); } }
+        public IOrganicPool FOM { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.FOM)); } }
 
-        /// <summary>The fresh organic matter surface residue pool.</summary>
-        public INutrientPool SurfaceResidue { get { return SumNutrientPools(patches.Select(patch => patch.Nutrient.SurfaceResidue)); } }
-
-        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic)</summary>
-        public INutrientPool Organic { get { return SumNutrientPoolsWithoutArea(new INutrientPool[] { FOM, Microbial, Humic }); } }
+        /// <summary>Soil organic nitrogen (FOM + Microbial + Humic + Inert)</summary>
+        public IOrganicPool Organic { get { return SumNutrientPoolsWithoutArea(new IOrganicPool[] { FOM, Microbial, Humic, Inert }); } }
 
         /// <summary>The NO3 pool.</summary>
         public ISolute NO3 { get { return SumSolutes(patches.Select(patch => patch.Nutrient.NO3)); } }
@@ -95,7 +95,7 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>The Urea pool.</summary>
         public ISolute Urea { get { return SumSolutes(patches.Select(patch => patch.Nutrient.Urea)); } }
-        
+
         /// <summary>The NO3 pool.</summary>
         public double[] NO3ForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.NO3)); } }
 
@@ -106,46 +106,49 @@ namespace Models.Soils.NutrientPatching
         public double[] UreaForEachPatch { get { return TotalSoluteForEachPatch(patches.Select(patch => patch.Nutrient.Urea)); } }
 
         /// <summary>Total C in each soil layer</summary>
-        public double[] TotalC {  get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
+        public IReadOnlyList<double> TotalC { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalC)); } }
 
         /// <summary>Total N in each soil layer</summary>
-        public double[] TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
+        public IReadOnlyList<double> TotalN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.TotalN)); } }
 
         /// <summary>Total C lost to the atmosphere</summary>
-        public double[] Catm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Catm)); } }
+        public IReadOnlyList<double> Catm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Catm)); } }
 
         /// <summary>Total N lost to the atmosphere</summary>
-        public double[] Natm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Natm)); } }
+        public IReadOnlyList<double> Natm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.Natm)); } }
 
         /// <summary>Total N2O lost to the atmosphere</summary>
-        public double[] N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
+        public IReadOnlyList<double> N2Oatm { get { return SumDoubles(patches.Select(patch => patch.Nutrient.N2Oatm)); } }
 
         /// <summary>Total Net N Mineralisation in each soil layer</summary>
-        public double[] MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
-
-        /// <summary>Net N Mineralisation from surface residue</summary>
-        public double[] MineralisedNSurfaceResidue { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedNSurfaceResidue)); } }
+        public IReadOnlyList<double> MineralisedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralisedN)); } }
 
         /// <summary>Denitrified Nitrogen (N flow from NO3).</summary>
-        public double[] DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
+        public IReadOnlyList<double> DenitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.DenitrifiedN)); } }
 
         /// <summary>Nitrified Nitrogen (from NH4 to either NO3 or N2O).</summary>
-        public double[] NitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.NitrifiedN)); } }
+        public IReadOnlyList<double> NitrifiedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.NitrifiedN)); } }
 
         /// <summary>Urea converted to NH4 via hydrolysis.</summary>
-        public double[] HydrolysedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.HydrolysedN)); } }
+        public IReadOnlyList<double> HydrolysedN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.HydrolysedN)); } }
 
         /// <summary>Total Mineral N in each soil layer</summary>
-        public double[] MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
+        public IReadOnlyList<double> MineralN { get { return SumDoubles(patches.Select(patch => patch.Nutrient.MineralN)); } }
 
         /// <summary>Carbon to Nitrogen Ratio for Fresh Organic Matter in a given layer</summary>
-        public double FOMCNR(int i)
+        public IReadOnlyList<double> FOMCNRFactor
         {
-            return MathUtilities.Sum(patches.Select(patch => patch.Nutrient.FOMCNR(i)));
+            get
+            {
+                var FOMCNR = new double[soilPhysical.Thickness.Length];
+                foreach (var patch in patches)
+                    FOMCNR = MathUtilities.Add(FOMCNR, patch.Nutrient.FOMCNRFactor);
+                return FOMCNR;
+            }
         }
 
         /// <summary>The number of patches.</summary>
-        public int NumPatches {  get { return patches.Count; } }
+        public int NumPatches { get { return patches.Count; } }
 
         /// <summary>The amount of NO3 in each patch (kg/ha).</summary>
         public double[] NO3EachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()).ToArray(); } }
@@ -157,29 +160,19 @@ namespace Models.Soils.NutrientPatching
         public double[] UreaEachPatch { get { return patches.Select(patch => patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
         /// <summary>The amount of mineral N in each patch (kg/ha).</summary>
-        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum()+ patch.Nutrient.NH4.kgha.Sum()+ patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
+        public double[] MineralNEachPatch { get { return patches.Select(patch => patch.Nutrient.NO3.kgha.Sum() + patch.Nutrient.NH4.kgha.Sum() + patch.Nutrient.Urea.kgha.Sum()).ToArray(); } }
 
-        /// <summary>Calculate actual decomposition</summary>
-        public SurfaceOrganicMatterDecompType CalculateActualSOMDecomp()
-        {
-            // Note:
-            //   - If there wasn't enough mineral N to decompose, the rate will be reduced to zero !!  - MUST CHECK THE VALIDITY OF THIS
+        /// <summary>Denitrified Nitrogen (N flow from NO3) for each patch.</summary>
+        public double[] DenitrifiedNEachPatch { get { return patches.Select(patch => patch.Nutrient.DenitrifiedN.Sum()).ToArray(); } }
 
-            SurfaceOrganicMatterDecompType returnSOMDecomp = null;
-            foreach (var patch in patches)
-            {
-                var somDecomp = patch.CalculateActualSOMDecomp();
-                foreach (var pool in somDecomp.Pool)
-                    pool.FOM.amount = 0;
+        /// <summary>Total N2O lost to the atmosphere for each patch.</summary>
+        public double[] DenitN2OEachPatch { get { return patches.Select(patch => patch.Nutrient.N2Oatm.Sum()).ToArray(); } }
 
-                if (returnSOMDecomp == null)
-                    returnSOMDecomp = somDecomp;
-                else
-                    returnSOMDecomp.Add(somDecomp);
-            }
+        /// <summary>Total C for each patch</summary>
+        public double[] TotalCEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalC.Sum()).ToArray(); } }
 
-            return returnSOMDecomp;
-        }
+        /// <summary>Total N for each patch</summary>
+        public double[] TotalNEachPatch { get { return patches.Select(patch => patch.Nutrient.TotalN.Sum()).ToArray(); } }
 
         /// <summary>
         /// Called by solutes to get the value of a solute.
@@ -244,6 +237,15 @@ namespace Models.Soils.NutrientPatching
         {
             foreach (var patch in patches)
                 patch.Nutrient.DoIncorpFOM(FOMdata);
+        }
+
+        /// <summary>
+        /// Incorporate FOM
+        /// </summary>
+        public void IncorpFOMPool(FOMPoolType FOMPoolData)
+        {
+            foreach (var patch in patches)
+                patch.Nutrient.IncorpFOMPool(FOMPoolData);
         }
 
         /// <summary>Reset all pools.</summary>
@@ -344,23 +346,24 @@ namespace Models.Soils.NutrientPatching
         /// Sum a list of pools, multiplying them by their respective areas.
         /// </summary>
         /// <param name="pools">The list of pools</param>
-        private INutrientPool SumNutrientPools(IEnumerable<INutrientPool> pools)
+        private IOrganicPool SumNutrientPools(IEnumerable<IOrganicPool> pools)
         {
             var areas = patches.Select(patch => patch.RelativeArea).ToList();
             var poolsAsList = pools.ToList();
 
-            var values = new NutrientPool();
-            values.C = new double[soilPhysical.Thickness.Length];
-            values.N = new double[soilPhysical.Thickness.Length];
-            for (int p = 0; p < poolsAsList.Count; p++)
+            double[] c = new double[soilPhysical.Thickness.Length];
+            double[] n = new double[soilPhysical.Thickness.Length];
+            double[] p = new double[soilPhysical.Thickness.Length];
+
+            for (int poolIndex = 0; poolIndex < poolsAsList.Count; poolIndex++)
             {
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
-                    values.C[i] += poolsAsList[p].C[i] * areas[p];
-                    values.N[i] += poolsAsList[p].N[i] * areas[p];
+                    c[i] += poolsAsList[poolIndex].C[i] * areas[poolIndex];
+                    n[i] += poolsAsList[poolIndex].N[i] * areas[poolIndex];
                 }
             }
-            return values;
+            return new OrganicPool(c, n, p);
         }
 
         /// <summary>
@@ -388,7 +391,7 @@ namespace Models.Soils.NutrientPatching
         /// Sum a list of double values, multiplying them by their respective areas.
         /// </summary>
         /// <param name="values">The list of solutes</param>
-        private double[] SumDoubles(IEnumerable<double[]> values)
+        private double[] SumDoubles(IEnumerable<IReadOnlyList<double>> values)
         {
             var areas = patches.Select(patch => patch.RelativeArea).ToArray();
             var valuesAsList = values.ToList();
@@ -403,7 +406,7 @@ namespace Models.Soils.NutrientPatching
         }
 
         /// <summary>
-        /// For each patch, sum all layers of a solute. 
+        /// For each patch, sum all layers of a solute.
         /// </summary>
         /// <param name="solutes">The list of solutes</param>
         /// <returns>A single total solute for each patch.</returns>
@@ -422,20 +425,12 @@ namespace Models.Soils.NutrientPatching
 
         /// <summary>Sum nutrient pools without using relative areas.</summary>
         /// <param name="pools">The pools to sum.</param>
-        private INutrientPool SumNutrientPoolsWithoutArea(INutrientPool[] pools)
+        private IOrganicPool SumNutrientPoolsWithoutArea(IOrganicPool[] pools)
         {
-            var values = new NutrientPool();
-            values.C = new double[soilPhysical.Thickness.Length];
-            values.N = new double[soilPhysical.Thickness.Length];
-            foreach (var pool in pools)
-            {
-                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                {
-                    values.C[i] += pool.C[i];
-                    values.N[i] += pool.N[i];
-                }
-            }
-            return values;
+            double[] c = pools.Select(p => p.C).Sum();
+            double[] n = pools.Select(p => p.N).Sum();
+            double[] p = pools.Select(p => p.P).Sum();
+            return new OrganicPool(c, n, p);
         }
 
         /// <summary>At the start of the simulation set up LifeCyclePhases</summary>
@@ -444,6 +439,13 @@ namespace Models.Soils.NutrientPatching
         [EventSubscribe("Commencing")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            // Make sure the NutrientPatchManager is after the solutes so that scoping works.
+            // This is an ugly hack but I can't think of an easy way to get around the problem of
+            // the plant models and soil water finding the solutes under NutrientPatchManager
+            // instead of the solute directly under the soil. Scoping design problem.
+            if (Parent.Children.Last() != this)
+                throw new Exception("NutrientPatchManager must be the last child of soil");
+
             // Create a new nutrient patch.
             var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
             newPatch.CreationDate = clock.Today;
@@ -471,10 +473,6 @@ namespace Models.Soils.NutrientPatching
 
             try
             {
-                // 1.5 If the calling model is a plant and the solute is NO3 or NH4 then use the 'PlantAvailable' solutes instead.
-                if (callingModelType == SoluteSetterType.Plant && (soluteName == "NO3" || soluteName == "NH4"))
-                    soluteName = "PlantAvailable" + soluteName;
-
                 // 2- gather how much solute is already in the soil
                 double[][] existingSoluteAmount = new double[patches.Count][];
                 for (int k = 0; k < patches.Count; k++)
@@ -537,7 +535,7 @@ namespace Models.Soils.NutrientPatching
                             Result[k][layer] = (incomingDelta[layer] * partitionWeight[k]) / patches[k].RelativeArea;
                     }
                     else
-                    { 
+                    {
                         // there is no incoming solute for this layer
                         for (int k = 0; k < patches.Count; k++)
                             Result[k][layer] = 0.0;
@@ -810,7 +808,5 @@ namespace Models.Soils.NutrientPatching
                 patches.RemoveAt(PatchesToDelete[i]);
             }
         }
-
-
     }
 }

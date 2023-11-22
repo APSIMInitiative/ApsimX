@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
 
 namespace Models.CLEM.Activities
 {
@@ -20,14 +19,14 @@ namespace Models.CLEM.Activities
     [Description("Multiply a resource when managed from external sources")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResourceMultiplier.htm")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivityExternalMultiplier : CLEMModel
+    public class ResourceActivityExternalMultiplier : CLEMActivityBase, IValidatableObject
     {
         /// <summary>
         /// Name of the resource this multiplier applies to
         /// </summary>
         [Description("Name of resource")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource Type required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStoreType), typeof(HumanFoodStoreType), typeof(ProductStoreType), typeof(EquipmentType), typeof(FinanceType), typeof(GreenhouseGasesType), typeof(WaterType) } })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore), typeof(Equipment), typeof(Finance), typeof(GreenhouseGases), typeof(WaterStore) } })]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
@@ -44,6 +43,25 @@ namespace Models.CLEM.Activities
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
         }
+
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            var selectedResourceType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+
+            if (selectedResourceType is null)
+            {
+                string[] memberNames = new string[] { "Selected resource" };
+                results.Add(new ValidationResult($"Unable to find the resource selected [r={ResourceTypeName}]", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
+
 
         #region descriptive summary
 
@@ -78,7 +96,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(this.Name);
 
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+                htmlWriter.Write($"\r\n<div class=\"filterborder clearfix\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
                 return htmlWriter.ToString();
             }
         }

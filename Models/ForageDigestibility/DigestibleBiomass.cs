@@ -1,6 +1,6 @@
-﻿using Models.PMF;
+﻿using System;
+using Models.PMF;
 using Models.PMF.Interfaces;
-using System;
 
 namespace Models.ForageDigestibility
 {

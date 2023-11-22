@@ -7,7 +7,7 @@ namespace Models.CLEM.Interfaces
     /// <summary>
     /// Crop data reader interface
     /// </summary>
-    public interface IFileCrop: IModel
+    public interface IFileCrop : IModel
     {
         /// <summary>
         /// Searches the DataTable created from the Forage File using the specified parameters.

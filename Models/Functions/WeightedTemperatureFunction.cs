@@ -1,11 +1,9 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Linq;
 
 namespace Models.Functions
 {
@@ -30,7 +28,7 @@ namespace Models.Functions
         /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
-        
+
         #endregion
 
         /// <summary>Gets the value.</summary>
@@ -54,7 +52,7 @@ namespace Models.Functions
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
 
-        private APSIM.Shared.Documentation.Graph CreateGraph(uint indent = 0)
+        private APSIM.Shared.Documentation.Graph CreateGraph()
         {
             // fixme - this is basically identical to what we've got in the linear interp code.
             var series = new APSIM.Shared.Graphing.Series[1];

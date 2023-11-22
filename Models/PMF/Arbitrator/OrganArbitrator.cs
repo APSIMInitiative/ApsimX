@@ -1,11 +1,11 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -34,7 +34,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class OrganArbitrator : Model, IUptake, IArbitrator
+    public class OrganArbitrator : Model, IUptake, IArbitrator, ITotalDMFixationSupply
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -74,6 +74,7 @@ namespace Models.PMF
         protected const double kgha2gsm = 0.1;
 
         /// <summary>The list of organs</summary>
+        [Link]
         protected List<IArbitration> Organs = new List<IArbitration>();
 
         ///4. Public Events And Enums
@@ -120,8 +121,12 @@ namespace Models.PMF
         /// <summary>Gets the n supply relative to N demand.</summary>
         /// <value>The n supply.</value>
         [JsonIgnore]
-        public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
+        public double FN { get { return N == null ? 1 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 1); } }
 
+
+        /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
+        [JsonIgnore]
+        public double TotalDMFixationSupply { get { return DM.TotalFixationSupply; } }
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -130,27 +135,20 @@ namespace Models.PMF
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e) { Clear(); }
-        
+
         /// <summary>Called when crop is sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
         virtual protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            List<IArbitration> organsToArbitrate = new List<IArbitration>();
-
-            foreach (IOrgan organ in plant.Organs)
-                if (organ is IArbitration)
-                    organsToArbitrate.Add(organ as IArbitration);
-
-            Organs = organsToArbitrate;
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
         }
 
-        
+
         /// First get all demands and supplies, send potential DM allocations and do N reallocation so N uptake demand can be calculated
-        
+
         /// <summary>Does the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
         /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         /// <param name="sender">The sender.</param>
@@ -174,7 +172,7 @@ namespace Models.PMF
                 nArbitration.DoPotentialPartitioning(Organs.ToArray(), N);
             }
         }
-        
+
         /// <summary>
         /// Calculate the potential sw uptake for today
         /// </summary>

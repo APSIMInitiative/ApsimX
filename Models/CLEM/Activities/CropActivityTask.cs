@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -96,7 +94,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {

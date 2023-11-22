@@ -1,17 +1,18 @@
+using System;
+using System.Collections.Generic;
+using Models.Core;
+using Models.Core.Run;
+using Models.Interfaces;
+using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
+using System.Linq;
+using Models.PMF;
+using System.Data;
+
 namespace Models
 {
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Data;
-    using APSIM.Shared.Utilities;
-
     /// <summary>
-    /// The clock model is resonsible for controlling the daily timestep in APSIM. It 
+    /// The clock model is resonsible for controlling the daily timestep in APSIM. It
     /// keeps track of the simulation date and loops from the start date to the end
     /// date, publishing events that other models can subscribe to.
     /// </summary>
@@ -99,85 +100,97 @@ namespace Models
         }
 
         // Public events that we're going to publish.
-        /// <summary>Occurs when [start of simulation].</summary>
+        /// <summary>Occurs once at the start of the simulation.</summary>
         public event EventHandler StartOfSimulation;
-        /// <summary>Occurs when [start of day].</summary>
+        /// <summary>Occurs at start of each day.</summary>
         public event EventHandler StartOfDay;
-        /// <summary>Occurs when [start of month].</summary>
+        /// <summary>Occurs at start of each month.</summary>
         public event EventHandler StartOfMonth;
-        /// <summary>Occurs when [start of year].</summary>
+        /// <summary>Occurs at start of each year.</summary>
         public event EventHandler StartOfYear;
-        /// <summary>Occurs when [start of week].</summary>
+        /// <summary>Occurs at start of each week.</summary>
         public event EventHandler StartOfWeek;
-        /// <summary>Occurs when [end of day].</summary>
+        /// <summary>Occurs at end of each day</summary>
         public event EventHandler EndOfDay;
-        /// <summary>Occurs when [end of month].</summary>
+        /// <summary>Occurs at end of each month.</summary>
         public event EventHandler EndOfMonth;
-        /// <summary>Occurs when [end of year].</summary>
+        /// <summary>Occurs at end of each year.</summary>
         public event EventHandler EndOfYear;
-        /// <summary>Occurs when [end of week].</summary>
+        /// <summary>Occurs at end of each week.</summary>
         public event EventHandler EndOfWeek;
-        /// <summary>Occurs when [end of simulation].</summary>
+        /// <summary>Occurs at end of simulation.</summary>
         public event EventHandler EndOfSimulation;
-        /// <summary>Last initialisation event.</summary>
+        /// <summary>Final Initialise event. Occurs once at start of simulation.</summary>
         public event EventHandler FinalInitialise;
 
-        /// <summary>Occurs when [do weather].</summary>
+        /// <summary>Occurs first each day to allow yesterdays values to be caught</summary>
+        public event EventHandler DoCatchYesterday;
+        /// <summary>Occurs each day to calculuate weather</summary>
         public event EventHandler DoWeather;
-        /// <summary>Occurs when [do daily initialisation].</summary>
+        /// <summary>Occurs each day to do daily updates to models</summary>
         public event EventHandler DoDailyInitialisation;
-        /// <summary>Occurs when [do initial summary].</summary>
+        /// <summary>Occurs each day to make the intial summary</summary>
         public event EventHandler DoInitialSummary;
-        /// <summary>Occurs when [do management].</summary>
+        /// <summary>Occurs each day to do management actions and changes</summary>
         public event EventHandler DoManagement;
-        /// <summary>Occurs when [do PestDisease damage]</summary>
+        /// <summary>Occurs to do Pest/Disease actions</summary>
         public event EventHandler DoPestDiseaseDamage;
-        /// <summary>Occurs when [do energy arbitration].</summary>
+        /// <summary>Occurs when the canopy energy balance needs to be calculated with MicroCLimate</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
-        /// <summary>Occurs when [do soil water movement].</summary>
+        /// <summary>Occurs each day to do water calculations such as irrigation, swim, water balance etc</summary>
         public event EventHandler DoSoilWaterMovement;                                //Soil module
-        /// <summary>Invoked to tell soil erosion to perform its calculations.</summary>
+        /// <summary>Occurs to tell soil erosion to perform its calculations.</summary>
         public event EventHandler DoSoilErosion;
-        /// <summary>Occurs when [do soil temperature].</summary>
+        /// <summary>Occurs to perform soil temperature calculations to do solute processes.</summary>
         public event EventHandler DoSoilTemperature;
-        //DoSoilNutrientDynamics will be here
-        /// <summary>Occurs when [do soil organic matter].</summary>
+        /// <summary>Occurs each day</summary>
+        public event EventHandler DoSolute;
+        /// <summary>Occurs each day to perform daily calculations of organic soil matter</summary>
+        public event EventHandler DoSurfaceOrganicMatterPotentialDecomposition;
+        /// <summary>Occurs each day to perform daily calculations of organic soil matter</summary>
         public event EventHandler DoSoilOrganicMatter;                                 //SurfaceOM
-        /// <summary>Occurs when [do surface organic matter decomposition].</summary>
+        /// <summary>Occurs each day to do the daily residue decomposition</summary>
         public event EventHandler DoSurfaceOrganicMatterDecomposition;                 //SurfaceOM
-        /// <summary>Occurs when [do update transpiration].</summary>                   
+        /// <summary>Occurs each day to do daily growth increment of total plant biomass</summary>
         public event EventHandler DoUpdateWaterDemand;
-        /// <summary>Occurs when [do water arbitration].</summary>
+        /// <summary>Occurs each day to do water arbitration</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+        /// <summary>Initiates water calculations for the Pasture model</summary>
+        public event EventHandler DoPastureWater;
         /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
         public event EventHandler PrePhenology;
-        /// <summary>Occurs when [do phenology].</summary>                             
-        public event EventHandler DoPhenology;                                         // Plant 
-        /// <summary>Occurs when [do potential plant growth].</summary>
-        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant        
-        /// <summary>Occurs when [do potential plant partioning].</summary>
+        /// <summary>Occurs each day to perform phenology</summary>
+        public event EventHandler DoPhenology;                                         // Plant
+        /// <summary>Occurs each day to do potential growth</summary>
+        public event EventHandler DoPotentialPlantGrowth;                              //Refactor to DoWaterLimitedGrowth  Plant
+        /// <summary>Occurs each day to do the water limited dm allocations.  Water constaints to growth are accounted for in the calculation of DM supply
+        /// and does initial N calculations to work out how much N uptake is required to pass to SoilArbitrator</summary>
         public event EventHandler DoPotentialPlantPartioning;                          // PMF OrganArbitrator.
-        /// <summary>Occurs when [do nutrient arbitration].</summary>
+        /// <summary>Occurs each day to do nutrient arbitration</summary>
         public event EventHandler DoNutrientArbitration;                               //Arbitrator
-        /// <summary>Occurs when [do potential plant partioning].</summary>
+        /// <summary>Occurs each day to do nutrient allocations</summary>
         public event EventHandler DoActualPlantPartioning;                             // PMF OrganArbitrator.
-        /// <summary>Occurs when [do actual plant growth].</summary>
+        /// <summary>Occurs each day to do nutrient allocations. Pasture growth</summary>
         public event EventHandler DoActualPlantGrowth;                                 //Refactor to DoNutirentLimitedGrowth Plant
-        /// <summary>Occurs when [do update].</summary>
+        /// <summary>Occurs each day to finish partitioning</summary>
+        public event EventHandler PartitioningComplete;
+        /// <summary>Occurs near end of each day to do checks and finalising</summary>
         public event EventHandler DoUpdate;
-        /// <summary> Process stock methods in GrazPlan Stock </summary>
+        /// <summary>Occurs each day to process stock methods in GrazPlan Stock</summary>
         public event EventHandler DoStock;
-        /// <summary> Process a Pest and Disease lifecycle object </summary>
+        /// <summary>Occurs each day to process a Pest and Disease lifecycle object</summary>
         public event EventHandler DoLifecycle;
-        /// <summary>Occurs when [do management calculations].</summary>
+        /// <summary>Occurs each day after the simulation is done. Does managment calculations</summary>
         public event EventHandler DoManagementCalculations;
+        /// <summary>Occurs after pasture growth and sends material to SOM</summary>
+        public event EventHandler DoEndPasture;
         /// <summary>Occurs when [do report calculations].</summary>
         public event EventHandler DoReportCalculations;
-        /// <summary>Occurs when [do report].</summary>
+        /// <summary>Occurs at end of each day</summary>
         public event EventHandler DoReport;
 
         /// <summary>
-        /// Occurs when dcaps performs its calculations. This needs to happen
+        /// Occurs each day when when dcaps performs its calculations. This must happen
         /// between DoPotentialPlantGrowth and DoPotentialPlantPartitioning.
         /// </summary>
         public event EventHandler DoDCAPST;
@@ -267,6 +280,18 @@ namespace Models
             }
         }
 
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartMonth => Today.Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsStartYear => Today.DayOfYear == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndMonth => Today.AddDays(1).Day == 1;
+
+        /// <summary>Is the current simulation date at end of month?</summary>
+        public bool IsEndYear => Today.AddDays(1).DayOfYear == 1;
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -277,10 +302,10 @@ namespace Models
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
-        /// <param name="sender">The sender.</param>
+        /// <param name="_">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, CommenceArgs e)
+        private void OnDoCommence(object _, CommenceArgs e)
         {
             Today = StartDate;
 
@@ -304,6 +329,10 @@ namespace Models
 
             while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
+
+                if (DoCatchYesterday != null)
+                    DoCatchYesterday.Invoke(this, args);
+
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
 
@@ -339,6 +368,12 @@ namespace Models
                 if (DoSoilTemperature != null)
                     DoSoilTemperature.Invoke(this, args);
 
+                if (DoSolute != null)
+                    DoSolute.Invoke(this, args);
+
+                if (DoSurfaceOrganicMatterPotentialDecomposition != null)
+                    DoSurfaceOrganicMatterPotentialDecomposition.Invoke(this, args);
+
                 if (DoSoilOrganicMatter != null)
                     DoSoilOrganicMatter.Invoke(this, args);
 
@@ -365,6 +400,9 @@ namespace Models
                 if (DoPotentialPlantPartioning != null)
                     DoPotentialPlantPartioning.Invoke(this, args);
 
+                if (DoPastureWater != null)
+                    DoPastureWater.Invoke(this, args);
+
                 if (DoNutrientArbitration != null)
                     DoNutrientArbitration.Invoke(this, args);
 
@@ -373,6 +411,9 @@ namespace Models
 
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
+
+                if (PartitioningComplete != null)
+                    PartitioningComplete.Invoke(this, args);
 
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
@@ -385,6 +426,9 @@ namespace Models
 
                 if (DoManagementCalculations != null)
                     DoManagementCalculations.Invoke(this, args);
+
+                if (DoEndPasture != null)
+                    DoEndPasture.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);
@@ -465,6 +509,15 @@ namespace Models
                 EndOfSimulation.Invoke(this, args);
 
             Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, GetModelDescription());
+            yield return new Section(Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true));
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
 
     /// <summary>
     /// An class for encapsulating a list of simulations that are ready
@@ -17,7 +15,7 @@
     {
         /// <summary>The descriptions of simulations that we are going to run.</summary>
         private List<IJobManager> jobs = new List<IJobManager>();
-        
+
         /// <summary>The job runner being used.</summary>
         private JobRunner jobRunner = null;
 
@@ -270,7 +268,7 @@
                     switch (runType)
                     {
                         case RunTypeEnum.SingleThreaded:
-                            jobRunner = new JobRunner(numProcessors:1);
+                            jobRunner = new JobRunner(numProcessors: 1);
                             break;
                         case RunTypeEnum.MultiThreaded:
                             jobRunner = new JobRunner(numberOfProcessors);
@@ -298,7 +296,6 @@
         {
             if (jobRunner != null)
             {
-                jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
                 // jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
@@ -331,20 +328,30 @@
         /// <param name="e">Event arguments.</param>
         private void OnAllCompleted(object sender, AllCompleteArguments e)
         {
-            Stop();
+            try
+            {
+                foreach (var job in jobs.OfType<SimulationGroup>())
+                    job.StorageFinishWriting();
 
-            AddException(e.ExceptionThrowByRunner);
+                Stop();
 
-            foreach (var job in jobs.OfType<SimulationGroup>())
-                if (job.PrePostExceptionsThrown != null)
-                    job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
+                AddException(e.ExceptionThrowByRunner);
 
-            AllSimulationsCompleted?.Invoke(this,
-                new AllJobsCompletedArgs()
-                {
-                    AllExceptionsThrown = ExceptionsThrown,
-                    ElapsedTime = ElapsedTime
-                });
+                foreach (var job in jobs.OfType<SimulationGroup>())
+                    if (job.PrePostExceptionsThrown != null)
+                        job.PrePostExceptionsThrown.ForEach(ex => AddException(ex));
+
+                AllSimulationsCompleted?.Invoke(this,
+                    new AllJobsCompletedArgs()
+                    {
+                        AllExceptionsThrown = ExceptionsThrown,
+                        ElapsedTime = ElapsedTime
+                    });
+            }
+            finally
+            {
+                jobRunner.AllCompleted -= OnAllCompleted;
+            }
         }
 
         /// <summary>

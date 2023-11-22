@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
 
 namespace Models.CLEM.Resources
 {
@@ -18,12 +17,12 @@ namespace Models.CLEM.Resources
     [Description("Specify the conception status of a new female")]
     [HelpUri(@"Content/Features/Resources/SetPreviousConception.htm")]
     [Version(1, 0, 1, "")]
-    public class SetPreviousConception: CLEMModel, IValidatableObject
+    public class SetPreviousConception : CLEMModel, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Number of months pregnant
@@ -47,7 +46,7 @@ namespace Models.CLEM.Resources
         public void SetConceptionDetails(RuminantFemale female)
         {
             // if female can breed
-            if(NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
+            if (NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
                 if (offspring > 0)
@@ -69,18 +68,18 @@ namespace Models.CLEM.Resources
         {
             RuminantTypeCohort ruminantCohort = Parent as RuminantTypeCohort;
             var results = new List<ValidationResult>();
-            if((Parent as RuminantTypeCohort).Sex == Sex.Female)
+            if ((Parent as RuminantTypeCohort).Sex == Sex.Female)
             {
                 // get the breed to check gestation
                 RuminantType ruminantType = this.FindAncestor<RuminantType>();
-                if(ruminantType is null)
+                if (ruminantType is null)
                 {
                     // find type from a specify ruminant component
                     var specifyRuminant = this.FindAncestor<SpecifyRuminant>();
-                    if(specifyRuminant != null)
+                    if (specifyRuminant != null)
                         ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this as Model, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-                    if(ruminantType != null)
+                    if (ruminantType != null)
                     {
                         if (NumberMonthsPregnant < ruminantType.GestationLength)
                         {

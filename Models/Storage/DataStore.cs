@@ -1,18 +1,13 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Newtonsoft.Json;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Documentation;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Text;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A storage service for reading and writing to/from a database.
@@ -304,7 +299,7 @@
                 if (connection.ViewExists(name))
                 {
                     var resultSql = dbReader.GetDataUsingSql($"SELECT sql FROM sqlite_master WHERE type='view' and name='{name}'");
-                    if(resultSql.Rows.Count > 0)
+                    if (resultSql.Rows.Count > 0)
                         return resultSql.Rows[0].ItemArray[0].ToString();
                 }
             }

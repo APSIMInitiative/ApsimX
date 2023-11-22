@@ -1,16 +1,18 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Interfaces;
+using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
+
+namespace Models.PostSimulationTools
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.IO;
-    using System.Threading;
 
     /// <summary>
     /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
@@ -23,10 +25,10 @@
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
-    [ValidParent(ParentType=typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
     [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridModel
     {
         /// <summary>
         /// The DataStore.
@@ -61,6 +63,35 @@
                 Simulations simulations = FindAncestor<Simulations>();
                 this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the table of values.
+        /// </summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                return new List<GridTable>() { new GridTable(Name, new List<GridTableColumn>(), this) };
+            }
+        }
+
+        /// <summary>
+        /// Combines the live and dead forages into a single row for display and renames columns
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            return GetTable();
+        }
+
+        /// <summary>
+        /// Breaks the lines into the live and dead parts and changes headers to match class
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            //since Input is not an input in the GUI, we don't want to actualy change the model.
+            return new DataTable();
         }
 
         /// <summary>Return our input filenames</summary>
@@ -99,6 +130,18 @@
         /// Return a datatable for this input file. Returns null if no data.
         /// </summary>
         /// <returns></returns>
+        public DataTable GetTable()
+        {
+            if (FullFileNames.Length > 0)
+                if (!String.IsNullOrEmpty(FullFileNames[0])) 
+                    return GetTable(FullFileNames[0]);
+            return null;
+        }
+
+        /// <summary>
+        /// Return a datatable for this input file. Returns null if no data.
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetTable(string fileName)
         {
             ApsimTextFile textFile = new ApsimTextFile();
@@ -120,6 +163,6 @@
             {
                 textFile?.Close();
             }
-        }       
+        }
     }
 }

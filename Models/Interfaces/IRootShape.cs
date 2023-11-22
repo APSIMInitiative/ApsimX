@@ -9,7 +9,7 @@ namespace Models.Interfaces
     {
         /// <summary>Calculates proportion of soil occupied by root in each layer</summary>
         /// <param name="zone">The ZoneState.</param>
-        void CalcRootProportionInLayers(ZoneState zone);
+        void CalcRootProportionInLayers(IRootGeometryData zone);
 
         /// <summary>
         /// Calculate proportion of soil volume occupied by root in each layer.

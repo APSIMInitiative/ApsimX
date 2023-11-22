@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.Utilities
+﻿namespace Models.Utilities
 {
     /// <summary>
     /// Collection of units conversion extension functions

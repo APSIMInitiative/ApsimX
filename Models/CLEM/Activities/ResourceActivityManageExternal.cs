@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly Clock clock = null;
+        private readonly IClock clock = null;
         private double[,] amountToDo;
         private double[,] valueToDo;
         private double[,] packetsToDo;
@@ -144,13 +144,13 @@ namespace Models.CLEM.Activities
 
                         if (resource != null)
                         {
-                            var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent);
+                            var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
                             if (matchingResources.Count() > 1)
                             {
                                 warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                             }
-                            resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent).FirstOrDefault()?.Multiplier ?? 1;
+                            resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
                         }
                         else
                         {
@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
                 {
                     var resource = allResources[item[fileResource.ResourceNameColumnName].ToString()];
                     if(resource.Item1 != null)
-                    { 
+                    {
                         // amount provided x any multiplier
                         double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture) * resource.Item2;
 
@@ -213,7 +213,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {
@@ -430,7 +430,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

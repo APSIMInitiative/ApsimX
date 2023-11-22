@@ -1,11 +1,11 @@
 ﻿using Models.CLEM.Groupings;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Resources
 {
@@ -36,7 +36,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double GetAvailability(int month)
         {
-            if(month<=12 && month>0 && month<=MonthlyValues.Count())
+            if (month <= 12 && month > 0 && month <= MonthlyValues.Count())
                 return MonthlyValues[month - 1];
             else
                 return 0;
@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
 
                     htmlWriter.Write(" days each month</div>");
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -108,21 +108,21 @@ namespace Models.CLEM.Resources
                 }
                 else
                     htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            string html = FormatForParentControl 
-                ? "<tr><td>" 
+            string html = FormatForParentControl
+                ? "<tr><td>"
                 : "\r\n<div class=\"filterborder clearfix\">";
 
-                if (FindAllChildren<Filter>().Count() < 1)
-                    html += "<div class=\"filter\">Any labour</div>";
+            if (FindAllChildren<Filter>().Count() < 1)
+                html += "<div class=\"filter\">Any labour</div>";
 
-                return html;            
+            return html;
         }
 
         /// <inheritdoc/>

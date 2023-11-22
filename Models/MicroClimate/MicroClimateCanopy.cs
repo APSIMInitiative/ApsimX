@@ -1,7 +1,8 @@
-﻿namespace Models
+﻿using System;
+using Models.Interfaces;
+
+namespace Models
 {
-    using System;
-    using Models.Interfaces;
 
     /// <summary>A micro climate wrapper around a ICanopy instance.</summary>
     [Serializable]

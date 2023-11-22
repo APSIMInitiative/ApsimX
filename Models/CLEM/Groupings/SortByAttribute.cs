@@ -3,12 +3,8 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Groupings
 {
@@ -70,8 +66,6 @@ namespace Models.CLEM.Groupings
                         {
                             case IndividualAttribute _:
                                 return float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
-                            case CLEMGenotypeAttribute _:
-                                return MissingAttributeValue;
                             default:
                                 return null;
                         }

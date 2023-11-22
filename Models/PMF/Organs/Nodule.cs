@@ -1,16 +1,16 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Newtonsoft.Json;
+
 namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using APSIM.Shared.Documentation;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// This organ simulates the root structure associate with symbiotic N-fixing bacteria.  It provides the core functions of determining 
@@ -19,7 +19,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Nodule : Model, IOrgan, IArbitration, IOrganDamage
+    public class Nodule : Model, IOrgan, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
         /// <summary>The fixation metabolic cost</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -57,7 +57,7 @@ namespace Models.PMF.Organs
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.ReTranslocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
             double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             Live.StorageN -= StorageNRetranslocation;
@@ -82,12 +82,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
-            if (NSupply.Reallocation < -BiomassToleranceValue)
+            NSupply.ReAllocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            if (NSupply.ReAllocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            if (NSupply.Retranslocation < -BiomassToleranceValue)
+            NSupply.ReTranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            if (NSupply.ReTranslocation < -BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Uptake = 0;
@@ -195,12 +195,12 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private NutrientPoolFunctions dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private NutrientPoolFunctions nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -352,18 +352,39 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        {
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.ReAllocation) * dmRetranslocationFactor.Value();
             if (availableDM < -BiomassToleranceValue)
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -384,8 +405,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMSupply")]
         protected virtual void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = AvailableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Fixation = 0;
             DMSupply.Uptake = 0;
         }
@@ -396,7 +417,7 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) ;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
             }
@@ -473,7 +494,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive || parentPlant.IsEnding)
+            if (parentPlant.IsAlive)
                 ClearBiomassFlows();
         }
 
@@ -610,11 +631,11 @@ namespace Models.PMF.Organs
 
             // document DM supplies
             yield return new Section("Dry Matter Supply", DocumentDMSupply());
-            
+
 
             // Document N supplies.
             yield return new Section("Nitrogen Supply", DocumentNSupply());
-            
+
 
             // Document N fixation.
             IModel fixationRate = FindChild("FixationRate");

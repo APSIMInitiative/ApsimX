@@ -1,12 +1,13 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using Gtk;
-    using Interfaces;
-    using OxyPlot.Axes;
+﻿using System;
+using System.Globalization;
+using Gtk;
+using OxyPlot.Axes;
+using UserInterface.Interfaces;
 
+namespace UserInterface.Views
+{
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// An implementation of an AxisView
     /// </summary>
     public class AxisView : ViewBase, IAxisView
     {
@@ -46,6 +47,11 @@
         private CheckButton checkbutton2 = null;
 
         /// <summary>
+        /// Single line label
+        /// </summary>
+        private CheckButton checkbutton3 = null;
+
+        /// <summary>
         /// The constructor
         /// </summary>
         /// <param name="owner">The owning view</param>
@@ -59,17 +65,24 @@
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
+            checkbutton3 = (CheckButton)builder.GetObject("checkbutton3");
             mainWidget = table1;
             entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
+            entryTitle.TextInserted += TitleTextBox_TextChanged;
             entryMin.FocusOutEvent += OnMinimumChanged;
             entryMax.FocusOutEvent += OnMaximumChanged;
             entryInterval.FocusOutEvent += OnIntervalChanged;
             entryTitle.Activated += TitleTextBox_TextChanged;
             entryMin.Activated += OnMinimumChanged;
+            entryMin.TextInserted += OnMinimumChanged;
             entryMax.Activated += OnMaximumChanged;
+            entryMax.TextInserted += OnMaximumChanged;
             entryInterval.Activated += OnIntervalChanged;
+            entryInterval.TextInserted += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
+            checkbutton3.Toggled += OnLabelOnOneLineChanged;
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -97,12 +110,17 @@
         /// Invoked when the user has changed the interval field
         /// </summary>
         public event EventHandler IntervalChanged;
-       
+
         /// <summary>
         /// Invoked when the user has changed the crosses at zero field
         /// </summary>
         public event EventHandler CrossesAtZeroChanged;
-       
+
+        /// <summary>
+        /// Invoked when the user has changed the single line label field
+        /// </summary>
+        public event EventHandler LabelOnOneLineChanged;
+
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
@@ -153,21 +171,38 @@
         }
 
         /// <summary>
+        /// Gets or sets a value indicating if the axis label should be shown on one line.
+        /// </summary>
+        public bool LabelOnOneLine
+        {
+            get
+            {
+                return checkbutton3.Active;
+            }
+
+            set
+            {
+                checkbutton3.Active = value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
-        { 
+        {
             get
             {
-                DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
-                else if (DateTime.TryParse(entryMin.Text, out date))
+                else if (DateTime.TryParseExact(entryMin.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
                     return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMin.Text,
-                                            System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToDouble(entryMin.Text, CultureInfo.InvariantCulture);
             }
         }
 
@@ -178,17 +213,18 @@
         {
             get
             {
-                DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
-                else if (DateTime.TryParse(entryMax.Text, out date))
+                else if (DateTime.TryParseExact(entryMax.Text,
+                                                CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+                                                CultureInfo.CurrentCulture,
+                                                DateTimeStyles.None,
+                                                out var date))
                     return DateTimeAxis.ToDouble(date);
                 else
-                    return Convert.ToDouble(
-                                            entryMax.Text,
-                                            System.Globalization.CultureInfo.InvariantCulture);
+                    return Convert.ToDouble(entryMax.Text, CultureInfo.InvariantCulture);
             }
-            
+
             set
             {
                 if (double.IsNaN(value))
@@ -340,6 +376,24 @@
             {
                 if (CrossesAtZeroChanged != null)
                     CrossesAtZeroChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user changes the single line label check box.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        private void OnLabelOnOneLineChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (LabelOnOneLineChanged != null)
+                    LabelOnOneLineChanged(this, e);
             }
             catch (Exception err)
             {

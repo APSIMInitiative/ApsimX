@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
-using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -36,6 +35,10 @@ namespace Models.PMF.Phen
         /// <summary>The phenological stage at the end of this phase.</summary>
         [Description("End")]
         public string End { get; set; }
+
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
 
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
@@ -70,20 +73,28 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            ProgressionForTimeStep = progression.Value() * propOfDayToUse;
-            ProgressThroughPhase += ProgressionForTimeStep;
 
-            if (ProgressThroughPhase > Target)
+            if (ProgressThroughPhase >= Target)
             {
-                if (ProgressionForTimeStep > 0.0)
-                {
-                    proceedToNextPhase = true;
-                    propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
-                    ProgressionForTimeStep *= (1 - propOfDayToUse);
-                }
-                ProgressThroughPhase = Target;
+                // We have entered this timestep after Target decrease below progress so exit without doing anything
+                proceedToNextPhase = true;
             }
-            
+            else
+            {
+                ProgressionForTimeStep = progression.Value() * propOfDayToUse;
+                ProgressThroughPhase += ProgressionForTimeStep;
+
+                if (ProgressThroughPhase > Target)
+                {
+                    if (ProgressionForTimeStep > 0.0)
+                    {
+                        proceedToNextPhase = true;
+                        propOfDayToUse *= (ProgressThroughPhase - Target) / ProgressionForTimeStep;
+                        ProgressionForTimeStep *= (1 - propOfDayToUse);
+                    }
+                    ProgressThroughPhase = Target;
+                }
+            }
             return proceedToNextPhase;
         }
 
@@ -126,5 +137,5 @@ namespace Models.PMF.Phen
     }
 }
 
-      
-      
+
+

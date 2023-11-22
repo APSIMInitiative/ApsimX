@@ -1,8 +1,8 @@
-﻿using APSIM.Shared.Documentation;
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Struct;
-using System;
-using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -36,4 +36,4 @@ namespace Models.Functions.DemandFunctions
                 yield return tag;
         }
     }
-}   
+}

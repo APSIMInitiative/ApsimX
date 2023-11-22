@@ -1,8 +1,8 @@
-﻿namespace UserInterface.Views
-{
-    using Gtk;
-    using System;
+﻿using Gtk;
+using System;
 
+namespace UserInterface.Views
+{
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
@@ -29,7 +29,7 @@
             graphView = new GraphView(this);
             vpaned.Pack1(gridView.MainWidget, true, false);
             vpaned.Pack2(graphView.MainWidget, true, false);
-            gridView.NumericFormat = null;
+            graphView.Height = 200;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 

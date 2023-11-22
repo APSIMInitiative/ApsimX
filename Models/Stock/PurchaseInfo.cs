@@ -1,6 +1,7 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+
+namespace Models.GrazPlan
 {
-    using System;
 
     /// <summary>
     ///  Abbreviated animal initialisation set, used in TStockList.Buy                

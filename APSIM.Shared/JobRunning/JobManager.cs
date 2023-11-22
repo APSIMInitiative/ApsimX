@@ -24,6 +24,9 @@
         /// </summary>
         public int NumJobs { get; protected set; }
 
+        /// <summary>Call JobHasCompleted when job is complete?</summary>
+        public bool NotifyWhenJobComplete => true;
+
         /// <summary>
         /// 
         /// </summary>

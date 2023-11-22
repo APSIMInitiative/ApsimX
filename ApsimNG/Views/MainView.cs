@@ -1,20 +1,18 @@
-﻿namespace UserInterface.Views
-{
-    using APSIM.Shared.Utilities;
-    using Gtk;
-    using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Gtk;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using Utility;
+using MessageType = Models.Core.MessageType;
 
-    using System;
-    using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using global::UserInterface.Extensions;
-    using System.Text;
-    using Utility;
-    using MessageType = Models.Core.MessageType;
+namespace UserInterface.Views
+{
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -115,6 +113,11 @@
         private Widget hbox1 = null;
 
         /// <summary>
+        /// Gtk vpane which holds two main parts of the viuw
+        /// </summary>
+        private VPaned vpaned1 = null;
+
+        /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
 
@@ -126,7 +129,7 @@
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
-            MasterView = this;
+            MasterView = (Interfaces.IMainView)this;
             numberOfButtons = 0;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
@@ -140,6 +143,7 @@
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
             hbox1 = (Widget)builder.GetObject("vbox3");
+            vpaned1 = (VPaned)builder.GetObject("vpaned1");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -277,7 +281,7 @@
                 ShowError(err);
             }
         }
-        
+
         /// <summary>
         /// Invoked when an error has been thrown in a view.
         /// </summary>
@@ -316,15 +320,38 @@
         /// <summary>
         /// Controls the height of the status panel.
         /// </summary>
-        public int StatusPanelHeight
+        public int StatusPanelPosition
         {
             get
             {
-                return hbox1.Allocation.Height;
+                return vpaned1.Position;
             }
             set
             {
-                hbox1.HeightRequest = value;
+                vpaned1.Position = value;
+            }
+        }
+
+        /// <summary>
+        /// Height of the VPaned that holds the view
+        /// </summary>
+        public int PanelHeight
+        {
+            get { return vpaned1.AllocatedHeight; }
+        }
+
+        /// <summary>
+        /// Controls the width of the tree panel.
+        /// </summary>
+        public int TreePanelWidth
+        {
+            get
+            {
+                return vpaned1.Position;
+            }
+            set
+            {
+                vpaned1.Position = value;
             }
         }
 
@@ -443,7 +470,7 @@
             {
                 Widget tab = (ownerView as ExplorerView).MainWidget;
                 Notebook notebook = tab.IsAncestor(notebook1) ? notebook1 : notebook2;
-                
+
                 // The top level of the "label" is an EventBox
                 EventBox ebox = (EventBox)notebook.GetTabLabel(tab);
                 ebox.TooltipText = tooltip;
@@ -665,7 +692,7 @@
             if (tabPage >= 0 && notebook != null)
                 notebook.CurrentPage = tabPage;
         }
-        
+
         /// <summary>Gets or set the main window position.</summary>
         public Point WindowLocation
         {
@@ -1181,21 +1208,6 @@
                 return notebook1;
             return hpaned1.FocusChild as Notebook;
         }
-    }
-
-    /// <summary>An event argument structure with a string.</summary>
-    public class TabClosingEventArgs : EventArgs
-    {
-        public bool LeftTabControl;
-        public string Name;
-        public int Index;
-        public bool AllowClose = true;
-    }
-
-    /// <summary>An event argument structure with a field for allow to close.</summary>
-    public class AllowCloseArgs : EventArgs
-    {
-        public bool AllowClose;
     }
 
 }

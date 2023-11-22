@@ -1,9 +1,9 @@
-﻿using APSIM.Shared.Documentation;
-using Models.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -70,7 +70,7 @@ namespace Models.Functions
 
         private static bool NameEqualsValue(string name, double value)
         {
-            return name.Equals("zero", StringComparison.InvariantCultureIgnoreCase) && value == 0 || 
+            return name.Equals("zero", StringComparison.InvariantCultureIgnoreCase) && value == 0 ||
                    name.Equals("one", StringComparison.InvariantCultureIgnoreCase) && value == 1 ||
                    name.Equals("two", StringComparison.InvariantCultureIgnoreCase) && value == 2 ||
                    name.Equals("three", StringComparison.InvariantCultureIgnoreCase) && value == 3 ||

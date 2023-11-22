@@ -30,6 +30,14 @@ namespace UserInterface.Views
         /// <summary>A backing field for NumberHiddenRows property.</summary>
         private int numberHiddenRowsBackingField;
 
+        /// <summary>Stores how many columns were drawn last draw. We have to re-initialise if this changes</summary>
+        private int prevNumColumns = -1;
+
+        /// <summary>Stores how many rows were drawn last draw. We have to re-initialise if this changes</summary>
+        private int prevNumRows = -1;
+
+        private bool recalculateWidths = true;
+
         /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<SheetEventKey> KeyPress;
 
@@ -250,6 +258,7 @@ namespace UserInterface.Views
         public void ScrollUp(int numRows = 1)
         {
             NumberHiddenRows = Math.Max(NumberHiddenRows - numRows, 0);
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet down one row.</summary>
@@ -259,6 +268,7 @@ namespace UserInterface.Views
             var bottomFullyVisibleRowIndex = FullyVisibleRowIndexes.Last();
             if (bottomFullyVisibleRowIndex < DataProvider.RowCount - 1)
                 NumberHiddenRows++;
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet down one page of rows.</summary>
@@ -267,6 +277,7 @@ namespace UserInterface.Views
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
             if (NumberHiddenRows + pageSize < DataProvider.RowCount - 1)
                 NumberHiddenRows += pageSize;
+            RecalculateColumnWidths();
         }
 
         /// <summary>Scroll the sheet up one page of rows.</summary>
@@ -274,6 +285,13 @@ namespace UserInterface.Views
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
             NumberHiddenRows = Math.Max(NumberHiddenRows - pageSize, 0);
+            RecalculateColumnWidths();
+        }
+
+        /// <summary>After this is called, the next time the view is drawn, columns widths will be recalculated</summary>
+        public void RecalculateColumnWidths()
+        {
+            recalculateWidths = true;
         }
 
         /// <summary>Return true if a xy pixel coordinates are in a specified cell.</summary>
@@ -312,8 +330,20 @@ namespace UserInterface.Views
             try
             {
                 // Do initialisation
-                if (ColumnWidths == null)
+                if (ColumnWidths == null || prevNumColumns != DataProvider.ColumnCount || prevNumRows != DataProvider.RowCount)
                     Initialise(cr);
+
+                if (recalculateWidths)
+                {
+                    if (cr != null)
+                    {
+                        CalculateColumnWidths(cr);
+                        recalculateWidths = false;
+                    }
+                }
+
+                prevNumColumns = DataProvider.ColumnCount;
+                prevNumRows = DataProvider.RowCount;
 
                 foreach (var columnIndex in VisibleColumnIndexes)
                     foreach (var rowIndex in VisibleRowIndexes)
@@ -321,7 +351,7 @@ namespace UserInterface.Views
 
                 // Optionally add in blank rows at bottom of grid.
                 int numRowsOfData = VisibleRowIndexes.Count();
-                int numBlankRowsToAdd = Math.Max(0, VisibleRowCount - numRowsOfData);
+                int numBlankRowsToAdd = 0;
                 foreach (var columnIndex in VisibleColumnIndexes)
                     for (int rowIndex = 0; rowIndex < numBlankRowsToAdd; rowIndex++)
                         DrawCell(cr, columnIndex, rowIndex + numRowsOfData);
@@ -342,7 +372,7 @@ namespace UserInterface.Views
                 CalculateColumnWidths(cr);
 
             if (RowCount == 0)
-                RowCount = DataProvider.RowCount;
+                RowCount = DataProvider.RowCount + 1;
 
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
@@ -475,21 +505,20 @@ namespace UserInterface.Views
         /// <param name="cr">The current draing context.</param>
         private void CalculateColumnWidths(IDrawContext cr)
         {
+            int visibleRows = FullyVisibleRowIndexes.Count() + NumberHiddenRows;
+            if (visibleRows >= DataProvider.RowCount)
+                visibleRows = DataProvider.RowCount - 1;
+
             ColumnWidths = new int[DataProvider.ColumnCount];
             for (int columnIndex = 0; columnIndex < DataProvider.ColumnCount; columnIndex++)
             {
-                int columnWidth = 0;
-                for (int rowIndex = 0; rowIndex < Math.Min(NumberFrozenRows + 1, DataProvider.RowCount); rowIndex++)
+                int columnWidth = GetWidthOfCell(cr, columnIndex, 0);
+                for (int rowIndex = NumberHiddenRows; rowIndex <= visibleRows; rowIndex++)
                     columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, rowIndex));
-
-                // Look at middle row.
-                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount / 2));
-
-                // Look at last row.
-                columnWidth = Math.Max(columnWidth, GetWidthOfCell(cr, columnIndex, DataProvider.RowCount-1));
 
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
+            RedrawNeeded?.Invoke(this, new EventArgs());
         }
 
         /// <summary>
@@ -520,6 +549,17 @@ namespace UserInterface.Views
                 string text = null;
                 if (rowIndex < DataProvider.RowCount)
                     text = DataProvider.GetCellContents(columnIndex, rowIndex);
+
+                if (DataProvider.GetColumnUnits(columnIndex) != null)
+                {
+                    string units = DataProvider.GetColumnUnits(columnIndex);
+                    if (units.CompareTo("boolean") == 0 && rowIndex > 0)
+                    {
+                        text = "\u2713";
+                    }
+                }
+                
+
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
                 if (cellBounds != null)
                 {
@@ -548,9 +588,9 @@ namespace UserInterface.Views
                         }
 
                         // Measure text for cell.
-                        var r = cr.GetPixelExtents(text, 
-                                                   CellPainter.TextBold(columnIndex, rowIndex), 
-                                                   CellPainter.TextItalics(columnIndex, rowIndex));
+                        var r = cr.GetPixelExtents(text,
+                                                    CellPainter.TextBold(columnIndex, rowIndex),
+                                                    CellPainter.TextItalics(columnIndex, rowIndex));
 
                         // Vertically center the text.
                         double y = cellBounds.Top + (cellBounds.Height - r.Height) / 2;
@@ -564,7 +604,8 @@ namespace UserInterface.Views
 
                         cr.MoveTo(x, y);
                         cr.DrawText(text, CellPainter.TextBold(columnIndex, rowIndex),
-                                          CellPainter.TextItalics(columnIndex, rowIndex));
+                                            CellPainter.TextItalics(columnIndex, rowIndex));
+                        
                     }
                     cr.ResetClip();
                     cr.State = States.Normal;

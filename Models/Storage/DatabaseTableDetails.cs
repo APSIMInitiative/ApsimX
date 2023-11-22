@@ -1,10 +1,12 @@
-﻿namespace Models.Storage
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using PdfSharpCore.Pdf.Content;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     class DatabaseTableDetails
     {
@@ -36,15 +38,21 @@
         /// <summary>Does the table exist in the .db file?</summary>
         public bool TableExistsInDb { get; private set; }
 
+        /// <summary>Lock object.</summary>
+        private static object lockObject = new object();
+
         /// <summary>Ensure the specified table matches our columns and row values.</summary>
         /// <param name="table">The table definition to write to the database.</param>
-        public void EnsureTableExistsAndHasRequiredColumns(DataTable table)
+        public void EnsureTableExistsAndHasRequiredColumns(ref DataTable table)
         {
-            // Check to make sure the table exists and has our columns.
-            if (TableExistsInDb)
-                AlterTable(table);
-            else
-                CreateTable(table);
+            lock (lockObject)
+            {
+                // Check to make sure the table exists and has our columns.
+                if (TableExistsInDb)
+                    AlterTable(ref table);
+                else
+                    CreateTable(table);
+            }
         }
 
         /// <summary>Create a table that matches the specified table.</summary>
@@ -54,7 +62,7 @@
             List<string> colTypes = new List<string>();
 
             foreach (DataColumn column in table.Columns)
-            { 
+            {
                 columnNamesInDb.Add(column.ColumnName);
                 bool allowLongStrings = table.TableName.StartsWith("_");
                 colTypes.Add(connection.GetDBDataTypeName(column.DataType, allowLongStrings));
@@ -69,15 +77,21 @@
             TableExistsInDb = true;
         }
 
-        /// <summary>Alter an existing table ensuring all columns exist.</summary>
+        /// <summary>Alter an existing table ensuring all columns exist.
+        /// Adjust column names in the DataTable to correspond in case with 
+        /// those already defined in the database.</summary>
         /// <param name="table">The table definition to write to the database.</param>
-        private void AlterTable(DataTable table)
+        private void AlterTable(ref DataTable table)
         {
             bool haveBegunTransaction = false;
-                
+
             foreach (DataColumn column in table.Columns)
             {
-                if (!columnNamesInDb.Contains(column.ColumnName))
+                if (columnNamesInDb.TryGetValue(column.ColumnName, out string actualName))
+                {
+                    column.ColumnName = actualName;
+                }
+                else
                 {
                     if (!haveBegunTransaction)
                     {

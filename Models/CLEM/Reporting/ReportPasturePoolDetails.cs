@@ -1,19 +1,10 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
-using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
-using Models.CLEM.Resources;
-using Models.Core.Attributes;
-using Models.Core.Run;
-using Models.Storage;
-using System.Globalization;
-using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -29,105 +20,104 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
-    public class ReportPasturePoolDetails: Models.Report
+    public class ReportPasturePoolDetails : Models.Report
     {
         /// <summary>
         /// Per ha
         /// </summary>
-        [Category("Style", "")]
+        [Category("Style", "Units")]
         [Description("Report per hectare")]
         public bool ReportPerHectare { get; set; }
 
         /// <summary>
         /// Report in tonnes
         /// </summary>
-        [Category("Style", "")]
+        [Category("Style", "Units")]
         [Description("Report in tonnes")]
         public bool ReportInTonnes { get; set; }
 
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Total")]
         public bool ReportTotal { get; set; }
 
         /// <summary>
         /// Pasture growth in timestep (kg)
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("New growth")]
         public bool ReportGrowth { get; set; }
 
         /// <summary>
         /// Pasture consumed in timestep
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Consumed")]
         public bool ReportConsumed { get; set; }
 
         /// <summary>
         /// Pasture detached in timestep
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Detached")]
         public bool ReportDetached { get; set; }
 
         /// <summary>
         /// Pasture Nitrogen (%)
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Nitrogen (%)")]
         public bool ReportNitrogen { get; set; }
 
         /// <summary>
         /// Dry Matter Digestibility (DMD, %)
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Dry matter digestibility (%, DMD)")]
         public bool ReportDMD { get; set; }
 
         /// <summary>
         /// Average age in timestep
         /// </summary>
-        [Category("By pasture", "")]
+        [Category("By pasture", "Output")]
         [Description("Average pasture age")]
         public bool ReportAge { get; set; }
-
 
 
         /// <summary>
         /// Pools Amount (kg)
         /// </summary>
-        [Category("By pools", "")]
+        [Category("By pools", "Output")]
         [Description("Total in each pool")]
         public bool ReportPoolsTotal { get; set; }
 
         /// <summary>
         /// Pools consumed in timestep (kg)
         /// </summary>
-        [Category("By pools", "")]
+        [Category("By pools", "Output")]
         [Description("Consumed from each pool")]
         public bool ReportPoolsConsumed { get; set; }
 
         /// <summary>
         /// Pools detached in timestep (kg)
         /// </summary>
-        [Category("By pools", "")]
+        [Category("By pools", "Output")]
         [Description("Detached from each pool")]
         public bool ReportPoolsDetached { get; set; }
 
         /// <summary>
         /// Pools nitrogen content (%)
         /// </summary>
-        [Category("By pools", "")]
+        [Category("By pools", "Output")]
         [Description("Nitrogen (%) of each pool")]
         public bool ReportPoolsNitrogen { get; set; }
 
         /// <summary>
         /// Pools dry matter digestibility (%)
         /// </summary>
-        [Category("By pools", "")]
+        [Category("By pools", "Output")]
         [Description("Dry matter digestibility (DMD) of each pool")]
         public bool ReportPoolsDMD { get; set; }
 
@@ -143,7 +133,7 @@ namespace Models.CLEM.Reporting
             // for each grazefoodstore
 
             ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
-            if(resHolder is null)
+            if (resHolder is null)
                 return;
 
             List<string> pastureEntries = new List<string>();
@@ -166,7 +156,7 @@ namespace Models.CLEM.Reporting
             {
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
-                   variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
+                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1)) as {pasture.Name}.{pastureVariable}");
 
                 // by pool measures
                 foreach (string poolVariable in poolEntries)
@@ -179,7 +169,7 @@ namespace Models.CLEM.Reporting
             }
 
             // sort
-            variableNames = variableNames.OrderBy(a => a).ToList(); 
+            variableNames = variableNames.OrderBy(a => a).ToList();
             variableNames.Insert(0, "[Clock].Today as Date");
             VariableNames = variableNames.ToArray();
 

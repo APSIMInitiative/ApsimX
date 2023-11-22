@@ -15,6 +15,7 @@
     using Models.Storage;
     using Views;
     using APSIM.Shared.Graphing;
+    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// A presenter for a graph.
@@ -128,6 +129,9 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
+                if (definitions.Count() == 0)
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No data matches the properties and filters set for this graph", Simulation.MessageType.Warning, false);
+
                 foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
@@ -137,8 +141,83 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (APSIM.Shared.Graphing.Axis a in graph.Axis)
-                    FormatAxis(a);
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                    FormatAxis(axis);
+
+                //check if the axes are too small, update if so
+                const double tolerance = 0.00001;
+                foreach (APSIM.Shared.Graphing.Axis axis in graph.Axis)
+                {
+                    double minimum = graphView.AxisMinimum(axis.Position);
+                    double maximum = graphView.AxisMaximum(axis.Position);
+                    if (axis.Maximum - axis.Minimum < tolerance)
+                    {
+                        axis.Minimum -= tolerance / 2;
+                        axis.Maximum += tolerance / 2;
+                        FormatAxis(axis);
+                    }
+                }
+
+                int pointsOutsideAxis = 0;
+                int pointsInsideAxis = 0;
+                foreach (SeriesDefinition definition in definitions)
+                {
+                    double xMin = graphView.AxisMinimum(definition.XAxis);
+                    double xMax = graphView.AxisMaximum(definition.XAxis);
+                    bool isOutside = false;
+                    foreach (var x in definition.X)
+                    {
+                        double xDouble = 0;
+                        if (x is DateTime)
+                            xDouble = ((DateTime)x).ToOADate();
+                        else
+                            xDouble = Convert.ToDouble(x);
+
+                        if (xMin != double.NaN)
+                            if (xDouble < xMin)
+                                isOutside = true;
+                        if (xMax != double.NaN)
+                            if (xDouble > xMax)
+                                isOutside = true;
+                    }
+                    double yMin = graphView.AxisMinimum(definition.YAxis);
+                    double yMax = graphView.AxisMaximum(definition.YAxis);
+                    foreach (var y in definition.Y)
+                    {
+                        double yDouble = 0;
+                        if (y is DateTime)
+                            yDouble = ((DateTime)y).ToOADate();
+                        else
+                            yDouble = Convert.ToDouble(y);
+
+                        if (yMin != double.NaN)
+                            if (yDouble < yMin)
+                                isOutside = true;
+                        if (yMax != double.NaN)
+                            if (yDouble > yMax)
+                                isOutside = true;
+                    }
+                    if (isOutside)
+                        pointsOutsideAxis += 1;
+                    else
+                        pointsInsideAxis += 1;
+                }
+
+                if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values. Axis minimum and maximums have been reset.", Simulation.MessageType.Warning, false);
+                    for (int i = 0; i < graph.Axis.Count; i++)
+                    {
+                        graph.Axis[i].Minimum = Double.NaN;
+                        graph.Axis[i].Maximum = Double.NaN;
+                        FormatAxis(graph.Axis[i]);
+                    }
+                    DrawGraph();
+                } 
+                else if (pointsOutsideAxis > 0)
+                {
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
+                }
 
                 // Get a list of series annotations.
                 DrawOnView(graph.GetAnnotationsToGraph());
@@ -181,13 +260,12 @@
             // The rectange numbers below are optimised for generation of PDF document
             // on a computer that has its display settings at 100%.
             Rectangle r = new Rectangle(0, 0, 600, 450);
-            Bitmap img = new Bitmap(r.Width, r.Height);
-
-            graphView.Export(ref img, r, true);
+            Gdk.Pixbuf img;
+            graphView.Export(out img, r, true);
 
             string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
-            img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            img.Save(fileName, "png");
 
             return fileName;
         }
@@ -464,10 +542,13 @@
                 }
 
                 // Create a default title by appending all 'names' together.
-                title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
+                if (axis.LabelOnOneLine)
+                    title = StringUtilities.BuildString(titles.ToArray(), ", ");
+                else
+                    title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
-            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero);
+            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero, axis.LabelOnOneLine);
         }
         
         /// <summary>The graph model has changed.</summary>

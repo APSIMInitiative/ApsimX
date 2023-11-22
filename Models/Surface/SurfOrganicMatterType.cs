@@ -1,7 +1,8 @@
-﻿namespace Models.Surface
+﻿using System;
+using Models.Interfaces;
+
+namespace Models.Surface
 {
-    using Models.Interfaces;
-    using System;
 
     /// <summary>
     /// 
@@ -64,8 +65,11 @@
     /// <summary>
     /// Class that holds Icanopy interface members
     /// </summary>
-    public class ResidueCanopy: ICanopy
+    public class ResidueCanopy : ICanopy
     {
+        /// <summary>Canopy type identifier.</summary>
+        public string CanopyType { get; set; } = "Residue";
+
         /// <summary>Albedo.</summary>
         public double Albedo { get; set; }
 

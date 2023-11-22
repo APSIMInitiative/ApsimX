@@ -1,20 +1,20 @@
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Models.Core;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Groupings;
-using Models.Core.Attributes;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Models.CLEM.Resources
 {
     ///<summary>
     /// Parent model of Labour Person models.
-    ///</summary> 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -22,10 +22,10 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
+    public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private List<string> warningsMultipleEntry = new List<string>();
         private List<string> warningsNotFound = new List<string>();
@@ -173,6 +173,7 @@ namespace Models.CLEM.Resources
                         Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
                     };
+                    labour.SetParentResourceBaseWithTransactions(this);
                     labour.Attributes.Add("Group", att);
                     labour.TransactionOccurred += Resource_TransactionOccurred;
                     Items.Add(labour);
@@ -193,6 +194,7 @@ namespace Models.CLEM.Resources
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                             Hired = labourChildModel.Hired
                         };
+                        labour.SetParentResourceBaseWithTransactions(this);
                         labour.Attributes.Add("Group", att);
                         labour.TransactionOccurred += Resource_TransactionOccurred;
                         Items.Add(labour);
@@ -200,8 +202,8 @@ namespace Models.CLEM.Resources
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (this.FindAllChildren<LabourPricing>().Count() > 0)
-                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
+            if (FindAllChildren<LabourPricing>().Count() > 0)
+                PayList = Apsim.Clone(FindAllChildren<LabourPricing>().FirstOrDefault());
         }
 
         /// <summary>
@@ -210,7 +212,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (LabourType childModel in this.FindAllChildren<LabourType>())
+            foreach (LabourType childModel in FindAllChildren<LabourType>())
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
 
             if (Items != null)
@@ -231,6 +233,13 @@ namespace Models.CLEM.Resources
                 CheckAssignLabourAvailability(item);
                 if (item.DietaryComponentList != null)
                     item.DietaryComponentList.Clear();
+
+                // reset check and take labour trackers for last activity to avoid between month carryover
+                for (int i = 0; i < 2; i++)
+                {
+                    item.LastActivityLabour[i] = 0;
+                    item.LastActivityRequestID[i] = new Guid();
+                }
             }
 
             // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability
@@ -252,7 +261,7 @@ namespace Models.CLEM.Resources
         {
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
-            {                
+            {
                 // check labour availability still ok
                 if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
                     labour.LabourAvailability = null;
@@ -279,7 +288,7 @@ namespace Models.CLEM.Resources
 
                     throw new ApsimXException(this, msg);
                 }
-            }            
+            }
         }
 
         /// <summary>Age individuals</summary>
@@ -288,7 +297,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void ONCLEMAgeResources(object sender, EventArgs e)
         {
-            if(AllowAging)
+            if (AllowAging)
             {
                 foreach (LabourType item in Items)
                 {
@@ -325,7 +334,7 @@ namespace Models.CLEM.Resources
             double ae = 0;
             foreach (LabourType person in Items)
                 if (!person.Hired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths)??1)*Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
+                    ae += (CalculateAE(person.AgeInMonths) ?? 1) * Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
             return ae;
         }
 
@@ -339,7 +348,7 @@ namespace Models.CLEM.Resources
             {
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
-                    if (item.Filter(ind))                    
+                    if (item.Filter(ind))
                         return item.Value;
 
                 // no price match found.
@@ -369,7 +378,7 @@ namespace Models.CLEM.Resources
                 LabourPriceGroup matchCriteria = null;
                 foreach (LabourPriceGroup priceGroup in PayList.FindAllChildren<LabourPriceGroup>())
                 {
-                    if (priceGroup.Filter(ind) && matchIndividual == null)                    
+                    if (priceGroup.Filter(ind) && matchIndividual == null)
                         matchIndividual = priceGroup;
 
                     // check that pricing item meets the specified criteria.
@@ -471,7 +480,7 @@ namespace Models.CLEM.Resources
                 }
                 htmlWriter.Write("</table>");
                 htmlWriter.Write("</div></div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using APSIM.Shared.Documentation;
 
 namespace Models.Functions.RootShape
 {
@@ -16,7 +16,7 @@ namespace Models.Functions.RootShape
     public class RootShapeCylinder : Model, IRootShape
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(ZoneState zone)
+        public void CalcRootProportionInLayers(IRootGeometryData zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
             zone.RootArea = (zone.RightDist + zone.LeftDist) * zone.Depth / 1e6;
@@ -28,7 +28,7 @@ namespace Models.Functions.RootShape
                 if (zone.Depth < top)
                 {
                     prop = 0;
-                } 
+                }
                 else
                 {
                     prop = SoilUtilities.ProportionThroughLayer(physical.Thickness, layer, zone.Depth);

@@ -1,18 +1,16 @@
 // -----------------------------------------------------------------------
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.ForageDigestibility;
 
 namespace Models.GrazPlan
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.ForageDigestibility;
-    using Models.Interfaces;
-    using Models.PMF.Interfaces;
 
     /*
      GRAZPLAN animal biology model for AusFarm - PaddockList && ForageList classes                                                                   
@@ -44,17 +42,17 @@ namespace Models.GrazPlan
         /// N in kg/ha
         /// </summary>
         public double NitrogenKgHa;
-        
+
         /// <summary>
         /// P in kg/ha
         /// </summary>
         public double PhosphorusKgHa;
-        
+
         /// <summary>
         /// S in kg/ha
         /// </summary>
         public double SulphurKgHa;
-        
+
         /// <summary>
         /// Ash alkalinity mol/ha
         /// </summary>
@@ -121,7 +119,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// 0 = non-seed, UNRIPE or RIPE
         /// </summary>
-        private int seedType = 0;   
+        private int seedType = 0;
 
         /// <summary>
         /// The herbage bottom
@@ -142,7 +140,7 @@ namespace Models.GrazPlan
         /// Herbage dmd fraction
         /// </summary>
         private double[] herbageDMDFract = new double[GrazType.DigClassNo + 1]; // [1..DigClassNo]
-        
+
         /// <summary>
         /// See ripe fraction
         /// </summary>
@@ -333,7 +331,8 @@ namespace Models.GrazPlan
 
             switch (lowClass - highClass + 1)
             {
-                case 1: result[highClass] = 1.0;
+                case 1:
+                    result[highClass] = 1.0;
                     break;
                 case 2:
                     {
@@ -477,7 +476,7 @@ namespace Models.GrazPlan
                 grazingInput.LegumeTrop = 0.0;
             }
         }
-        
+
         /// <summary>
         /// The the forage data
         /// </summary>
@@ -495,9 +494,9 @@ namespace Models.GrazPlan
         public GrazType.GrazingInputs AvailForage()
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
-                        
+
             result.CopyFrom(this.forageData);
-            
+
             return result;
         }
 
@@ -534,7 +533,7 @@ namespace Models.GrazPlan
     }
 
     // ============================================================================
-    
+
     /// <summary>
     /// List of ForageInfo forages 
     /// </summary>
@@ -688,7 +687,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Ref to the paddock object in the model
         /// </summary>
-        private PaddockInfo owningPaddock;     
+        private PaddockInfo owningPaddock;
 
         /// <summary>
         /// Construct the forage provider
@@ -744,7 +743,7 @@ namespace Models.GrazPlan
             get { return this.hostID; }
             set { this.hostID = value; }
         }
-               
+
         /// <summary>
         /// Gets or sets the crop, pasture component
         /// </summary>
@@ -759,7 +758,7 @@ namespace Models.GrazPlan
             // ensure this forage is in the list
             // the forage key in this case is component name
             ForageInfo forage = this.forages.ByName(this.ForageHostName);
-            if (forage == null)  
+            if (forage == null)
             {
                 // if this cohort doesn't exist in the forage list
                 forage = new ForageInfo();
@@ -767,7 +766,7 @@ namespace Models.GrazPlan
                 this.owningPaddock.AssignForage(forage);               // the paddock in the model can access this forage
                 this.forages.Add(forage);                               // create a new forage for this cohort
             }
-            
+
             // TODO: just assuming one forage cohort in this component (expand here?)
             this.PassGrazingInputs(forage, this.Crop2GrazingInputs(forageObj), "g/m^2"); // then update it's value
         }
@@ -825,7 +824,7 @@ namespace Models.GrazPlan
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
-            
+
             result.TotalGreen = 0;
             result.TotalDead = 0;
 
@@ -837,7 +836,7 @@ namespace Models.GrazPlan
 
             // calculate the green available based on the total green in this paddock
             double greenPropn = 0;
-            
+
             // ** should really take into account the height ratio here e.g. Params.HeightRatio
             if (this.PastureGreenDM > GrazType.Ungrazeable)
             {
@@ -903,7 +902,7 @@ namespace Models.GrazPlan
                             break;
                     }
                 }
-                    
+
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
                 // TODO: Store any seed pools
@@ -952,10 +951,7 @@ namespace Models.GrazPlan
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
                         double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Total.Wt + dead.Total.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
-                        removal.FractionLiveToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(live.Name, removal);
+                        ForageObj.RemoveBiomass(liveToRemove: prpnOfOrganToRemove, deadToRemove: prpnOfOrganToRemove);
 
                         amountRemoved += amountOfOrganToRemove;
                     }
@@ -970,9 +966,7 @@ namespace Models.GrazPlan
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
                         double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Total.Wt, 0);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
-                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(dead.Name, removal);
+                        ForageObj.RemoveBiomass(deadToRemove: prpnOfOrganToRemove);
 
                         amountRemoved += amountOfOrganToRemove;
                     }
@@ -980,7 +974,7 @@ namespace Models.GrazPlan
 
                 if (!APSIM.Shared.Utilities.MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
                     throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
-                
+
                 forageIdx++;
                 forage = this.ForageByIndex(forageIdx);
             }

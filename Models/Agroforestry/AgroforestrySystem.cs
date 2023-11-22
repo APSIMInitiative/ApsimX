@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
 using Models.Core;
 using Newtonsoft.Json;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.Soils.Arbitrator;
-using Models.Zones;
 using APSIM.Shared.Documentation;
 
 namespace Models.Agroforestry

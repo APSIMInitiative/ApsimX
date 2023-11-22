@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
@@ -196,7 +195,7 @@ namespace Models.CLEM.Activities
                 inds.RemoveAll(a => filteredInd.Contains(a));
             }
 
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
 

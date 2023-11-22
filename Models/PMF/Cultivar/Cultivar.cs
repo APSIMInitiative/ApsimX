@@ -1,11 +1,12 @@
-﻿namespace Models.PMF
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
+using Newtonsoft.Json;
+
+namespace Models.PMF
 {
-    using APSIM.Shared.Documentation;
-    using Models.Core;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// A cultivar model - used to override properties of another model
@@ -24,9 +25,28 @@
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(ModelOverrides))]
     public class Cultivar : Model, ILineEditor
     {
-        /// <summary>The model the cultvar is relative to.</summary>
+        /// <summary>
+        /// Default constructor - needed for AddModel to work.
+        /// </summary>
+        public Cultivar()
+        {
+        }
+
+        /// <summary>
+        /// Constructor to initialise cultivar instance with specified commands
+        /// </summary>
+        /// <param name="commands">list of parameter overwrite commands</param>
+        /// <param name="name">The name of the cultivar</param>
+        public Cultivar (string name, string[] commands)
+        {
+            this.Name = name;
+            Command = commands;
+        }
+
+        /// <summary>The model the cultivar is relative to.</summary>
         private IModel relativeToModel;
 
         /// <summary>The collection of undo overrides that undo the overrides.</summary>
@@ -71,11 +91,9 @@
         }
 
         /// <summary>
-        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
-        /// back to default state.
+        /// Undoes cultivar changes, if any.
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        public void Unapply()
         {
             if (undos != null)
             {
@@ -83,6 +101,16 @@
                 relativeToModel = null;
                 undos = null;
             }
+        }
+
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Unapply();
         }
 
         /// <summary>Document the model.</summary>

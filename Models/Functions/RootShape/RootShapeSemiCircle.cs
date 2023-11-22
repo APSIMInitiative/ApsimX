@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using Models.PMF.Organs;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF.Organs;
 
 namespace Models.Functions.RootShape
 {
@@ -55,7 +54,7 @@ namespace Models.Functions.RootShape
                 zone.RootProportionVolume[i] = CalcRootProportion(zone, i);
         }
 
-        private double CalcRootAreaSemiCircleMaize(ZoneState zone, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiCircleMaize(IRootGeometryData zone, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0)
             {

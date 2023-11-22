@@ -1,9 +1,8 @@
-﻿namespace APSIM.Shared.Utilities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
     /// <summary>Various soil utilities.</summary>
     public class SoilUtilities
     {
@@ -239,6 +238,27 @@
         }
 
         /// <summary>
+        /// Computes the water filled pore space for the entire profile.
+        /// </summary>
+        /// <param name="sw">Layered sw content.</param>
+        /// <param name="sat">Layered sat.</param>
+        /// <param name="dul">Layered dul.</param>
+        /// <returns>Layered wfps.</returns>
+        public static double[] WFPS(double[] sw, double[] sat, double[] dul)
+        {
+            return sw.Zip(sat, dul).Select(layerWfps).ToArray();
+
+            static double layerWfps((double sw, double sat, double dul) layer)
+            {
+                if (layer.sw < layer.dul)
+                    return 0;
+                if (layer.sw > layer.sat)
+                    return 1;
+                return MathUtilities.Divide(layer.sw - layer.dul, layer.sat - layer.dul, 0.0);
+            }
+        }
+
+        /// <summary>
         /// Convert organic carbon Walkley Black to Total %.
         /// </summary>
         /// <param name="values">Values to convert.</param>
@@ -326,14 +346,14 @@
         /// <param name="toThickness">To thickness.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
         /// <returns>The from values mapped to the specified thickness</returns>
-        public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
+        public static double[] MapMass(IReadOnlyList<double> fromValues, double[] fromThickness, double[] toThickness,
                                        bool allowMissingValues = false)
         {
             if (fromValues == null || fromThickness == null || toThickness == null)
                 return null;
 
             double[] FromThickness = MathUtilities.RemoveMissingValuesFromBottom((double[])fromThickness.Clone());
-            double[] FromValues = (double[])fromValues.Clone();
+            double[] FromValues = fromValues.ToArray();
 
             if (FromValues == null)
                 return null;

@@ -7,8 +7,8 @@ https://developer.gnome.org/gtk3/stable/chap-css-properties.html
 */
 
 scrollbar, scrollbar button, scrollbar slider {
-	min-width: 8px;
-	min-height: 8px;
+	min-width: 24px;
+	min-height: 24px;
 }
 
 progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {
@@ -19,4 +19,8 @@ progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {
 	background-color: #B0C4DE;
 	color: #000000;
 	padding: 5px;
+}
+
+combobox {
+	-GtkComboBox-appears-as-list: true;
 }

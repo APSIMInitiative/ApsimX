@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -34,7 +32,7 @@ namespace Models.CLEM.Activities
         private ResourcesHolder resourcesHolder = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -370,7 +368,7 @@ namespace Models.CLEM.Activities
                         bankAccount.Remove(marketRequest);
                     }
 
-                    // is this a market 
+                    // is this a market
 
                     requests.Add(new ResourceRequest()
                     {
@@ -516,7 +514,7 @@ namespace Models.CLEM.Activities
             // assumes all households above in the tree supply this level.
             // if sibling above relies on food from this household it own't work
             // selling is perfomed in the next method called in this same event
-            
+
         }
 
         /// <summary>An event handler to allow us to sell excess resources.</summary>
@@ -542,7 +540,7 @@ namespace Models.CLEM.Activities
 
                 // amount to store
                 //double amountToStore = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
-                
+
                 for (int i = 1; i <= MonthsStorage; i++)
                 {
                     DateTime month = clock.Today.AddMonths(i);
@@ -598,7 +596,7 @@ namespace Models.CLEM.Activities
                             ResourcePricing priceToUse = new ResourcePricing()
                             {
                                 PacketSize = 1
-                            }; 
+                            };
                             if(foodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                                 priceToUse = foodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
 
@@ -632,7 +630,7 @@ namespace Models.CLEM.Activities
                                 };
                                 bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, TransactionCategory);
                             }
-                        } 
+                        }
                     }
                 }
             }
@@ -665,7 +663,7 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
             }
 
-            // check that at least one target has been provided. 
+            // check that at least one target has been provided.
             if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
@@ -718,7 +716,7 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

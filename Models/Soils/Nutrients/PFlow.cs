@@ -1,8 +1,9 @@
-﻿namespace Models.Soils.Nutrients
+﻿using System;
+using Models.Core;
+using Models.Functions;
+
+namespace Models.Soils.Nutrients
 {
-    using Core;
-    using Models.Functions;
-    using System;
 
     /// <summary>
     /// Encapsulates a nitrogen flow between mineral N pools.
@@ -39,6 +40,18 @@
         public string destinationName { get; set; }
 
         /// <summary>
+        /// Start of simulation - find source and destination solute.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            sourceSolute = FindInScope<ISolute>(sourceName);
+            destinationSolute = FindInScope<ISolute>(destinationName);
+        }
+
+        /// <summary>
         /// Calculate Flows
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -46,11 +59,6 @@
         [EventSubscribe("DoSoilOrganicMatter")]
         private void OnDoSoilOrganicMatter(object sender, EventArgs e)
         {
-            if (sourceSolute == null)
-            {
-                sourceSolute = FindInScope<ISolute>(sourceName);
-                destinationSolute = FindInScope<ISolute>(destinationName);
-            }
             if (sourceSolute != null)
             {
                 double[] source = sourceSolute.kgha;

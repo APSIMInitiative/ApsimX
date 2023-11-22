@@ -1,16 +1,15 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.Soils
 {
-    using Core;
-    using Interfaces;
-    using System;
-    using APSIM.Shared.Utilities;
-    using Newtonsoft.Json;
-    using System.Collections.Generic;
-    using APSIM.Shared.Documentation;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.
@@ -21,11 +20,15 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, ITabularData
+    public class Solute : Model, ISolute, IGridModel
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical physical = null;
+
+        /// <summary>Access the water model.</summary>
+        [Link]
+        private Water water = null;
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -45,7 +48,7 @@ namespace Models.Soils
         public Solute() { }
 
         /// <summary>Default constructor.</summary>
-        public Solute(string soluteName, double[] value) 
+        public Solute(string soluteName, double[] value)
         {
             kgha = value;
             Name = soluteName;
@@ -69,6 +72,11 @@ namespace Models.Soils
         [Display(Format = "N3")]
         public double[] InitialValues { get; set; }
 
+        /// <summary> Values converted to alternative units.</summary>
+        [Summary]
+        [Display(Format = "N3")]
+        public double[] InitialValuesConverted { get { return SoilUtilities.ppm2kgha(Physical.Thickness, Physical.BD, ppm); } }
+
         /// <summary>Units of the Initial values.</summary>
         public UnitsEnum InitialValuesUnits { get; set; }
 
@@ -77,7 +85,7 @@ namespace Models.Soils
         public double WaterTableConcentration { get; set; }
 
         /// <summary>Diffusion coefficient (D0).</summary>
-        [Description("For SWIM: Diffusion coefficient (D0)")]
+        [Description("Diffusion coefficient (D0)")]
         public double D0 { get; set; }
 
         /// <summary>EXCO.</summary>
@@ -127,6 +135,36 @@ namespace Models.Soils
             AmountLostInRunoff = new double[Thickness.Length];
         }
 
+        /// <summary>Invoked to perform solute daily processes</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("DoSolute")]
+        private void OnDoSolute(object sender, EventArgs e)
+        {
+            if (D0 > 0)
+            {
+                for (int i = 0; i < physical.Thickness.Length - 1; i++)
+                {
+                    // Calculate concentrations in SW solution
+                    double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
+                    double c2 = kgha[i + 1] / (Math.Pow(physical.Thickness[i + 1] * 100000.0, 2) * water.Volumetric[i + 1]);  // kg/mm3 water
+
+                    // Calculate average water content
+                    double avsw = (water.Volumetric[i] + water.Volumetric[i + 1]) / 2.0;
+
+                    // Millington and Quirk type approach for pore water tortuosity
+                    double avt = (Math.Pow(water.Volumetric[i] / Physical.SAT[i], 2) +
+                                  Math.Pow(water.Volumetric[i + 1] / Physical.SAT[i + 1], 2)) / 2.0; // average tortuosity
+
+                    double dx = (Physical.Thickness[i] + Physical.Thickness[i + 1]) / 2.0;
+                    double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
+
+                    kgha[i] = kgha[i] - flux;
+                    kgha[i + 1] = kgha[i + 1] + flux;
+                }
+            }
+        }
+
         /// <summary>
         /// Set solute to initialisation state
         /// </summary>
@@ -171,20 +209,27 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-            var columns = new List<TabularData.Column>()
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            };
-            if (swimPresent)
-            {
-                columns.Add(new TabularData.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                columns.Add(new TabularData.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
+                var columns = new List<GridTableColumn>()
+                {
+                    new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                    new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                };
+                if (swimPresent)
+                {
+                    columns.Add(new GridTableColumn("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                    columns.Add(new GridTableColumn("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                }
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
             }
-            return new TabularData(Name, columns);
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>
@@ -241,6 +286,6 @@ namespace Models.Soils
         }
 
         /// <summary>Return bulk density on the same layer structure as this solute.</summary>
-        private double[] SoluteBD => SoilUtilities.MapConcentration(Physical.BD, Physical.Thickness, Thickness, Physical.BD.Last());
+        public double[] SoluteBD => SoilUtilities.MapConcentration(Physical.BD, Physical.Thickness, Thickness, Physical.BD.Last());
     }
 }

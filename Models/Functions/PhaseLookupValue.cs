@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Models.Core;
-using Models.PMF.Phen;
-using System.IO;
-using APSIM.Shared.Utilities;
 using System.Linq;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.PMF.Phen;
 
 namespace Models.Functions
 {
@@ -32,10 +29,12 @@ namespace Models.Functions
 
         /// <summary>The start</summary>
         [Description("Start")]
+        [Display(Type = DisplayType.CropStageName)]
         public string Start { get; set; }
 
         /// <summary>The end</summary>
         [Description("End")]
+        [Display(Type = DisplayType.CropStageName)]
         public string End { get; set; }
 
         /// <summary>Gets the value.</summary>

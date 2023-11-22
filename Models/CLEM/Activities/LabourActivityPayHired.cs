@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -27,7 +25,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         private double amountToDo;
         private double amountToSkip;
         private string task = "";
@@ -81,7 +79,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             task = "available";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>(); 
             ManageActivityResourcesAndTasks("labour available");
         }
 
@@ -92,7 +90,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             task = "used";
-            ResourceRequestList.Clear();
+            ResourceRequestList = new List<ResourceRequest>();
             ManageActivityResourcesAndTasks("labour used");
         }
 
@@ -122,7 +120,7 @@ namespace Models.CLEM.Activities
             amountToDo = totaldays;
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {
@@ -212,7 +210,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on associated Fee components</div>");
                 return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

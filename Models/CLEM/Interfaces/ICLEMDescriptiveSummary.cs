@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Models.Core;
+﻿using Models.Core;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Models.CLEM.Interfaces
 {
