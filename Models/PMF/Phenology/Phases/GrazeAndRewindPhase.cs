@@ -35,7 +35,7 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return phenology?.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
 

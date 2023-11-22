@@ -1,26 +1,30 @@
 ﻿using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
-    /// Data structure that contains information for a specific crop type in Scrum
+    /// Data structure that contains information for a specific planting of scrum
     /// </summary>
-    [ValidParent(ParentType = typeof(Plant))]
+    [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ScrumCrop: Model
+    public class ScrumCropInstance : Model
     {
+        /// <summary>Establishemnt Date</summary>
+        public string CropName { get {return this.Name; } }
+
         /// <summary>Harvest Index</summary>
+        [Separator("Parameters for this crop instance are specified in the section below")]
+
         [Description("Harvest Index (0-1)")]
         public double HarvestIndex { get; set; }
 
@@ -68,11 +72,11 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Base temperature for crop</summary>
         [Description("Base temperature for crop (oC)")]
         public double BaseT { get; set; }
-        
+
         /// <summary>Optimum temperature for crop</summary>
         [Description("Optimum temperature for crop (oC)")]
         public double OptT { get; set; }
-        
+
         /// <summary>Maximum temperature for crop</summary>
         [Description("Maximum temperature for crop (oC)")]
         public double MaxT { get; set; }
@@ -85,18 +89,81 @@ namespace Models.PMF.SimplePlantModels
         [Description("Does the crop respond to water stress?")]
         public bool WaterStress { get; set; }
 
+        /// <summary>Establishemnt Date</summary>
+        [Separator("Management data for this crop can be specified below.  Alternatively this information can be sent from a manager script and left blank below")]
+        [Description("Establishment Date")]
+        public Nullable<DateTime> EstablishDate { get { return _establishDate; } set { _establishDate = value; } }
+        private Nullable<DateTime> _establishDate { get; set; }
+
+        /// <summary>Establishment Stage</summary>
+        [Description("Establishment Stage")]
+        [Display(Type = DisplayType.ScrumEstablishStages)]
+        public string EstablishStage { get { return _establishStage; } set { _establishStage = value; } }
+        private string _establishStage { get; set; }
+
+        /// <summary>Planting depth (mm)</summary>
+        [Description("Planting depth (mm)")]
+        public double PlantingDepth { get { return _plantingDepth; } set { _plantingDepth = value; } }
+        private double _plantingDepth { get; set; }
+
+        /// <summary>Harvest Date</summary>
+        [Separator("Scrum needs to have a valid harvest date or Tt duration (from establishment to harvest) specified")]
+        [Description("Harvest Date")]
+        //public Nullable<DateTime> harvestDate { get; set; }
+        public Nullable<DateTime> HarvestDate { get { return _harvestDate; } set { _harvestDate = value;} }
+        private Nullable<DateTime> _harvestDate { get; set; }
+        private DateTime nonNullHarvestDate { get; set; }
+
+        /// <summary>Harvest Tt (oCd establishment to harvest)</summary>
+        [Description("TT from Establish to Harvest (oCd")]
+        public double TtEstabToHarv { get { return _ttEstabToHarv; } set { _ttEstabToHarv = value; } }
+        private double _ttEstabToHarv { get; set; }
+
+        /// <summary>Planting Stage</summary>
+        [Description("Harvest Stage")]
+        [Display(Type = DisplayType.ScrumHarvestStages)]
+        public string HarvestStage { get { return _harvestStage; } set { _harvestStage = value; } }
+        private string _harvestStage { get; set; }
+
+
+        /// <summary>Expected Yield (g FW/m2)</summary>
+        [Separator("Specify an appropriate potential yeild for the location, sowing date and assumed genotype \nScrum will reduce yield below potential if water or N stress are predicted")]
+        [Description("Expected Yield (t/Ha)")]
+        public double ExpectedYield { get { return _expectedYield; } set { _expectedYield = value; } }
+        private double _expectedYield { get; set; }
+
+        /// <summary>Field loss (i.e the proportion of expected yield that is left in the field 
+        /// because of diseaese, poor quality or lack of market)</summary>
+        [Separator("Specify proportion of field loss and residue removal at harvest")]
+        [Description("Field loss (0-1)")]
+        public double FieldLoss { get { return _fieldLoss; } set { _fieldLoss = value; } }
+        private double _fieldLoss { get; set; }
+
+        /// <summary>Residue Removal (i.e the proportion of residues that are removed from the field 
+        /// by bailing or some other means)</summary>
+        [Description("Residue removal (0-1)")]
+        public double ResidueRemoval { get { return _residueRemoval; } set { _residueRemoval = value; } }
+        private double _residueRemoval { get; set; }
+
+
+        
+
+
+        [Link(Type = LinkType.Scoped)]
+        private Clock clock = null;
+
+        [Link(Type = LinkType.Ancestor)]
+        private Zone zone = null;
+
         /// <summary>The plant</summary>
-        [Link(Type = LinkType.Ancestor, ByName = true)]
-        private Plant scrum = null;
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        public Plant scrum = null;
 
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Phenology phenology = null;
 
         [Link]
         Weather weather = null;
-
-        [Link]
-        private Clock clock = null;
 
         /// <summary>The summary</summary>
         [Link]
@@ -111,16 +178,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SCRUM crop/// </summary>
         private Cultivar crop = null;
 
-        /// <summary> The date this instance of the crop will be harvested</summary>
-        private DateTime HarvestDate { get; set; }
-
         private double ttEmergeToHarv { get; set; }
-
-        /// <summary> Field loss assigned at sowing so can be used in harvest event </summary>
-        private double FieldLoss { get; set; }
-
-        /// <summary> ResiduesRemoved assigned at sowing so can be used in harvest event </summary>
-        private double ResidueRemoval { get; set; }
 
         /// <summary>Dictionary containing values for the proportion of maximum DM that occurs at each predefined crop stage</summary>
         [JsonIgnore]
@@ -132,7 +190,7 @@ namespace Models.PMF.SimplePlantModels
         public static Dictionary<string, double> PropnMaxDM = new Dictionary<string, double>() { {"Seed",0.0 },{ "Emergence", 0.018 },{ "Seedling", 0.05 },
             { "Vegetative", 0.5},{ "EarlyReproductive",0.7},{ "MidReproductive",0.86},{  "LateReproductive",0.95},{"Maturity",0.9925},{"Ripe",0.9995 } };
 
-        
+
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
@@ -175,32 +233,52 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>
         /// Method that sets scurm running
         /// </summary>
-        public void Establish(ScrumManagement management)
+        public void Establish(ScrumManagementInstance management=null)
         {
-            string cropName = this.Name;
-            double depth = management.PlantingDepth;
-            double maxCover = this.Acover;
-            double population = 1.0;
-            double rowWidth = 0.0;
+            if (management != null) 
+            {
+                this._establishDate = management.EstablishDate;
+                this._establishStage = management.EstablishStage;
+                this._plantingDepth = management.PlantingDepth;
+                this._harvestStage = management.HarvestStage;
+                this._expectedYield = management.ExpectedYield;
+                this._harvestDate = management.HarvestDate;
+                this._ttEstabToHarv = management.TtEstabToHarv;
+                this._fieldLoss = management.FieldLoss;
+                this._residueRemoval = management.ResidueRemoval;
+            }
+            else
+            {
+                management = new ScrumManagementInstance(this.CropName, (DateTime)this._establishDate, this._establishStage, this._plantingDepth, this._harvestStage, this._expectedYield,
+                                                 this._harvestDate, this._ttEstabToHarv, this._fieldLoss, this._residueRemoval);
+            }
+
+            if (this._expectedYield == 0.0)
+                throw new Exception(this.Name + "must have a yield > 0 set for the scrum crop to grow");
+            if ((this.HarvestDate == null) && (Double.IsNaN(this.TtEstabToHarv)))
+                throw new Exception("Scrum requires a valid harvest date or harvest Tt to be specified");
 
             crop = coeffCalc(management);
             scrum.Children.Add(crop);
-            scrum.Sow(cropName, population, depth, rowWidth, maxCover: maxCover);
+            double population = 1.0;
+            double rowWidth = 0.0;
+
+            scrum.Sow(CropName, population,this._plantingDepth, rowWidth, maxCover: this.Acover);
             if (management.EstablishStage.ToString() != "Seed")
             {
                 phenology.SetToStage(StageNumbers[management.EstablishStage.ToString()]);
             }
-            summary.WriteMessage(this,"Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
+            summary.WriteMessage(this, "Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
                 management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoisturePc +
-                " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on "+ this.HarvestDate.ToString("dd-MMM-yyyy")+
-                ", "+ this.ttEmergeToHarv.ToString() +" oCd from now.",MessageType.Information);
+                " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") +
+                ", " + this.ttEmergeToHarv.ToString() + " oCd from now.", MessageType.Information);
         }
 
         /// <summary>
         /// Data structure that holds SCRUM parameter names and the cultivar overwrite they map to
         /// </summary>
-        public Cultivar coeffCalc(ScrumManagement management)
+        public Cultivar coeffCalc(ScrumManagementInstance management)
         {
             Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
 
@@ -229,13 +307,13 @@ namespace Models.PMF.SimplePlantModels
             cropParams["ACover"] += this.Acover.ToString();
             cropParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
 
-           
+
 
             // Derive the proportion of Tt that has accumulated at each stage from the proporiton of DM at each stage and the logistic funciton rearanged
             Dictionary<string, double> PropnTt = new Dictionary<string, double>();
             foreach (KeyValuePair<string, double> entry in PropnMaxDM)
             {
-                if (entry.Key == "Seed") 
+                if (entry.Key == "Seed")
                 {
                     PropnTt.Add(entry.Key, 0.0);
                 }
@@ -249,7 +327,7 @@ namespace Models.PMF.SimplePlantModels
             double emergeTt = 0.0;
             if (management.EstablishStage == "Seed")
                 emergeTt = management.PlantingDepth * 5.0; //This is Phenology.Emerging.Target.ShootRate value 
-            
+
             // Derive Crop Parameters
             ttEmergeToHarv = 0.0;
             if (Double.IsNaN(management.TtEstabToHarv) || (management.TtEstabToHarv == 0))
@@ -262,13 +340,14 @@ namespace Models.PMF.SimplePlantModels
                 ttEmergeToHarv = management.TtEstabToHarv - emergeTt;
             }
 
-            if ((management.HarvestDate == DateTime.MinValue)||(management.HarvestDate == null))
+            if ((management.HarvestDate == DateTime.MinValue) || (management.HarvestDate == null))
             {
-                this.HarvestDate = GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
+                this._harvestDate = GetHarvestDate(management.EstablishDate, emergeTt + ttEmergeToHarv, this.BaseT, this.OptT, this.MaxT);
+                this.nonNullHarvestDate = (DateTime)this._harvestDate;
             }
             else
             {
-                this.HarvestDate = (DateTime)management.HarvestDate;
+                this._harvestDate = (DateTime)management.HarvestDate;
             }
 
             double PropnTt_EstToHarv = PropnTt[management.HarvestStage] - PropnTt[management.EstablishStage];
@@ -295,10 +374,10 @@ namespace Models.PMF.SimplePlantModels
             cropParams["TtMaturity"] += (Tt_mat * (PropnTt["Maturity"] - PropnTt["LateReproductive"])).ToString();
             cropParams["TtRipe"] += (Tt_mat * (PropnTt["Ripe"] - PropnTt["Maturity"])).ToString();
 
-            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1/(1- this.Proot));
+            double fDM = ey * dmc * (1 / this.HarvestIndex) * (1 / (1 - this.Proot));
             double iDM = fDM * Math.Max(PropnMaxDM[management.EstablishStage], PropnMaxDM["Emergence"]);
-            cropParams["InitialStoverWt"] += (iDM * (1-this.Proot)).ToString(); 
-            cropParams["InitialRootWt"] += (Math.Max(0.01,iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
+            cropParams["InitialStoverWt"] += (iDM * (1 - this.Proot)).ToString();
+            cropParams["InitialRootWt"] += (Math.Max(0.01, iDM * this.Proot)).ToString();//Need to have some root mass at start or else get error
 
             cropParams["BaseT"] += this.BaseT.ToString();
             cropParams["OptT"] += this.OptT.ToString();
@@ -307,9 +386,6 @@ namespace Models.PMF.SimplePlantModels
             string[] commands = new string[cropParams.Count];
             cropParams.Values.CopyTo(commands, 0);
 
-            this.FieldLoss = management.FieldLoss/100;
-            this.ResidueRemoval = management.ResidueRemoval/100;
-
             Cultivar CropValues = new Cultivar(this.Name, commands);
             return CropValues;
         }
@@ -317,12 +393,20 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
-            if (clock.Today == HarvestDate)
+            if ((zone != null) && (clock != null))
             {
-                product.RemoveBiomass(liveToRemove: 1-FieldLoss, deadToRemove: 1-FieldLoss, liveToResidue: FieldLoss, deadToResidue: FieldLoss);
-                stover.RemoveBiomass(liveToRemove: ResidueRemoval, deadToRemove: ResidueRemoval, liveToResidue: 1 - ResidueRemoval, deadToResidue: 1 - ResidueRemoval);
-                scrum.EndCrop();
-                scrum.Children.Remove(crop);
+                if (clock.Today == _establishDate)
+                {
+                    Establish();
+                }
+
+                if (clock.Today == HarvestDate)
+                {
+                    product.RemoveBiomass(liveToRemove: 1 - FieldLoss, deadToRemove: 1 - FieldLoss, liveToResidue: FieldLoss, deadToResidue: FieldLoss);
+                    stover.RemoveBiomass(liveToRemove: ResidueRemoval, deadToRemove: ResidueRemoval, liveToResidue: 1 - ResidueRemoval, deadToResidue: 1 - ResidueRemoval);
+                    scrum.EndCrop();
+                    scrum.Children.Remove(crop);
+                }
             }
         }
 
@@ -376,4 +460,7 @@ namespace Models.PMF.SimplePlantModels
             return d;
         }
     }
+
+
+
 }

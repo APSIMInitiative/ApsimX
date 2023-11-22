@@ -1,5 +1,4 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
@@ -21,7 +20,7 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StrumTree: Model
+    public class StrumTreeInstance: Model
     {
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Tree Age")]

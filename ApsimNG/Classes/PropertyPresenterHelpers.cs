@@ -1,6 +1,5 @@
 namespace UserInterface.Classes
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Models.Core;
@@ -8,7 +7,7 @@ namespace UserInterface.Classes
     using Models.PMF;
     using Models.PMF.Phen;
     using Models.PMF.SimplePlantModels;
-
+   
     /// <summary>
     /// Helper functions for the property presenter. Most involve
     /// fetching valid values for the various DisplayType options.
@@ -141,12 +140,12 @@ namespace UserInterface.Classes
         /// <returns>A list of phases.</returns>
         public static string[] GetSCRUMcropNames(Zone zone)
         {
-            List<ScrumCrop> crops = zone.FindAllInScope<ScrumCrop>().ToList();
+            List<ScrumCropInstance> crops = zone.FindAllInScope<ScrumCropInstance>().ToList();
             if (crops.Count > 0)
             {
                 string[] Namelist = new string[crops.Count];
                 int i = 0;
-                foreach (ScrumCrop c in crops)
+                foreach (ScrumCropInstance c in crops)
                 {
                     Namelist[i] = c.Name;
                     i++;
