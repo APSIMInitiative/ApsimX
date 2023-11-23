@@ -165,6 +165,7 @@
                     double xMin = graphView.AxisMinimum(definition.XAxis);
                     double xMax = graphView.AxisMaximum(definition.XAxis);
                     bool isOutside = false;
+                    bool valuesContainNaNs = false;
                     foreach (var x in definition.X)
                     {
                         double xDouble = 0;
@@ -173,15 +174,26 @@
                         else
                             xDouble = Convert.ToDouble(x);
 
-                        if (xMin != double.NaN)
-                            if (xDouble < xMin)
-                                isOutside = true;
-                        if (xMax != double.NaN)
-                            if (xDouble > xMax)
-                                isOutside = true;
+                        if (double.IsNaN(xDouble))
+                        {
+                            valuesContainNaNs = true;
+                        }
+                        else
+                        {
+                            if (xMin != double.NaN)
+                                if (xDouble < xMin)
+                                    isOutside = true;
+                            if (xMax != double.NaN)
+                                if (xDouble > xMax)
+                                    isOutside = true;
+                        }
                     }
+                    if (valuesContainNaNs)
+                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: X Axis values contain NaN values.", Simulation.MessageType.Warning, false);
+
                     double yMin = graphView.AxisMinimum(definition.YAxis);
                     double yMax = graphView.AxisMaximum(definition.YAxis);
+                    valuesContainNaNs = false;
                     foreach (var y in definition.Y)
                     {
                         double yDouble = 0;
@@ -190,13 +202,23 @@
                         else
                             yDouble = Convert.ToDouble(y);
 
-                        if (yMin != double.NaN)
-                            if (yDouble < yMin)
-                                isOutside = true;
-                        if (yMax != double.NaN)
-                            if (yDouble > yMax)
-                                isOutside = true;
+                        if (double.IsNaN(yDouble))
+                        {
+                            valuesContainNaNs = true;
+                        }
+                        else
+                        {
+                            if (yMin != double.NaN)
+                                if (yDouble < yMin)
+                                    isOutside = true;
+                            if (yMax != double.NaN)
+                                if (yDouble > yMax)
+                                    isOutside = true;
+                        }
                     }
+                    if (valuesContainNaNs)
+                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: Y Axis values contain NaN values.", Simulation.MessageType.Warning, false);
+
                     if (isOutside)
                         pointsOutsideAxis += 1;
                     else
@@ -205,14 +227,7 @@
 
                 if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
                 {
-                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values. Axis minimum and maximums have been reset.", Simulation.MessageType.Warning, false);
-                    for (int i = 0; i < graph.Axis.Count; i++)
-                    {
-                        graph.Axis[i].Minimum = Double.NaN;
-                        graph.Axis[i].Maximum = Double.NaN;
-                        FormatAxis(graph.Axis[i]);
-                    }
-                    DrawGraph();
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values.", Simulation.MessageType.Warning, false);
                 } 
                 else if (pointsOutsideAxis > 0)
                 {
