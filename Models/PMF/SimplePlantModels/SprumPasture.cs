@@ -37,10 +37,22 @@ namespace Models.PMF.SimplePlantModels
         [Description("Maximum growth rate of pasture (g/m2/oCd)")]
         public double PotentialGrowthRate { get; set; }
 
+        /// <summary>Root Biomass proportion (0-1)</summary>
+        [Description("Root Biomass proportion (0-1)")]
+        public double Proot { get; set; }
+
         /// <summary>Root depth (mm)</summary>
         [Separator("Plant Dimnesions")]
         [Description("Root depth (mm)")]
         public double MaxRD { get; set; }
+
+        /// <summary>Pasture height at grazing (mm)</summary>
+        [Description("Pasture height at grazing (mm)")]
+        public double MaxHeight { get; set; }
+
+        /// <summary>Pasture height after grazing (mm)</summary>
+        [Description("Pasture height after grazing(mm)")]
+        public double MaxPrunedHeight { get; set; }
 
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
@@ -101,16 +113,19 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
-            {"YearsToMaturity","[RelativeAnnualDimension].XYPairs.X[2] = " },
-            {"YearsToMaxRD","[Root].RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
-            {"PotentialGrowthRate","[Leaf].Photosynthesis.Potential.g_per_oCd.FixedValue = "},
-            {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
-            {"ResidueNConc","[Residue].MaximumNConc.FixedValue = "},
-            {"LeafNConc","[Leaf].MaximumNConc.FixedValue = "},
-            {"RootNConc","[Root].MaximumNConc.FixedValue = "},
-            {"GSMax","[Leaf].Gsmax350 = " },
-            {"R50","[Leaf].R50 = " },
-            {"LegumePropn","[LegumePropn].FixedValue = "},
+            {"YearsToMaturity","[SPRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
+            {"YearsToMaxRD","[SPRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
+            {"PotentialGrowthRate","[SPRUM].Leaf.Photosynthesis.Potential.g_per_oCd.FixedValue = "},
+            {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
+            {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
+            {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
+            {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
+            {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
+            {"LeafNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
+            {"RootNConc","[SPRUM].Root.MaximumNConc.FixedValue = "},
+            {"GSMax","[SPRUM].Leaf.Gsmax350 = " },
+            {"R50","[SPRUM].Leaf.R50 = " },
+            {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
         };
 
         /// <summary>
@@ -190,6 +205,9 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             pastureParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             pastureParams["PotentialGrowthRate"] += PotentialGrowthRate.ToString();
+            pastureParams["Proot"] += Proot.ToString();
+            pastureParams["HightOfRegrowth"] += (MaxHeight- MaxPrunedHeight).ToString();
+            pastureParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             pastureParams["MaxRootDepth"] += MaxRD.ToString();
             pastureParams["ResidueNConc"] += ResidueNConc.ToString();
             pastureParams["LeafNConc"] += LeafNConc.ToString();

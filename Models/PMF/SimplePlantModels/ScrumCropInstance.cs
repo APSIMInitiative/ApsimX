@@ -29,8 +29,8 @@ namespace Models.PMF.SimplePlantModels
         public double HarvestIndex { get; set; }
 
         /// <summary>Moisture percentage of product</summary>
-        [Description("Moisture percentage of product (%)")]
-        public double MoisturePc { get; set; }
+        [Description("Product DM conc (g/g)")]
+        public double DryMatterContent { get; set; }
 
         /// <summary>Root biomass proportion</summary>
         [Description("Root Biomass proportion (0-1)")]
@@ -270,7 +270,7 @@ namespace Models.PMF.SimplePlantModels
             }
             summary.WriteMessage(this, "Some of the message above is not relevent as SCRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + management.CropName + " is established as " + management.EstablishStage + " and harvested at " +
-                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.MoisturePc +
+                management.HarvestStage + ". Potential yield is " + management.ExpectedYield.ToString() + " t/ha with a moisture content of " + this.DryMatterContent +
                 " % and HarvestIndex of " + this.HarvestIndex.ToString() + ". It will be harvested on " + nonNullHarvestDate.ToString("dd-MMM-yyyy") +
                 ", " + this.ttEmergeToHarv.ToString() + " oCd from now.", MessageType.Information);
         }
@@ -292,7 +292,7 @@ namespace Models.PMF.SimplePlantModels
                 cropParams["WaterStressSens"] += "1.0";
 
             cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
-            double dmc = (100 - this.MoisturePc) / 100;
+            double dmc = (100 - this.DryMatterContent) / 100;
             cropParams["DryMatterContent"] += dmc.ToString();
             double ey = management.ExpectedYield * 100;
             cropParams["ExpectedYield"] += ey.ToString();
