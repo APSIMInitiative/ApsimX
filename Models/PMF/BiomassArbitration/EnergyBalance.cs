@@ -105,6 +105,10 @@ namespace Models.PMF
         [Units("0-1")]
         public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
+
         /// <summary>Gets or sets the height.</summary>
         [JsonIgnore]
         [Units("mm")]

@@ -109,6 +109,10 @@ namespace Models.PMF.OilPalm
         [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
+
         #endregion
 
         /// <summary>

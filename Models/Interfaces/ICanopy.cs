@@ -48,6 +48,9 @@ namespace Models.Interfaces
 
         /// <summary>Sets the light profile.</summary>
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; }
+
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        double fRadnAllZones { get; set; }
     }
 
     /// <summary>This interface describes a model that has a list of canopies.</summary>
