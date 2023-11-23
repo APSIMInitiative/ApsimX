@@ -6664,11 +6664,11 @@
                 "[Phenology].Juvenile.Target.FixedValue = 150",
                 "[Phenology].GrainFilling.Target.FixedValue = 500",
                 "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
-                "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
+                "[Leaf].Phyllochron.XYPairs.X = 1, 4, 4.2, 10.5, 11",
+                "[Leaf].Phyllochron.XYPairs.Y = 26, 26, 46, 46, 70",
                 "[Rachis].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 18",
-                "[Structure].HeightModel.PotentialHeight.XYPairs.X = 3, 4, 5, 6",
-                "[Structure].HeightModel.PotentialHeight.XYPairs.Y = 20, 40, 50, 2370"
+                "[Leaf].HeightFunction.PotentialHeight.XYPairs.X = 3, 4, 5, 6",
+                "[Leaf].HeightFunction.PotentialHeight.XYPairs.Y = 20, 40, 50, 2370"
               ],
               "Name": "Atrium",
               "ResourceName": null,
