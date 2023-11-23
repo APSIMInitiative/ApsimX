@@ -152,6 +152,9 @@ namespace Models.AgPasture
             set { myWaterDemand = value; }
         }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
         /// <summary>Light profile, energy available for each canopy layer (W/m^2).</summary>
         private CanopyEnergyBalanceInterceptionlayerType[] myLightProfile;
 

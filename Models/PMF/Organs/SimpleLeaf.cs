@@ -331,6 +331,10 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double WaterDemand { get; set; }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
+
         /// <summary>
         /// Sets the light profile. Set by MICROCLIMATE.
         /// </summary>

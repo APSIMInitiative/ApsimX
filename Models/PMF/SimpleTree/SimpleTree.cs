@@ -82,6 +82,10 @@ namespace Models.PMF
         /// <summary>Gets or sets the R50.</summary>
         public double R50 { get { return 200; } }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
+
         /// <summary>The soil</summary>
         [Link]
         Soils.Soil Soil = null;

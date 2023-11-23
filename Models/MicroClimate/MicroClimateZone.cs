@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
+using Models.Zones;
 
 namespace Models
 {
@@ -499,7 +501,7 @@ namespace Models
         }
 
         /// <summary>Send an energy balance event</summary>
-        public void SetCanopyEnergyTerms()
+        public void SetCanopyEnergyTerms(double radn, double areaWidth)
         {
             for (int j = 0; j <= Canopies.Count - 1; j++)
                 if (Canopies[j].Canopy != null)
@@ -507,6 +509,7 @@ namespace Models
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
                     double totalPotentialEp = 0;
                     double totalInterception = 0.0;
+                    double totalRsGreen = 0.0;
                     for (int i = 0; i <= numLayers - 1; i++)
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
@@ -515,10 +518,15 @@ namespace Models
                         lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
+                        totalRsGreen += Canopies[j].Rs[i] * RadnGreenFraction(j);
                     }
                     Canopies[j].Canopy.PotentialEP = totalPotentialEp;
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
+                    if (Zone is RectangularZone)
+                        Canopies[j].Canopy.fRadnAllZones = (totalRsGreen * (Zone as Zones.RectangularZone).Width) / (radn * areaWidth);
+                    else 
+                        Canopies[j].Canopy.fRadnAllZones = totalRsGreen  / radn;
                 }
         }
 
