@@ -5344,6 +5344,21 @@ namespace Models.Core.ApsimFile
                 manager.Save();
             }
         }
+        /// <summary>
+        /// Change Maize model to use simple leaf class
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion171(JObject root, string _)
+        {
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Nutrient.SurfaceResidue.Decomposition", "[SurfaceOrganicMatter].SurfaceResidue.Decomposition");
+
+            }
+        }
+
     }
 }
 
