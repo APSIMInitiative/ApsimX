@@ -24,8 +24,8 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Tree Age")]
-        [Description("Tree Age At Start of Simulation")]
-        public int AgeAtSimulationStart { get; set; }
+        [Description("Tree Age At Start of Simulation (years)")]
+        public double AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Years from planting to reach Maximum dimension (years)")]

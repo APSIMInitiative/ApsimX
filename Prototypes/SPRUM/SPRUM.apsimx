@@ -202,48 +202,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "AgeDecimal",
+                  "$type": "Models.PMF.Phen.Age, Models",
+                  "Name": "Age",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Age",
-                      "Name": "AgeInt",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "Decimal",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].DaysSinceWinterSolstice",
-                          "Name": "DOY",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 365.0,
-                          "Units": null,
-                          "Name": "DaysInAYear",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1243,44 +1205,62 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.SigmoidFunction, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "Cover",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.97,
-                      "Units": null,
-                      "Name": "Ymax",
+                      "$type": "Models.Functions.SigmoidFunction, Models",
+                      "Name": "Seasonal pattern",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.97,
+                          "Units": null,
+                          "Name": "Ymax",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].AccumulatedTT",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Xo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 50.0,
+                          "Units": null,
+                          "Name": "b",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].AccumulatedTT",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Xo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 50.0,
-                      "Units": null,
-                      "Name": "b",
+                      "VariableName": "[SPRUM].RelativeAnnualDimension",
+                      "Name": "Age pattern",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1311,39 +1291,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[SPRUM].Height",
                   "Name": "HeightFunction",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        2.0,
-                        3.0,
-                        4.0
-                      ],
-                      "Y": [
-                        100.0,
-                        250.0,
-                        300.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3022,6 +2974,61 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Height",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "Seasonal Pattern",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        2.0,
+                        3.0,
+                        4.0
+                      ],
+                      "Y": [
+                        100.0,
+                        250.0,
+                        300.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[SPRUM].RelativeAnnualDimension",
+                  "Name": "Age pattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -3762,7 +3769,7 @@
                     "[SPRUM].Root.Depth",
                     "[SPRUM].Leaf.CoverGreen",
                     "[SPRUM].Leaf.LAI",
-                    "[SPRUM].Leaf.Height",
+                    "[SPRUM].Height",
                     "[SPRUM].Leaf.Wt",
                     "[SPRUM].Root.NUptake",
                     "[SPRUM].Root.Wt",
@@ -4132,7 +4139,7 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
-                  "AgeAtSimulationStart": 1,
+                  "AgeAtSimulationStart": 1.0,
                   "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
                   "MaxRD": 600.0,
@@ -8321,6 +8328,7 @@
                     "[SPRUM].DaysAfterSowing",
                     "[SPRUM].Phenology.CurrentPhaseName",
                     "[SPRUM].Phenology.Stage",
+                    "[SPRUM].Phenology.Age.YearDecimal",
                     "[SPRUM].Residue.Wt",
                     "[Phenology].AccumulatedTT",
                     "[SPRUM].Total.Wt",
@@ -8330,7 +8338,7 @@
                     "[SPRUM].Root.Depth",
                     "[SPRUM].Leaf.CoverGreen",
                     "[SPRUM].Leaf.LAI",
-                    "[SPRUM].Leaf.Height",
+                    "[SPRUM].Height",
                     "[SPRUM].Leaf.Wt",
                     "[SPRUM].Root.NUptake",
                     "[SPRUM].Root.Wt",
@@ -8703,7 +8711,7 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
-                  "AgeAtSimulationStart": 1,
+                  "AgeAtSimulationStart": 1.0,
                   "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
                   "MaxRD": 600.0,
@@ -12216,7 +12224,75 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "SPRUM.DaysAfterSowing",
-              "YFieldName": "SPRUM.Leaf.Height",
+              "YFieldName": "SPRUM.Height",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Age",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "SPRUM.DaysAfterSowing",
+              "YFieldName": "SPRUM.Phenology.Age.YearDecimal",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": false,

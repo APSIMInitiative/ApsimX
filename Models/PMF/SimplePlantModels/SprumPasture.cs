@@ -25,8 +25,8 @@ namespace Models.PMF.SimplePlantModels
     {
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Pasture Age")]
-        [Description("Age At Start of Simulation")]
-        public int AgeAtSimulationStart { get; set; }
+        [Description("Age At Start of Simulation (years)")]
+        public double AgeAtSimulationStart { get; set; }
 
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Description("Years from planting to reach Maximum root depth (years)")]
@@ -75,6 +75,9 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
         private Plant sprum = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private Phenology phenology = null;
 
         [Link(Type = LinkType.Scoped)]
         private Soil soil = null;
@@ -171,6 +174,7 @@ namespace Models.PMF.SimplePlantModels
             pasture = coeffCalc();
             sprum.Children.Add(pasture);
             sprum.Sow(cropName, population, depth, rowWidth);
+            phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this,"Some of the message above is not relevent as SPRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established "
                 ,MessageType.Information); 
