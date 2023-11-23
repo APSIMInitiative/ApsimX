@@ -186,30 +186,30 @@ namespace UserInterface.Views
             Select(0);
     }
 
-    /// <summary>
-    /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
-    /// </summary>
-    public List<StateNode> Nodes
+        /// <summary>
+        /// Nodes in the directed graph. To change them, use <see cref="SetGraph(List{Node}, List{Arc})" />.
+        /// </summary>
+        public List<Node> Nodes
         {
             get
             {
-                return graphView.DirectedGraph.Nodes.Select(n => new StateNode(n, nodeDescriptions[n.ID])).ToList();
+                return graphView.DirectedGraph.Nodes.Select(n => new Node(n, nodeDescriptions[n.ID])).ToList();
             }
         }
 
         /// <summary>
-        /// Arcs in the directed graph. To change them, use <see cref="SetGraph(List{StateNode}, List{RuleAction})" />.
+        /// Arcs in the directed graph. To change them, use <see cref="SetGraph(List{Node}, List{Arc})" />.
         /// </summary>
         /// <value></value>
-        public List<RuleAction> Arcs
+        public List<Arc> Arcs
         {
             get
             {
-                List<RuleAction> arcs = new List<RuleAction>();
+                List<Arc> arcs = new List<Arc>();
                 foreach (var a in graphView.DirectedGraph.Arcs)
                 {
                     Arc ga = graphView.DirectedGraph.Arcs.Find(x => x.ID == a.ID);
-                    var na = new RuleAction(ga);
+                    var na = new Arc(ga);
                     na.Conditions = rules[na.ID];
                     na.Actions = actions[na.ID];
                     arcs.Add(na);
@@ -223,7 +223,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
-        public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
+        public void SetGraph(List<Node> nodes, List<Arc> arcs)
         {
             rules.Clear();
             actions.Clear();
@@ -539,7 +539,7 @@ namespace UserInterface.Views
             {
                 Node node = new Node();
                 node.Name = null;
-                StateNode newNode = new StateNode(node);
+                Node newNode = new Node(node);
                 //randomize colour of node
                 System.Drawing.Color[] colours = ColourUtilities.Colours;
                 Random rand = new Random();
@@ -627,7 +627,7 @@ namespace UserInterface.Views
                 newArc.DestinationID = graphView.SelectedObjects[0].ID;
                 newArc.Location = graphView.tempArc.Location;
 
-                AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new RuleAction(newArc) });
+                AddArcEnd?.Invoke(this, new AddArcEventArgs { Arc = new Arc(newArc) });
             }
         }
 

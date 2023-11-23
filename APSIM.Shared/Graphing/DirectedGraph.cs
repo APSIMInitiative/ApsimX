@@ -6,7 +6,7 @@ namespace APSIM.Shared.Graphing
 {
     /// <summary>Encapsulates a node on a directed graph</summary>
     [Serializable]
-    public class Node
+    public class GraphElement
     {
         /// <summary>ID for Node</summary>
         public int ID { get; set; }
@@ -19,6 +19,14 @@ namespace APSIM.Shared.Graphing
 
         /// <summary>Fill colour of node</summary>
         public Color Colour { get; set; }
+    }
+
+    /// <summary>Encapsulates a node on a directed graph</summary>
+    [Serializable]
+    public class Node : GraphElement
+    {
+        /// <summary>Description of the node.</summary>
+        public string Description { get; set; }
 
         /// <summary>Outline colour of node</summary>
         public Color OutlineColour { get; set; }
@@ -32,6 +40,8 @@ namespace APSIM.Shared.Graphing
         /// <summary>Constructor</summary>
         public Node()
         {
+            Name = "";
+            Description = "";
             Colour = Color.Beige;
             OutlineColour = Color.Black;
         }
@@ -46,6 +56,7 @@ namespace APSIM.Shared.Graphing
             OutlineColour = x.OutlineColour;
             Location = x.Location;
             Name = x.Name;
+            Description = x.Description;
             ID = x.ID;
             Transparent = x.Transparent;
         }
@@ -64,11 +75,28 @@ namespace APSIM.Shared.Graphing
                 OutlineColour = Color.Black;
             }
         }
+
+        /// <summary>
+        /// Constructor - creates a copy of x with given description
+        /// </summary>
+        /// <param name="x">The node to be copied.</param>
+        /// <param name="description">Description for the node</param>
+        public Node(Node x, string description)
+        {
+            if (x != null)
+                CopyFrom(x);
+            else
+            {
+                Colour = Color.Beige;
+                OutlineColour = Color.Black;
+            }
+            Description = description;
+        }
     }
 
     /// <summary>Encapsulates an arc on a directed graph</summary>
     [Serializable]
-    public class Arc
+    public class Arc: GraphElement
     {
         /// <summary>Source node (where arc starts)</summary>
         public int SourceID { get; set; }
@@ -76,17 +104,11 @@ namespace APSIM.Shared.Graphing
         /// <summary>Destination node (where arc finishes)</summary>
         public int DestinationID { get; set; }
 
-        /// <summary>Location of arc (centre/control point)</summary>
-        public Point Location { get; set; }
+        /// <summary>Test conditions that need to be satisfied for this transition</summary>
+        public List<string> Conditions { get; set; }
 
-        /// <summary>Colour of arc</summary>
-        public Color Colour { get; set; }
-
-        /// <summary>Text to show on arc</summary>
-        public string Name { get; set; }
-
-        /// <summary>ID for arc</summary>
-        public int ID { get; set; }
+        /// <summary>Actions undertaken when making this transition</summary>
+        public List<string> Actions { get; set; }
 
         /// <summary>
         /// Default constructor.
@@ -113,10 +135,12 @@ namespace APSIM.Shared.Graphing
         {
             ID = x.ID;
             Name = x.Name;
-            SourceID = x.SourceID;
-            DestinationID = x.DestinationID;
             Location = x.Location;
             Colour = x.Colour;
+            SourceID = x.SourceID;
+            DestinationID = x.DestinationID;
+            Conditions = new List<string>(x.Conditions);
+            Actions = new List<string>(x.Actions);
         }
     }
 

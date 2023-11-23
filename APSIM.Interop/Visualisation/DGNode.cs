@@ -17,11 +17,6 @@
         public Color ForegroundColour = Color.Black;
 
         /// <summary>
-        /// Description. Unsure if this is actually used.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
         /// Diameter of the node (in px?).
         /// </summary>
         public int Width { get { return 120; } }

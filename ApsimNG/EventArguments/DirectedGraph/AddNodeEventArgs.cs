@@ -1,11 +1,11 @@
-﻿using System;
-using Models.Management;
+﻿using APSIM.Shared.Graphing;
+using System;
 
 namespace ApsimNG.EventArguments.DirectedGraph
 {
     public class AddNodeEventArgs : EventArgs
     {
-        public StateNode Node { get; set; }
-        public AddNodeEventArgs(StateNode node) => Node = node;
+        public Node Node { get; set; }
+        public AddNodeEventArgs(Node node) => Node = node;
     }
 }

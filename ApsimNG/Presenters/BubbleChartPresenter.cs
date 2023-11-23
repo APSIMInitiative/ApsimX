@@ -166,10 +166,10 @@ namespace UserInterface.Presenters
             changes.Add(new ChangeProperty.Property(model, nameof(model.Nodes), e.Nodes));
 
             // Check for multiple nodes or arcs with the same name.
-            IEnumerable<IGrouping<int, StateNode>> duplicateNodes = e.Nodes.GroupBy(n => n.ID).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<int, Node>> duplicateNodes = e.Nodes.GroupBy(n => n.ID).Where(g => g.Count() > 1);
             if (duplicateNodes.Any())
                 throw new Exception($"Unable to apply changes - duplicate node name found: {duplicateNodes.First().Key}");
-            IEnumerable<IGrouping<int, RuleAction>> duplicateArcs = e.Arcs.GroupBy(a => a.ID).Where(g => g.Count() > 1);
+            IEnumerable<IGrouping<int, Arc>> duplicateArcs = e.Arcs.GroupBy(a => a.ID).Where(g => g.Count() > 1);
             if (duplicateArcs.Any())
                 throw new Exception($"Unable to apply changes - duplicate arc name found: {duplicateArcs.First().Key}");
 
@@ -184,7 +184,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments.</param>
         private void OnAddNode(object sender, AddNodeEventArgs e)
         {
-            List<StateNode> newNodes = new List<StateNode>();
+            List<Node> newNodes = new List<Node>();
             newNodes.AddRange(model.Nodes);
             newNodes.Add(e.Node);
             ICommand addNode = new ChangeProperty(model, nameof(model.Nodes), newNodes);
@@ -199,8 +199,8 @@ namespace UserInterface.Presenters
         private void OnDelNode(object sender, GraphObjectsArgs e)
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
-            List<RuleAction> newArcs = new List<RuleAction>(model.Arcs);
-            List<StateNode> newNodes = new List<StateNode>(model.Nodes);
+            List<Arc> newArcs = new List<Arc>(model.Arcs);
+            List<Node> newNodes = new List<Node>(model.Nodes);
             foreach (var obj in e.Objects)
             {
                 int idToDelete = obj.ID;
@@ -232,13 +232,13 @@ namespace UserInterface.Presenters
                 model.Nodes.Find(n => n.ID == e.Arc.DestinationID) == null)
                 throw new Exception("Target empty in arc");
 
-            List<RuleAction> newArcs = new List<RuleAction>();
+            List<Arc> newArcs = new List<Arc>();
             newArcs.AddRange(model.Arcs);
-            RuleAction existingArc = newArcs.Find(a => a.ID == e.Arc.ID);
+            Arc existingArc = newArcs.Find(a => a.ID == e.Arc.ID);
             if (existingArc == null)
-                newArcs.Add(new RuleAction(e.Arc));
+                newArcs.Add(new Arc(e.Arc));
             else
-                existingArc.CopyFrom((Arc)new RuleAction(e.Arc));
+                existingArc.CopyFrom((Arc)new Arc(e.Arc));
 
             ICommand addArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(addArc);
@@ -255,9 +255,9 @@ namespace UserInterface.Presenters
             foreach (var obj in e.Objects)
             {
                 int idToDelete = obj.ID;
-                List<RuleAction> newArcs = new List<RuleAction>();
+                List<Arc> newArcs = new List<Arc>();
                 newArcs.AddRange(model.Arcs);
-                newArcs.RemoveAll(delegate (RuleAction a) { return (a.ID == idToDelete); });
+                newArcs.RemoveAll(delegate (Arc a) { return (a.ID == idToDelete); });
                 changes.Add(new ChangeProperty.Property(model, nameof(model.Arcs), newArcs));
             }
             ICommand removeArcs = new ChangeProperty(changes);
@@ -376,7 +376,7 @@ namespace UserInterface.Presenters
         public class NodePropertyWrapper : Model
         {
             /// <summary>Currently selected node in the Rotation Manager</summary>
-            public StateNode node = null;
+            public Node node = null;
 
             /// <summary>Property wrapper for name</summary>
             [Description("Name")]

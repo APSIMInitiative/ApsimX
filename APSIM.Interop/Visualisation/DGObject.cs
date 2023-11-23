@@ -8,21 +8,6 @@
     public abstract class DGObject
     {
         /// <summary>
-        /// Is the object selected?
-        /// </summary>
-        public bool Selected { get; set; }
-
-        /// <summary>
-        /// Is the object hovered over?
-        /// </summary>
-        public bool Hover { get; set; }
-
-        /// <summary>
-        /// Cartesian location.
-        /// </summary>
-        public Point Location { get; set; }
-
-        /// <summary>
         /// ID of the object.
         /// </summary>
         public int ID { get; set; }
@@ -33,9 +18,24 @@
         public string Name { get; set; }
 
         /// <summary>
+        /// Cartesian location.
+        /// </summary>
+        public Point Location { get; set; }
+
+        /// <summary>
         /// Background colour.
         /// </summary>
         public Color Colour { get; set; } = Color.Black;
+
+        /// <summary>
+        /// Is the object selected?
+        /// </summary>
+        public bool Selected { get; set; }
+
+        /// <summary>
+        /// Is the object hovered over?
+        /// </summary>
+        public bool Hover { get; set; }
 
         /// <summary>
         /// Default outline colour if none is specified.

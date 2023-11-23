@@ -2,6 +2,7 @@ using System;
 using Models.Management;
 using System.Collections.Generic;
 using ApsimNG.EventArguments.DirectedGraph;
+using APSIM.Shared.Graphing;
 
 namespace UserInterface.Interfaces
 {
@@ -49,12 +50,12 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// 
         /// </summary>
-        List<StateNode> Nodes { get; }
+        List<Node> Nodes { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        List<RuleAction> Arcs { get; }
+        List<Arc> Arcs { get; }
 
         /// <summary>
         /// Properties editor.
@@ -71,7 +72,7 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
-        void SetGraph(List<StateNode> nodes, List<RuleAction> arcs);
+        void SetGraph(List<Node> nodes, List<Arc> arcs);
 
         /// <summary>
         /// A graph object has been selected. Make the (middle part of) UI relevant to it

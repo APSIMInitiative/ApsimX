@@ -52,13 +52,13 @@ namespace Models.Management
         /// <summary>
         /// The nodes of the graph. These represent states of the rotation.
         /// </summary>
-        public List<StateNode> Nodes { get; set; } = new List<StateNode>();
+        public List<Node> Nodes { get; set; } = new List<Node>();
 
         /// <summary>
         /// The arcs on the bubble chart which define transition
         /// between stages (nodes).
         /// </summary>
-        public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
+        public List<Arc> Arcs { get; set; } = new List<Arc>();
 
         /// <summary>
         /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
@@ -101,7 +101,7 @@ namespace Models.Management
         {
             get
             {
-                foreach (StateNode state in Nodes)
+                foreach (Node state in Nodes)
                 {
                     yield return $"TransitionFrom{state}";
                     yield return $"TransitionTo{state}";
@@ -152,7 +152,7 @@ namespace Models.Management
             {
                 more = false;
                 double bestScore = -1.0;
-                RuleAction bestArc = null;
+                Arc bestArc = null;
                 foreach (var arc in Arcs.FindAll(arc => arc.ID == CurrentState))
                 {
                     double score = 1;
@@ -221,7 +221,7 @@ namespace Models.Management
         /// Transition along an arc to another stage/node.
         /// </summary>
         /// <param name="transition">The arc to be followed.</param>
-        private void TransitionTo(RuleAction transition)
+        private void TransitionTo(Arc transition)
         {
             try
             {
@@ -353,61 +353,6 @@ namespace Models.Management
             }
 
             return parameterValues;
-        }
-    }
-
-    /// <summary>Rules and actions required for a transition</summary>
-    [Serializable]
-    public class RuleAction : Arc
-    {
-        /// <summary>
-        /// Contructor
-        /// </summary>
-        public RuleAction(Arc a) : base(a)
-        {
-            Conditions = new List<string>();
-            Actions = new List<string>();
-        }
-
-        /// <summary>Test conditions that need to be satisfied for this transition</summary>
-        public List<string> Conditions { get; set; }
-
-        /// <summary>Actions undertaken when making this transition</summary>
-        public List<string> Actions { get; set; }
-
-        /// <param name="other"></param>
-        public void CopyFrom(RuleAction other)
-        {
-            base.CopyFrom(other);
-            this.Conditions = new List<string>(other.Conditions);
-            this.Actions = new List<string>(other.Actions);
-        }
-    }
-
-    /// <summary>A state in the directed graph.</summary>
-    [Serializable]
-    public class StateNode : Node
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="n">Node from which properties will be copied.</param>
-        /// <param name="description">Description of the node.</param>
-        public StateNode(Node n, string description = null) : base(n) => Description = description;
-
-        /// <summary>
-        /// Description of the node.
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Copy all properties of another node into this one.
-        /// </summary>
-        /// <param name="other">A node whose properties will be copied.</param>
-        public void CopyFrom(StateNode other)
-        {
-            Description = other.Description;
-            base.CopyFrom(other);
         }
     }
 }
