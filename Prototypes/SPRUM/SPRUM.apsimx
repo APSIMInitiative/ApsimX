@@ -200,6 +200,52 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "AgeDecimal",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Age",
+                      "Name": "AgeInt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "Decimal",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "DOY",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 365.0,
+                          "Units": null,
+                          "Name": "DaysInAYear",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -2813,12 +2859,59 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "RootFrontVelocity",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].MaximumRootDepth",
+                      "Name": "MaxRootDepth",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "RootGrowthDuration",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "years",
+                          "Name": "YearsToMaxDepth",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                              "Name": "Param value set at establishment",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 365.0,
+                          "Units": null,
+                          "Name": "DaysInAYear",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -2892,6 +2985,41 @@
               "Name": "SeedMortalityRate",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "RelativeAnnualDimension",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    6.0
+                  ],
+                  "Y": [
+                    0.4,
+                    1.0
+                  ],
+                  "XVariableName": null,
+                  "Name": "XYPairs",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Age.YearDecimal",
+                  "Name": "XValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -4004,8 +4132,10 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
+                  "AgeAtSimulationStart": 1,
+                  "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
-                  "MaxRootDepth": 600.0,
+                  "MaxRD": 600.0,
                   "RootThyNeighbour": false,
                   "RootNConc": 0.01,
                   "LeafNConc": 0.05,
@@ -8573,8 +8703,10 @@
                 },
                 {
                   "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
+                  "AgeAtSimulationStart": 1,
+                  "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
-                  "MaxRootDepth": 600.0,
+                  "MaxRD": 600.0,
                   "RootThyNeighbour": false,
                   "RootNConc": 0.01,
                   "LeafNConc": 0.05,
