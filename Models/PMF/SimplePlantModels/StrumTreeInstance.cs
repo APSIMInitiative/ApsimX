@@ -57,6 +57,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Root depth when mature (mm)")]
         public double MaxRD { get; set; }
 
+        /// <summary>Root Biomass proportion (0-1)</summary>
+        [Description("Root Biomass proportion (0-1)")]
+        public double Proot { get; set; }
+
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
         public bool RootThyNeighbour { get; set; }
@@ -129,7 +133,7 @@ namespace Models.PMF.SimplePlantModels
         public double Density { get; set; }
 
         /// <summary>Fruit DM conc </summary>
-        [Description("Fruit DM conc (g/g)")]
+        [Description("Product DM conc (g/g)")]
         public double DMC { get; set; }
 
         /// <summary>Maximum Bloom </summary>
@@ -191,6 +195,7 @@ namespace Models.PMF.SimplePlantModels
             {"FullCanopy","[Phenology].FullCanopy.DAWStoProgress = " },
             {"LeafFall", "[Phenology].LeafFall.DAWStoProgress = " },
             {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
+            {"Proot","[Root].DMDemands.Structural.DMDemandFunction.PartitionFraction.AcitveGrowth.Constant.FixedValue = " },
             {"MaxPrunedHeight","[MaxPrunedHeight].FixedValue = " },
             {"CanopyBaseHeight","[Height].CanopyBaseHeight.Maximum.FixedValue = " },
             {"MaxSeasonalHeight","[Height].SeasonalGrowth.Maximum.FixedValue = " },
@@ -213,7 +218,7 @@ namespace Models.PMF.SimplePlantModels
             {"Number","[Fruit].Number.RetainedPostThinning.FixedValue = " },
             {"Size","[Fruit].MaximumSize.FixedValue = " },
             {"Density","[Fruit].Density.FixedValue = " },
-            {"DMC", "[Fruit].MinimumDMC.FixedValue = " },
+            {"DryMatterContent", "[Fruit].MinimumDMC.FixedValue = " },
             {"DAWSMaxBloom","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
             {"DAWSLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
             {"DAWSEndLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
@@ -292,37 +297,38 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public Cultivar coeffCalc()
         {
-            Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
+            Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
-            cropParams["SpringDormancy"] += BudBreakDAWS.ToString();
-            cropParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
-            cropParams["FullCanopy"] += StartLeafFallDAWS.ToString();
-            cropParams["LeafFall"] += EndLeafFallDAWS.ToString();
+            treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
+            treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
+            treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
+            treeParams["LeafFall"] += EndLeafFallDAWS.ToString();
             pruneDAWS = EndLeafFallDAWS;
-            cropParams["MaxRootDepth"] += MaxRD.ToString();
-            cropParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            cropParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
-            cropParams["MaxSeasonalHeight"] += SeasonalHeightGrowth.ToString();
-            cropParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
-            cropParams["MaxSeasonalWidth"] += SeasonalWidthGrowth.ToString();
-            cropParams["FruitNConc"] += FruitNConc.ToString();
-            cropParams["LeafNConc"] += LeafNConc.ToString();
-            cropParams["RootNConc"] += RootNConc.ToString();
-            cropParams["TrunkNConc"] += TrunkNConc.ToString();
-            cropParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            cropParams["MaxLAI"] += MaxLAI.ToString();
-            cropParams["GSMax"] += GSMax.ToString();
-            cropParams["R50"] += R50.ToString();
-            cropParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            cropParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            cropParams["Number"] += Number.ToString();
-            cropParams["Size"] += Size.ToString();
-            cropParams["Density"] += Density.ToString();
-            cropParams["DMC"] += DMC.ToString();
-            cropParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
-            cropParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
-            cropParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
-            cropParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
+            treeParams["MaxRootDepth"] += MaxRD.ToString();
+            treeParams["Proot"] += Proot.ToString();
+            treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
+            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
+            treeParams["MaxSeasonalHeight"] += SeasonalHeightGrowth.ToString();
+            treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
+            treeParams["MaxSeasonalWidth"] += SeasonalWidthGrowth.ToString();
+            treeParams["FruitNConc"] += FruitNConc.ToString();
+            treeParams["LeafNConc"] += LeafNConc.ToString();
+            treeParams["RootNConc"] += RootNConc.ToString();
+            treeParams["TrunkNConc"] += TrunkNConc.ToString();
+            treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
+            treeParams["MaxLAI"] += MaxLAI.ToString();
+            treeParams["GSMax"] += GSMax.ToString();
+            treeParams["R50"] += R50.ToString();
+            treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
+            treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
+            treeParams["Number"] += Number.ToString();
+            treeParams["Size"] += Size.ToString();
+            treeParams["Density"] += Density.ToString();
+            treeParams["DryMatterContent"] += DMC.ToString();
+            treeParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
+            treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
+            treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth+(DAWSMaxSize - DAWSLinearGrowth)*.6)).ToString();
+            treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
             harvestDAWS = DAWSMaxSize;
 
 
@@ -330,13 +336,13 @@ namespace Models.PMF.SimplePlantModels
                 throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
             if (TrunkMassAtMaxDimension <= 0)
                 throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            cropParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            cropParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
-            cropParams["InitialFruitWt"] += (0).ToString();
-            cropParams["InitialLeafWt"] += (0).ToString();
+            treeParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart/ (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
+            treeParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
+            treeParams["InitialFruitWt"] += (0).ToString();
+            treeParams["InitialLeafWt"] += (0).ToString();
                 
-            string[] commands = new string[cropParams.Count];
-            cropParams.Values.CopyTo(commands, 0);
+            string[] commands = new string[treeParams.Count];
+            treeParams.Values.CopyTo(commands, 0);
 
             Cultivar TreeValues = new Cultivar(this.Name, commands);
             return TreeValues;
