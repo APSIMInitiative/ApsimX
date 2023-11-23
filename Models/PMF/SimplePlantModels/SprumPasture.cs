@@ -23,6 +23,15 @@ namespace Models.PMF.SimplePlantModels
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SprumPasture: Model
     {
+        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
+        [Separator("Pasture Age")]
+        [Description("Age At Start of Simulation")]
+        public int AgeAtSimulationStart { get; set; }
+
+        /// <summary>Years from planting to reach Maximum dimension (years)</summary>
+        [Description("Years from planting to reach Maximum root depth (years)")]
+        public int YearsToMaxDimension { get; set; }
+
         /// <summary>Maximum growth rate of pasture (g/m2/oCd)</summary>
         [Separator("Pasture growth")]
         [Description("Maximum growth rate of pasture (g/m2/oCd)")]
@@ -31,7 +40,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Root depth (mm)</summary>
         [Separator("Plant Dimnesions")]
         [Description("Root depth (mm)")]
-        public double MaxRootDepth { get; set; }
+        public double MaxRD { get; set; }
 
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
@@ -89,6 +98,8 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
+            {"YearsToMaturity","[RelativeAnnualDimension].XYPairs.X[2] = " },
+            {"YearsToMaxRD","[Root].RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"PotentialGrowthRate","[Leaf].Photosynthesis.Potential.g_per_oCd.FixedValue = "},
             {"MaxRootDepth","[Root].MaximumRootDepth.FixedValue = "},
             {"ResidueNConc","[Residue].MaximumNConc.FixedValue = "},
@@ -122,7 +133,7 @@ namespace Models.PMF.SimplePlantModels
                     break;
             }
 
-            double rootDepth = Math.Min(MaxRootDepth, soilDepthMax);
+            double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
@@ -153,7 +164,7 @@ namespace Models.PMF.SimplePlantModels
             }
 
             string cropName = this.Name;
-            double depth = this.MaxRootDepth;
+            double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -172,8 +183,10 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> pastureParams = new Dictionary<string, string>(blankParams);
 
+            pastureParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
+            pastureParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             pastureParams["PotentialGrowthRate"] += PotentialGrowthRate.ToString();
-            pastureParams["MaxRootDepth"] += MaxRootDepth.ToString();
+            pastureParams["MaxRootDepth"] += MaxRD.ToString();
             pastureParams["ResidueNConc"] += ResidueNConc.ToString();
             pastureParams["LeafNConc"] += LeafNConc.ToString();
             pastureParams["RootNConc"] += RootNConc.ToString();
