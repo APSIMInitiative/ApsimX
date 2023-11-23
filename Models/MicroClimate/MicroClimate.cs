@@ -225,6 +225,9 @@ namespace Models
             get { return microClimatesZones[0].DeltaZ.Length; }
         }
 
+        /// <summary>the widith across two zones</summary>
+        private double AreaWidth { get; set; }
+
         /// <summary>Called when simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
@@ -277,7 +280,7 @@ namespace Models
                 ZoneMC.CalculateInterception(a_interception, b_interception, c_interception, d_interception);
                 ZoneMC.CalculatePM(dayLengthEvap, NightInterceptionFraction);
                 ZoneMC.CalculateOmega();
-                ZoneMC.SetCanopyEnergyTerms();
+                ZoneMC.SetCanopyEnergyTerms(weather.Radn, AreaWidth);
                 ZoneMC.CalculateEo();
             }
         }
@@ -331,6 +334,7 @@ namespace Models
                 double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
                 double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alleyZone.Zone as Zones.RectangularZone).Width;   // Width of alley zone
+                AreaWidth = Wt + Wa;
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
                 double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
                 foreach (MicroClimateCanopy c in treeZone.Canopies)

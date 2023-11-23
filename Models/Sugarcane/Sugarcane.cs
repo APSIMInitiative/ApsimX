@@ -422,6 +422,10 @@ namespace Models
         [Units("mm")]
         public double WaterDemand { get; set; }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
+
         /// <summary>
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
