@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 170; } }
+        public static int LatestVersion { get { return 171; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5318,11 +5318,39 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Change the namespace for scrum to SimplePlantModels
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion170(JObject root, string fileName)
+        {
+            foreach (var scrum in JsonUtilities.ChildrenOfType(root, "ScrumCrop"))
+            {
+                scrum["$type"] = "Models.PMF.SimplePlantModels.ScrumCrop, Models";
+            }
+            foreach (var strum in JsonUtilities.ChildrenOfType(root, "StrumTree"))
+            {
+                strum["$type"] = "Models.PMF.SimplePlantModels.StrumTree, Models";
+            }
+            foreach (var scrumMGMT in JsonUtilities.ChildrenOfType(root, "ScrumManagement"))
+            {
+                scrumMGMT["$type"] = "Models.PMF.SimplePlantModels.ScrumManagement, Models";
+            }
+
+            // scrum name space refs in managers.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Replace("Models.PMF.Scrum", "Models.PMF.SimplePlantModels");
+                manager.Save();
+            }
+        }
+
+        /// <summary>
         /// Change name based system to id based system in directed graphs
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="_">The name of the apsimx file.</param>
-        private static void UpgradeToVersion170(JObject root, string _)
+        private static void UpgradeToVersion171(JObject root, string _)
         {
             foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager"))
             {
@@ -5332,6 +5360,7 @@ namespace Models.Core.ApsimFile
                 {
                     id += 1;
                     node["ID"] = id;
+                    node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
                 }
 
                 //give each arc an id
@@ -5340,6 +5369,7 @@ namespace Models.Core.ApsimFile
                 {
                     id += 1;
                     arc["ID"] = id;
+                    arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
 
                     //connect up arc source/dest with ids instead of names
                     string sourceName = arc["SourceName"].ToString();
@@ -5350,7 +5380,7 @@ namespace Models.Core.ApsimFile
 
                     string destinationName = arc["DestinationName"].ToString();
                     int destinationID = 0;
-                    foreach (var node in rotationManager["Nodes"])                               
+                    foreach (var node in rotationManager["Nodes"])
                         if (node["Name"].ToString() == destinationName)
                             destinationID = (int)node["ID"];
 

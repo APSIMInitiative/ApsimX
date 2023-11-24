@@ -200,7 +200,8 @@ namespace Models.Soils
         public string RelativeTo { get; set; }
 
         /// <summary>Allowed strings in 'RelativeTo' property.</summary>
-        public IEnumerable<string> AllowedRelativeTo => new string[] { "LL15" }.Concat(FindAllInScope<SoilCrop>().Select(s => s.Name.Replace("Soil", "")));
+        public IEnumerable<string> AllowedRelativeTo => (GetAllowedRelativeToStrings());
+
 
         /// <summary>Distribute the water at the top of the profile when setting fraction full.</summary>
         public bool FilledFromTop { get; set; }
@@ -274,7 +275,7 @@ namespace Models.Soils
                     values = Physical.LL15;
                 else
                 {
-                    var plantCrop = FindInScope<SoilCrop>(RelativeTo + "Soil");
+                    var plantCrop = FindAncestor<Soil>().FindDescendant<SoilCrop>(RelativeTo + "Soil");
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";
@@ -475,6 +476,25 @@ namespace Models.Soils
 
             // Convert mass back to concentration and return
             return MathUtilities.Divide(SoilUtilities.MapMass(massValues, thickness.ToArray(), toThickness), toThickness);
+        }
+
+        /// <summary>
+        /// Get all soil crop names as strings from the relevant Soil this water node is a child of as well as LL15 (default value).
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<string> GetAllowedRelativeToStrings()
+        {
+            IEnumerable<string> results = new List<string>();
+            IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
+            // LL15 is here as this is the default value.
+            List<string> newSoilCropNames = new List<string> { "LL15" };
+            Soil ancestorSoil = FindAncestor<Soil>();
+            if (ancestorSoil != null)
+            {
+                ancestorSoilCropLists = ancestorSoil.FindAllDescendants<SoilCrop>();
+                newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
+            }
+            return newSoilCropNames;
         }
     }
 }

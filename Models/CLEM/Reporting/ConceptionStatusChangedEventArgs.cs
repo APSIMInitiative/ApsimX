@@ -52,11 +52,12 @@ namespace Models.CLEM.Reporting
         /// <param name="female">Female this change applies to</param>
         /// <param name="date">Date of change</param>
         /// <param name="offspring">Offspring included</param>
-        public void Update(ConceptionStatus status, RuminantFemale female, DateTime date, Ruminant offspring = null)
+        /// <param name="calculateFromAge">Use female age and age at last conception to calculate conception date assuming Clock.Today passed as date</param>
+        public void Update(ConceptionStatus status, RuminantFemale female, DateTime date, Ruminant offspring = null, bool calculateFromAge = true)
         {
             Status = status;
             Female = female;
-            UpdateConceptionDate(date, offspring?.Age);
+            UpdateConceptionDate(date, offspring?.Age, calculateFromAge);
         }
 
         /// <summary>
@@ -64,20 +65,24 @@ namespace Models.CLEM.Reporting
         /// </summary>
         /// <param name="date"></param>
         /// <param name="offspringAge"></param>
+        /// <param name="calculateFromAge">Use female age and age at last conception to calculate conception date assuming Clock.Today passed as date</param>
         /// <exception cref="ArgumentException"></exception>
-        public void UpdateConceptionDate(DateTime date, double? offspringAge = null)
+        public void UpdateConceptionDate(DateTime date, double? offspringAge = null, bool calculateFromAge = true)
         {
             switch (Status)
             {
                 case ConceptionStatus.Conceived:
                 case ConceptionStatus.Failed:
                 case ConceptionStatus.Birth:
-                    ConceptionDate = date.AddMonths(-1 * Convert.ToInt32(Female.Age - Female.AgeAtLastConception, CultureInfo.InvariantCulture));
+                    if(calculateFromAge)
+                        ConceptionDate = date.AddMonths(-1 * Convert.ToInt32(Female.Age - Female.AgeAtLastConception, CultureInfo.InvariantCulture));
+                    else ConceptionDate = date;
+
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
                     break;
                 case ConceptionStatus.Weaned:
                     if (offspringAge is null)
-                        throw new ArgumentException("Code logice error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
+                        throw new ArgumentException("Code logic error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
                     ConceptionDate = date.AddMonths(-1 * Convert.ToInt32(offspringAge + Female.BreedParams.GestationLength, CultureInfo.InvariantCulture));
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
                     break;

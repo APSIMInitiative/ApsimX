@@ -447,7 +447,9 @@ namespace Models.Surface
             Add((double)(data.OMWeight * fractionFaecesAdded),
                          (double)(data.OMN * fractionFaecesAdded),
                          (double)(data.OMP * fractionFaecesAdded),
-                         Manure, "");
+                         Manure, "", 0,
+                         (double)(data.NO3N * fractionFaecesAdded),
+                         (double)(data.NH4N * fractionFaecesAdded));
         }
 
         /// <summary>
@@ -625,16 +627,8 @@ namespace Models.Surface
                 FinalResidueC += surfaceResidue.C[i];
 
             FractionDecomposed = 1.0 - MathUtilities.Divide(FinalResidueC, InitialResidueC, 0);
-            if (FractionDecomposed < 1)
-            { }
-            SurfaceOrganicMatterDecompType actualDecomposition = ReflectionUtilities.Clone(potentialDecomposition) as SurfaceOrganicMatterDecompType;
-            for (int i = 0; i < potentialDecomposition.Pool.Length; i++)
-            {
-                actualDecomposition.Pool[i].FOM.C = potentialDecomposition.Pool[i].FOM.C * FractionDecomposed;
-                actualDecomposition.Pool[i].FOM.N = potentialDecomposition.Pool[i].FOM.N * FractionDecomposed;
-            }
-            if (actualDecomposition != null)
-                DecomposeSurfom(actualDecomposition);
+
+            DecomposeSurfom(potentialDecomposition, FractionDecomposed);
 
             Canopies = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
@@ -919,10 +913,11 @@ namespace Models.Surface
         }
 
         /// <summary>Decomposes the surfom.</summary>
-        /// <param name="SOMDecomp">The som decomp.</param>
-        private void DecomposeSurfom(SurfaceOrganicMatterDecompType SOMDecomp)
+        /// <param name="potSOMDecomp">The potential som decomp.</param>
+        /// <param name="fraction">Fraction of potential to decompose.</param>
+        private void DecomposeSurfom(SurfaceOrganicMatterDecompType potSOMDecomp, double fraction)
         {
-            int numSurfom = SOMDecomp.Pool.Length;          // local surfom counter from received event;
+            int numSurfom = potSOMDecomp.Pool.Length;          // local surfom counter from received event;
             int residue_no;                                 // Index into the global array;
             double[] cPotDecomp = new double[numSurfom];  // pot amount of C to decompose (kg/ha)
             double[] nPotDecomp = new double[numSurfom];  // pot amount of N to decompose (kg/ha)
@@ -940,10 +935,10 @@ namespace Models.Surface
 
             for (int counter = 0; counter < numSurfom; counter++)
             {
-                totCDecomp = SOMDecomp.Pool[counter].FOM.C;
-                totNDecomp = SOMDecomp.Pool[counter].FOM.N;
+                totCDecomp = potSOMDecomp.Pool[counter].FOM.C * fraction;
+                totNDecomp = potSOMDecomp.Pool[counter].FOM.N * fraction;
 
-                residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
+                residue_no = GetResidueNumber(potSOMDecomp.Pool[counter].Name);
 
                 if (MathUtilities.IsLessThan(totNDecomp, 0.0) || MathUtilities.IsGreaterThan(totNDecomp, nPotDecomp[residue_no]))
                     summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}",
@@ -1205,7 +1200,9 @@ namespace Models.Surface
         /// <param name="type">Type of the biomass.</param>
         /// <param name="name">Name of the biomass written to summary file</param>
         /// <param name="fractionStanding">Fraction standing. Defaults to 0</param>
-        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0)
+        /// <param name="no3">The amount of no3 added (kg/ha).</param>
+        /// <param name="nh4">The amount of nh4 added (kg/ha).</param>
+        public void Add(double mass, double N, double P, string type, string name, double fractionStanding = 0, double no3 = -1, double nh4 = -1)
         {
             if (mass > 0 || N > 0 || P > 0)
             {
@@ -1217,8 +1214,16 @@ namespace Models.Surface
                 summary.WriteMessage(this, $"Adding {mass:F2} kg/ha of biomass ({N:F2} kgN/ha) to pool: {type}. ", MessageType.Diagnostic);
 
                 // convert the ppm figures into kg/ha;
-                SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
-                SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                if (no3 < 0)
+                    SurfOM[SOMNo].no3 += MathUtilities.Divide(no3ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].no3 += no3;
+
+                if (nh4 != 0)
+                    SurfOM[SOMNo].nh4 += MathUtilities.Divide(nh4ppm[SOMNo], 1000000.0, 0.0) * mass;
+                else
+                    SurfOM[SOMNo].nh4 += nh4;
+
                 SurfOM[SOMNo].po4 += MathUtilities.Divide(po4ppm[SOMNo], 1000000.0, 0.0) * mass;
 
                 for (int i = 0; i < maxFr; i++)
