@@ -73,9 +73,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Hight of the top of the canopy after pruning mature tree (mm)")]
         public double MaxPrunedHeight { get; set; }
 
-        /// <summary>Increase in hight between bud burst and pruning of mature tree  (mm)</summary>
-        [Description("Increase in hight between bud burst and pruning of mature tree (mm)")]
-        public double SeasonalHeightGrowth { get; set; }
+        /// <summary>maximum hight of mature tre at pruning(mm)</summary>
+        [Description("maximum hight of mature tre at pruning (mm)")]
+        public double MaxHeight { get; set; }
 
         /// <summary>Hight of the top of the canopy after pruning mature tree (mm)</summary>
         [Description("Width of the top of the canopy after pruning mature tree (mm)")]
@@ -107,9 +107,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum LAI of mature tree prior to Leaf Fall (m2/m2)</summary>
-        [Description("Maximum LAI of mature tree prior to Leaf Fall (m2/m2)")]
-        public double MaxLAI { get; set; }
+        /// <summary>Maximum Cover of mature tree in the row area (0-0.97)</summary>
+        [Description("Maximum Cover of mature tree in the row area (0-0.97)")]
+        public double MaxCover { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
@@ -201,12 +201,12 @@ namespace Models.PMF.SimplePlantModels
             {"MaxSeasonalHeight","[Height].SeasonalGrowth.Maximum.FixedValue = " },
             {"MaxPrunedWidth","[Width].PrunedWidth.Maximum.FixedValue = "},
             {"MaxSeasonalWidth","[Width].SeasonalGrowth.Maximum.FixedValue = " },
-            {"FruitNConc","[Fruit].MaxNConcAtHarvest.FixedValue = "},
-            {"LeafNConc","[Leaf].MaxNConcAtStartLeafFall.FixedValue = "},
+            {"ProductNConc","[Fruit].MaxNConcAtHarvest.FixedValue = "},
+            {"ResidueNConc","[Leaf].MaxNConcAtStartLeafFall.FixedValue = "},
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
-            {"TrunkNConc","[Trunk].MaximumNConc.FixedValue = "},
+            {"WoodNConc","[Trunk].MaximumNConc.FixedValue = "},
             {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
-            {"MaxLAI","[Leaf].Area.Maximum.FixedValue = " },
+            {"MaxCover","[Leaf].Cover.Maximum.FixedValue = " },
             {"GSMax","[Leaf].Gsmax350 = " },
             {"R50","[Leaf].R50 = " },
             {"InitialTrunkWt","[Trunk].InitialWt.Structural.FixedValue = "},
@@ -308,15 +308,15 @@ namespace Models.PMF.SimplePlantModels
             treeParams["Proot"] += Proot.ToString();
             treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
-            treeParams["MaxSeasonalHeight"] += SeasonalHeightGrowth.ToString();
+            treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
             treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
             treeParams["MaxSeasonalWidth"] += SeasonalWidthGrowth.ToString();
-            treeParams["FruitNConc"] += FruitNConc.ToString();
-            treeParams["LeafNConc"] += LeafNConc.ToString();
+            treeParams["ProductNConc"] += FruitNConc.ToString();
+            treeParams["ResidueNConc"] += LeafNConc.ToString();
             treeParams["RootNConc"] += RootNConc.ToString();
-            treeParams["TrunkNConc"] += TrunkNConc.ToString();
+            treeParams["WoodNConc"] += TrunkNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            treeParams["MaxLAI"] += MaxLAI.ToString();
+            treeParams["MaxCover"] += MaxCover.ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
