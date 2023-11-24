@@ -54,6 +54,15 @@ namespace Models.PMF.SimplePlantModels
         [Description("Pasture height after grazing(mm)")]
         public double MaxPrunedHeight { get; set; }
 
+        /// <summary>Maximum green cover</summary>
+        [Description("Maximum green cover (0-0.97)")]
+        public double MaxCover { get; set; }
+
+        /// <summary>Maximum green cover</summary>
+        [Separator("Canopy parameters")]
+        [Description("Extinction coefficient (0-1)")]
+        public double ExtinctCoeff { get; set; }
+
         /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
         [Description("Grow roots into neighbouring zone (yes or no)")]
         public bool RootThyNeighbour { get; set; }
@@ -70,6 +79,18 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Product Nitrogen Concentration</summary>
         [Description("Residue Nitrogen concentration(g/g)")]
         public double ResidueNConc { get; set; }
+
+        /// <summary>Base temperature for crop</summary>
+        [Description("Base temperature for crop (oC)")]
+        public double BaseT { get; set; }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Optimum temperature for crop (oC)")]
+        public double OptT { get; set; }
+
+        /// <summary>Maximum temperature for crop</summary>
+        [Description("Maximum temperature for crop (oC)")]
+        public double MaxT { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
@@ -120,12 +141,18 @@ namespace Models.PMF.SimplePlantModels
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
             {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
+            {"MaxCover","[SPRUM].Leaf.Cover.Seasonal pattern.Ymax.FixedValue = "},
+            {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.FixedValue = "},
             {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
-            {"LeafNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
+            {"ProductNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
             {"RootNConc","[SPRUM].Root.MaximumNConc.FixedValue = "},
             {"GSMax","[SPRUM].Leaf.Gsmax350 = " },
             {"R50","[SPRUM].Leaf.R50 = " },
             {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
+            {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
+            {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
+            {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
+            {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
         };
 
         /// <summary>
@@ -209,14 +236,19 @@ namespace Models.PMF.SimplePlantModels
             pastureParams["HightOfRegrowth"] += (MaxHeight- MaxPrunedHeight).ToString();
             pastureParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
             pastureParams["MaxRootDepth"] += MaxRD.ToString();
+            pastureParams["MaxCover"] += MaxCover.ToString();
+            pastureParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             pastureParams["ResidueNConc"] += ResidueNConc.ToString();
-            pastureParams["LeafNConc"] += LeafNConc.ToString();
+            pastureParams["ProductNConc"] += LeafNConc.ToString();
             pastureParams["RootNConc"] += RootNConc.ToString();
             pastureParams["GSMax"] += GSMax.ToString();
             pastureParams["R50"] += R50.ToString();
             pastureParams["LegumePropn"] += LegumePropn.ToString();
-
-                
+            pastureParams["BaseT"] += this.BaseT.ToString();
+            pastureParams["OptT"] += this.OptT.ToString();
+            pastureParams["MaxT"] += this.MaxT.ToString();
+            pastureParams["MaxTt"] += (this.OptT - this.BaseT).ToString();
+            
             string[] commands = new string[pastureParams.Count];
             pastureParams.Values.CopyTo(commands, 0);
 
