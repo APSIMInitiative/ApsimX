@@ -2,12 +2,12 @@ namespace ApsimNG.EventArguments.DirectedGraph
 {
     using System;
     using System.Collections.Generic;
-    using APSIM.Interop.Visualisation;
+    using APSIM.Shared.Graphing;
 
     public class GraphObjectsArgs : EventArgs
     {
-        public List<DGObject> Objects { get; set; }
-        public GraphObjectsArgs(List<DGObject> objs)
+        public List<GraphObject> Objects { get; set; }
+        public GraphObjectsArgs(List<GraphObject> objs)
         {
             Objects = objs;
         }

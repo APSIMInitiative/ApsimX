@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System;
+using Newtonsoft.Json;
 
 namespace APSIM.Shared.Graphing
 {
@@ -11,14 +11,17 @@ namespace APSIM.Shared.Graphing
         /// <summary>Description of the node.</summary>
         public string Description { get; set; }
 
-        /// <summary>Outline colour of node</summary>
-        public Color OutlineColour { get; set; }
-
         /// <summary>
         /// If true, the node's background and outline will be the same colour
         /// as the canvas' background.
         /// </summary>
         public bool Transparent { get; set; }
+
+        /// <summary>
+        /// Diameter of the node (in px?).
+        /// </summary>
+        [JsonIgnore]
+        public int Width { get { return 120; } }
 
         /// <summary>Constructor</summary>
         public Node()
@@ -26,7 +29,7 @@ namespace APSIM.Shared.Graphing
             Name = "";
             Description = "";
             Colour = Color.Beige;
-            OutlineColour = Color.Black;
+            Transparent = false;
         }
 
         /// <summary>
@@ -36,7 +39,6 @@ namespace APSIM.Shared.Graphing
         public void CopyFrom(Node x)
         {
             Colour = x.Colour;
-            OutlineColour = x.OutlineColour;
             Location = x.Location;
             Name = x.Name;
             Description = x.Description;
@@ -55,7 +57,6 @@ namespace APSIM.Shared.Graphing
             else
             {
                 Colour = Color.Beige;
-                OutlineColour = Color.Black;
             }
         }
 
@@ -71,9 +72,35 @@ namespace APSIM.Shared.Graphing
             else
             {
                 Colour = Color.Beige;
-                OutlineColour = Color.Black;
             }
             Description = description;
         }
+
+        
+
+        /// <summary>Return true if the clickPoint is on this object</summary>
+        /// <param name="clickPoint"></param>
+        public override bool HitTest(Point clickPoint)
+        {
+            double dist = GetDistance(Location, clickPoint);
+            return dist < (Width / 2);
+        }
+
+        /// <summary>Return true if the clickPoint is on this object</summary>
+        /// <param name="selection"></param>
+        public override bool HitTest(Rectangle selection)
+        {
+            double minX = selection.X - (Width / 2);
+            double maxX = selection.X + selection.Width + (Width / 2);
+            double minY = selection.Y - (Width / 2);
+            double maxY = selection.Y + selection.Height + (Width / 2);
+
+            if (minX < Location.X && Location.X < maxX && minY < Location.Y && Location.Y < maxY)
+                return true;
+            else
+                return false;
+        }
+
+
     }
 }

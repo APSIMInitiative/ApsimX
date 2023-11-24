@@ -30,14 +30,6 @@ namespace APSIM.Shared.Graphing
             Arcs.Clear();
         }
 
-        /// <summary>End constrction of graph</summary>
-        public void End()
-        {
-            // Remove unwanted nodes and arcs.
-            //Nodes.RemoveAll(node => !nodesToKeep.Contains(node));
-            //Arcs.RemoveAll(arc => !arcsToKeep.Contains(arc));
-        }
-
         /// <summary>Add a new node to the graph</summary>
         public void AddTransparentNode(string name)
         {
@@ -102,22 +94,22 @@ namespace APSIM.Shared.Graphing
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string NextArcName(int id)
+        /// <summary>Get a reference to the node with the given ID. Null if not found</summary>
+        public Node GetNodeByID(int id)
         {
-            return $"Arc {id}";
+            foreach (Node node in Nodes)
+                if (node.ID == id)
+                    return node;
+            return null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string NextNodeName(int id)
+        /// <summary>Get a reference to the arc with the given ID. Null if not found</summary>
+        public Arc GetArcByID(int id)
         {
-            return $"Node {id}";
+            foreach (Arc arc in Arcs)
+                if (arc.ID == id)
+                    return arc;
+            return null;
         }
 
         /// <summary>

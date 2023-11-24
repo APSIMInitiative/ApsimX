@@ -64,7 +64,6 @@ namespace UserInterface.Views
 
         private Dictionary<int, List<string>> rules = new Dictionary<int, List<string>>();
         private Dictionary<int, List<string>> actions = new Dictionary<int, List<string>>();
-        private Dictionary<int, string> nodeDescriptions = new Dictionary<int, string>();
 
         private bool isDrawingArc = false;
 
@@ -193,7 +192,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return graphView.DirectedGraph.Nodes.Select(n => new Node(n, nodeDescriptions[n.ID])).ToList();
+                return graphView.DirectedGraph.Nodes;
             }
         }
 
@@ -205,16 +204,7 @@ namespace UserInterface.Views
         {
             get
             {
-                List<Arc> arcs = new List<Arc>();
-                foreach (var a in graphView.DirectedGraph.Arcs)
-                {
-                    Arc ga = graphView.DirectedGraph.Arcs.Find(x => x.ID == a.ID);
-                    var na = new Arc(ga);
-                    na.Conditions = rules[na.ID];
-                    na.Actions = actions[na.ID];
-                    arcs.Add(na);
-                }
-                return arcs;
+                return graphView.DirectedGraph.Arcs;
             }
         }
 
@@ -227,23 +217,15 @@ namespace UserInterface.Views
         {
             rules.Clear();
             actions.Clear();
-            nodeDescriptions.Clear();
-            var graph = new DirectedGraph();
 
-            nodes.ForEach(node =>
+            graphView.DirectedGraph.Nodes = nodes;
+            graphView.DirectedGraph.Arcs = arcs;
+            foreach (Arc a in arcs)
             {
-                Node n = graph.AddNode(node);
-                node.CopyFrom(n);
-                nodeDescriptions[node.ID] = node.Description;
-            });
-            arcs.ForEach(arc =>
-            {
-                Arc a = graph.AddArc(arc);
-                arc.CopyFrom(a);
-                rules[arc.ID] = arc.Conditions;
-                actions[arc.ID] = arc.Actions;
-            });
-            graphView.DirectedGraph = graph;
+                a.Source = graphView.DirectedGraph.GetNodeByID(a.SourceID);
+                a.Destination = graphView.DirectedGraph.GetNodeByID(a.DestinationID);
+            }
+
             graphView.MainWidget.QueueDraw();
         }
 
@@ -314,8 +296,8 @@ namespace UserInterface.Views
             }
             else if (graphView.SelectedObjects.Count == 1)
             {
-                DGObject selectedObj = graphView.SelectedObjects[0];
-                if (selectedObj is DGNode)
+                GraphObject selectedObj = graphView.SelectedObjects[0];
+                if (selectedObj is Node)
                 {
                     // User has right-clicked on a node.
                     item = new MenuItem($"Duplicate {selectedObj.Name}");
@@ -333,15 +315,17 @@ namespace UserInterface.Views
                     item.Activated += handler;
                     ContextMenu.Append(item);
                 }
-                else if (selectedObj is DGArc arc)
+                else if (selectedObj is Arc arc)
                 {
+
+
                     // User has right-clicked on an arc.
-                    item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Target.Name}");
+                    item = new MenuItem($"Duplicate Arc from {arc.Source.Name} to {arc.Destination.Name}");
                     handler = OnDuplicateArc;
                     item.Activated += handler;
                     ContextMenu.Append(item);
 
-                    item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Target.Name}");
+                    item = new MenuItem($"Delete Arc from {arc.Source.Name} to {arc.Destination.Name}");
                     handler = OnDeleteArc;
                     item.Activated += handler;
                     ContextMenu.Append(item);
@@ -596,18 +580,16 @@ namespace UserInterface.Views
                 startNode.Name = graphView.SelectedObjects[0].Name;
                 startNode.Location = graphView.SelectedObjects[0].Location;
 
-                List<DGNode> nodes = new List<DGNode>();
-                nodes.Add(new DGNode(startNode));
-                nodes.Add(new DGNode(cursorNode));
-
                 Arc arc = new Arc();
                 arc.ID = 0;
                 arc.Name = "";
                 arc.SourceID = graphView.SelectedObjects[0].ID;
                 arc.DestinationID = 0;
                 arc.Location = startNode.Location;
+                arc.Source = startNode;
+                arc.Destination = cursorNode;
 
-                graphView.tempArc = new DGArc(arc, nodes);
+                graphView.tempArc = new Arc(arc);
             }
         }
 
@@ -623,7 +605,7 @@ namespace UserInterface.Views
                 Arc newArc = new Arc();
                 newArc.ID = graphView.DirectedGraph.NextArcID();
                 newArc.Name = null;
-                newArc.SourceID = graphView.tempArc.Source.ID;
+                newArc.SourceID = graphView.tempArc.SourceID;
                 newArc.DestinationID = graphView.SelectedObjects[0].ID;
                 newArc.Location = graphView.tempArc.Location;
 

@@ -7,6 +7,9 @@ using APSIM.Interop.Visualisation;
 using APSIM.Shared.Graphing;
 using Utility;
 using ApsimNG.EventArguments.DirectedGraph;
+using APSIM.Interop.Drawing;
+using System.Drawing;
+using OxyPlot;
 
 namespace UserInterface.Views
 {
@@ -23,12 +26,12 @@ namespace UserInterface.Views
         /// <summary>
         /// The currently selected node.
         /// </summary>
-        public List<DGObject> SelectedObjects { get; private set; }
+        public List<GraphObject> SelectedObjects { get; private set; }
 
         /// <summary>
         /// The currently hovered node.
         /// </summary>
-        public DGObject HoverObject { get; private set; }
+        public GraphObject HoverObject { get; private set; }
 
         /// <summary>
         /// Keeps track of whether the user is currently dragging an object.
@@ -51,7 +54,7 @@ namespace UserInterface.Views
         /// <summary>
         /// A temporary arc to draw when an arc is being created.
         /// </summary>
-        public DGArc tempArc = null;
+        public Arc tempArc = null;
 
         /// <summary>
         /// Drawing area upon which the graph is rendered.
@@ -71,12 +74,21 @@ namespace UserInterface.Views
         /// <summary>
         /// List of nodes. These are currently circles with text in them.
         /// </summary>
-        private List<DGNode> nodes = new List<DGNode>();
+        private List<APSIM.Shared.Graphing.Node> nodes
+        {
+            get { return DirectedGraph.Nodes; }
+        }
 
         /// <summary>
         /// List of arcs which connect the nodes.
         /// </summary>
-        private List<DGArc> arcs = new List<DGArc>();
+        private List<Arc> arcs
+        {
+            get { return DirectedGraph.Arcs; }
+        }
+
+        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
+        public DirectedGraph DirectedGraph { get; set; }
 
         /// <summary>
         /// When a single object is selected
@@ -122,6 +134,7 @@ namespace UserInterface.Views
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
 
+            DirectedGraph = new DirectedGraph();
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
@@ -143,40 +156,6 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
-        public DirectedGraph DirectedGraph
-        {
-            get
-            {
-                DirectedGraph graph = new DirectedGraph();
-                nodes.ForEach(node => graph.Nodes.Add(node.ToNode()));
-                arcs.ForEach(arc => graph.Arcs.Add(arc.ToArc()));
-                return graph;
-            }
-            set
-            {
-                List<int> selectedObjectIDs = new List<int>();
-                if (SelectedObjects != null)
-                    foreach (DGObject obj in SelectedObjects)
-                        selectedObjectIDs.Add(obj.ID);
-                SelectedObjects = new List<DGObject>();
-                nodes.Clear();
-                arcs.Clear();
-
-                value.Nodes.ForEach(node => nodes.Add(new DGNode(node)));
-                value.Arcs.ForEach(arc => arcs.Add(new DGArc(arc, nodes)));
-
-                foreach (int id in selectedObjectIDs)
-                {
-                    DGObject SelectedObject = nodes?.Find(n => n.ID == id);
-                    if (SelectedObject == null)
-                        SelectedObject = arcs?.Find(a => a.ID == id);
-                    if (SelectedObject != null)
-                        SelectedObjects.Add(SelectedObject);
-                }
-            }
-        }
-
         /// <summary>Export the view to the image</summary>
         public Gdk.Pixbuf Export()
         {
@@ -193,7 +172,7 @@ namespace UserInterface.Views
             MainWidget.WidthRequest = size;
             MainWidget.HeightRequest = size;
             window.ShowAll();
-            while (GLib.MainContext.Iteration());
+            while (GLib.MainContext.Iteration()) ;
 
             return window.Pixbuf;
         }
@@ -207,16 +186,18 @@ namespace UserInterface.Views
 
                 Cairo.Context context = args.Cr;
 
-                DGObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
+                GraphObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
 #pragma warning disable 0612
-                DGObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+                GraphObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
 #pragma warning restore 0612
 
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
 
                 if (isDrawingArc)
                     arcs.Add(tempArc);
+
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes, selectionRectangle);
+
                 if (isDrawingArc)
                     arcs.Remove(tempArc);
 
@@ -242,7 +223,7 @@ namespace UserInterface.Views
                     mouseDown = true;
 
                     isDragging = false;
-                    DGObject objClicked = null;
+                    GraphObject objClicked = null;
                     for (int i = 0; i < nodes.Count && isDragging == false; i++)
                     {
                         if (nodes[i].HitTest(clickPoint))
@@ -251,7 +232,7 @@ namespace UserInterface.Views
                             objClicked = nodes[i];
                         }
                     }
-                           
+
                     for (int i = 0; i < arcs.Count && isDragging == false; i++)
                     {
                         if (arcs[i].HitTest(clickPoint))
@@ -265,7 +246,7 @@ namespace UserInterface.Views
                     {
                         selectionPoint = clickPoint;
                         selectionRectangle = new DGRectangle(selectionPoint.X, selectionPoint.Y, 1, 1);
-                        SelectedObjects = new List<DGObject>();
+                        SelectedObjects = new List<GraphObject>();
                     }
                     else
                     {
@@ -284,7 +265,7 @@ namespace UserInterface.Views
                                     OnGraphObjectSelected?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
 
                                     if (isDrawingArc)
-                                        if (SelectedObjects[0] is DGNode)
+                                        if (SelectedObjects[0] is APSIM.Shared.Graphing.Node)
                                             AddArc?.Invoke(this, new EventArgs());
                                 }
                             }
@@ -296,9 +277,9 @@ namespace UserInterface.Views
                 }
                 else
                 {
-                    
+
                 }
-                
+
                 isDrawingArc = false;
             }
             catch (Exception err)
@@ -327,7 +308,7 @@ namespace UserInterface.Views
                     int x = tempArc.Location.X + (diff.X / 2);
                     int y = tempArc.Location.Y + (diff.Y / 2);
                     tempArc.Location = new Point(x, y);
-                    tempArc.Target.Location = new Point((int)args.Event.X, (int)args.Event.Y);
+                    tempArc.Destination.Location = new Point((int)args.Event.X, (int)args.Event.Y);
                 }
                 else if (mouseDown)
                 {
@@ -341,16 +322,16 @@ namespace UserInterface.Views
                                 int y = SelectedObjects[i].Location.Y + diff.Y;
                                 SelectedObjects[i].Location = new Point(x, y);
 
-                                if (SelectedObjects[i] is DGNode)
+                                if (SelectedObjects[i] is APSIM.Shared.Graphing.Node)
                                 {
                                     for (int j = 0; j < arcs.Count; j++)
                                     {
                                         if (arcs[j].Selected == false)
                                         {
-                                            DGNode source = arcs[j].Source;
-                                            DGNode target = arcs[j].Target;
+                                            APSIM.Shared.Graphing.Node source = arcs[j].Source;
+                                            APSIM.Shared.Graphing.Node target = arcs[j].Destination;
 
-                                            if ((SelectedObjects[i] as DGNode) == source || (SelectedObjects[i] as DGNode) == target)
+                                            if ((SelectedObjects[i] as APSIM.Shared.Graphing.Node) == source || (SelectedObjects[i] as APSIM.Shared.Graphing.Node) == target)
                                             {
                                                 x = arcs[j].Location.X + (diff.X / 2);
                                                 y = arcs[j].Location.Y + (diff.Y / 2);
@@ -424,7 +405,7 @@ namespace UserInterface.Views
                     if (isDragging)
                     {
                         OnGraphObjectMoved?.Invoke(this, new GraphObjectsArgs(SelectedObjects));
-                    } 
+                    }
                     else if (selectionRectangle != null)
                     {
                         Select(selectionRectangle, false);
@@ -435,7 +416,7 @@ namespace UserInterface.Views
                     {
                         Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
                         // Look through nodes for the click point
-                        DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
+                        GraphObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
 
                         // If not found, look through arcs for the click point
                         if (clickedObject == null)
@@ -457,10 +438,14 @@ namespace UserInterface.Views
         public void Select(DGRectangle selectionRect, bool single)
         {
             // Delselect existing objects
-            SelectedObjects = new List<DGObject>();
+            SelectedObjects = new List<GraphObject>();
+            for (int i = 0; i < nodes.Count; i++)
+                nodes[i].Selected = false;
+            for (int i = 0; i < arcs.Count; i++)
+                arcs[i].Selected = false;
 
             //Look through nodes that are in rectangle
-            for(int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < nodes.Count; i++)
                 if (nodes[i].HitTest(selectionRect.GetRectangle()))
                     if (!single || (single && SelectedObjects.Count == 0))
                         SelectedObjects.Add(nodes[i]);
@@ -480,9 +465,9 @@ namespace UserInterface.Views
         /// </summary> 
         public void UnSelect()
         {
-            nodes.ForEach(node => {  node.Selected = false; });
+            nodes.ForEach(node => { node.Selected = false; });
             arcs.ForEach(arc => { arc.Selected = false; });
-            SelectedObjects = new List<DGObject>();
+            SelectedObjects = new List<GraphObject>();
             mouseDown = false;
             isDragging = false;
             // Redraw area.
@@ -515,8 +500,8 @@ namespace UserInterface.Views
         {
             if (nodes != null && nodes.Any())
             {
-                DGNode rightMostNode = nodes.Aggregate((node1, node2) => node1.Location.X > node2.Location.X ? node1 : node2);
-                DGNode bottomMostNode = nodes.Aggregate((node1, node2) => node1.Location.Y > node2.Location.Y ? node1 : node2);
+                APSIM.Shared.Graphing.Node rightMostNode = nodes.Aggregate((node1, node2) => node1.Location.X > node2.Location.X ? node1 : node2);
+                APSIM.Shared.Graphing.Node bottomMostNode = nodes.Aggregate((node1, node2) => node1.Location.Y > node2.Location.Y ? node1 : node2);
                 if (rightMostNode.Location.X + rightMostNode.Width >= drawable.Allocation.Width)
                     drawable.WidthRequest = 2 * drawable.Allocation.Width;
                 // I Assume that the nodes are circles such that width = height.
@@ -524,5 +509,6 @@ namespace UserInterface.Views
                     drawable.HeightRequest = 2 * drawable.Allocation.Height;
             }
         }
+
     }
 }

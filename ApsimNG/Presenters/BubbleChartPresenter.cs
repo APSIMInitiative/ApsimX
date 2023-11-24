@@ -226,11 +226,11 @@ namespace UserInterface.Presenters
         /// <param name="e">Event data.</param>
         private void OnAddArc(object sender, AddArcEventArgs e)
         {
-            // Ensure that existing source/dest nodes exist.
-            // todo - does this belong inside RotationManager??
-            if (model.Nodes.Find(n => n.ID == e.Arc.SourceID) == null ||
-                model.Nodes.Find(n => n.ID == e.Arc.DestinationID) == null)
-                throw new Exception("Target empty in arc");
+            if (model.Nodes.Find(n => n.ID == e.Arc.SourceID) == null)
+                throw new Exception("BubbleChartPresenter: Source empty in arc new Arc");
+
+            if (model.Nodes.Find(n => n.ID == e.Arc.DestinationID) == null)
+                throw new Exception("BubbleChartPresenter: Destination empty in arc new Arc");
 
             List<Arc> newArcs = new List<Arc>();
             newArcs.AddRange(model.Arcs);
@@ -238,7 +238,7 @@ namespace UserInterface.Presenters
             if (existingArc == null)
                 newArcs.Add(new Arc(e.Arc));
             else
-                existingArc.CopyFrom((Arc)new Arc(e.Arc));
+                existingArc.CopyFrom(new Arc(e.Arc));
 
             ICommand addArc = new ChangeProperty(model, nameof(model.Arcs), newArcs);
             presenter.CommandHistory.Add(addArc);
