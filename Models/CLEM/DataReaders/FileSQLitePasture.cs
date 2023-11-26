@@ -32,7 +32,7 @@ namespace Models.CLEM
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private List<ValidationResult> validationResults;
         private RainfallShuffler shuffler = null;
@@ -205,7 +205,7 @@ namespace Models.CLEM
         public FileSQLitePasture()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-            this.SetDefaults();
+            SetDefaults();
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Models.CLEM
         /// </summary>
         public bool FileExists
         {
-            get { return File.Exists(this.FullFileName); }
+            get { return File.Exists(FullFileName); }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -223,7 +223,7 @@ namespace Models.CLEM
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // look for a shuffler
-            shuffler = this.FindAllChildren<RainfallShuffler>().FirstOrDefault();
+            shuffler = FindAllChildren<RainfallShuffler>().FirstOrDefault();
             if (shuffler != null)
                 rndClem = FindInScope<RandomNumberGenerator>();
         }
@@ -236,13 +236,13 @@ namespace Models.CLEM
         {
             if (SQLiteReader == null)
             {
-                if (this.FullFileName == null || this.FullFileName == "")
+                if (FullFileName == null || FullFileName == "")
                 {
                     ErrorMessage = "File name for the SQLite database is missing";
                     return false;
                 }
 
-                if (System.IO.File.Exists(this.FullFileName))
+                if (File.Exists(FullFileName))
                 {
                     // check SQL file
                     SQLiteReader = new SQLite();
@@ -253,13 +253,13 @@ namespace Models.CLEM
                     }
                     catch (Exception ex)
                     {
-                        ErrorMessage = "There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name +"]\r\n" + ex.Message;
+                        ErrorMessage = $"There was a problem opening the SQLite database [o={ FullFileName} for [x={Name}]\r\n{ ex.Message}";
                         return false;
                     }
                 }
                 else
                 {
-                    ErrorMessage = "The SQLite database [o=" + FullFileName + "] could not be found for [x="+this.Name+"]";
+                    ErrorMessage = $"The SQLite database [o={ FullFileName}] could not be found for [x={Name}]";
                     return false;
                 }
             }
@@ -307,7 +307,7 @@ namespace Models.CLEM
             if (!this.FileExists)
             {
                 string[] memberNames = new string[] { "FileName" };
-                results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for ["+this.Name+"]", memberNames));
+                results.Add(new ValidationResult($"The SQLite database [x={FullFileName} could not be found for [{Name}]", memberNames));
             }
             else
             {
@@ -319,11 +319,11 @@ namespace Models.CLEM
                 }
                 catch(Exception ex)
                 {
-                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\r\n" + ((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message));
+                    throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message)}");
                 }
 
                 // check all columns present
-                List<string> expectedColumns = new List<string>()
+                List<string> expectedColumns = new()
                 {
                     RegionColumnName,
                     LandIdColumnName,
@@ -337,30 +337,20 @@ namespace Models.CLEM
 
                 // add extra data columns if specified
                 if (ErosionColumnName != null || ErosionColumnName != "")
-                {
                     expectedColumns.Add(ErosionColumnName);
-                }
                 if (RunoffColumnName != null || RunoffColumnName != "")
-                {
                     expectedColumns.Add(RunoffColumnName);
-                }
                 if (RainfallColumnName != null || RainfallColumnName != "")
-                {
                     expectedColumns.Add(RainfallColumnName);
-                }
                 if (CoverColumnName != null || CoverColumnName != "")
-                {
                     expectedColumns.Add(CoverColumnName);
-                }
                 if (TBAColumnName != null || TBAColumnName != "")
-                {
                     expectedColumns.Add(TBAColumnName);
-                }
-
+ 
                 try
                 {
-                    DataTable res = SQLiteReader.ExecuteQuery("PRAGMA table_info(" + TableName + ")");
-                    List<string> dBcolumns = new List<string>();
+                    DataTable res = SQLiteReader.ExecuteQuery($"PRAGMA table_info({ TableName})");
+                    List<string> dBcolumns = new();
                     foreach (DataRow row in res.Rows)
                     {
                         dBcolumns.Add(row[1].ToString());
@@ -371,13 +361,13 @@ namespace Models.CLEM
                         if (!dBcolumns.Contains(col))
                         {
                             string[] memberNames = new string[] { "Missing SQLite database column" };
-                            results.Add(new ValidationResult("Unable to find column [o=" + col + "] in pasture database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
+                            results.Add(new ValidationResult($"Unable to find column [o={ col}] in pasture database [x={ FullFileName }] for [{Name}]", memberNames));
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new ApsimXException(this, "There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\r\n" + ((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message));
+                    throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={ FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message)}");
                 }
             }
             return results;
@@ -398,11 +388,11 @@ namespace Models.CLEM
                 Simulation sim = FindAncestor<Simulation>();
                 if (sim?.FileName != null)
                 {
-                    return PathUtilities.GetAbsolutePath(this.FileName, sim.FileName);
+                    return PathUtilities.GetAbsolutePath(FileName, sim.FileName);
                 }
                 else
                 {
-                    return this.FileName;
+                    return FileName;
                 }
             }
         }
@@ -427,46 +417,44 @@ namespace Models.CLEM
                 return null;
             }
 
-            string sqlQuery = "SELECT  " +
-            RegionColumnName + "," +
-            LandIdColumnName + "," +
-            GrassBAColumnName + "," +
-            LandConColumnName + "," +
-            StkRateColumnName + "," +
-            YearColumnName + "," +
-            //"CutNum," +
-            MonthColumnName + "," +
-            GrowthColumnName;
-            //"BP1," +
-            //"BP2" +
+            using StringWriter sqlQuery = new();
+            sqlQuery.Write("SELECT ");
+            sqlQuery.Write($"{RegionColumnName}, ");
+            sqlQuery.Write($"{LandIdColumnName}, ");
+            sqlQuery.Write($"{GrassBAColumnName}, ");
+            sqlQuery.Write($"{LandConColumnName}, ");
+            sqlQuery.Write($"{StkRateColumnName}, ");
+            sqlQuery.Write($"{YearColumnName}, ");
+            sqlQuery.Write($"{MonthColumnName}, ");
+            sqlQuery.Write($"{GrowthColumnName}");
 
             if (ErosionColumnName != null && ErosionColumnName != "")
             {
-                sqlQuery += "," + ErosionColumnName;
+                sqlQuery.Write($", {ErosionColumnName}");
             }
             if (RunoffColumnName != null || RunoffColumnName != "")
             {
-                sqlQuery += "," + RunoffColumnName;
+                sqlQuery.Write($", {RunoffColumnName}");
             }
             if (RainfallColumnName != null || RainfallColumnName != "")
             {
-                sqlQuery += "," + RainfallColumnName;
+                sqlQuery.Write($", {RainfallColumnName}");
             }
             if (CoverColumnName != null || CoverColumnName != "")
             {
-                sqlQuery += "," + CoverColumnName;
+                sqlQuery.Write($", {CoverColumnName}");
             }
             if (TBAColumnName != null || TBAColumnName != "")
             {
-                sqlQuery += "," + TBAColumnName;
+                sqlQuery.Write($", {TBAColumnName}");
             }
 
-            sqlQuery += " FROM " + TableName;
-            sqlQuery += " WHERE "+YearColumnName+" BETWEEN " + startYear + " AND " + endYear;
+            sqlQuery.Write($" FROM {TableName}");
+            sqlQuery.Write($" WHERE {YearColumnName} BETWEEN { startYear} AND { endYear}");
 
             try
             {
-                DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+                DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
                 results.DefaultView.Sort = YearColumnName+", "+MonthColumnName;
                 return results;
             }
@@ -504,16 +492,16 @@ namespace Models.CLEM
                 if (result.Rows.Count >= 0 && Convert.ToInt32(result.Rows[0][0]) != 1)
                 {
                     // add warning
-                    string warn = $"The database [x={this.FileName.Replace("_", "\\_")}] specified in [x={this.Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\r\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\r\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
+                    string warn = $"The database [x={FileName.Replace("_", "\\_")}] specified in [x={Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\r\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\r\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
             }
 
             // get list of distinct stocking rates available in database
             // database has already been opened and checked in Validate()
-            this.distinctStkRates = GetCategories(StkRateColumnName);
-            this.distinctGBAs = GetCategories(GrassBAColumnName);
-            this.distinctLandConditions = GetCategories(LandConColumnName);
+            distinctStkRates = GetCategories(StkRateColumnName);
+            distinctGBAs = GetCategories(GrassBAColumnName);
+            distinctLandConditions = GetCategories(LandConColumnName);
         }
 
         /// <summary>
@@ -549,8 +537,8 @@ namespace Models.CLEM
                     if(valuesToUse.Max() > 100 | valuesToUse.Min() < 0)
                     {
                         // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 100";
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 100";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
@@ -560,8 +548,8 @@ namespace Models.CLEM
                     if (valuesToUse.Max() > 10 | valuesToUse.Min() < 0)
                     {
                         // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 0 and 10";
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 0 and 10";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
@@ -570,28 +558,28 @@ namespace Models.CLEM
                     if (valuesToUse.Max() > 11 | valuesToUse.Min() < 0)
                     {
                         // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 11";
+                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 11";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
                 default:
-                    throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={this.Name}]");
+                    throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={Name}]");
             }
 
             if (valuesToUse.Count() == 0)
             {
-                throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={this.Name}]");
+                throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={Name}]");
             }
 
             int index = Array.BinarySearch(valuesToUse, value);
             if(~index >= valuesToUse.Count())
             {
                 // add warning
-                string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={this.Name}]";
-                string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={this.Name}]\r\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nUsed: [{valuesToUse.Last()}]\r\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
+                string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={Name}]";
+                string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={Name}]\r\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nUsed: [{valuesToUse.Last()}]\r\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
-                index = valuesToUse.Count() - 1;
+                index = valuesToUse.Length - 1;
             }
             return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
@@ -631,83 +619,73 @@ namespace Models.CLEM
             double grassBasalAreaCategory = FindClosestCategory("GBA", grassBasalArea);
             double landConditionCategory = FindClosestCategory("LandCondition", landCondition);
 
-            string sqlQuery = "SELECT " +
-                YearColumnName + ", " +
-                MonthColumnName + "," +
-                GrowthColumnName;
+            using StringWriter sqlQuery = new();
+            sqlQuery.Write("SELECT ");
+            sqlQuery.Write($"{YearColumnName}, ");
+            sqlQuery.Write($"{MonthColumnName}, ");
+            sqlQuery.Write($"{GrowthColumnName}");
 
             if (ErosionColumnName != null && ErosionColumnName != "")
-            {
-                sqlQuery += "," + ErosionColumnName;
-            }
+                sqlQuery.Write($", {ErosionColumnName}");
             if (RunoffColumnName != null || RunoffColumnName != "")
-            {
-                sqlQuery += "," + RunoffColumnName;
-            }
+                sqlQuery.Write($", {RunoffColumnName}");
             if (RainfallColumnName != null || RainfallColumnName != "")
-            {
-                sqlQuery += "," + RainfallColumnName;
-            }
+                sqlQuery.Write($", {RainfallColumnName}");
             if (CoverColumnName != null || CoverColumnName != "")
-            {
-                sqlQuery += "," + CoverColumnName;
-            }
+                sqlQuery.Write($", {CoverColumnName}");
             if (TBAColumnName != null || TBAColumnName != "")
-            {
-                sqlQuery += "," + TBAColumnName;
-            }
+                sqlQuery.Write($", {TBAColumnName}");
 
-            sqlQuery += " FROM " + TableName +
-                " WHERE "+RegionColumnName+" = " + region +
-                " AND "+LandIdColumnName+" = " + soil +
-                " AND "+GrassBAColumnName+" = " + grassBasalAreaCategory +
-                " AND "+LandConColumnName+" = " + landConditionCategory +
-                " AND "+StkRateColumnName+" = " + stkRateCategory;
 
-            Dictionary<int, int> orderOfYears = new Dictionary<int, int>();
+            sqlQuery.Write($" FROM { TableName}");
+            sqlQuery.Write($" WHERE {RegionColumnName} = {region}");
+            sqlQuery.Write($" AND {LandIdColumnName} = {soil}");
+            sqlQuery.Write($" AND {GrassBAColumnName} = {grassBasalAreaCategory}");
+            sqlQuery.Write($" AND {LandConColumnName} = {landConditionCategory}");
+            sqlQuery.Write($" AND {StkRateColumnName} = {stkRateCategory}");
+
+            Dictionary<int, int> orderOfYears = new();
             if (shuffler != null && (rndClem?.Iteration??-9999) != shuffler.DoNotShuffleIteration)
             {
                 // need to check for all random year month matches in database
                 // this takes into account keeping seasonal rainfall together while shuffling the years
 
                 DateTime currentDate = ecolCalculationDate;
-                sqlQuery += " AND (";
+                sqlQuery.Write(" AND (");
                 bool firstEntry = true;
                 int indx = 0;
                 while (currentDate <= endDate)
                 {
                     indx++;
                     if(!firstEntry)
-                        sqlQuery += " OR ";
+                        sqlQuery.Write(" OR ");
                     firstEntry = false;
                     var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
                     if (foundEntry != null)
                     {
-                        sqlQuery += "( " + YearColumnName + " = " + foundEntry.RandomYear + " AND " + MonthColumnName + " = " + currentDate.Month + ")";
+                        sqlQuery.Write($"( {YearColumnName} = { foundEntry.RandomYear} AND { MonthColumnName} = { currentDate.Month}");
                         orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, indx);
                     }
 
                     currentDate = currentDate.AddMonths(1);
                 }
-                sqlQuery += ");";
+                sqlQuery.Write(":)" );
             }
             else
             {
                 if (startYear == endYear)
                 {
-                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + " AND " + MonthColumnName + " < " + endMonth + ")"
-                    + ")";
+                    sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth} AND {MonthColumnName} < {endMonth}) )");
                 }
                 else
                 {
-                    sqlQuery += " AND (( " + YearColumnName + " = " + startYear + " AND " + MonthColumnName + " >= " + startMonth + ")"
-                    + " OR  ( " + YearColumnName + " > " + startYear + " AND " + YearColumnName + " < " + endYear + ")"
-                    + " OR  ( " + YearColumnName + " = " + endYear + " AND " + MonthColumnName + " < " + endMonth + ")"
-                    + ")";
+                    sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth})");
+                    sqlQuery.Write($" OR  ( {YearColumnName} > {startYear} AND {YearColumnName} < {endYear})");
+                    sqlQuery.Write($" OR  ( {YearColumnName} = {endYear} AND {MonthColumnName} < {endMonth}) )");
                 }
             }
 
-            DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+            DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
 
             if(results.Rows.Count == 0 && (startMonth != endMonth))
             {
@@ -715,7 +693,7 @@ namespace Models.CLEM
                 {
                     case OnMissingResourceActionTypes.ReportWarning:
                         // this is no longer an error to allow situations where there is no pasture production reported in a given period
-                        string warn = $"No pasture production was found for [x={this.NameWithParent}] between [{startMonth}/{startYear}] and [{endMonth}/{endYear}]";
+                        string warn = $"No pasture production was found for [x={NameWithParent}] between [{startMonth}/{startYear}] and [{endMonth}/{endYear}]";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         break;
                     default:
@@ -777,13 +755,13 @@ namespace Models.CLEM
 
             //Check no gaps in the months
             DateTime tempdate = startDate;
-            if (filtered.Count() > 0 && MissingDataAction != OnMissingResourceActionTypes.Ignore)
+            if (filtered.Count > 0 && MissingDataAction != OnMissingResourceActionTypes.Ignore)
                 foreach (PastureDataType month in filtered)
                 {
                     if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
                     {
                         // missing month entry
-                        string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={this.Name}]";
+                        string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={Name}]";
                         string warnfull = warn + $"\r\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\r\nAssume [0] for pasture production and all associated values such as rainfall";
                         if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
@@ -831,128 +809,80 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (FileName == null || FileName == "")
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
+                htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+                htmlWriter.Write("\r\n</div>");
+            }
+            else
+            {
+                if (!this.FileExists)
                 {
-                    htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write($"The file <span class=\"errorlink\">{ FullFileName}</span> could not be found\r\n</div>");
                 }
                 else
                 {
-                    if (!this.FileExists)
-                    {
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                        htmlWriter.Write("\r\n</div>");
-                    }
+                    htmlWriter.Write($"Using <span class=\"filelink\">{ FileName}</span>\r\n</div>");
+
+                    // Add table name
+                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                    htmlWriter.Write($"Using table <span class=\"filelink\">{ TableName}</span>");
+                    // add column links
+                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is {CLEMModel.DisplaySummaryValueSnippet(RegionColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(LandIdColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is {CLEMModel.DisplaySummaryValueSnippet(GrassBAColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is {CLEMModel.DisplaySummaryValueSnippet(LandConColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is {CLEMModel.DisplaySummaryValueSnippet(StkRateColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is {CLEMModel.DisplaySummaryValueSnippet(YearColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is {CLEMModel.DisplaySummaryValueSnippet(MonthColumnName)}");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grwoth</span> is {CLEMModel.DisplaySummaryValueSnippet(GrowthColumnName)}");
+
+                    // other data columns
+                    if (ErosionColumnName is null || ErosionColumnName == "")
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">No erosion data will be obtained from database</div>");
                     else
                     {
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                        htmlWriter.Write("\r\n</div>");
-
-                        // Add table name
-                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                        htmlWriter.Write("Using table <span class=\"filelink\">" + TableName + "</span>");
-                        // add column links
-                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is ");
-                        if (RegionColumnName is null || RegionColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + RegionColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
-                        if (LandIdColumnName is null || LandIdColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + LandIdColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is ");
-                        if (GrassBAColumnName is null || GrassBAColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + GrassBAColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is ");
-                        if (LandConColumnName is null || LandConColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + LandConColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is ");
-                        if (StkRateColumnName is null || StkRateColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + StkRateColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
-                        if (YearColumnName is null || YearColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                        if (MonthColumnName is null || MonthColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
-
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
-                        if (GrowthColumnName is null || GrowthColumnName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                        else
-                            htmlWriter.Write("<span class=\"setvalue\">" + GrowthColumnName + "</span></div>");
-
-                        // other data columns
-                        if (ErosionColumnName is null || ErosionColumnName == "")
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">No erosion data will be obtained from database</div>");
-                        else
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Erosion data will be obtained from column named ");
-                            htmlWriter.Write("<span class=\"setvalue\">" + ErosionColumnName + "</span></div>");
-                        }
-
-                        if (RunoffColumnName is null || RunoffColumnName == "")
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">No runoff data will be obtained from database</div>");
-                        else
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Runoff data will be obtained from column named ");
-                            htmlWriter.Write("<span class=\"setvalue\">" + RunoffColumnName + "</span></div>");
-                        }
-
-                        if (RainfallColumnName is null || RainfallColumnName == "")
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>");
-                        else
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Rainfall data will be obtained from column named ");
-                            htmlWriter.Write("<span class=\"setvalue\">" + RainfallColumnName + "</span></div>");
-                        }
-
-                        if (CoverColumnName is null || CoverColumnName == "")
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">No cover data will be obtained from database</div>");
-                        else
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Cover data will be obtained from column named ");
-                            htmlWriter.Write("<span class=\"setvalue\">" + CoverColumnName + "</span></div>");
-                        }
-
-                        if (TBAColumnName is null || TBAColumnName == "")
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>");
-                        else
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">Tree basal area data will be obtained from column named ");
-                            htmlWriter.Write("<span class=\"setvalue\">" + TBAColumnName + "</span></div>");
-                        }
-                        htmlWriter.Write("\r\n</div>");
-                        htmlWriter.Write("\r\n</div>");
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Erosion data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(ErosionColumnName)}");
                     }
+
+                    if (RunoffColumnName is null || RunoffColumnName == "")
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">No runoff data will be obtained from database</div>");
+                    else
+                    {
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Runoff data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(RunoffColumnName)}");
+                    }
+
+                    if (RainfallColumnName is null || RainfallColumnName == "")
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>");
+                    else
+                    {
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Rainfall data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(RainfallColumnName)}");
+                    }
+
+                    if (CoverColumnName is null || CoverColumnName == "")
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">No cover data will be obtained from database</div>");
+                    else
+                    {
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Cover data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(CoverColumnName)}");
+                    }
+
+                    if (TBAColumnName is null || TBAColumnName == "")
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>");
+                    else
+                    {
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Tree basal area data will be obtained from column named {CLEMModel.DisplaySummaryValueSnippet(TBAColumnName)}");
+                    }
+                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
-                if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
-                    htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");
-                return htmlWriter.ToString();
             }
+            if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
+                htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");
+            return htmlWriter.ToString();
         }
         #endregion
     }

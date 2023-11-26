@@ -107,15 +107,15 @@ namespace Models.CLEM
         {
             get
             {
-                if ((this.FileName == null) || (this.FileName == ""))
+                if ((FileName == null) || (FileName == ""))
                     return "";
                 else
                 {
                     Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
-                        return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
                     else
-                        return this.FileName;
+                        return FileName;
                 }
             }
         }
@@ -125,7 +125,7 @@ namespace Models.CLEM
         /// </summary>
         public bool FileExists
         {
-            get { return File.Exists(this.FullFileName); }
+            get { return File.Exists(FullFileName); }
         }
 
         /// <summary>
@@ -134,15 +134,15 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            if (!this.FileExists)
+            if (!FileExists)
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
                 if(filename == "")
                     filename = "Not set";
-                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, Name);
                 throw new ApsimXException(this, errorMsg);
             }
-            this.resourceFileAsTable = GetAllData();
+            resourceFileAsTable = GetAllData();
         }
 
         /// <summary>
@@ -151,10 +151,10 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
+            if (reader != null)
             {
-                this.reader.Close();
-                this.reader = null;
+                reader.Close();
+                reader = null;
             }
         }
 
@@ -201,9 +201,9 @@ namespace Models.CLEM
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
-            this.reader = null;
+            reader = null;
 
-            if (this.OpenDataFile())
+            if (OpenDataFile())
             {
                 List<string> cropProps = new List<string>
                 {
@@ -213,7 +213,7 @@ namespace Models.CLEM
                     AmountColumnName
                 };
 
-                DataTable table = this.reader.ToTable(cropProps);
+                DataTable table = reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[1] = table.Columns[ResourceNameColumnName];
@@ -290,14 +290,14 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FullFileName))
+            if (System.IO.File.Exists(FullFileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
@@ -309,30 +309,30 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, ResourceNameColumnName) == -1)
-                        if (this.reader == null || this.reader.Constant(ResourceNameColumnName) == null)
-                            throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, ResourceNameColumnName) == -1)
+                        if (reader == null || reader.Constant(ResourceNameColumnName) == null)
+                            throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, YearColumnName) == -1)
-                        if (this.reader == null || this.reader.Constant(YearColumnName) == null)
-                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName) == -1)
+                        if (reader == null || reader.Constant(YearColumnName) == null)
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
 
                     if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                        if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName) == -1)
-                            if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
-                                throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                        if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName) == -1)
+                            if (reader == null || reader.Constant(MonthColumnName) == null)
+                                throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName) == -1)
-                        if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
-                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName) == -1)
+                        if (reader == null || reader.Constant(AmountColumnName) == null)
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                        reader.SeekToDate(reader.FirstDate);
                 }
 
                 return true;
@@ -356,83 +356,81 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (FileName == null || FileName == "")
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                {
-                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                }
-                else
-                {
-                    if (!this.FileExists)
-                    {
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                    }
-                }
-                if (FileName != null && FileName.Contains(".xls"))
-                {
-                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                    {
-                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-                    }
-                }
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
-                if (ResourceNameColumnName is null || ResourceNameColumnName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>");
-                }
-                string yearLabel = (StyleOfDateEntry == DateStyle.DateStamp) ? "Date" : "Year";
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">{yearLabel}</span> is ");
-                if (YearColumnName is null || YearColumnName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
-                }
-
-                if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                    if (MonthColumnName is null || MonthColumnName == "")
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
-                    } 
-                }
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
-                if (AmountColumnName is null || AmountColumnName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
-                }
-
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
             }
+            else
+            {
+                if (!FileExists)
+                {
+                    htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
+                }
+                else
+                {
+                    htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
+                }
+            }
+            if (FileName != null && FileName.Contains(".xls"))
+            {
+                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                {
+                    htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write($" with worksheet <span class=\"filelink\">{ExcelWorkSheetName}</span>");
+                }
+            }
+            htmlWriter.Write("</div>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
+            if (ResourceNameColumnName is null || ResourceNameColumnName == "")
+            {
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            }
+            else
+            {
+                htmlWriter.Write($"<span class=\"setvalue\">{ResourceNameColumnName}</span></div>");
+            }
+            string yearLabel = (StyleOfDateEntry == DateStyle.DateStamp) ? "Date" : "Year";
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">{yearLabel}</span> is ");
+            if (YearColumnName is null || YearColumnName == "")
+            {
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            }
+            else
+            {
+                htmlWriter.Write($"<span class=\"setvalue\">{YearColumnName}</span></div>");
+            }
+
+            if (StyleOfDateEntry == DateStyle.YearAndMonth)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                if (MonthColumnName is null || MonthColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write($"<span class=\"setvalue\">{MonthColumnName}</span></div>");
+                }
+            }
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
+            if (AmountColumnName is null || AmountColumnName == "")
+            {
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            }
+            else
+            {
+                htmlWriter.Write($"<span class=\"setvalue\">{AmountColumnName}</span></div>");
+            }
+
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

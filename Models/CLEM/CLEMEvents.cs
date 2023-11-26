@@ -1,17 +1,11 @@
 ﻿using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
-using Models.CLEM.Resources;
 using Models.Core;
-using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Models.CLEM
 {
@@ -355,8 +349,29 @@ namespace Models.CLEM
 
         #endregion
 
-
         #region Descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
+        {
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write($"\r\nCLEM is running using a [{TimeStep}] time-step");
+            if (TimeStep == TimeStepTypes.Custom)
+            {
+                htmlWriter.Write($" of {CLEMModel.DisplaySummaryValueSnippet(CustomTimeStep)} days");
+            }
+            htmlWriter.Write(".</div>");
+
+            if (FindAllInScope<RuminantActivityGrazeAll>().Any() || FindAllInScope<RuminantActivityGrazePasture>().Any() || FindAllInScope<RuminantActivityGrazePastureHerd>().Any())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Ecological indicators will be calculated every {CLEMModel.DisplaySummaryValueSnippet(EcologicalIndicatorsCalculationInterval)} months");
+                htmlWriter.Write($" starting at the end of {CLEMModel.DisplaySummaryValueSnippet(EcologicalIndicatorsCalculationMonth)}.</div>");
+            }
+            return htmlWriter.ToString();
+        }
+
 
         /////<inheritdoc/>
         //public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)

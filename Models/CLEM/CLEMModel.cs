@@ -94,7 +94,8 @@ namespace Models.CLEM
             //Iterate through properties
             foreach (var property in model.GetType().GetProperties())
                 //Iterate through attributes of this property
-                foreach (Attribute attr in property.GetCustomAttributes(true))
+                foreach (Attribute attr in property.GetCustomAttributes(true).Cast<Attribute>())
+                {
                     //So lets try to load default value to the property
                     //does this property have [DefaultValueAttribute]?
                     if (attr is System.ComponentModel.DefaultValueAttribute dv)
@@ -107,7 +108,7 @@ namespace Models.CLEM
                                 property.SetValue(model, dv.Value, null);
                         }
                     }
-
+                }
         }
 
         /// <summary>
@@ -118,8 +119,7 @@ namespace Models.CLEM
         {
             get
             {
-                if (activityTimers is null)
-                    activityTimers = FindAllChildren<IActivityTimer>();
+                activityTimers ??= FindAllChildren<IActivityTimer>();
                 return activityTimers;
             }
         }
@@ -145,10 +145,10 @@ namespace Models.CLEM
         {
             List<string> results = new List<string>();
             Zone zone = FindAncestor<Zone>();
-            if (!(zone is null))
+            if (zone is not null)
             {
                 ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
-                if (!(resources is null))
+                if (resources is not null)
                 {
                     foreach (object type in typesToFind)
                     {
@@ -178,7 +178,7 @@ namespace Models.CLEM
                 return new List<string>().AsEnumerable();
             else
             {
-                List<Type> types = new List<Type>();
+                List<Type> types = new();
                 return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
         }
@@ -291,8 +291,7 @@ namespace Models.CLEM
             }
 
             bool zeroFound = false;
-            double zeroTest = 0;
-            if (value != null && warnZero && double.TryParse(value.ToString(), out zeroTest))
+            if (value != null && warnZero && double.TryParse(value.ToString(), out double zeroTest))
             {
                 if (zeroTest == 0)
                 {
@@ -356,9 +355,9 @@ namespace Models.CLEM
             string spanClass = "resourcelink";
             string errorClass = "errorlink";
             string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
-            string valueString = string.Empty;
             string htmlStart = (htmlTags) ? $"<span class=\"{spanClass}\">" : string.Empty;
 
+            string valueString;
             if (value == null || value == "")
             {
                 if (!nullGeneralYards)

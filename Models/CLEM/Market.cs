@@ -147,18 +147,16 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public string GetFullSummary(object model, List<string> parentControls, Func<string, string> markdown2Html = null)
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                var parents = parentControls.ToList();
-                parents.Add(model.GetType().Name);
+            using StringWriter htmlWriter = new();
+            var parents = parentControls.ToList();
+            parents.Add(model.GetType().Name);
 
-                htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
-                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
-                htmlWriter.Write("</div>");
+            htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
+            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+                htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
+            htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString();
-            }
+            return htmlWriter.ToString();
         }
         #endregion
 

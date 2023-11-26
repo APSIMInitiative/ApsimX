@@ -465,76 +465,74 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (FileName == null || FileName == "")
+                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+                if (!this.FileExists)
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 else
-                {
-                    if (!this.FileExists)
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    else
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
-
-                if (FileName != null && FileName.Contains(".xls"))
-                {
-                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    else
-                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-                }
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
-                if (SoilTypeColumnName is null || SoilTypeColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
-                if (CropNameColumnName is null || CropNameColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
-                if (YearColumnName is null || YearColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                if (MonthColumnName is null || MonthColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
-                if (AmountColumnName is null || AmountColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
-
-                if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                else
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
-
-                if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                else
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
             }
+
+            if (FileName != null && FileName.Contains(".xls"))
+            {
+                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                    htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                else
+                    htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
+            }
+
+            htmlWriter.Write("\r\n</div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+            if (SoilTypeColumnName is null || SoilTypeColumnName == "")
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            else
+                htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
+            if (CropNameColumnName is null || CropNameColumnName == "")
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            else
+                htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+            if (YearColumnName is null || YearColumnName == "")
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            else
+                htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+            if (MonthColumnName is null || MonthColumnName == "")
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            else
+                htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
+            if (AmountColumnName is null || AmountColumnName == "")
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+            else
+                htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
+
+            if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+            else
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+
+            if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+            else
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+
+            htmlWriter.Write("\r\n</div>");
+
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 

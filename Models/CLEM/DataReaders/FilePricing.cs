@@ -31,7 +31,7 @@ namespace Models.CLEM
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -208,7 +208,7 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pricingColumns = new List<string>
+                List<string> pricingColumns = new()
                 {
                     DateColumnName
                 };
@@ -235,14 +235,14 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(FullFileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
@@ -253,17 +253,17 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, DateColumnName) == -1)
-                        if (this.reader == null || this.reader.Constant(DateColumnName) == null)
-                            throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, DateColumnName) == -1)
+                        if (reader == null || reader.Constant(DateColumnName) == null)
+                            throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                        reader.SeekToDate(reader.FirstDate);
                 }
                 return true;
             }
@@ -286,25 +286,22 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                else if (!this.FileExists)
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (FileName == null || FileName == "")
+                htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+            else if (!this.FileExists)
+                htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
+            else
+                htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
+
+            if (FileName != null && FileName.Contains(".xls"))
+                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                    htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
                 else
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-
-                if (FileName != null && FileName.Contains(".xls"))
-                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    else
-                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
+                    htmlWriter.Write($" with worksheet <span class=\"filelink\">{ExcelWorkSheetName}</span>");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

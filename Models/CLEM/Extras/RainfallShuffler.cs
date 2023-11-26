@@ -123,25 +123,23 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("\r\nThe rainfall year starts in ");
+            if (StartSeasonMonth == MonthsOfYear.NotSet)
+                htmlWriter.Write("<span class=\"errorlink\">Not set");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\nThe rainfall year starts in ");
-                if (StartSeasonMonth == MonthsOfYear.NotSet)
-                    htmlWriter.Write("<span class=\"errorlink\">Not set");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(StartSeasonMonth.ToString());
-                }
-                htmlWriter.Write("</span>");
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(StartSeasonMonth.ToString());
             }
+            htmlWriter.Write("</span>");
+            htmlWriter.Write("\r\n</div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

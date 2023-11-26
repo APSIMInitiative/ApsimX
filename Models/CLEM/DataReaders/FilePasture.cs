@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class FilePasture : CLEMModel, IFilePasture
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -721,21 +721,19 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (FileName == null || FileName == "")
+                htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+                if (!this.FileExists)
+                    htmlWriter.Write($"The file <span class=\"errorlink\">{FullFileName}</span> could not be found");
                 else
-                {
-                    if (!this.FileExists)
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    else
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
+                    htmlWriter.Write($"Using <span class=\"filelink\">{FileName}</span>");
             }
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         }
         #endregion
     }
