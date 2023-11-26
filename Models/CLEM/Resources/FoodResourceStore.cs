@@ -3,17 +3,20 @@ using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
     /// A store for a particular type of animal food used to track details as multiple instances are mixed in the diet.
     /// </summary>
+    [Serializable]
     public class FoodResourceStore
     {
         /// <summary>
         /// Store quality and quantity details.
         /// </summary>
+        [JsonIgnore]
         public FoodResourcePacket Details { get; set; } = new FoodResourcePacket();
 
         /// <summary>
@@ -65,15 +68,12 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                switch (Details.TypeOfFeed)
+                return Details.TypeOfFeed switch
                 {
-                    case FeedType.Forage:
-                        return Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85));
-                    case FeedType.Concentrate:
-                        return 0.9 * (1 - ((Details.ADIP / Details.UndegradableCrudeProteinContent)));
-                    default:
-                        return 0;
-                }
+                    FeedType.Forage => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
+                    FeedType.Concentrate => 0.9 * (1 - ((Details.ADIP / Details.UndegradableCrudeProteinContent))),
+                    _ => 0,
+                };
             }
         }
 

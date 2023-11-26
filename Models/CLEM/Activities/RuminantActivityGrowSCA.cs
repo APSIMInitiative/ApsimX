@@ -32,6 +32,7 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
         private RuminantHerd ruminantHerd;
+        [JsonIgnore]
         private readonly FoodResourcePacket milkPacket;
         private double kl = 0;
         private double MP2 = 0;
@@ -169,7 +170,7 @@ namespace Models.CLEM.Activities
                         // For 0.57 (A) use .42, .58, .85 and .69; for 0.7 (B) use 1.7, 0.7, 0.7 and 1.4, for 81 (C) use 62, 81, 81, 28
                         // added LactatingPotentialModifierConstantA, LactatingPotentialModifierConstantB and LactatingPotentialModifierConstantC
                         // replaces (A), (B) and (C) 
-                        double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((femaleind.DaysLactating / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (femaleind.DaysLactating / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * ind.RelativeCondition);
+                        double intakeMilkMultiplier = 1 + ind.BreedParams.LactatingPotentialModifierConstantA * Math.Pow((femaleind.DaysLactating(events.Interval/2.0) / ind.BreedParams.LactatingPotentialModifierConstantB), ind.BreedParams.LactatingPotentialModifierConstantC) * Math.Exp(ind.BreedParams.LactatingPotentialModifierConstantC * (1 - (femaleind.DaysLactating(events.Interval / 2.0) / ind.BreedParams.LactatingPotentialModifierConstantB)))*(1 - 0.5 + 0.5 * ind.RelativeCondition);
 
                         ind.Intake.Feed.Expected *= intakeMilkMultiplier;
 
@@ -329,7 +330,7 @@ namespace Models.CLEM.Activities
 
                 CalculateMaintenanceEnergy(ind, kml, sme);
             }
-            double feedingLevel = ind.EnergyFromIntake / ind.EnergyForMaintenance;
+            double feedingLevel = ind.EnergyFromIntake / ind.Energy.ForMaintenance;
 
             // Wool production
             ind.Energy.ForWool = CalculateWoolEnergy(ind);
@@ -370,8 +371,8 @@ namespace Models.CLEM.Activities
                 double fatGainMJ = energyEmptyBodyGain - proteinGainMJ;
 
                 // NEG1
-                ind.EnergyAvailableForGain = kg * (ind.Intake.ME - (ind.EnergyForMaintenance + ind.EnergyForFetus + ind.EnergyForLactation));
-                double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.EnergyAvailableForGain / energyEmptyBodyGain));
+                ind.Energy.ForGain = kg * (ind.Intake.ME - (ind.Energy.ForMaintenance + ind.Energy.ForFetus + ind.Energy.ForLactation));
+                double ProteinNet1 = proteinGain1 - (proteinContentOfGain * (ind.Energy.ForGain / energyEmptyBodyGain));
                 recalculate = false;
 
                 if (milkProtein > 0 && ProteinNet1 < milkProtein)
@@ -388,19 +389,19 @@ namespace Models.CLEM.Activities
                     checkFemale.MilkCurrentlyAvailable = MP * events.Interval;
                     checkFemale.MilkProducedThisTimeStep = checkFemale.MilkCurrentlyAvailable;
 
-                    ind.EnergyForLactation = MP / 0.94 * kl;
+                    ind.Energy.ForLactation = MP / 0.94 * kl;
                     recalculate = (MP != MP2);
 
                     // adjusted NEG1/ 
-                    double NEG2 = ind.EnergyAvailableForGain + ind.BreedParams.CL5 * (MP2 - MP);
+                    double NEG2 = ind.Energy.ForGain + ind.BreedParams.CL5 * (MP2 - MP);
                     double PG2 = proteinGain1 + (MP2 - MP) * (ind.BreedParams.CL5 / ind.BreedParams.CL6);
                     double ProteinNet2 = PG2 - proteinContentOfGain * (NEG2 / energyEmptyBodyGain);
                     netEnergyAvailableForGain = NEG2 + ind.BreedParams.CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
-                    emptyBodyGain = ind.EnergyAvailableForGain / energyEmptyBodyGain;
+                    emptyBodyGain = ind.Energy.ForGain / energyEmptyBodyGain;
                 }
                 else
                 {
-                    netEnergyAvailableForGain = ind.EnergyAvailableForGain + ind.BreedParams.CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
+                    netEnergyAvailableForGain = ind.Energy.ForGain + ind.BreedParams.CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
                     emptyBodyGain = netEnergyAvailableForGain / energyEmptyBodyGain;
                 }
             }
@@ -579,7 +580,7 @@ namespace Models.CLEM.Activities
                 // TODO: new intercept = 0.4 and coefficient = 0.02
                 // TODO: update peak yield.
                 kl = ind.BreedParams.ELactationEfficiencyCoefficient * ind.Intake.ME + ind.BreedParams.ELactationEfficiencyIntercept;
-                double milkTime = ind.DaysLactating; // assumes mid month
+                double milkTime = ind.DaysLactating(events.Interval / 2.0); // assumes mid month
 
                 // determine milk production curve to use
                 double milkCurve = ind.BreedParams.MilkCurveSuckling;

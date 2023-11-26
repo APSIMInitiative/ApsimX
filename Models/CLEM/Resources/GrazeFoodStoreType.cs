@@ -60,6 +60,14 @@ namespace Models.CLEM.Resources
         public double NitrogenToCrudeProteinFactor { get; set; }
 
         /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double DryMatterDigestibility { get; set; }
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        public double NitrogenContent { get; set; }
+
+        /// <inheritdoc/>
         public double FatContent { get; set; } = 0;
 
         /// <inheritdoc/>
@@ -191,7 +199,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
+        public List<GrazeFoodStorePool> Pools = new();
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -230,7 +238,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                if (index < Pools.Count())
+                if (index < Pools.Count)
                     return new List<GrazeFoodStorePool> { Pools.ElementAt(index) };
             }
             return null;
@@ -277,7 +285,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculated total pasture (all pools) Dry Matter Digestibility (%)
         /// </summary>
-        public double DryMatterDigestibility
+        public double SwardDryMatterDigestibility
         {
             get
             {
@@ -287,13 +295,12 @@ namespace Models.CLEM.Resources
 
                 return Math.Max(MinimumDMD, dmd);
             }
-            set { throw new NotImplementedException("GrazeFoodStore DMD is calulated"); }
         }
 
         /// <summary>
         /// Calculated total pasture (all pools) Nitrogen (%)
         /// </summary>
-        public double NitrogenContent
+        public double SwardNitrogenContent
         {
             get
             {
@@ -303,7 +310,6 @@ namespace Models.CLEM.Resources
 
                 return Math.Max(MinimumNitrogen, n);
             }
-            set { throw new NotImplementedException("GrazeFoodStore percent nitrogen is calulated"); }
         }
 
         /// <summary>
@@ -380,7 +386,7 @@ namespace Models.CLEM.Resources
                     break;
                 case "Nitrogen":
                     if (age < 0)
-                        return NitrogenContent;
+                        return SwardNitrogenContent;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
@@ -392,7 +398,7 @@ namespace Models.CLEM.Resources
                     return valueToUse;
                 case "DMD":
                     if (age < 0)
-                        return DryMatterDigestibility;
+                        return SwardDryMatterDigestibility;
                     else
                     {
                         IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
@@ -465,8 +471,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Pools != null)
-                Pools.Clear();
+            Pools?.Clear();
             Pools = null;
         }
 
@@ -662,7 +667,7 @@ namespace Models.CLEM.Resources
             foreach (var pool in newPools)
             {
                 string reason = "Initialise";
-                if (newPools.Count() > 1)
+                if (newPools.Any())
                     reason = "Initialise pool " + pool.Age.ToString();
 
                 Add(pool, null, null, reason);
@@ -709,8 +714,8 @@ namespace Models.CLEM.Resources
                 case double _:
                     // add amount at current rates
                     pool.Set((double)resourceAmount);
-                    pool.NitrogenContent = this.NitrogenContent;
-                    pool.DryMatterDigestibility = DryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
+                    pool.NitrogenContent = this.SwardNitrogenContent;
+                    pool.DryMatterDigestibility = SwardDryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");

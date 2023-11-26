@@ -33,10 +33,11 @@ namespace Models.CLEM.Activities
         [Link]
         public IClock Clock = null;
 
-        private DateTime lastResourceRequest = new DateTime();
+        private DateTime lastResourceRequest = new();
         private double totalPastureRequired = 0;
         private double totalPastureDesired = 0;
-        private FoodResourcePacket foodDetails = new FoodResourcePacket();
+        [JsonIgnore]
+        private FoodResourcePacket foodDetails = new();
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = false;
@@ -193,7 +194,7 @@ namespace Models.CLEM.Activities
         public double CalculatePotentialIntakePastureQualityLimiter()
         {
             // determine pasture quality from all pools (DMD) at start of grazing
-            double pastureDMD = GrazeFoodStoreModel.DryMatterDigestibility;
+            double pastureDMD = GrazeFoodStoreModel.SwardDryMatterDigestibility;
             // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
             // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
             // this will still occur when grazing on improved, irrigated or crops.
