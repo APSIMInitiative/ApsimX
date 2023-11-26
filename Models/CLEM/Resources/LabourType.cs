@@ -96,7 +96,7 @@ namespace Models.CLEM.Resources
                 if (adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r=" + this.Parent.Name + "]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r=" + Parent.Name + "]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship with the Identifier with [Adult equivalent] below the [r=Labour] resource group.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
@@ -233,7 +233,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public LabourType()
         {
-            this.SetDefaults();
+            SetDefaults();
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace Models.CLEM.Resources
 
             if (amountAdded > 0)
             {
-                this.AvailableDays += amountAdded;
+                AvailableDays += amountAdded;
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
         }
@@ -317,13 +317,13 @@ namespace Models.CLEM.Resources
             if (request.Required == 0)
                 return;
 
-            if (this.Individuals > 1)
+            if (Individuals > 1)
                 throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
 
             double amountRemoved = request.Required;
             // avoid taking too much
-            amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
-            this.AvailableDays -= amountRemoved;
+            amountRemoved = Math.Min(AvailableDays, amountRemoved);
+            AvailableDays -= amountRemoved;
             request.Provided = amountRemoved;
 
             ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
@@ -335,7 +335,7 @@ namespace Models.CLEM.Resources
         /// <param name="newValue">New value to set food store to</param>
         public new void Set(double newValue)
         {
-            this.AvailableDays = newValue;
+            AvailableDays = newValue;
         }
 
         #endregion
@@ -357,7 +357,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return this.AvailableDays;
+                return AvailableDays;
             }
         }
 
@@ -368,29 +368,27 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (!FormatForParentControl)
             {
-                if (!FormatForParentControl)
+                htmlWriter.Write("<div class=\"activityentry\">");
+                if (Individuals == 0)
+                    htmlWriter.Write("No individuals are provided for this labour type");
+                else
                 {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    if (this.Individuals == 0)
-                        htmlWriter.Write("No individuals are provided for this labour type");
-                    else
-                    {
-                        if (this.Individuals > 1)
-                            htmlWriter.Write($"<span class=\"setvalue\">{this.Individuals}</span> x ");
-                        htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
-                        htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
-                        if (Hired)
-                            htmlWriter.Write(" as hired labour");
-                    }
-                    htmlWriter.Write("</div>");
-
-                    if (this.Individuals > 1)
-                        htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
+                    if (Individuals > 1)
+                        htmlWriter.Write($"<span class=\"setvalue\">{Individuals}</span> x ");
+                    htmlWriter.Write($"<span class=\"setvalue\">{InitialAge}</span> year old ");
+                    htmlWriter.Write($"<span class=\"setvalue\">{Sex}</span>");
+                    if (Hired)
+                        htmlWriter.Write(" as hired labour");
                 }
-                return htmlWriter.ToString();
+                htmlWriter.Write("</div>");
+
+                if (Individuals > 1)
+                    htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
             }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

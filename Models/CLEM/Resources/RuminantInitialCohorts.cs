@@ -74,17 +74,15 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
-            return html;
+            return "";
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            string html = "</table>";
             if (WeightWarningOccurred)
-                html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            return html;
+                return "</table></br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
+            return "";
         }
 
         /// <inheritdoc/>

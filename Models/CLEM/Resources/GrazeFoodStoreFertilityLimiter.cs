@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreFertilityLimiter : CLEMModel
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private double annualNUsed = 0;
         private GrazeFoodStoreType parentPasture;

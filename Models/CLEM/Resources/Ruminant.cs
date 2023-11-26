@@ -18,19 +18,17 @@ namespace Models.CLEM.Resources
         private int age;
         private double normalisedWeight;
         private double adultEquivalent;
-
-        #region All new Grow SCA properties
-
-        //ToDo: ensure these are set at birth and new individual creation.
         private double proteinMass = 0;
         private double fatMass = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Ruminant()
-        {
-        }
+        #region All new Grow SCA properties
+
+        ///// <summary>
+        ///// Constructor
+        ///// </summary>
+        //public Ruminant()
+        //{
+        //}
 
         /// <summary>
         /// Ruminant intake manager
@@ -536,6 +534,35 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Standard Reference Weight determined from coefficients and gender
+        /// </summary>
+        /// <units>kg</units>
+        [FilterByProperty]
+        public double StandardReferenceWeight
+        {
+            get
+            {
+                if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
+                    return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
+                else
+                    return BreedParams.SRWFemale;
+            }
+        }
+
+        /// <summary>
+        /// Normalised animal weight
+        /// </summary>
+        /// <units>kg</units>
+        [FilterByProperty]
+        public double NormalisedAnimalWeight
+        {
+            get
+            {
+                return normalisedWeight;
+            }
+        }
+
+        /// <summary>
         /// Calculate normalised weight from age of individual (in days)
         /// </summary>
         /// <param name="age">Age in days</param>
@@ -593,47 +620,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
-            }
-        }
-
-        /// <summary>
-        /// A simple health score
-        /// </summary>
-        [FilterByProperty]
-        public int HealthScore
-        {
-            get
-            {
-                throw new NotImplementedException("The Ruminant.HealthScore property is depeciated. Please use Body Condition Score.");
-            }
-        }
-
-        /// <summary>
-        /// Standard Reference Weight determined from coefficients and gender
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double StandardReferenceWeight
-        {
-            get
-            {
-                if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
-                    return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
-                else
-                    return BreedParams.SRWFemale;
-            }
-        }
-
-        /// <summary>
-        /// Normalised animal weight
-        /// </summary>
-        /// <units>kg</units>
-        [FilterByProperty]
-        public double NormalisedAnimalWeight
-        {
-            get
-            {
-                return normalisedWeight;
             }
         }
 
@@ -844,16 +830,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Age when individual must be weaned
-        /// </summary>
-        public int WeaningAge { 
-            get
-            {
-                return MathUtilities.FloatsAreEqual(BreedParams.NaturalWeaningAge.InDays, 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
-            }
-        }
-
-        /// <summary>
         /// Wean this individual
         /// </summary>
         public void Wean(bool report, string reason, DateTime date)
@@ -879,40 +855,16 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///// <summary>
-        ///// Method to set the weaned status to unweaned for new born individuals.
-        ///// </summary>
-        //public void SetUnweaned()
-        //{
-        //    weaned = 0;
-        //}
-
-        ///// <summary>
-        ///// Weaned individual flag
-        ///// </summary>
-        //[FilterByProperty]
-        //public bool Weaned { get { return weaned > 0; } }
-
-        ///// <summary>
-        ///// Weaned individual flag
-        ///// </summary>
-        //[FilterByProperty]
-        //public bool IsWeaned { get { return weaned > 0; } }
-
-        ///// <summary>
-        ///// Number of months since weaned
-        ///// </summary>
-        //[FilterByProperty]
-        //public int MonthsSinceWeaned
-        //{
-        //    get
-        //    {
-        //        if (weaned > 0)
-        //            return Convert.ToInt32(Math.Round(Age - weaned, 4));
-        //        else
-        //            return 0;
-        //    }
-        //}
+        /// <summary>
+        /// Age when individual must be weaned
+        /// </summary>
+        public int AgeToWeanNaturally
+        {
+            get
+            {
+                return MathUtilities.FloatsAreEqual(BreedParams.NaturalWeaningAge.InDays, 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
+            }
+        }
 
         /// <summary>
         /// Milk production currently available for each offspring from mother (L day-1)
@@ -936,16 +888,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///// <summary>
-        ///// Method to increase age
-        ///// </summary>
-        ///// <param name="days">Number of days to add</param>
-        //public void IncrementAge(double days = 30.4)
-        //{
-        //    AgeInDays += days;
-        //    Age++;
-        //}
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -964,18 +906,19 @@ namespace Models.CLEM.Resources
             Weight = (setWeight <= 0) ? NormalisedAnimalWeight : setWeight;
             PreviousWeight = Weight; 
 
+            //ToDo: setup protein mass and fat mass for new individual
+
             Number = 1;
             Wool = 0;
             Cashmere = 0;
 
-            int weanAge = WeaningAge;
+            int weanAge = AgeToWeanNaturally;
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
             
             SaleFlag = HerdChangeReason.None;
             Attributes = new IndividualAttributeList();
             Energy = new RuminantEnergyInfo(this);
-
         }
 
         /// <summary>

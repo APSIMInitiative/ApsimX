@@ -28,6 +28,22 @@ namespace Models.CLEM.Resources
         public string Units { get; set; }
 
         /// <summary>
+        /// Age when individuals become adults for feeding and breeding rates
+        /// </summary>
+        [Description("Age when adult")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
+        [Units("years, months, days")]
+        public AgeSpecifier AgeWhenAdult { get; set; }
+
+        /// <summary>
+        /// Age when individuals die
+        /// </summary>
+        [Description("Maximum age before death")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaxAge { get; set; }
+
+        /// <summary>
         /// Current cohorts of this Other Animal Type.
         /// </summary>
         [JsonIgnore]
@@ -54,26 +70,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (Cohorts != null)
-                Cohorts.Clear();
+            Cohorts?.Clear();
             Cohorts = null;
         }
-
-        /// <summary>
-        /// Age when individuals become adults for feeding and breeding rates
-        /// </summary>
-        [Description("Age when adult")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier AgeWhenAdult { get; set; }
-
-        /// <summary>
-        /// Age when individuals die
-        /// </summary>
-        [Description("Maximum age before death")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
-        [Units("years, months, days")]
-        public AgeSpecifier MaxAge { get; set; }
 
         /// <summary>
         /// Initialise resource type
@@ -83,9 +82,9 @@ namespace Models.CLEM.Resources
             Cohorts = new List<OtherAnimalsTypeCohort>();
             foreach (var child in this.Children)
             {
-                if (child is OtherAnimalsTypeCohort)
+                if (child is OtherAnimalsTypeCohort cohort)
                 {
-                    ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
+                    cohort.SaleFlag = HerdChangeReason.InitialHerd;
                     Add(child, null, null, "Initial numbers");
                 }
             }
@@ -101,7 +100,6 @@ namespace Models.CLEM.Resources
                 return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
-
 
         #region Transactions
 
@@ -149,7 +147,7 @@ namespace Models.CLEM.Resources
             if (cohortexists == null)
             {
                 // tried to remove individuals that do not exist
-                throw new Exception("Tried to remove individuals from " + this.Name + " that do not exist");
+                throw new Exception($"Tried to remove individuals from {Name} that do not exist");
             }
             else
             {

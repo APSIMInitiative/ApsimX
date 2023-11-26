@@ -20,9 +20,9 @@ namespace Models.CLEM.Resources
     public class SetPreviousConception : CLEMModel, IValidatableObject
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Number of months pregnant
@@ -115,34 +115,32 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
+                // skip if this is inside the table summary of Initial Chohort
+                if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
                 {
-                    // skip if this is inside the table summary of Initial Chohort
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-                    {
-                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
-                        htmlWriter.Write($"These individuals will be ");
-                        if (NumberDaysPregnant == 0)
-                            htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                        else
-                            htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
-                        htmlWriter.Write($" dayss pregnant</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Set last conception age to make these females ");
+                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
+                    htmlWriter.Write($"These individuals will be ");
                     if (NumberDaysPregnant == 0)
                         htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
                     else
                         htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
-                    htmlWriter.Write($" days pregnant</div>");
+                    htmlWriter.Write($" dayss pregnant</div>");
                 }
-                return htmlWriter.ToString();
             }
+            else
+            {
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Set last conception age to make these females ");
+                if (NumberDaysPregnant == 0)
+                    htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
+                else
+                    htmlWriter.Write($"<span class=\"setvalue\">{NumberDaysPregnant}</span>");
+                htmlWriter.Write($" days pregnant</div>");
+            }
+            return htmlWriter.ToString();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -129,14 +130,14 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
             if (StartingAmount > 0)
             {
-                html += "<div class=\"activityentry\">";
-                html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
-                html += "</div>";
+                using StringWriter htmlWriter = new();
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span></div>");
+                return htmlWriter.ToString();
             }
-            return html;
+            return "";
         }
         #endregion
 

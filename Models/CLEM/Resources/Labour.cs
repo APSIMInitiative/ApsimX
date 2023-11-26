@@ -25,10 +25,10 @@ namespace Models.CLEM.Resources
     public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
-        private List<string> warningsMultipleEntry = new List<string>();
-        private List<string> warningsNotFound = new List<string>();
+        private List<string> warningsMultipleEntry = new();
+        private List<string> warningsNotFound = new();
         private Relationship adultEquivalentRelationship = null;
         private LabourAvailabilityList availabilityList;
 
@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate resources
-            availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
+            availabilityList = FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
 
             if (clock.Today.Day != 1)
                 OnStartOfMonth(this, null);
@@ -133,7 +133,7 @@ namespace Models.CLEM.Resources
             var results = new List<ValidationResult>();
 
             // Add warning if no individuals defined
-            if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
+            if (FindAllChildren<LabourType>().Any() && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
                 string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
                 if (!warningsNotFound.Contains(warningString))
@@ -159,10 +159,10 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
             {
-                IndividualAttribute att = new IndividualAttribute() { StoredValue = labourChildModel.Name };
+                IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
                 if (UseCohorts)
                 {
-                    LabourType labour = new LabourType()
+                    LabourType labour = new()
                     {
                         Sex = labourChildModel.Sex,
                         Individuals = labourChildModel.Individuals,
@@ -183,7 +183,7 @@ namespace Models.CLEM.Resources
                     for (int i = 0; i < labourChildModel.Individuals; i++)
                     {
                         // get the availability from provided list
-                        LabourType labour = new LabourType()
+                        LabourType labour = new()
                         {
                             Sex = labourChildModel.Sex,
                             Individuals = 1,
@@ -215,9 +215,7 @@ namespace Models.CLEM.Resources
             foreach (LabourType childModel in FindAllChildren<LabourType>())
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
 
-            if (Items != null)
-                Items.Clear();
-
+            Items?.Clear();
             Items = null;
         }
 
@@ -231,8 +229,7 @@ namespace Models.CLEM.Resources
             {
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
-                if (item.DietaryComponentList != null)
-                    item.DietaryComponentList.Clear();
+                item.DietaryComponentList?.Clear();
 
                 // reset check and take labour trackers for last activity to avoid between month carryover
                 for (int i = 0; i < 2; i++)
@@ -306,7 +303,6 @@ namespace Models.CLEM.Resources
 
                     //Update labour available if needed.
                     CheckAssignLabourAvailability(item);
-
                 }
             }
         }
@@ -456,32 +452,30 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (AllowAging)
             {
-                if (AllowAging)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Individuals age with time");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
-                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
-                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-                foreach (LabourType labourType in this.FindAllChildren<LabourType>())
-                {
-                    htmlWriter.Write("<tr>");
-                    htmlWriter.Write($"<td>{labourType.Name}</td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
-                    htmlWriter.Write("</tr>");
-                }
-                htmlWriter.Write("</table>");
-                htmlWriter.Write("</div></div>");
-                return htmlWriter.ToString();
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Individuals age with time");
+                htmlWriter.Write("</div>");
             }
+            htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
+            htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
+            htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
+            htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
+            foreach (LabourType labourType in this.FindAllChildren<LabourType>())
+            {
+                htmlWriter.Write("<tr>");
+                htmlWriter.Write($"<td>{labourType.Name}</td>");
+                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
+                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
+                htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
+                htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                htmlWriter.Write("</tr>");
+            }
+            htmlWriter.Write("</table>");
+            htmlWriter.Write("</div></div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

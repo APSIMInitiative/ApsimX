@@ -26,9 +26,9 @@ namespace Models.CLEM.Resources
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private Clock clock = null;
+        private readonly Clock clock = null;
 
         private RuminantType ruminantType;
 

@@ -34,7 +34,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age

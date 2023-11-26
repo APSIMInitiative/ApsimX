@@ -149,14 +149,12 @@ namespace Models.CLEM.Resources
         public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             List<Ruminant> individuals = new List<Ruminant>();
-            if (initialAttributes is null)
-                initialAttributes = new List<ISetAttribute>();
+            initialAttributes ??= new List<ISetAttribute>();
 
             if (number > 0)
             {
                 RuminantType parent = ruminantType;
-                if (parent is null)
-                    parent = FindAncestor<RuminantType>();
+                parent ??= FindAncestor<RuminantType>();
 
                 // get Ruminant Herd resource for unique ids
                 RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
@@ -218,8 +216,7 @@ namespace Models.CLEM.Resources
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
 
-                        if (setPreviousConception != null)
-                            setPreviousConception.SetConceptionDetails(ruminantFemale);
+                        setPreviousConception?.SetConceptionDetails(ruminantFemale);
                     }
 
                     // initialise attributes
@@ -245,191 +242,187 @@ namespace Models.CLEM.Resources
             RuminantType rumType;
             bool specifyRuminantParent = false;
 
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (!FormatForParentControl)
             {
-                if (!FormatForParentControl)
+                rumType = FindAncestor<RuminantType>();
+                if (rumType is null)
                 {
-                    rumType = FindAncestor<RuminantType>();
-                    if (rumType is null)
+                    // look for rum type in SpecifyRuminant
+                    var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
+                    if (specParent != null)
                     {
-                        // look for rum type in SpecifyRuminant
-                        var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
-                        if (specParent != null)
-                        {
-                            var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
-                            rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-                            specifyRuminantParent = true;
-                        }
+                        var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
+                        rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                        specifyRuminantParent = true;
                     }
+                }
 
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (!specifyRuminantParent & Number <= 0)
-                        htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
-                    else if (!specifyRuminantParent & Number > 1)
-                        htmlWriter.Write("<span class=\"setvalue\">" + Number.ToString() + "</span> x ");
-                    else
-                        htmlWriter.Write("A ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (!specifyRuminantParent & Number <= 0)
+                    htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
+                else if (!specifyRuminantParent & Number > 1)
+                    htmlWriter.Write("<span class=\"setvalue\">" + Number.ToString() + "</span> x ");
+                else
+                    htmlWriter.Write("A ");
 
-                    htmlWriter.Write($"<span class=\"setvalue\">{Age}</span> month old ");
-                    htmlWriter.Write("<span class=\"setvalue\">" + Sex.ToString() + "</span></div>");
-                    if (Suckling)
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
+                htmlWriter.Write($"<span class=\"setvalue\">{Age}</span> month old ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Sex.ToString() + "</span></div>");
+                if (Suckling)
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
 
-                    if (Sire)
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
+                if (Sire)
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
 
-                    Ruminant newInd = null;
-                    string normWtString = "Unavailable";
+                Ruminant newInd = null;
+                string normWtString = "Unavailable";
 
-                    if (rumType != null)
-                    {
-                        newInd = Ruminant.Create(Sex, rumType, new (2000, 1, 1), Age);
-                        normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                    }
+                if (rumType != null)
+                {
+                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age);
+                    normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                }
 
-                    if (WeightSD > 0)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals will be randomly assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
-                        if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                            htmlWriter.Write("<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
-                        if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                            htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
-                        htmlWriter.Write("</div>");
-                    }
+                if (WeightSD > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals will be randomly assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
+                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                        htmlWriter.Write("<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>");
                 }
                 else
                 {
-                    if (this.Parent is CLEMActivityBase | this.Parent is SpecifyRuminant)
-                    {
-                        bool parentIsSpecify = (Parent is SpecifyRuminant);
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
+                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                        htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
+                    htmlWriter.Write("</div>");
+                }
+            }
+            else
+            {
+                if (this.Parent is CLEMActivityBase | this.Parent is SpecifyRuminant)
+                {
+                    bool parentIsSpecify = (Parent is SpecifyRuminant);
 
-                        // when formatted for parent control. i.e. child fo trade 
-                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                        if (!parentIsSpecify)
-                        {
-                            htmlWriter.Write("Buy ");
-                            if (Number > 0)
-                            {
-                                htmlWriter.Write("<span class=\"setvalue\">");
-                                htmlWriter.Write(Number.ToString());
-                            }
-                            else
-                            {
-                                htmlWriter.Write("<span class=\"errorlink\">");
-                                htmlWriter.Write("NOT SET");
-                            }
-                            htmlWriter.Write("</span> x ");
-                        }
-                        if (Age > 0)
+                    // when formatted for parent control. i.e. child fo trade 
+                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
+                    if (!parentIsSpecify)
+                    {
+                        htmlWriter.Write("Buy ");
+                        if (Number > 0)
                         {
                             htmlWriter.Write("<span class=\"setvalue\">");
-                            htmlWriter.Write(Age.ToString());
+                            htmlWriter.Write(Number.ToString());
                         }
                         else
                         {
                             htmlWriter.Write("<span class=\"errorlink\">");
                             htmlWriter.Write("NOT SET");
                         }
-                        htmlWriter.Write("</span> month old ");
+                        htmlWriter.Write("</span> x ");
+                    }
+                    if (Age > 0)
+                    {
                         htmlWriter.Write("<span class=\"setvalue\">");
-                        htmlWriter.Write(Sex.ToString() + ((Number > 1 | parentIsSpecify) ? "s" : ""));
-                        htmlWriter.Write("</span> weighing ");
-                        if (Weight > 0)
+                        htmlWriter.Write(Age.ToString());
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">");
+                        htmlWriter.Write("NOT SET");
+                    }
+                    htmlWriter.Write("</span> month old ");
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(Sex.ToString() + ((Number > 1 | parentIsSpecify) ? "s" : ""));
+                    htmlWriter.Write("</span> weighing ");
+                    if (Weight > 0)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(Weight.ToString());
+                        htmlWriter.Write("</span> kg ");
+                        if (WeightSD > 0)
                         {
-                            htmlWriter.Write("<span class=\"setvalue\">");
-                            htmlWriter.Write(Weight.ToString());
-                            htmlWriter.Write("</span> kg ");
-                            if (WeightSD > 0)
-                            {
-                                htmlWriter.Write("with a standard deviation of <span class=\"setvalue\">");
-                                htmlWriter.Write(WeightSD.ToString());
-                                htmlWriter.Write("</span>");
-                            }
-                        }
-                        else
-                        {
-                            htmlWriter.Write("<span class=\"setvalue\">");
-                            htmlWriter.Write("Normalised weight");
+                            htmlWriter.Write("with a standard deviation of <span class=\"setvalue\">");
+                            htmlWriter.Write(WeightSD.ToString());
                             htmlWriter.Write("</span>");
                         }
-                        if (Sire || Suckling)
-                        {
-                            htmlWriter.Write(" and ");
-                            htmlWriter.Write(Sire ? "<span class=\"setvalue\">Sires</span>" : "");
-                            if (Suckling)
-                                htmlWriter.Write($"<span class=\"{(Sire ? "errorlink" : "setvalue")}\">Suckling</span>");
-                        }
-                        htmlWriter.Write("\r\n</div>");
                     }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write("Normalised weight");
+                        htmlWriter.Write("</span>");
+                    }
+                    if (Sire || Suckling)
+                    {
+                        htmlWriter.Write(" and ");
+                        htmlWriter.Write(Sire ? "<span class=\"setvalue\">Sires</span>" : "");
+                        if (Suckling)
+                            htmlWriter.Write($"<span class=\"{(Sire ? "errorlink" : "setvalue")}\">Suckling</span>");
+                    }
+                    htmlWriter.Write("\r\n</div>");
                 }
-                return htmlWriter.ToString();
             }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
+                if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                 {
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
+                    RuminantType rumtype = FindAncestor<RuminantType>();
+                    if (rumtype != null)
                     {
-                        RuminantType rumtype = FindAncestor<RuminantType>();
-                        if (rumtype != null)
+                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age);
+
+                        string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                        if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                         {
-                            var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age);
-
-                            string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                            if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                            {
-                                normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
-                                (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
-                            }
-                            string weightstring = "";
-                            if (this.Weight > 0)
-                                weightstring = $"<span class=\"setvalue\">{this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "")}</span>";
-
-                            htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>{this.Name}</td><td><span class=\"setvalue\">{this.Sex}</span></td><td><span class=\"setvalue\">{this.Age.ToString()}</span></td><td>{weightstring}</td><td>{normWtString}</td><td><span class=\"setvalue\">{this.Number.ToString()}</span></td><td{((this.Suckling) ? " class=\"fill\"" : "")}></td><td{((this.Sire) ? " class=\"fill\"" : "")}></td>");
-
-                            if ((Parent as RuminantInitialCohorts).ConceptionsFound)
-                            {
-                                var setConceptionFound = this.FindChild<SetPreviousConception>();
-                                if (setConceptionFound != null)
-                                    htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberDaysPregnant}</span> days</td>");
-                                else
-                                    htmlWriter.Write("<td></td>");
-                            }
-
-                            if ((Parent as RuminantInitialCohorts).AttributesFound)
-                            {
-                                var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
-                                if (setAttributesFound.Any())
-                                {
-                                    htmlWriter.Write($"<td class=\"fill\">");
-                                    foreach (var attribute in setAttributesFound)
-                                    {
-                                        htmlWriter.Write($"<span class=\"setvalue\">{attribute.AttributeName}</span> ");
-                                    }
-                                    htmlWriter.Write($"</td>");
-                                }
-                                else
-                                    htmlWriter.Write("<td></td>");
-                            }
-
-                            htmlWriter.Write("</tr>");
+                            normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                            (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                         }
+                        string weightstring = "";
+                        if (this.Weight > 0)
+                            weightstring = $"<span class=\"setvalue\">{this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "")}</span>";
+
+                        htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>{this.Name}</td><td><span class=\"setvalue\">{this.Sex}</span></td><td><span class=\"setvalue\">{this.Age.ToString()}</span></td><td>{weightstring}</td><td>{normWtString}</td><td><span class=\"setvalue\">{this.Number.ToString()}</span></td><td{((this.Suckling) ? " class=\"fill\"" : "")}></td><td{((this.Sire) ? " class=\"fill\"" : "")}></td>");
+
+                        if ((Parent as RuminantInitialCohorts).ConceptionsFound)
+                        {
+                            var setConceptionFound = this.FindChild<SetPreviousConception>();
+                            if (setConceptionFound != null)
+                                htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberDaysPregnant}</span> days</td>");
+                            else
+                                htmlWriter.Write("<td></td>");
+                        }
+
+                        if ((Parent as RuminantInitialCohorts).AttributesFound)
+                        {
+                            var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                            if (setAttributesFound.Any())
+                            {
+                                htmlWriter.Write($"<td class=\"fill\">");
+                                foreach (var attribute in setAttributesFound)
+                                {
+                                    htmlWriter.Write($"<span class=\"setvalue\">{attribute.AttributeName}</span> ");
+                                }
+                                htmlWriter.Write($"</td>");
+                            }
+                            else
+                                htmlWriter.Write("<td></td>");
+                        }
+
+                        htmlWriter.Write("</tr>");
                     }
                 }
-                else
-                    htmlWriter.Write("\r\n</div>");
-
-                return htmlWriter.ToString();
             }
+            else
+                htmlWriter.Write("\r\n</div>");
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -453,29 +446,29 @@ namespace Models.CLEM.Resources
         #endregion
     }
 
-    /// <summary>
-    /// Age details for user interface
-    /// </summary>
-    public class AgeClass
-    {
-        /// <summary>
-        /// Years
-        /// </summary>
-        public int Years { get; set; }
-        /// <summary>
-        /// Months
-        /// </summary>
-        public int Months { get; set; }
-        /// <summary>
-        /// Days
-        /// </summary>
-        public int Days { get; set; }
+    ///// <summary>
+    ///// Age details for user interface
+    ///// </summary>
+    //public class AgeClass
+    //{
+    //    /// <summary>
+    //    /// Years
+    //    /// </summary>
+    //    public int Years { get; set; }
+    //    /// <summary>
+    //    /// Months
+    //    /// </summary>
+    //    public int Months { get; set; }
+    //    /// <summary>
+    //    /// Days
+    //    /// </summary>
+    //    public int Days { get; set; }
 
-        /// <summary>
-        /// Age in days
-        /// </summary>
-        public int AgeInDays => Convert.ToInt32(Math.Floor((Years * 365) + (Months * 30.4) + Days));
-    }
+    //    /// <summary>
+    //    /// Age in days
+    //    /// </summary>
+    //    public int AgeInDays => Convert.ToInt32(Math.Floor((Years * 365) + (Months * 30.4) + Days));
+    //}
 }
 
 

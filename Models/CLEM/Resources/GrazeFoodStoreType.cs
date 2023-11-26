@@ -550,7 +550,7 @@ namespace Models.CLEM.Resources
         private void ONCLEMPastureReady(object sender, EventArgs e)
         {
             // do not return zero as there is always something there and zero affects calculations.
-            this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare, 0.01);
+            TonnesPerHectareStartOfTimeStep = Math.Max(TonnesPerHectare, 0.01);
         }
 
         /// <summary>
@@ -686,7 +686,7 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            GrazeFoodStorePool pool = new GrazeFoodStorePool()
+            GrazeFoodStorePool pool = new()
             {
                 EnergyContent = EnergyContent,
                 CPDegradability = CPDegradability,
@@ -727,7 +727,7 @@ namespace Models.CLEM.Resources
                     pool.Growth = pool.Amount;
 
                 // allow decaying or no pools currently available
-                if (PastureDecays || Pools.Count() == 0)
+                if (PastureDecays || Pools.Count == 0)
                     Pools.Insert(0, pool);
                 else
                     Pools[0].Add(pool);
@@ -907,45 +907,43 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("This pasture has an initial green nitrogen content of ");
+            if (this.GreenNitrogen == 0)
+                htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
+            else
+                htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogen:0.###}%</span>");
+
+            if (DecayNitrogen > 0)
+                htmlWriter.Write($" and will decline by <span class=\"setvalue\">{DecayNitrogen:0.###}%</span> per month to a minimum nitrogen of <span class=\"setvalue\">{MinimumNitrogen:0.###}%</span>");
+
+            htmlWriter.Write("\r\n</div>");
+            if (DecayDMD > 0)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("This pasture has an initial green nitrogen content of ");
-                if (this.GreenNitrogen == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
-                else
-                    htmlWriter.Write($"<span class=\"setvalue\">{GreenNitrogen:0.###}%</span>");
-
-                if (DecayNitrogen > 0)
-                    htmlWriter.Write($" and will decline by <span class=\"setvalue\">{DecayNitrogen:0.###}%</span> per month to a minimum nitrogen of <span class=\"setvalue\">{MinimumNitrogen:0.###}%</span>");
+                htmlWriter.Write($"Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">{DecayDMD:0.###}</span> per month to a minimum DMD of <span class=\"setvalue\">{MinimumDMD:0.###}%</span>");
+                htmlWriter.Write("\r\n</div>");
+            }
+            if (DetachRate > 0)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Pasture is lost through detachment at a rate of <span class=\"setvalue\">{DetachRate:0.###}</span> per month");
+                if (CarryoverDetachRate > 0)
+                    htmlWriter.Write($" and <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
 
                 htmlWriter.Write("\r\n</div>");
-                if (DecayDMD > 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">{DecayDMD:0.###}</span> per month to a minimum DMD of <span class=\"setvalue\">{MinimumDMD:0.###}%</span>");
-                    htmlWriter.Write("\r\n</div>");
-                }
-                if (DetachRate > 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Pasture is lost through detachment at a rate of <span class=\"setvalue\">{DetachRate:0.###}</span> per month");
-                    if (CarryoverDetachRate > 0)
-                        htmlWriter.Write($" and <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
-
-                    htmlWriter.Write("\r\n</div>");
-                }
-                else
-                {
-                    if (CarryoverDetachRate > 0)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write($"Pasture is lost through detachement at a rate of <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
-                        htmlWriter.Write("\r\n</div>");
-                    }
-                }
-                return htmlWriter.ToString();
             }
+            else
+            {
+                if (CarryoverDetachRate > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write($"Pasture is lost through detachement at a rate of <span class=\"setvalue\">{CarryoverDetachRate:0.###}</span> per month after 12 months");
+                    htmlWriter.Write("\r\n</div>");
+                }
+            }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

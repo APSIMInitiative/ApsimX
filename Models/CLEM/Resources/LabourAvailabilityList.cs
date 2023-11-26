@@ -30,14 +30,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() == 0)
             {
-                html += "\r\n<div class=\"errorlink\">";
-                html += "No labour availability has been defined";
-                html += "</div>";
+                return "\r\n<div class=\"errorlink\">No labour availability has been defined</div>";
             }
-            return html;
+            return "";
         }
 
         /// <inheritdoc/>
@@ -50,7 +47,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() > 0)
+            if (Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() > 0)
                 html += "<table><tr><th>Filter</th><th>J</th><th>F</th><th>M</th><th>A</th><th>M</th><th>J</th><th>J</th><th>A</th><th>S</th><th>O</th><th>N</th><th>D</th></tr>";
             return html;
         }

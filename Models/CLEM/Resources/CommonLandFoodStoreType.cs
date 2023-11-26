@@ -28,7 +28,9 @@ namespace Models.CLEM.Resources
         private ResourcesHolder resources = null;
 
         [NonSerialized]
-        private object pasture = new object();
+        private object pasture = new();
+
+        private double dryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Unit type
@@ -56,8 +58,6 @@ namespace Models.CLEM.Resources
         [Description("Nitrogen of common land pasture (%)")]
         [Required, Percentage]
         public double Nitrogen { get; set; }
-
-        private double dryMatterDigestibility { get; set; }
 
         /// <summary>
         /// Minimum Nitrogen %
@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
             {
                 // this is a virtual pool of forage outside the farm
                 // it requires labour to create (cut and carry) it.
-                return double.PositiveInfinity; // Pools.Sum(a => a.Amount);
+                return double.PositiveInfinity; 
             }
         }
 
@@ -121,7 +121,6 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // TODO: find and link pasture
-
             if (pasture == null)
             {
                 dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;

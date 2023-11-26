@@ -209,7 +209,7 @@ namespace Models.CLEM.Resources
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             // report all females of breeding age at end of simulation
-            RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+            RuminantReportItemEventArgs args = new()
             {
                 Category = "breeding stats"
             };
@@ -229,7 +229,7 @@ namespace Models.CLEM.Resources
         public void AddRuminant(Ruminant ind, IModel model)
         {
             if (ind.ID == 0)
-                ind.ID = this.NextUniqueID;
+                ind.ID = NextUniqueID;
 
             Herd.Add(ind);
             LastIndividualChanged = ind;
@@ -394,7 +394,7 @@ namespace Models.CLEM.Resources
         /// <returns>Dicitonary of ResourceTypes and categories for each</returns>
         public IEnumerable<string> GetReportingGroups(RuminantType ruminantType)
         {
-            List<string> catNames = new List<string>();
+            List<string> catNames = new();
             switch (TransactionStyle)
             {
                 case RuminantTransactionsGroupingStyle.Combined:

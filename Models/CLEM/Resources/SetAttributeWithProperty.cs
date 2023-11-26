@@ -212,57 +212,55 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
+                if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
                 {
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-                    {
-                        bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
+                    bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
 
-                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                        htmlWriter.Write($"Attribute  ");
-                        if (AttributeName == null || AttributeName == "")
-                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                        else
-                            htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-
-                        if (StandardDeviation == 0)
-                            htmlWriter.Write($" is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                        else
-                            htmlWriter.Write($" is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
-
-                        htmlWriter.Write($"</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Provide an attribute with the label ");
+                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
+                    htmlWriter.Write($"Attribute  ");
                     if (AttributeName == null || AttributeName == "")
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
                     else
                         htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
 
-                    htmlWriter.Write($" that will be inherited with the <span class=\"setvalue\">{InheritanceStyle}</span> style");
-                    if (Mandatory)
-                        htmlWriter.Write($" and is required by all individuals in the population");
-
-                    htmlWriter.Write($"</div>");
-
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     if (StandardDeviation == 0)
-                        htmlWriter.Write($"This attribute is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} and has a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
+                        htmlWriter.Write($" is linked to {DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
                     else
-                        htmlWriter.Write($"This attribute's value is linked to {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual)} is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value.ToString()}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
-
-                    if (InheritanceStyle != AttributeInheritanceStyle.None)
-                        htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
+                        htmlWriter.Write($" is linked to {DisplaySummaryValueSnippet(PropertyOfIndividual)} and provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
 
                     htmlWriter.Write($"</div>");
                 }
-                return htmlWriter.ToString();
             }
+            else
+            {
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Provide an attribute with the label ");
+                if (AttributeName == null || AttributeName == "")
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                else
+                    htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
+
+                htmlWriter.Write($" that will be inherited with the <span class=\"setvalue\">{InheritanceStyle}</span> style");
+                if (Mandatory)
+                    htmlWriter.Write($" and is required by all individuals in the population");
+
+                htmlWriter.Write($"</div>");
+
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+                if (StandardDeviation == 0)
+                    htmlWriter.Write($"This attribute is linked to {DisplaySummaryValueSnippet(PropertyOfIndividual)} and has a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
+                else
+                    htmlWriter.Write($"This attribute's value is linked to {DisplaySummaryValueSnippet(PropertyOfIndividual)} is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value.ToString()}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
+
+                if (InheritanceStyle != AttributeInheritanceStyle.None)
+                    htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
+
+                htmlWriter.Write($"</div>");
+            }
+            return htmlWriter.ToString();
         }
 
         /// <summary>

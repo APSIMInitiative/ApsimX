@@ -39,12 +39,12 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (this.FindAllChildren<LabourPriceGroup>().Count() == 0)
+            if (!FindAllChildren<LabourPriceGroup>().Any())
             {
                 string[] memberNames = new string[] { "Labour pricing" };
                 results.Add(new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [LabourPriceGroups] to include labour pricing.", memberNames));
             }
-            else if (this.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            else if (FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Any(a => a.Value == 0))
             {
                 string[] memberNames = new string[] { "Labour pricing" };
                 results.Add(new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
@@ -59,31 +59,25 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
-            if (this.Children.OfType<LabourPriceGroup>().Count() == 0)
+            if (!Children.OfType<LabourPriceGroup>().Any())
             {
-                html += "\r\n<div class=\"errorlink\">";
-                html += "No labour price groups has been defined";
-                html += "</div>";
+                return "\r\n<div class=\"errorlink\">No labour price groups has been defined</div>";
             }
-            return html;
+            return "";
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            string html = "";
-            html += "</table>";
-            return html;
+            return "</table>";
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            string html = "";
-            if (this.Children.OfType<LabourPriceGroup>().Count() > 0)
-                html += "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
-            return html;
+            if (Children.OfType<LabourPriceGroup>().Any())
+                return "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
+            return "";
         }
 
         #endregion

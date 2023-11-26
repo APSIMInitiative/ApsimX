@@ -267,7 +267,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
         /// Reduce the rumen degradable protein by a proportion provided.
         /// </summary>

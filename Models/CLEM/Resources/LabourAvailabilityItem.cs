@@ -52,61 +52,56 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (!FormatForParentControl)
             {
-                if (!FormatForParentControl)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (Value <= 0)
+                    htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
+                else
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (Value <= 0)
-                        htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
-                    else
-                    {
-                        if (Value > 0)
-                            htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
-                    }
-
-                    htmlWriter.Write(" days available each month</div>");
+                    if (Value > 0)
+                        htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
                 }
-                return htmlWriter.ToString();
+                htmlWriter.Write(" days available each month</div>");
             }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
-                {
-                    string classstr = "setvalue";
-                    if (Value == 0)
-                        classstr = "errorlink";
+                string classstr = "setvalue";
+                if (Value == 0)
+                    classstr = "errorlink";
 
-                    htmlWriter.Write("</td>");
-                    htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
-                    for (int i = 1; i < 12; i++)
-                        htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
+                htmlWriter.Write("</td>");
+                htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
+                for (int i = 1; i < 12; i++)
+                    htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
 
-                    htmlWriter.Write("</tr>");
-                }
-                else
-                    htmlWriter.Write("\r\n</div>");
-
-                return htmlWriter.ToString();
+                htmlWriter.Write("</tr>");
             }
+            else
+                htmlWriter.Write("\r\n</div>");
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using (StringWriter htmlWriter = new())
             {
                 if (FormatForParentControl)
                     htmlWriter.Write("<tr><td>");
                 else
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
 
-                if (FindAllChildren<Filter>().Count() < 1)
+                if (!FindAllChildren<Filter>().Any())
                     htmlWriter.Write("<div class=\"filter\">Any labour</div>");
 
                 return htmlWriter.ToString();

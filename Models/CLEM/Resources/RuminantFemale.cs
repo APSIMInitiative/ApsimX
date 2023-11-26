@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.IsBreeder && !this.IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception);
+                return (IsBreeder && !IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception);
             }
         }
 
@@ -114,27 +114,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public DateTime DateLastConceived { get; set; }
 
-        ///// <summary>
-        ///// The age of female at last birth
-        ///// </summary>
-        //public double AgeAtLastBirth { get { return TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays; } }
-
-        ///// <summary>
-        ///// The time (months) passed since last birth
-        ///// Returns 0 for pre-first birth females
-        ///// </summary>
-        //[FilterByProperty]
-        //public double MonthsSinceLastBirth
-        //{
-        //    get
-        //    {
-        //        if (AgeAtLastBirth > 0)
-        //            return Age - AgeAtLastBirth;
-        //        else
-        //            return 0;
-        //    }
-        //}
-
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
         /// </summary>
@@ -163,11 +142,6 @@ namespace Models.CLEM.Resources
         /// Births this timestep
         /// </summary>
         public int NumberOfBirthsThisTimestep { get; set; }
-
-        ///// <summary>
-        ///// The age at last conception
-        ///// </summary>
-        //public double AgeAtLastConception { get { return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays; } }
 
         /// <summary>
         /// Weight at time of conception
@@ -206,17 +180,6 @@ namespace Models.CLEM.Resources
         /// Previous conception rate
         /// </summary>
         public double PreviousConceptionRate { get; set; }
-
-        ///// <summary>
-        ///// Months since minimum breeding age or entering the population
-        ///// </summary>
-        //public double NumberOfBreedingMonths
-        //{
-        //    get
-        //    {
-        //        return Age - Math.Max(BreedParams.MinimumAge1stMating, AgeEnteredSimulation);
-        //    }
-        //}
 
         /// <summary>
         /// Store for the style of mating
@@ -350,7 +313,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).TotalDays == this.BreedParams.GestationLength.InDays;
+                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).TotalDays == BreedParams.GestationLength.InDays;
             }
         }
 
@@ -389,7 +352,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= this.BreedParams.MilkingDays);
+                return ((SucklingOffspringList.Any() | this.MilkingPerformed) && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays <= this.BreedParams.MilkingDays);
             }
         }
 

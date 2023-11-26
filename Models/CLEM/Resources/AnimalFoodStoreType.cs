@@ -225,25 +225,6 @@ namespace Models.CLEM.Resources
             return;
         }
 
-        ///// <inheritdoc/>
-        //public new void Set(double newValue)
-        //{
-        //    this.amount = newValue;
-        //}
-
-        ///// <inheritdoc/>
-        //public event EventHandler TransactionOccurred;
-
-        ///// <inheritdoc/>
-        //protected virtual void OnTransactionOccurred(EventArgs e)
-        //{
-        //    TransactionOccurred?.Invoke(this, e);
-        //}
-
-        ///// <inheritdoc/>
-        //[JsonIgnore]
-        //public ResourceTransaction LastTransaction { get; set; }
-
         #endregion
 
         #region descriptive summary
@@ -251,24 +232,22 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent.ToString("0.###")}%</span>");
+            if (DryMatterDigestibility > 0)
+                htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility.ToString("0.###")}%</span>");
+            else
+                htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
+
+            htmlWriter.Write("</div>");
+            if (StartingAmount > 0)
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write($"This food has a nitrogen content of <span class=\"setvalue\">{NitrogenContent.ToString("0.###")}%</span>");
-                if (DryMatterDigestibility > 0)
-                    htmlWriter.Write($" and a Dry Matter Digesibility of <span class=\"setvalue\">{DryMatterDigestibility.ToString("0.###")}%</span>");
-                else
-                    htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
-
+                htmlWriter.Write($"Simulation starts with <span class=\"setvalue\">{StartingAmount.ToString("#,##0.##")}</span> kg");
                 htmlWriter.Write("</div>");
-                if (StartingAmount > 0)
-                {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write($"Simulation starts with <span class=\"setvalue\">{StartingAmount.ToString("#,##0.##")}</span> kg");
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString();
             }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

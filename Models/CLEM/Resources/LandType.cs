@@ -222,8 +222,7 @@ namespace Models.CLEM.Resources
 
         private void UpdateLandAllocatedList(CLEMModel activity, double amountChanged, bool added)
         {
-            if (AllocatedActivitiesList == null)
-                AllocatedActivitiesList = new List<LandActivityAllocation>();
+            AllocatedActivitiesList ??= new List<LandActivityAllocation>();
 
             // find activity in list
             LandActivityAllocation allocation = AllocatedActivitiesList.Where(a => a.Activity.Name == activity.Name).FirstOrDefault();
@@ -257,37 +256,35 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (LandArea == 0)
+                htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (LandArea == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
+                if (ProportionOfTotalArea == 0)
+                    htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
                 else
                 {
-                    if (ProportionOfTotalArea == 0)
-                        htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
-                    else
+                    htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
+                    string units = (this as IResourceType).Units;
+                    if (units != "NA")
                     {
-                        htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
-                        string units = (this as IResourceType).Units;
-                        if (units != "NA")
-                        {
-                            if (units == null || units == "")
-                                htmlWriter.Write("");
-                            else
-                                htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
-                        }
+                        if (units == null || units == "")
+                            htmlWriter.Write("");
+                        else
+                            htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
                     }
                 }
-
-                if (PortionBuildings > 0)
-                    htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
             }
+
+            if (PortionBuildings > 0)
+                htmlWriter.Write(" of which <span class=\"setvalue\">" + PortionBuildings.ToString("0.##%") + "</span> is buildings");
+            htmlWriter.Write("</div>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

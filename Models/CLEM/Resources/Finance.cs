@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     public class Finance : ResourceBaseWithTransactions
     {
         [Link]
-        IClock Clock = null;
+        readonly IClock Clock = null;
 
         /// <summary>
         /// Currency used
@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using StringWriter htmlWriter = new StringWriter();
+            using StringWriter htmlWriter = new();
             htmlWriter.Write($"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>");
             htmlWriter.Write($"<div class=\"activityentry\">The financial year starts in ");
             if (FirstMonthOfFinancialYear == 0)

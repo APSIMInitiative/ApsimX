@@ -79,36 +79,34 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write("Females ");
+            switch (ConditionBasedConceptionStyle)
             {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Females ");
-                switch (ConditionBasedConceptionStyle)
-                {
-                    case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                        htmlWriter.Write("with a ratio of live weight to highest weight achieved greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.RelativeCondition:
-                        htmlWriter.Write("with a relative condition (live weight over normalised weight) greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.BodyConditionScore:
-                        htmlWriter.Write("with a Body Condition Score greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.None:
-                        htmlWriter.Write("");
-                        break;
-                    default:
-                        htmlWriter.Write("with <span class=\"errorlink\">Undefined style selected</span> ");
-                        break;
-                }
-                if(ConditionBasedConceptionStyle != ConditionBasedCalculationStyle.None)
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionCutOff, warnZero: true)}");
-                }
-                htmlWriter.Write($" will have a {CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionProbability, warnZero: true)} probability of conceiving.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+                    htmlWriter.Write("with a ratio of live weight to highest weight achieved greater than or equal to ");
+                    break;
+                case ConditionBasedCalculationStyle.RelativeCondition:
+                    htmlWriter.Write("with a relative condition (live weight over normalised weight) greater than or equal to ");
+                    break;
+                case ConditionBasedCalculationStyle.BodyConditionScore:
+                    htmlWriter.Write("with a Body Condition Score greater than or equal to ");
+                    break;
+                case ConditionBasedCalculationStyle.None:
+                    htmlWriter.Write("");
+                    break;
+                default:
+                    htmlWriter.Write("with <span class=\"errorlink\">Undefined style selected</span> ");
+                    break;
             }
+            if (ConditionBasedConceptionStyle != ConditionBasedCalculationStyle.None)
+            {
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionCutOff, warnZero: true)}");
+            }
+            htmlWriter.Write($" will have a {CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionProbability, warnZero: true)} probability of conceiving.");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion
