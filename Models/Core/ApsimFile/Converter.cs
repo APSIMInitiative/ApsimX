@@ -14,6 +14,7 @@ using Models.Factorial;
 using Models.Functions;
 using Models.PMF;
 using Models.Soils;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Models.Core.ApsimFile
@@ -5314,51 +5315,77 @@ namespace Models.Core.ApsimFile
         /// <param name="_">The name of the apsimx file.</param>
         private static void UpgradeToVersion169(JObject root, string _)
         {
-            var propertyUpdates = new Tuple<string, string>[]
+            var propertyDeletes = new Tuple<string, string>[]
             {
-                new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
+                new Tuple<string, string>("GrazeFoodStoreType", "DryMatterDigestibility"),
+                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                new Tuple<string, string>("GrazeFoodStoreType", "NitrogenContent"),
+                new Tuple<string, string>("AnimalFoodStoreType", "DryMatterDigestibility"),
+                new Tuple<string, string>("AnimalFoodStoreType", "NitrogenContent"),
+
                 new Tuple<string, string>("RuminantType", "GestationLength"),
                 new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
+                new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
                 new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
                 new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
                 new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
                 new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
                 new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
                 new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
+                new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
+            };
+
+
+            var propertyUpdates = new Tuple<string, string>[]
+            {
+                new Tuple<string, string>("RuminantType", "NaturalWeaningAge"),
+                new Tuple<string, string>("RuminantType", "GestationLength"),
+                new Tuple<string, string>("RuminantType", "MinimumAge1stMating"),
+                new Tuple<string, string>("RuminantType", "EnergyMaintenanceMaximumAge"),
+                new Tuple<string, string>("RuminantActivityControlledMating", "MaximumAgeMating"),
+                new Tuple<string, string>("RuminantActivityWean", "WeaningAge"),
                 new Tuple<string, string>("RuminantActivityManage", "MaximumBreederAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaximumSireAge"),
+                new Tuple<string, string>("RuminantActivityManage", "MaleSellingAge"),
+                new Tuple<string, string>("RuminantActivityManage", "FemaleSellingAge"),
+                new Tuple<string, string>("ProductStoreTypeManure", "MaximumAge")
             };
 
             foreach (var item in propertyUpdates)
-            {
-                var node = JsonUtilities.DescendantOfType(root, item.Item1);
-                node[item.Item2] = Convert.ToInt32(Math.Floor(node.Value<float>(item.Item2) *30.4)).ToString();
-            }
+                foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+                    //AgeSpecifier ageSpecifier = new();
+                    //var value = node.Value<float>(item.Item2);
+                    //if (value == Math.Floor(value))
+                    //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), 0 };
+                    //else
+                    //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
+                    node[item.Item2] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>(item.Item2))); //value * 30.4
 
             foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
-            {
-                AgeSpecifier ageSpecifier = new();
-                var months = node.Value<float>("Age");
-                if (months > 0)
-                {
-                    if (months == Math.Floor(months))
-                        ageSpecifier.Parts = new int[] { Convert.ToInt32(months), 0 };
-                    else
-                        ageSpecifier.Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30*(months- Convert.ToInt32(months))) };
-                }
-                node.Add(new JProperty("AgeDetails", JToken.FromObject(ageSpecifier)));
-            }
+                //AgeSpecifier ageSpecifier = new();
+                //var value = node.Value<float>("Age");
+                //if (value == Math.Floor(value))
+                //    ageSpecifier.Parts = new int[] { 0, Convert.ToInt32(value) };
+                //else
+                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
+                node.Add(new JProperty("AgeDetails", JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
+            
             foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
-            {
+            { 
                 node["PropertyOfIndividual"] = "AgeObject";
-                node["Value"] = $"0,{Convert.ToInt32(node.Value<float>("Value"))},0";
+                //AgeSpecifier ageSpecifier = new();
+                //var value = node.Value<float>("Value");
+                //if (value == Math.Floor(value))
+                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), 0 };
+                //else
+                //    ageSpecifier.Parts = new int[] { Convert.ToInt32(value), Convert.ToInt32(30.4 * (value - Convert.ToInt32(value))) };
+                node["Value"] = JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Value")));
             }
-
-            // int age -> Age specifier
-            // BreederAge - OtherAnimalsActivityBreed
-
-
-
         }
+
     }
+
 }
 
