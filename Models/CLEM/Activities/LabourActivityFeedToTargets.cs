@@ -193,9 +193,11 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var person in peopleList)
                     {
-                        LabourDietComponent outsideEat = new LabourDietComponent();
-                        // TODO: might need to add consumed here
-                        outsideEat.AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth;
+                        LabourDietComponent outsideEat = new()
+                        {
+                            // TODO: might need to add consumed here
+                            AmountConsumed = DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth
+                        };
                         outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
                         // track this consumption by people here.
                         person.AddIntake(outsideEat);
@@ -208,7 +210,7 @@ namespace Models.CLEM.Activities
             int maxFoodAge = food.FindAllChildren<HumanFoodStoreType>().Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
             // create list of all food parcels
-            List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> foodParcels = new();
 
             foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
             {
@@ -232,7 +234,7 @@ namespace Models.CLEM.Activities
             // We can check if the parent of the human food store used is a market and charge accordingly.
 
             // for each market
-            List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> marketFoodParcels = new();
             ResourcesHolder resources = Market?.Resources;
             if (resources != null)
             {
@@ -272,8 +274,8 @@ namespace Models.CLEM.Activities
             while(parcelIndex < foodParcels.Count)
             {
                 foodParcels[parcelIndex].Proportion = 0;
-                var isHousehold = foodParcels[parcelIndex].FoodStore.CLEMParentName == this.CLEMParentName;
-                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold)? !a.TargetMaximumAchieved: !a.TargetAchieved)).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
+                var isHousehold = foodParcels[parcelIndex].FoodStore.CLEMParentName == CLEMParentName;
+                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold) ? !a.TargetMaximumAchieved : !a.TargetAchieved)).Any() | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
                     // reduce by amout that can be eaten
@@ -343,7 +345,7 @@ namespace Models.CLEM.Activities
             }
 
             // fill resource requests
-            List<ResourceRequest> requests = new List<ResourceRequest>();
+            List<ResourceRequest> requests = new();
             foreach (var item in foodParcels.GroupBy(a => a.FoodStore))
             {
                 double amount = item.Sum(a => a.Pool.Amount * a.Proportion);
@@ -403,7 +405,7 @@ namespace Models.CLEM.Activities
                     metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
                     double amountToFull = intakeLimit - intake;
 
-                    foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
+                    foreach (LabourActivityFeedTargetPurchase purchase in FindAllChildren<LabourActivityFeedTargetPurchase>())
                     {
                         HumanFoodStoreType foodtype = purchase.FoodStore;
                         if (purchase.ProportionToPurchase > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
@@ -505,10 +507,10 @@ namespace Models.CLEM.Activities
                             labour.FeedToTargetIntake += amount;
                         }
                 }
-                if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetAchieved).Any())
-                    this.Status = ActivityStatus.Partial;
+                if (FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetAchieved).Any())
+                    Status = ActivityStatus.Partial;
                 else
-                    this.Status = ActivityStatus.Success;
+                    Status = ActivityStatus.Success;
             }
             // finished eating, so this household is now free to sell the resources
             // assumes all households above in the tree supply this level.
@@ -536,7 +538,7 @@ namespace Models.CLEM.Activities
                 // determine AEs to be fed - NOTE does not account for aging in reserve calcualtion
                 double aE = people.AdultEquivalents(IncludeHiredLabour);
 
-                LabourActivityFeedTarget feedTarget = this.FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault();
+                LabourActivityFeedTarget feedTarget = FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault();
 
                 // amount to store
                 //double amountToStore = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
@@ -612,7 +614,7 @@ namespace Models.CLEM.Activities
                                 AllowTransmutation = false,
                                 Category = $"{TransactionCategory}.SellToMarket",
                                 RelatesToResource = foodStore.NameWithParent,
-                                MarketTransactionMultiplier = this.FarmMultiplier
+                                MarketTransactionMultiplier = FarmMultiplier
                             };
                             foodStore.Remove(purchaseRequest);
 
@@ -626,7 +628,7 @@ namespace Models.CLEM.Activities
                                     AllowTransmutation = false,
                                     Category = $"{TransactionCategory}.Sales",
                                     RelatesToResource = foodStore.NameWithParent,
-                                    MarketTransactionMultiplier = this.FarmMultiplier
+                                    MarketTransactionMultiplier = FarmMultiplier
                                 };
                                 bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, TransactionCategory);
                             }
@@ -660,14 +662,14 @@ namespace Models.CLEM.Activities
             if (Resources.FoundMarket != null & bankAccount is null)
             {
                 string[] memberNames = new string[] { "AccountName" };
-                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
+                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a={Name}].", memberNames));
             }
 
             // check that at least one target has been provided.
             if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
-                results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
+                results.Add(new ValidationResult($"At least one [LabourActivityFeedTarget] component is required below the feed activity [{Name}]", memberNames));
             }
 
             return results;
@@ -689,35 +691,33 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write($"Each Adult Equivalent is able to consume {CLEMModel.DisplaySummaryValueSnippet(DailyIntakeLimit, warnZero: true)} kg per day");
+            if (DailyIntakeOtherSources > 0)
             {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write($"Each Adult Equivalent is able to consume {CLEMModel.DisplaySummaryValueSnippet(DailyIntakeLimit, warnZero:true)} kg per day");
-                if (DailyIntakeOtherSources > 0)
-                {
-                    htmlWriter.Write("with <span class=\"setvalue\">");
-                    htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
-                    htmlWriter.Write("</span> provided from non-modelled sources");
-                }
-                htmlWriter.Write(".</div>");
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
-                htmlWriter.Write("</div>");
-
-                // find a market place if present
-                Simulation sim = FindAncestor<Simulation>();
-                if (sim != null)
-                {
-                    Market marketPlace = sim.FindChild<Market>();
-                    if (marketPlace != null)
-                    {
-                        htmlWriter.Write("<div class=\"activityentry\">");
-                        htmlWriter.Write("Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>");
-                        htmlWriter.Write("</div>");
-                    }
-                }
-                return htmlWriter.ToString();
+                htmlWriter.Write("with <span class=\"setvalue\">");
+                htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
+                htmlWriter.Write("</span> provided from non-modelled sources");
             }
+            htmlWriter.Write(".</div>");
+            htmlWriter.Write("<div class=\"activityentry\">");
+            htmlWriter.Write($"Hired labour <span class=\"setvalue\">{((IncludeHiredLabour) ? "is" : "is not")}</span> included");
+            htmlWriter.Write("</div>");
+
+            // find a market place if present
+            Simulation sim = FindAncestor<Simulation>();
+            if (sim != null)
+            {
+                Market marketPlace = sim.FindChild<Market>();
+                if (marketPlace != null)
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write($"Food with be bought and sold through the market <span class=\"setvalue\">{marketPlace.Name}</span>");
+                    htmlWriter.Write("</div>");
+                }
+            }
+            return htmlWriter.ToString();
         }
 
         #endregion

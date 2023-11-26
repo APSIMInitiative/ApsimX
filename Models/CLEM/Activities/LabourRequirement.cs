@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
 
             if (MathUtilities.IsPositive(daysNeeded))
             {
-                CLEMActivityBase handlesActivityComponents = this.Parent as CLEMActivityBase;
+                CLEMActivityBase handlesActivityComponents = Parent as CLEMActivityBase;
 
                 foreach (LabourGroup fg in FindAllChildren<LabourGroup>())
                 {
@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = "",
                             ActivityModel = this,
                             FilterDetails = new List<object>() { fg },
-                            Category = this.TransactionCategory,
+                            Category = TransactionCategory,
                         }
                         ); 
                     }
@@ -288,65 +288,63 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">");
+            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LabourPerUnit, "Rate not set")} day{((LabourPerUnit == 1) ? "" : "s")} is required ");
+
+            if ((Measure ?? "").ToLower() != "fixed")
             {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LabourPerUnit, "Rate not set")} day{((LabourPerUnit==1)?"":"s")} is required ");
-
-                if ((Measure??"").ToLower() != "fixed")
+                if (WholeUnitBlocks)
                 {
-                    if (WholeUnitBlocks)
+                    if (UnitSize == 1)
+                        htmlWriter.Write($"for each ");
+                    else
                     {
-                        if (UnitSize == 1)
-                            htmlWriter.Write($"for each ");
-                        else
-                        {
-                            htmlWriter.Write($"as whole units of ");
-                            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(UnitSize, "Unit not set")} ");
-                        }
+                        htmlWriter.Write($"as whole units of ");
+                        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(UnitSize, "Unit not set")} ");
                     }
-
-                    htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")}");
-                    if(ApplyToAll)
-                        htmlWriter.Write($" applied to each person specified");
-                }
-                htmlWriter.Write($".</div>");
-
-
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
-                string extraLimit = "";
-                switch (LimitStyle)
-                {
-                    case LabourLimitType.AsRatePerUnitsAllowed:
-                        htmlWriter.Write($"as the rate per number of units specified</div>");
-                        extraLimit = " times the number of unt blocks requested. i.e. using the same calculation as LabourPerUnits";
-                        break;
-                    case LabourLimitType.AsTotalDaysAllowed:
-                        htmlWriter.Write($"as the total days permitted in the month</div>");
-                        extraLimit = " days";
-                        break;
-                    case LabourLimitType.ProportionOfDaysRequired:
-                        htmlWriter.Write($"as a proportion of the total days required</div>");
-                        extraLimit = " times the total days required";
-                        break;
-                    default:
-                        break;
                 }
 
-                if (MaximumPerGroup > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span>{extraLimit}</div>");
-
-                if (MinimumPerPerson > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span>{extraLimit}</div>");
-
-                if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span>{extraLimit}</div>");
-
+                htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")}");
                 if (ApplyToAll)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
-
-                return htmlWriter.ToString(); 
+                    htmlWriter.Write($" applied to each person specified");
             }
+            htmlWriter.Write($".</div>");
+
+
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
+            string extraLimit = "";
+            switch (LimitStyle)
+            {
+                case LabourLimitType.AsRatePerUnitsAllowed:
+                    htmlWriter.Write($"as the rate per number of units specified</div>");
+                    extraLimit = " times the number of unt blocks requested. i.e. using the same calculation as LabourPerUnits";
+                    break;
+                case LabourLimitType.AsTotalDaysAllowed:
+                    htmlWriter.Write($"as the total days permitted in the month</div>");
+                    extraLimit = " days";
+                    break;
+                case LabourLimitType.ProportionOfDaysRequired:
+                    htmlWriter.Write($"as a proportion of the total days required</div>");
+                    extraLimit = " times the total days required";
+                    break;
+                default:
+                    break;
+            }
+
+            if (MaximumPerGroup > 0)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span>{extraLimit}</div>");
+
+            if (MinimumPerPerson > 0)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span>{extraLimit}</div>");
+
+            if (MaximumPerPerson > 0 && MaximumPerPerson < 31)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span>{extraLimit}</div>");
+
+            if (ApplyToAll)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
+
+            return htmlWriter.ToString();
         }
 
         #endregion

@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
         private Relationship pastureToStockingChangeElNino { get; set; }
         private Relationship pastureToStockingChangeLaNina { get; set; }
 
@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPredictiveStockingENSO()
         {
-            this.SetDefaults();
+            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
             // if average >= 7 assumed La Nina. If <= 7 El Nino, else Neutral
             // http://www.bom.gov.au/climate/influences/timeline/
 
-            DateTime date = new DateTime(clock.Today.Year, clock.Today.Month, 1);
+            DateTime date = new(clock.Today.Year, clock.Today.Month, 1);
             int monthsAvailable = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Count();
             // get sum of previous 6 months
             double ensoValue = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Sum(a => a.Value);
@@ -187,15 +187,15 @@ namespace Models.CLEM.Activities
 
             Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
-                fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySOIFile, simulation.FileName);
+                fullFilename = PathUtilities.GetAbsolutePath(MonthlySOIFile, simulation.FileName);
             else
-                fullFilename = this.MonthlySOIFile;
+                fullFilename = MonthlySOIFile;
 
             //check file exists
             if (File.Exists(fullFilename))
             {
                 // load ENSO file into memory
-                using (StreamReader ensoStream = new StreamReader(MonthlySOIFile))
+                using (StreamReader ensoStream = new(MonthlySOIFile))
                 {
                     string line = "";
                     while ((line = ensoStream.ReadLine()) != null)
@@ -215,9 +215,9 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name), MessageType.Error);
+                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, Name), MessageType.Error);
 
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
 
             // try attach relationships
             pastureToStockingChangeElNino = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
@@ -272,7 +272,7 @@ namespace Models.CLEM.Activities
                     case ENSOState.Neutral:
                         break;
                     case ENSOState.ElNino:
-                        if (!(pastureToStockingChangeElNino is null))
+                        if (pastureToStockingChangeElNino is not null)
                         {
                             double kgha = pasture.TonnesPerHectare * 1000;
                             herdChange = pastureToStockingChangeElNino.SolveY(kgha);
@@ -280,7 +280,7 @@ namespace Models.CLEM.Activities
                         }
                         break;
                     case ENSOState.LaNina:
-                        if (!(pastureToStockingChangeLaNina is null))
+                        if (pastureToStockingChangeLaNina is not null)
                         {
                             double kgha = pasture.TonnesPerHectare * 1000;
                             herdChange = pastureToStockingChangeLaNina.SolveY(kgha);
@@ -292,8 +292,8 @@ namespace Models.CLEM.Activities
                 }
                 if (!relationshipFound)
                 {
-                    string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState == ENSOState.ElNino) ? "El Niño" : "La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
-                    this.Status = ActivityStatus.Warning;
+                    string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState == ENSOState.ElNino) ? "El Niño" : "La Niña")} phase in [a={Name}]\r\nNo stock management will be performed in this phase.";
+                    Status = ActivityStatus.Warning;
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
 
@@ -428,8 +428,8 @@ namespace Models.CLEM.Activities
                         var specifyComponents = FindAllChildren<SpecifyRuminant>();
                         if (specifyComponents.Count() == 0)
                         {
-                            string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
-                            this.Status = ActivityStatus.Warning;
+                            string warn = $"No [f=SpecifyRuminant]s were provided in [a={Name}]\r\nNo restocking will be performed.";
+                            Status = ActivityStatus.Warning;
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
 
@@ -453,7 +453,7 @@ namespace Models.CLEM.Activities
 
                                 if (MathUtilities.FloatsAreEqual(newIndividual.Weight, 0))
                                 {
-                                    throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
+                                    throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{Name}]");
                                 }
 
                                 HerdResource.PurchaseIndividuals.Add(newIndividual);
@@ -484,88 +484,86 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            bool extracomps = false;
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Monthly SOI data are provided by {CLEMModel.DisplaySummaryValueSnippet(MonthlySOIFile, "File not set", HTMLSummaryStyle.FileReader)}");
+            htmlWriter.Write("</div>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">The mean of the previous ");
+            if (AssessMonths == 0)
+                htmlWriter.Write("<span class=\"errorlink\">Not set</span>");
+            else
+                htmlWriter.Write($"<span class=\"setvalue\">{AssessMonths}</span>");
+
+            htmlWriter.Write($" months will determine the current ENSO phase where:");
+            htmlWriter.Write("</div>");
+
+            // when in El Nino
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">El Ni&ntilde;o phase</div>");
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI less than <span class=\"setvalue\">{SOIForElNino}</span></div>");
+
+            // relationship to use
+            var relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
+            if (relationship is null)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
+            else
             {
-                bool extracomps = false;
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Monthly SOI data are provided by {CLEMModel.DisplaySummaryValueSnippet(MonthlySOIFile, "File not set", HTMLSummaryStyle.FileReader)}");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The mean of the previous ");
-                if(AssessMonths == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">Not set</span>");
-                else
-                    htmlWriter.Write($"<span class=\"setvalue\">{AssessMonths}</span>");
-
-                htmlWriter.Write($" months will determine the current ENSO phase where:");
-                htmlWriter.Write("</div>");
-
-                // when in El Nino
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">El Ni&ntilde;o phase</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI less than <span class=\"setvalue\">{SOIForElNino}</span></div>");
-
-                // relationship to use
-                var relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
-                if (relationship is null)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
-                }
-
-                htmlWriter.Write("</div>");
-
-
-                // when in La Nina
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">La Ni&ntilde;a phase</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI greater than <span class=\"setvalue\">{SOIForLaNina}</span></div>");
-
-                // relationship to use
-                relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
-                if (relationship is null)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
-                }
-
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
-                // Destock
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                var rumGrps = FindAllChildren<RuminantGroup>();
-                if (rumGrps.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Destocking will be performed in the order of <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> provided below</div>");
-                }
-
-                // restock
-                // pasture
-                var specs = FindAllChildren<SpecifyRuminant>();
-                if(specs.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">SpecifyRuminant</span> were provided</span>. No restocking will be performed</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be performed in the order of <span class=\"resourcelink\">SpecifyRuminant</span> provided below</div>");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be only take place when pasture biomass is above {MinimumFeedBeforeRestock} kg per hectare</div>");
-                }
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">");
-                if (extracomps)
-                    htmlWriter.Write("<div class=\"labournote\">Additional components used by this activity</div>");
-                else
-                    htmlWriter.Write("<div class=\"labournote\">No additional components have been supplied</div>");
-
-                return htmlWriter.ToString();
+                extracomps = true;
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
             }
+
+            htmlWriter.Write("</div>");
+
+
+            // when in La Nina
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">La Ni&ntilde;a phase</div>");
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI greater than <span class=\"setvalue\">{SOIForLaNina}</span></div>");
+
+            // relationship to use
+            relationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
+            if (relationship is null)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
+            else
+            {
+                extracomps = true;
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
+            }
+
+            htmlWriter.Write("</div>");
+
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
+            // Destock
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+            var rumGrps = FindAllChildren<RuminantGroup>();
+            if (rumGrps.Count() == 0)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
+            else
+            {
+                extracomps = true;
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Destocking will be performed in the order of <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> provided below</div>");
+            }
+
+            // restock
+            // pasture
+            var specs = FindAllChildren<SpecifyRuminant>();
+            if (!specs.Any())
+                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">SpecifyRuminant</span> were provided</span>. No restocking will be performed</div>");
+            else
+            {
+                extracomps = true;
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be performed in the order of <span class=\"resourcelink\">SpecifyRuminant</span> provided below</div>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be only take place when pasture biomass is above {MinimumFeedBeforeRestock} kg per hectare</div>");
+            }
+            htmlWriter.Write("</div>");
+
+            htmlWriter.Write("\r\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">");
+            if (extracomps)
+                htmlWriter.Write("<div class=\"labournote\">Additional components used by this activity</div>");
+            else
+                htmlWriter.Write("<div class=\"labournote\">No additional components have been supplied</div>");
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

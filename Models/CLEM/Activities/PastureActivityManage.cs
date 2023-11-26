@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         private IFilePasture filePasture = null;
         private string soilIndex = "0"; // obtained from LandType used
         private double stockingRateSummed;  //summed since last Ecological Calculation.
-        private double ha2sqkm = 0.01; //convert ha to square km
+        private readonly double ha2sqkm = 0.01; //convert ha to square km
         private List<PastureDataType> pastureDataList;
         private Relationship relationshipLC;
         private Relationship relationshipGBA;
@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // activity is performed in CLEMUpdatePasture not CLEMGetResources and has no labour
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -220,14 +220,14 @@ namespace Models.CLEM.Activities
                 ZoneCLEM clem = FindAncestor<ZoneCLEM>();
                 int recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).RegionColumnName, clem.ClimateRegion);
                 if (recs == 0)
-                    throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={this.Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
+                    throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
 
                 land = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (land != null)
                 {
                     recs = filePasture.RecordsFound((filePasture as FileSQLitePasture).LandIdColumnName, land.SoilType);
                     if (recs == 0)
-                        throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={this.Name}] given [Land id] = [{land.SoilType}] as specified in [{land.Name}] used to manage the pasture");
+                        throw new ApsimXException(this, $"No pasture production records were located by [x={(filePasture as Model).Name}] for [a={Name}] given [Land id] = [{land.SoilType}] as specified in [{land.Name}] used to manage the pasture");
                 }
             }
 
@@ -269,10 +269,10 @@ namespace Models.CLEM.Activities
 
                 soilIndex = ((LandType)ResourceRequestList.FirstOrDefault().Resource).SoilType;
 
-                if (!(LandConditionIndex is null))
+                if (LandConditionIndex is not null)
                     LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex = LandConditionIndex.StartingValue;
 
-                if (!(GrassBasalArea is null))
+                if (GrassBasalArea is not null)
                     LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea = GrassBasalArea.StartingValue;
 
                 LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate = StartingStockingRate;
@@ -312,10 +312,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMUpdatePasture")]
         private void OnCLEMUpdatePasture(object sender, EventArgs e)
         {
-            this.Status = ActivityStatus.Ignored;
+            Status = ActivityStatus.Ignored;
             if (pastureDataList != null)
             {
-                this.Status = ActivityStatus.NotNeeded;
+                Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
                 //Get this months pasture data from the pasture data list
@@ -334,26 +334,26 @@ namespace Models.CLEM.Activities
 
                 if (growth > 0)
                 {
-                    this.Status = ActivityStatus.Success;
+                    Status = ActivityStatus.Success;
                     GrazeFoodStorePool newPasture = new GrazeFoodStorePool
                     {
                         Age = 0
                     };
                     newPasture.Set(growth * Area);
-                    newPasture.NitrogenContent = this.LinkedNativeFoodType.GreenNitrogen;
+                    newPasture.NitrogenContent = LinkedNativeFoodType.GreenNitrogen;
                     newPasture.DryMatterDigestibility = newPasture.NitrogenContent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
+                    LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
                 }
             }
 
             // report activity performed.
             ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
             {
-                Name = this.Name,
+                Name = Name,
                 Status = events.IsEcologicalIndicatorsCalculationMonth() ? ActivityStatus.Calculation : ActivityStatus.Success,
-                Id = this.UniqueID.ToString(),
+                Id = UniqueID.ToString(),
             };
         }
 
@@ -500,29 +500,27 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" occupies ");
+            Land parentLand = null;
+            if (LandTypeNameToUse != null && LandTypeNameToUse != "")
+                parentLand = FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
+
+            if (UseAreaAvailable)
+                htmlWriter.Write("the unallocated portion of ");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" occupies ");
-                Land parentLand = null;
-                if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-                    parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
-
-                if (UseAreaAvailable)
-                    htmlWriter.Write("the unallocated portion of ");
+                if (parentLand == null)
+                    htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
                 else
-                {
-                    if (parentLand == null)
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
-                }
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
+                    htmlWriter.Write($"<span class=\"setvalue\">{AreaRequested:#,##0.###}</span> {parentLand.UnitsOfArea} of ");
             }
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write("</div>");
+
+            return htmlWriter.ToString();
         }
         #endregion
     }

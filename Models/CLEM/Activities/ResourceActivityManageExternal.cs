@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             // get reader
-            Model parentZone = this.FindAllAncestors<Zone>().FirstOrDefault();
+            Model parentZone = FindAllAncestors<Zone>().FirstOrDefault();
             if(parentZone != null)
                 fileResource = parentZone.FindDescendant<FileResource>(ResourceDataReader);
 
@@ -132,7 +132,7 @@ namespace Models.CLEM.Activities
                             case "Models.CLEM.Resources.LabourType":
                             case "Models.CLEM.Resources.GrazeFoodStoreType":
                             case "Models.CLEM.Resources.OtherAnimalsType":
-                                warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
+                                warn = $"[a={Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                                 resource = null;
                                 break;
@@ -147,14 +147,14 @@ namespace Models.CLEM.Activities
                             var matchingResources = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
                             if (matchingResources.Count() > 1)
                             {
-                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                                warn = $"[a={Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                             }
                             resourceMultiplier = FindAllChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
                         }
                         else
                         {
-                            warn = $"[a={this.Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
+                            warn = $"[a={Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                         }
 
@@ -379,7 +379,7 @@ namespace Models.CLEM.Activities
             else
             {
                 if (currentEntries.Count > 0)
-                    this.Status = ActivityStatus.Warning;
+                    Status = ActivityStatus.Warning;
                 return;
             }
 
@@ -406,40 +406,39 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Resources added or removed are provided by ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader));
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (AccountName == null || AccountName == "")
-                    htmlWriter.Write("Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>");
-                else if (AccountName == "No financial implications")
-                    htmlWriter.Write("No financial constraints relating to pricing and packet sizes associated with each resource will be included.");
-                else
-                    htmlWriter.Write("Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>");
-                htmlWriter.Write("</div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Resources added or removed are provided by ");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader));
+            htmlWriter.Write("</div>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (AccountName == null || AccountName == "")
+                htmlWriter.Write("Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>");
+            else if (AccountName == "No financial implications")
+                htmlWriter.Write("No financial constraints relating to pricing and packet sizes associated with each resource will be included.");
+            else
+                htmlWriter.Write("Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>");
+            htmlWriter.Write("</div>");
 
 
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The following resources will be included if present in the Resource File");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                var resourceFilter = ((ResourceColumnsToUse ?? "").Length > 0) ? ResourceColumnsToUse:"All resources";
-                foreach (var res in resourceFilter.Split(",").Select(x => x.Trim()))
-                    htmlWriter.Write($"<div class=\"filter\">{res}</div>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">The following resources will be included if present in the Resource File");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+            var resourceFilter = ((ResourceColumnsToUse ?? "").Length > 0) ? ResourceColumnsToUse : "All resources";
+            foreach (var res in resourceFilter.Split(",").Select(x => x.Trim()))
+                htmlWriter.Write($"<div class=\"filter\">{res}</div>");
 
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("</div>");
+            htmlWriter.Write("</div>");
+            htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString();
-            }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
-
-            childList.Add((FindAllChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", ""));
+            var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
+            {
+                (FindAllChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", "")
+            };
             return childList;
         }
 
@@ -454,8 +453,6 @@ namespace Models.CLEM.Activities
         {
             return "";
         }
-
-
 
         #endregion
 

@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
             weightToNumberPerLoadUnit = GetCompanionModelsByIdentifier<Relationship>(false, false, "Live weight to load unit size")?.FirstOrDefault()??null;
@@ -458,11 +458,11 @@ namespace Models.CLEM.Activities
                 {
                     if (truckDetails.individualsTransported == 0)
                     {
-                        this.Status = ActivityStatus.Warning;
+                        Status = ActivityStatus.Warning;
                         AddStatusMessage("No individuals loaded");
                     }
                     else
-                        this.Status = ActivityStatus.Partial;
+                        Status = ActivityStatus.Partial;
                 }
             }
             else 
@@ -474,39 +474,37 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {CLEMModel.DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {CLEMModel.DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero:true)} head (of specified individuals)");
-                htmlWriter.Write("</div>");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero: true)} head (of specified individuals)");
+            htmlWriter.Write("</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
-                if (MinimumLoadUnitsPerTruck > 0)
-                    htmlWriter.Write($" requires a minimum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
-                htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
-                if (MinimumLoadUnitsBeforeTransporting > 0)
-                    htmlWriter.Write($" and requires at least {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
-                htmlWriter.Write("</div>");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
+            if (MinimumLoadUnitsPerTruck > 0)
+                htmlWriter.Write($" requires a minimum of {DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
+            htmlWriter.Write($"has a maximum of {DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
+            if (MinimumLoadUnitsBeforeTransporting > 0)
+                htmlWriter.Write($" and requires at least {DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
+            htmlWriter.Write("</div>");
 
-                if(LoadUnitsPerTrailer.Count() > 1)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
-                else
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
+            if (LoadUnitsPerTrailer.Count() > 1)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
+            else
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
+            htmlWriter.Write($"{DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
 
-                if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
-                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
-                htmlWriter.Write(".</div>");
+            if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
+                htmlWriter.Write($" and requires {DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
+            htmlWriter.Write(".</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {CLEMModel.DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
-                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg)");
-                if (AggregateTrailerMass.Count() > 1)
-                    htmlWriter.Write($" from first to last trailer");
-                htmlWriter.Write("</div>");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
+            htmlWriter.Write($"with an Aggregate Trailer Mass {DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero: true)} (kg)");
+            if (AggregateTrailerMass.Count() > 1)
+                htmlWriter.Write($" from first to last trailer");
+            htmlWriter.Write("</div>");
 
-                return htmlWriter.ToString(); 
-            }
+            return htmlWriter.ToString();
         }
 
         #endregion

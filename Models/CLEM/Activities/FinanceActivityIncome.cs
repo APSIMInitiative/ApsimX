@@ -70,13 +70,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Earn {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
-                htmlWriter.Write($" paid into {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Earn {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
+            htmlWriter.Write($" paid into {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 

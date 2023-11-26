@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityFeed()
         {
-            this.SetDefaults();
+            SetDefaults();
         }
 
         /// <inheritdoc/>
@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(true, true);
+            InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+            List<ResourceRequest> resourceRequests = new();
 
             feedEstimated = 0;
             feedToSatisfy = 0;
@@ -251,7 +251,7 @@ namespace Models.CLEM.Activities
                 {
                     amountToDo = 0;
                 }
-                this.Status = ActivityStatus.Partial;
+                Status = ActivityStatus.Partial;
 
                 // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
                 int numberNotAllowed = numberToSkip;
@@ -311,7 +311,7 @@ namespace Models.CLEM.Activities
                 // adjust for, and report, wastage
                 if (MathUtilities.IsPositive(wasted))
                 {
-                    ResourceRequest wastedRequest = new ResourceRequest()
+                    ResourceRequest wastedRequest = new()
                     {
                         AllowTransmutation = false,
                         Required = wasted,
@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Wastage",
-                        RelatesToResource = this.PredictedHerdNameToDisplay,
+                        RelatesToResource = PredictedHerdNameToDisplay,
                     };
                     ResourceRequestList.Insert(0, wastedRequest);
                 }
@@ -329,7 +329,7 @@ namespace Models.CLEM.Activities
                 // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
                 if (MathUtilities.IsPositive(excessFed))
                 {
-                    ResourceRequest excessRequest = new ResourceRequest()
+                    ResourceRequest excessRequest = new()
                     {
                         AllowTransmutation = false,
                         Required = excessFed,
@@ -339,7 +339,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = $"{TransactionCategory}.Overfed wastage",
-                        RelatesToResource = this.PredictedHerdNameToDisplay
+                        RelatesToResource = PredictedHerdNameToDisplay
                     };
                     ResourceRequestList.Insert(0, excessRequest);
                 }
@@ -442,15 +442,13 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                if (ProportionTramplingWastage > 0)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write("</div>");
+            if (ProportionTramplingWastage > 0)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\"> <span class=\"setvalue\">{ProportionTramplingWastage:0.##%}</span> is lost through trampling</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
     }

@@ -94,37 +94,35 @@ namespace Models.CLEM.Activities
         public override string ModelSummary()
         {
 
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Metric, "Metric not set"));
+            if (TargetValue > 0)
+            {
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(TargetValue.ToString("#,##0.##"));
+            }
+            else
+                htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+
+            htmlWriter.Write("</span> units per AE per day ");
+
+            if (TargetMaximumValue > 0)
+            {
+                htmlWriter.Write("up to maximum of <span class=\"setvalue\">");
+                htmlWriter.Write(TargetMaximumValue.ToString("#,##0.##"));
+            }
+            else
+                htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+
+            htmlWriter.Write("</span></div>");
+
+            if (OtherSourcesValue > 0)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Metric, "Metric not set"));
-                if (TargetValue > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(TargetValue.ToString("#,##0.##"));
-                }
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
-
-                htmlWriter.Write("</span> units per AE per day ");
-
-                if (TargetMaximumValue > 0)
-                {
-                    htmlWriter.Write("up to maximum of <span class=\"setvalue\">");
-                    htmlWriter.Write(TargetMaximumValue.ToString("#,##0.##"));
-                }
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
-
-                htmlWriter.Write("</span></div>");
-
-                if (OtherSourcesValue > 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>");
-                }
-                return htmlWriter.ToString(); 
+                htmlWriter.Write($"<span class=\"setvalue\">{OtherSourcesValue:#,##0.##}</span> is provided from sources outside the human food store</div>");
             }
+            return htmlWriter.ToString();
         } 
         #endregion
 

@@ -181,12 +181,10 @@ namespace Models.CLEM.Activities
 
                 // add emissions
                 double burnkg = pastureToDo * BurningEfficiency * CarbonContent; // burnkg * burning efficiency * carbon content
-                if (methaneStore != null)
-                    //TODO change emissions for green material
-                    methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
+                                                                                 //TODO change emissions for green material
+                methaneStore?.Add(burnkg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
 
-                if (n2oStore != null)
-                    n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
+                n2oStore?.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
 
                 // TODO: add fertilisation to pasture for given period.
 
@@ -199,31 +197,29 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Burn {DisplaySummaryResourceTypeSnippet(PaddockName, "Pasture Not Set", nullGeneralYards: false)}");
-                htmlWriter.Write($" if less than {DisplaySummaryValueSnippet(MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green.");
-                htmlWriter.Write($" with a burning efficiency of {DisplaySummaryValueSnippet(BurningEfficiency, warnZero: true)} and ");
-                htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonContent, warnZero: true)}");
-                htmlWriter.Write("</div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Burn {DisplaySummaryResourceTypeSnippet(PaddockName, "Pasture Not Set", nullGeneralYards: false)}");
+            htmlWriter.Write($" if less than {DisplaySummaryValueSnippet(MinimumProportionGreen.ToString("0.#%"), warnZero: true)} green.");
+            htmlWriter.Write($" with a burning efficiency of {DisplaySummaryValueSnippet(BurningEfficiency, warnZero: true)} and ");
+            htmlWriter.Write($" and a carbon content of {DisplaySummaryValueSnippet(CarbonContent, warnZero: true)}");
+            htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
-                if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                    htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
-                else
-                    htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
+            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
+            else
+                htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
 
-                htmlWriter.Write("</div>");
+            htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
-                if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                    htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
-                else
-                    htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
+            if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+                htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
+            else
+                htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
 
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 

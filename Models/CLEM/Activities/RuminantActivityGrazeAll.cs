@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)
             {
-                this.InitialiseHerd(true, true);
+                InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
                 Guid currentUid = UniqueID;
@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
                     if (!buildTransactionFromTree)
                         transCat = TransactionCategory;
 
-                    RuminantActivityGrazePasture grazePasture = new RuminantActivityGrazePasture
+                    RuminantActivityGrazePasture grazePasture = new()
                     {
                         ActivitiesHolder = ActivitiesHolder,
                         CLEMParentName = CLEMParentName,
@@ -70,8 +70,8 @@ namespace Models.CLEM.Activities
                         GrazeFoodStoreModel = pastureType,
                         Clock = clock,
                         Parent = this,
-                        Name = "Graze_" + (pastureType as Model).Name,
-                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                        Name = "Graze_" + (pastureType).Name,
+                        OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
                         Status = ActivityStatus.NoTask
                     };
                     currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                             HoursGrazed = HoursGrazed,
                             Parent = grazePasture,
                             Name = grazePasture.Name + "_" + herdType.Name,
-                            OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
+                            OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction,
                             ActivitiesHolder = ActivitiesHolder,
                             TransactionCategory = transCat,
                             Status = ActivityStatus.NoTask
@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
                         grazePastureHerd.SetLinkedModels(Resources);
 
                         if (grazePastureHerd.Clock == null)
-                            grazePastureHerd.Clock = this.clock;
+                            grazePastureHerd.Clock = clock;
 
                         grazePastureHerd.InitialiseHerd(true, true);
                         grazePasture.Children.Add(grazePastureHerd);
@@ -111,7 +111,7 @@ namespace Models.CLEM.Activities
                 this.FindAllDescendants<RuminantActivityGrazePastureHerd>().LastOrDefault().IsHidden = true;
             }
             else
-                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={Name}]!", MessageType.Warning);
         }
 
         /// <inheritdoc/>
@@ -147,18 +147,16 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
-                if (HoursGrazed <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                else
-                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+            if (HoursGrazed <= 0)
+                htmlWriter.Write($"<span class=\"errorlink\">{HoursGrazed:0.#}</span> hours of ");
+            else
+                htmlWriter.Write(((HoursGrazed == 8) ? "" : $"<span class=\"setvalue\">{HoursGrazed:0.#}</span> hours of "));
 
-                htmlWriter.Write("the maximum 8 hours each day</span>");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
+            htmlWriter.Write("the maximum 8 hours each day</span>");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
         #endregion
 

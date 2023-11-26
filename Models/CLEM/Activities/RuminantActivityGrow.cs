@@ -282,7 +282,7 @@ namespace Models.CLEM.Activities
             // grow individuals
 
             IEnumerable<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct();
-            this.Status = ActivityStatus.NotNeeded;
+            Status = ActivityStatus.NotNeeded;
 
             foreach (string breed in breeds)
             {
@@ -292,7 +292,7 @@ namespace Models.CLEM.Activities
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.AgeInDays))
                 {
                     ind.MetabolicIntake = ind.Intake.Feed.Actual;
-                    this.Status = ActivityStatus.Success;
+                    Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
                         // check that they had some food
@@ -382,11 +382,8 @@ namespace Models.CLEM.Activities
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
 
-                if (methaneEmissions != null)
-                {
-                    // g per day -> total kg
-                    methaneEmissions.Add(totalMethane * events.Interval / 1000, this, breed, TransactionCategory);
-                }
+                // g per day -> total kg
+                methaneEmissions?.Add(totalMethane * events.Interval / 1000, this, breed, TransactionCategory);
             }
         }
 
@@ -448,8 +445,7 @@ namespace Models.CLEM.Activities
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable * events.Interval);
 
-                if (ind.Mother != null)
-                    ind.Mother.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
+                ind.Mother?.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
                 double milkIntakeDaily = ind.Intake.Milk.Actual / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
@@ -488,7 +484,6 @@ namespace Models.CLEM.Activities
             {
                 double energyMilk = 0;
                 double energyFetus = 0;
-                double energyBalance = energyMetabolicFromIntake;
 
                 // set maintenance age to maximum of 6 years (2190 days). Now uses EnergeyMaintenanceMaximumAge
                 double maintenanceAge = Math.Min(ind.AgeInDays, ind.BreedParams.EnergyMaintenanceMaximumAge.InDays);
@@ -497,7 +492,7 @@ namespace Models.CLEM.Activities
                 // 0.000082 is -0.03 Age in Years/365 for days
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetabolicFromIntake);
                 //ind.EnergyMaintenance = energyMaintenance;
-                energyBalance = energyMetabolicFromIntake - energyMaintenance; // milk will be zero for non lactating individuals.
+                double energyBalance = energyMetabolicFromIntake - energyMaintenance;
 
                 if (ind.Sex == Sex.Female)
                 {

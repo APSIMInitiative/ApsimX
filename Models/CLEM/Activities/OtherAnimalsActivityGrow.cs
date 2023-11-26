@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
                 cohort.Age++; //Todo: Add clock increnement here
 
             // death from old age
-            while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge.InDays).Count() > 0)
+            while (animalType.Cohorts.Where(a => a.Age > animalType.MaxAge.InDays).Any())
                 animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge.InDays).FirstOrDefault(), this, "Died");
 
         }

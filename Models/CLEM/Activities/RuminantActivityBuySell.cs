@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
         /// Get the styles available for this activity
         /// </summary>
         /// <returns>An Ienumerable of strings</returns>
-        public IEnumerable<string> ActivityStyleList()
+        public static IEnumerable<string> ActivityStyleList()
         {
             return new string[] { "Arrange sales", "Arrange purchases" };
         }
@@ -125,7 +125,7 @@ namespace Models.CLEM.Activities
             if (Resources.ResourceItemsExist<Finance>())
             {
                 if (BankAccountName == "")
-                    Summary.WriteMessage(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.", MessageType.Warning);
+                    Summary.WriteMessage(this, $"No bank account has been specified in [a={Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.", MessageType.Warning);
             }
             if (BankAccountName != "")
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                     Required = herdValue,
                     AllowTransmutation = false,
                     Category = TransactionCategory,
-                    RelatesToResource = this.PredictedHerdNameToDisplay,
+                    RelatesToResource = PredictedHerdNameToDisplay,
                     AdditionalDetails = "Purchases",
                     ResourceType = typeof(Finance),
                     ResourceTypeName = BankAccountName,
@@ -256,19 +256,22 @@ namespace Models.CLEM.Activities
             if (numberTrucked < numberToDo)
             {
                 // Report trucks shortfall for task
-                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = new ResourceRequest()
+                ResourceRequestEventArgs rrEventArgs = new()
                 {
-                    Resource = null,
-                    ResourceType = null,
-                    ResourceTypeName = "Head trucked",
-                    AllowTransmutation = false,
-                    Required = numberToDo,
-                    Provided = numberTrucked,
-                    Category = ActivityStyle,
-                    AdditionalDetails = null,
-                    RelatesToResource = null,
-                    ActivityModel = this,
-                }};
+                    Request = new ResourceRequest()
+                    {
+                        Resource = null,
+                        ResourceType = null,
+                        ResourceTypeName = "Head trucked",
+                        AllowTransmutation = false,
+                        Required = numberToDo,
+                        Provided = numberTrucked,
+                        Category = ActivityStyle,
+                        AdditionalDetails = null,
+                        RelatesToResource = null,
+                        ActivityModel = this,
+                    }
+                };
 
 
                 if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
@@ -371,19 +374,19 @@ namespace Models.CLEM.Activities
                             // report any financial shortfall in purchases when trying to purchase the animals
                             if (MathUtilities.IsPositive(shortfall))
                             {
-                                ResourceRequest purchaseRequest = new ResourceRequest
+                                ResourceRequest purchaseRequest = new()
                                 {
                                     ActivityModel = this,
                                     AllowTransmutation = false,
                                     Category = TransactionCategory,
-                                    RelatesToResource = this.PredictedHerdNameToDisplay
+                                    RelatesToResource = this.PredictedHerdNameToDisplay,
+                                    Available = bankAccount.Amount,
+                                    Required = request.Required - valueOfSkipped,
+                                    Provided = request.Provided - valueOfSkipped,
+                                    ResourceType = typeof(Finance),
+                                    ResourceTypeName = BankAccountName
                                 };
-                                purchaseRequest.Available = bankAccount.Amount;
-                                purchaseRequest.Required = request.Required-valueOfSkipped;
-                                purchaseRequest.Provided = request.Provided-valueOfSkipped;
-                                purchaseRequest.ResourceType = typeof(Finance);
-                                purchaseRequest.ResourceTypeName = BankAccountName;
-                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
+                                ResourceRequestEventArgs rre = new() { Request = purchaseRequest };
                                 ActivitiesHolder.ReportActivityShortfall(rre);
                             }
                         }
@@ -420,7 +423,7 @@ namespace Models.CLEM.Activities
         private void ProcessAnimals()
         {
             int head = 0;
-            List<Ruminant> taskIndividuals = new List<Ruminant>();
+            List<Ruminant> taskIndividuals = new();
 
             if (ActivityStyle == "Arrange sales")
             {

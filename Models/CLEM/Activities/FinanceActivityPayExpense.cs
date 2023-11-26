@@ -68,8 +68,8 @@ namespace Models.CLEM.Activities
                     Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = false,
-                    Required = this.Amount,
-                    ResourceTypeName = this.AccountName,
+                    Required = Amount,
+                    ResourceTypeName = AccountName,
                     ActivityModel = this,
                     Category = TransactionCategory
                 }
@@ -95,13 +95,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)}");
-                htmlWriter.Write($" from {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            StringWriter stringWriter = new();
+            using StringWriter htmlWriter = stringWriter;
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
+            htmlWriter.Write($" from {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 

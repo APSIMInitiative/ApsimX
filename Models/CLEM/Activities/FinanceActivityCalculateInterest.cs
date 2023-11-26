@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
                         double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
                         if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
                         {
-                            ResourceRequest interestRequest = new ResourceRequest
+                            ResourceRequest interestRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = interest,
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
                                 interestRequest.ResourceType = typeof(Finance);
                                 interestRequest.ResourceTypeName = accnt.NameWithParent;
                                 interestRequest.Available = accnt.FundsAvailable;
-                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
+                                ResourceRequestEventArgs rre = new() { Request = interestRequest };
                                 ActivitiesHolder.ReportActivityShortfall(rre);
 
                                 switch (OnPartialResourcesAvailableAction)
@@ -105,39 +105,37 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
+            ResourcesHolder resHolder;
+            Finance finance = null;
+            if (clemParent != null)
             {
-                ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
-                ResourcesHolder resHolder;
-                Finance finance = null;
-                if (clemParent != null)
-                {
-                    resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
-                    finance = resHolder.FindResourceGroup<Finance>();
-                    if (finance != null && !finance.Enabled)
-                        finance = null;
-                }
+                resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
+                finance = resHolder.FindResourceGroup<Finance>();
+                if (finance != null && !finance.Enabled)
+                    finance = null;
+            }
 
-                if (finance == null)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
-                else
+            if (finance == null)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
+            else
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
+                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
+                    if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
+                    else
                     {
-                        if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
+                        if (accnt.InterestRateCharged > 0)
+                            htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
                         else
-                        {
-                            if (accnt.InterestRateCharged > 0)
-                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
-                            else
-                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
-                        }
+                            htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
                     }
                 }
-                return htmlWriter.ToString(); 
             }
+            return htmlWriter.ToString();
         } 
         #endregion
 

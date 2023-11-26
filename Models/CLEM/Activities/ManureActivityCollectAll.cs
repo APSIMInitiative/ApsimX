@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class ManureActivityCollectAll : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // activity is performed in CLEMCollectManure not CLEMGetResources
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
@@ -86,7 +86,6 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToSkip = 0;
-
             amountToDo = manureStore?.UncollectedStores.Sum(a => a.Pools.Sum(b => b.WetWeight))??0;
 
             // reduce amount by limiter if present.

@@ -65,7 +65,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            //relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
             parentManagementActivity = FindAncestor<CropActivityManageCrop>();
             parentManageProductActivity = (Parent as CropActivityManageProduct);
         }
@@ -87,7 +86,7 @@ namespace Models.CLEM.Activities
                     }
                     if (!timingIssueReported)
                     {
-                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
                         timingIssueReported = true;
                     }
                 }
@@ -138,7 +137,6 @@ namespace Models.CLEM.Activities
             {
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
-                //if (tagsShort != null)
                 amountToSkip = (1 - tagsShort.Available / tagsShort.Required);
             }
         }
@@ -162,8 +160,8 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            IModel follow = this.Parent;
-            while(!(follow is ActivitiesHolder))
+            IModel follow = Parent;
+            while (!(follow is ActivitiesHolder))
             {
                 if(follow is CropActivityManageProduct)
                     return results;
@@ -185,12 +183,10 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (this.FindAllChildren<ActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
-                    htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            if (FindAllChildren<ActivityFee>().Count() + FindAllChildren<LabourRequirement>().Count() == 0)
+                htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
     }

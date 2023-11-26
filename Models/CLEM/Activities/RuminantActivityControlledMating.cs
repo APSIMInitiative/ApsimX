@@ -28,13 +28,13 @@ namespace Models.CLEM.Activities
         private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
+        private IEnumerable<RuminantFemale> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         private int numberToDo;
         private int numberToSkip;
         private int amountToSkip;
         private int amountToDo;
-        private IEnumerable<RuminantFemale> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Maximum age for mating (months)
@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityControlledMating()
         {
             SetDefaults();
-            this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("StartOfSimulation")]
         private new void OnStartOfSimulation(object sender, EventArgs e)
         {
-            attributeList = this.FindAllDescendants<ISetAttribute>().ToList();
+            attributeList = FindAllDescendants<ISetAttribute>().ToList();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -111,18 +111,18 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
-            this.InitialiseHerd(false, true);
+            AllocationStyle = ResourceAllocationStyle.Manual;
+            InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
-            if (!this.TimingExists)
-                Summary.WriteMessage(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
+            if (!TimingExists)
+                Summary.WriteMessage(this, $"Breeding with controlled mating [a={Parent.Name}].[a={Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
 
             // get details from parent breeding activity
-            breedingParent = this.Parent as RuminantActivityBreed;
+            breedingParent = Parent as RuminantActivityBreed;
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Models.CLEM.Activities
             if (breedingParent is null)
             {
                 string[] memberNames = new string[] { "Controlled mating parent" };
-                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
+                results.Add(new ValidationResult($"Invalid parent component of [a={Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
             }
             return results;
         }
@@ -304,29 +304,27 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            // set attribute with value
+            IEnumerable<SetAttributeWithValue> attributeSetters = FindAllChildren<SetAttributeWithValue>();
+            if (attributeSetters.Any())
             {
-                // set attribute with value
-                IEnumerable<SetAttributeWithValue> attributeSetters = this.FindAllChildren<SetAttributeWithValue>();
-                if (attributeSetters.Any())
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any() ? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
+                htmlWriter.Write("</div>");
+            }
+            else
+            {
+                // need to check for mandatory attributes
+                var mandatoryAttributes = FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                if (mandatoryAttributes.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
+                    htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
                     htmlWriter.Write("</div>");
                 }
-                else
-                {
-                    // need to check for mandatory attributes
-                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
-                    if (mandatoryAttributes.Any())
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
-                        htmlWriter.Write("</div>");
-                    }
-                }
-                return htmlWriter.ToString();
             }
+            return htmlWriter.ToString();
         }
         #endregion
 

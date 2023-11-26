@@ -192,16 +192,14 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Move individuals to {DisplaySummaryResourceTypeSnippet(ManagedPastureName, nullGeneralYards: true)}");
-                if (MoveSucklings)
-                    htmlWriter.Write(" moving sucklings with mother");
-                htmlWriter.Write(".</div>");
-                if (PerformAtStartOfSimulation)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Move individuals to {DisplaySummaryResourceTypeSnippet(ManagedPastureName, nullGeneralYards: true)}");
+            if (MoveSucklings)
+                htmlWriter.Write(" moving sucklings with mother");
+            htmlWriter.Write(".</div>");
+            if (PerformAtStartOfSimulation)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
     }

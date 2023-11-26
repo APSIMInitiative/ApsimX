@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
                     }
                     break;
                 default:
-                    throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, this.Name));
+                    throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, Name));
             }
 
             // reduce amount by limiter if present.
@@ -254,35 +254,33 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write($"Cut {DisplaySummaryValueSnippet(Supply, warnZero: true)}");
+            switch (CutStyle)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Cut {CLEMModel.DisplaySummaryValueSnippet(Supply, warnZero:true)}");
-                switch (CutStyle)
-                {
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        htmlWriter.Write(" kg ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">live weight</span> ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">potential intake</span> ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">remaining intake required</span> ");
-                        break;
-                    default:
-                        break;
-                }
-
-                htmlWriter.Write("from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" and carry to ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    htmlWriter.Write(" kg ");
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                    htmlWriter.Write(" of herd <span class=\"setvalue\">live weight</span> ");
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                    htmlWriter.Write(" of herd <span class=\"setvalue\">potential intake</span> ");
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                    htmlWriter.Write(" of herd <span class=\"setvalue\">remaining intake required</span> ");
+                    break;
+                default:
+                    break;
             }
+
+            htmlWriter.Write("from ");
+            htmlWriter.Write(DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" and carry to ");
+            htmlWriter.Write(DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
         #endregion
 

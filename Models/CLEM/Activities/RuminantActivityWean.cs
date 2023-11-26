@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityWean()
         {
-            this.SetDefaults();
+            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -111,10 +111,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(true, true);
+            InitialiseHerd(true, true);
 
             // activity is performed in ManageAnimals
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -129,8 +129,8 @@ namespace Models.CLEM.Activities
                     if (GrazeFoodStoreName == "Not specified - general yards")
                     {
                         grazeStore = "";
-                        ActivitiesHolder ah = this.FindInScope<ActivitiesHolder>();
-                        if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                        ActivitiesHolder ah = FindInScope<ActivitiesHolder>();
+                        if (ah.FindAllDescendants<PastureActivityManage>().Any())
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
                     }
                 }
@@ -206,7 +206,7 @@ namespace Models.CLEM.Activities
         {
             if (numberToDo - numberToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
             {
-                ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
+                ConceptionStatusChangedEventArgs conceptionArgs = new();
                 int weaned = 0;
                 foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
                 {
@@ -253,6 +253,7 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -280,30 +281,28 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
+            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
-                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge.InDays)} days");
-                    if (Style == WeaningStyle.AgeOrWeight)
-                        htmlWriter.Write(" or  ");
-                }
-                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningWeight)} kg");
-
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
-                if (GrazeFoodStoreName == "Leave at current location")
-                    htmlWriter.Write("remain at the location they were weaned");
-                else
-                    htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards:true)}");
-
-                htmlWriter.Write("</div>");
-                // ToDo: warn if natural weaning will take place
-                return htmlWriter.ToString();
+                htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningAge.InDays)} days");
+                if (Style == WeaningStyle.AgeOrWeight)
+                    htmlWriter.Write(" or  ");
             }
+            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
+                htmlWriter.Write($"{DisplaySummaryValueSnippet(WeaningWeight)} kg");
+
+            htmlWriter.Write("</div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
+            if (GrazeFoodStoreName == "Leave at current location")
+                htmlWriter.Write("remain at the location they were weaned");
+            else
+                htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}");
+
+            htmlWriter.Write("</div>");
+            // ToDo: warn if natural weaning will take place
+            return htmlWriter.ToString();
         }
         #endregion
     }

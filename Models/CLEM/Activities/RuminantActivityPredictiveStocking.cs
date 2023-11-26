@@ -127,7 +127,7 @@ namespace Models.CLEM.Activities
         {
             AeToDestock = 0;
             AeDestocked = 0;
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
             paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
@@ -337,23 +337,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Pasture will be assessed in months defined by a Timer and assessed until ");
+            if ((int)LastAssessmentMonth > 0 & (int)LastAssessmentMonth <= 12)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pasture will be assessed in months defined by a Timer and assessed until ");
-                if ((int)LastAssessmentMonth > 0 & (int)LastAssessmentMonth <= 12)
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(LastAssessmentMonth.ToString());
-                }
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">No month set");
-                htmlWriter.Write("</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(FeedLowLimit, warnZero: true)} kg/ha at the end of this period");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(LastAssessmentMonth.ToString());
             }
+            else
+                htmlWriter.Write("<span class=\"errorlink\">No month set");
+            htmlWriter.Write("</span></div>");
+
+            htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
+            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(FeedLowLimit, warnZero: true)} kg/ha at the end of this period");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

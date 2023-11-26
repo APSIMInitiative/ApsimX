@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
         {
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
-            foreach (CropActivityManageProduct item in this.Children.OfType<CropActivityManageProduct>())
+            foreach (CropActivityManageProduct item in Children.OfType<CropActivityManageProduct>())
             {
                 numberOfCrops = i+1;
                 item.CurrentlyManaged = (i == currentCropIndex);
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
             }
 
             if (Area == 0 && UseAreaAvailable)
-                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={this.NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
+                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
                         // careful that this doesn't get taken by a use all available elewhere if you want it back again.
                         if (LinkedLandItem != null)
                         {
-                            LinkedLandItem.Add(-areaneeded, this, cropProduct.LinkedResourceItem.Name, this.TransactionCategory);
+                            LinkedLandItem.Add(-areaneeded, this, cropProduct.LinkedResourceItem.Name, TransactionCategory);
                             Area += areaneeded;
                         }
                     }
@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that this activity contains at least one CollectProduct activity
-            var cropProductChildren = this.Children.OfType<CropActivityManageProduct>();
+            var cropProductChildren = Children.OfType<CropActivityManageProduct>();
             if (!cropProductChildren.Any())
             {
                 string[] memberNames = new string[] { "Collect product activity" };
@@ -254,31 +254,29 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
+
+            Land parentLand = null;
+            IModel clemParent = FindAncestor<ZoneCLEM>();
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
+                if (clemParent != null && clemParent.Enabled)
+                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+
+            if (UseAreaAvailable)
+                htmlWriter.Write("the unallocated portion of ");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
+                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero: true)} of ");
 
-                Land parentLand = null;
-                IModel clemParent = FindAncestor<ZoneCLEM>();
-                if (LandItemNameToUse != null && LandItemNameToUse != "")
-                    if (clemParent != null && clemParent.Enabled)
-                        parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
-
-                if (UseAreaAvailable)
-                    htmlWriter.Write("the unallocated portion of ");
+                if (parentLand == null)
+                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
                 else
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero:true)} of ");
-
-                    if (parentLand == null)
-                        htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                    else
-                        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
-                }
-                htmlWriter.Write($"{ CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
             }
+            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
         #endregion
     }

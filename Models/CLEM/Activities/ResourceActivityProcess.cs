@@ -95,7 +95,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
+            List<ResourceRequest> resourcesNeeded = new();
 
             amountToSkip = 0;
             amountToDo = resourceTypeProcessModel.Amount;
@@ -180,25 +180,23 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
+            htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" into ");
+            htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" at a rate of ");
+            if (ConversionRate <= 0)
+                htmlWriter.Write("<span class=\"errorlink\">RATE NOT SET</span>");
+            else
+                htmlWriter.Write($"1:<span class=\"resourcelink\">{ConversionRate:0.###}</span>");
+            htmlWriter.Write("</div>");
+            if (Reserve > 0)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" into ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" at a rate of ");
-                if (ConversionRate <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">RATE NOT SET</span>");
-                else
-                    htmlWriter.Write("1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>");
-                htmlWriter.Write("</div>");
-                if (Reserve > 0)
-                {
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{CLEMModel.DisplaySummaryValueSnippet(Reserve, warnZero:true)}");
-                    htmlWriter.Write(" will be reserved.</div>");
-                }
-                return htmlWriter.ToString(); 
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">{DisplaySummaryValueSnippet(Reserve, warnZero: true)}");
+                htmlWriter.Write(" will be reserved.</div>");
             }
+            return htmlWriter.ToString();
         } 
         #endregion
     }

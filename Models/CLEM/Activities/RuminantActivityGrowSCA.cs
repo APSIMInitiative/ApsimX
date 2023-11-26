@@ -490,20 +490,6 @@ namespace Models.CLEM.Activities
             ind.Intake.CalculateDigestibleProteinLeavingStomach(cp_out.RDPReq);
         }
 
-        // ToDo: moved to ind.Intake
-        //private static double CalculateDigestibleProteinLeavingStomach(Ruminant ind, double RDPRequired)
-        //{
-        //    FoodResourceStore forage = ind.Intake.GetStore(FeedType.Forage);
-        //    FoodResourceStore concentrate = ind.Intake.GetStore(FeedType.Concentrate);
-        //    FoodResourceStore milk = ind.Intake.GetStore(FeedType.Milk);
-
-        //    // digestibility of undegradable protein for each feet type
-        //    //double forageDUDP = Math.Max(0.05, Math.Min(5.5 * forage.Details.CrudeProteinContent - 0.178, 0.85));
-        //    //double concentrateDUDP = 0.9 * (1 - ((concentrate.Details.ADIP / concentrate.Details.UndegradableCrudeProteinContent));
-
-        //    return forage.DUDP * forage.UndegradableCrudeProtein + concentrate.DUDP * concentrate.UndegradableCrudeProtein + (0.92 * milk.CrudeProtein) + (0.6 * RDPRequired);
-        //}
-
         private static (double reduction, double RDPReq) CalculateCrudeProtein(Ruminant ind, double feedingLevel)
         {
             // 1. calc RDP intake. Rumen Degradable Protein
@@ -854,7 +840,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using StringWriter htmlWriter = new StringWriter();
+            using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                 htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");

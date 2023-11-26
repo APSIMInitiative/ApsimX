@@ -83,7 +83,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get other animal type model
             SelectedOtherAnimalsType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, AnimalType, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
@@ -103,8 +102,8 @@ namespace Models.CLEM.Activities
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {
-                        double newbysex = breeders * this.OffspringPerBreeder / 2.0;
-                        OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                        double newbysex = breeders * OffspringPerBreeder / 2.0;
+                        OtherAnimalsTypeCohort newmales = new()
                         {
                             Age = 0,
                             Weight = 0,
@@ -113,7 +112,7 @@ namespace Models.CLEM.Activities
                             SaleFlag = HerdChangeReason.Born
                         };
                         SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
-                        OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                        OtherAnimalsTypeCohort newfemales = new()
                         {
                             Age = 0,
                             Weight = 0,

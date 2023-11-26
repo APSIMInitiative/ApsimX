@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     public class GreenhouseGasActivityEmission : CLEMModel, IActivityCompanionModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private GreenhouseGasesType emissionStore;
 
         /// <summary>

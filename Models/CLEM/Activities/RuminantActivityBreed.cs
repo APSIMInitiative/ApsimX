@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
@@ -525,7 +525,7 @@ namespace Models.CLEM.Activities
 
                 int numberPossible = breeders.Sum(a => a.Count());
                 int numberServiced = 1;
-                List<Ruminant> maleBreeders = new List<Ruminant>();
+                List<Ruminant> maleBreeders = new();
 
                 // for each location where parts of this herd are located
                 bool breedoccurred = false;
@@ -770,7 +770,6 @@ namespace Models.CLEM.Activities
             }
             return 0;
         }
-
 
         /// <inheritdoc/>
         public override bool TimingOK

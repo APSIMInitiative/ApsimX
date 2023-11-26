@@ -102,8 +102,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if(parentZone is null)
-                    parentZone = FindAncestor<ZoneCLEM>();
+                parentZone ??= FindAncestor<ZoneCLEM>();
 
                 if(parentZone is null)
                     return 1;
@@ -484,7 +483,7 @@ namespace Models.CLEM.Activities
         {
             this.TriggerOnActivityPerformed(level);
             level++;
-            string spaces = new string(' ', level*2);
+            string spaces = new(' ', level * 2);
 
             // report all timers that were due this time step
             if (!fromSetup)
@@ -908,8 +907,7 @@ namespace Models.CLEM.Activities
                 if (item.Resource != null && (item.Resource as Model).FindAncestor<Market>() != null)
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
-                    if (marketActivities != null)
-                        marketActivities.ReportActivityShortfall(rrEventArgs);
+                    marketActivities?.ReportActivityShortfall(rrEventArgs);
                 }
                 else
                     ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
@@ -1136,9 +1134,8 @@ namespace Models.CLEM.Activities
         private double TakeNonLabour(ResourceRequest request, bool removeFromResource)
         {
             // get available resource
-            if (request.Resource == null)
-                //If it hasn't been assigned try and find it now.
-                request.Resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            //If it hasn't been assigned try and find it now.
+            request.Resource ??= Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(request, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             if (request.Resource != null)
                 // get amount available
@@ -1155,7 +1152,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void TriggerOnActivityPerformed(int level = 0)
         {
-            string spaces = new string(' ', level*2);
+            string spaces = new(' ', level * 2);
 
             int type = 0;
             if (GetType().Name.Contains("ActivityTimer"))
@@ -1169,10 +1166,10 @@ namespace Models.CLEM.Activities
 
             ActivitiesHolder?.ReportActivityPerformed(new ActivityPerformedEventArgs
             {
-                Name = spaces + this.Name,
-                Status = this.Status,
+                Name = spaces + Name,
+                Status = Status,
                 StatusMessage = StatusMessage,
-                Id = this.UniqueID.ToString(),
+                Id = UniqueID.ToString(),
                 ModelType = type
             });
         }
@@ -1183,7 +1180,7 @@ namespace Models.CLEM.Activities
         /// <param name="status">The status of the activity to be reported</param>
         public void TriggerOnActivityPerformed(ActivityStatus status)
         {
-            this.Status = status;
+            Status = status;
             TriggerOnActivityPerformed();
         }
     }

@@ -162,7 +162,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public CropActivityManageProduct()
         {
-            this.SetDefaults();
+            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -200,11 +200,11 @@ namespace Models.CLEM.Activities
             InsideMultiHarvestSequence = false;
 
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
-                throw new ApsimXException(this, $"Unable to locate crop data reader [x={this.ModelNameFileCrop ?? "Unknown"}] requested by [a={this.NameWithParent}]");
+                throw new ApsimXException(this, $"Unable to locate crop data reader [x={ModelNameFileCrop ?? "Unknown"}] requested by [a={NameWithParent}]");
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if((LinkedResourceItem as Model).Parent is GrazeFoodStore)
@@ -244,7 +244,7 @@ namespace Models.CLEM.Activities
         {
             // parent crop doesn't know pasture area until FinalInitialise activity
             // We must initialise biomass after the crop/pasture area is known
-            if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == this.StoreItemName).FirstOrDefault() == this)
+            if (LinkedResourceItem is GrazeFoodStoreType && (Parent as CropActivityManageCrop).FindAllChildren<CropActivityManageProduct>().Where(a => a.StoreItemName == StoreItemName).FirstOrDefault() == this)
             {
                 double firstMonthsGrowth = 0;
                 CropDataType cropData = HarvestData.Where(a => a.Year == events.Clock.StartDate.Year && a.Month == events.Clock.StartDate.Month).FirstOrDefault();
@@ -345,8 +345,7 @@ namespace Models.CLEM.Activities
                     {
                         // if the "last" tag has not been found keep checking as new data may have been loaded
                         // otherwise this crop will run until end of simulation.
-                        if(harvests.last is null)
-                            harvests.last = HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
+                        harvests.last ??= HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
                         harvests.current = harvests.next;
                         harvests.next = HarvestData.Skip(1).FirstOrDefault();
                     }
@@ -386,11 +385,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMUpdatePasture")]
         private void OnCLEMUpdatePasture(object sender, EventArgs e)
         {
-            if(parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType) && this.TimingOK)
+            if(parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType) && TimingOK)
             {
                 Status = ActivityStatus.NotNeeded;
                 ManageActivityResourcesAndTasks();
-                //PerformTasksForTimestep();
             }
         }
 
@@ -444,7 +442,7 @@ namespace Models.CLEM.Activities
             AmountAvailableForHarvest = 0;
             amountToDo = 0;
             amountToSkip = 0;
-            if (CurrentlyManaged && this.TimingOK)
+            if (CurrentlyManaged && TimingOK)
             {
                 //if this month is a harvest month for this crop
                 if (harvests.current != null)
@@ -510,7 +508,7 @@ namespace Models.CLEM.Activities
                 if (tagsShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Available / tagsShort.Required));
 
-                this.Status = ActivityStatus.Partial;
+                Status = ActivityStatus.Partial;
             }
 
             AmountHarvested = amountToDo - amountToSkip;
@@ -522,7 +520,7 @@ namespace Models.CLEM.Activities
                 AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
 
                 if (MathUtilities.IsLessThan(canBeCarried, AmountHarvested))
-                    this.Status = ActivityStatus.Partial;
+                    Status = ActivityStatus.Partial;
 
                 limiter.AddWeightCarried(AmountHarvested);
             }
@@ -535,7 +533,7 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NoTask;
             if (CurrentlyManaged)
             {
-                if (this.TimingOK)
+                if (TimingOK)
                 {
                     Status = ActivityStatus.NotNeeded;
                     if (MathUtilities.IsPositive(AmountHarvested))
@@ -585,14 +583,14 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.Parent.GetType() != typeof(CropActivityManageCrop) && this.Parent.GetType() != typeof(CropActivityManageProduct))
+            if (Parent.GetType() != typeof(CropActivityManageCrop) && Parent.GetType() != typeof(CropActivityManageProduct))
             {
                 string[] memberNames = new string[] { "Parent model" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", memberNames));
             }
 
             // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
-            if (!((this.Parent.GetType() == typeof(CropActivityManageCrop) || (this.Parent.GetType() == typeof(CropActivityManageProduct) && this.Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
+            if (!((Parent.GetType() == typeof(CropActivityManageCrop) || (Parent.GetType() == typeof(CropActivityManageProduct) && Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
             {
                 string[] memberNames = new string[] { "Invalid nesting" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
@@ -605,12 +603,12 @@ namespace Models.CLEM.Activities
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
                     string[] memberNames = new string[] { "Invalid crop area" };
-                    results.Add(new ValidationResult($"You cannot alter the crop area planted for product [a={this.Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", memberNames));
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", memberNames));
                 }
                 if(Parent is CropActivityManageProduct)
                 {
                     string[] memberNames = new string[] { "Invalid crop area" };
-                    results.Add(new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={this.Name}] of the crop [a={parentManageCrop.NameWithParent}]", memberNames));
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", memberNames));
                 }
             }
             return results;
@@ -623,7 +621,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
         {
-            string intro = (FindAllChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
+            string intro = (FindAllChildren<CropActivityManageProduct>().Any()) ? "Mixed crop" : "";
             return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
             {
                 (FindAllChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, ""),
@@ -633,20 +631,18 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (TreesPerHa > 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">This is a tree crop with a density of {CLEMModel.DisplaySummaryValueSnippet(TreesPerHa)} per hectare</div>");
+            using StringWriter htmlWriter = new();
+            if (TreesPerHa > 0)
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">This is a tree crop with a density of {CLEMModel.DisplaySummaryValueSnippet(TreesPerHa)} per hectare</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : $"{CLEMModel.DisplaySummaryValueSnippet(ProportionKept, warnZero: true)} of this ") + "product is placed in ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : $"{CLEMModel.DisplaySummaryValueSnippet(ProportionKept, warnZero: true)} of this ") + "product is placed in ");
+            htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(StoreItemName, "Resource not set", HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write("</div>");
 
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Data is retrieved from {CLEMModel.DisplaySummaryValueSnippet(ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)}");
-                htmlWriter.Write($" using crop named {CLEMModel.DisplaySummaryValueSnippet(CropName)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
+            htmlWriter.Write($"\r\n<div class=\"activityentry\">Data is retrieved from {CLEMModel.DisplaySummaryValueSnippet(ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)}");
+            htmlWriter.Write($" using crop named {CLEMModel.DisplaySummaryValueSnippet(CropName)}");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

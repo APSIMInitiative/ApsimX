@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 // add clip to stores
-                (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (milkStore as IResourceType).Add(amountDone, this, PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }
@@ -205,13 +205,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 

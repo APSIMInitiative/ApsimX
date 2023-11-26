@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
             InitialiseHerd(false, false);
 
             // get herd to add to 
-            rumTypeToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            rumTypeToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -119,8 +119,10 @@ namespace Models.CLEM.Activities
             if (grazeStore == "")
             {
                 var ah = FindInScope<ActivitiesHolder>();
-                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
+                if (ah.FindAllDescendants<PastureActivityManage>().Any())
+                {
                     Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
+                }
             }
 
             numberToStock = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
@@ -217,6 +219,7 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
+
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -279,24 +282,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write($"Purchased individuals will be placed in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}</div>");
+
+            Relationship numberRelationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
+            if (numberRelationship != null)
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Purchased individuals will be placed in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards: true)}</div>");
+                if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                    htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
+                else
+                    htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
 
-                Relationship numberRelationship = FindAllChildren<Relationship>().Where(a => a.Identifier == "Number to stock vs pasture").FirstOrDefault();
-                if (numberRelationship != null)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-                        htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
-                    else
-                        htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
-
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString(); 
+                htmlWriter.Write("</div>");
             }
+            return htmlWriter.ToString();
         } 
         #endregion
     }

@@ -499,7 +499,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityManage()
         {
-            this.SetDefaults();
+            SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -564,8 +564,8 @@ namespace Models.CLEM.Activities
         {
             // reset min breeders if set greater than max breeders
             // this allows multi run versions to only consider maxbreeders
-            minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
-            maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
+            minBreeders = (MinimumBreedersKept > MaximumBreedersKept) ? MaximumBreedersKept : MinimumBreedersKept;
+            maxBreeders = Math.Max(MaximumBreedersKept, minBreeders);
 
             if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
                 SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
@@ -582,7 +582,7 @@ namespace Models.CLEM.Activities
                 if (herds.Count() == 1)
                 {
                     string warn = "";
-                    List<string> information = new List<string>();
+                    List<string> information = new();
                     // calculate the number of breeders, sucklings, weaners and prebreeders
                     IEnumerable<RuminantTypeCohort> cohorts = herds.FirstOrDefault().FindAllDescendants<RuminantTypeCohort>();
 
@@ -702,10 +702,10 @@ namespace Models.CLEM.Activities
 
             var ah = this.FindInScope<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
-            if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
+            if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && MaximumProportionBreedersPerPurchase > 0)
             {
                 if(ah.FindAllDescendants<PastureActivityManage>().Any())
-                    Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
+                    Summary.WriteMessage(this, $"Breeders purchased by [a={Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
             
             // check GrazeFoodStoreExists for sires
@@ -717,10 +717,10 @@ namespace Models.CLEM.Activities
             }
 
             // check for managed paddocks and warn if sires placed in yards.
-            if (grazeStoreSires == "" && this.SiresKept > 0)
+            if (grazeStoreSires == "" && SiresKept > 0)
             {
                 if (ah.FindAllDescendants<PastureActivityManage>().Any())
-                    Summary.WriteMessage(this, $"Sires purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
+                    Summary.WriteMessage(this, $"Sires purchased by [a={Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
 
             // check GrazeFoodStoreExists for grow out males
@@ -733,7 +733,7 @@ namespace Models.CLEM.Activities
                 if (grazeStoreGrowOutMales == "")
                 {
                     if (ah.FindAllDescendants<PastureActivityManage>().Any())
-                        Summary.WriteMessage(this, $"Males grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
+                        Summary.WriteMessage(this, $"Males grown out before sale by [a={Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
 
@@ -746,7 +746,7 @@ namespace Models.CLEM.Activities
                 if (grazeStoreGrowOutFemales == "")
                 {
                     if (ah.FindAllDescendants<PastureActivityManage>().Any())
-                        Summary.WriteMessage(this, $"Females grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
+                        Summary.WriteMessage(this, $"Females grown out before sale by [a={Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
                 }
             }
 
@@ -792,11 +792,11 @@ namespace Models.CLEM.Activities
                     // MALES
                     // check for sires after sale of old individuals and buy/sell
                     numberMaleSiresInHerd = nonGrowOutHerd.OfType<RuminantMale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsSire).Count();
-                    numberMaleSiresInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsSire).Count();
+                    numberMaleSiresInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == PredictedHerdBreed && a.IsSire).Count();
 
                     int numberFemaleTotalInHerd = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None).Count();
 
-                    numberFemaleInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsBreeder).Count();
+                    numberFemaleInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == PredictedHerdBreed && a.IsBreeder).Count();
 
                     // these are the breeders already marked for sale
                     // don't include those marked as max age sale as these can't be considered excess female
@@ -806,7 +806,7 @@ namespace Models.CLEM.Activities
                     // we should not include those individuals > 12 months before reaching breeder age
                     List<RuminantFemale> preBreeders = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.AgeInDays - a.BreedParams.MinimumAge1stMating.InDays > -334) & !a.Attributes.Exists("GrowOut")).ToList();
                     numberFemalePreBreedersInHerd = preBreeders.Count();
-                    int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsPreBreeder).Count();
+                    int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == PredictedHerdBreed && a.IsPreBreeder).Count();
 
                     siresPresent = numberMaleSiresInHerd + numberMaleSiresInPurchases;
                     if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
@@ -1027,7 +1027,7 @@ namespace Models.CLEM.Activities
                     // identify those ready for sale
                     foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight >= MaleSellingWeight)))
                     {
-                        this.Status = ActivityStatus.Success;
+                        Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                     } 
                 }
@@ -1036,14 +1036,14 @@ namespace Models.CLEM.Activities
                     // identify those ready for sale
                     foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight >= FemaleSellingWeight)))
                     {
-                        this.Status = ActivityStatus.Success;
+                        Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                     }
                 }
 
             }
 
-            this.Status = ActivityStatus.NotNeeded;
+            Status = ActivityStatus.NotNeeded;
 
             // select old females for sale
             if (MarkOldBreedersForSale && PerformFemaleDestocking)
@@ -1051,7 +1051,7 @@ namespace Models.CLEM.Activities
                     foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.AgeInDays >= MaximumBreederAge.InDays)).ToList())
                     {
                         ind.SaleFlag = HerdChangeReason.MaxAgeSale;
-                        this.Status = ActivityStatus.Success;
+                        Status = ActivityStatus.Success;
                     }
 
             // select old males for sale
@@ -1060,7 +1060,7 @@ namespace Models.CLEM.Activities
                     foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsSire && a.AgeInDays >= MaximumSireAge.InDays)).ToList())
                     {
                         ind.SaleFlag = HerdChangeReason.MaxAgeSale;
-                        this.Status = ActivityStatus.Success;
+                        Status = ActivityStatus.Success;
                     }
 
             // Number of females needed to check stop simulation rule
@@ -1089,7 +1089,7 @@ namespace Models.CLEM.Activities
                         foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveSiresFromPurchases"))
                         {
                             int index = 0;
-                            var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsSire)).ToList();
+                            var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == PredictedHerdBreed && a.IsSire)).ToList();
                             while (numberToRemove > 0 && index < individuals.Count())
                             {
                                 HerdResource.PurchaseIndividuals.Remove(individuals[index]);
@@ -1107,7 +1107,7 @@ namespace Models.CLEM.Activities
                                     {
                                         male.Location = grazeStoreSires;
                                         male.SaleFlag = HerdChangeReason.ExcessSireSale;
-                                        this.Status = ActivityStatus.Success;
+                                        Status = ActivityStatus.Success;
                                         male.ReplacementBreeder = false;
                                         numberToRemove--;
                                     }
@@ -1196,7 +1196,7 @@ namespace Models.CLEM.Activities
                                     {
                                         if (purchaseIndex == selectedPurchaseDetails.Count())
                                             // Cummulative probabilities of the purchase breeders provided have been calculated and checked under validation
-                                            throw new ApsimXException(this, $"Cannot assign PurchaseSireDetails in [a={this.NameWithParent}] due to invalid cummulative probabilities. See developers.");
+                                            throw new ApsimXException(this, $"Cannot assign PurchaseSireDetails in [a={NameWithParent}] due to invalid cummulative probabilities. See developers.");
                                         purchaseIndex++;
                                     }
                                     totals[purchaseIndex]++;
@@ -1205,7 +1205,7 @@ namespace Models.CLEM.Activities
                                 {
                                     RuminantTypeCohort cohort = selectedPurchaseDetails[i].SpecifyRuminantComponent.Details;
                                     cohort.Number = totals[i];
-                                    this.Status = ActivityStatus.Success;
+                                    Status = ActivityStatus.Success;
                                     var newindividuals = cohort.CreateIndividuals(null, clock.Today, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedParams);
                                     foreach (var ind in newindividuals)
                                     {
@@ -1253,7 +1253,7 @@ namespace Models.CLEM.Activities
                         foreach (var removeFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveBreedersFromPurchases"))
                         {
                             int index = 0;
-                            var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsBreeder)).ToList();
+                            var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == PredictedHerdBreed && a.IsBreeder)).ToList();
                             while (excessBreeders > 0 && index < individuals.Count())
                             {
                                 HerdResource.PurchaseIndividuals.Remove(individuals[index]);
@@ -1380,7 +1380,7 @@ namespace Models.CLEM.Activities
                                         {
                                             if (purchaseIndex == purchaseBreederDetails.Count())
                                                 // Cummulative probabilities of the purchase breeders provided have been calculated and checked under validation
-                                                throw new ApsimXException(this, $"Cannot assign PurchaseBreederDetails in [a={this.NameWithParent}] due to invalid cummulative probabilities. See developers.");
+                                                throw new ApsimXException(this, $"Cannot assign PurchaseBreederDetails in [a={NameWithParent}] due to invalid cummulative probabilities. See developers.");
                                             purchaseIndex++;
                                         }
                                         totals[purchaseIndex]++;
@@ -1389,7 +1389,7 @@ namespace Models.CLEM.Activities
                                     {
                                         RuminantTypeCohort cohort = purchaseBreederDetails[i].SpecifyRuminantComponent.Details;
                                         cohort.Number = totals[i];
-                                        this.Status = ActivityStatus.Success;
+                                        Status = ActivityStatus.Success;
                                         var newindividuals = cohort.CreateIndividuals(null, clock.Today, purchaseBreederDetails[i].SpecifyRuminantComponent.BreedParams);
                                         foreach (var ind in newindividuals)
                                         {
@@ -1552,7 +1552,7 @@ namespace Models.CLEM.Activities
                         // identify those ready for sale
                         foreach (var ind in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightMalesForSale && (a.AgeInDays >= MaleSellingAge.InDays || a.Weight >= MaleSellingWeight)))
                         {
-                            this.Status = ActivityStatus.Success;
+                            Status = ActivityStatus.Success;
                             ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                         }
                     }
@@ -1561,7 +1561,7 @@ namespace Models.CLEM.Activities
                         // identify those ready for sale
                         foreach (var ind in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && MarkAgeWeightFemalesForSale && (a.AgeInDays >= FemaleSellingAge.InDays || a.Weight >= FemaleSellingWeight)))
                         {
-                            this.Status = ActivityStatus.Success;
+                            Status = ActivityStatus.Success;
                             ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                         }
                     }
@@ -1569,7 +1569,7 @@ namespace Models.CLEM.Activities
                     // identify those ready for sale
                     foreach (var ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut") && ((a is RuminantMale) ? MarkAgeWeightMalesForSale : MarkAgeWeightFemalesForSale) && (a.AgeInDays >= ((a is RuminantMale) ? MaleSellingAge.InDays : FemaleSellingAge.InDays) || a.Weight >= ((a is RuminantMale) ? MaleSellingWeight : FemaleSellingWeight))))
                     {
-                        this.Status = ActivityStatus.Success;
+                        Status = ActivityStatus.Success;
                         ind.SaleFlag = HerdChangeReason.AgeWeightSale;
                     }
                 }
@@ -1635,6 +1635,7 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -1651,12 +1652,12 @@ namespace Models.CLEM.Activities
                 if ((ManageMaleBreederNumbers & PerformMaleStocking) && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
-                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
                 }
                 if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
-                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
+                    results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
                 }
             }
             else
@@ -1699,7 +1700,7 @@ namespace Models.CLEM.Activities
                     foreach (var item in unknownPurchases)
                     {
                         string[] memberNames = new string[] { "Invalid purchase details provided" };
-                        results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male (sire) or female in [a={this.Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames));
+                        results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male (sire) or female in [a={Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames));
                     }
             }
 
@@ -1747,7 +1748,7 @@ namespace Models.CLEM.Activities
                 if (Math.Round(sumProportions, 4) != 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportions set" };
-                    string error = $"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={this.Name}] do not add up to 1.";
+                    string error = $"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={Name}] do not add up to 1.";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -1756,7 +1757,7 @@ namespace Models.CLEM.Activities
                 if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "No breeding males specified" };
-                    string error = $"No purchases specified by [r=SpecifyRuminant] in [a={this.Name}] represent sires required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males";
+                    string error = $"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent sires required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -1778,7 +1779,7 @@ namespace Models.CLEM.Activities
                 if (Math.Round(sumProportions, 4) != 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportions set" };
-                    var error = $"The proportions set in each [r=SpecifyRuminant] representing breeding females in [a={this.Name}] do not add up to 1.";
+                    var error = $"The proportions set in each [r=SpecifyRuminant] representing breeding females in [a={Name}] do not add up to 1.";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -1787,7 +1788,7 @@ namespace Models.CLEM.Activities
                 if (MaximumProportionBreedersPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "No breeding females specified" };
-                    var error = $"No purchases specified by [r=SpecifyRuminant] in [a={this.Name}] represent breeding females required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females";
+                    var error = $"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent breeding females required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -1803,289 +1804,287 @@ namespace Models.CLEM.Activities
         {
             List<string> notBeingMarked = new List<string>();
 
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop:#0.###}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{MaxBreedersMultiplierToStop * MaximumBreedersKept:#,###}</span> individuals.");
+            htmlWriter.Write("</div>");
+
+            // adjust herd
+            if (AdjustBreedingFemalesAtStartup | AdjustBreedingMalesAtStartup)
+            {
+                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Initial herd</div>");
+                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+                string adjusted = "";
+                if (AdjustBreedingFemalesAtStartup & AdjustBreedingMalesAtStartup)
+                    adjusted = "females and males";
+                else
+                {
+                    if (AdjustBreedingFemalesAtStartup)
+                        adjusted = "females";
+                    else
+                        adjusted = "males";
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"The number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the maximum herd by scaling the initial ruminant cohorts at the start of the simulation.");
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("</div>");
+            }
+
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Breeding females</div>");
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+
+            // does controlled mating exist in simulation
+            var zone = this.FindAncestor<Zone>();
+            bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
+
+            if (ManageFemaleBreederNumbers && (PerformFemaleStocking | PerformFemaleDestocking))
+            {
+                double minimumBreedersKept = Math.Min(MinimumBreedersKept, MaximumBreedersKept);
+                int maxBreed = Math.Max(MinimumBreedersKept, MaximumBreedersKept);
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("The herd will be maintained");
+                if (!PerformFemaleStocking | (minimumBreedersKept == 0))
+                    htmlWriter.Write($" using only natural recruitment up to <span class=\"setvalue\">{MaximumBreedersKept:#,###}</span> breeders");
+                else
+                {
+                    if (minimumBreedersKept == maxBreed)
+                        htmlWriter.Write($" with breeder purchases and natural recruitment up to <span class=\"setvalue\">{minimumBreedersKept:#,###}</span > breeders");
+                    else
+                        htmlWriter.Write($" with breeder purchases up to <span class=\"setvalue\">{minimumBreedersKept:#,###}</span> and only natural recruitment to <span class=\"setvalue\">{maxBreed:#,###}</span> breeders");
+                }
+                if (!PerformFemaleDestocking)
+                {
+                    htmlWriter.Write(" with <b>No</b> destocking through sales");
+                }
+                htmlWriter.Write("</div>");
+
+                if (PerformFemaleDestocking)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    if (MarkOldBreedersForSale)
+                    {
+                        htmlWriter.Write($"Individuals will be sold when over <span class=\"setvalue\">{MaximumBreederAge.InDays:###}</span> days old");
+                        if (ReturnPregnantMaxAgeToHerd)
+                            htmlWriter.Write(" unless pregant and the herd is below the required level");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"Old breeders will <b>NOT</b> be marked for sale<sup>*</sup>");
+                        notBeingMarked.Add("Sell old female breeders");
+                    }
+                    htmlWriter.Write("</div>");
+                }
+
+                if (PerformFemaleStocking)
+                {
+                    if (MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write($"A maximum of <span class=\"setvalue\">{MaximumProportionBreedersPerPurchase:#0.##%}</span> of the Minimum Breeders Kept equal to <span class=\"setvalue\">" + (MaximumProportionBreedersPerPurchase * minimumBreedersKept).ToString("#,###") + "</span > can be purchased in a single transaction");
+                        htmlWriter.Write("</div>");
+                    }
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Purchased breeders will be placed in ");
+
+                    if (GrazeFoodStoreNameBreeders == null || GrazeFoodStoreNameBreeders == "")
+                        htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
+                    else
+                    {
+                        htmlWriter.Write($"<span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span>");
+                        if (MinimumPastureBeforeRestock > 0)
+                            htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
+                    }
+                    htmlWriter.Write("</div>");
+
+                    if (!cmate && GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
+                        htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span>.</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("This activity is <b>NOT</b> stocking any breeding females");
+                    htmlWriter.Write("</div>");
+                }
+            }
+            else
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"This activity will stop the simulation if the number of breeders exceeds the <i>Maximum number of breeders to stop multiplier</i> <span class=\"setvalue\">{MaxBreedersMultiplierToStop:#0.###}</span> x <i>Maximum number of breeders</i> which equates to <span class=\"setvalue\">{MaxBreedersMultiplierToStop * MaximumBreedersKept:#,###}</span> individuals.");
+                htmlWriter.Write("This activity is <b>NOT</b> currently managing breeding females");
+                htmlWriter.Write("</div>");
+            }
+
+            htmlWriter.Write("</div>");
+
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Breeding males (sires/rams etc)</div>");
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+
+            if (ManageMaleBreederNumbers && (PerformMaleStocking | PerformMaleDestocking))
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (MaximumSiresKept == 0)
+                    htmlWriter.Write("No breeding sires will be kept");
+                else if (MaximumSiresKept < 1)
+                    htmlWriter.Write($"The number of breeding males will be determined as <span class=\"setvalue\">{MaximumSiresKept:###%}</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">{Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture):#,##0}</span> individuals");
+                else
+                    htmlWriter.Write($"A maximum of <span class=\"setvalue\">{MaximumSiresKept:###%}</span> will be maintained");
                 htmlWriter.Write("</div>");
 
-                // adjust herd
-                if (AdjustBreedingFemalesAtStartup | AdjustBreedingMalesAtStartup)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (PerformMaleDestocking)
                 {
-                    htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Initial herd</div>");
-                    htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                    string adjusted = "";
-                    if (AdjustBreedingFemalesAtStartup & AdjustBreedingMalesAtStartup)
-                        adjusted = "females and males";
+                    if (MarkOldSiresForSale)
+                        htmlWriter.Write($"Individuals will be sold when over <span class=\"setvalue\">{MaximumSireAge.InDays}</span> days old");
                     else
                     {
-                        if (AdjustBreedingFemalesAtStartup)
-                            adjusted = "females";
-                        else
-                            adjusted = "males";
-                    }
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the maximum herd by scaling the initial ruminant cohorts at the start of the simulation.");
-                    htmlWriter.Write("</div>");
-                    htmlWriter.Write("</div>");
-                }
-
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Breeding females</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-
-                // does controlled mating exist in simulation
-                var zone = this.FindAncestor<Zone>();
-                bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
-
-                if (ManageFemaleBreederNumbers && (PerformFemaleStocking | PerformFemaleDestocking))
-                {
-                    double minimumBreedersKept = Math.Min(MinimumBreedersKept, MaximumBreedersKept);
-                    int maxBreed = Math.Max(MinimumBreedersKept, MaximumBreedersKept);
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("The herd will be maintained");
-                    if (!PerformFemaleStocking | (minimumBreedersKept == 0))
-                        htmlWriter.Write(" using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders");
-                    else
-                    { 
-                        if (minimumBreedersKept == maxBreed)
-                            htmlWriter.Write(" with breeder purchases and natural recruitment up to <span class=\"setvalue\">" + minimumBreedersKept.ToString("#,###") + "</span > breeders");
-                        else
-                            htmlWriter.Write(" with breeder purchases up to <span class=\"setvalue\">" + minimumBreedersKept.ToString("#,###") + "</span > and only natural recruitment to <span class=\"setvalue\">" + maxBreed.ToString("#,###") + "</span> breeders");
-                    }
-                    if(!PerformFemaleDestocking)
-                    {
-                        htmlWriter.Write(" with <b>No</b> destocking through sales");
-                    }
-                    htmlWriter.Write("</div>");
-
-                    if (PerformFemaleDestocking)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        if (MarkOldBreedersForSale)
-                        {
-                            htmlWriter.Write("Individuals will be sold when over <span class=\"setvalue\">" + MaximumBreederAge.InDays.ToString("###") + "</span> days old");
-                            if (ReturnPregnantMaxAgeToHerd)
-                                htmlWriter.Write(" unless pregant and the herd is below the required level");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"Old breeders will <b>NOT</b> be marked for sale<sup>*</sup>");
-                            notBeingMarked.Add("Sell old female breeders");
-                        }
-                        htmlWriter.Write("</div>");
-                    }
-
-                    if(PerformFemaleStocking)
-                    { 
-                        if (MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
-                        {
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                            htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumProportionBreedersPerPurchase.ToString("#0.##%") + "</span> of the Minimum Breeders Kept equal to <span class=\"setvalue\">" + (MaximumProportionBreedersPerPurchase * minimumBreedersKept).ToString("#,###") + "</span > can be purchased in a single transaction");
-                            htmlWriter.Write("</div>");
-                        }
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Purchased breeders will be placed in ");
-
-                        if (GrazeFoodStoreNameBreeders == null || GrazeFoodStoreNameBreeders == "")
-                            htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                        else
-                        {
-                            htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameBreeders + "</span>");
-                            if (MinimumPastureBeforeRestock > 0)
-                                htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
-                        }
-                        htmlWriter.Write("</div>");
-
-                        if (!cmate && GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
-                            htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span>.</div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("This activity is <b>NOT</b> stocking any breeding females");
-                        htmlWriter.Write("</div>");
+                        htmlWriter.Write($"Old sires will <b>NOT</b> be marked for sale<sup>*</sup>{((MaximumSiresKept == 0) ? " as maximum sires kept is class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span>" : "")}");
+                        notBeingMarked.Add("Sell old male breeders");
                     }
                 }
                 else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This activity is <b>NOT</b> currently managing breeding females");
-                    htmlWriter.Write("</div>");
-                }
-
+                    htmlWriter.Write("This activity is <b>NOT</b> destocking any breeding males");
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Breeding males (sires/rams etc)</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-
-                if (ManageMaleBreederNumbers && (PerformMaleStocking | PerformMaleDestocking))
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (PerformMaleDestocking)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (MaximumSiresKept == 0)
-                        htmlWriter.Write("No breeding sires will be kept");
-                    else if (MaximumSiresKept < 1)
-                        htmlWriter.Write("The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">" + (Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) + "</span> individuals");
+                    htmlWriter.Write("Purchased sires will be placed in ");
+                    if (GrazeFoodStoreNameSires == null || GrazeFoodStoreNameSires == "")
+                        htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
                     else
-                        htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be maintained");
-                    htmlWriter.Write("</div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (PerformMaleDestocking)
                     {
-                        if (MarkOldSiresForSale)
-                            htmlWriter.Write("Individuals will be sold when over <span class=\"setvalue\">" + MaximumSireAge.InDays.ToString("###") + "</span> days old");
-                        else
-                        {
-                            htmlWriter.Write($"Old sires will <b>NOT</b> be marked for sale<sup>*</sup>{((MaximumSiresKept == 0) ? " as maximum sires kept is class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span>" : "")}");
-                            notBeingMarked.Add("Sell old male breeders");
-                        }
+                        htmlWriter.Write($"<span class=\"resourcelink\">{GrazeFoodStoreNameSires}</span>");
+                        if (MinimumPastureBeforeRestock > 0)
+                            htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
                     }
-                    else
-                        htmlWriter.Write("This activity is <b>NOT</b> destocking any breeding males");
-                    htmlWriter.Write("</div>");
+                }
+                else
+                    htmlWriter.Write("This activity is <b>NOT</b> stocking any breeding males");
+                htmlWriter.Write("</div>");
+            }
+            else
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("This activity is <b>NOT</b> currently managing breeding males");
+                htmlWriter.Write("</div>");
+            }
+            htmlWriter.Write("</div>");
 
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (PerformMaleDestocking)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Purchased sires will be placed in ");
-                        if (GrazeFoodStoreNameSires == null || GrazeFoodStoreNameSires == "")
-                            htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                        else
-                        {
-                            htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameSires + "</span>");
-                            if (MinimumPastureBeforeRestock > 0)
-                                htmlWriter.Write($" with no restocking while pasture is below <span class=\"setvalue\">{MinimumPastureBeforeRestock}</span> kg/ha");
-                        }
-                    }
-                    else
-                        htmlWriter.Write("This activity is <b>NOT</b> stocking any breeding males");
-                    htmlWriter.Write("</div>");
+            htmlWriter.Write("\r\n<div class=\"activitybannerlight\">General herd</div>");
+            htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
+            if (GrowOutYoungMales)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Young males will be managed for grow out");
+                htmlWriter.Write("</div>");
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (!PerformMaleDestocking | !MarkAgeWeightMalesForSale)
+                {
+                    htmlWriter.Write("Grow out males are <b>NOT</b> marked for sale");
+                    notBeingMarked.Add("Sell grow out males reaching age or weight");
                 }
                 else
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This activity is <b>NOT</b> currently managing breeding males");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">General herd</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                if(GrowOutYoungMales)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Young males will be managed for grow out");
-                    htmlWriter.Write("</div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (!PerformMaleDestocking | !MarkAgeWeightMalesForSale)
+                    if (MaleSellingAge.InDays + ((int)MaleSellingWeight) > 0)
                     {
-                        htmlWriter.Write("Grow out males are <b>NOT</b> marked for sale");
+                        htmlWriter.Write($"Grow out males will be sold when <span class=\"setvalue\">{MaleSellingAge.InDays}</span> days old or <span class=\"setvalue\">{MaleSellingWeight:#,###}</span> kg");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"Grow out males will <b>NOT</b> be marked for sale<sup>*</sup> {((MaleSellingAge.InDays + MaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
                         notBeingMarked.Add("Sell grow out males reaching age or weight");
                     }
-                    else
-                    {
-                        if(MaleSellingAge.InDays + ((int)MaleSellingWeight) > 0)
-                        {
-                            htmlWriter.Write("Grow out males will be sold when <span class=\"setvalue\">" + MaleSellingAge.InDays.ToString("###") + "</span> days old or <span class=\"setvalue\">" + MaleSellingWeight.ToString("#,###") + "</span> kg");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"Grow out males will <b>NOT</b> be marked for sale<sup>*</sup> {((MaleSellingAge.InDays + MaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
-                            notBeingMarked.Add("Sell grow out males reaching age or weight");
-                        }
-                    }
-                    htmlWriter.Write("</div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Grow-out males will be placed in ");
-                    if (GrazeFoodStoreNameGrowOutMales == null || GrazeFoodStoreNameGrowOutMales == "")
-                        htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                    else
-                        htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutMales + "</span>");
-                    htmlWriter.Write("</div>");
                 }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Growing out and sale of young males is <b>NOT</b> being performed by this activity");
-                    htmlWriter.Write("</div>");
-                }
-
-                if (GrowOutYoungFemales)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Young females will be managed as grow out or a breeder reserve {((GrowOutYoungMales)?" with the grow out males":"")}");
-                    htmlWriter.Write("</div>");
-
-                    if (!PerformFemaleDestocking | !MarkAgeWeightFemalesForSale)
-                    {
-                        htmlWriter.Write("Grow out females are <b>NOT</b> marked for sale</div>");
-                        notBeingMarked.Add("Sell grow out females reaching age or weight");
-                    }
-                    else
-                    {
-                        if (FemaleSellingAge.InDays + FemaleSellingWeight > 0)
-                        {
-                            htmlWriter.Write("Grow out females will be sold when <span class=\"setvalue\">" + FemaleSellingAge.InDays.ToString("###") + "</span> days old or <span class=\"setvalue\">" + FemaleSellingWeight.ToString("#,###") + "</span> kg");
-                        }
-                        else
-                        {
-                            htmlWriter.Write($"Grow out females will <b>NOT</b> be marked for sale<sup>*</sup> {((FemaleSellingAge.InDays + FemaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
-                            notBeingMarked.Add("Sell grow out females reaching age or weight");
-                        }
-                    }
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Grow-out females will be placed in ");
-                    if (GrazeFoodStoreNameGrowOutFemales == null || GrazeFoodStoreNameGrowOutFemales == "")
-                        htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                    else
-                        htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutFemales + "</span>");
-                    htmlWriter.Write("</div>");
-
-                    if (!cmate && GrazeFoodStoreNameGrowOutFemales != "" & !CastrateMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
-                        htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span> if using natural mating.</div>");
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Growing out and sale of young females is <b>NOT</b> being performed by this activity");
-                    htmlWriter.Write("</div>");
-                }
-
-
-                if (GrowOutYoungFemales | GrowOutYoungMales)
-                {
-                    if (ContinuousGrowOutSales)
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Grow out age/weight sales will be performed in any month where conditions are met");
-                        htmlWriter.Write("</div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Grow out age/weight sales will only be performed when this activity is due");
-                        htmlWriter.Write("</div>");
-                    }
-                }
-
-                if (GrowOutYoungMales & CastrateMales)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Young males will be castrated (e.g. create steers or bullocks)");
-                    htmlWriter.Write("</div>");
-                }
-
                 htmlWriter.Write("</div>");
 
-                if (notBeingMarked.Any())
-                    htmlWriter.Write($"<div class=\"clearfix warningbanner\">* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: <span class=\"highlightdiv\">{string.Join("</span><span class=\"highlightdiv\">", notBeingMarked)}</span></div>");
-
-                return htmlWriter.ToString(); 
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Grow-out males will be placed in ");
+                if (GrazeFoodStoreNameGrowOutMales == null || GrazeFoodStoreNameGrowOutMales == "")
+                    htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
+                else
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutMales + "</span>");
+                htmlWriter.Write("</div>");
             }
+            else
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Growing out and sale of young males is <b>NOT</b> being performed by this activity");
+                htmlWriter.Write("</div>");
+            }
+
+            if (GrowOutYoungFemales)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Young females will be managed as grow out or a breeder reserve {((GrowOutYoungMales) ? " with the grow out males" : "")}");
+                htmlWriter.Write("</div>");
+
+                if (!PerformFemaleDestocking | !MarkAgeWeightFemalesForSale)
+                {
+                    htmlWriter.Write("Grow out females are <b>NOT</b> marked for sale</div>");
+                    notBeingMarked.Add("Sell grow out females reaching age or weight");
+                }
+                else
+                {
+                    if (FemaleSellingAge.InDays + FemaleSellingWeight > 0)
+                    {
+                        htmlWriter.Write($"Grow out females will be sold when <span class=\"setvalue\">{FemaleSellingAge.InDays}</span> days old or <span class=\"setvalue\">{FemaleSellingWeight:#,###}</span> kg");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"Grow out females will <b>NOT</b> be marked for sale<sup>*</sup> {((FemaleSellingAge.InDays + FemaleSellingWeight > 0) ? " as no age or weight for sale has been defined" : "")}");
+                        notBeingMarked.Add("Sell grow out females reaching age or weight");
+                    }
+                }
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Grow-out females will be placed in ");
+                if (GrazeFoodStoreNameGrowOutFemales == null || GrazeFoodStoreNameGrowOutFemales == "")
+                    htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
+                else
+                    htmlWriter.Write($"<span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span>");
+                htmlWriter.Write("</div>");
+
+                if (!cmate && GrazeFoodStoreNameGrowOutFemales != "" & !CastrateMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
+                    htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span> if using natural mating.</div>");
+            }
+            else
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Growing out and sale of young females is <b>NOT</b> being performed by this activity");
+                htmlWriter.Write("</div>");
+            }
+
+
+            if (GrowOutYoungFemales | GrowOutYoungMales)
+            {
+                if (ContinuousGrowOutSales)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Grow out age/weight sales will be performed in any month where conditions are met");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Grow out age/weight sales will only be performed when this activity is due");
+                    htmlWriter.Write("</div>");
+                }
+            }
+
+            if (GrowOutYoungMales & CastrateMales)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Young males will be castrated (e.g. create steers or bullocks)");
+                htmlWriter.Write("</div>");
+            }
+
+            htmlWriter.Write("</div>");
+
+            if (notBeingMarked.Any())
+                htmlWriter.Write($"<div class=\"clearfix warningbanner\">* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: <span class=\"highlightdiv\">{string.Join("</span><span class=\"highlightdiv\">", notBeingMarked)}</span></div>");
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

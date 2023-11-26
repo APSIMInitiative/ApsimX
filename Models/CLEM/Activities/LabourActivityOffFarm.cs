@@ -100,21 +100,21 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             if (bankType == null && Resources.FindResource<Finance>() != null)
-                Summary.WriteMessage(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!", MessageType.Warning);
+                Summary.WriteMessage(this, $"No bank account has been specified for [a={Name}]. No funds will be earned!", MessageType.Warning);
 
             var labour = FindAllChildren<LabourRequirement>();
             // get check labour required
             if (labour == null)
             {
                 string[] memberNames = new string[] { "Labour requirement" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", memberNames));
             }
 
             // check pricing
             if (!Resources.FindResourceGroup<Labour>().PricingAvailable)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", memberNames));
             }
             return results;
         }
@@ -125,15 +125,13 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
-                htmlWriter.Write("Earnings will be paid to ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
+            htmlWriter.Write("Earnings will be paid to ");
+            htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         } 
         #endregion
 
