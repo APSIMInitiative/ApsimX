@@ -131,16 +131,14 @@ namespace Models.CLEM
                 else
                 {
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
-                    using (StringWriter htmlWriter = new StringWriter())
+                    using StringWriter htmlWriter = new();
+                    int index = html.IndexOf("<!-- CLEMZoneBody -->");
+                    if (index > 0)
                     {
-                        int index = html.IndexOf("<!-- CLEMZoneBody -->");
-                        if (index > 0)
-                        {
-                            htmlWriter.Write(html.Substring(0, index - 1));
-                            htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
-                            htmlWriter.Write(html.Substring(index));
-                            File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
-                        }
+                        htmlWriter.Write(html.Substring(0, index - 1));
+                        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
+                        htmlWriter.Write(html.Substring(index));
+                        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                     }
                 }
             }
@@ -158,19 +156,19 @@ namespace Models.CLEM
             var results = new List<ValidationResult>();
 
             // Check that CLEMEvents component is present under Clock
-            int componentCount = this.FindAllChildren<CLEMEvents>().Count();
-            if (componentCount == 0)
+            var clemEvents = this.FindAllInScope<CLEMEvents>();
+            if (!clemEvents.Any())
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A simulation using CLEM must contain a CLEMEvents component as a child of Clock", memberNames));
+                results.Add(new ValidationResult("A simulation using CLEM must contain a [CLEMEvents] component usually placed as a child of [Clock]", memberNames));
             }
-            if (componentCount > 1)
+            if (clemEvents.Count() > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("CLEM simulations must contain only one (1) CLEMEvents component as a child of the single APSIM Clock", memberNames));
+                results.Add(new ValidationResult("CLEM simulations must contain only one (1) [CLEMEvents] component usually as a child of the single APSIM [Clock]", memberNames));
             }
             // check that one resources and on activities are present.
-            componentCount = this.FindAllChildren<ResourcesHolder>().Count();
+            int componentCount = this.FindAllChildren<ResourcesHolder>().Count();
             if (componentCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };

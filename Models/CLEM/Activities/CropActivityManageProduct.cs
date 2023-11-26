@@ -561,7 +561,7 @@ namespace Models.CLEM.Activities
                         }
                         else
                         {
-                            FoodResourcePacket packet = new FoodResourcePacket()
+                            FoodResourcePacket packet = new()
                             {
                                 Amount = AmountHarvested,
                                 NitrogenContent = percentN

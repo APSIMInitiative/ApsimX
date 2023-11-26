@@ -14,18 +14,18 @@ namespace Models.CLEM.Resources
     /// </summary>
     public  class RuminantIntake
     {
-        private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new Dictionary<FeedType, FoodResourceStore>();
+        private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new();
         private double dpls = 0;
 
         /// <summary>
         /// The potential and actual milk intake of the individual.
         /// </summary>
-        public ExpectedActualContainer Milk { get; private set; }
+        public ExpectedActualContainer Milk { get; private set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// The potential and actual feed intake of the individual.
         /// </summary>
-        public ExpectedActualContainer Feed { get; private set; }
+        public ExpectedActualContainer Feed { get; private set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy.

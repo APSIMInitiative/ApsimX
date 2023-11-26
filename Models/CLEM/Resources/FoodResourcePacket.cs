@@ -6,6 +6,7 @@ namespace Models.CLEM.Resources
     ///<summary>
     /// Additional information for animal food requests
     ///</summary> 
+    [Serializable]
     public class FoodResourcePacket: IFeed
     {
         /// <inheritdoc/>

@@ -86,11 +86,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A packet to pass the current food quality to activities. Allows for mixing of feed into store
         /// </summary>
+        [JsonIgnore]
         public FoodResourcePacket CurrentStoreDetails { get; set; }
 
         /// <summary>
         /// A packet to store the quality details of this food
         /// </summary>
+        [JsonIgnore]
         public FoodResourcePacket StoreDetails { get; set; }
 
         /// <summary>
