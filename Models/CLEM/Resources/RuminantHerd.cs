@@ -93,10 +93,10 @@ namespace Models.CLEM.Resources
             {
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
-                if (herd.Count > 0)
+                if (herd.Any())
                 {
                     // get list of all sucking individuals
-                    var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.AgeInDays).OrderByDescending(a => a.Key);
+                    var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
 
                     foreach (var sucklingList in sucklingGroups)
                     {
@@ -130,10 +130,8 @@ namespace Models.CLEM.Resources
                                     // restrict minimum period between births
                                     currentIPI = Math.Max(currentIPI, breedFemales[0].BreedParams.GestationLength.InDays + 60);
 
-                                    //breedFemales[0].Parity = breedFemales[0].Age - suckling.Age - 9;
-                                    // AL removed the -9 as this would make it conception month not birth month
-                                    breedFemales[0].DateOfLastBirth = breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays);
-                                    breedFemales[0].DateLastConceived = breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].BreedParams.GestationLength.InDays);
+                                    breedFemales[0].DateOfLastBirth = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start;
+                                    breedFemales[0].DateLastConceived = events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].BreedParams.GestationLength.InDays)).start;
                                     breedFemales[0].DateEnteredSimulation = breedFemales[0].DateLastConceived;
                                     //breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
                                     //breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
@@ -192,8 +190,8 @@ namespace Models.CLEM.Resources
                         // therefore first birth min age + gestation length
 
                         int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
-                        female.DateOfLastBirth = female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths));
-                        female.DateLastConceived = female.DateOfLastBirth.AddDays(-female.BreedParams.GestationLength.InDays);
+                        female.DateOfLastBirth = events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start;
+                        female.DateLastConceived = events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.BreedParams.GestationLength.InDays)).start;
                         //female.AgeAtLastBirth = ageFirstBirth + (currentIPI * numberOfBirths);
                         //female.AgeAtLastConception = female.AgeAtLastBirth - female.BreedParams.GestationLength;
                     }

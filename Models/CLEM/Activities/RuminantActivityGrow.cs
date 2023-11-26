@@ -372,13 +372,13 @@ namespace Models.CLEM.Activities
                 if (unfed > 0)
                 {
                     string warn = $"individuals of [r={breed}] not fed";
-                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
                 if (unfedcalves > 0)
                 {
                     string warn = $"calves of [r={breed}] not fed";
-                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{events.Clock.Today.Month}/{events.Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
 
@@ -1347,7 +1347,7 @@ namespace Models.CLEM.Activities
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
             IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
-            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count == 0).OrderBy(a => a.DaysLactating(events.Interval/2.0)).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {

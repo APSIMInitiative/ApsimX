@@ -89,7 +89,8 @@ namespace Models.CLEM
         /// <summary>CLEM end of timestep event</summary>
         public event EventHandler CLEMEndOfTimeStep;
 
-        private DateTime nextDate;
+        private DateTime timeStepStart;
+        private DateTime timeStepEnd;
 
         /// <summary>
         /// CLEM time-step
@@ -133,6 +134,90 @@ namespace Models.CLEM
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
 
+        /// <summary>
+        /// The start date of the current time-step
+        /// </summary>
+        public DateTime TimeStepStart { get { return timeStepStart; } }
+
+        /// <summary>
+        /// The end date of the current time-step
+        /// </summary>
+        public DateTime TimeStepEnd { get { return timeStepEnd; } }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public CLEMEvents()
+        {
+            SetDefaults();
+        }
+
+        /// <summary>
+        /// Provides the date range of the time-step containing the specified date based on the time-step Interval and simulation start date
+        /// </summary>
+        /// <param name="date">The date to find</param>
+        /// <returns>(start, end) DateTime Tuple containing the specified date</returns>
+        public (DateTime start, DateTime end) GetTimeStepRangeContainingDate(DateTime date)
+        {
+            switch (TimeStep)
+            {
+                case TimeStepTypes.Monthly:
+                    return (new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+                case TimeStepTypes.Fortnightly:
+                case TimeStepTypes.Weekly:
+                case TimeStepTypes.Custom:
+                    int days = Convert.ToInt32(Math.Floor(((new DateTime(date.Year, date.Month, date.Day) - Clock.StartDate).TotalDays + 1) / Interval))*Interval;
+                    return (Clock.StartDate.AddDays(days), Clock.StartDate.AddDays(days-1));
+                case TimeStepTypes.Daily:
+                default:
+                    return (date, date);
+            }
+        }
+
+        private void SetNextTimeStep(DateTime fromDate)
+        {
+            timeStepStart = fromDate;
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                timeStepEnd = new DateTime(timeStepStart.Year, timeStepStart.Month, DateTime.DaysInMonth(timeStepStart.Year, timeStepStart.Month));
+                Interval = (timeStepEnd - timeStepStart).Days + 1;
+            }
+            else
+            {
+                timeStepEnd = timeStepStart.AddDays(Interval-1);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the custom interval property is available based on TimeStepTypes set by user.
+        /// </summary>
+        /// <returns>Boolean indicating whether to display custom interval property</returns>
+        public bool IsCustomIntervalPropertyVisible()
+        {
+            return TimeStep == TimeStepTypes.Custom;
+        }
+
+        /// <summary>
+        /// Method to determine if this is the month to calculate ecological indicators
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEcologicalIndicatorsCalculationMonth()
+        {
+            return EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+        }
+
+        /// <summary>Data stores to clear at start of month</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfMonth")]
+        private void OnEndOfMonth(object sender, EventArgs e)
+        {
+            if (IsEcologicalIndicatorsCalculationMonth())
+                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+
+            // ToDo: Ensure next date is the last day of the relevant month
+            // the IsDue will return true if the current timestep contains the due date
+        }
 
         /// <summary>An event handler to perform any start of simulation tasks</summary>
         /// <param name="sender">The sender.</param>
@@ -157,35 +242,13 @@ namespace Models.CLEM
                     Interval = CustomTimeStep;
                     break;
                 default:
-                    throw new NotImplementedException($"Unknown time-step [{TimeStep}] not supported in [CLEMClock]");
+                    throw new NotImplementedException($"Unknown time-step [{TimeStep}] not supported in [CLEMEvents]");
             }
-            SetNextDate(Clock.StartDate.AddDays(-1));
+            SetNextTimeStep(Clock.StartDate);
 
             CLEMInitialiseResource?.Invoke(this, e);
             CLEMInitialiseActivity?.Invoke(this, e);
             CLEMValidate?.Invoke(this, e);
-        }
-
-        private void SetNextDate(DateTime fromDate)
-        {
-            if (TimeStep == TimeStepTypes.Monthly)
-            {
-                nextDate = fromDate.AddMonths(1);
-                Interval = (nextDate - fromDate).Days + 1;
-            }
-            else
-            {
-                nextDate = fromDate.AddDays(Interval);
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the custom interval property is available based on TimeStepTypes set by user.
-        /// </summary>
-        /// <returns>Boolean indicating whether to display custom interval property</returns>
-        public bool IsCustomIntervalPropertyVisible()
-        {
-            return TimeStep == TimeStepTypes.Custom;
         }
 
         /// <summary>Fire all CLEM events in order at the EndOfDay of the specificed date</summary>
@@ -194,7 +257,7 @@ namespace Models.CLEM
         [EventSubscribe("EndOfDay")]
         protected virtual void OnEndOfDay(object sender, EventArgs args)
         {
-            if (Clock.Today == nextDate)
+            if (Clock.Today == timeStepEnd)
             {
                 // CLEM events performed at the EndOfDay of specificed date
                 CLEMStartOfTimeStep?.Invoke(this, args);
@@ -223,32 +286,9 @@ namespace Models.CLEM
                 CLEMFinalizeTimeStep?.Invoke(this, args);
                 CLEMEndOfTimeStep?.Invoke(this, args);
 
-                SetNextDate(Clock.Today);
+                SetNextTimeStep(Clock.Today.AddDays(1));
             }
         }
-
-        /// <summary>
-        /// Method to determine if this is the month to calculate ecological indicators
-        /// </summary>
-        /// <returns></returns>
-        public bool IsEcologicalIndicatorsCalculationMonth()
-        {
-            return EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
-        }
-
-        /// <summary>Data stores to clear at start of month</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
-        {
-            if (IsEcologicalIndicatorsCalculationMonth())
-                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-
-            // ToDo: Ensure next date is the last day of the relvent month
-            // the IsDue will return true if the current timestep contains the due date
-        }
-
 
         #region validation
 
@@ -270,10 +310,10 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "Clock.EndDate" };
                 results.Add(new ValidationResult(String.Format("Invalid end date {0}", Clock.EndDate.ToShortDateString()), memberNames));
             }
-            if (Clock.StartDate.Day != 1)
+            if (TimeStep == TimeStepTypes.Monthly & Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
+                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month when using monthly time-step. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
             }
             return results;
         }

@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     {
         private RuminantFemale mother;
         private double weight;
-        private double age;
+        private int age;
         private double normalisedWeight;
         private double adultEquivalent;
 
@@ -30,8 +30,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public Ruminant()
         {
-            Energy = new RuminantEnergyInfo(this);
-            Output = new RuminantOutputInfo();
         }
 
         /// <summary>
@@ -47,8 +45,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Store for tracking ruminant outputs
         /// </summary>
-        public RuminantOutputInfo Output { get; set; }
-
+        public RuminantOutputInfo Output { get; set; } = new RuminantOutputInfo();
 
         /// <summary>
         /// Relative size based on highest weight achieved (High weight / standard reference weight)
@@ -363,7 +360,7 @@ namespace Models.CLEM.Resources
         public void SetCurrentDate(DateTime currentDate)
         {
             lastKnownDate = currentDate;
-            AgeInDays = TimeSince(RuminantTimeSpanTypes.Birth, currentDate).TotalDays;
+            AgeInDays = Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, currentDate).TotalDays);
         }
 
         /// <summary>
@@ -434,7 +431,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>Days</units>
         [FilterByProperty]
-        public double AgeInDays
+        public int AgeInDays
         {
             get
             {
@@ -543,7 +540,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="age">Age in days</param>
         /// <returns>Normalised weight (kg)</returns>
-        public double CalculateNormalisedWeight(double age)
+        public double CalculateNormalisedWeight(int age)
         {
             return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
         }
@@ -849,7 +846,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age when individual must be weaned
         /// </summary>
-        public double WeaningAge { 
+        public int WeaningAge { 
             get
             {
                 return MathUtilities.FloatsAreEqual(BreedParams.NaturalWeaningAge.InDays, 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
@@ -882,47 +879,43 @@ namespace Models.CLEM.Resources
             }
         }
 
+        ///// <summary>
+        ///// Method to set the weaned status to unweaned for new born individuals.
+        ///// </summary>
+        //public void SetUnweaned()
+        //{
+        //    weaned = 0;
+        //}
+
+        ///// <summary>
+        ///// Weaned individual flag
+        ///// </summary>
+        //[FilterByProperty]
+        //public bool Weaned { get { return weaned > 0; } }
+
+        ///// <summary>
+        ///// Weaned individual flag
+        ///// </summary>
+        //[FilterByProperty]
+        //public bool IsWeaned { get { return weaned > 0; } }
+
+        ///// <summary>
+        ///// Number of months since weaned
+        ///// </summary>
+        //[FilterByProperty]
+        //public int MonthsSinceWeaned
+        //{
+        //    get
+        //    {
+        //        if (weaned > 0)
+        //            return Convert.ToInt32(Math.Round(Age - weaned, 4));
+        //        else
+        //            return 0;
+        //    }
+        //}
+
         /// <summary>
-<<<<<<< HEAD
         /// Milk production currently available for each offspring from mother (L day-1)
-=======
-        /// Method to set the weaned status to unweaned for new born individuals.
-        /// </summary>
-        public void SetUnweaned()
-        {
-            weaned = 0;
-        }
-
-        /// <summary>
-        /// Weaned individual flag
-        /// </summary>
-        [FilterByProperty]
-        public bool Weaned { get { return weaned > 0; } }
-
-        /// <summary>
-        /// Weaned individual flag
-        /// </summary>
-        [FilterByProperty]
-        public bool IsWeaned { get { return weaned > 0; } }
-
-        /// <summary>
-        /// Number of months since weaned
-        /// </summary>
-        [FilterByProperty]
-        public int MonthsSinceWeaned
-        {
-            get
-            {
-                if (weaned > 0)
-                    return Convert.ToInt32(Math.Round(Age - weaned, 4));
-                else
-                    return 0;
-            }
-        }
-
-        /// <summary>
-        /// Milk production currently available from mother
->>>>>>> dce17a516d7cdc906f1a294c4be119801e268dcb
         /// </summary>
         public double MothersMilkProductionAvailable
         {
@@ -963,26 +956,26 @@ namespace Models.CLEM.Resources
         public Ruminant(RuminantType setParams, int setAge , double setWeight, DateTime date)
         {
             BreedParams = setParams;
+
+            AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1*setAge);
             DateEnteredSimulation = date;
 
-            //DateEnteredSimulation = date;
-            //Age = setAge;
-            //AgeEnteredSimulation = setAge;
-
-            Weight = setWeight <= 0 ? NormalisedAnimalWeight : setWeight;
-            //PreviousWeight = Weight;
+            Weight = (setWeight <= 0) ? NormalisedAnimalWeight : setWeight;
+            PreviousWeight = Weight; 
 
             Number = 1;
             Wool = 0;
             Cashmere = 0;
 
-            int weanAge = (BreedParams.NaturalWeaningAge.InDays == 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
+            int weanAge = WeaningAge;
             if ((date - DateOfBirth).TotalDays > weanAge)
                 dateOfWeaning = DateOfBirth.AddDays(weanAge);
             
-            this.SaleFlag = HerdChangeReason.None;
-            this.Attributes = new IndividualAttributeList();
+            SaleFlag = HerdChangeReason.None;
+            Attributes = new IndividualAttributeList();
+            Energy = new RuminantEnergyInfo(this);
+
         }
 
         /// <summary>

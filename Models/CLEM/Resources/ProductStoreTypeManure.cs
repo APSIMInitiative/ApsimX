@@ -22,6 +22,9 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
     public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        [Link]
+        private readonly CLEMEvents events = null;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -59,9 +62,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Maximum age manure lasts
         /// </summary>
-        [Description("Maximum age (time steps) manure lasts")]
-        [Required]
-        public int MaximumAge { get; set; }
+        [Description("Maximum age manure lasts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaximumAge { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -129,12 +133,12 @@ namespace Models.CLEM.Resources
             {
                 foreach (ManurePool pool in store.Pools)
                 {
-                    pool.Age++;
+                    pool.Age += events.Interval;
                     pool.Amount *= DecayRate;
                     pool.ProportionMoisture *= MoistureDecayRate;
                     pool.ProportionMoisture = Math.Max(pool.ProportionMoisture, 0.05);
                 }
-                store.Pools.RemoveAll(a => a.Age > MaximumAge);
+                store.Pools.RemoveAll(a => a.Age > MaximumAge.InDays);
             }
         }
 
@@ -242,7 +246,7 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>");
+                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.InDays.ToString("0.#") + "</span> days.</div>");
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
                 htmlWriter.Write("</div>");

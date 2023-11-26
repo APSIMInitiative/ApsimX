@@ -16,13 +16,14 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public override string BreederClass
         {
+            // is only used by class property
             get
             {
                 if (IsPreBreeder)
                     return "PreBreeder";
                 else
                 {
-                    if(IsSpayed)
+                    if (IsSpayed)
                         return "Spayed";
                     else if (IsWebbed)
                         return "Webbed";
@@ -221,7 +222,7 @@ namespace Models.CLEM.Resources
         /// Store for the style of mating
         /// </summary>
         [FilterByProperty]
-        public MatingStyle LastMatingStyle { get; set; }
+        public MatingStyle LastMatingStyle { get; set; } = MatingStyle.NotMated;
 
         /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates
@@ -328,7 +329,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if individual is carrying multiple feotus
+        /// Indicates if individual is carrying multiple fetuses
         /// </summary>
         public int CarryingCount { get; set; }
 
@@ -370,7 +371,7 @@ namespace Models.CLEM.Resources
             DateLastConceived = date.AddDays(ageOffset);
             //AgeAtLastConception = this.Age + ageOffset;
             // use normalised weight for age if offset provided for pre simulation allocation
-            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays) : this.Weight;
+            WeightAtConception = (ageOffset < 0) ? this.CalculateNormalisedWeight(Convert.ToInt32(TimeSince(RuminantTimeSpanTypes.Birth, DateLastConceived).TotalDays)) : this.Weight;
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
@@ -411,7 +412,7 @@ namespace Models.CLEM.Resources
         /// Calculate the the number of days lacating for the individual
         /// </summary>
         /// <param name="halfIntervalOffset">Number of days to offset (e.g. half time step)</param>
-        public double DaysLactating(double halfIntervalOffset)
+        public double DaysLactating(double halfIntervalOffset = 0)
         {
             if(SucklingOffspringList.Any() || MilkingPerformed)
             {
@@ -542,6 +543,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Mating assigned at setup
         /// </summary>
-        PreSimulation
+        PreSimulation,
+        /// <summary>
+        /// Individual not mated
+        /// </summary>
+        NotMated
     }
 }
