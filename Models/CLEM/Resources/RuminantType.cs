@@ -847,9 +847,8 @@ namespace Models.CLEM.Resources
         //[System.ComponentModel.DefaultValueAttribute(6)]
         [Category("Advanced", "Growth")]
         [Description("Maximum age for energy maintenance calculation")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; }
         /// <summary>
         /// Breed factor for maintenence energy
@@ -886,9 +885,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier NaturalWeaningAge { get; set; }
 
         /// <summary>
@@ -911,7 +909,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Units("proportion of female SRW")]
-        [Description("Birth mass (proportion of female SRW)")]
+        [Description("Birth mass as proportion of female SRW")]
         [Required, GreaterThanValue(0)]
         public double BirthScalar { get; set; }
         /// <summary>
@@ -1274,18 +1272,16 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Advanced", "Breeding")]
         [Description("Days from conception to parturition")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier GestationLength { get; set; }
         /// <summary>
         /// Minimum age for 1st mating (months)
         /// </summary>
         [Category("Basic", "Breeding")]
-        [Description("Minimum age for 1st mating (months)")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Description("Minimum age for 1st mating")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier MinimumAge1stMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW

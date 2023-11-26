@@ -29,9 +29,8 @@ namespace Models.CLEM.Resources
         /// Initial age
         /// </summary>
         [Description("Age")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier AgeDetails { get; set; }
 
         /// <summary>

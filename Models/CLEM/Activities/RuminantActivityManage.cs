@@ -151,7 +151,6 @@ namespace Models.CLEM.Activities
         //[System.ComponentModel.DefaultValueAttribute(120)]
         [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
 
         public AgeSpecifier MaximumBreederAge { get; set; }
 
@@ -220,12 +219,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Destock", "Breeding males")]
         [Description("Maximum sire age (months) before removal")]
-        //[Required, GreaterThanEqualValue(0)]
-        //[Core.Display(EnabledCallback = "EnableOldMaleSellProperties")]
-        //[System.ComponentModel.DefaultValueAttribute(120)]
         [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
 
         public AgeSpecifier MaximumSireAge { get; set; }
 
@@ -308,7 +303,6 @@ namespace Models.CLEM.Activities
         //[System.ComponentModel.DefaultValueAttribute(24)]
         [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
 
         public AgeSpecifier MaleSellingAge { get; set; }
 
@@ -337,7 +331,6 @@ namespace Models.CLEM.Activities
         //[System.ComponentModel.DefaultValueAttribute(24)]
         [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "AgeParts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
 
         public AgeSpecifier FemaleSellingAge { get; set; }
 

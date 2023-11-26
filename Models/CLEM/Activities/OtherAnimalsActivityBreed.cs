@@ -47,9 +47,8 @@ namespace Models.CLEM.Activities
         /// Breeding female age
         /// </summary>
         [Description("Breeding age")]
-        [Core.Display(SubstituteSubPropertyName ="AgeParts")]
+        [Core.Display(SubstituteSubPropertyName ="Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
         public AgeSpecifier BreedingAge { get; set; }
 
         /// <summary>

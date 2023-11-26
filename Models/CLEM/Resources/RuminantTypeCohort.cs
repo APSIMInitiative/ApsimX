@@ -42,12 +42,13 @@ namespace Models.CLEM.Resources
         /// Provides the age in a user friendly format of "years (optional), months (optional), days"
         /// </summary>
         [Description("Age")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         public AgeSpecifier AgeDetails { get; set; } = new AgeSpecifier();
 
         /// <summary>
         /// Age in days
         /// </summary>
+        [JsonIgnore]
         public int Age 
         {
             get

@@ -41,10 +41,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum female age for mating")]
         [Category("General", "All")]
-        [Core.Display(SubstituteSubPropertyName = "AgeParts")]
+        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
-        [Required, ArrayItemCount(1, 3)]
-        //[System.ComponentModel.DefaultValue(120)]
         public AgeSpecifier MaximumAgeMating { get; set; }
 
         /// <summary>
