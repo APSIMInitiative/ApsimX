@@ -56,35 +56,37 @@ namespace UserInterface.Presenters
                 int terminatedCount = 0;
                 // find IStorageReader of simulation
                 IModel simulation = model.FindAncestor<Simulation>();
-                IDataStore ds = model.FindInScope<IDataStore>() as IDataStore;
-                if (ds == null)
+                if (model.FindInScope<IDataStore>() is not IDataStore ds)
+                {
+                    markdownWriter.Write("### No [DataStore] found in simulation.");
                     return markdownWriter.ToString();
+                }
 
                 DataTable dataTable = null;
 
                 bool expSim = model.FindAllAncestors<Experiment>().Any();
                 if (expSim)
                 {
-                    markdownWriter.Write("### Multiple simulation experiment performed");
-                    markdownWriter.Write("  \r\n  \r\n");
+                    markdownWriter.Write("### Multiple simulation experiment performed.  \r\n  \r\n");
 
                     if (ds.Reader.TableNames.Any())
                         dataTable = ds.Reader.GetData(tableName: "_Messages");
                 }
                 else
                 {
-                    if (ds.Reader.TableNames.Any())
-                        dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                    dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
                 }
 
                 if (dataTable == null)
                 {
-                    markdownWriter.Write("### Datastore is empty");
-                    markdownWriter.Write("  \r\n  \r\nNo simulation has been performed for this farm");
+                    markdownWriter.Write("### Datastore is empty  \r\n  \r\nNo simulation has been performed for this farm.");
                     return markdownWriter.ToString();
                 }
+                if (!ds.Reader.TableNames.Any())
+                    markdownWriter.Write("### No data reported  \r\n  \r\nNo data has been reported in the last simulation.  \r\n  \r\n");
+
                 DataRow[] dataRows = dataTable.Select();
-                if (dataRows.Count() > 0)
+                if (dataRows.Any())
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;
@@ -201,7 +203,7 @@ namespace UserInterface.Presenters
                             markdownWriter.Write(msgStr);
                         }
                     }
-                    if (dataRows.Count() > maxErrors)
+                    if (dataRows.Length > maxErrors)
                     {
                         markdownWriter.Write("## Warning limit reached");
                         markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayed here. Please refer to the SummaryInformation for the full list of issues.");
@@ -210,7 +212,7 @@ namespace UserInterface.Presenters
                 else
                 {
                     markdownWriter.Write("\r\n### Message");
-                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
+                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed.");
                 }
                 return markdownWriter.ToString(); 
             }
