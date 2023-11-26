@@ -107,13 +107,14 @@ namespace UserInterface.Classes
         /// </summary>
         /// <param name="obj">The object reference used to fetch the current value of the property.</param>
         /// <param name="metadata">Property metadata.</param>
-        public Property(object obj, PropertyInfo metadata)
+        /// <param name="parentMetaData">The parent property of a substitute properties (optional).</param>
+        public Property(object obj, PropertyInfo metadata, PropertyInfo parentMetaData = null)
         {
             IModel model = obj as IModel;
             ID = Guid.NewGuid();
-            Name = metadata.GetCustomAttribute<DescriptionAttribute>()?.ToString();
+            Name = ((parentMetaData is not null)?parentMetaData:metadata).GetCustomAttribute<DescriptionAttribute>()?.ToString();
             if (string.IsNullOrEmpty(Name))
-                Name = metadata.Name;
+                Name = ((parentMetaData is not null) ? parentMetaData : metadata).Name;
             string units = metadata.GetCustomAttribute<UnitsAttribute>()?.ToString();
             if (!string.IsNullOrEmpty(units))
             {

@@ -137,7 +137,7 @@ namespace UserInterface.Presenters
                         subObject ??= Activator.CreateInstance(property.PropertyType);
                         PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
 
-                        result = new Property(subObject, subProperty);
+                        result = new Property(subObject, subProperty, property);
                         propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
                     }
                     else
