@@ -29,7 +29,7 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
-        [Link] IClock clock = null;
+        [Link] readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -120,27 +120,25 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            htmlWriter.Write("Perform when ");
+            htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+            htmlWriter.Write(" is between <span class=\"setvalueextra\">");
+            htmlWriter.Write(MinimumPastureLevel.ToString());
+            htmlWriter.Write("</span> and ");
+            if (MaximumPastureLevel <= MinimumPastureLevel)
+                htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" is between <span class=\"setvalueextra\">");
-                htmlWriter.Write(MinimumPastureLevel.ToString());
-                htmlWriter.Write("</span> and ");
-                if (MaximumPastureLevel <= MinimumPastureLevel)
-                    htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(MaximumPastureLevel.ToString());
-                    htmlWriter.Write("</span> ");
-                }
-                htmlWriter.Write(" kg per hectare</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(MaximumPastureLevel.ToString());
+                htmlWriter.Write("</span> ");
             }
+            htmlWriter.Write(" kg per hectare</div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -152,15 +150,13 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write(this.Name);
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
         #endregion
 

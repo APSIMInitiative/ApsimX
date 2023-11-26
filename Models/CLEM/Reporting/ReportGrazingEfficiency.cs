@@ -70,8 +70,10 @@ namespace Models.CLEM.Reporting
             var multiHerds = FindAllInScope<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
-            List<string> variableNames = new List<string>();
-            variableNames.Add("[Clock].Today as Date");
+            List<string> variableNames = new()
+            {
+                "[Clock].Today as Date"
+            };
             foreach (var grz in grzes)
             {
                 if (IncludePastureQualityLimiter)

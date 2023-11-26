@@ -139,107 +139,101 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (!FormatForParentControl)
             {
-                if (!FormatForParentControl)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                switch (PurchaseOrSale)
                 {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    switch (PurchaseOrSale)
-                    {
-                        case PurchaseOrSalePricingStyleType.Both:
-                            htmlWriter.Write("Buy and sell for ");
-                            break;
-                        case PurchaseOrSalePricingStyleType.Purchase:
-                            htmlWriter.Write("Buy for ");
-                            break;
-                        case PurchaseOrSalePricingStyleType.Sale:
-                            htmlWriter.Write("Sell for ");
-                            break;
-                    }
-                    if (Value.ToString() == "0")
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("<span class=\"setvalue\">");
-                        htmlWriter.Write(Value.ToString("#,0.##"));
-                    }
-                    htmlWriter.Write("</span> ");
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(PricingStyle.ToString());
-                    htmlWriter.Write("</span>");
-                    htmlWriter.Write("</div>");
+                    case PurchaseOrSalePricingStyleType.Both:
+                        htmlWriter.Write("Buy and sell for ");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        htmlWriter.Write("Buy for ");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        htmlWriter.Write("Sell for ");
+                        break;
                 }
-                return htmlWriter.ToString(); 
+                if (Value.ToString() == "0")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(Value.ToString("#,0.##"));
+                }
+                htmlWriter.Write("</span> ");
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(PricingStyle.ToString());
+                htmlWriter.Write("</span>");
+                htmlWriter.Write("</div>");
             }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
+                if (Value.ToString() == "0")
                 {
-                    if (Value.ToString() == "0")
-                    {
-                        htmlWriter.Write("</td><td><span class=\"errorlink\">NOT SET");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("</td><td><span class=\"setvalue\">");
-                        htmlWriter.Write(this.Value.ToString("#,0.##"));
-                    }
-                    htmlWriter.Write("</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{PricingStyle.ToString()}</span></td>");
-                    string buySellString = "";
-                    switch (PurchaseOrSale)
-                    {
-                        case PurchaseOrSalePricingStyleType.Both:
-                            buySellString = "Buy and sell";
-                            break;
-                        case PurchaseOrSalePricingStyleType.Purchase:
-                            buySellString = "Buy";
-                            break;
-                        case PurchaseOrSalePricingStyleType.Sale:
-                            buySellString = "Sell";
-                            break;
-                    }
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{buySellString}</span></td>");
-                    htmlWriter.Write("</tr>");
+                    htmlWriter.Write("</td><td><span class=\"errorlink\">NOT SET");
                 }
                 else
                 {
-                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("</td><td><span class=\"setvalue\">");
+                    htmlWriter.Write(this.Value.ToString("#,0.##"));
                 }
-                return htmlWriter.ToString(); 
+                htmlWriter.Write("</span></td>");
+                htmlWriter.Write($"<td><span class=\"setvalue\">{PricingStyle}</span></td>");
+                string buySellString = "";
+                switch (PurchaseOrSale)
+                {
+                    case PurchaseOrSalePricingStyleType.Both:
+                        buySellString = "Buy and sell";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        buySellString = "Buy";
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        buySellString = "Sell";
+                        break;
+                }
+                htmlWriter.Write($"<td><span class=\"setvalue\">{buySellString}</span></td>");
+                htmlWriter.Write("</tr>");
             }
+            else
+            {
+                htmlWriter.Write("\r\n</div>");
+            }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (FormatForParentControl)
             {
-                if (FormatForParentControl)
+                htmlWriter.Write($"<tr><td>{Name}</td><td>");
+                if (!(this.FindAllChildren<Filter>().Count() >= 1))
                 {
-                    htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                    }
+                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                 }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                    }
-                }
-                return htmlWriter.ToString(); 
             }
+            else
+            {
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                if (!(this.FindAllChildren<Filter>().Any()))
+                {
+                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+                }
+            }
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

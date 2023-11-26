@@ -28,7 +28,7 @@ namespace Models.CLEM.Timers
     [Version(1, 0, 1, "")]
     public class ActivityTimerRuminantLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link] IClock clock = null;
+        [Link] readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -93,7 +93,7 @@ namespace Models.CLEM.Timers
         public ActivityTimerRuminantLevel()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
+            SetDefaults();
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -217,38 +217,36 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"clearfix\"><div class=\"filter\">");
+            htmlWriter.Write("Perform when ");
+            if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+                htmlWriter.Write($"{DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"clearfix\"><div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
-                    htmlWriter.Write($"{DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
-                else
+                string stl = "[Unknown]";
+                switch (TimerStyle)
                 {
-                    string stl = "[Unknown]";
-                    switch (TimerStyle)
-                    {
-                        case ActivityTimerRuminantLevelStyle.SumOfProperty:
-                            stl = "sum";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MeanOfProperty:
-                            stl = "mean";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MinimumOfProperty:
-                            stl = "minimum";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MaximumOfProperty:
-                            stl = "maximum";
-                            break;
-                    }
-                    htmlWriter.Write($"the {DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {DisplaySummaryValueSnippet(RuminantProperty)}", "Not set", HTMLSummaryStyle.Default);
+                    case ActivityTimerRuminantLevelStyle.SumOfProperty:
+                        stl = "sum";
+                        break;
+                    case ActivityTimerRuminantLevelStyle.MeanOfProperty:
+                        stl = "mean";
+                        break;
+                    case ActivityTimerRuminantLevelStyle.MinimumOfProperty:
+                        stl = "minimum";
+                        break;
+                    case ActivityTimerRuminantLevelStyle.MaximumOfProperty:
+                        stl = "maximum";
+                        break;
                 }
-                htmlWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
-                htmlWriter.Write($" {DisplaySummaryValueSnippet(Amount, "Not set", HTMLSummaryStyle.Default)}</div></div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
+                htmlWriter.Write($"the {DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {DisplaySummaryValueSnippet(RuminantProperty)}", "Not set", HTMLSummaryStyle.Default);
             }
+            htmlWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
+            htmlWriter.Write($" {DisplaySummaryValueSnippet(Amount, "Not set", HTMLSummaryStyle.Default)}</div></div>");
+            if (!Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <summary>
@@ -298,15 +296,13 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!Name.Contains(GetType().Name.Split('.').Last()))
+                htmlWriter.Write(Name);
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

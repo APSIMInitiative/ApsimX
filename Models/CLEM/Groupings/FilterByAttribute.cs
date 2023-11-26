@@ -101,7 +101,7 @@ namespace Models.CLEM.Groupings
             else
             {
                 if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
-                    throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
+                    throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={NameWithParent}]");
 
                 var valueMethod = typeof(IndividualAttributeList).GetMethod("GetValue");
                 var valueVal = Expression.TypeAs(Expression.Call(attProperty, valueMethod, tag), typeof(IndividualAttribute));
@@ -172,32 +172,30 @@ namespace Models.CLEM.Groupings
 
         private string FilterString(bool htmltags)
         {
-            using (StringWriter filterWriter = new StringWriter())
+            using StringWriter filterWriter = new();
+            filterWriter.Write($"Filter:");
+            bool truefalse = IsOperatorTrueFalseTest();
+            if (FilterStyle == AttributeFilterStyle.Exists | truefalse)
             {
-                filterWriter.Write($"Filter:");
-                bool truefalse = IsOperatorTrueFalseTest();
-                if (FilterStyle == AttributeFilterStyle.Exists | truefalse)
-                {
-                    bool nothingAdded = true;
-                    if (truefalse)
-                        if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
-                        {
-                            filterWriter.Write(" does not have");
-                            nothingAdded = false;
-                        }
-                    if(nothingAdded)
-                        filterWriter.Write(" has");
+                bool nothingAdded = true;
+                if (truefalse)
+                    if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
+                    {
+                        filterWriter.Write(" does not have");
+                        nothingAdded = false;
+                    }
+                if (nothingAdded)
+                    filterWriter.Write(" has");
 
-                    filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                }
-                else
-                {
-                    filterWriter.Write($" Attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
-                }
-                return filterWriter.ToString();
+                filterWriter.Write($" attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
             }
+            else
+            {
+                filterWriter.Write($" Attribute {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+            }
+            return filterWriter.ToString();
         }
 
         #region validation

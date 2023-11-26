@@ -96,7 +96,7 @@ namespace Models.CLEM.Groupings
             if (linkedGroup is null)
             {
                 string[] memberNames = new string[] { "Linked filter group" };
-                string errorMsg = string.Empty;
+                string errorMsg;
                 if (ExistingGroupName is null)
                     errorMsg = "No existing filter group has been specified";
                 else
@@ -137,27 +137,25 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                //if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                htmlWriter.Write($"{Name}");
-                if ((Identifier ?? "") != "")
-                    htmlWriter.Write($" - applies to {Identifier} and");
-                htmlWriter.Write($" linked to </div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            //if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            htmlWriter.Write($"{Name}");
+            if ((Identifier ?? "") != "")
+                htmlWriter.Write($" - applies to {Identifier} and");
+            htmlWriter.Write($" linked to </div>");
 
-                var foundGroup = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
-                if (foundGroup != null)
-                    htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            RuminantGroup foundGroup = FindAncestor<Zone>().FindAllDescendants<RuminantGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as RuminantGroup;
+            if (foundGroup != null)
+                htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            else
+            {
+                if ((ExistingGroupName ?? "") == "")
+                    htmlWriter.Write("<div class=\"errorbanner\">Linked RuminantGroup not specified</div>");
                 else
-                {
-                    if ((ExistingGroupName ?? "") == "")
-                        htmlWriter.Write("<div class=\"errorbanner\">Linked RuminantGroup not specified</div>");
-                    else
-                        htmlWriter.Write($"<div class=\"errorbanner\">Linked RuminantGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
-                }
-                return htmlWriter.ToString();
+                    htmlWriter.Write($"<div class=\"errorbanner\">Linked RuminantGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
             }
+            return htmlWriter.ToString();
         }
 
         #endregion

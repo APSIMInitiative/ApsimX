@@ -211,7 +211,7 @@ namespace Models.CLEM
             {
                 IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
                 string[] memberNames = new string[] { "Ruminant herd resource" };
-                results.Add(new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={this.Name}] for [r={parentResource.Name}]", memberNames));
+                results.Add(new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", memberNames));
             }
             return results;
         }
@@ -228,49 +228,47 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"activityentry\">");
+            if (TransmuteStyle == TransmuteStyle.Direct)
             {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                if (TransmuteStyle == TransmuteStyle.Direct)
+                string directexchangeStyleText = "";
+                switch (DirectExhangeStyle)
                 {
-                    string directexchangeStyleText = "";
-                    switch (DirectExhangeStyle)
-                    {
-                        case PricingStyleType.perHead:
-                            directexchangeStyleText = "head of ";
-                            break;
-                        case PricingStyleType.perKg:
-                            directexchangeStyleText = "kg live weight head of ";
-                            break;
-                        case PricingStyleType.perAE:
-                            directexchangeStyleText = "animal equivalents of ";
-                            break;
-                        default:
-                            break;
-                    }
-                    if (AmountPerPacket > 0)
-                        htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> {directexchangeStyleText} ");
-                    else
-                        htmlWriter.Write($"<span class=\"errorlink\">Not set</span> {directexchangeStyleText} ");
+                    case PricingStyleType.perHead:
+                        directexchangeStyleText = "head of ";
+                        break;
+                    case PricingStyleType.perKg:
+                        directexchangeStyleText = "kg live weight head of ";
+                        break;
+                    case PricingStyleType.perAE:
+                        directexchangeStyleText = "animal equivalents of ";
+                        break;
+                    default:
+                        break;
                 }
-
-                IModel ruminants = this.FindAncestor<ResourcesHolder>().FindResourceGroup<RuminantHerd>();
-                if(ruminants is null)
-                    htmlWriter.Write("<span class=\"errorlink\">Herd not found</span>");
+                if (AmountPerPacket > 0)
+                    htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> {directexchangeStyleText} ");
                 else
-                    htmlWriter.Write($"<span class=\"resourcelink\">{ruminants.Name}</span>");
-
-                htmlWriter.Write($" (B) are taken from the following groups to supply shortfall resource (A) ");
-
-                if (TransmuteStyle == TransmuteStyle.UsePricing)
-                {
-                    htmlWriter.Write($" using the herd pricing details");
-                    if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
-                        htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                }
-                htmlWriter.WriteLine("</div>");
-                return htmlWriter.ToString();
+                    htmlWriter.Write($"<span class=\"errorlink\">Not set</span> {directexchangeStyleText} ");
             }
+
+            IModel ruminants = this.FindAncestor<ResourcesHolder>().FindResourceGroup<RuminantHerd>();
+            if (ruminants is null)
+                htmlWriter.Write("<span class=\"errorlink\">Herd not found</span>");
+            else
+                htmlWriter.Write($"<span class=\"resourcelink\">{ruminants.Name}</span>");
+
+            htmlWriter.Write($" (B) are taken from the following groups to supply shortfall resource (A) ");
+
+            if (TransmuteStyle == TransmuteStyle.UsePricing)
+            {
+                htmlWriter.Write($" using the herd pricing details");
+                if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
+                    htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
+            }
+            htmlWriter.WriteLine("</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

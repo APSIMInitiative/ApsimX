@@ -228,14 +228,14 @@ namespace Models.CLEM.Reporting
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
                 (a.Sex == Sex.Female && a.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
-            if (values.Count() == 0)
+            if (values.Count == 0)
                 return listStatistics;
 
             double sd = 0;
             Single mean = 0;
             Single sum = 0;
             var valuesPresent = values.Where(a => !float.IsNaN(a.Item1));
-            if (valuesPresent.Count() > 0)
+            if (valuesPresent.Any())
             {
                 mean = valuesPresent.Average(a => a.Item1);
                 sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item1 - mean, 2)));
@@ -246,7 +246,7 @@ namespace Models.CLEM.Reporting
             }
 
             valuesPresent = values.Where(a => !float.IsNaN(a.Item2));
-            if (valuesPresent.Count() > 0)
+            if (valuesPresent.Any())
             {
                 mean = valuesPresent.Average(a => a.Item2);
                 sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item2 - mean, 2)));

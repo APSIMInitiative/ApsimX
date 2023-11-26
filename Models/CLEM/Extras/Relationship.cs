@@ -163,20 +163,19 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
-                // draw chart
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
+            // draw chart
 
-                if (XValues is null || XValues.Length == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+            if (XValues is null || XValues.Length == 0)
+                htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+            else
+            {
+                if (YValues is null || XValues.Length != YValues.Length)
+                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
                 else
                 {
-                    if (YValues is null || XValues.Length != YValues.Length)
-                        htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
-                    else
-                    {
-                        htmlWriter.Write(@"
+                    htmlWriter.Write(@"
                         <canvas id=""myChart_" + this.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
                         <script>
                         var ctx = document.getElementById('myChart_" + this.FullPath + @"').getContext('2d');
@@ -187,14 +186,14 @@ namespace Models.CLEM
                         data: {
                             datasets: [{
                                 data: [");
-                        string data = "";
-                        for (int i = 0; i < XValues.Length; i++)
-                            if (YValues.Length > i)
-                                data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                    string data = "";
+                    for (int i = 0; i < XValues.Length; i++)
+                        if (YValues.Length > i)
+                            data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
 
-                        data = data.TrimEnd(',');
-                        htmlWriter.Write(data);
-                        htmlWriter.Write(@"],
+                    data = data.TrimEnd(',');
+                    htmlWriter.Write(data);
+                    htmlWriter.Write(@"],
                         pointBackgroundColor: '[GraphPointColour]',
                         pointBorderColor: '[GraphPointColour]',
                         borderColor: '[GraphLineColour]', 
@@ -224,15 +223,15 @@ namespace Models.CLEM
                                        color: '[GraphGridLineColour]',
                                        drawOnChartArea: true
                                     }");
-                        if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                        {
-                            htmlWriter.Write(@", 
+                    if (this.NameOfXVariable != null && this.NameOfXVariable != "")
+                    {
+                        htmlWriter.Write(@", 
                             scaleLabel: {
                             display: true,
                             labelString: '" + this.NameOfXVariable + @"'
                             }");
-                        }
-                        htmlWriter.Write(@"}],
+                    }
+                    htmlWriter.Write(@"}],
                         yAxes: [{
                             type: 'linear',
                             gridLines: {
@@ -247,23 +246,22 @@ namespace Models.CLEM
                                 fontSize: 13,
                                 padding: 3
                             }");
-                        if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                        {
-                            htmlWriter.Write(@", scaleLabel: {
+                    if (this.NameOfYVariable != null && this.NameOfYVariable != "")
+                    {
+                        htmlWriter.Write(@", scaleLabel: {
                             display: true,
                             labelString: '" + this.NameOfYVariable + @"'
                         }");
-                        }
-                        htmlWriter.Write(@"}],
+                    }
+                    htmlWriter.Write(@"}],
                             }
                            }
                         });
                         </script>");
-                    }
                 }
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString(); 
             }
+            htmlWriter.Write("\r\n</div>");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

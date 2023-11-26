@@ -85,35 +85,33 @@ namespace Models.CLEM.Groupings
 
         private string takeString(bool htmltags)
         {
-            using (StringWriter takeWriter = new StringWriter())
+            using StringWriter takeWriter = new();
+            string cssSet = "";
+            string cssError = "";
+            string cssClose = "";
+            if (htmltags)
             {
-                string cssSet = "";
-                string cssError = "";
-                string cssClose = "";
-                if (htmltags)
-                {
-                    cssSet = "<span class = \"filterset\">";
-                    cssError = "<span class = \"filtererror\">";
-                    cssClose = "</span>";
-                }
-                bool isTake = (TakeStyle.ToString().Contains("Take"));
-                bool isIndividuals = (TakeStyle == TakeFromFilterStyle.TakeIndividuals || TakeStyle == TakeFromFilterStyle.SkipIndividuals);
-                takeWriter.Write((isTake) ? $"Take: " : "Skip: ");
-                string errorString = "";
-                if (Value < 0 || (isIndividuals & Value > 1))
-                    errorString = "Invalid";
-
-                if (errorString != "")
-                    takeWriter.Write($"{cssError}{errorString}{cssClose}");
-                else
-                {
-                    takeWriter.Write(cssSet);
-                    takeWriter.Write((!isIndividuals ? Value.ToString("P0") : $"{Convert.ToInt32(Value)}"));
-                    takeWriter.Write(cssClose);
-                    takeWriter.WriteLine(((!isIndividuals) ? "" : " individuals"));
-                }
-                return takeWriter.ToString();
+                cssSet = "<span class = \"filterset\">";
+                cssError = "<span class = \"filtererror\">";
+                cssClose = "</span>";
             }
+            bool isTake = (TakeStyle.ToString().Contains("Take"));
+            bool isIndividuals = (TakeStyle == TakeFromFilterStyle.TakeIndividuals || TakeStyle == TakeFromFilterStyle.SkipIndividuals);
+            takeWriter.Write((isTake) ? $"Take: " : "Skip: ");
+            string errorString = "";
+            if (Value < 0 || (isIndividuals & Value > 1))
+                errorString = "Invalid";
+
+            if (errorString != "")
+                takeWriter.Write($"{cssError}{errorString}{cssClose}");
+            else
+            {
+                takeWriter.Write(cssSet);
+                takeWriter.Write((!isIndividuals ? Value.ToString("P0") : $"{Convert.ToInt32(Value)}"));
+                takeWriter.Write(cssClose);
+                takeWriter.WriteLine(((!isIndividuals) ? "" : " individuals"));
+            }
+            return takeWriter.ToString();
         }
 
         #region validation

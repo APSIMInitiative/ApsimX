@@ -84,11 +84,11 @@ namespace Models.CLEM.Groupings
             if (linkedGroup is null)
             {
                 string[] memberNames = new string[] { "Linked filter group" };
-                string errorMsg = string.Empty;
+                string errorMsg;
                 if (ExistingGroupName is null)
                     errorMsg = "No existing filter group has been specified";
                 else
-                    errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same ZoneCLEM";
+                    errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same [ZoneCLEM]";
 
                 results.Add(new ValidationResult(errorMsg, memberNames));
             }
@@ -125,22 +125,20 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"<div class=\"filtername\">{Name} is linked to </div>");
 
-                var foundGroup = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
-                if (foundGroup != null)
-                    htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            var foundGroup = FindAncestor<Zone>().FindAllDescendants<LabourGroup>().Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingGroupName).FirstOrDefault() as LabourGroup;
+            if (foundGroup != null)
+                htmlWriter.Write(foundGroup.GetFullSummary(foundGroup, new List<string>(), ""));
+            else
+            {
+                if ((ExistingGroupName ?? "") == "")
+                    htmlWriter.Write("<div class=\"errorbanner\">Linked LabourGroup not specified</div>");
                 else
-                {
-                    if ((ExistingGroupName ?? "") == "")
-                        htmlWriter.Write("<div class=\"errorbanner\">Linked LabourGroup not specified</div>");
-                    else
-                        htmlWriter.Write($"<div class=\"errorbanner\">Linked LabourGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
-                }
-                return htmlWriter.ToString();
+                    htmlWriter.Write($"<div class=\"errorbanner\">Linked LabourGroup <span class=\"setvalue\">{ExistingGroupName}</span> not found</div>");
             }
+            return htmlWriter.ToString();
         }
 
         #endregion

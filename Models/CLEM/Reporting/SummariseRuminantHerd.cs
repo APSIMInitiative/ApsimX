@@ -108,7 +108,7 @@ namespace Models.CLEM
 
             // get full name for reporting
             current = this;
-            string name = this.Name;
+            string name = Name;
             while (current.GetType() != typeof(ZoneCLEM))
             {
                 string quoteName = (current.GetType() == typeof(ActivitiesHolder)) ? "[" + current.Name + "]" : current.Name;
@@ -296,35 +296,33 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
-                if (AddGroupByLocation)
-                    htmlWriter.Write("based on location and ");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">This will report individuals ");
+            if (AddGroupByLocation)
+                htmlWriter.Write("based on location and ");
 
-                switch (GroupStyle)
-                {
-                    case SummarizeRuminantHerdStyle.Classic:
-                        htmlWriter.Write("with age in years and a column for sex");
-                        break;
-                    case SummarizeRuminantHerdStyle.ByClass:
-                        htmlWriter.Write("grouped by class");
-                        break;
-                    case SummarizeRuminantHerdStyle.BySexClass:
-                        htmlWriter.Write("grouped by a combination of sex and class");
-                        break;
-                    case SummarizeRuminantHerdStyle.ByAgeYears:
-                        htmlWriter.Write("grouped by age (in years)");
-                        break;
-                    case SummarizeRuminantHerdStyle.ByAgeMonths:
-                        htmlWriter.Write("grouped by age (in months)");
-                        break;
-                    default:
-                        break;
-                }
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+            switch (GroupStyle)
+            {
+                case SummarizeRuminantHerdStyle.Classic:
+                    htmlWriter.Write("with age in years and a column for sex");
+                    break;
+                case SummarizeRuminantHerdStyle.ByClass:
+                    htmlWriter.Write("grouped by class");
+                    break;
+                case SummarizeRuminantHerdStyle.BySexClass:
+                    htmlWriter.Write("grouped by a combination of sex and class");
+                    break;
+                case SummarizeRuminantHerdStyle.ByAgeYears:
+                    htmlWriter.Write("grouped by age (in years)");
+                    break;
+                case SummarizeRuminantHerdStyle.ByAgeMonths:
+                    htmlWriter.Write("grouped by age (in months)");
+                    break;
+                default:
+                    break;
             }
+            htmlWriter.Write("</div>");
+            return htmlWriter.ToString();
         }
     }
 

@@ -58,7 +58,7 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            if (MonthlyValues.Count() > 0)
+            if (MonthlyValues.Length > 0)
             {
                 if (MonthlyValues.Max() == 0)
                 {
@@ -75,107 +75,105 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                // get amount
-                var grps = MonthlyValues.GroupBy(a => a).OrderBy(a => a.Key);
+            using StringWriter htmlWriter = new();
+            // get amount
+            var grps = MonthlyValues.GroupBy(a => a).OrderBy(a => a.Key);
 
-                RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (grps.Count() > 1)
-                {
-                    htmlWriter.Write("From ");
-                }
+            RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (grps.Count() > 1)
+            {
+                htmlWriter.Write("From ");
+            }
+            htmlWriter.Write("<span class=\"setvalue\">");
+            switch (ft)
+            {
+                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    htmlWriter.Write(grps.FirstOrDefault().Key.ToString() + "kg");
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                    if (grps.LastOrDefault().Key != 1)
+                    {
+                        htmlWriter.Write((Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            htmlWriter.Write("</span>");
+
+            if (grps.Count() > 1)
+            {
+                htmlWriter.Write(" to ");
                 htmlWriter.Write("<span class=\"setvalue\">");
                 switch (ft)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        htmlWriter.Write(grps.FirstOrDefault().Key.ToString() + "kg");
+                        htmlWriter.Write(grps.LastOrDefault().Key.ToString() + "kg");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        if (grps.LastOrDefault().Key != 1)
-                        {
-                            htmlWriter.Write((Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
-                        }
+                        htmlWriter.Write((Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
                         break;
                     default:
                         break;
                 }
                 htmlWriter.Write("</span>");
-
-                if (grps.Count() > 1)
-                {
-                    htmlWriter.Write(" to ");
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    switch (ft)
-                    {
-                        case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                            htmlWriter.Write(grps.LastOrDefault().Key.ToString() + "kg");
-                            break;
-                        case RuminantFeedActivityTypes.ProportionOfWeight:
-                        case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                            htmlWriter.Write((Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
-                            break;
-                        default:
-                            break;
-                    }
-                    htmlWriter.Write("</span>");
-                }
-
-                string starter = " of ";
-                if (grps.Count() == 1 && grps.LastOrDefault().Key == 1)
-                {
-                    starter = "The ";
-                }
-
-                bool overfeed = false;
-
-                htmlWriter.Write("<span class=\"setvalue\">");
-                switch (ft)
-                {
-                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        htmlWriter.Write(" feed available");
-                        overfeed = true;
-                        break;
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                        htmlWriter.Write(" per individual per day");
-                        overfeed = true;
-                        break;
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        htmlWriter.Write(" per day");
-                        overfeed = true;
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                        htmlWriter.Write(starter + "live weight");
-                        overfeed = true;
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        htmlWriter.Write(starter + "potential intake");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        htmlWriter.Write(starter + "remaining intake");
-                        break;
-                    default:
-                        break;
-                }
-                htmlWriter.Write("</span> is fed each month to the individuals that match the following conditions:");
-
-                htmlWriter.Write("</div>");
-
-                if (overfeed)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted");
-                    htmlWriter.Write("</div>");
-                }
-
-                return htmlWriter.ToString();
             }
+
+            string starter = " of ";
+            if (grps.Count() == 1 && grps.LastOrDefault().Key == 1)
+            {
+                starter = "The ";
+            }
+
+            bool overfeed = false;
+
+            htmlWriter.Write("<span class=\"setvalue\">");
+            switch (ft)
+            {
+                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                    htmlWriter.Write(" feed available");
+                    overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    htmlWriter.Write(" per individual per day");
+                    overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                    htmlWriter.Write(" per day");
+                    overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                    htmlWriter.Write(starter + "live weight");
+                    overfeed = true;
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                    htmlWriter.Write(starter + "potential intake");
+                    break;
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                    htmlWriter.Write(starter + "remaining intake");
+                    break;
+                default:
+                    break;
+            }
+            htmlWriter.Write("</span> is fed each month to the individuals that match the following conditions:");
+
+            htmlWriter.Write("</div>");
+
+            if (overfeed)
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted");
+                htmlWriter.Write("</div>");
+            }
+
+            return htmlWriter.ToString();
         }
 
         #endregion

@@ -524,62 +524,58 @@ namespace Models.CLEM.Reporting
         ///<inheritdoc/>
         public string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"activityentry\">");
+            if (CreateHTML)
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (CreateHTML)
+                htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
+                if (RotateReport)
                 {
-                    htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
-                    if (RotateReport)
-                    {
-                        htmlWriter.Write($" with months as columns and activities as rows.</div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write($" with months as rows and activities as columns.</div>");
-                    }
+                    htmlWriter.Write($" with months as columns and activities as rows.</div>");
                 }
                 else
                 {
-                    htmlWriter.Write($"<div>No HTML version of this report is provided for viewing in browser.</div>");
+                    htmlWriter.Write($" with months as rows and activities as columns.</div>");
                 }
-                if (AutoCreateHTML)
-                {
-                    htmlWriter.Write($"<div>A HTML version of this report will automatically be created for its parent CLEMZone and named the same as the simulation file with a html extension</div>");
-                }
-                return htmlWriter.ToString();
             }
+            else
+            {
+                htmlWriter.Write($"<div>No HTML version of this report is provided for viewing in browser.</div>");
+            }
+            if (AutoCreateHTML)
+            {
+                htmlWriter.Write($"<div>A HTML version of this report will automatically be created for its parent CLEMZone and named the same as the simulation file with a html extension</div>");
+            }
+            return htmlWriter.ToString();
         }
 
         ///<inheritdoc/>
         public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            if (model is ICLEMDescriptiveSummary)
             {
-                if (model is ICLEMDescriptiveSummary)
+                ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
+                cm.CurrentAncestorList = parentControls.ToList();
+                cm.CurrentAncestorList.Add(model.GetType().Name);
+
+                htmlWriter.Write(cm.ModelSummaryOpeningTags());
+
+                htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
+
+                htmlWriter.Write(cm.ModelSummary());
+
+                htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
+
+                foreach (var item in (model as IModel).Children)
                 {
-                    ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    cm.CurrentAncestorList = parentControls.ToList();
-                    cm.CurrentAncestorList.Add(model.GetType().Name);
-
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
-
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
-
-                    htmlWriter.Write(cm.ModelSummary());
-
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
-
-                    foreach (var item in (model as IModel).Children)
-                    {
-                        htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
-                    }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
-
-                    htmlWriter.Write(cm.ModelSummaryClosingTags());
+                    htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
                 }
-                return htmlWriter.ToString();
+                htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
+
+                htmlWriter.Write(cm.ModelSummaryClosingTags());
             }
+            return htmlWriter.ToString();
         }
 
         ///<inheritdoc/>
@@ -594,14 +590,12 @@ namespace Models.CLEM.Reporting
             string overall = "default";
             string extra = "";
 
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
+            htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
+            htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
-                return htmlWriter.ToString();
-            }
+            return htmlWriter.ToString();
         }
 
         ///<inheritdoc/>
@@ -628,18 +622,16 @@ namespace Models.CLEM.Reporting
         ///<inheritdoc/>
         public string ModelSummaryNameTypeHeader()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
+            if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
-                htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
-                if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-                {
-                    htmlWriter.Write("<div class=\"partialdiv\"");
-                    htmlWriter.Write(">");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<div class=\"partialdiv\"");
+                htmlWriter.Write(">");
+                htmlWriter.Write("</div>");
             }
+            htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
+            return htmlWriter.ToString();
         }
 
         ///<inheritdoc/>

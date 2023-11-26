@@ -234,7 +234,7 @@ namespace Models.CLEM.Reporting
             // check if running from a CLEM.Market
             bool market = (FindAncestor<Zone>().GetType() == typeof(Market));
 
-            List<string> variableNames = new List<string>
+            List<string> variableNames = new()
             {
                 "[Clock].Today as Date"
             };
@@ -245,7 +245,7 @@ namespace Models.CLEM.Reporting
                     variableNames.Add($"[Resources].{financeStore.Name}.FinancialYear as FY");
             }
 
-            List<string> eventNames = new List<string>();
+            List<string> eventNames = new();
 
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {

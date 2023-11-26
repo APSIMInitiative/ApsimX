@@ -3,6 +3,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.Groupings
@@ -27,9 +28,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "<div class=\"filtername\">";
-            html += "This ruminant filter is applied to this activity and all activities within this branch</div>";
-            return html;
+            return "<div class=\"filtername\">This ruminant filter is applied to this activity and all activities within this branch</div>";
         }
 
         /// <inheritdoc/>
@@ -47,20 +46,17 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            string html = "";
-            html += "\r\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            string html = "";
-            html += "\r\n<div class=\"filterborder filteractivityborder clearfix\">";
-            if (FindAllChildren<Filter>().Count() < 1)
-                html += "<div class=\"filter\">All individuals</div>";
-
-            return html;
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filterborder filteractivityborder clearfix\">");
+            if (!FindAllChildren<Filter>().Any())
+                htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+            return htmlWriter.ToString();
         }
         #endregion
 

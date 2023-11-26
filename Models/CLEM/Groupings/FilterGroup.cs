@@ -234,14 +234,12 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (FindAllChildren<Filter>().Count() == 0)
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+            if (!FindAllChildren<Filter>().Any())
+                htmlWriter.Write("<div class=\"filter\">All individuals</div>");
 
-                return htmlWriter.ToString();
-            }
+            return htmlWriter.ToString();
         }
         #endregion
     }

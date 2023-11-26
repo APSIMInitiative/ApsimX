@@ -109,15 +109,13 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
-                htmlWriter.Write("</span></div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
+            htmlWriter.Write("</span></div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -129,16 +127,14 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write(this.Name);
 
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
         #endregion
 
@@ -156,7 +152,7 @@ namespace Models.CLEM.Timers
             if (linkedTimer is null)
             {
                 string[] memberNames = new string[] { "Linked timer" };
-                string errorMsg = string.Empty;
+                string errorMsg;
                 if (ExistingTimerName is null)
                     errorMsg = "No existing timer has been specified";
                 else

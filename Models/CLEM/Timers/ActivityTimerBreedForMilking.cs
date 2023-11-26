@@ -156,13 +156,6 @@ namespace Models.CLEM.Timers
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
 
-            //var firstCycleList = pregnantList.Where(a => a.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
-            //if (firstCycleList.Count > 0 && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
-            //{
-            //    // if where less than the spread months from the max pregnancy found
-            //    numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
-            //}
-
             if (numberNeeded > 0)
             {
                 // return the number needed of breeders able to mate in this timestep
@@ -171,11 +164,11 @@ namespace Models.CLEM.Timers
                 // report activity performed details.
                 ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                 {
-                    Name = this.Name,
+                    Name = Name,
                     Status = ActivityStatus.Timer,
-                    Id = this.UniqueID.ToString(),
+                    Id = UniqueID.ToString(),
                 };
-                this.OnActivityPerformed(activitye);
+                OnActivityPerformed(activitye);
             }
         }
 
@@ -222,28 +215,26 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            htmlWriter.Write("\r\nTiming of breeding and selection of breeders for continous milk production");
+            if (RestMonths + ShortenLactationMonths > 0)
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("\r\nTiming of breeding and selection of breeders for continous milk production");
-                if (RestMonths + ShortenLactationMonths > 0)
+                htmlWriter.Write("\r\n<br />");
+                if (RestMonths > 0)
                 {
-                    htmlWriter.Write("\r\n<br />");
-                    if (RestMonths > 0)
-                    {
-                        htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
-                        if (ShortenLactationMonths > 0)
-                            htmlWriter.Write(" and ");
-                    }
+                    htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
                     if (ShortenLactationMonths > 0)
-                        htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
+                        htmlWriter.Write(" and ");
                 }
-                htmlWriter.Write("\r\n</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-
-                return htmlWriter.ToString();
+                if (ShortenLactationMonths > 0)
+                    htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
             }
+            htmlWriter.Write("\r\n</div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -255,17 +246,15 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
             {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
-                    htmlWriter.Write(this.Name);
-                }
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
+                htmlWriter.Write(this.Name);
             }
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
 
         #endregion

@@ -93,8 +93,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override void BuildRule()
         {
-            if (Rule is null)
-                Rule = Compile<IFilterable>();
+            Rule ??= Compile<IFilterable>();
         }
 
         /// <inheritdoc/>
@@ -185,10 +184,10 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
@@ -205,10 +204,10 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
@@ -218,7 +217,7 @@ namespace Models.CLEM.Groupings
                     {
                         case ExpressionType.IsFalse:
                         case ExpressionType.IsTrue:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         case ExpressionType.Equal:
                         case ExpressionType.NotEqual:
@@ -228,12 +227,12 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.LessThanOrEqual:
                             break;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
                 default:
-                    errorMessage = $"Unsupported property type [{property.PropertyType.Name}] for property [{property.Name}] in [f={this.NameWithParent}] ";
+                    errorMessage = $"Unsupported property type [{property.PropertyType.Name}] for property [{property.Name}] in [f={NameWithParent}] ";
                     return false;
             }
             return true;
@@ -261,64 +260,62 @@ namespace Models.CLEM.Groupings
         {
             Initialise();
 
-            using (StringWriter filterWriter = new StringWriter())
+            using StringWriter filterWriter = new();
+            if (propertyInfo is null)
             {
-                if (propertyInfo is null)
-                {
-                    filterWriter.Write($"Filter:");
-                    string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
-                    string spanclose = (htmltags) ? "</span>" : "";
-                    string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
-                    filterWriter.Write($"{errorlink}{message}{spanclose}");
-                    return filterWriter.ToString();
-                }
-
                 filterWriter.Write($"Filter:");
-                bool truefalse = IsOperatorTrueFalseTest();
-                if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
+                string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
+                string spanclose = (htmltags) ? "</span>" : "";
+                string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
+                filterWriter.Write($"{errorlink}{message}{spanclose}");
+                return filterWriter.ToString();
+            }
+
+            filterWriter.Write($"Filter:");
+            bool truefalse = IsOperatorTrueFalseTest();
+            if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
+            {
+                if (propertyInfo.PropertyType == typeof(bool))
                 {
-                    if (propertyInfo.PropertyType == typeof(bool))
-                    {
-                        if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
-                            filterWriter.Write(" not");
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
-                    else
-                    {
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                        if (validOperator)
-                            filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
-                        else
-                        {
-                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                            string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{spanclose}");
-                        }
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
+                    if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
+                        filterWriter.Write(" not");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 else
                 {
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-
-                    if (propertyInfo != null)
-                    {
-                        if (validOperator)
-                            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                        else
-                        {
-                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                            string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.PropertyType.Name}{spanclose}");
-                        }
-                    }
+                    if (validOperator)
+                        filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
                     else
-                        filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-
-                    filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    {
+                        string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                        string spanclose = (htmltags) ? "</span>" : "";
+                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{spanclose}");
+                    }
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
-                return filterWriter.ToString();
             }
+            else
+            {
+                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+
+                if (propertyInfo != null)
+                {
+                    if (validOperator)
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    else
+                    {
+                        string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                        string spanclose = (htmltags) ? "</span>" : "";
+                        filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.PropertyType.Name}{spanclose}");
+                    }
+                }
+                else
+                    filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+
+                filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+            }
+            return filterWriter.ToString();
         }
 
         #region validation

@@ -262,7 +262,7 @@ namespace Models.CLEM
             {
                 sqlQuery += $" AND (( {YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month})"
                 + $" OR  ( {YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year})"
-                + $" OR  ( {YearColumnName} = {endDate.Year} AND {MonthColumnName} < {endDate.Month}) )"
+                + $" OR  ( {YearColumnName} = {endDate.Year} AND {MonthColumnName} < {endDate.Month}) )";
             }
 
             DataTable results;
@@ -347,7 +347,7 @@ namespace Models.CLEM
                         htmlWriter.Write($"Using table <span class=\"filelink\">{TableName}</span>");
                         // add column links
                         htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(SoilTypeColumnName)}\");
+                        htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is {CLEMModel.DisplaySummaryValueSnippet(SoilTypeColumnName)}");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is {CLEMModel.DisplaySummaryValueSnippet(CropNameColumnName)}");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is {CLEMModel.DisplaySummaryValueSnippet(YearColumnName)}");
                         htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is {CLEMModel.DisplaySummaryValueSnippet(MonthColumnName)}");

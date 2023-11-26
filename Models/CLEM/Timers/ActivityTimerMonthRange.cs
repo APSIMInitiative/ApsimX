@@ -32,7 +32,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerMonthRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
         private DateTime lastCheck = DateTime.MinValue;
         private bool lastReturn = false;
 
@@ -140,30 +140,28 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            htmlWriter.Write("Perform between ");
+            if (StartMonth == 0)
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform between ");
-                if (StartMonth == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(StartMonth.ToString() + "</span>");
-                }
-                htmlWriter.Write(" and <span class=\"setvalueextra\">");
-                if (EndMonth == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(EndMonth.ToString() + "</span>");
-                }
-                htmlWriter.Write("</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(StartMonth.ToString() + "</span>");
             }
+            htmlWriter.Write(" and <span class=\"setvalueextra\">");
+            if (EndMonth == 0)
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            else
+            {
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(EndMonth.ToString() + "</span>");
+            }
+            htmlWriter.Write("</div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

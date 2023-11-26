@@ -31,7 +31,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerInterval : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -89,8 +89,8 @@ namespace Models.CLEM.Timers
             {
                 return true;
             }
-            DateTime dd = new DateTime(this.NextDueDate.Year, this.NextDueDate.Month, 1);
-            DateTime dd2c = new DateTime(dateToCheck.Year, dateToCheck.Month, 1);
+            DateTime dd = new(this.NextDueDate.Year, this.NextDueDate.Month, 1);
+            DateTime dd2c = new(dateToCheck.Year, dateToCheck.Month, 1);
 
             int direction = (dd2c < dd) ? -1 : 1;
             if (direction < 0)
@@ -158,36 +158,34 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            htmlWriter.Write("Perform every ");
+            if (Interval > 0)
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform every ");
-                if (Interval > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(Interval.ToString());
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">");
-                    htmlWriter.Write("NOT SET");
-                }
-                htmlWriter.Write($"</span> month{((Interval == 1) ? "" : "s")} from ");
-                if (MonthDue > 0)
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(MonthDue.ToString());
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">");
-                    htmlWriter.Write("NOT SET");
-                }
-                htmlWriter.Write("</span></div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(Interval.ToString());
             }
+            else
+            {
+                htmlWriter.Write("<span class=\"errorlink\">");
+                htmlWriter.Write("NOT SET");
+            }
+            htmlWriter.Write($"</span> month{((Interval == 1) ? "" : "s")} from ");
+            if (MonthDue > 0)
+            {
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(MonthDue.ToString());
+            }
+            else
+            {
+                htmlWriter.Write("<span class=\"errorlink\">");
+                htmlWriter.Write("NOT SET");
+            }
+            htmlWriter.Write("</span></div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -199,16 +197,14 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write(this.Name);
 
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
         #endregion
 

@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.Groupings
@@ -40,44 +41,43 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            string html = "";
+            using StringWriter htmlWriter = new();
             if (!FormatForParentControl)
             {
-                html += "\r\n<div class=\"activityentry\">";
-                html += $"Pay {CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)} for a days work</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"Pay {CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)} for a days work</div>");
             }
-            return html;
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags()
         {
-            string html = "";
+            using StringWriter htmlWriter = new();
             if (FormatForParentControl)
             {
-                html += $"</td><td>{CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)}</td>";
-                html += "</tr>";
+                htmlWriter.Write($"</td><td>{CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)}</td></tr>");
             }
             else
             {
-                html += "\r\n</div>";
+                htmlWriter.Write("\r\n</div>");
             }
-            return html;
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags()
         {
-            string html = "";
+            using StringWriter htmlWriter = new();
             if (FormatForParentControl)
-                html += "<tr><td>" + this.Name + "</td><td>";
+                htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
             else
-                html += "\r\n<div class=\"filterborder clearfix\">";
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
 
-            if (FindAllChildren<Filter>().Count() < 1)
-                html += "<div class=\"filter\">All individuals</div>";
+            if (!FindAllChildren<Filter>().Any())
+                htmlWriter.Write("<div class=\"filter\">All individuals</div>");
 
-            return html;
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>

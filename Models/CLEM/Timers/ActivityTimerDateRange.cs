@@ -90,11 +90,11 @@ namespace Models.CLEM.Timers
                     // report activity performed.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                     {
-                        Name = this.Name,
+                        Name = Name,
                         Status = ActivityStatus.Timer,
-                        Id = this.UniqueID.ToString(),
+                        Id = UniqueID.ToString(),
                     };
-                    this.OnActivityPerformed(activitye);
+                    OnActivityPerformed(activitye);
                 }
                 return inrange;
             }
@@ -108,8 +108,8 @@ namespace Models.CLEM.Timers
 
         private bool IsMonthInRange(DateTime date)
         {
-            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+            DateTime endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new(StartDate.Year, StartDate.Month, 1);
 
             bool inrange = ((date >= startDate) && (date <= endDate));
             if (Invert)
@@ -128,41 +128,39 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummary()
         {
-            DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
+            DateTime endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            DateTime startDate = new(StartDate.Year, StartDate.Month, 1);
 
-            using (StringWriter htmlWriter = new StringWriter())
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("\r\n<div class=\"filter\">");
+            string invertString = "";
+            if (Invert)
+                invertString = "when <b>NOT</b> ";
+
+            htmlWriter.Write("Perform " + invertString + "between ");
+            if (startDate.Year == 1)
+                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+            else
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                string invertString = "";
-                if (Invert)
-                    invertString = "when <b>NOT</b> ";
-
-                htmlWriter.Write("Perform " + invertString + "between ");
-                if (startDate.Year == 1)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(startDate.ToString("d MMM yyyy"));
-                    htmlWriter.Write("</span>");
-                }
-                htmlWriter.Write(" and ");
-                if (EndDate <= StartDate)
-                    htmlWriter.Write("<span class=\"errorlink\">[must be > StartDate]");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(endDate.ToString("d MMM yyyy"));
-                }
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(startDate.ToString("d MMM yyyy"));
                 htmlWriter.Write("</span>");
-                if (StartDate != startDate || EndDate != endDate)
-                    htmlWriter.Write(" (modified for monthly timestep)");
-                htmlWriter.Write("</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
             }
+            htmlWriter.Write(" and ");
+            if (EndDate <= StartDate)
+                htmlWriter.Write("<span class=\"errorlink\">[must be > StartDate]");
+            else
+            {
+                htmlWriter.Write("<span class=\"setvalueextra\">");
+                htmlWriter.Write(endDate.ToString("d MMM yyyy"));
+            }
+            htmlWriter.Write("</span>");
+            if (StartDate != startDate || EndDate != endDate)
+                htmlWriter.Write(" (modified for monthly timestep)");
+            htmlWriter.Write("</div>");
+            if (!this.Enabled & !FormatForParentControl)
+                htmlWriter.Write(" - DISABLED!");
+            return htmlWriter.ToString();
         }
 
         /// <inheritdoc/>
@@ -174,15 +172,13 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write(this.Name);
+            htmlWriter.Write($"</div>");
+            htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+            return htmlWriter.ToString();
         }
         #endregion
 

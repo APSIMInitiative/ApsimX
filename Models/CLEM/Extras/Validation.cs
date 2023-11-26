@@ -57,7 +57,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class PercentageAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must be a percentage (0-100)";
+        private readonly string DefaultErrorMessage = "Value must be a percentage (0-100)";
 
         /// <summary>
         /// 
@@ -92,7 +92,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class ProportionAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must be a proportion (0-1)";
+        private readonly string DefaultErrorMessage = "Value must be a proportion (0-1)";
 
         /// <summary>
         /// 
@@ -134,7 +134,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class MonthAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December]";
+        private readonly string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December]";
 
         /// <summary>
         /// 
@@ -196,7 +196,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = 0;
+            double maxvalue;
             if (value.GetType().IsArray)
                 maxvalue = (value as double[]).Min();
             else
@@ -241,7 +241,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = 0;
+            double maxvalue;
             if (value.GetType().IsArray)
                 maxvalue = (value as double[]).Min();
             else

@@ -57,17 +57,15 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"<div class=\"filtername\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write($"{Name}");
-                if ((Identifier ?? "") != "")
-                    htmlWriter.Write($" - applies to {Identifier}");
+            using StringWriter htmlWriter = new();
+            htmlWriter.Write($"<div class=\"filtername\" style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">");
+            if (!Name.Contains(GetType().Name.Split('.').Last()))
+                htmlWriter.Write($"{Name}");
+            if ((Identifier ?? "") != "")
+                htmlWriter.Write($" - applies to {Identifier}");
 
-                htmlWriter.Write($"</div>");
-                return htmlWriter.ToString();
-            }
+            htmlWriter.Write($"</div>");
+            return htmlWriter.ToString();
         }
 
         #endregion

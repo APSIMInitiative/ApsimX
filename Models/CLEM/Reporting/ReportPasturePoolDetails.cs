@@ -135,7 +135,7 @@ namespace Models.CLEM.Reporting
             if (resHolder is null)
                 return;
 
-            List<string> pastureEntries = new List<string>();
+            List<string> pastureEntries = new();
             if (ReportTotal) pastureEntries.Add("Amount");
             if (ReportGrowth) pastureEntries.Add("Growth");
             if (ReportConsumed) pastureEntries.Add("Consumed");
@@ -144,7 +144,7 @@ namespace Models.CLEM.Reporting
             if (ReportDMD) pastureEntries.Add("DMD");
             if (ReportAge) pastureEntries.Add("Age");
 
-            List<string> poolEntries = new List<string>();
+            List<string> poolEntries = new();
             if (ReportPoolsTotal) poolEntries.Add("Amount");
             if (ReportPoolsConsumed) poolEntries.Add("Consumed");
             if (ReportPoolsDetached) poolEntries.Add("Detached");
