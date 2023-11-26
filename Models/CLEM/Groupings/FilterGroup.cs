@@ -77,7 +77,10 @@ namespace Models.CLEM
             if (properties is null)
                 InitialiseFilters(false);
 
-            return properties[name]; 
+            if(properties.ContainsKey(name))
+                return properties[name]; 
+            else
+                return null;
         }
 
         /// <summary>
