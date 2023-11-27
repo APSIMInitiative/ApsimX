@@ -240,7 +240,9 @@ namespace Models.PMF.SimplePlantModels
             {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
             {"GSMax","[SCRUM].Stover.Gsmax350 = " },
             {"R50","[SCRUM].Stover.R50 = " },
-            {"WaterStressSens","[Stover].WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressPhoto","[SCRUM].Stover.Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SCRUM].Stover.Cover.Growth.Expansion.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[SCRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>
@@ -296,9 +298,17 @@ namespace Models.PMF.SimplePlantModels
             Dictionary<string, string> cropParams = new Dictionary<string, string>(blankParams);
 
             if (this.WaterStress)
-                cropParams["WaterStressSens"] += "0.0";
+            {
+                cropParams["WaterStressPhoto"] += "0.0";
+                cropParams["WaterStressCover"] += "0.0";
+                cropParams["WaterStressNUptake"] += "0.0";
+            }
             else
-                cropParams["WaterStressSens"] += "1.0";
+            {
+                cropParams["WaterStressPhoto"] += "1.0";
+                cropParams["WaterStressCover"] += "1.0";
+                cropParams["WaterStressNUptake"] += "1.0";
+            }
 
             cropParams["InvertedRelativeMaturity"] += (1 / PropnMaxDM[management.HarvestStage]).ToString();
             double dmc = (100 - this.DryMatterContent) / 100;

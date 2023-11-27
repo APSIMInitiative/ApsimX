@@ -107,9 +107,9 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum Cover of mature tree in the row area (0-0.97)</summary>
-        [Description("Maximum Cover of mature tree in the row area (0-0.97)")]
-        public double MaxCover { get; set; }
+        /// <summary>Maximum LAI of mature tree prior to Leaf Fall (m2/m2)</summary>
+        [Description("Maximum LAI of mature tree prior to Leaf Fall (m2/m2)")]
+        public double MaxLAI { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
@@ -147,6 +147,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Maximum Size </summary>
         [Description("Max Size (Days After Winter Solstice)")]
         public int DAWSMaxSize { get; set; }
+
+        /// <summary>"Does the crop respond to water stress?"</summary>
+        [Description("Does the crop respond to water stress?")]
+        public bool WaterStress { get; set; }
 
         /// <summary>Cutting Event</summary>
         public event EventHandler<EventArgs> PhenologyHarvest;
@@ -206,7 +210,7 @@ namespace Models.PMF.SimplePlantModels
             {"RootNConc","[Root].MaximumNConc.FixedValue = "},
             {"WoodNConc","[Trunk].MaximumNConc.FixedValue = "},
             {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
-            {"MaxCover","[Leaf].Cover.Maximum.FixedValue = " },
+            {"MaxLAI","[Leaf].Area.Maximum.FixedValue = " },
             {"GSMax","[Leaf].Gsmax350 = " },
             {"R50","[Leaf].R50 = " },
             {"InitialTrunkWt","[Trunk].InitialWt.Structural.FixedValue = "},
@@ -223,6 +227,10 @@ namespace Models.PMF.SimplePlantModels
             {"DAWSLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
             {"DAWSEndLinearGrowth","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
             {"DAWSMaxSize","[Fruit].DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
+            {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
+            //{"WaterStressCover","[STRUM].Leaf.Cover.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>
@@ -299,6 +307,21 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
 
+            if (this.WaterStress)
+            {
+                treeParams["WaterStressPhoto"] += "0.0";
+                //treeParams["WaterStressCover"] += "0.2";
+                treeParams["WaterStressExtinct"] += "0.2"; 
+                treeParams["WaterStressNUptake"] += "0.0";
+            }
+            else
+            {
+                treeParams["WaterStressPhoto"] += "1.0";
+                //treeParams["WaterStressCover"] += "1.0";
+                treeParams["WaterStressExtinct"] += "1.0";
+                treeParams["WaterStressNUptake"] += "1.0";
+            }
+
             treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
             treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
             treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
@@ -316,7 +339,7 @@ namespace Models.PMF.SimplePlantModels
             treeParams["RootNConc"] += RootNConc.ToString();
             treeParams["WoodNConc"] += TrunkNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            treeParams["MaxCover"] += MaxCover.ToString();
+            treeParams["MaxLAI"] += MaxLAI.ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
