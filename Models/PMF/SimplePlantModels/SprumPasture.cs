@@ -104,6 +104,10 @@ namespace Models.PMF.SimplePlantModels
         [Description("Proportion of pasture mass that is leguem (0-1)")]
         public double LegumePropn { get; set; }
 
+        /// <summary>"Does the crop respond to water stress?"</summary>
+        [Description("Does the crop respond to water stress?")]
+        public bool WaterStress { get; set; }
+
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
@@ -153,6 +157,9 @@ namespace Models.PMF.SimplePlantModels
             {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
             {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
             {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
+            {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressCover","[SPRUM].Leaf.Cover.WaterStressFactor.XYPairs.Y[1] = "},
+            {"WaterStressNUptake","[SPRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
 
         /// <summary>
@@ -228,6 +235,19 @@ namespace Models.PMF.SimplePlantModels
         public Cultivar coeffCalc()
         {
             Dictionary<string, string> pastureParams = new Dictionary<string, string>(blankParams);
+
+            if (this.WaterStress)
+            {
+                pastureParams["WaterStressPhoto"] += "0.0";
+                pastureParams["WaterStressCover"] += "0.4";
+                pastureParams["WaterStressNUptake"] += "0.0";
+            }
+            else
+            {
+                pastureParams["WaterStressPhoto"] += "1.0";
+                pastureParams["WaterStressCover"] += "1.0";
+                pastureParams["WaterStressNUptake"] += "1.0";
+            }
 
             pastureParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
             pastureParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
