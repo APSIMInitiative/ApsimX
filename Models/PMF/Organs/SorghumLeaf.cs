@@ -398,7 +398,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Leaf number.</summary>
         [JsonIgnore]
-        public double LeafNo => culms?.LeafNo ?? 0;
+        public double LeafNo => culms?.LeafNo > 1 ? culms.LeafNo : 0;
 
         /// <summary> /// Sowing Density (Population). /// </summary>
         [JsonIgnore]
