@@ -592,6 +592,8 @@ namespace Models.PMF.Organs
             WaterAllocation = 0;
 
             SowingDensity = 0;
+            // Default the stage number to 0 for Sorghum.
+            phenology.Stage = 0;
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
@@ -1061,7 +1063,6 @@ namespace Models.PMF.Organs
             nDeadLeaves = 0;
             var organNames = Arbitrator.OrganNames;
             leafIndex = organNames.IndexOf(Name);
-
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -1108,7 +1109,9 @@ namespace Models.PMF.Organs
 
             LAI += DltLAI - DltSenescedLai;
 
+            // TODO Revisit.
             int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+
             if (phenology.Stage >= flag)
             {
                 if (LAI - DltSenescedLai < 0.1)
