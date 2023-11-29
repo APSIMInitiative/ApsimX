@@ -323,7 +323,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.1,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Upper",
                   "ResourceName": null,

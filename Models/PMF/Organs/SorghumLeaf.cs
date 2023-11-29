@@ -170,7 +170,7 @@ namespace Models.PMF.Organs
         [Description("Fertile Tiller Number")]
         public double FertileTillerNumber
         {
-            get => culms.FertileTillerNumber;
+            get => culms?.FertileTillerNumber ?? 0;
             set
             {
                 //the preferred method for setting FertileTillerNumber is during the sowing event
