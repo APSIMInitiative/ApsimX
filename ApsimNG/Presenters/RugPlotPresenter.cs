@@ -89,7 +89,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void RefreshView()
         {
-            view.SetGraph(model.RVPs, model.RVIndices);
+            view.SetModel(model);
             propertiesPresenter.RefreshView(model);
         }
     }

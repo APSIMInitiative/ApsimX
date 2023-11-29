@@ -42,7 +42,7 @@ namespace Models.Management
         [Link] private Summary summary = null;
 
         /// <summary>detailed logging component</summary>
-        [Link(Type = LinkType.Child)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         public rotationRugplot detailedLogger = null;
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
-                    detailedLogger?.DoTransition(bestArc.Name);
+                    detailedLogger?.DoTransition(bestArc.DestinationName);
                     TransitionTo(bestArc);
                     more = true;
                     MadeAChange = true;

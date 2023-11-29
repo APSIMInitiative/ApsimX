@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+
 using System.Data;
 using Models.Core;
 using Models.Storage;
 using Models.Functions;
 using System.Collections;
-using System.Xml.Serialization;
+using System.Drawing;
 
 namespace Models.Management
 {
@@ -39,6 +40,8 @@ namespace Models.Management
         {
              RVPs = new List<RVPair>();
              RVIndices  = new Dictionary<DateTime, int>();
+             Transitions = new List<Transition>();
+             States = new List<string>();
         }
 
         /// <summary>
@@ -59,18 +62,25 @@ namespace Models.Management
                                  rule = rule, value = value});
 
        }
+
        /// <summary>
        /// log a transition
        /// </summary>
        public void DoTransition(string state) 
        {
-             //fixme - nothing for now..
+            // Find which padddock is being managed right now
+            var cp = simulation.Get(CurrentPaddockString);
+            if (cp is IFunction function)
+                cp = function.Value();
+            string currentPaddock = cp.ToString();
+            Transitions.Add(new Transition{Date = Clock.Today, paddock = currentPaddock, state = state});
        }
 
        [EventSubscribe("EndOfSimulation")]
         private void onEndSimulation(object sender, EventArgs args) {
               writeRVs();
               writeIndexes();
+              writeTransitions();
         }
 
         private string myLocalName()
@@ -123,7 +133,30 @@ namespace Models.Management
             }
             storage?.Writer?.WriteTable(table, false);
        }
-        private List<RVPair> _RVPs = null;
+       private void writeTransitions () {
+             string relativeModelPath = myLocalName();
+             DataTable messages = new DataTable("_" + relativeModelPath + "_Transitions");
+             messages.Columns.Add("SimulationName", typeof(string));
+             messages.Columns.Add("ComponentName", typeof(string));
+             messages.Columns.Add("Date", typeof(DateTime));
+             messages.Columns.Add("Paddock", typeof(string));
+             messages.Columns.Add("State", typeof(string));
+
+            DataTable table = messages.Clone();   // fixme - I dont understand why this is needed??
+            foreach (var t in Transitions) {
+               DataRow row = table.NewRow();
+               row[0] = simulation.Name;
+               row[1] = relativeModelPath;
+               row[2] = t.Date;
+               row[3] = t.paddock;
+               row[4] = t.state;
+               table.Rows.Add(row);
+            }
+            storage?.Writer?.WriteTable(table, false);
+       }
+
+        [NonSerialized]
+         private List<RVPair> _RVPs = null;
         /// <summary>The list of rules and evaluations </summary>
        public List<RVPair> RVPs {
             get {
@@ -133,6 +166,7 @@ namespace Models.Management
             private set {_RVPs = value;}
        }
 
+        [NonSerialized]
        private Dictionary<DateTime, int> _RVIndices = null;
         /// <summary>Indices (by date) into the big list of rules &amp; evaluations </summary>
         public Dictionary<DateTime, int> RVIndices {
@@ -142,21 +176,42 @@ namespace Models.Management
             } 
             private set {_RVIndices = value;}
        }
+        [NonSerialized]
+        private List<Transition> _Transitions = null;
+
+        /// <summary> The zones we know about</summary>
+        public List<Transition> Transitions {
+            get {
+               if (_Transitions == null) loadIt(); 
+               return(_Transitions);
+            } 
+            private set {_Transitions = value;}
+       }
+
+        private List<string> _States = null;
+        /// <summary> The zones we know about</summary>
+        public List<string> States {
+            get {
+               if (_States == null) loadIt(); 
+               return(_States);
+            } 
+            private set {_States = value;}
+       }
 
         private void loadIt() 
         {
              storage = this.FindInScope<IDataStore>();
              if (storage == null) {throw new Exception("No storage");}
              DataTable table = storage?.Reader?.GetData("_" + myLocalName() + "_Values" /*, 
-                                                        simulationNames: new [] { simulation.Name} links aren't resolved by here */);
+                                               fixme   simulationNames: new [] { simulation.Name} links aren't resolved by here */);
              if (table == null) {throw new Exception("No rule/value table in storage");}
              var Dates = table.AsEnumerable().Select(r => r.Field<DateTime>("Date")).ToArray();
-             var Paddocks = table.AsEnumerable().Select(r => r.Field<string>("Paddock")).ToArray();
+             var AllPaddocks = table.AsEnumerable().Select(r => r.Field<string>("Paddock")).ToArray();
              var Rules = table.AsEnumerable().Select(r => r.Field<string>("Rule")).ToArray();
              var Values = table.AsEnumerable().Select(r => r.Field<double>("Value")).ToArray();
              _RVPs = new List<RVPair>();
              for(int i = 0; i < Dates.Length; i++) {
-                _RVPs.Add(new RVPair{Date =Dates[i], paddock = Paddocks[i],
+                _RVPs.Add(new RVPair{Date =Dates[i], paddock = AllPaddocks[i],
                                      rule = Rules[i], value = Values[i]});
              }
 
@@ -169,9 +224,42 @@ namespace Models.Management
              for(int i = 0; i < Dates.Length; i++) {
                 _RVIndices.Add(Dates[i], Indices[i]);
              }
+
+             table = storage?.Reader?.GetData("_" + myLocalName() + "_Transitions" /*, 
+                                                        simulationNames: new [] { simulation.Name} links aren't resolved by here */);
+             Dates = table.AsEnumerable().Select(r => r.Field<DateTime>("Date")).ToArray();
+             AllPaddocks = table.AsEnumerable().Select(r => r.Field<string>("Paddock")).ToArray();
+             var AllStates = table.AsEnumerable().Select(r => r.Field<string>("State")).ToArray();
+             _Transitions = new List<Transition>();
+             for(int i = 0; i < Dates.Length; i++) {
+                _Transitions.Add(new Transition{Date = Dates[i], paddock = AllPaddocks[i], state = AllStates[i]});
+             }
+             _States = AllStates.Distinct().ToList();
         }
     }
+    /// <summary>
+    /// A rule:value pair
+    /// </summary>
+    public class Transition {
+       /// <summary>
+       /// 
+       /// </summary>
+       public Transition() { }
+       /// <summary>
+       /// 
+       /// </summary>
+       public DateTime Date;
 
+       /// <summary>
+       /// 
+       /// </summary>
+       public string paddock;
+
+       /// <summary>
+       /// 
+       /// </summary>
+       public string state;
+    }
     /// <summary>
     /// A rule:value pair
     /// </summary>
