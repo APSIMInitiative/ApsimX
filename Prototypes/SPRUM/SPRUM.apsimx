@@ -42,47 +42,96 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.SubDailyInterpolation, Models",
-                  "agregationMethod": 0,
+                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                  "MaximumTemperatureWeighting": 0.5,
                   "Name": "ThermalTime",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Progression through each of the phenological stages is driven by thermal time.  As temperature increases from zero to 30 degrees, development acelerates and then slows down again above 30 degress",
-                      "Name": "Description",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        1.0,
-                        15.0,
+                        0.0,
                         30.0,
                         40.0
                       ],
                       "Y": [
                         0.0,
-                        10.0,
-                        25.0,
+                        30.0,
                         0.0
                       ],
                       "XVariableName": null,
-                      "Name": "Response",
+                      "Name": "XYPairs",
                       "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
-                      "TempRangeFactors": null,
-                      "Name": "InterpolationMethod",
-                      "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": "Y",
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": -0.30000999999974737,
+                              "Maximum": 30.300009999999748,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": "X",
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": -0.4000099999997474,
+                              "Maximum": 40.400009999999746,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 5,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Graph",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": -65536,
+                              "FactorToVaryColours": null,
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": null,
+                              "XFieldName": ".Simulations.Replacements.SCRUM.Phenology.WeightedTemperatureFunction.XYPairs.X",
+                              "YFieldName": ".Simulations.Replacements.SCRUM.Phenology.WeightedTemperatureFunction.XYPairs.Y",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": false,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Series",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1121,14 +1170,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.0,
-                            0.5,
                             1.0
                           ],
                           "Y": [
                             0.0,
-                            0.0,
-                            1.0,
                             1.0
                           ],
                           "XVariableName": null,
@@ -1263,6 +1308,41 @@
                       "Name": "Age pattern",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WaterStressFactor",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0
+                          ],
+                          "Y": [
+                            0.4,
+                            1.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2981,33 +3061,71 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "Seasonal Pattern",
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "SeasonalPattern",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        2.0,
-                        3.0,
-                        4.0
-                      ],
-                      "Y": [
-                        100.0,
-                        250.0,
-                        300.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "HightOfRegrowth",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "MaxHeightFromRegrowth",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "RegrowthPattern",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                2.0,
+                                3.0,
+                                4.0
+                              ],
+                              "Y": [
+                                0.0,
+                                0.75,
+                                1.0
+                              ],
+                              "XVariableName": null,
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Stage",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
-                      "Name": "XValue",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PostGrazeHeight",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -3020,7 +3138,42 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[SPRUM].RelativeAnnualDimension",
-                  "Name": "Age pattern",
+                  "Name": "AgePattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "Name": "WaterStressFactor",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    1.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0
+                  ],
+                  "XVariableName": null,
+                  "Name": "XYPairs",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Fw",
+                  "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -4138,19 +4291,27 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
+                  "$type": "Models.PMF.SimplePlantModels.SprumPastureInstance, Models",
                   "AgeAtSimulationStart": 1.0,
                   "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
                   "Proot": 0.1,
-                  "MaxRD": 600.0,
                   "RootThyNeighbour": false,
+                  "MaxRD": 600.0,
+                  "MaxHeight": 300.0,
+                  "MaxPrunedHeight": 100.0,
+                  "MaxCover": 0.98,
+                  "ExtinctCoeff": 0.7,
                   "RootNConc": 0.01,
                   "LeafNConc": 0.05,
                   "ResidueNConc": 0.01,
+                  "LegumePropn": 0.0,
+                  "BaseT": 5.0,
+                  "OptT": 25.0,
+                  "MaxT": 35.0,
                   "GSMax": 0.006,
                   "R50": 120.0,
-                  "LegumePropn": 0.0,
+                  "WaterStress": false,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],
@@ -8711,19 +8872,27 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.SimplePlantModels.SprumPasture, Models",
+                  "$type": "Models.PMF.SimplePlantModels.SprumPastureInstance, Models",
                   "AgeAtSimulationStart": 1.0,
                   "YearsToMaxDimension": 1,
                   "PotentialGrowthRate": 0.9,
                   "Proot": 0.1,
-                  "MaxRD": 600.0,
                   "RootThyNeighbour": false,
+                  "MaxRD": 600.0,
+                  "MaxHeight": 300.0,
+                  "MaxPrunedHeight": 100.0,
+                  "MaxCover": 0.95,
+                  "ExtinctCoeff": 0.5,
                   "RootNConc": 0.01,
                   "LeafNConc": 0.05,
                   "ResidueNConc": 0.01,
+                  "LegumePropn": 0.0,
+                  "BaseT": 5.0,
+                  "OptT": 25.0,
+                  "MaxT": 35.0,
                   "GSMax": 0.006,
                   "R50": 120.0,
-                  "LegumePropn": 0.0,
+                  "WaterStress": false,
                   "Name": "BasePasture",
                   "ResourceName": null,
                   "Children": [],

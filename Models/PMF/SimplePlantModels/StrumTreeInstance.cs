@@ -52,18 +52,18 @@ namespace Models.PMF.SimplePlantModels
         [Description("End of Leaf fall (Days after Winter Solstice)")]
         public int EndLeafFallDAWS { get; set; }
 
+        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
+        [Separator("Tree Dimnesions")]
+        [Description("Grow roots into neighbouring zone (yes or no)")]
+        public bool RootThyNeighbour { get; set; }
+
         /// <summary>Root depth at harvest (mm)</summary>
-        [Separator("Plant Dimnesions")]
         [Description("Root depth when mature (mm)")]
         public double MaxRD { get; set; }
 
         /// <summary>Root Biomass proportion (0-1)</summary>
         [Description("Root Biomass proportion (0-1)")]
         public double Proot { get; set; }
-
-        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
-        [Description("Grow roots into neighbouring zone (yes or no)")]
-        public bool RootThyNeighbour { get; set; }
 
         /// <summary>Hight of the bottom of the canop (mm)</summary>
         [Description("Hight of the bottom of the canopy (mm)")]
@@ -86,7 +86,7 @@ namespace Models.PMF.SimplePlantModels
         public double MaxWidth { get; set; }
         
         /// <summary>Root Nitrogen Concentration</summary>
-        [Separator("Plant Nitrogen contents")]
+        [Separator("Tree Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
         public double RootNConc { get; set; }
 
@@ -107,17 +107,22 @@ namespace Models.PMF.SimplePlantModels
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Maximum cover of mature tree at leaf fall (0-1)</summary>
-        [Description("Maximum cover of mature tree at leaf fall (0-1)")]
+        /// <summary>Maximum cover of tree canopyl (0-1)</summary>
+        [Description("Maximum cover of tree canopy (0-1)")]
         public double MaxCover { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
+        [Separator("Water demand and response")]
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
         public double GSMax { get; set; }
 
         /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
         [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
         public double R50 { get; set; }
+
+        /// <summary>"Does the crop respond to water stress?"</summary>
+        [Description("Does the crop respond to water stress?")]
+        public bool WaterStress { get; set; }
 
         /// <summary>Maximum green cover</summary>
         [Separator("Fruit parameters")]
@@ -148,9 +153,6 @@ namespace Models.PMF.SimplePlantModels
         [Description("Max Size (Days After Winter Solstice)")]
         public int DAWSMaxSize { get; set; }
 
-        /// <summary>"Does the crop respond to water stress?"</summary>
-        [Description("Does the crop respond to water stress?")]
-        public bool WaterStress { get; set; }
 
         /// <summary>Cutting Event</summary>
         public event EventHandler<EventArgs> PhenologyHarvest;
