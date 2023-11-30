@@ -21,7 +21,7 @@ namespace Models.PMF.SimplePlantModels
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SprumPasture: Model
+    public class SprumPastureInstance: Model
     {
         /// <summary>Years from planting to reach Maximum dimension (years)</summary>
         [Separator("Pasture Age")]
@@ -32,17 +32,38 @@ namespace Models.PMF.SimplePlantModels
         [Description("Years from planting to reach Maximum root depth (years)")]
         public int YearsToMaxDimension { get; set; }
 
-        /// <summary>Maximum growth rate of pasture (g/m2/oCd)</summary>
+        /// <summary>Maximum growth rate of pasture (g/MJ)</summary>
         [Separator("Pasture growth")]
-        [Description("Maximum growth rate of pasture (g/m2/oCd)")]
-        public double PotentialGrowthRate { get; set; }
+        [Description("Radiation use efficiency (g/MJ)")]
+        public double RUE { get; set; }
 
         /// <summary>Root Biomass proportion (0-1)</summary>
         [Description("Root Biomass proportion (0-1)")]
         public double Proot { get; set; }
 
-        /// <summary>Root depth (mm)</summary>
+        /// <summary>Base temperature for crop</summary>
+        [Separator("Biomass production temperature Responses")]
+        [Description("Base temperature for photosynthesis (oC)")]
+        public double PSBaseT { get; set; }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Lower optimum temperature for photosynthesis (oC)")]
+        public double PSLOptT { get; set; }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Upper optimum temperature for photosynthesis (oC)")]
+        public double PSUOptT { get; set; }
+
+        /// <summary>Maximum temperature for crop</summary>
+        [Description("Maximum temperature for photosynthesis (oC)")]
+        public double PSMaxT { get; set; }
+
+        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
+        [Description("Grow roots into neighbouring zone (yes or no)")]
         [Separator("Plant Dimnesions")]
+        public bool RootThyNeighbour { get; set; }
+
+        /// <summary>Root depth (mm)</summary>
         [Description("Root depth (mm)")]
         public double MaxRD { get; set; }
 
@@ -55,20 +76,37 @@ namespace Models.PMF.SimplePlantModels
         public double MaxPrunedHeight { get; set; }
 
         /// <summary>Maximum green cover</summary>
+        [Separator("Canopy parameters")]
         [Description("Maximum green cover (0-0.97)")]
         public double MaxCover { get; set; }
 
+        /// <summary>Min green cover</summary>
+        [Description("Green cover post defoliation (0-MaxCover)")]
+        public double MinCover { get; set; }
+
         /// <summary>Maximum green cover</summary>
-        [Separator("Canopy parameters")]
         [Description("Extinction coefficient (0-1)")]
         public double ExtinctCoeff { get; set; }
 
-        /// <summary>Grow roots into neighbouring zone (yes or no)</summary>
-        [Description("Grow roots into neighbouring zone (yes or no)")]
-        public bool RootThyNeighbour { get; set; }
+        /// <summary>tt duration of regrowth period</summary>
+        [Description("Regrowth duration  (oCd)")]
+        public double RegrowthDuration { get; set; }
+
+        /// <summary>Base temperature for crop</summary>
+        [Separator("Canopy expansion Temperature Responses")]
+        [Description("Base temperature for Canopy expansion (oC)")]
+        public double BaseT { get; set; }
+
+        /// <summary>Optimum temperature for crop</summary>
+        [Description("Optimum temperature for Canopy expansion (oC)")]
+        public double OptT { get; set; }
+
+        /// <summary>Maximum temperature for crop</summary>
+        [Description("Maximum temperature for Canopy expansion (oC)")]
+        public double MaxT { get; set; }
 
         /// <summary>Root Nitrogen Concentration</summary>
-        [Separator("Plant Nitrogen contents")]
+        [Separator("Pasture Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
         public double RootNConc { get; set; }
 
@@ -80,29 +118,18 @@ namespace Models.PMF.SimplePlantModels
         [Description("Residue Nitrogen concentration(g/g)")]
         public double ResidueNConc { get; set; }
 
-        /// <summary>Base temperature for crop</summary>
-        [Description("Base temperature for crop (oC)")]
-        public double BaseT { get; set; }
-
-        /// <summary>Optimum temperature for crop</summary>
-        [Description("Optimum temperature for crop (oC)")]
-        public double OptT { get; set; }
-
-        /// <summary>Maximum temperature for crop</summary>
-        [Description("Maximum temperature for crop (oC)")]
-        public double MaxT { get; set; }
+        /// <summary>Proportion of pasture mass that is leguem (0-1)</summary>
+        [Description("Proportion of pasture mass that is leguem (0-1)")]
+        public double LegumePropn { get; set; }
 
         /// <summary>Maximum canopy conductance (between 0.001 and 0.016) </summary>
+        [Separator("Water demand and response")]
         [Description("Maximum canopy conductance (between 0.001 and 0.016)")]
         public double GSMax { get; set; }
 
         /// <summary>Net radiation at 50% of maximum conductance (between 50 and 200)</summary>
         [Description("Net radiation at 50% of maximum conductance (between 50 and 200)")]
         public double R50 { get; set; }
-
-        /// <summary>Proportion of pasture mass that is leguem (0-1)</summary>
-        [Description("Proportion of pasture mass that is leguem (0-1)")]
-        public double LegumePropn { get; set; }
 
         /// <summary>"Does the crop respond to water stress?"</summary>
         [Description("Does the crop respond to water stress?")]
@@ -134,30 +161,37 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>The cultivar object representing the current instance of the SPRUM pasture/// </summary>
         private Cultivar pasture = null;
 
-        
+
         [JsonIgnore]
         private Dictionary<string, string> blankParams = new Dictionary<string, string>()
         {
             {"YearsToMaturity","[SPRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"YearsToMaxRD","[SPRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
-            {"PotentialGrowthRate","[SPRUM].Leaf.Photosynthesis.Potential.g_per_oCd.FixedValue = "},
+            {"RUE","[SPRUM].Leaf.Photosynthesis.RUE.FixedValue = "},
+            {"PSBaseT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[1] = "},
+            {"PSLOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[2] = "},
+            {"PSUOptT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[3] = "},
+            {"PSMaxT","[SPRUM].Leaf.Photosynthesis.FT.XYPairs.X[4] = "},
             {"Proot","[SPRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.FixedValue = " },
             {"HightOfRegrowth","[SPRUM].Height.SeasonalPattern.HightOfRegrowth.MaxHeightFromRegrowth.FixedValue = "},
             {"MaxPrunedHeight","[SPRUM].Height.SeasonalPattern.PostGrazeHeight.FixedValue ="},
             {"MaxRootDepth","[SPRUM].Root.MaximumRootDepth.FixedValue = "},
-            {"MaxCover","[SPRUM].Leaf.Cover.Seasonal pattern.Ymax.FixedValue = "},
-            {"ExtinctCoeff","[Leaf].ExtinctionCoefficient.FixedValue = "},
+            {"MaxCover","[SPRUM].Leaf.Cover.SeasonalPattern.Ymax.FixedValue = "},
+            {"XoCover","[SPRUM].Leaf.Cover.SeasonalPattern.Xo.FixedValue = "},
+            {"bCover","[SPRUM].Leaf.Cover.SeasonalPattern.b.FixedValue = "},
+            {"ExtinctCoeff","[SPRUM].Leaf.ExtinctionCoefficient.FixedValue = "},
             {"ResidueNConc","[SPRUM].Residue.MaximumNConc.FixedValue = "},
             {"ProductNConc","[SPRUM].Leaf.MaximumNConc.FixedValue = "},
             {"RootNConc","[SPRUM].Root.MaximumNConc.FixedValue = "},
             {"GSMax","[SPRUM].Leaf.Gsmax350 = " },
             {"R50","[SPRUM].Leaf.R50 = " },
             {"LegumePropn","[SPRUM].LegumePropn.FixedValue = "},
-            {"BaseT","[Phenology].ThermalTime.XYPairs.X[1] = "},
-            {"OptT","[Phenology].ThermalTime.XYPairs.X[2] = " },
-            {"MaxT","[Phenology].ThermalTime.XYPairs.X[3] = " },
-            {"MaxTt","[Phenology].ThermalTime.XYPairs.Y[2] = "},
-            {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.WaterStressFactor.XYPairs.Y[1] = "},
+            {"RegrowDurat","[SPRUM].Phenology.Regrowth.Target.FixedValue =" },
+            {"BaseT","[SPRUM].Phenology.ThermalTime.XYPairs.X[1] = "},
+            {"OptT","[SPRUM].Phenology.ThermalTime.XYPairs.X[2] = " },
+            {"MaxT","[SPRUM].Phenology.ThermalTime.XYPairs.X[3] = " },
+            {"MaxTt","[SPRUM].Phenology.ThermalTime.XYPairs.Y[2] = "},
+            {"WaterStressPhoto","[SPRUM].Leaf.Photosynthesis.FW.XYPairs.Y[1] = "},
             {"WaterStressCover","[SPRUM].Leaf.Cover.WaterStressFactor.XYPairs.Y[1] = "},
             {"WaterStressNUptake","[SPRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
         };
@@ -249,21 +283,28 @@ namespace Models.PMF.SimplePlantModels
                 pastureParams["WaterStressNUptake"] += "1.0";
             }
 
-            pastureParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            pastureParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            pastureParams["PotentialGrowthRate"] += PotentialGrowthRate.ToString();
-            pastureParams["Proot"] += Proot.ToString();
-            pastureParams["HightOfRegrowth"] += (MaxHeight- MaxPrunedHeight).ToString();
-            pastureParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            pastureParams["MaxRootDepth"] += MaxRD.ToString();
-            pastureParams["MaxCover"] += MaxCover.ToString();
-            pastureParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            pastureParams["ResidueNConc"] += ResidueNConc.ToString();
-            pastureParams["ProductNConc"] += LeafNConc.ToString();
-            pastureParams["RootNConc"] += RootNConc.ToString();
-            pastureParams["GSMax"] += GSMax.ToString();
-            pastureParams["R50"] += R50.ToString();
-            pastureParams["LegumePropn"] += LegumePropn.ToString();
+            pastureParams["XoCover"] += ((this.RegrowthDuration *.3) * (0.5-this.MinCover) * 2.78 ).ToString();
+            pastureParams["bCover"] += (this.RegrowthDuration/6).ToString();
+            pastureParams["RegrowDurat"] += this.RegrowthDuration.ToString();
+            pastureParams["YearsToMaturity"] += this.YearsToMaxDimension.ToString();
+            pastureParams["YearsToMaxRD"] += this.YearsToMaxDimension.ToString();
+            pastureParams["RUE"] += RUE.ToString();
+            pastureParams["PSBaseT"] += this.PSBaseT.ToString();
+            pastureParams["PSLOptT"] += this.PSLOptT.ToString();
+            pastureParams["PSUOptT"] += this.PSUOptT.ToString();
+            pastureParams["PSMaxT"] += this.PSMaxT.ToString();
+            pastureParams["Proot"] += this.Proot.ToString();
+            pastureParams["HightOfRegrowth"] += (this.MaxHeight- this.MaxPrunedHeight).ToString();
+            pastureParams["MaxPrunedHeight"] += this.MaxPrunedHeight.ToString();
+            pastureParams["MaxRootDepth"] += this.MaxRD.ToString();
+            pastureParams["MaxCover"] += this.MaxCover.ToString();
+            pastureParams["ExtinctCoeff"] += this.ExtinctCoeff.ToString();
+            pastureParams["ResidueNConc"] += this.ResidueNConc.ToString();
+            pastureParams["ProductNConc"] += this.LeafNConc.ToString();
+            pastureParams["RootNConc"] += this.RootNConc.ToString();
+            pastureParams["GSMax"] += this.GSMax.ToString();
+            pastureParams["R50"] += this.R50.ToString();
+            pastureParams["LegumePropn"] += this.LegumePropn.ToString();
             pastureParams["BaseT"] += this.BaseT.ToString();
             pastureParams["OptT"] += this.OptT.ToString();
             pastureParams["MaxT"] += this.MaxT.ToString();
