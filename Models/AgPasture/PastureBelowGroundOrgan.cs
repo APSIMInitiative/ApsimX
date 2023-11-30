@@ -147,13 +147,13 @@ namespace Models.AgPasture
         internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0, Epsilon); } }
+        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0, Epsilon); } }
+        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0, Epsilon); } }
+        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
@@ -318,7 +318,7 @@ namespace Models.AgPasture
             CalculateRootZoneBottomLayer();
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
-            var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0, Epsilon));
+            var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
             Live.SetBiomass(rootBiomassWt, rootBiomassN);
             var blankArray = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), 0.0);
             Dead.SetBiomass(blankArray, blankArray); // assumes there's no dead material

@@ -8,6 +8,9 @@ namespace Models.Interfaces
     public interface ICanopy
     {
         /// <summary>Albedo.</summary>
+        string CanopyType { get; }
+
+        /// <summary>Albedo.</summary>
         double Albedo { get; }
 
         /// <summary>Gets or sets the gsmax.</summary>

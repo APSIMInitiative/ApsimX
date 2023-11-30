@@ -136,6 +136,11 @@ namespace Models.Climate
         [JsonIgnore]
         public double VPD { get; set; }
 
+        /// <summary>Daily Pan evaporation.</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PanEvap { get; set; }
+
         /// <summary>Rainfall (mm).</summary>
         [Units("mm")]
         [JsonIgnore]

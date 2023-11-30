@@ -25,11 +25,20 @@
 
         /// <summary>Moves the selected cell down one row.</summary>
         void MoveDown(bool shift = false);
-        
+
+        /// <summary>Cut cells to clipboard, deleting them from the cell</summary>
+        void Cut();
+
         /// <summary>Copy cells to clipboard.</summary>
         void Copy();
 
         /// <summary>Past cells from clipboard.</summary>
         void Paste();
+
+        /// <summary>Delete contents of cell</summary>
+        void Delete();
+
+        /// <summary></summary>
+        void SelectAll();
     }
 }

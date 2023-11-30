@@ -1917,7 +1917,7 @@ namespace Models.Soils
 
                 double tot_rain = SWIMRainAmt[SWIMRainAmt.Length - 1] - SWIMRainAmt[start];
 
-                double fraction = MathUtilities.Divide(amount, tot_rain, 1e6, divideTolerance);
+                double fraction = MathUtilities.Divide(amount, tot_rain, 1e6);
                 if (fraction > 1.0)
                     throw new Exception("Interception > Rainfall");
                 else
@@ -2164,7 +2164,7 @@ namespace Models.Soils
                 double eqrain = 0.0;
                 double amount = (SWIMRainAmt[counter] - SWIMRainAmt[counter - 1]) / 10.0;
                 double duration = SWIMRainTime[counter] - SWIMRainTime[counter - 1];
-                double avinten = MathUtilities.Divide(amount, duration, 0.0, divideTolerance);
+                double avinten = MathUtilities.Divide(amount, duration, 0.0);
 
                 if (avinten > 0.0)
                     eqrain = (1.0 + effpar * Math.Log(avinten / 2.5)) * amount;
@@ -2284,20 +2284,20 @@ namespace Models.Soils
 
             // reduce CN2 for the day due to cover effect
 
-            double cover_fract = MathUtilities.Divide(CoverSurfaceRunoff, CNCov, 0.0, divideTolerance);
+            double cover_fract = MathUtilities.Divide(CoverSurfaceRunoff, CNCov, 0.0);
             cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
 
             double cn2_new = CN2Bare - (CNRed * cover_fract);
 
             cn2_new = MathUtilities.Bound(cn2_new, 0.0, 100.0);
 
-            double cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0, divideTolerance);
-            double cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0, divideTolerance);
+            double cn1 = MathUtilities.Divide(cn2_new, (2.334 - 0.01334 * cn2_new), 0.0);
+            double cn3 = MathUtilities.Divide(cn2_new, (0.4036 + 0.005964 * cn2_new), 0.0);
             double cn = cn1 + (cn3 - cn1) * cnpd;
 
             //! curve number will be decided from scs curve number table ??dms
 
-            double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0, divideTolerance) - 1.0);
+            double s = 254.0 * (MathUtilities.Divide(100.0, cn, 1000000.0) - 1.0);
             double xpb = rain - 0.2 * s;
             xpb = Math.Max(xpb, 0.0);
 
@@ -2736,7 +2736,7 @@ namespace Models.Soils
                         }
                         qmax = Math.Max(qmax, Math.Abs(q[n + 1]));
                         if (qmax > 0.0)
-                            _dt = MathUtilities.Divide(MaxWaterIncrement, qmax, 0.0, divideTolerance);
+                            _dt = MathUtilities.Divide(MaxWaterIncrement, qmax, 0.0);
                     }
 
                     _dt = Math.Min(_dt, timestepRemaining);
@@ -2958,7 +2958,7 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current g%hmin.
 
-                double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0, divideTolerance);
+                double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0);
 
                 if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
@@ -3000,7 +3000,7 @@ namespace Models.Soils
                 // first calculate the amount of Energy that must have been
                 // applied to reach the current conductance.
 
-                double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0, divideTolerance);
+                double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0);
 
                 if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
@@ -3814,7 +3814,7 @@ namespace Models.Soils
                 {
                     //There is no adsorption:
 
-                    Cw = MathUtilities.Divide(Ctot, th[node], 0.0, divideTolerance);
+                    Cw = MathUtilities.Divide(Ctot, th[node], 0.0);
                     solved = true;
                 }
 
@@ -3830,7 +3830,7 @@ namespace Models.Soils
                 {
                     // Linear adsorption:
 
-                    Cw = MathUtilities.Divide(Ctot, th[node] + ex[solnum][node], 0.0, divideTolerance);
+                    Cw = MathUtilities.Divide(Ctot, th[node] + ex[solnum][node], 0.0);
                     solved = true;
                 }
                 else
@@ -3838,7 +3838,7 @@ namespace Models.Soils
                     // Non linear isotherm:
 
                     // take initial guess for Cw
-                    Cw = Math.Pow(MathUtilities.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0, divideTolerance), (1.0 / fip[solnum][node]));
+                    Cw = Math.Pow(MathUtilities.Divide(Ctot, (th[node] + ex[solnum][node]), 0.0), (1.0 / fip[solnum][node]));
                     if (Cw < 0.0)            // test added by RCichota 09/Jul/2010
                     {
                         string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: 0",
@@ -3881,7 +3881,7 @@ namespace Models.Soils
                         {
 
                             // next value for Cw
-                            Cw = Cw - MathUtilities.Divide(error_amount, 2 * dfdCw, 0.0, divideTolerance);
+                            Cw = Cw - MathUtilities.Divide(error_amount, 2 * dfdCw, 0.0);
                             if (Cw < 0.0)             // test added by RCichota 09/Jul/2010
                             {
                                 string mess = String.Format("  {0}({1}) = {2,12:G6} - Iteration: {3}",
@@ -4068,7 +4068,7 @@ namespace Models.Soils
                 double TD_Eo = CEvap(end_of_day) - CEvap(start_of_day);
 
                 for (int j = 0; j < nveg; j++)
-                    rtp[j] = MathUtilities.Divide(pep[j], TD_Eo, 0.0, divideTolerance) * rep;
+                    rtp[j] = MathUtilities.Divide(pep[j], TD_Eo, 0.0) * rep;
 
                 // pot soil evap rate is not linked to apsim timestep
                 tresp = sep / _dt;

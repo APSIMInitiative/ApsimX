@@ -61,6 +61,13 @@ namespace Models.Management
         public List<RuleAction> Arcs { get; set; } = new List<RuleAction>();
 
         /// <summary>
+        /// Whether this component is a toplevel manager that does things by itself, or working in conjuction with another manager component
+        /// </summary>
+        [Description("Top Level")]
+        [Tooltip("When enabled, this component will control other management components, if not it does nothing")]
+        public bool TopLevel { get; set; }
+
+        /// <summary>
         /// Initial state of the rotation.
         /// </summary>
         [Description("Initial State")]
@@ -80,7 +87,7 @@ namespace Models.Management
         /// Current State of the rotation.
         /// </summary>
         [JsonIgnore]
-        public string CurrentState { get; private set; }
+        public string CurrentState { get; set; }
 
         /// <summary>
         /// All dynamic events published by the rotation manager.
@@ -133,6 +140,9 @@ namespace Models.Management
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
         {
+            if (! TopLevel) { return; }
+
+            MadeAChange = false;
             bool more = true;
             while (more)
             {
@@ -144,9 +154,17 @@ namespace Models.Management
                     double score = 1;
                     foreach (string testCondition in arc.Conditions)
                     {
-                        object value = FindByPath(testCondition)?.Value;
-                        if (value == null)
-                            throw new Exception($"Test condition '{testCondition}' returned nothing");
+                        object value;
+                        try 
+                        { 
+                           value = FindByPath(testCondition)?.Value;
+                           if (value == null)
+                              throw new Exception("Test condition returned nothing");
+                        }
+                        catch (Exception ex) 
+                        {
+                            throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
+                        }
                         score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
                     }
 
@@ -176,8 +194,23 @@ namespace Models.Management
                 {
                     TransitionTo(bestArc);
                     more = true;
+                    MadeAChange = true;
                 }
             }
+        }
+        
+        private bool MadeAChange;
+
+        /// <summary>
+        /// Do our rule evaluation when asked by method call
+        /// </summary>
+        public bool DoManagement() 
+        {
+            bool oldState = TopLevel; // I can't see why this method would called when it is a toplevel, but...
+            TopLevel = true;
+            OnDoManagement(null, new EventArgs());
+            TopLevel = oldState;
+            return(MadeAChange);
         }
 
         /// <summary>
