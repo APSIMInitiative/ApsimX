@@ -72,8 +72,11 @@ namespace Models.Management
             var cp = simulation.Get(CurrentPaddockString);
             if (cp is IFunction function)
                 cp = function.Value();
-            string currentPaddock = cp.ToString();
-            Transitions.Add(new Transition{Date = Clock.Today, paddock = currentPaddock, state = state});
+            if (cp != null) 
+            {
+               string currentPaddock = cp.ToString();
+               Transitions.Add(new Transition{Date = Clock.Today, paddock = currentPaddock, state = state});
+            }
        }
 
        [EventSubscribe("EndOfSimulation")]
@@ -222,7 +225,8 @@ namespace Models.Management
              var Indices = table.AsEnumerable().Select(r => r.Field<int>("Index")).ToArray();
              _RVIndices = new Dictionary<DateTime, int>();
              for(int i = 0; i < Dates.Length; i++) {
-                _RVIndices.Add(Dates[i], Indices[i]);
+                if (! _RVIndices.ContainsKey(Dates[i]))
+                  _RVIndices.Add(Dates[i], Indices[i]);
              }
 
              table = storage?.Reader?.GetData("_" + myLocalName() + "_Transitions" /*, 

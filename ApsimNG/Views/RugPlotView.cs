@@ -16,6 +16,8 @@
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
     using System.Threading;
+    using Models.Core;
+
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -34,7 +36,8 @@
         private Label lastDateLabel;
         private DateTime selectedDate;
         private Label selectedDateLabel;
-
+        private Gtk.TreeStore RVTreeModel;
+        private Gtk.ListStore stateListStore;
         Button dateminus = null;
         Button dateplus = null;
 
@@ -122,40 +125,82 @@
             vbox2a.PackStart(scroller, true, true, 0);
 
             // States in upper right
-            VBox vbox2b = new VBox();
+            //VBox vbox2b = new VBox();
             VPaned vpane2b = new VPaned();
             
             ScrolledWindow StateLegend = new ScrolledWindow();
             StateLegend.ShadowType = ShadowType.EtchedIn;
             StateLegend.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-            //StateLegend.Add((stateList as ViewBase).MainWidget);
+
+            Gtk.TreeView stateTree = new Gtk.TreeView ();
+            var cr = new Gtk.CellRendererText ();
+            var c = stateTree.AppendColumn ("State", cr, "text", 0);
+            c.SetCellDataFunc(cr, new Gtk.TreeCellDataFunc (renderStateCell));
+
+            stateListStore = new Gtk.ListStore (typeof (string));
+            stateTree.Model = stateListStore;
+            StateLegend.Add(stateTree);
             vpane2b.Pack1(StateLegend, true, true );
 
             // Rule/values lower right
             ScrolledWindow RVTree = new ScrolledWindow();
             RVTree.ShadowType = ShadowType.EtchedIn;
             RVTree.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-            //RVTree.Add((CropList as ViewBase).MainWidget);
+            Gtk.TreeView tree = new Gtk.TreeView ();
+            var cr2 = new Gtk.CellRendererText ();
+            var c2 = tree.AppendColumn ("Paddock", cr2, "text", 0);
+            c2.SetCellDataFunc(cr2, new Gtk.TreeCellDataFunc (renderRVCell));
+
+            tree.AppendColumn ("Rule", new Gtk.CellRendererText (), "text", 1);
+            RVTreeModel = new TreeStore (typeof(string), typeof(string));
+
+            tree.Model = RVTreeModel;
+
+            RVTree.Add(tree);
             vpane2b.Pack2(RVTree, true, true );
             vpane2b.ShowAll();
 
             hpane2.Pack1(vbox2a, true, true );
-            hpane2.Pack2(vbox2b, true, true );
+            hpane2.Pack2(vpane2b, true, true );
 
             vbox1.PackEnd(hpane2, true, true , 0);
             vbox1.ShowAll();
 
-
             PropertiesView = new PropertyView(this);
             ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
+        }
 
-
-            //graphView.OnGraphObjectSelected += OnGraphObjectSelected;
-            //graphView.OnGraphObjectMoved += OnGraphObjectMoved;
-            //combobox1.Changed += OnComboBox1SelectedValueChanged;
-
-            // Ensure the menu is populated
-            Select(null);
+        /// <summary>
+        /// Set up the colour:state list at top right
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="cell"></param>
+        /// <param name="model"></param>
+        /// <param name="iter"></param>
+        private void renderStateCell (Gtk.TreeViewColumn column, Gtk.CellRenderer cell,
+                                      Gtk.ITreeModel model, Gtk.TreeIter iter)
+        {
+            var state = (string) model.GetValue (iter, 0);
+            var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+               Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
+            if (dgn != null) {
+               (cell as Gtk.CellRendererText).BackgroundRgba = dgn.Colour.ToRGBA();
+               (cell as Gtk.CellRendererText).Text = state;
+            }
+        }
+        private void renderRVCell (Gtk.TreeViewColumn column, Gtk.CellRenderer cell,
+                                      Gtk.ITreeModel model, Gtk.TreeIter iter)
+        {
+            var stringValue = (string) model.GetValue (iter, 0);
+            var stringValue2 = (string) model.GetValue (iter, 1);
+            double dblValue;
+            (cell as Gtk.CellRendererText).Text = stringValue;
+            if (Double.TryParse(stringValue, out dblValue)) {
+                if (dblValue <= 0) 
+                   (cell as Gtk.CellRendererText).Background = "red";
+                else
+                   (cell as Gtk.CellRendererText).Background = "green";
+            }
         }
 
         /// <summary>
@@ -180,17 +225,17 @@
             }
             if (model.Transitions != null)
                 myPaddocks = model.Transitions.Select(t => t.paddock).Distinct().ToList();
-            
-        }
 
-        /// <summary>
-        /// A graph object has been selected. Make the (middle part of) UI relevant to it
-        /// </summary>
-        /// <param name="objectName">Name of the object to be selected.</param>
-        public void Select(string objectName)
-        {
-        }
+            RVTreeModel.Clear();
+            foreach (var p in myPaddocks) {
+               RVTreeModel.AppendValues (p, "");
+            }
 
+            foreach (var node in rugPlotModel.FindAncestor<RotationManager>().Nodes) {
+               stateListStore.AppendValues (node.Name);
+            }
+        }
+ 
         /// <summary>
         /// Called when the main widget is destroyed.
         /// Need to detach all event handlers to/from native objects
@@ -274,6 +319,7 @@
         {
             DrawLabels(drawingContext);
             DrawRug(drawingContext);
+            DrawSelectedDate(drawingContext);
         }
 
         private void DrawCentredText(CairoContext context, string text, Point point)
@@ -283,13 +329,21 @@
             double y = point.Y - (height / 2 + top);
             context.MoveTo(x, y);
             context.SetColour(DefaultOutlineColour);
-            //OutlineColour
             context.DrawText(text, false, false);
         }
         private void DrawRectangle(CairoContext context, int x, int y, int w, int h, Color color)
         {
+            //context.SetColour(color);
+            //context.DrawFilledRectangle(x,y,w,h);
+            //context.Fill();
+
             context.SetColour(color);
-            context.DrawFilledRectangle(x,y,w,h );
+            context.SetLineWidth(0);
+            context.NewPath();
+            context.Rectangle(new System.Drawing.Rectangle(x,y,w,h));
+            context.StrokePreserve();
+            context.Fill();
+
         }
         
         private void DrawLabels(CairoContext ctx)
@@ -329,22 +383,38 @@
                    if (Transitions.Count <= 1) { continue; }
                    var tStart = Transitions[0].Date;
 
+                   int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
                    for (var i = 1; i < Transitions.Count; i++) 
                    { 
                        var tEnd = Transitions[i].Date;
-                       var x1 = m_DateWidth + (column * m_ColWidth) + i * m_ColWidth;
-                       var x2 = m_DateWidth + (column * m_ColWidth) + (i + 1) * m_ColWidth;
-                       var y1 = (int) (yoffset +  (tStart - t0).Days * yscale);
-                       var y2 = (int) (yoffset +  (tEnd - t0).Days * yscale);
-                       // fixme:
-                       // var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.Find(n => n.Name == Transitions[i].state) as DGNode;
-                       //DrawRectangle(ctx, x1, y1, x2-x1, y2-y1, dgn.color);
-
+                       x1 = m_DateWidth + column * m_ColWidth;
+                       x2 = m_DateWidth + (column + 1) * m_ColWidth;
+                       y1 = (int) (yoffset +  (tStart - t0).Days * yscale);
+                       y2 = (int) (yoffset +  (tEnd - t0).Days * yscale);
+                       // transition is logged at the end of a phase, so the colour of the rect is the preceding state
+                       var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                                 Find(n => n.Name == Transitions[i - 1].state) as APSIM.Shared.Graphing.Node;
+                       DrawRectangle(ctx, x1, y1, x2-x1, y2-y1, dgn.Colour);
                        tStart = tEnd;
                    }
+                   DrawRectangle(ctx, x1, y2, x2-x1, (int) (yoffset +  (t1 - t0).Days * yscale) - y2, 
+                              (rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                               Find(n => n.Name == Transitions.Last().state) as APSIM.Shared.Graphing.Node).Colour);
+
                    column++;
                 }
             }
+        }
+        private void DrawSelectedDate(CairoContext context)
+        {
+            context.SetColour(DefaultOutlineColour);
+            context.SetLineWidth(3);
+            context.NewPath();
+            context.MoveTo( m_DateWidth, (int) (yoffset +  (selectedDate - t0).Days * yscale) );
+            context.LineTo(m_DateWidth + myPaddocks.Count * m_ColWidth, 
+                            (int) (yoffset +  (selectedDate - t0).Days * yscale));
+            context.StrokePreserve();
+            context.Fill();
         }
         /// <summary>
         /// Drawing area has been rendered - make sure it has enough space.
@@ -369,15 +439,19 @@
         {
             try
             {
-                // Get the point clicked by the mouse.
-                Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
-                
                 if (args.Event.Button == 1)
                 {
-                    //mouseDown = true;
+                    // Get the point clicked by the mouse.
+                    Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
-                    // Redraw area.
-                    (o as DrawingArea).QueueDraw();
+                    var column = Convert.ToInt32(Math.Floor((args.Event.X - m_DateWidth) / m_ColWidth));
+                    column = Math.Max(0, Math.Min(myPaddocks.Count, column));
+                    var days = (args.Event.Y - yoffset) / yscale;
+                    days = Math.Max(0, Math.Min(days, (t1 - t0).Days));
+                    
+                    setDateTo (t0.AddDays(days));
+
+                    //RVTreeModel.
                 }
             }
             catch (Exception err)
@@ -385,18 +459,40 @@
                 ShowError(err);
             }
         }
+        private void setDateTo (DateTime t) {
+           selectedDate = t.Date;
+           if (selectedDate > lastDate) selectedDate = lastDate;
+           if (selectedDate < earliestDate) selectedDate = earliestDate;
+           selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
+
+           RVTreeModel.Clear();
+           foreach (var p in myPaddocks) {
+               Gtk.TreeIter iter = RVTreeModel.AppendValues (p);
+               if (rugPlotModel.RVIndices.ContainsKey(selectedDate)) 
+               {
+                  var idx = rugPlotModel.RVIndices[selectedDate];
+                  while (idx < rugPlotModel.RVPs.Count &&
+                         rugPlotModel.RVPs[idx].Date.Date == selectedDate.Date)
+                  {
+                      if (rugPlotModel.RVPs[idx].paddock == p) 
+                      {
+                           RVTreeModel.AppendValues (iter, 
+                                                     rugPlotModel.RVPs[idx].value.ToString(), 
+                                                     rugPlotModel.RVPs[idx].rule);
+                      }
+                      idx++;
+                  }
+               }
+           }
+        }
 
         private void onPlusButtonClicked( object obj, EventArgs args )
         {
-            selectedDate = selectedDate.AddDays(1);
-            if (selectedDate > lastDate) selectedDate = lastDate;
-            selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
+            setDateTo (selectedDate.AddDays(1));
         }
         private void onMinusButtonClicked( object obj, EventArgs args )
         {
-            selectedDate = selectedDate.AddDays(-1);
-            if (selectedDate < earliestDate) selectedDate = earliestDate;
-            selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
+            setDateTo (selectedDate.AddDays(-1));
         }
 
         private void onDateSelected(object source, System.EventArgs args)
