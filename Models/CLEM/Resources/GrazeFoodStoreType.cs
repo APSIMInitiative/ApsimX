@@ -45,7 +45,13 @@ namespace Models.CLEM.Resources
         [Description("Gross energy content")]
         [Units("MJ/kg digestible DM")]
         [Required]
-        public double EnergyContent { get; set; }
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [Required, GreaterThanEqualValue(0)]
+        [Description("Metabolisable energy content")]
+        [Units("MJ/kg DM")]
+        public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
@@ -688,7 +694,7 @@ namespace Models.CLEM.Resources
         {
             GrazeFoodStorePool pool = new()
             {
-                EnergyContent = EnergyContent,
+                MetabolisableEnergyContent = MetabolisableEnergyContent,
                 CPDegradability = CPDegradability,
                 FatContent = FatContent,
                 NitrogenContent = 0,

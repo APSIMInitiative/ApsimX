@@ -36,8 +36,14 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(18.4)]
         [Required, GreaterThanValue(0)]
         [Description("Gross energy content")]
-        [Units("MJ/kg digestible DM")]
-        public double EnergyContent { get; set; }
+        [Units("MJ/kg DM")]
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [Required, GreaterThanEqualValue(0)]
+        [Description("Metabolisable energy content")]
+        [Units("MJ/kg DM")]
+        public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
         [System.ComponentModel.DefaultValueAttribute(0)]
@@ -127,14 +133,14 @@ namespace Models.CLEM.Resources
             // initialise the current state and details of this store
             CurrentStoreDetails = new FoodResourcePacket()
             {
-                EnergyContent = EnergyContent,
+                MetabolisableEnergyContent = MetabolisableEnergyContent,
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent= FatContent,
                 NitrogenContent = NitrogenContent
             };
             StoreDetails = new FoodResourcePacket()
             {
-                EnergyContent = EnergyContent,
+                MetabolisableEnergyContent = MetabolisableEnergyContent,
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent
@@ -174,7 +180,7 @@ namespace Models.CLEM.Resources
                 CurrentStoreDetails.NitrogenContent = ((CurrentStoreDetails.NitrogenContent * Amount) + (foodPacket.NitrogenContent * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * Amount) + (foodPacket.DryMatterDigestibility * addAmount)) / (Amount + addAmount);
                 CurrentStoreDetails.FatContent = ((CurrentStoreDetails.FatContent * Amount) + (foodPacket.FatContent * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.EnergyContent = ((CurrentStoreDetails.EnergyContent * Amount) + (foodPacket.EnergyContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.MetabolisableEnergyContent = ((CurrentStoreDetails.MetabolisableEnergyContent * Amount) + (foodPacket.MetabolisableEnergyContent * addAmount)) / (Amount + addAmount);
 
                 this.amount += addAmount;
 

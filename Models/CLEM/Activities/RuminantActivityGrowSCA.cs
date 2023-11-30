@@ -66,7 +66,7 @@ namespace Models.CLEM.Activities
                 NitrogenToCrudeProteinFactor = 5.0,
                 NitrogenContent = 0,
                 // Energy content will be set in code based on breed parameter
-                EnergyContent = 0,
+                MetabolisableEnergyContent = 0,
                 // Amount will be set in code
                 Amount = 0
             };
@@ -324,7 +324,7 @@ namespace Models.CLEM.Activities
 
                 // ToDo: ensure MilkIntakeMaximum is daily and add units to summary description
 
-                milkPacket.EnergyContent = ind.BreedParams.EnergyContentMilk;
+                milkPacket.MetabolisableEnergyContent = ind.BreedParams.EnergyContentMilk;
                 milkPacket.Amount = Math.Min(ind.BreedParams.MilkIntakeMaximum, milkIntakeDaily)*30.4;
                 ind.Intake.AddFeed(milkPacket);
 
@@ -518,7 +518,7 @@ namespace Models.CLEM.Activities
             double fermentableSupplementMEI = (13.3 * concentrate.Details?.DryMatterDigestibility??0 + 1.32) * concentrate?.Details.Amount??0; //Eq.(32) - (Ether extract set to zero)
 
             double RDPReq = (ind.BreedParams.RumenDegradableProteinIntercept + ind.BreedParams.RumenDegradableProteinSlope * (1 - Math.Exp(-ind.BreedParams.RumenDegradableProteinExponent *
-                (feedingLevel + 1)))) * (forage?.Details.EnergyContent??0 + fermentableSupplementMEI);
+                (feedingLevel + 1)))) * (forage?.Details.MEContent??0 + fermentableSupplementMEI);
 
             if(RDPReq > ind.Intake.RDP)
             {

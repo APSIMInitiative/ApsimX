@@ -16,7 +16,10 @@ namespace Models.CLEM.Resources
         public FeedType TypeOfFeed { get; set; } = FeedType.Forage;
 
         /// <inheritdoc/>
-        public double EnergyContent { get; set; }
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
         public double FatContent { get; set; }

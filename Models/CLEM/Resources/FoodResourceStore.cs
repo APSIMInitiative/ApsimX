@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
             Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.FatContent = ((Details.FatContent * Details.Amount) + (packet.FatContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.NitrogenContent = ((Details.NitrogenContent * Details.Amount) + (packet.NitrogenContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.EnergyContent = ((Details.EnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.ADIP = ((Details.ADIP * Details.Amount) + (packet.ADIP * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
 
@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Metabolisable energy.
         /// </summary>
-        public double ME { get { return Details.EnergyContent * Details.Amount; } }
+        public double ME { get { return Details.MEContent * Details.Amount; } }
 
         /// <summary>
         /// Reset running stores.

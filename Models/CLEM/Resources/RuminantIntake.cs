@@ -124,7 +124,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Sum(a => a.Value.Details.EnergyContent * a.Value.Details.Amount);
+                return feedTypeStoreDict.Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.EnergyContent * a.Value.Details.Amount)/SolidIntake;
+                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount)/SolidIntake;
             }
         }
 

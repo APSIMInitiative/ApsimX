@@ -13,7 +13,10 @@ namespace Models.CLEM.Resources
         public FeedType TypeOfFeed { get; set; }
 
         /// <inheritdoc/>
-        public double EnergyContent { get; set; }
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double MetabolisableEnergyContent { get; set; }
 
         /// <inheritdoc/>
         public double DryMatterDigestibility { get; set; }
@@ -45,9 +48,9 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                if(EnergyContent > 0)
+                if(MetabolisableEnergyContent > 0)
                 {
-                    return EnergyContent;
+                    return MetabolisableEnergyContent;
                 }
                 return TypeOfFeed switch
                 {
@@ -117,7 +120,7 @@ namespace Models.CLEM.Resources
             FatContent = 0;
             NitrogenContent = 0;
             Amount = 0;
-            EnergyContent = 0;
+            MetabolisableEnergyContent = 0;
             RumenDegradableProteinContent = 0;
             ADIP = 0;
         }
@@ -131,7 +134,7 @@ namespace Models.CLEM.Resources
             return new FoodResourcePacket()
             {
                 TypeOfFeed = TypeOfFeed,
-                EnergyContent = EnergyContent,
+                MetabolisableEnergyContent = MetabolisableEnergyContent,
                 Amount = amount,
                 DryMatterDigestibility = DryMatterDigestibility,
                 FatContent = FatContent,

@@ -18,7 +18,12 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Gross energy content (MJ/kg DM)
         /// </summary>
-        double EnergyContent { get; set; }
+        double GrossEnergyContent { get; set; }
+
+        /// <summary>
+        /// Metabolisable energy content (MJ/kg DM)
+        /// </summary>
+        double MetabolisableEnergyContent { get; set; }
 
         /// <summary>
         /// Dry Matter Digestibility (%)
