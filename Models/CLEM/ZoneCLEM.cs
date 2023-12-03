@@ -234,7 +234,7 @@ namespace Models.CLEM
         /// <param name="model">Model performing validation</param>
         /// <param name="messages">List of messages</param>
         /// <exception cref="ApsimXException"></exception>
-        public static void ReportErrors(IModel model, IEnumerable<Models.Logging.Message> messages)
+        public static void ReportErrors(IModel model, IEnumerable<Logging.Message> messages)
         {
             // report error and stop
             if (messages.Any())
@@ -245,7 +245,7 @@ namespace Models.CLEM
                     innerExceptionString.Append($"{error.Text}{Environment.NewLine}");
 
                 Exception innerException = new Exception(innerExceptionString.ToString());
-                throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occured during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
+                throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occurred during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
 

@@ -32,12 +32,12 @@ namespace Models.CLEM.Activities
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
         /// <summary>
-        /// Resource shortfall occured event handler
+        /// Resource shortfall occurred event handler
         /// </summary>
         public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
-        /// Resource shortfall occured event handler
+        /// Resource shortfall occurred event handler
         /// </summary>
         public event EventHandler ActivityPerformed;
 

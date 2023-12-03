@@ -8,7 +8,7 @@ namespace Models.CLEM.Interfaces
     public interface IResourceWithTransactionType
     {
         /// <summary>
-        /// Resource transaction occured event handler
+        /// Resource transaction occurred event handler
         /// </summary>
         event EventHandler TransactionOccurred;
 

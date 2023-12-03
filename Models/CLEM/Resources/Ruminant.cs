@@ -4,6 +4,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -23,26 +24,22 @@ namespace Models.CLEM.Resources
 
         #region All new Grow SCA properties
 
-        ///// <summary>
-        ///// Constructor
-        ///// </summary>
-        //public Ruminant()
-        //{
-        //}
-
         /// <summary>
         /// Ruminant intake manager
         /// </summary>
+        [JsonIgnore]
         public RuminantIntake Intake = new();
 
         /// <summary>
         /// Store for tracking energy use
         /// </summary>
+        [JsonIgnore]
         public RuminantEnergyInfo Energy { get; set; }
 
         /// <summary>
         /// Store for tracking ruminant outputs
         /// </summary>
+        [JsonIgnore]
         public RuminantOutputInfo Output { get; set; } = new RuminantOutputInfo();
 
         /// <summary>

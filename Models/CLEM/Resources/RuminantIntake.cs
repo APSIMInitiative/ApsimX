@@ -1,4 +1,5 @@
-﻿using Docker.DotNet.Models;
+﻿using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Interfaces;
 using System;
@@ -6,12 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
     /// Manages tracking of Ruminant intake quality and quantity.
     /// </summary>
+    [Serializable]
     public  class RuminantIntake
     {
         private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new();
@@ -20,11 +23,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The potential and actual milk intake of the individual.
         /// </summary>
+        [JsonIgnore]
         public ExpectedActualContainer Milk { get; private set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// The potential and actual feed intake of the individual.
         /// </summary>
+        [JsonIgnore]
         public ExpectedActualContainer Feed { get; private set; } = new ExpectedActualContainer();
 
         /// <summary>
@@ -135,7 +140,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount)/SolidIntake;
+                if (MathUtilities.IsGreaterThan(SolidIntake, 0))
+                {
+                    return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.MEContent * a.Value.Details.Amount) / SolidIntake;
+                }
+                return 0;
             }
         }
 

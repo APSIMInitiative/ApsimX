@@ -9,6 +9,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Stores all ruminant outputs for the time step
     /// </summary>
+    [Serializable]
     public class RuminantOutputInfo
     {
         /// <summary>
@@ -30,6 +31,5 @@ namespace Models.CLEM.Resources
         /// Manure
         /// </summary>
         public double Manure { get; set; }
-
     }
 }

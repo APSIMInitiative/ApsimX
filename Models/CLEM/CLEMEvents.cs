@@ -327,7 +327,7 @@ namespace Models.CLEM
 
             // not all errors will be reported in validation so perform in two steps
             //Validate(this, "", this, summary);
-            ZoneCLEM.ReportInvalidParameters(this);
+            //ZoneCLEM.ReportInvalidParameters(this);
 
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {

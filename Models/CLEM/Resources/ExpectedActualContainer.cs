@@ -8,6 +8,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Object to manage measures that have an expected (potential) and actual (realised) value
     /// </summary>
+    [Serializable]
     public class ExpectedActualContainer
     {
         /// <summary>

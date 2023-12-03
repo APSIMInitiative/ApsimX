@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -359,6 +360,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Lactation information
         /// </summary>
+        [JsonIgnore]
         public RuminantLactationInfo Milk { get; set; } = new RuminantLactationInfo();
 
         /// <summary>

@@ -21,7 +21,7 @@ namespace Models.CLEM.Interfaces
         double GrossEnergyContent { get; set; }
 
         /// <summary>
-        /// Metabolisable energy content (MJ/kg DM)
+        /// Metabolisable energy content (MJ/kg DM). User provided value. Use MEContent of FoodResourcePacket  
         /// </summary>
         double MetabolisableEnergyContent { get; set; }
 

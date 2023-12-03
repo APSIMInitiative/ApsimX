@@ -276,7 +276,7 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
-        /// Bank account transaction occured
+        /// Bank account transaction occurred
         /// </summary>
         public virtual event EventHandler TransactionOccurred;
 
