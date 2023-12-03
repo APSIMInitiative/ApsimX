@@ -342,10 +342,10 @@ namespace Models.CLEM.Activities
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
             double EndogenousUrinaryProtein = ind.BreedParams.BreedEUPFactor1 * Math.Log(ind.Weight) - ind.BreedParams.BreedEUPFactor2;
-            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26 * (10 ^ -4)) * milkStore.ME;
+            double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26 * (10 ^ -4)) * milkStore?.ME??0;
             double DermalProtein = (1.1 * (10 ^ -4)) * Math.Pow(ind.Weight,0.75);
             // digestible protein leaving stomach from milk
-            double DPLSmilk = milkStore.CrudeProtein * 0.92;
+            double DPLSmilk = milkStore?.CrudeProtein??0 * 0.92;
             // efficiency of using DPLS
             double kDPLS = (ind.Weaned)? 0.7: 0.7 / (1 + ((0.7 / 0.8)-1)*(DPLSmilk / ind.Intake.DPLS) ); //EQn 103
             double proteinForMaintenance = EndogenousUrinaryProtein + EndogenousFecalProtein + DermalProtein;
@@ -426,7 +426,7 @@ namespace Models.CLEM.Activities
             double Nbal =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.BreedParams.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.BreedParams.Prt2NTissue);
 
             // Total fecal protein
-            double TFP = ind.Intake.IndigestibleUDP + ind.BreedParams.CA7 * ind.BreedParams.CA8 * ind.Intake.RDPRequired + (1 - ind.BreedParams.CA5) * milkStore.CrudeProtein + EndogenousFecalProtein;
+            double TFP = ind.Intake.IndigestibleUDP + ind.BreedParams.CA7 * ind.BreedParams.CA8 * ind.Intake.RDPRequired + (1 - ind.BreedParams.CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
 
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + kgProteinChange) - TFP - DermalProtein;
@@ -477,7 +477,12 @@ namespace Models.CLEM.Activities
                 else
                     ind.Energy.ForMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.FHPScalar * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * Math.Min(ind.AgeInYears, 6)) + (ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake);
 
-                cp_out = CalculateCrudeProtein(ind, (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1);
+                double adjustedFeedingLevel = -1;
+                if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))
+                {
+                    adjustedFeedingLevel = (ind.Energy.FromIntake / ind.Energy.ForMaintenance) - 1;
+                }
+                cp_out = CalculateCrudeProtein(ind, adjustedFeedingLevel);
                 if (cp_out.reduction < 1 & recalculate == 0)
                     ind.Intake.AdjustIntakeByRumenProteinRequired(cp_out.reduction);
                 else
@@ -496,13 +501,21 @@ namespace Models.CLEM.Activities
 
             FoodResourceStore forage = ind.Intake.GetStore(FeedType.Forage);
             FoodResourceStore concentrate = ind.Intake.GetStore(FeedType.Concentrate);
+            double MEI = 0;
 
             if (feedingLevel > 0)
             {
-                if(forage != null)
-                    ind.Intake.ReduceDegradableProtein(FeedType.Forage, (1 - (ind.BreedParams.RumenDegradabilityIntercept - ind.BreedParams.RumenDegradabilitySlope * forage.Details?.DryMatterDigestibility??0) * feedingLevel));
+                if (forage != null)
+                {
+                    ind.Intake.ReduceDegradableProtein(FeedType.Forage, (1 - (ind.BreedParams.RumenDegradabilityIntercept - ind.BreedParams.RumenDegradabilitySlope * forage.Details?.DryMatterDigestibility ?? 0) * feedingLevel));
+                    MEI += forage?.Details.MEContent ?? 0;
+                }
                 if (concentrate != null)
+                {
                     ind.Intake.ReduceDegradableProtein(FeedType.Concentrate, (1 - ind.BreedParams.RumenDegradabilityConcentrateSlope * feedingLevel)); // Eq.(50)
+                    // fermentable Supplement MEI
+                    MEI += (13.3 * concentrate?.Details?.DryMatterDigestibility ?? 0 + 1.32) * concentrate?.Details.Amount ?? 0; //Eq.(32) - (Ether extract set to zero)
+                }
             }
 
             // Crude protein has been adjusted in previous loop if feeding level > 0
@@ -515,10 +528,9 @@ namespace Models.CLEM.Activities
 
             // ignored GrassGro timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
             // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
-            double fermentableSupplementMEI = (13.3 * concentrate.Details?.DryMatterDigestibility??0 + 1.32) * concentrate?.Details.Amount??0; //Eq.(32) - (Ether extract set to zero)
 
             double RDPReq = (ind.BreedParams.RumenDegradableProteinIntercept + ind.BreedParams.RumenDegradableProteinSlope * (1 - Math.Exp(-ind.BreedParams.RumenDegradableProteinExponent *
-                (feedingLevel + 1)))) * (forage?.Details.MEContent??0 + fermentableSupplementMEI);
+                (feedingLevel + 1)))) * MEI;
 
             if(RDPReq > ind.Intake.RDP)
             {
