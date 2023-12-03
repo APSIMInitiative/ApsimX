@@ -1,4 +1,6 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.EMMA;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
@@ -30,7 +32,11 @@ namespace Models.CLEM.Timers
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
+
+        // local datetime adjusted if monthly time-step
+        DateTime endDate;
+        DateTime startDate;
 
         /// <summary>
         /// Start date of period to perform activities
@@ -72,6 +78,24 @@ namespace Models.CLEM.Timers
             this.SetDefaults();
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            if(events.TimeStep == TimeStepTypes.Monthly)
+            {
+                endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+                startDate = new(StartDate.Year, StartDate.Month, 1);
+            }
+            else
+            {
+                endDate = EndDate;
+                startDate = StartDate;
+            }
+        }
+
         /// <summary>
         /// Method to determine whether the activity is due
         /// </summary>
@@ -80,11 +104,10 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                if (clock is null)
-                {
+                if (events is null)
                     return true;
-                }
-                bool inrange = IsMonthInRange(clock.Today);
+
+                bool inrange = IsInRange(events.Clock.Today);
                 if (inrange)
                 {
                     // report activity performed.
@@ -103,18 +126,20 @@ namespace Models.CLEM.Timers
         /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
-            return IsMonthInRange(dateToCheck);
+            return IsInRange(dateToCheck);
         }
 
-        private bool IsMonthInRange(DateTime date)
+        private bool IsInRange(DateTime date)
         {
-            DateTime endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
-            DateTime startDate = new(StartDate.Year, StartDate.Month, 1);
+            //DateTime endDate = new(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
+            //DateTime startDate = new(StartDate.Year, StartDate.Month, 1);
 
-            bool inrange = ((date >= startDate) && (date <= endDate));
-            if (Invert)
-                inrange = !inrange;
-            return inrange;
+            //bool inrange = ((date >= startDate) && (date <= endDate));
+
+            bool inrange = ((events.TimeStepStart >= startDate) && (events.TimeStepStart <= endDate));
+            //if (Invert)
+            //    inrange = !inrange;
+            return (Invert)?!inrange:inrange;
         }
 
         /// <inheritdoc/>
@@ -133,11 +158,9 @@ namespace Models.CLEM.Timers
 
             using StringWriter htmlWriter = new();
             htmlWriter.Write("\r\n<div class=\"filter\">");
-            string invertString = "";
-            if (Invert)
-                invertString = "when <b>NOT</b> ";
-
+            string invertString = (Invert)? "when <b>NOT</b> ":"";
             htmlWriter.Write("Perform " + invertString + "between ");
+
             if (startDate.Year == 1)
                 htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
             else
