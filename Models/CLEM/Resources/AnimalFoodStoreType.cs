@@ -126,10 +126,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
-            if (StartingAmount > 0)
-                Add(StartingAmount, null, null, "Starting value");
-
             // initialise the current state and details of this store
             CurrentStoreDetails = new FoodResourcePacket()
             {
@@ -145,6 +141,10 @@ namespace Models.CLEM.Resources
                 FatContent = FatContent,
                 NitrogenContent = NitrogenContent
             };
+
+            this.amount = 0;
+            if (StartingAmount > 0)
+                Add(StartingAmount, null, null, "Starting value");
         }
 
         #region Transactions

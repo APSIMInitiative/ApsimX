@@ -288,7 +288,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to perform any start of simulation tasks</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("DoInitialSummary")] //StartOfSimulation")]
         protected virtual void OnStartOfSimulation(object sender, EventArgs e)
         {
             // create Transaction category based on Zone settings
@@ -299,7 +299,7 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to perform companion tasks at start of simulation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("DoInitialSummary")] //"StartOfSimulation")]
         protected virtual void OnStartOfSimulationGetCompanionModels(object sender, EventArgs e)
         {
             // if this activity supports companion child models for controlling resource requirements
