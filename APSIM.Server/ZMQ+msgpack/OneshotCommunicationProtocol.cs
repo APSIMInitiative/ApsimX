@@ -52,7 +52,6 @@ namespace APSIM.ZMQServer.IO
         /// </summary>
         public void doCommands(ApsimEncapsulator apsim)
         {
-            Console.WriteLine("OneshotComms; doCommands; YAY 1");
             while (true)
             {
                 var msg = conn.ReceiveMultipartMessage();
@@ -99,7 +98,7 @@ namespace APSIM.ZMQServer.IO
                     if (verbose) { Console.WriteLine(msgBuf); }
                     conn.SendFrame(msgBuf);
                 }
-            Console.WriteLine("OneshotComms; doCommands; YAY 2");
+            // Console.WriteLine("OneshotComms; doCommands; YAY 2");
             }
         }
 

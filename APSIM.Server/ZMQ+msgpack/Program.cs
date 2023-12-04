@@ -14,7 +14,7 @@ namespace APSIM.Server
 
         static int Main(string[] args)
         {
-            Console.WriteLine("Main; YAY");
+            // Console.WriteLine("Main; YAY");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             new Parser(config =>
             {

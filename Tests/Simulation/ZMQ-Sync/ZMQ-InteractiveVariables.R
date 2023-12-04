@@ -63,6 +63,7 @@ poll_zmq2 <- function(socket) {
     } else if (msg == "paused") {
       # Each send is followed by a receive. "set" responds with a string "ok",
       # "get" responds with a packed byte array that we pass to the deserialiser
+      
       #sendCommand(socket, "get", "[Clock].Today.Day")
       #reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
       #stopifnot(class(reply) == "numeric")
