@@ -25,45 +25,47 @@ namespace Models.PMF
 
         /// <summary>The Potential Area Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction a0 = null;
-        /// <summary>The Potential Area Calculation</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction a1 = null;
+        readonly IFunction a0 = null;
 
         /// <summary>The Potential Area Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction b0 = null;
+        readonly IFunction a1 = null;
+
         /// <summary>The Potential Area Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction b1 = null;
+        readonly IFunction b0 = null;
+
+        /// <summary>The Potential Area Calculation</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        readonly IFunction b1 = null;
 
         ///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
         //[Link(Type = LinkType.Child, ByName = true)]
         //IFunction aX0 = null;
 
-        /// <summary>TODO JS</summary>
+        /// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aX0S = null;
+        readonly IFunction aX0I = null;
 
-        /// <summary>TODO JS</summary>
+        /// <summary>The slope of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aX0I = null;
+        readonly IFunction aX0S = null;
 
         /// <summary></summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aMaxA = null;
+        readonly IFunction aMaxA = null;
 
         /// <summary>Senescence Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aMaxB = null;
+        readonly IFunction aMaxB = null;
 
         /// <summary>Senescence Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aMaxC = null;
+        readonly IFunction aMaxC = null;
 
         /// <summary>Senescence Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction leafNoCorrection = null;
+        readonly IFunction leafNoCorrection = null;
 
         private double sowingDensity;
 
@@ -110,8 +112,8 @@ namespace Models.PMF
             largestLeafSize *= (1 - vertAdjust);
 
             double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
-                aX0S.Value(),
                 aX0I.Value(),
+                aX0S.Value(),
                 finalLeafNo
             );
 

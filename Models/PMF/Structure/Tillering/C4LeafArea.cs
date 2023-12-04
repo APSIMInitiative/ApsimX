@@ -7,10 +7,10 @@ using System;
 
 namespace Models.PMF
 {
-	/// <summary>
-	/// This is the basic organ class that contains biomass structures and transfers
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// This is the basic organ class that contains biomass structures and transfers
+    /// </summary>
+    [Serializable]
 	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(LeafCulms))]
@@ -36,45 +36,47 @@ namespace Models.PMF
 
 		/// <summary>The Potential Area Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction a0 = null;
-		/// <summary>The Potential Area Calculation</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction a1 = null;
+		readonly IFunction a0 = null;
 
 		/// <summary>The Potential Area Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction b0 = null;
+		readonly IFunction a1 = null;
+
 		/// <summary>The Potential Area Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction b1 = null;
+		readonly IFunction b0 = null;
 
-		///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
-		//[Link(Type = LinkType.Child, ByName = true)]
-		//IFunction aX0 = null;
+		/// <summary>The Potential Area Calculation</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		readonly IFunction b1 = null;
 
-        /// <summary>TODO</summary>
+        ///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction aX0 = null;
+
+        /// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aX0S = null;
+        readonly IFunction aX0I = null;
 
-        /// <summary>TODO</summary>
+        /// <summary>The slope of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aX0I = null;
+        readonly IFunction aX0S = null;
 
         /// <summary></summary>
         [Link(Type = LinkType.Child, ByName = true)]
-		IFunction aMaxS = null;
+		readonly IFunction aMaxS = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction aMaxI = null;
+		readonly IFunction aMaxI = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction leafNoCorrection = null;
+		readonly IFunction leafNoCorrection = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction largestLeafPlateau = null;
+		readonly IFunction largestLeafPlateau = null;
         
 		private double sowingDensity;
 		
@@ -116,8 +118,8 @@ namespace Models.PMF
             // (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
 
             double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
-				aX0S.Value(),
-                aX0I.Value(),
+				aX0I.Value(),
+                aX0S.Value(),
                 finalLeafNo
 			);
 
