@@ -10,7 +10,8 @@
             double finalLeafNo
         )
 		{
-            return ax0s * finalLeafNo + ax0i;
+            double largestLeafPosition = (ax0s * finalLeafNo) + ax0i;
+            return largestLeafPosition;
 		}
 	}
 }
