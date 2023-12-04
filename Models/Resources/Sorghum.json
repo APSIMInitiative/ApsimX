@@ -3614,6 +3614,24 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aMaxSlope",
                           "Name": "aMaxS",
                           "ResourceName": null,
@@ -3760,6 +3778,24 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.aX0",
                           "Name": "aX0",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0I",
+                          "Name": "aX0I",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0S",
+                          "Name": "aX0S",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -5877,6 +5913,26 @@
                   "FixedValue": 0.687,
                   "Units": null,
                   "Name": "aX0",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 3.58,
+                  "Units": null,
+                  "Name": "aX0I",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.60,
+                  "Units": null,
+                  "Name": "aX0S",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

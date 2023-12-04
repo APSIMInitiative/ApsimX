@@ -48,12 +48,20 @@ namespace Models.PMF
 		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction b1 = null;
 
-		/// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
-		IFunction aX0 = null;
+		///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
+		//[Link(Type = LinkType.Child, ByName = true)]
+		//IFunction aX0 = null;
 
-		/// <summary></summary>
-		[Link(Type = LinkType.Child, ByName = true)]
+        /// <summary>TODO</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction aX0S = null;
+
+        /// <summary>TODO</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction aX0I = null;
+
+        /// <summary></summary>
+        [Link(Type = LinkType.Child, ByName = true)]
 		IFunction aMaxS = null;
 
 		/// <summary>Senescence Calculation</summary>
@@ -77,11 +85,11 @@ namespace Models.PMF
 		{
 			if (culms == null) culms = Parent as LeafCulms ?? throw new Exception("C4LeafArea expects a LeafCulms as a parent: " + Parent?.Name ?? "Null");
 
-			return calcPotentialLeafArea(culms);
+			return CalcPotentialLeafArea(culms);
 		}
 
 		/// <summary> Calculate the potential area for all culms</summary>
-		public double calcPotentialLeafArea(LeafCulms culms)
+		public double CalcPotentialLeafArea(LeafCulms culms)
 		{
 			var dltCulmArea = 0.0;
             foreach (var culm in culms.Culms)
@@ -96,8 +104,6 @@ namespace Models.PMF
 				culm.DltLAI = culm.LeafArea * culm.Proportion;
 				dltCulmArea += culm.DltLAI;
 			}
-			var tt = phenology.thermalTime.Value();
-			var clockDay = clock.Today;
 
             return dltCulmArea;
 		}
@@ -105,12 +111,17 @@ namespace Models.PMF
 		/// <summary>Calculate potential LeafArea</summary>
 		public double CalculateIndividualLeafArea(double leafNo, double finalLeafNo, double vertAdjust = 0.0)
 		{
-			// use finalLeafNo to calculate the size of the individual leafs
-			// Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
-			// (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
-			//
-			double largestLeafPos = aX0.Value() * finalLeafNo;
-			leafNo = adjustLeafNumberForPlateuEffect(leafNo, finalLeafNo, largestLeafPlateau.Value());
+            // use finalLeafNo to calculate the size of the individual leafs
+            // Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
+            // (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
+
+            double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
+				aX0S.Value(),
+                aX0I.Value(),
+                finalLeafNo
+			);
+
+            leafNo = AdjustLeafNumberForPlateuEffect(leafNo, finalLeafNo, largestLeafPlateau.Value());
 			//double leafPlateauStart = 24;
 			//adding new code to handle varieties that grow very high number of leaves
 			//double a0 = -0.009, a1 = -0.2;
@@ -132,8 +143,6 @@ namespace Models.PMF
 			//Calculation then changed to use the relationship as described in the Carberry paper in Table 2
 			//The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
 			//aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
-			var amaxS = aMaxS.Value();
-			var amaxI = aMaxI.Value();
             double largestLeafSize = aMaxS.Value() * finalLeafNo + aMaxI.Value(); //aMaxI is the intercept
 
 			//a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
@@ -144,12 +153,12 @@ namespace Models.PMF
 			return Math.Max(leafSize,0.0);
 		}
 
-		private double adjustLeafNumberForPlateuEffect(double leafNo, double finalLeafNo, double largestLeafPlateau)
+		private double AdjustLeafNumberForPlateuEffect(double leafNo, double finalLeafNo, double largestLeafPlateau)
 		{
 			if (largestLeafPlateau <= 0) return leafNo;
 			if (finalLeafNo < largestLeafPlateau) return leafNo; //so it doesn't get in an error state
 
-			var largestLeafPos = aX0.Value() * largestLeafPlateau;
+			var largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(aX0S.Value(), aX0I.Value(), largestLeafPlateau);
 			if (leafNo <= largestLeafPos) return leafNo;
 
 			//Some varieties with large numbers of leaves have a plateau effect for leaf size where the leaves
@@ -174,6 +183,5 @@ namespace Models.PMF
 				sowingDensity = data.Population;
 			}
 		}
-
 	}
 }

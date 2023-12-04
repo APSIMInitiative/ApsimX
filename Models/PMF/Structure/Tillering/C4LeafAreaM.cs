@@ -37,9 +37,17 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction b1 = null;
 
-        /// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
+        ///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //IFunction aX0 = null;
+
+        /// <summary>TODO JS</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction aX0 = null;
+        IFunction aX0S = null;
+
+        /// <summary>TODO JS</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction aX0I = null;
 
         /// <summary></summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -101,7 +109,12 @@ namespace Models.PMF
             double largestLeafSize = calcLargestLeafSize(finalLeafNo);
             largestLeafSize *= (1 - vertAdjust);
 
-            double largestLeafPos = aX0.Value() * finalLeafNo;                                          // Eqn 14
+            double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
+                aX0S.Value(),
+                aX0I.Value(),
+                finalLeafNo
+            );
+
             double relativeLeafPos = leafNo - largestLeafPos;
 
             return largestLeafSize * Math.Exp(a * Math.Pow(relativeLeafPos, 2) + b * Math.Pow(relativeLeafPos, 3)) * 100;  // Eqn 5
