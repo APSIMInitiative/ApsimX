@@ -8,6 +8,10 @@ namespace UnitTests.Tillering
     {
         // Buster Defaults.
         [TestCase(3.58, 0.6, 16, 13.18)]
+        // Corner cases
+        [TestCase(3.58, 0.0, 16, 3.58)]
+        [TestCase(0, 0.0, 16, 0)]
+        [TestCase(0, 1000, 0, 0)] // * 0
         public void CalculateLargestLeafPosition_CorrectResults(
             double ax0i, 
             double ax0s, 
