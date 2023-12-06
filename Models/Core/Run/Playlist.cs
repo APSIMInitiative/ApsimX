@@ -32,9 +32,28 @@ namespace Models
         [JsonIgnore]
         private List<PlaylistPrevSearch> searchCache = new List<PlaylistPrevSearch>();
 
+        [JsonIgnore]
+        private string[] lastSearch = null;
+
         /// <summary>The Playlist text that is used for comparisions</summary>
         [Description("Text of the playlist")]
         public string Text { get; set; }
+
+        /// <summary>
+        /// Returns the last generated list of simulation names.
+        /// If that list has not been searched yet, this will generate the list.
+        /// </summary>
+        /// <returns>
+        /// An array of simulation and simulation variations names that were found during the last search. 
+        /// Will return an empty array if no matches are found.
+        /// </returns>
+        public string[] GetListOfSimulations()
+        {
+            if (lastSearch == null)
+                return GenerateListOfSimulations();
+            else
+                return lastSearch;
+        }
 
         /// <summary>
         /// Returns the name of all simulations that match the text
@@ -48,7 +67,7 @@ namespace Models
         /// An array of simulation and simulation variations names that match the text of this playlist. 
         /// Will return an empty array if no matches are found.
         /// </returns>
-        public string[] GetListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
+        public string[] GenerateListOfSimulations(List<Simulation> allSimulations = null, List<Experiment> allExperiments = null)
         {
             if (Simulations == null)
                 Simulations = this.FindAncestor<Simulations>();
@@ -162,7 +181,8 @@ namespace Models
                     }
                 }
             }
-            return names.ToArray();
+            lastSearch = names.ToArray();
+            return lastSearch;
         }
 
         /// <summary>

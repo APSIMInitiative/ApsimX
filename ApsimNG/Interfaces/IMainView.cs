@@ -62,7 +62,6 @@ namespace UserInterface.Interfaces
         bool SplitWindowOn { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
-        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
         int SplitScreenPosition { get; set; }
 
         /// <summary

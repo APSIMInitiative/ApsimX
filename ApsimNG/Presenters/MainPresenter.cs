@@ -93,7 +93,7 @@ namespace UserInterface.Presenters
 
             double width = this.view.WindowSize.Width;
             int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
-            if (savedHeight > 0.9 || savedHeight < 0.1)
+            if (savedWidth > 0.9 || savedWidth < 0.1)
                 this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
             else
                 this.view.SplitScreenPosition = (int)Math.Round(width * savedWidth);

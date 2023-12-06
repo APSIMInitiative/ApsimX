@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 169; } }
+        public static int LatestVersion { get { return 170; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5314,6 +5314,34 @@ namespace Models.Core.ApsimFile
             foreach (var rotationManager in JsonUtilities.ChildrenOfType(root, "RotationManager")) 
             {
                 rotationManager["TopLevel"] = true;
+            }
+        }
+
+        /// <summary>
+        /// Change the namespace for scrum to SimplePlantModels
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion170(JObject root, string fileName)
+        {
+            foreach (var scrum in JsonUtilities.ChildrenOfType(root, "ScrumCrop"))
+            {
+                scrum["$type"] = "Models.PMF.SimplePlantModels.ScrumCrop, Models";
+            }
+            foreach (var strum in JsonUtilities.ChildrenOfType(root, "StrumTree"))
+            {
+                strum["$type"] = "Models.PMF.SimplePlantModels.StrumTree, Models";
+            }
+            foreach (var scrumMGMT in JsonUtilities.ChildrenOfType(root, "ScrumManagement"))
+            {
+                scrumMGMT["$type"] = "Models.PMF.SimplePlantModels.ScrumManagement, Models";
+            }
+
+            // scrum name space refs in managers.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                manager.Replace("Models.PMF.Scrum", "Models.PMF.SimplePlantModels");
+                manager.Save();
             }
         }
     }

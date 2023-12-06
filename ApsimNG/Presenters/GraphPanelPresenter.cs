@@ -359,7 +359,7 @@ namespace UserInterface.Presenters
                                      axis.Minimum ?? double.NaN,
                                      axis.Maximum ?? double.NaN,
                                      axis.Interval ?? double.NaN,
-                                     axis.CrossesAtZero);
+                                     axis.CrossesAtZero, false);
             }
         }
 

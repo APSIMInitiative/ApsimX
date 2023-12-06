@@ -37,6 +37,8 @@ namespace Models.PMF.Phen
         [Link(IsOptional = true)]
         private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
 
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        private Age age = null;
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -68,6 +70,40 @@ namespace Models.PMF.Phen
 
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
+
+        /// <summary>List of stages in phenology</summary>
+        [JsonIgnore]
+        public List<string> StageNames 
+        {
+            get
+            {
+                List<string> stages = new List<string>();
+                stages.Add(phases[0].Start.ToString());
+                foreach (IPhase p in  phases)
+                {
+                    stages.Add(p.End.ToString());
+                }
+            return stages;
+            }
+        }
+
+        /// <summary>List of numerical stage codes</summary>
+        [JsonIgnore]
+        public List<int> StageCodes
+        {
+            get
+            {
+                List<int> stages = new List<int>();
+                int current = 0;
+                stages.Add(current);
+                foreach (IPhase p in phases)
+                {
+                    current += 1;
+                    stages.Add(current);
+                }
+                return stages;
+            }
+        }
 
         /// <summary>The Thermal time accumulated tt</summary>
         [JsonIgnore]
@@ -282,6 +318,13 @@ namespace Models.PMF.Phen
             StageWasReset?.Invoke(this, new EventArgs());
         }
 
+        /// <summary>Allows setting of age if phenology has an age child</summary>
+        public void SetAge(int newAge)
+        {
+            if (age != null)
+                age.Years = newAge;
+        }
+        
         /// <summary> A utility function to return true if the simulation is on the first day of the specified stage. </summary>
         public bool OnStartDayOf(String stageName)
         {

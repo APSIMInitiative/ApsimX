@@ -329,6 +329,23 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the water uptake.</summary>
         [Units("mm")]
+        public double[] WaterUptakeByZone
+        {
+            get
+            {
+                double[] uptake = new double[Zones.Count];  
+                int i = 0;
+                foreach (ZoneState zone in Zones)
+                {
+                    uptake[i] = -MathUtilities.Sum(zone.WaterUptake);
+                    i += 1;
+                }
+                return uptake;
+            }
+        }
+
+        /// <summary>Gets the water uptake.</summary>
+        [Units("mm")]
         public double[] SWUptakeLayered
         {
             get
@@ -610,7 +627,7 @@ namespace Models.PMF.Organs
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
             }
         }
-
+        
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
         private void SetNDemand(object sender, EventArgs e)
