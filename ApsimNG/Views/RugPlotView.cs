@@ -36,7 +36,10 @@
         private Label lastDateLabel;
         private DateTime selectedDate;
         private Label selectedDateLabel;
+        Gtk.TreeView RVTreeView;
         private Gtk.TreeStore RVTreeModel;
+
+        private string RVTreePaddockSelected;
         private Gtk.ListStore stateListStore;
         Button dateminus = null;
         Button dateplus = null;
@@ -125,7 +128,6 @@
             vbox2a.PackStart(scroller, true, true, 0);
 
             // States in upper right
-            //VBox vbox2b = new VBox();
             VPaned vpane2b = new VPaned();
             
             ScrolledWindow StateLegend = new ScrolledWindow();
@@ -134,8 +136,9 @@
 
             Gtk.TreeView stateTree = new Gtk.TreeView ();
             var cr = new Gtk.CellRendererText ();
-            var c = stateTree.AppendColumn ("State", cr, "text", 0);
-            c.SetCellDataFunc(cr, new Gtk.TreeCellDataFunc (renderStateCell));
+            cr.Alignment = Pango.Alignment.Center;
+            var c = stateTree.AppendColumn ("State", cr, "text", 0); 
+            c.SetCellDataFunc(cr, new Gtk.TreeCellDataFunc (renderCell));
 
             stateListStore = new Gtk.ListStore (typeof (string));
             stateTree.Model = stateListStore;
@@ -146,17 +149,37 @@
             ScrolledWindow RVTree = new ScrolledWindow();
             RVTree.ShadowType = ShadowType.EtchedIn;
             RVTree.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-            Gtk.TreeView tree = new Gtk.TreeView ();
+            RVTreeView = new Gtk.TreeView ();
+
             var cr2 = new Gtk.CellRendererText ();
-            var c2 = tree.AppendColumn ("Paddock", cr2, "text", 0);
-            c2.SetCellDataFunc(cr2, new Gtk.TreeCellDataFunc (renderRVCell));
+            var c2 = RVTreeView.AppendColumn ("Paddock", cr2, "text", 0);
+            c2.SetCellDataFunc(cr2, new Gtk.TreeCellDataFunc (renderCell));
+            c2.Resizable = true;
 
-            tree.AppendColumn ("Rule", new Gtk.CellRendererText (), "text", 1);
-            RVTreeModel = new TreeStore (typeof(string), typeof(string));
+            var cr3 = new Gtk.CellRendererText ();
+            var c3 = RVTreeView.AppendColumn ("Target", cr3, "text", 1);
+            c3.SetCellDataFunc(cr3, new Gtk.TreeCellDataFunc (renderCell));
+            c3.Resizable = true;
 
-            tree.Model = RVTreeModel;
+            var c4 = RVTreeView.AppendColumn ("Rule", new Gtk.CellRendererText (), "text", 2);
+            c4.Resizable = true;
 
-            RVTree.Add(tree);
+            RVTreeModel = new TreeStore (typeof(string), typeof(string), typeof(string));
+
+            RVTreeView.Model = RVTreeModel;
+
+            RVTreeView.Selection.Changed +=  (sender, e) => {
+                Gtk.TreeIter selected;
+                RVTreePaddockSelected = "";
+                if (RVTreeView.Selection.GetSelected(out selected)) {
+                    var sel = RVTreeView.Model.GetValue(selected, 0).ToString();
+                    if (myPaddocks.Contains(sel)) {
+                      RVTreePaddockSelected = sel;
+                    }
+                }
+            };
+
+            RVTree.Add(RVTreeView);
             vpane2b.Pack2(RVTree, true, true );
             vpane2b.ShowAll();
 
@@ -177,32 +200,48 @@
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-        private void renderStateCell (Gtk.TreeViewColumn column, Gtk.CellRenderer cell,
+        private void renderCell (Gtk.TreeViewColumn column, Gtk.CellRenderer cell,
                                       Gtk.ITreeModel model, Gtk.TreeIter iter)
         {
-            var state = (string) model.GetValue (iter, 0);
-            var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
-               Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
-            if (dgn != null) {
-               (cell as Gtk.CellRendererText).BackgroundRgba = dgn.Colour.ToRGBA();
-               (cell as Gtk.CellRendererText).Text = state;
+            if (column.Title == "Paddock") {
+                var cellContents = (string) model.GetValue (iter, 0);
+                double dblValue;
+                if (Double.TryParse(cellContents, out dblValue)) 
+                {
+                    if (dblValue <= 0) 
+                       (cell as Gtk.CellRendererText).Background = "red";
+                    else
+                       (cell as Gtk.CellRendererText).Background = "green";
+                } else 
+                    (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
+            } 
+            else if (column.Title == "Target") 
+            {
+                var state = (string) model.GetValue (iter, 1);
+                var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                       Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
+                if (dgn != null) {
+                    (cell as Gtk.CellRendererText).BackgroundRgba  = dgn.Colour.ToRGBA(); 
+                } else {
+                    Console.WriteLine($"T: {state}");
+                    (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
+                    (cell as Gtk.CellRendererText).Text = "";
+                }
             }
-        }
-        private void renderRVCell (Gtk.TreeViewColumn column, Gtk.CellRenderer cell,
-                                      Gtk.ITreeModel model, Gtk.TreeIter iter)
-        {
-            var stringValue = (string) model.GetValue (iter, 0);
-            var stringValue2 = (string) model.GetValue (iter, 1);
-            double dblValue;
-            (cell as Gtk.CellRendererText).Text = stringValue;
-            if (Double.TryParse(stringValue, out dblValue)) {
-                if (dblValue <= 0) 
-                   (cell as Gtk.CellRendererText).Background = "red";
-                else
-                   (cell as Gtk.CellRendererText).Background = "green";
+            else if (column.Title == "State") 
+            {
+                var state = (string) model.GetValue (iter, 0);
+                var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
+                       Find(n => n.Name == state) as APSIM.Shared.Graphing.Node;
+                if (dgn != null) {
+                    (cell as Gtk.CellRendererText).BackgroundRgba = dgn.Colour.ToRGBA(); 
+                } else {
+                    (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
+                }
             }
+            else
+                throw new Exception("Don't know about column " + column.Title);
         }
-
         /// <summary>
         /// Set the graph in the view.
         /// </summary>
@@ -228,12 +267,13 @@
 
             RVTreeModel.Clear();
             foreach (var p in myPaddocks) {
-               RVTreeModel.AppendValues (p, "");
+               RVTreeModel.AppendValues (new string [] {p, " ", " "});
             }
 
             foreach (var node in rugPlotModel.FindAncestor<RotationManager>().Nodes) {
                stateListStore.AppendValues (node.Name);
             }
+            setDateTo ("", earliestDate);
         }
  
         /// <summary>
@@ -449,9 +489,7 @@
                     var days = (args.Event.Y - yoffset) / yscale;
                     days = Math.Max(0, Math.Min(days, (t1 - t0).Days));
                     
-                    setDateTo (t0.AddDays(days));
-
-                    //RVTreeModel.
+                    setDateTo (myPaddocks[column], t0.AddDays(days));
                 }
             }
             catch (Exception err)
@@ -459,15 +497,31 @@
                 ShowError(err);
             }
         }
-        private void setDateTo (DateTime t) {
+        private void setDateTo (string newPaddock, DateTime t) {
            selectedDate = t.Date;
            if (selectedDate > lastDate) selectedDate = lastDate;
            if (selectedDate < earliestDate) selectedDate = earliestDate;
            selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
 
-           RVTreeModel.Clear();
+           Gtk.TreeIter iter ;
            foreach (var p in myPaddocks) {
-               Gtk.TreeIter iter = RVTreeModel.AppendValues (p);
+               //RVTreeModel.GetIterFirst(out iter);
+               var thisPath = new Gtk.TreePath(new[]{myPaddocks.IndexOf(p)});
+               iter = new TreeIter();
+
+               // store whether the row is currently active, or the user has clicked this paddock on the rug 
+               bool isExpanded = RVTreeView.GetRowExpanded(thisPath);
+               if (newPaddock != "") { isExpanded = newPaddock == p; }
+
+               // remove children
+               do {
+                  RVTreeModel.GetIter(out iter, new TreePath(new[]{myPaddocks.IndexOf(p), 0 }));
+                  if (RVTreeModel.IterIsValid(iter)) 
+                     RVTreeModel.Remove (ref iter);
+               } while (RVTreeModel.IterIsValid(iter));
+
+               // Add new children
+               RVTreeModel.GetIter(out iter, thisPath);
                if (rugPlotModel.RVIndices.ContainsKey(selectedDate)) 
                {
                   var idx = rugPlotModel.RVIndices[selectedDate];
@@ -477,22 +531,29 @@
                       if (rugPlotModel.RVPs[idx].paddock == p) 
                       {
                            RVTreeModel.AppendValues (iter, 
-                                                     rugPlotModel.RVPs[idx].value.ToString(), 
-                                                     rugPlotModel.RVPs[idx].rule);
+                                                     new string[] {
+                                                        rugPlotModel.RVPs[idx].value.ToString(), 
+                                                        rugPlotModel.RVPs[idx].target,
+                                                        rugPlotModel.RVPs[idx].rule} );
                       }
                       idx++;
                   }
+               }
+               if (isExpanded) {
+                  RVTreeView.ExpandRow(thisPath, false);
+               } else {
+                  RVTreeView.CollapseRow(thisPath);
                }
            }
         }
 
         private void onPlusButtonClicked( object obj, EventArgs args )
         {
-            setDateTo (selectedDate.AddDays(1));
+            setDateTo ("", selectedDate.AddDays(1));
         }
         private void onMinusButtonClicked( object obj, EventArgs args )
         {
-            setDateTo (selectedDate.AddDays(-1));
+            setDateTo ("", selectedDate.AddDays(-1));
         }
 
         private void onDateSelected(object source, System.EventArgs args)

@@ -47,7 +47,7 @@ namespace Models.Management
         /// <summary>
         /// log a rule evaluation
         /// </summary>
-       public void DoRuleEvaluation(string rule, double value) 
+       public void DoRuleEvaluation(string target, string rule, double value) 
        {
             if (!RVIndices.Keys.Contains(Clock.Today))
                  RVIndices.Add(Clock.Today, RVPs.Count);
@@ -58,8 +58,10 @@ namespace Models.Management
                 cp = function.Value();
             string currentPaddock = cp.ToString();
 
-            RVPs.Add(new RVPair{Date = Clock.Today, paddock = currentPaddock,
-                                 rule = rule, value = value});
+            RVPs.Add(new RVPair{Date = Clock.Today, 
+                                paddock = currentPaddock,
+                                target = target, 
+                                rule = rule, value = value});
 
        }
 
@@ -99,6 +101,7 @@ namespace Models.Management
              messages.Columns.Add("ComponentName", typeof(string));
              messages.Columns.Add("Date", typeof(DateTime));
              messages.Columns.Add("Paddock", typeof(string));
+             messages.Columns.Add("Target", typeof(string));
              messages.Columns.Add("Rule", typeof(string));
              messages.Columns.Add("Value", typeof(double));
 
@@ -110,8 +113,9 @@ namespace Models.Management
                row[1] = relativeModelPath;
                row[2] = rv.Date;
                row[3] = rv.paddock;
-               row[4] = rv.rule;
-               row[5] = rv.value;
+               row[4] = rv.target;
+               row[5] = rv.rule;
+               row[6] = rv.value;
                table.Rows.Add(row);
             }
             storage?.Writer?.WriteTable(table, false);
@@ -210,11 +214,12 @@ namespace Models.Management
              if (table == null) {throw new Exception("No rule/value table in storage");}
              var Dates = table.AsEnumerable().Select(r => r.Field<DateTime>("Date")).ToArray();
              var AllPaddocks = table.AsEnumerable().Select(r => r.Field<string>("Paddock")).ToArray();
+             var AllTargets = table.AsEnumerable().Select(r => r.Field<string>("Target")).ToArray();
              var Rules = table.AsEnumerable().Select(r => r.Field<string>("Rule")).ToArray();
              var Values = table.AsEnumerable().Select(r => r.Field<double>("Value")).ToArray();
              _RVPs = new List<RVPair>();
              for(int i = 0; i < Dates.Length; i++) {
-                _RVPs.Add(new RVPair{Date =Dates[i], paddock = AllPaddocks[i],
+                _RVPs.Add(new RVPair{Date =Dates[i], paddock = AllPaddocks[i], target = AllTargets[i],
                                      rule = Rules[i], value = Values[i]});
              }
 
@@ -283,6 +288,11 @@ namespace Models.Management
        /// 
        /// </summary>
        public string paddock;
+
+       /// <summary>
+       /// 
+       /// </summary>
+       public string target;
 
        /// <summary>
        /// 

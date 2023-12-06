@@ -177,7 +177,7 @@ namespace Models.Management
                             throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
                         }
                         double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-                        detailedLogger?.DoRuleEvaluation(testCondition, result);
+                        detailedLogger?.DoRuleEvaluation(arc.DestinationName, testCondition, result);
                         score *= result;
                     }
 
