@@ -76,11 +76,11 @@ namespace Models.PMF
         {
             if (culms == null) culms = Parent as LeafCulms ?? throw new Exception("C4LeafArea expects a LeafCulms as a parent: " + Parent?.Name ?? "Null");
 
-            return calcPotentialLeafArea(culms);
+            return CalcPotentialLeafArea(culms);
         }
 
         /// <summary> Calculate the potential area for all culms</summary>
-        public double calcPotentialLeafArea(LeafCulms culms)
+        public double CalcPotentialLeafArea(LeafCulms culms)
         {
             var dltCulmArea = 0.0;
             foreach (var culm in culms.Culms)
@@ -108,7 +108,7 @@ namespace Models.PMF
             double a = a0.Value() - Math.Exp(a1.Value() * finalLeafNo);                      // Eqn 18
             double b = b0.Value() - Math.Exp(b1.Value() * finalLeafNo);                      // Eqn 19
 
-            double largestLeafSize = calcLargestLeafSize(finalLeafNo);
+            double largestLeafSize = CalcLargestLeafSize(finalLeafNo);
             largestLeafSize *= (1 - vertAdjust);
 
             double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
@@ -122,7 +122,7 @@ namespace Models.PMF
             return largestLeafSize * Math.Exp(a * Math.Pow(relativeLeafPos, 2) + b * Math.Pow(relativeLeafPos, 3)) * 100;  // Eqn 5
         }
 
-        private double calcLargestLeafSize(double finalLeafNo)
+        private double CalcLargestLeafSize(double finalLeafNo)
         {
             //Largest Leaf calculation
             double a = aMaxA.Value();
@@ -152,6 +152,5 @@ namespace Models.PMF
                 sowingDensity = data.Population;
             }
         }
-
     }
 }
