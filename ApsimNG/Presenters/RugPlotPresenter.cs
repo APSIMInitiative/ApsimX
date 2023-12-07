@@ -37,7 +37,7 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
 
         /// <summary>The model used</summary>
-        private rotationRugplot model;
+        private RotationRugplot model;
 
         /// <summary>
         /// Handles generation of completion options for the view.
@@ -60,7 +60,7 @@ namespace UserInterface.Presenters
         {
             this.view = view as RugPlotView;
             this.presenter = presenter;
-            this.model = model as rotationRugplot;
+            this.model = model as RotationRugplot;
 
             propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
             RefreshView();

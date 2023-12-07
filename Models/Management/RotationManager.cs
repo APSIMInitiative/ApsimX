@@ -43,7 +43,7 @@ namespace Models.Management
 
         /// <summary>detailed logging component</summary>
         [Link(Type = LinkType.Child, IsOptional = true)]
-        public rotationRugplot detailedLogger = null;
+        public RotationRugplot detailedLogger = null;
 
         /// <summary>
         /// Events service. Used to publish events when transitioning
@@ -132,13 +132,18 @@ namespace Models.Management
         private void OnCommence(object sender, EventArgs e)
         {
             CurrentState = InitialState;
-            DoLogState();
             if (Verbose)
                 summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
-        [EventSubscribe("EndSimulation")]
-        private void OnEndSimulation(object sender, EventArgs e)
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
         {
             DoLogState();
         }

@@ -22,6 +22,7 @@
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
+    /// FIXME - need to allow user to select which simulation to plot (dropdown list of SimulationNames)
     /// </summary>
     /// <remarks>
     /// </remarks>
@@ -39,7 +40,7 @@
         Gtk.TreeView RVTreeView;
         private Gtk.TreeStore RVTreeModel;
 
-        private string RVTreePaddockSelected;
+        //private string RVTreePaddockSelected;
         private Gtk.ListStore stateListStore;
         Button dateminus = null;
         Button dateplus = null;
@@ -54,7 +55,7 @@
         Color DefaultOutlineColour;
         Color DefaultBackgroundColour;
         
-        rotationRugplot rugPlotModel;
+        RotationRugplot rugPlotModel;
         List<string> myPaddocks = null;
         //List<RVPair> myRVs;
         //Dictionary<DateTime, int> myRVIndices;
@@ -168,6 +169,7 @@
 
             RVTreeView.Model = RVTreeModel;
 
+#if false
             RVTreeView.Selection.Changed +=  (sender, e) => {
                 Gtk.TreeIter selected;
                 RVTreePaddockSelected = "";
@@ -178,7 +180,7 @@
                     }
                 }
             };
-
+#endif
             RVTree.Add(RVTreeView);
             vpane2b.Pack2(RVTree, true, true );
             vpane2b.ShowAll();
@@ -194,7 +196,7 @@
         }
 
         /// <summary>
-        /// Set up the colour:state list at top right
+        /// Set up the colour mappings of the rigfht hand lists. Each column has a differnt encoding
         /// </summary>
         /// <param name="column"></param>
         /// <param name="cell"></param>
@@ -223,7 +225,6 @@
                 if (dgn != null) {
                     (cell as Gtk.CellRendererText).BackgroundRgba  = dgn.Colour.ToRGBA(); 
                 } else {
-                    Console.WriteLine($"T: {state}");
                     (cell as Gtk.CellRendererText).BackgroundRgba = DefaultBackgroundColour.ToRGBA();
                     (cell as Gtk.CellRendererText).Text = "";
                 }
@@ -246,7 +247,7 @@
         /// Set the graph in the view.
         /// </summary>
         /// <param name="model">the model.</param>
-        public void SetModel(rotationRugplot model)
+        public void SetModel(RotationRugplot model)
         {
             ruleTree.Clear();
             earliestDate = selectedDate = new DateTime(0);
@@ -264,6 +265,10 @@
             }
             if (model.Transitions != null)
                 myPaddocks = model.Transitions.Select(t => t.paddock).Distinct().ToList();
+
+            // Ugh. Multipaddock simulations always have an "empty" toplevel.
+            if (myPaddocks.Count > 1 && myPaddocks.Last() == "") 
+               myPaddocks.RemoveAt(myPaddocks.Count-1);
 
             RVTreeModel.Clear();
             foreach (var p in myPaddocks) {
@@ -357,9 +362,11 @@
         /// <param name="drawingContext">The context.</param>
         private void Draw(CairoContext drawingContext)
         {
-            DrawLabels(drawingContext);
-            DrawRug(drawingContext);
-            DrawSelectedDate(drawingContext);
+            if (myPaddocks?.Count > 0) {
+               DrawLabels(drawingContext);
+               DrawRug(drawingContext);
+               DrawSelectedDate(drawingContext);
+            }
         }
 
         private void DrawCentredText(CairoContext context, string text, Point point)
@@ -434,7 +441,8 @@
                        // transition is logged at the end of a phase, so the colour of the rect is the preceding state
                        var dgn = rugPlotModel.FindAncestor<RotationManager>().Nodes.
                                  Find(n => n.Name == Transitions[i - 1].state) as APSIM.Shared.Graphing.Node;
-                       DrawRectangle(ctx, x1, y1, x2-x1, y2-y1, dgn.Colour);
+                       if(dgn != null) 
+                          DrawRectangle(ctx, x1, y1, x2-x1, y2-y1, dgn.Colour);
                        tStart = tEnd;
                    }
                    DrawRectangle(ctx, x1, y2, x2-x1, (int) (yoffset +  (t1 - t0).Days * yscale) - y2, 
@@ -485,10 +493,10 @@
                     Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
                     var column = Convert.ToInt32(Math.Floor((args.Event.X - m_DateWidth) / m_ColWidth));
-                    column = Math.Max(0, Math.Min(myPaddocks.Count, column));
+                    column = Math.Max(0, Math.Min(myPaddocks.Count - 1, column));
                     var days = (args.Event.Y - yoffset) / yscale;
                     days = Math.Max(0, Math.Min(days, (t1 - t0).Days));
-                    
+
                     setDateTo (myPaddocks[column], t0.AddDays(days));
                 }
             }
@@ -524,6 +532,8 @@
                RVTreeModel.GetIter(out iter, thisPath);
                if (rugPlotModel.RVIndices.ContainsKey(selectedDate)) 
                {
+                  var ruleMap = rugPlotModel.ruleHashes.ToDictionary(x => x.Value, x => x.Key);
+                  var targetMap = rugPlotModel.targetHashes.ToDictionary(x => x.Value, x => x.Key);
                   var idx = rugPlotModel.RVIndices[selectedDate];
                   while (idx < rugPlotModel.RVPs.Count &&
                          rugPlotModel.RVPs[idx].Date.Date == selectedDate.Date)
@@ -533,8 +543,8 @@
                            RVTreeModel.AppendValues (iter, 
                                                      new string[] {
                                                         rugPlotModel.RVPs[idx].value.ToString(), 
-                                                        rugPlotModel.RVPs[idx].target,
-                                                        rugPlotModel.RVPs[idx].rule} );
+                                                        targetMap [ rugPlotModel.RVPs[idx].target ],
+                                                        ruleMap[ rugPlotModel.RVPs[idx].rule ] } );
                       }
                       idx++;
                   }
@@ -554,12 +564,6 @@
         private void onMinusButtonClicked( object obj, EventArgs args )
         {
             setDateTo ("", selectedDate.AddDays(-1));
-        }
-
-        private void onDateSelected(object source, System.EventArgs args)
-        {
-            //selectedDate = ???
-            System.Console.WriteLine("Fixme ");
         }
     }
 }
