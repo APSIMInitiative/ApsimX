@@ -23,7 +23,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 170; } }
+        public static int LatestVersion { get { return 171; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -5344,6 +5344,22 @@ namespace Models.Core.ApsimFile
                 manager.Save();
             }
         }
+        /// <summary>
+        /// Change Maize model to use simple leaf class
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="_">The name of the apsimx file.</param>
+        private static void UpgradeToVersion171(JObject root, string _)
+        {
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Structure.LeafTipsAppeared", "[Maize].Leaf.Tips");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Leaf.ExpandedCohortNo", "[Maize].Leaf.Ligules");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Structure.Height", "[Maize].Leaf.Height");
+            }
+        }
+
     }
 }
 
