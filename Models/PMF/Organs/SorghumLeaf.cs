@@ -608,8 +608,7 @@ namespace Models.PMF.Organs
         {
             if (culms.Culms.Count > culmNumber)
             {
-                var culm = culms.Culms[culmNumber];
-                return culm.LeafSizes;
+                return culms.Culms[culmNumber].LeafSizes;
             }
 
             return new();           
