@@ -324,7 +324,14 @@
             "[Arbitrator].N.TotalPlantDemand as TotalPlantNDemand",
             "[Phenology].DltTT.Stress as stress",
             "[Arbitrator].NitrogenUptakeMethod.NDiffusionSupply as NDiffusionSupply",
-            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply"
+            "[Arbitrator].NitrogenUptakeMethod.NMassFlowSupply as NMassFlowSupply",
+            "",
+            "[SorghumLeaf].LeafSizesMain",
+            "[SorghumLeaf].LeafSizesTiller1",
+            "[SorghumLeaf].LeafSizesTiller2",
+            "[SorghumLeaf].LeafSizesTiller3",
+            "[SorghumLeaf].LeafSizesTiller4",
+            "[SorghumLeaf].LeafSizesTiller5"
           ],
           "EventNames": [
             "[Clock].DoReport"

@@ -542,6 +542,80 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double DltSenescedLaiAge { get; set; }
 
+        #region LeafSizes
+        /// <summary>The leaf sizes on the main culm.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesMain
+        {
+            get
+            {
+                return GetLeafSizesForTiller(0);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 1.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller1 
+        { 
+            get
+            {
+                return GetLeafSizesForTiller(1);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 2.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller2
+        {
+            get
+            {
+                return GetLeafSizesForTiller(2);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 3.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller3
+        {
+            get
+            {
+                return GetLeafSizesForTiller(3);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 4.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller4
+        {
+            get
+            {
+                return GetLeafSizesForTiller(4);
+            }
+        }
+
+        /// <summary>The leaf sizes on tiller 5.</summary>
+        [JsonIgnore]
+        public List<double> LeafSizesTiller5
+        {
+            get
+            {
+                return GetLeafSizesForTiller(5);
+            }
+        }
+
+        /// <summary>Gets the leaf sizes for the the specific culm.</summary>
+        private List<double> GetLeafSizesForTiller(int culmNumber)
+        {
+            if (culms.Culms.Count > culmNumber)
+            {
+                var culm = culms.Culms[culmNumber];
+                return culm.LeafSizes;
+            }
+
+            return new();           
+        }
+        #endregion
+
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
