@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import glob
 import os.path as path
-import pandas
+import pandas as pd
 import re
 
 # Get the indices of the header rows.
@@ -36,17 +36,22 @@ def combineResults(directory):
     date_repl = r'\3-\2-\1'
     for file in files:
         ignoredRows = getHeaderRows(file)
-        df = pandas.read_csv(file, skiprows = ignoredRows)
+        df = pd.read_csv(file, skiprows = ignoredRows)
         simName = path.splitext(path.basename(file))[0]
         if simName in simNames:
             simName = simNames[simName]
+
         df['SimulationName'] = simName
-        df['Date'] = df['Date'].apply(lambda x: re.sub(date_rx, date_repl, x))
+        # Handle both "Date" and "date" columns
+        for col in ['Date', 'date']:
+            if col in df.columns:
+                df[col] = df[col].apply(lambda x: re.sub(date_rx, date_repl, str(x), flags=re.IGNORECASE))
+
         data.append(df)
 
     # Concatenate all data frames into a single big dataframe
-    combined = pandas.concat(data, sort = False)
+    combined = pd.concat(data, sort = False)
     combined.to_csv('combined_%s.csv' % directory, header = True, index = False)
 
 combineResults('fixed')
-# combineResults('dynamic')
+combineResults('dynamic')
