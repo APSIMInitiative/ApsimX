@@ -1,4 +1,5 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Drawing;
 using Models.Climate;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -16,7 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
+using System.Text.RegularExpressions;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -44,11 +45,18 @@ namespace Models.PMF.SimplePlantModels
         ///<summary></summary> 
         [JsonIgnore] public string[] ParamUnit { get; set; }
         ///<summary></summary> 
-        [JsonIgnore] public string[] Description { get; set; }
-        ///<summary></summary> 
         [JsonIgnore] public string[] Maize { get; set; }
         ///<summary></summary> 
         [JsonIgnore] public string[] Apple { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] RyeGrass { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Clover { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Description { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public Dictionary<string, string> Current { get; set; }
+
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Scoped, ByName = true)]
@@ -94,7 +102,21 @@ namespace Models.PMF.SimplePlantModels
             Description = repack(CropCoeffs, 2);
             Maize = repack(CropCoeffs, 3);
             Apple = repack(CropCoeffs, 4);
+            RyeGrass = repack(CropCoeffs, 5);
+            Clover = repack(CropCoeffs, 6);
+            Current = getCurrentParams(CropCoeffs, CropName);
         }
+
+        private Dictionary<string, string> getCurrentParams(DataTable tab, string cropName)
+        {
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            for (int i = 0; i < tab.Rows.Count; i++)
+            {
+                ret.Add(ParamName[i], tab.Rows[i][cropName].ToString());
+            }
+            return ret;
+        }
+
 
         private string[] repack(DataTable tab, int colIndex)
         {
@@ -118,9 +140,10 @@ namespace Models.PMF.SimplePlantModels
                 setCropCoefficients();
 
                 List<GridTableColumn> columns = new List<GridTableColumn>();
-
+                int i = 0;
                 foreach (DataColumn col in CropCoeffs.Columns)
                 {
+                    string[] newCol = repack(CropCoeffs, i);
                     columns.Add(new GridTableColumn(col.ColumnName, new VariableProperty(this, GetType().GetProperty(col.ColumnName))));
                 }
 
@@ -160,6 +183,7 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
+            setCropCoefficients();
             Establish();
         }
 
@@ -191,7 +215,7 @@ namespace Models.PMF.SimplePlantModels
 
             //double rootDepth = Math.Min(MaxRD, soilDepthMax);
             double rootDepth = 1500;
-            
+
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
@@ -231,108 +255,67 @@ namespace Models.PMF.SimplePlantModels
             deropapy.Children.Add(derochild);
             deropapy.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
-            summary.WriteMessage(this, "Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
+            summary.WriteMessage(this, "Some of the message above is not relevent as DEROPAPY has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
-                , MessageType.Information); 
+                , MessageType.Information);
+        }
+
+
+        private string clean(string dirty)
+        {
+            string ret = dirty.Replace("(", "").Replace(")", "");
+            Regex sWhitespace = new Regex(@"\s+");
+            return sWhitespace.Replace(ret,",");
         }
 
 
         /// <summary>
-        /// Data structure that holds STRUM parameter names and the cultivar overwrite they map to
+        /// Data structure that holds DEROPAPY parameter names and the cultivar overwrite they map to
         /// </summary>
         public Cultivar coeffCalc()
         {
-            Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
+            Dictionary<string, string> thisDero = new Dictionary<string, string>(deroParams);
 
-            /*
-            treeParams["SpringDormancy"] += BudBreakDAWS.ToString();
-            treeParams["CanopyExpansion"] += StartFullCanopyDAWS.ToString();
-            treeParams["FullCanopy"] += StartLeafFallDAWS.ToString();
-            treeParams["LeafFall"] += EndLeafFallDAWS.ToString();
-            pruneDAWS = EndLeafFallDAWS;
-            treeParams["MaxRootDepth"] += MaxRD.ToString();
-            treeParams["Proot"] += Proot.ToString();
-            treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
-            treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
-            treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
-            treeParams["MaxSeasonalWidth"] += (MaxWidth - MaxPrunedWidth).ToString();
-            treeParams["ProductNConc"] += FruitNConc.ToString();
-            treeParams["ResidueNConc"] += LeafNConc.ToString();
-            treeParams["RootNConc"] += RootNConc.ToString();
-            treeParams["WoodNConc"] += TrunkNConc.ToString();
-            treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
-            treeParams["MaxLAI"] += ((Math.Log(1 - MaxCover) / (ExtinctCoeff * -1))).ToString();
-            treeParams["GSMax"] += GSMax.ToString();
-            treeParams["R50"] += R50.ToString();
-            treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
-            treeParams["Number"] += Number.ToString();
-            treeParams["Size"] += Size.ToString();
-            treeParams["Density"] += Density.ToString();
-            treeParams["DryMatterContent"] += DMC.ToString();
-            treeParams["DAWSMaxBloom"] += DAWSMaxBloom.ToString();
-            treeParams["DAWSLinearGrowth"] += DAWSLinearGrowth.ToString();
-            treeParams["DAWSEndLinearGrowth"] += ((int)(DAWSLinearGrowth + (DAWSMaxSize - DAWSLinearGrowth) * .6)).ToString();
-            treeParams["DAWSMaxSize"] += DAWSMaxSize.ToString();
-            harvestDAWS = DAWSMaxSize;
+            thisDero["TT_Temp_X"] += clean(Current["TT_Temp_X"]);
+            thisDero["TT_Acc_Y"] += clean(Current["TT_Acc_Y"]);
+            thisDero["StartGrowth_00"] += clean(Current["StartGrowth_00"]);
+            thisDero["Tt_Vegetative_01"] += clean(Current["Tt_Vegetative_01"]);
+            thisDero["DefoliateOrDevelop"] += clean(Current["DefoliateOrDevelop"]);
+            thisDero["Pp_Reproductive_02"] += clean(Current["Pp_Reproductive_02"]);
+            thisDero["Tt_Reproductive_02"] += clean(Current["Tt_Reproductive_02"]);
+            thisDero["Pp_Senescent_03"] += clean(Current["Pp_Senescent_03"]);
+            thisDero["Tt_Senescent_03"] += clean(Current["Tt_Senescent_03"]);
+            thisDero["Tt_Mature_04"] += clean(Current["Tt_Mature_04"]);
+            thisDero["Chill_Temp_X"] += clean(Current["Chill_Temp_X"]);
+            thisDero["Chill_Acc_Y"] += clean(Current["Chill_Acc_Y"]);
+            thisDero["AC_Dormant_05"] += clean(Current["AC_Dormant_05"]);
+            thisDero["Tt_Dormant_05"] += clean(Current["Tt_Dormant_05"]);
 
 
-            if (AgeAtSimulationStart <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
-            if (TrunkMassAtMaxDimension <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            treeParams["InitialTrunkWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 100).ToString();
-            treeParams["InitialRootWt"] += ((double)AgeAtSimulationStart / (double)YearsToMaxDimension * TrunkMassAtMaxDimension * 40).ToString();
-            treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += (0).ToString();
-            */
-
-            string[] commands = new string[treeParams.Count];
-            treeParams.Values.CopyTo(commands, 0);
-            Cultivar TreeValues = new Cultivar(this.Name, commands);
-            return TreeValues;
+            
+            string[] commands = new string[deroParams.Count];
+            thisDero.Values.CopyTo(commands, 0);
+            Cultivar deroValues = new Cultivar(this.Name, commands);
+            return deroValues;
         }
 
         [JsonIgnore]
-        private Dictionary<string, string> blankParams = new Dictionary<string, string>()
+        private Dictionary<string, string> deroParams = new Dictionary<string, string>()
         {
-            {"SpringDormancy","[STRUM].Phenology.SpringDormancy.DAWStoProgress = " },
-            {"CanopyExpansion","[STRUM].Phenology.CanopyExpansion.DAWStoProgress = " },
-            {"FullCanopy","[STRUM].Phenology.FullCanopy.DAWStoProgress = " },
-            {"LeafFall", "[STRUM].Phenology.LeafFall.DAWStoProgress = " },
-            {"MaxRootDepth","[STRUM].Root.MaximumRootDepth.FixedValue = "},
-            {"Proot","[STRUM].Root.DMDemands.Structural.DMDemandFunction.PartitionFraction.AcitveGrowth.Constant.FixedValue = " },
-            {"MaxPrunedHeight","[STRUM].MaxPrunedHeight.FixedValue = " },
-            {"CanopyBaseHeight","[STRUM].Height.CanopyBaseHeight.Maximum.FixedValue = " },
-            {"MaxSeasonalHeight","[STRUM].Height.SeasonalGrowth.Maximum.FixedValue = " },
-            {"MaxPrunedWidth","[STRUM].Width.PrunedWidth.Maximum.FixedValue = "},
-            {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
-            {"ProductNConc","[STRUM].Fruit.MaxNConcAtHarvest.FixedValue = "},
-            {"ResidueNConc","[STRUM].Leaf.MaxNConcAtStartLeafFall.FixedValue = "},
-            {"RootNConc","[STRUM].Root.MaximumNConc.FixedValue = "},
-            {"WoodNConc","[STRUM].Trunk.MaximumNConc.FixedValue = "},
-            {"ExtinctCoeff","[STRUM].Leaf.ExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
-            {"MaxLAI","[STRUM].Leaf.Area.Maximum.FixedValue = " },
-            {"GSMax","[STRUM].Leaf.Gsmax350 = " },
-            {"R50","[STRUM].Leaf.R50 = " },
-            {"InitialTrunkWt","[STRUM].Trunk.InitialWt.Structural.FixedValue = "},
-            {"InitialRootWt", "[STRUM].Root.InitialWt.Structural.FixedValue = " },
-            {"InitialFruitWt","[STRUM].Fruit.InitialWt.Structural.FixedValue = "},
-            {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
-            {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
-            {"YearsToMaxRD","[STRUM].Root.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
-            {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
-            {"Size","[STRUM].Fruit.MaximumSize.FixedValue = " },
-            {"Density","[STRUM].Fruit.Density.FixedValue = " },
-            {"DryMatterContent", "[STRUM].Fruit.MinimumDMC.FixedValue = " },
-            {"DAWSMaxBloom","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[2] = "},
-            {"DAWSLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[3] = "},
-            {"DAWSEndLinearGrowth","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[4] = "},
-            {"DAWSMaxSize","[STRUM].Fruit.DMDemands.Structural.RelativeFruitMass.Delta.Integral.XYPairs.X[5] = "},
-            {"WaterStressPhoto","[STRUM].Leaf.Photosynthesis.Fw.XYPairs.Y[1] = "},
-            {"WaterStressExtinct","[STRUM].Leaf.ExtinctionCoefficient.WaterStressFactor.XYPairs.Y[1] = "},
-            {"WaterStressNUptake","[STRUM].Root.NUptakeSWFactor.XYPairs.Y[1] = "},
+            {"TT_Temp_X","[DEROPAPY].Phenology.ThermalTime.XYPairs.X = " },
+            {"TT_Acc_Y","[DEROPAPY].Phenology.ThermalTime.XYPairs.Y = " },
+            {"StartGrowth_00","[DEROPAPY].Phenology.Waiting.DAWStoProgress = " },
+            {"Tt_Vegetative_01","[DEROPAPY].Phenology.Vegetative.Target.FixedValue = " },
+            {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
+            {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
+            {"Tt_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.Y = " },
+            {"Pp_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.XYPairs.X = " },
+            {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.XYPairs.Y = " },
+            {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },   
+            {"Chill_Temp_X","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.X = " },
+            {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
+            {"AC_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.X = " },
+            {"Tt_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.Y = " },
         };
     }
 }
