@@ -50,12 +50,12 @@ namespace Models.PMF
 		[Link(Type = LinkType.Child, ByName = true)]
 		readonly IFunction b1 = null;
 
-        ///// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //IFunction aX0 = null;
+		/// <summary>Largest Leaf Position as a percentage of Final Leaf No</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		IFunction aX0 = null;
 
-        /// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+		/// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
         readonly IFunction aX0I = null;
 
         /// <summary>The slope of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
@@ -113,15 +113,25 @@ namespace Models.PMF
 		/// <summary>Calculate potential LeafArea</summary>
 		public double CalculateIndividualLeafArea(double leafNo, double finalLeafNo, double vertAdjust = 0.0)
 		{
-            // use finalLeafNo to calculate the size of the individual leafs
-            // Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
-            // (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
+			// use finalLeafNo to calculate the size of the individual leafs
+			// Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
+			// (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
+			var newCalcs = false;
+			double largestLeafPos = 0.0;
 
-            double largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
-				aX0I.Value(),
-                aX0S.Value(),
-                finalLeafNo
-			);
+			if (newCalcs)
+			{
+				largestLeafPos = C4LeafCalculations.CalculateLargestLeafPosition(
+					aX0I.Value(),
+					aX0S.Value(),
+					finalLeafNo
+				);
+			}
+			else
+			{
+				largestLeafPos = aX0.Value() * finalLeafNo;
+			}
+
 
             leafNo = AdjustLeafNumberForPlateuEffect(leafNo, finalLeafNo, largestLeafPlateau.Value());
 			//double leafPlateauStart = 24;
