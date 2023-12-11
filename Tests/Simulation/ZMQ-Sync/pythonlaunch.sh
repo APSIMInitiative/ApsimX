@@ -20,7 +20,7 @@ echo $APSIMX_FILEPATH
 #   --version          Display version information.
 
 # /usr/bin/dotnet $DLL_PATH -P interactive -f $APSIMX_FILEPATH -v &
-/usr/bin/dotnet $DLL_PATH -P interactive -f $APSIMX_FILEPATH -v &
+/usr/bin/dotnet run --project $APSIM_PATH/APSIM.Server/ZMQ+msgpack/APSIM.ZMQServer.csproj --framework net6.0 -- -P interactive -f $APSIMX_FILEPATH -v &
 
 # echo $!
 echo 'started APSIM server process'
