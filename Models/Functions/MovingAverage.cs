@@ -23,6 +23,7 @@ namespace Models.Functions
 
         /// <summary>The stage to start calculating moving average</summary>
         [Description("The stage to start calculating moving average")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StageToStartMovingAverage { get; set; }
 
 
@@ -71,6 +72,7 @@ namespace Models.Functions
             //Put the first data member into the list on the day that moving average is to start being calculated
             if (phaseChange.StageName == StageToStartMovingAverage)
             {
+                AccumulatedValues.Clear();
                 AccumulatedValues.Add(ChildFunction.Value());
                 InitialisedToday = true;
                 Calculate = true;
