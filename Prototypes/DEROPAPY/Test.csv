@@ -2,7 +2,8 @@ ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover
 CropType,string,type of crop,Annual,Tree,Pasture,Pasture
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",272,242,0,0
+D_StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",200,200,0,0
+T_StartGrowth_00,oC,"""14 day running average temperature required to start growth""",13,10,0,0
 Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,600,450,300,300
 DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)

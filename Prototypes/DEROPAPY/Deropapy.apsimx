@@ -444,14 +444,36 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.OnDatePhase, Models",
+                  "$type": "Models.PMF.Phen.StartGrowthPhase, Models",
                   "Start": "Waiting",
                   "End": "StartGrowth",
                   "IsEmerged": true,
                   "DOYtoProgress": 0,
+                  "TemptoProgress": 0,
                   "Name": "Waiting",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MovingAverageFunction, Models",
+                      "NumberOfDays": 14,
+                      "StageToStartMovingAverage": "Waiting",
+                      "Name": "MovingAverageTemp",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].MeanT",
+                          "Name": "VariableReference",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },

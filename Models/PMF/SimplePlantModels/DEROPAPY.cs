@@ -278,7 +278,8 @@ namespace Models.PMF.SimplePlantModels
 
             thisDero["TT_Temp_X"] += clean(Current["TT_Temp_X"]);
             thisDero["TT_Acc_Y"] += clean(Current["TT_Acc_Y"]);
-            thisDero["StartGrowth_00"] += clean(Current["StartGrowth_00"]);
+            thisDero["D_StartGrowth_00"] += clean(Current["D_StartGrowth_00"]);
+            thisDero["T_StartGrowth_00"] += clean(Current["T_StartGrowth_00"]);
             thisDero["Tt_Vegetative_01"] += clean(Current["Tt_Vegetative_01"]);
             thisDero["DefoliateOrDevelop"] += clean(Current["DefoliateOrDevelop"]);
             thisDero["Pp_Reproductive_02"] += clean(Current["Pp_Reproductive_02"]);
@@ -304,7 +305,8 @@ namespace Models.PMF.SimplePlantModels
         {
             {"TT_Temp_X","[DEROPAPY].Phenology.ThermalTime.XYPairs.X = " },
             {"TT_Acc_Y","[DEROPAPY].Phenology.ThermalTime.XYPairs.Y = " },
-            {"StartGrowth_00","[DEROPAPY].Phenology.Waiting.DOYtoProgress = " },
+            {"D_StartGrowth_00","[DEROPAPY].Phenology.Waiting.DOYtoProgress = " },
+            {"T_StartGrowth_00","[DEROPAPY].Phenology.Waiting.TemptoProgress = " },
             {"Tt_Vegetative_01","[DEROPAPY].Phenology.Vegetative.Target.FixedValue = " },
             {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
             {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
