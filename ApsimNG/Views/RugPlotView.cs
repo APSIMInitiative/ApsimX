@@ -25,14 +25,11 @@
     /// </remarks>
     public class RugPlotView : ViewBase
     {
-        private Box vbox1 = null;
         private ListStore stateList = new ListStore(typeof(string));
         private ListStore ruleTree = new ListStore(typeof(string));
         private Entry CurrPName;
         private DateTime earliestDate;
-        private Label earliestDateLabel;
         private DateTime lastDate;
-        private Label lastDateLabel;
         private DateTime selectedDate;
         private Label selectedDateLabel;
         Gtk.TreeView RVTreeView;
@@ -43,67 +40,50 @@
         Button dateminus = null;
         Button dateplus = null;
 
+        Button dateminus2 = null;
+        Button dateplus2 = null;
+
         DrawingArea rugCanvas;
 
         int m_DateWidth = 100;
         int m_ColWidth = 100;
         int m_HeaderHeight = 30;
-        //int m_DateHeight = 30;
-
+        
         Color DefaultOutlineColour;
         Color DefaultBackgroundColour;
         
         RotationRugplot rugPlotModel;
-        List<string> myPaddocks = null;
-        //List<RVPair> myRVs;
-        //Dictionary<DateTime, int> myRVIndices;
 
+        List<string> myPaddocks = null;
 
         /// <summary>Drop down box which displays the simulation names.</summary>
         public DropDownView SimulationDropDown { get; private set; }
+        /// <summary>
+        /// If there are no simulation names to choose from, the dropdown box is hidden
+        /// </summary>
         private HBox SimChooserBox;
 
-        /// <summary>
-        /// Properties editor.
-        /// </summary>
-        public IPropertyView PropertiesView { get; private set; }
         public RugPlotView(ViewBase owner = null) : base(owner)
         {
-            vbox1 = new VBox(false, 0);
+            VBox vbox1 =  new VBox(false, 0);
             mainWidget = vbox1;
             mainWidget.Destroyed += OnDestroyed;
 
-            HBox hbox1 = new HBox();
+            HBox hbox2 = new HBox();
+            Label lmpVar = new Label("Current paddock:");
+            lmpVar.TooltipText = "If a multipaddock manager is being used, this variable (eg [Manager].Script.currentPaddock) is used to direct which paddock is being considered by the rotation graph.";
+            hbox2.PackStart(lmpVar, false, false, 5 );
+            CurrPName = new Entry();
+            CurrPName.WidthChars = 40;
+            hbox2.PackStart(CurrPName, false, false, 5 );
 
-            Label l1 = new Label("Start Date:");
-            hbox1.PackStart(l1, false, false, 5 );
-
-            earliestDateLabel = new Label("Some Date Here");
-            hbox1.PackStart(earliestDateLabel, false, false, 5);
-
-            Label l3 = new Label("End Date:");   
-            hbox1.PackStart(l3, false, false, 5);
-
-            lastDateLabel = new Label("Some Date Here");
-            hbox1.PackStart(lastDateLabel, false, false, 5);
-
-            Label l5 = new Label("Selected");
-            hbox1.PackStart(l5, false, false, 5);
-
-            selectedDateLabel = new Label("Selected Date Here");
-            hbox1.PackStart(selectedDateLabel, false, false, 5);
-            
-            dateminus = new Button(new Image(Gtk.Stock.Remove, IconSize.Button));
-            dateminus.Clicked += onMinusButtonClicked;
-            hbox1.PackStart(dateminus, false, false, 5);
-
-            dateplus = new Button(new Image(Gtk.Stock.Add, IconSize.Button));
-            dateplus.Clicked += onPlusButtonClicked;
-            hbox1.PackStart(dateplus, false, false, 5);
-
-            vbox1.PackStart(hbox1, false, false, 10);
-
-            HPaned hpane2 = new HPaned();
+            SimChooserBox = new HBox();
+            SimulationDropDown = new DropDownView(this);
+            SimChooserBox.PackStart(new Label("Simulation:"), false, false, 5);
+            SimChooserBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
+           
+            hbox2.PackEnd(SimChooserBox, false, false, 5 );
+            vbox1.PackEnd(hbox2, false, false, 5 );
 
             // the rugplot              
             VBox vbox2a = new VBox();
@@ -143,6 +123,37 @@
             StateLegend.Add(stateTree);
             vpane2b.Pack1(StateLegend, true, true );
 
+            VBox LRVBox = new VBox();
+            HBox hbox1 = new HBox();
+            Label l5 = new Label("Selected");
+            hbox1.PackStart(l5, false, false, 25);
+
+            dateminus2 = new Button(new Image(Gtk.Stock.ZoomOut, IconSize.Button));
+            dateminus2.Clicked += onMinus2ButtonClicked;
+            dateminus2.TooltipText = "Go back 7 days";
+            hbox1.PackStart(dateminus2, false, false, 5);
+
+            dateminus = new Button(new Image(Gtk.Stock.Remove, IconSize.Button));
+            dateminus.Clicked += onMinusButtonClicked;
+            dateminus.TooltipText = "Go back 1 day";
+            hbox1.PackStart(dateminus, false, false, 5);
+
+            selectedDateLabel = new Label("Selected Date Here");
+            hbox1.PackStart(selectedDateLabel, false, false, 5);
+            
+            dateplus = new Button(new Image(Gtk.Stock.Add, IconSize.Button));
+            dateplus.Clicked += onPlusButtonClicked;
+            dateplus.TooltipText = "Go forward 1 day";
+            hbox1.PackStart(dateplus, false, false, 5);
+
+            dateplus2 = new Button(new Image(Gtk.Stock.ZoomIn, IconSize.Button));
+            dateplus2.Clicked += onPlus2ButtonClicked;
+            dateplus2.TooltipText = "Go forward 7 days";
+            hbox1.PackStart(dateplus2, false, false, 5);
+
+            hbox1.PackStart(dateplus, false, false, 5);
+            LRVBox.PackStart(hbox1, false, false, 0);
+
             // Rule/values lower right
             ScrolledWindow RVTree = new ScrolledWindow();
             RVTree.ShadowType = ShadowType.EtchedIn;
@@ -164,47 +175,18 @@
 
             RVTreeModel = new TreeStore (typeof(string), typeof(string), typeof(string));
             RVTreeView.Model = RVTreeModel;
-
-#if false
-            // pretty sure this isnt needed
-            RVTreeView.Selection.Changed +=  (sender, e) => {
-                Gtk.TreeIter selected;
-                RVTreePaddockSelected = "";
-                if (RVTreeView.Selection.GetSelected(out selected)) {
-                    var sel = RVTreeView.Model.GetValue(selected, 0).ToString();
-                    if (myPaddocks.Contains(sel)) {
-                      RVTreePaddockSelected = sel;
-                    }
-                }
-            };
-#endif
             RVTree.Add(RVTreeView);
-            vpane2b.Pack2(RVTree, true, true );
+
+            LRVBox.PackStart(RVTree, true, true, 0);
+            vpane2b.Pack2(LRVBox, true, true );
             vpane2b.ShowAll();
 
+            HPaned hpane2 = new HPaned();
             hpane2.Pack1(vbox2a, true, true );
-            hpane2.Pack2(vpane2b, true, true );
+            hpane2.Pack2(vpane2b, false, false );
 
             vbox1.PackEnd(hpane2, true, true , 0);
-            
-            HBox hbox2 = new HBox();
-            Label lmpVar = new Label("Current paddock variable:");
-            hbox2.PackStart(lmpVar, false, false, 5 );
-            CurrPName = new Entry();
-            CurrPName.WidthChars = 40;
-            hbox2.PackStart(CurrPName, false, false, 5 );
-
-            SimChooserBox = new HBox();
-            SimulationDropDown = new DropDownView(this);
-            SimChooserBox.PackStart(new Label("Simulation:"), false, false, 5);
-            SimChooserBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
-           
-            hbox2.PackEnd(SimChooserBox, false, false, 5 );
-            vbox1.PackEnd(hbox2, false, false, 5 );
             vbox1.ShowAll();
-
-            PropertiesView = new PropertyView(this);
-            ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
         }
 
         /// <summary>
@@ -268,13 +250,11 @@
 
             if (model.RVIndices != null) {
                 earliestDate = model.RVIndices.Keys.Min();
-                earliestDateLabel.Text = earliestDate.ToString("d MMM yyyy");
 
                 selectedDate = earliestDate;
-                selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
+                selectedDateLabel.Text = selectedDate.ToString("dd MMM yyyy");
 
                 lastDate = model.RVIndices.Keys.Max();
-                lastDateLabel.Text = lastDate.ToString("d MMM yyyy");
             }
             CurrPName.Text = model.CurrentPaddockString;
             CurrPName.Changed += OnCurrPNameChanged;
@@ -330,14 +310,13 @@
         {
             try
             {
-                (PropertiesView as ViewBase).Dispose();
-                SimulationDropDown.Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
                 dateminus.Clicked -= onMinusButtonClicked;
                 dateplus.Clicked -= onPlusButtonClicked;
                 rugCanvas.Realized -= OnRealized;
                 rugCanvas.SizeAllocated -= OnRealized;
                 CurrPName.Changed -= OnCurrPNameChanged;
+                mainWidget.Dispose();
             }
             catch (Exception err)
             {
@@ -547,7 +526,7 @@
            selectedDate = t.Date;
            if (selectedDate > lastDate) selectedDate = lastDate;
            if (selectedDate < earliestDate) selectedDate = earliestDate;
-           selectedDateLabel.Text = selectedDate.ToString("d MMM yyyy");
+           selectedDateLabel.Text = selectedDate.ToString("dd MMM yyyy");
 
            Gtk.TreeIter iter ;
            foreach (var p in myPaddocks) {
@@ -599,13 +578,21 @@
         {
             setDateTo ("", selectedDate.AddDays(1));
         }
+        private void onPlus2ButtonClicked( object obj, EventArgs args )
+        {
+            setDateTo ("", selectedDate.AddDays(7));
+        }
         private void onMinusButtonClicked( object obj, EventArgs args )
         {
             setDateTo ("", selectedDate.AddDays(-1));
         }
+        private void onMinus2ButtonClicked( object obj, EventArgs args )
+        {
+            setDateTo ("", selectedDate.AddDays(-7));
+        }
         private void OnCurrPNameChanged (object sender, EventArgs e) 
         {
-            rugPlotModel.CurrentPaddockString = (sender as Gtk.Entry).Text;
+            rugPlotModel.CurrentPaddockString = (sender as Gtk.Entry)?.Text;
         }
     }
 }
