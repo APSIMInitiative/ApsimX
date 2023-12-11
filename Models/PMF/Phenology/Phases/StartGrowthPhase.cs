@@ -1,6 +1,7 @@
 using System;
 using Models.Climate;
 using Models.Core;
+using Models.Functions;
 using Newtonsoft.Json;
 
 
@@ -13,7 +14,7 @@ namespace Models.PMF.Phen
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class OnDatePhase : Model, IPhase
+    public class StartGrowthPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -21,10 +22,13 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
+        /// <summary>The thermal time</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction MovingAverageTemp = null;
+
         //2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
-        private int StartDOY = 0;
         private bool First = true;
         
         //5. Public properties
@@ -46,13 +50,19 @@ namespace Models.PMF.Phen
         [Description("DAWStoProgress")]
         public int DOYtoProgress { get; set; }
 
+        /// <summary>Moving Average temperature required to start growth</summary>
+        [Description("Moving average temperature to Progress")]
+        public int TemptoProgress { get; set; }
+
         /// <summary>Return a fraction of phase complete.</summary>
         [JsonIgnore]
         public double FractionComplete
         {
             get
             {
-                return Math.Min(1.0, ((double)clock.Today.DayOfYear - (double)StartDOY) / ((double)DOYtoProgress - (double)StartDOY));
+                double daysFrac = Math.Min(1.0, (double)clock.Today.DayOfYear  / (double)DOYtoProgress);
+                double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value()/TemptoProgress));
+                return Math.Min(daysFrac, tempFrac);
             }
         }
 
@@ -65,11 +75,10 @@ namespace Models.PMF.Phen
             bool proceedToNextPhase = false;
             if (First)
             {
-                StartDOY = clock.Today.DayOfYear;
                 First = false;
             }
 
-            if (clock.Today.DayOfYear >= DOYtoProgress) 
+            if ((clock.Today.DayOfYear >= DOYtoProgress)  && (MovingAverageTemp.Value() >= TemptoProgress))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
@@ -81,7 +90,6 @@ namespace Models.PMF.Phen
         public void ResetPhase()
         {
             First = true;
-            StartDOY = 0;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
