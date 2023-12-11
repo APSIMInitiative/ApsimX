@@ -304,7 +304,7 @@ namespace Models.PMF.SimplePlantModels
         {
             {"TT_Temp_X","[DEROPAPY].Phenology.ThermalTime.XYPairs.X = " },
             {"TT_Acc_Y","[DEROPAPY].Phenology.ThermalTime.XYPairs.Y = " },
-            {"StartGrowth_00","[DEROPAPY].Phenology.Waiting.DAWStoProgress = " },
+            {"StartGrowth_00","[DEROPAPY].Phenology.Waiting.DOYtoProgress = " },
             {"Tt_Vegetative_01","[DEROPAPY].Phenology.Vegetative.Target.FixedValue = " },
             {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
             {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },

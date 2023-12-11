@@ -1,19 +1,19 @@
-﻿ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover
+ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover
 CropType,string,type of crop,Annual,Tree,Pasture,Pasture
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
-StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",90,60,0,0
+StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",272,242,0,0
 Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,600,450,300,300
 DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(300 300),(450 450),(0 0), (0 0)
+Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(300 300),(200 1000),(0 0), (0 0)
 Pp_Senescent_03,h,Photoperiod at start and end of response,(8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,(500.0 600.0),(500.0 600.0),(500.0 600.0),(500.0 600.0)
-Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,50, 50, 0, 0
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,(300.0 300.0),(10.0 1000.0),(500.0 600.0),(500.0 600.0)
+Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,50,50,0,0
 Chill_Temp_X,oC,Chill thresholds,(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
 Chill_Acc_Y,oCd,Chill rate,(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
-AC_Dormant_05,oCd,chill stuff,(0.0 30),(0.0 30),(0.0 30),(0.0 30)
-Tt_Dormant_05,oCd,more chill stuff,(500 0),(500 0),(500 0),(500 0)
+AC_Dormant_05,oCd,chill stuff,(0.0 30),(0.0 200),(0.0 30),(0.0 30)
+Tt_Dormant_05,oCd,more chill stuff,(0 0),(900 300),(0 0),(0 0)
 LAImax,m2/m2,Maximum achievable leaf are index (optimal management),6,6,6,6
 ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.45,0.45,0.45
 PartitioningStages,stageCode,Phenology stage code to drive partitioning changes,(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5)

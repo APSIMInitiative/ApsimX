@@ -369,11 +369,86 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.DAWSPhase, Models",
+                  "$type": "Models.PMF.Phen.GenericPhase, Models",
+                  "Start": "Dormancy",
+                  "End": "Waiting",
+                  "IsEmerged": true,
+                  "Name": "Dormant",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Grain filling is nearly complete",
+                      "Name": "Description",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "Progression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Target",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.0
+                          ],
+                          "Y": [
+                            0.0,
+                            0.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                              "Name": "Param value set at establishment",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[DEROPAPY].Phenology.Chill",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Phen.OnDatePhase, Models",
                   "Start": "Waiting",
                   "End": "StartGrowth",
                   "IsEmerged": true,
-                  "DAWStoProgress": 0,
+                  "DOYtoProgress": 0,
                   "Name": "Waiting",
                   "ResourceName": null,
                   "Children": [],
@@ -615,7 +690,7 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Maturity",
-                  "End": "Dormancy",
+                  "End": "ReStart",
                   "IsEmerged": true,
                   "Name": "Mature",
                   "ResourceName": null,
@@ -663,109 +738,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "Dormancy",
-                  "End": "ReStart",
-                  "IsEmerged": true,
-                  "Name": "Dormant",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Grain filling is nearly complete",
-                      "Name": "Description",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "Progression",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Target",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.0
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                              "Name": "Param value set at establishment",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[DEROPAPY].Phenology.Chill",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "ReStart",
                   "IsEmerged": true,
-                  "PhaseNameToGoto": "Waiting",
+                  "PhaseNameToGoto": "Dormant",
                   "Name": "Reset",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Phen.EndPhase, Models",
-                  "Start": "Ripe",
-                  "End": "Unused",
-                  "IsEmerged": true,
-                  "Name": "ReadyForHarvesting",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
-                      "Name": "ThermalTime",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -825,9 +804,9 @@
                 },
                 {
                   "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "Maturity",
-                  "EndStageName": "ReStart",
-                  "ResetStageName": "DoneWaiting",
+                  "StartStageName": "Dormancy",
+                  "EndStageName": "Waiting",
+                  "ResetStageName": "FullCanopy",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -9121,6 +9100,15 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Weather].FileName  = VCS_Brightwater.met, VCS_Cromwell.met,VCS_Jervoistown.met",
+                  "Name": "Location",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -13533,7 +13521,7 @@
               "ColourArgb": -16744448,
               "FactorToVaryColours": "Crop",
               "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
+              "FactorToVaryLines": "Location",
               "Marker": 11,
               "MarkerSize": 0,
               "Line": 0,
