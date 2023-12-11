@@ -261,6 +261,10 @@ namespace Models.PMF.Phen
                 }
                 AccumulatedTT = Math.Max(0, AccumulatedTT);
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
+
+                //if the first phase wound back to is not emerged that set emerged to false
+                if (!phasesToRewind[0].IsEmerged)
+                    Emerged = false;
             }
             else
             {

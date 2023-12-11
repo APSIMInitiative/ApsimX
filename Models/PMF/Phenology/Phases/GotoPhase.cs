@@ -63,9 +63,8 @@ namespace Models.PMF.Phen
         /// <summary>Should not be called in this class</summary>
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            PropOfDayToUse = 0;
             phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
-            return false;
+            return true;
         }
 
         /// <summary>Resets the phase.</summary>
