@@ -8,20 +8,15 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using Commands;
     using EventArguments;
-    using EventArguments.DirectedGraph;
     using Models;
     using Models.Core;
     using Models.Interfaces;
     using Models.Management;
     using Views;
-    using Interfaces;
-    using APSIM.Shared.Graphing;
+
+
 
     /// <summary>
     /// Presenter for the rotation bubble chart component
@@ -44,13 +39,6 @@ namespace UserInterface.Presenters
         /// </summary>
 
         /// <summary>
-        /// Used by the intellisense to keep track of which editor the user is currently using.
-        /// Without this, it's difficult to know which editor (variables or events) to
-        /// insert an intellisense item into.
-        /// </summary>
-        private PropertyPresenter propertiesPresenter = new PropertyPresenter();
-
-        /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
         /// <param name="model">The model</param>
@@ -62,8 +50,9 @@ namespace UserInterface.Presenters
             this.presenter = presenter;
             this.model = model as RotationRugplot;
 
-            propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
-            RefreshView();
+            this.view.SimulationDropDown.Changed += OnSimulationNameChanged;
+
+            RefreshView(true);
         }
 
         /// <summary>
@@ -71,7 +60,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            propertiesPresenter.Detach();
+            this.view.SimulationDropDown.Changed -= OnSimulationNameChanged;
         }
 
         /// <summary>
@@ -81,16 +70,23 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-                RefreshView();
+                RefreshView(true);
         }
 
         /// <summary>
         /// Refresh the view with the model's current state.
         /// </summary>
-        private void RefreshView()
+        private void RefreshView(bool setSimulationName)
         {
-            view.SetModel(model);
-            propertiesPresenter.RefreshView(model);
+            view.SetModel(model, setSimulationName);
+        }
+        /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        private void OnSimulationNameChanged(object sender, EventArgs e)
+        {
+            model.SetSimulationName((sender as DropDownView).SelectedValue);
+            RefreshView(false); 
         }
     }
 }

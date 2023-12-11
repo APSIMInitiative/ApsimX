@@ -5,18 +5,15 @@
     using System.Linq;
     using Interfaces;
     using EventArguments;
-    using APSIM.Interop.Visualisation;
-    using Cairo;
     using Gtk;
-    using Models.Management;
     using Models;
+    using Models.Core;
+    using Models.Management;
     using Extensions;
     using Utility;
     using APSIM.Shared.Graphing;
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
-    using System.Threading;
-    using Models.Core;
 
 
     /// <summary>
@@ -31,6 +28,7 @@
         private Box vbox1 = null;
         private ListStore stateList = new ListStore(typeof(string));
         private ListStore ruleTree = new ListStore(typeof(string));
+        private Entry CurrPName;
         private DateTime earliestDate;
         private Label earliestDateLabel;
         private DateTime lastDate;
@@ -59,6 +57,11 @@
         List<string> myPaddocks = null;
         //List<RVPair> myRVs;
         //Dictionary<DateTime, int> myRVIndices;
+
+
+        /// <summary>Drop down box which displays the simulation names.</summary>
+        public DropDownView SimulationDropDown { get; private set; }
+        private HBox SimChooserBox;
 
         /// <summary>
         /// Properties editor.
@@ -105,23 +108,17 @@
             // the rugplot              
             VBox vbox2a = new VBox();
             rugCanvas = new DrawingArea();
-            rugCanvas.AddEvents(
-            (int)Gdk.EventMask.PointerMotionMask
-            | (int)Gdk.EventMask.ButtonPressMask
-            | (int)Gdk.EventMask.ButtonReleaseMask);
-
+            rugCanvas.AddEvents( (int)Gdk.EventMask.PointerMotionMask
+                    | (int)Gdk.EventMask.ButtonPressMask
+                    | (int)Gdk.EventMask.ButtonReleaseMask);
 
             rugCanvas.Drawn += OnDrawingAreaExpose;
 
             rugCanvas.ButtonPressEvent += OnMouseButtonPress;
 
-            ScrolledWindow scroller = new ScrolledWindow()
-            {
-                HscrollbarPolicy = PolicyType.Always,
-                VscrollbarPolicy = PolicyType.Always
-            };
-
-
+            ScrolledWindow scroller = new ScrolledWindow();
+            scroller.ShadowType = ShadowType.EtchedIn;
+            scroller.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             scroller.Add(rugCanvas);
 
             rugCanvas.Realized += OnRealized;
@@ -166,10 +163,10 @@
             c4.Resizable = true;
 
             RVTreeModel = new TreeStore (typeof(string), typeof(string), typeof(string));
-
             RVTreeView.Model = RVTreeModel;
 
 #if false
+            // pretty sure this isnt needed
             RVTreeView.Selection.Changed +=  (sender, e) => {
                 Gtk.TreeIter selected;
                 RVTreePaddockSelected = "";
@@ -189,6 +186,21 @@
             hpane2.Pack2(vpane2b, true, true );
 
             vbox1.PackEnd(hpane2, true, true , 0);
+            
+            HBox hbox2 = new HBox();
+            Label lmpVar = new Label("Current paddock variable:");
+            hbox2.PackStart(lmpVar, false, false, 5 );
+            CurrPName = new Entry();
+            CurrPName.WidthChars = 40;
+            hbox2.PackStart(CurrPName, false, false, 5 );
+
+            SimChooserBox = new HBox();
+            SimulationDropDown = new DropDownView(this);
+            SimChooserBox.PackStart(new Label("Simulation:"), false, false, 5);
+            SimChooserBox.PackStart(SimulationDropDown.MainWidget, false, false, 5);
+           
+            hbox2.PackEnd(SimChooserBox, false, false, 5 );
+            vbox1.PackEnd(hbox2, false, false, 5 );
             vbox1.ShowAll();
 
             PropertiesView = new PropertyView(this);
@@ -247,7 +259,8 @@
         /// Set the graph in the view.
         /// </summary>
         /// <param name="model">the model.</param>
-        public void SetModel(RotationRugplot model)
+        /// <param name="setSimName">Whether to tell the model to load data from the simulation name we're displaying.</param>
+        public void SetModel(RotationRugplot model, bool setSimName)
         {
             ruleTree.Clear();
             earliestDate = selectedDate = new DateTime(0);
@@ -263,24 +276,49 @@
                 lastDate = model.RVIndices.Keys.Max();
                 lastDateLabel.Text = lastDate.ToString("d MMM yyyy");
             }
+            CurrPName.Text = model.CurrentPaddockString;
+            CurrPName.Changed += OnCurrPNameChanged;
+
             if (model.Transitions != null)
                 myPaddocks = model.Transitions.Select(t => t.paddock).Distinct().ToList();
 
-            // Ugh. Multipaddock simulations always have an "empty" toplevel.
-            if (myPaddocks.Count > 1 && myPaddocks.Last() == "") 
-               myPaddocks.RemoveAt(myPaddocks.Count-1);
+            // Multipaddock simulations always have an "empty" toplevel.
+            if (myPaddocks.Count > 1) {
+               myPaddocks.RemoveAll(s => s == "");
+               myPaddocks.RemoveAll(s => s == null);
+            }
+
+            SimulationDropDown.Values = model.GetSimulationNames();
+            if (SimulationDropDown.Values.Length > 1) 
+               EnableMultipleSims();
+            else
+               DisableMultipleSims();
+               
+            if (setSimName) 
+               SimulationDropDown.SelectedValue = model.SimulationName;
 
             RVTreeModel.Clear();
             foreach (var p in myPaddocks) {
                RVTreeModel.AppendValues (new string [] {p, " ", " "});
             }
 
+            stateListStore.Clear();
             foreach (var node in rugPlotModel.FindAncestor<RotationManager>().Nodes) {
                stateListStore.AppendValues (node.Name);
             }
             setDateTo ("", earliestDate);
         }
- 
+        /// <summary></summary>
+        public void EnableMultipleSims() 
+        {
+            SimChooserBox.Visible = true;
+        }
+        /// <summary></summary>
+        public void DisableMultipleSims() 
+        {
+            SimChooserBox.Visible = false;
+        }
+
         /// <summary>
         /// Called when the main widget is destroyed.
         /// Need to detach all event handlers to/from native objects
@@ -293,13 +331,13 @@
             try
             {
                 (PropertiesView as ViewBase).Dispose();
+                SimulationDropDown.Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
                 dateminus.Clicked -= onMinusButtonClicked;
                 dateplus.Clicked -= onPlusButtonClicked;
                 rugCanvas.Realized -= OnRealized;
                 rugCanvas.SizeAllocated -= OnRealized;
-
-                
+                CurrPName.Changed -= OnCurrPNameChanged;
             }
             catch (Exception err)
             {
@@ -564,6 +602,10 @@
         private void onMinusButtonClicked( object obj, EventArgs args )
         {
             setDateTo ("", selectedDate.AddDays(-1));
+        }
+        private void OnCurrPNameChanged (object sender, EventArgs e) 
+        {
+            rugPlotModel.CurrentPaddockString = (sender as Gtk.Entry).Text;
         }
     }
 }

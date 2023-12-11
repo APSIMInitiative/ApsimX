@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Utilities;
 
 using System.Data;
 using Models.Core;
+using Models.Core.Run;
+using Models.Factorial;
 using Models.Storage;
 using Models.Functions;
 using System.Collections;
@@ -19,6 +20,11 @@ namespace Models.Management
    [ValidParent(ParentType = typeof(RotationManager))]
    public class RotationRugplot : Model
    {
+      /// <summary>
+      /// Constructor
+      /// </summary>
+      public RotationRugplot() { }
+
       /// <summary>A link to a storage service</summary>
       [Link]
       private IDataStore storage = null;
@@ -31,7 +37,7 @@ namespace Models.Management
       [Link]
       IClock Clock = null;
 
-      /// <summary>The current paddock under examination (eg [Manager].Script.currentPaddock) </summary>
+      /// <summary>The current paddock under examination (eg [Manager].Script.currentPaddock) FIXME needs UI element </summary>
       [Description("The name of the current paddock under investigation")]
       public string CurrentPaddockString { get; set; }
 
@@ -44,6 +50,7 @@ namespace Models.Management
          _States = new List<string>();
          ruleHashes = new Dictionary<string, int>();
          targetHashes = new Dictionary<string, int>();
+         SimulationName = simulation.Name;
       }
 
       /// <summary>
@@ -261,15 +268,28 @@ namespace Models.Management
          private set { _States = value; }
       }
 
+      /// <summary>
+      /// The simulation name to load
+      /// </summary>
+      public string SimulationName = "";
+/// <summary>
+/// The view is asking for a different set of data
+/// </summary>
+/// <param name="s"></param>
+      public void SetSimulationName(string s) {
+          SimulationName = s;
+          loadIt();
+      }
       private void loadIt()
       {
          storage = this.FindInScope<IDataStore>();
          if (storage == null) { throw new Exception("No storage"); }
 
-         string simulationName = storage?.Reader?.SimulationNames[0];
+         if (SimulationName == "") 
+             SimulationName = GetSimulationNames()[0];
 
          _RVPs = new List<RVPair>();
-         DataTable table = storage?.Reader?.GetData("_" + simulationName +  "_" + myLocalName() + "_Values");
+         DataTable table = storage.Reader.GetData("_" + SimulationName +  "_" + myLocalName() + "_Values");
          if (table == null) { throw new Exception("No rule/value table in storage"); }
          if (table?.Rows?.Count > 0)
          {
@@ -292,7 +312,7 @@ namespace Models.Management
          }
 
          _RVIndices = new Dictionary<DateTime, int>();
-         table = storage?.Reader?.GetData("_" + simulationName +  "_" + myLocalName() + "_Indices");
+         table = storage.Reader.GetData("_" + SimulationName +  "_" + myLocalName() + "_Indices");
          if (table == null) { throw new Exception("No index table in storage"); }
          if (table?.Rows?.Count > 0)
          {
@@ -306,7 +326,7 @@ namespace Models.Management
          }
 
          _Transitions = new List<Transition>();
-         table = storage?.Reader?.GetData("_" + simulationName +  "_" + myLocalName() + "_Transitions");
+         table = storage.Reader.GetData("_" + SimulationName +  "_" + myLocalName() + "_Transitions");
          if (table?.Rows?.Count > 0)
          {
             var Dates = table.AsEnumerable().Select(r => r.Field<DateTime>("Date")).ToArray();
@@ -320,8 +340,8 @@ namespace Models.Management
          }
 
          ruleHashes = new Dictionary<string, int>();
-         table = storage?.Reader?.GetData("_" + simulationName +  "_" + myLocalName() + "_ruleHashes");
-         if (table?.Rows?.Count > 0)
+         table = storage.Reader.GetData("_" + SimulationName +  "_" + myLocalName() + "_ruleHashes");
+         if (table.Rows.Count > 0)
          {
             var keys = table.AsEnumerable().Select(r => r.Field<string>("Key")).ToArray();
             var values = table.AsEnumerable().Select(r => r.Field<int>("Value")).ToArray();
@@ -332,8 +352,8 @@ namespace Models.Management
             }
          }
          targetHashes = new Dictionary<string, int>();
-         table = storage?.Reader?.GetData("_" + simulationName +  "_" + myLocalName() + "_targetHashes");
-         if (table?.Rows?.Count > 0)
+         table = storage.Reader.GetData("_" + SimulationName +  "_" + myLocalName() + "_targetHashes");
+         if (table.Rows.Count > 0)
          {
             var keys = table.AsEnumerable().Select(r => r.Field<string>("Key")).ToArray();
             var values = table.AsEnumerable().Select(r => r.Field<int>("Value")).ToArray();
@@ -344,6 +364,38 @@ namespace Models.Management
             }
          }
       }
+      /// <summary>
+      /// Get the simulation names 
+      /// </summary>
+      /// <returns></returns>
+      public string[] GetSimulationNames()
+        {
+            // populate the simulation names in the view.
+            IModel scopedParent = ScopingRules.FindScopedParentModel(this);
+
+            if (scopedParent is Simulation parentSimulation)
+            {
+                if (scopedParent.Parent is Experiment)
+                    scopedParent = scopedParent.Parent;
+                else
+                {
+                    return new string[] { parentSimulation.Name };
+                }
+            }
+
+            if (scopedParent is Experiment experiment)
+            {
+                return(experiment.GenerateSimulationDescriptions().Select(s => s.Name).ToArray());
+            }
+            else
+            {
+                List<ISimulationDescriptionGenerator> simulations = this.FindAllInScope<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
+                simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
+                List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
+                simulationNames.AddRange(this.FindAllInScope<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                return(simulationNames.ToArray());
+            }
+        }
    }
    /// <summary>
    /// A rule:value pair
