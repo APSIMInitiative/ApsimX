@@ -291,9 +291,27 @@ namespace Models.PMF.SimplePlantModels
             thisDero["Chill_Acc_Y"] += clean(Current["Chill_Acc_Y"]);
             thisDero["AC_Dormant_05"] += clean(Current["AC_Dormant_05"]);
             thisDero["Tt_Dormant_05"] += clean(Current["Tt_Dormant_05"]);
+            thisDero["MaxCanopyBaseHeight"] += clean(Current["MaxCanopyBaseHeight"]);
+            thisDero["MaxCanopyPrunedHeight"] += clean(Current["MaxCanopyPrunedHeight"]);
+            thisDero["MaxCanopyHeight"] += clean(Current["MaxCanopyHeight"]);
+            thisDero["MaxCanopyPrunedWidth"] += clean(Current["MaxCanopyPrunedWidth"]);
+            thisDero["MaxCanopyWidth"] += clean(Current["MaxCanopyWidth"]);
+            thisDero["AgeToMaxDimension"] += clean(Current["AgeToMaxDimension"]);
+            thisDero["SeasonalDimensionPattern"] += clean(Current["SeasonalDimensionPattern"]);
+
+            if (Current["CropType"] == "Annual")
+            {
+            }
+            else if (Current["CropType"] == "Pasture")
+            {
+            }
+            else if (Current["CropType"] == "Tree")
+            {
+            }
+            else
+            { throw new Exception("CropType must be Annual, Pasture or Tree"); }
 
 
-            
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
             Cultivar deroValues = new Cultivar(this.Name, commands);
@@ -318,6 +336,14 @@ namespace Models.PMF.SimplePlantModels
             {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
             {"AC_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.X = " },
             {"Tt_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.Y = " },
+            {"MaxCanopyBaseHeight","[DEROPAPY].Height.CanopyBaseHeight.Maximum.FixedValue = " },
+            {"MaxCanopyPrunedHeight","[DEROPAPY].Height.PrunedCanopyDepth.Maximum.MaxPrunedHeight.FixedValue = " },
+            {"MaxCanopyHeight","[DEROPAPY].Height.SeasonalGrowth.Maximum.MaxHeight.FixedValue = " },
+            {"MaxCanopyPrunedWidth","[DEROPAPY].Width.PrunedWidth.Maximum.FixedValue = " },
+            {"MaxCanopyWidth","[DEROPAPY].Width.SeasonalGrowth.Maximum.MaxWidth.FixedValue = " },
+            {"AgeToMaxDimension","[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2] = " },
+            {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
+            
         };
     }
 }

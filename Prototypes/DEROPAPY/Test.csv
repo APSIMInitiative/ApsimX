@@ -15,6 +15,13 @@ Chill_Temp_X,oC,Chill thresholds,(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0
 Chill_Acc_Y,oCd,Chill rate,(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
 AC_Dormant_05,oCd,chill stuff,(0.0 30),(0.0 200),(0.0 30),(0.0 30)
 Tt_Dormant_05,oCd,more chill stuff,(0 0),(900 300),(0 0),(0 0)
+MaxCanopyBaseHeight,mm,Height of the base of the canopy of mature plant,0,700,0,0
+MaxCanopyPrunedHeight,mm,Height of the top of the canopy of a mature plant after pruning or grazing,0,2500,100,100
+MaxCanopyHeight,mm,Height of the top of the canopy of a matur plant before harvest or pruning,1800,3500,300,300
+MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,800,1200,300,300
+MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,800,1500,300,300
+AgeToMaxDimension,Y,Years until plant reaches mature size,1,6,1,1
+SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth FullCanopy StartSenescence and Maturity respectively,(0 0.5 0.5 1.0),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
 LAImax,m2/m2,Maximum achievable leaf are index (optimal management),6,6,6,6
 ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.45,0.45,0.45
 PartitioningStages,stageCode,Phenology stage code to drive partitioning changes,(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5)
