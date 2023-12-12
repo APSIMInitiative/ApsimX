@@ -470,7 +470,7 @@ ExperimentY2
             string newApsimxFileName = "newSim.apsimx";
             string newApsimxFilePath = Path.Combine(Path.GetTempPath(), newApsimxFileName);
 
-            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile.txt");
+            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile8.txt");
             string newCommandString = $"save {newApsimxFileName}";
             File.WriteAllText(newConfigFilePath, newCommandString);
 
@@ -492,7 +492,7 @@ ExperimentY2
         {
             string newSimName = "newSim1.apsimx";
             string newApsimxFilePath = Path.Combine(Path.GetTempPath(), newSimName);
-            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile1.txt");
+            string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile9.txt");
 
             string newCommands = $@"save {newSimName}
 load {newSimName}
@@ -563,7 +563,7 @@ year  day radn  maxt   mint  rain  pan    vp      code
             string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
 
             string newFileString = $"load {apsimxFileName}\ndelete [Simulations]";
-            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config6.txt");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config10.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -590,7 +590,7 @@ add [Simulations] Experiment
 copy [Simulation] [Experiment]
 save {apsimxFileName}";
 
-            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config11.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -620,7 +620,7 @@ save {apsimxFileName}";
 copy [Simulation] [Experiment]
 save {apsimxFileName}";
 
-            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config12.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
             bool fileExists = File.Exists(newTempConfigFile);
@@ -631,6 +631,7 @@ save {apsimxFileName}";
         }
 
         [Test]
+        [Order(3)]
         public void TestSubsequentCommandDoesNotOverwriteTempSim()
         {
             Simulations file = Utilities.GetRunnableSim();
@@ -643,7 +644,7 @@ add [Simulations] Simulation
 save {apsimxFileName}
 ";
 
-            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config13.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
             Utilities.RunModels($"--apply {newTempConfigFile}");
@@ -658,6 +659,7 @@ save {apsimxFileName}
         }
 
         [Test]
+        [Order(4)]
         public void TestFactorOverrideIsApplied()
         {
             Simulations file = Utilities.GetRunnableSim();
@@ -672,7 +674,7 @@ add [Factors] Factor
 save {apsimxFileName}
 ";
 
-            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "config14.txt");
             File.WriteAllText(newTempConfigFile, newFileString);
 
             Utilities.RunModels($"--apply {newTempConfigFile}");
@@ -682,7 +684,8 @@ save {apsimxFileName}
 
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
             Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
-            Assert.IsTrue(modifiedFactor.Specification == "[Factor].Specification = [Fertilise at sowing].Script.Amount = 0 to 200 step 20");
+            Console.WriteLine($"modifiedFactor.Specification = {modifiedFactor.Specification}");
+            Assert.Contains(modifiedFactor.Specification, new List<string>() { "[Fertilise at sowing].Script.Amount = 0 to 200 step 20" });
         }
     }
 }
