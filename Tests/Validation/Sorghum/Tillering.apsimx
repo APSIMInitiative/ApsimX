@@ -30846,7 +30846,7 @@
               "Parameters": [
                 {
                   "Key": "DynamicTillering",
-                  "Value": "False"
+                  "Value": "True"
                 }
               ],
               "Name": "Config",
@@ -30964,8 +30964,8 @@
                   "TableName": "DailyReport",
                   "XFieldName": "Date",
                   "YFieldName": "GrainGreenWt",
-                  "X2FieldName": "",
-                  "Y2FieldName": "",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
