@@ -51,7 +51,7 @@ namespace Models.PMF.Phen
         /// <summary>This lists all the stages that are pased on this day</summary>
         private List<string> stagesPassedToday = new List<string>();
 
-
+        
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
 
@@ -533,10 +533,13 @@ namespace Models.PMF.Phen
                         throw new Exception("Cannot transition to the next phase. No more phases exist");
 
                     currentPhaseIndex = currentPhaseIndex + 1;
-
+                    
                     PhaseChangedType PhaseChangedData = new PhaseChangedType();
                     PhaseChangedData.StageName = CurrentPhase.Start;
                     PhaseChanged?.Invoke(plant, PhaseChangedData);
+
+                    if ((CurrentPhase is GotoPhase) || (CurrentPhase is GrazeAndRewind)) //If new phase is one that sets a new stage, do them now
+                        CurrentPhase.DoTimeStep(ref propOfDayToUse);
 
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }

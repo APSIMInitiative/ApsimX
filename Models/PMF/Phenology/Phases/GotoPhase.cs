@@ -53,10 +53,6 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public double FractionComplete { get; }
 
-        /// <summary>Thermal time target</summary>
-        [JsonIgnore]
-        public double Target { get; set; }
-
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
 

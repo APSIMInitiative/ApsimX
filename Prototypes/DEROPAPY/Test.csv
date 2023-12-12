@@ -5,7 +5,7 @@ TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  2
 D_StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",200,200,0,0
 T_StartGrowth_00,oC,"""14 day running average temperature required to start growth""",13,10,0,0
 Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,600,450,300,300
-DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,DefoliateOrDevelop,DefoliateOrDevelop
+DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(300 300),(200 1000),(0 0), (0 0)
 Pp_Senescent_03,h,Photoperiod at start and end of response,(8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
