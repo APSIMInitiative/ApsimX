@@ -629,5 +629,60 @@ save {apsimxFileName}";
             Exception ex = Assert.Throws<Exception>(delegate { Utilities.RunModels($"--apply {newTempConfigFile}"); });
             //Assert.IsTrue(ex.Message.Contains("System.InvalidOperationException: Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file."));
         }
+
+        [Test]
+        public void TestSubsequentCommandDoesNotOverwriteTempSim()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string newFileString = @$"load {apsimxFileName}
+add [Simulations] Simulation
+add [Simulations] Simulation
+save {apsimxFileName}
+";
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), apsimxFileName);
+
+            string text = File.ReadAllText(newApsimxFilePath);
+
+            Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            Simulation thirdSim = simAfterCommands.FindInScope<Simulation>("Simulation2");
+            Assert.NotNull(thirdSim);
+
+        }
+
+        [Test]
+        public void TestFactorOverrideIsApplied()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
+
+            string newFileString = @$"load {apsimxFileName}
+add [Simulations] Experiment
+add [Experiment] Factors
+add [Factors] Factor
+[Factor].Specification = [Fertilise at sowing].Script.Amount = 0 to 200 step 20
+save {apsimxFileName}
+";
+
+            string newTempConfigFile = Path.Combine(Path.GetTempPath(), "configCopyCommand.txt");
+            File.WriteAllText(newTempConfigFile, newFileString);
+
+            Utilities.RunModels($"--apply {newTempConfigFile}");
+            string newApsimxFilePath = Path.Combine(Path.GetTempPath(), apsimxFileName);
+
+            string text = File.ReadAllText(newApsimxFilePath);
+
+            Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
+            Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
+            Assert.IsTrue(modifiedFactor.Specification == "[Factor].Specification = [Fertilise at sowing].Script.Amount = 0 to 200 step 20");
+        }
     }
 }

@@ -164,7 +164,8 @@ namespace Models
                                                                Path.DirectorySeparatorChar +
                                                                filePathSplits[filePathSplits.Count - 2] +
                                                                "temp." +
-                                                               filePathSplits.Last<string>();
+                                                               filePathSplits.Last<string>() +
+                                                               ".temp";
                                         // Create the file if new, back it up and write over it if it isn't.
                                         CreateApsimxFile(temporarySimLoadPath);
                                         File.Copy(fullLoadPath, temporarySimLoadPath, true);
@@ -180,17 +181,21 @@ namespace Models
                                 // You should never make changes to the original unless specified in save command.
                                 else
                                 {
-                                    int indexOfLastDir = file.LastIndexOf(Path.DirectorySeparatorChar);
-                                    int differenceOfLastDirAndLastPeriod = file.LastIndexOf('.') - indexOfLastDir;
-                                    string fileName = file.Substring(indexOfLastDir + 1, differenceOfLastDirAndLastPeriod - 1);
-                                    temporarySimLoadPath = configFileDirectory +
-                                                           Path.DirectorySeparatorChar +
-                                                           fileName +
-                                                           "temp" +
-                                                           ".apsimx";
-                                    // Create the file if new, back it up and write over it if it isn't.
-                                    CreateApsimxFile(temporarySimLoadPath);
-                                    File.Copy(file, temporarySimLoadPath, true);
+                                    if (string.IsNullOrEmpty(temporarySimLoadPath))
+                                    {
+                                        int indexOfLastDir = file.LastIndexOf(Path.DirectorySeparatorChar);
+                                        int differenceOfLastDirAndLastPeriod = file.LastIndexOf('.') - indexOfLastDir;
+                                        string fileName = file.Substring(indexOfLastDir + 1, differenceOfLastDirAndLastPeriod - 1);
+                                        temporarySimLoadPath = configFileDirectory +
+                                                               Path.DirectorySeparatorChar +
+                                                               fileName +
+                                                               "temp" +
+                                                               ".apsimx.temp";
+                                        // Create the file if new, back it up and write over it if it isn't.
+                                        CreateApsimxFile(temporarySimLoadPath);
+                                        File.Copy(file, temporarySimLoadPath, true);
+                                    }
+
                                 }
 
                                 // Required as RunConfigCommands() requires list, not just a string.
@@ -214,6 +219,10 @@ namespace Models
 
                                 if (isSimToBeRun)
                                 {
+                                    // TODO: Needs to overwrite original and run it as this is expected behaviour.
+                                    File.Copy(temporarySimLoadPath, file, true);
+                                    sim = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false).NewModel as Simulations;
+
                                     Runner runner = new Runner(sim,
                                                                 true,
                                                                 true,
@@ -223,6 +232,10 @@ namespace Models
                                                                 simulationNamePatternMatch: options.SimulationNameRegex);
                                     RunSimulations(runner, options);
                                     isSimToBeRun = false;
+                                    //// An assumption is made here that once a simulation is run a temp file is no longer needed.
+                                    //// Release database files and clean up.
+                                    //runner.DisposeStorage();
+                                    //CleanUpTempFiles(configFileDirectory);
                                 }
                             }
                         }
@@ -256,7 +269,8 @@ namespace Models
                                                            Path.DirectorySeparatorChar +
                                                            filePathSplits[filePathSplits.Count - 2] +
                                                            "temp." +
-                                                           filePathSplits.Last<string>();
+                                                           filePathSplits.Last<string>() +
+                                                           ".temp";
                                     // Create the file if new, back it up and write over it if it isn't.
                                     CreateApsimxFile(temporarySimLoadPath);
                                     File.Copy(fullLoadPath, temporarySimLoadPath, true);
@@ -298,6 +312,9 @@ namespace Models
                                     sim.Write(savePath);
                                 if (isSimToBeRun)
                                 {
+                                    // TODO: Needs to overwrite original and run it as this is expected behaviour.
+                                    File.Copy(temporarySimLoadPath, loadPath, true);
+                                    sim = FileFormat.ReadFromFile<Simulations>(loadPath, e => throw e, false).NewModel as Simulations;
                                     Runner runner = new Runner(sim,
                                                             true,
                                                             true,
@@ -307,6 +324,10 @@ namespace Models
                                                             simulationNamePatternMatch: options.SimulationNameRegex);
                                     RunSimulations(runner, options);
                                     isSimToBeRun = false;
+                                    //// An assumption is made here that once a simulation is run a temp file is no longer needed.
+                                    //// Release database files and clean up. 
+                                    //runner.DisposeStorage();
+                                    //CleanUpTempFiles(configFileDirectory);
                                 }
                             }
                             else if (!string.IsNullOrEmpty(savePath))
@@ -317,15 +338,11 @@ namespace Models
                                 savePath = "";
                             }
                             else throw new Exception("--apply switch used without apsimx file and no load command. Include a load command in the config file.");
-                        }
-                        // Clean up temp apsimx file.
-                        if (File.Exists(temporarySimLoadPath))
-                        {
-                            File.Replace(temporarySimLoadPath, temporarySimLoadPath + ".bak", null);
-                            File.Delete(temporarySimLoadPath);
+
                         }
 
                     }
+
                 }
                 else
                 {
@@ -360,6 +377,7 @@ namespace Models
                         Console.WriteLine("ERRORS FOUND!!");
                     if (options.Verbose)
                         Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
+
                 }
             }
             catch (Exception err)
@@ -522,7 +540,7 @@ namespace Models
             runner.Run();
         }
 
-        private static Simulations CreateMinimalSimulation() // TODO: needs testing.
+        private static Simulations CreateMinimalSimulation()
         {
             try
             {
@@ -559,5 +577,57 @@ namespace Models
                 File.Create(existingFilePath)?.Close();
         }
 
+        // TODO: clean up function needs further work. Currently has trouble removing files due to other processes using the \
+        // files.
+        private static void CleanUpTempFiles(string configFileDirectoryPath)
+        {
+            string[] tempFileList = {
+                "*temp.apsimx.temp.bak",
+                "*temp.apsimx.dh-shm",
+                "*temp.apsimx.db-wal",
+                "*temp.apsimx.db",
+                @"*.temp"
+            };
+
+            bool isFileInUse = false;
+            List<string> matchingTempFiles = new();
+            foreach (string file in tempFileList)
+                foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
+                    matchingTempFiles.Add(match);
+            foreach (string matchingFile in matchingTempFiles)
+            {
+                while (isFileInUse == true)
+                    isFileInUse = IsFileLocked(matchingFile);
+                File.Delete(matchingFile);
+            }
+
+        }
+
+        /// <summary>
+        /// Closes file if in use and returns true otherwise returns false.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>bool</returns>
+        private static bool IsFileLocked(string filePath)
+        {
+            try
+            {
+                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    stream.Close();
+                }
+            }
+            catch (IOException)
+            {
+                //the file is unavailable because it is:
+                //still being written to
+                //or being processed by another thread
+                //or does not exist (has already been processed)
+                return true;
+            }
+
+            //file is not locked
+            return false;
+        }
     }
 }

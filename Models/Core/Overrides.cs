@@ -154,11 +154,14 @@ namespace Models.Core
                     continue;
 
                 string[] values = lines[i].Split('=');
-                if (values.Length != 2)
+                if (values.Length < 2)
                     throw new Exception($"Wrong number of values specified on line {lines[i]}");
 
                 string path = values[0].Trim();
                 string value = values[1].Trim();
+                // Handles factor specifications.
+                if (values.Length > 2)
+                    value += " =" + values[2];
                 yield return new Override(path, value, Override.MatchTypeEnum.NameAndType);
             }
         }

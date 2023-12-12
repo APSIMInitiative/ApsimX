@@ -316,6 +316,7 @@ namespace Models.Core.ConfigFile
             Regex rxBrokenNodeStart = new Regex(@"(\[){1}([\w])+");
             Regex rxBrokenNodeEnd = new Regex(@"([\w])+(\]){1}");
             Regex rxNode = new Regex(@"(\[){1}([\w\s])+(\]){1}");
+            Regex rxFactorSpecification = new Regex(@"(.)*(\=)(.)*(\=)(.)*");
 
             List<string> normalizedList = new();
             StringBuilder correctedLineString = new();
@@ -326,25 +327,25 @@ namespace Models.Core.ConfigFile
                 // if the line is an override...
                 if (lineString.Contains('='))
                 {
+                    // Check for factor specification override
+                    Match factorSpecification = rxFactorSpecification.Match(lineString);
                     string correctedLine = "";
                     char[] delimiters = new char[] { '=' };
                     lineSections = lineString.Split(delimiters).ToList();
                     foreach (string section in lineSections)
                     {
-                        string fixedSection;
-                        if (section.Contains(' '))
-                        {
-                            string trimmedSection = section.TrimEnd();
-                            fixedSection = trimmedSection.Replace(' ', '@');
-                            correctedLine += fixedSection;
-                        }
-                        else if (section == lineSections.Last())
-                            correctedLine += section;
+                        string tempString = null;
+                        if (section == lineSections.Last())
+                            tempString += section;
                         else
                         {
                             string nonEndSection = section + "=";
-                            correctedLine += nonEndSection;
+                            tempString += nonEndSection;
                         }
+
+                        if (tempString.Contains(' '))
+                            tempString = EncodeCommandSubString(tempString);
+                        correctedLine += tempString;
                     }
                     normalizedList.Add(correctedLine);
                 }
@@ -534,6 +535,18 @@ namespace Models.Core.ConfigFile
             {
                 throw new Exception($"An error occurred creating new list without null values.\n {e}");
             }
+        }
+
+        /// <summary>
+        /// Returns a section of command with '@' encoded.
+        /// </summary>
+        /// <param name="section"></param>
+        /// <returns></returns>
+        public static string EncodeCommandSubString(string section)
+        {
+            string trimmedSection = section.TrimEnd();
+            return trimmedSection.Replace(' ', '@');
+
         }
     }
 }
