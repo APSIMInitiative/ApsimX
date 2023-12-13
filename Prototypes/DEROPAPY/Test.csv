@@ -8,8 +8,7 @@ Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,60
 DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze
 Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(300 300),(200 1000),(0 0), (0 0)
-Pp_Senescent_03,h,Photoperiod at start and end of response,(8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
-Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,(300.0 300.0),(10.0 1000.0),(500.0 600.0),(500.0 600.0)
+Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,300,200,0,0
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,50,50,0,0
 Chill_Temp_X,oC,Chill thresholds,(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
 Chill_Acc_Y,oCd,Chill rate,(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
@@ -22,8 +21,10 @@ MaxCanopyPrunedWidth,mm,Width of the canopy of mature plants after pruning,800,1
 MaxCanopyWidth,mm,Width of the canopy of mature plants before pruning,800,1500,300,300
 AgeToMaxDimension,Y,Years until plant reaches mature size,1,6,1,1
 SeasonalDimensionPattern,0-1,Relative values for height and width at StartGrowth FullCanopy StartSenescence and Maturity respectively,(0 0.5 0.5 1.0),(0 0.3 0.3 1.0),(0 1.0 1.0 1.0),(0 1.0 1.0 1.0)
-LAImax,m2/m2,Maximum achievable leaf are index (optimal management),6,6,6,6
-ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.45,0.45,0.45
+LAImax,m2/m2,Maximum achievable leaf are index (optimal management),5,8,6,3
+LAIWaterStressSens,0/1,Stress factor for LAI expansion when FW = 0.5  i.e this should be a value of zero or one,1,0,0,0
+ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.7,0.5,0.8
+ExtCoeffWaterStressSens,0/1,Stress factor of extinction coefficient when FW = 0.4 i.e should be between 0.2 and 1.0 depending on crop sensitivity,1,0.2,0.2,0.2
 PartitioningStages,stageCode,Phenology stage code to drive partitioning changes,(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5)
 DailyShareToShoot,fractional,Fractional allocation of total daily biomass assimilation to shoots (without produce),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)
 DailyShareFromShootToLeaf,fractional,Fractional allocation of shoot daily biomass into leaves (% of shoot allocation),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)

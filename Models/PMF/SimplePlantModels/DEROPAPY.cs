@@ -287,7 +287,6 @@ namespace Models.PMF.SimplePlantModels
             thisDero["DefoliateOrDevelop"] += clean(Current["DefoliateOrDevelop"]);
             thisDero["Pp_Reproductive_02"] += clean(Current["Pp_Reproductive_02"]);
             thisDero["Tt_Reproductive_02"] += clean(Current["Tt_Reproductive_02"]);
-            thisDero["Pp_Senescent_03"] += clean(Current["Pp_Senescent_03"]);
             thisDero["Tt_Senescent_03"] += clean(Current["Tt_Senescent_03"]);
             thisDero["Tt_Mature_04"] += clean(Current["Tt_Mature_04"]);
             thisDero["Chill_Temp_X"] += clean(Current["Chill_Temp_X"]);
@@ -301,6 +300,10 @@ namespace Models.PMF.SimplePlantModels
             thisDero["MaxCanopyWidth"] += clean(Current["MaxCanopyWidth"]);
             thisDero["AgeToMaxDimension"] += clean(Current["AgeToMaxDimension"]);
             thisDero["SeasonalDimensionPattern"] += clean(Current["SeasonalDimensionPattern"]);
+            thisDero["LAImax"] += clean(Current["LAImax"]);
+            thisDero["ExtCoeff"] += clean(Current["ExtCoeff"]);
+            thisDero["LAIWaterStressSens"] += clean(Current["LAIWaterStressSens"]);
+            thisDero["ExtCoeffWaterStressSens"] += clean(Current["ExtCoeffWaterStressSens"]);
 
             if (Current["CropType"] == "Annual")
             {
@@ -332,8 +335,7 @@ namespace Models.PMF.SimplePlantModels
             {"DefoliateOrDevelop","[DEROPAPY].Phenology.DefoliateOrDevelop.PhaseNameToGoto = "},
             {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
             {"Tt_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.Y = " },
-            {"Pp_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.XYPairs.X = " },
-            {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.XYPairs.Y = " },
+            {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.FixedValue = " },
             {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },   
             {"Chill_Temp_X","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.X = " },
             {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
@@ -346,7 +348,10 @@ namespace Models.PMF.SimplePlantModels
             {"MaxCanopyWidth","[DEROPAPY].Width.SeasonalGrowth.Maximum.MaxWidth.FixedValue = " },
             {"AgeToMaxDimension","[DEROPAPY].RelativeAnnualDimension.XYPairs.X[2] = " },
             {"SeasonalDimensionPattern","[DEROPAPY].RelativeSeasonalDimension.XYPairs.Y = " },
-            
+            {"LAImax","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.Delta.Integral.LAIMax.FixedValue = " },
+            {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
+            {"LAIWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y[1] = " },
+            {"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " }
         };
     }
 }

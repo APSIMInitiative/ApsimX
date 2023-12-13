@@ -556,41 +556,16 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "<sup>o</sup>Cd",
                       "Name": "Target",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            200.0
-                          ],
-                          "Y": [
-                            200.0,
-                            200.0
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                              "Name": "Param value set at establishment",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[DEROPAPY].Phenology.PhotoPeriod",
-                          "Name": "XValue",
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                          "Name": "Param value set at establishment",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1795,9 +1770,9 @@
                       "StartStageName": "StartGrowth",
                       "EndStageName": "FullCanopy",
                       "ResetStageName": "ReStart",
-                      "FractionRemovedOnCut": 1.0,
+                      "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
-                      "FractionRemovedOnGraze": 1.0,
+                      "FractionRemovedOnGraze": 0.0,
                       "FractionRemovedOnPrune": 0.0,
                       "Name": "GreenAreaExpansion",
                       "ResourceName": null,
@@ -1814,70 +1789,48 @@
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.SigmoidFunction, Models",
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
                                   "Name": "Integral",
                                   "ResourceName": null,
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.97,
+                                      "FixedValue": 5.0,
                                       "Units": null,
-                                      "Name": "Ymax",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].AccumulatedEmergedTT",
-                                      "Name": "XValue",
+                                      "Name": "LAIMax",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 403.8,
-                                      "Units": null,
-                                      "Name": "Xo",
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "GrowthPattern",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            3.0,
+                                            3.2,
+                                            4.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.1,
+                                            1.0
+                                          ],
+                                          "XVariableName": null,
+                                          "Name": "XYPairs",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 80.75,
-                                      "Units": null,
-                                      "Name": "b",
-                                      "ResourceName": null,
-                                      "Children": [
+                                        },
                                         {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                          "Name": "Param value set at establishment",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Deropapy].Phenology.Stage",
+                                          "Name": "XValue",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -1907,7 +1860,7 @@
                                     1.0
                                   ],
                                   "Y": [
-                                    0.0,
+                                    1.0,
                                     1.0
                                   ],
                                   "XVariableName": null,
@@ -1953,7 +1906,7 @@
                             {
                               "$type": "Models.Functions.HoldFunction, Models",
                               "WhenToHold": "StartSenescence",
-                              "Name": "MaxGAI",
+                              "Name": "LAIMax",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1970,8 +1923,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "ProportionLost",
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "MinimumFunction",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1985,61 +1938,62 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "ProportionRemaining",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "ProportionLost",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "TTSenesce",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "ProportionRemaining",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].AccumulatedEmergedTT",
-                                          "Name": "AccumulatedThermalTime",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.AddFunction, Models",
-                                          "Name": "ThermalTimeAtStartSenescence",
+                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "Name": "TTSenesce",
                                           "ResourceName": null,
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].Vegetative.Target",
-                                              "Name": "Vegetative",
+                                              "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                              "Name": "AccumulatedThermalTime",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].Reproductive.Target",
-                                              "Name": "Reproductive",
+                                              "$type": "Models.Functions.HoldFunction, Models",
+                                              "WhenToHold": "StartSenescence",
+                                              "Name": "ThermalTimeAtStartSenescence",
                                               "ResourceName": null,
-                                              "Children": [],
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Phenology].AccumulatedEmergedTT",
+                                                  "Name": "ValueToHold",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             }
                                           ],
                                           "Enabled": true,
                                           "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Senescent.Target",
+                                          "Name": "SenescencePhaseDuration",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Senescent.Target",
-                                      "Name": "SenescencePhaseDuration",
-                                      "ResourceName": null,
-                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -2148,13 +2102,11 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                0.0,
-                                0.6417916048816809,
+                                0.4,
                                 1.0
                               ],
                               "Y": [
-                                0.5,
-                                1.0,
+                                0.2,
                                 1.0
                               ],
                               "XVariableName": null,
@@ -2193,7 +2145,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.578135838582281,
+                      "FixedValue": 0.2,
                       "Units": null,
                       "Name": "DeadExtinctionCoefficient",
                       "ResourceName": null,
@@ -13646,7 +13598,9 @@
                     "[Deropapy].Leaf.Canopy.LAI",
                     "[Deropapy].Leaf.Canopy.LAITotal",
                     "[Deropapy].Leaf.Canopy.CoverGreen",
-                    "[Deropapy].Leaf.Canopy.CoverTotal"
+                    "[Deropapy].Leaf.Canopy.CoverTotal",
+                    "[Deropapy].Leaf.Canopy.LAIDead",
+                    "[Deropapy].Leaf.Canopy.CoverDead"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -14177,41 +14131,16 @@
                                 "ReadOnly": false
                               },
                               {
-                                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                "$type": "Models.Functions.Constant, Models",
+                                "FixedValue": 0.0,
+                                "Units": "<sup>o</sup>Cd",
                                 "Name": "Target",
                                 "ResourceName": null,
                                 "Children": [
                                   {
-                                    "$type": "Models.Functions.XYPairs, Models",
-                                    "X": [
-                                      0.0,
-                                      200.0
-                                    ],
-                                    "Y": [
-                                      200.0,
-                                      200.0
-                                    ],
-                                    "XVariableName": null,
-                                    "Name": "XYPairs",
-                                    "ResourceName": null,
-                                    "Children": [
-                                      {
-                                        "$type": "Models.Memo, Models",
-                                        "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                        "Name": "Param value set at establishment",
-                                        "ResourceName": null,
-                                        "Children": [],
-                                        "Enabled": true,
-                                        "ReadOnly": false
-                                      }
-                                    ],
-                                    "Enabled": true,
-                                    "ReadOnly": false
-                                  },
-                                  {
-                                    "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[DEROPAPY].Phenology.PhotoPeriod",
-                                    "Name": "XValue",
+                                    "$type": "Models.Memo, Models",
+                                    "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
+                                    "Name": "Param value set at establishment",
                                     "ResourceName": null,
                                     "Children": [],
                                     "Enabled": true,
@@ -15416,9 +15345,9 @@
                                 "StartStageName": "StartGrowth",
                                 "EndStageName": "FullCanopy",
                                 "ResetStageName": "ReStart",
-                                "FractionRemovedOnCut": 1.0,
+                                "FractionRemovedOnCut": 0.0,
                                 "FractionRemovedOnHarvest": 0.0,
-                                "FractionRemovedOnGraze": 1.0,
+                                "FractionRemovedOnGraze": 0.0,
                                 "FractionRemovedOnPrune": 0.0,
                                 "Name": "GreenAreaExpansion",
                                 "ResourceName": null,
@@ -15435,70 +15364,48 @@
                                         "ResourceName": null,
                                         "Children": [
                                           {
-                                            "$type": "Models.Functions.SigmoidFunction, Models",
+                                            "$type": "Models.Functions.MultiplyFunction, Models",
                                             "Name": "Integral",
                                             "ResourceName": null,
                                             "Children": [
                                               {
                                                 "$type": "Models.Functions.Constant, Models",
-                                                "FixedValue": 0.97,
+                                                "FixedValue": 5.0,
                                                 "Units": null,
-                                                "Name": "Ymax",
-                                                "ResourceName": null,
-                                                "Children": [
-                                                  {
-                                                    "$type": "Models.Memo, Models",
-                                                    "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                                    "Name": "Param value set at establishment",
-                                                    "ResourceName": null,
-                                                    "Children": [],
-                                                    "Enabled": true,
-                                                    "ReadOnly": false
-                                                  }
-                                                ],
-                                                "Enabled": true,
-                                                "ReadOnly": false
-                                              },
-                                              {
-                                                "$type": "Models.Functions.VariableReference, Models",
-                                                "VariableName": "[Phenology].AccumulatedEmergedTT",
-                                                "Name": "XValue",
+                                                "Name": "MaxGAI",
                                                 "ResourceName": null,
                                                 "Children": [],
                                                 "Enabled": true,
                                                 "ReadOnly": false
                                               },
                                               {
-                                                "$type": "Models.Functions.Constant, Models",
-                                                "FixedValue": 403.8,
-                                                "Units": null,
-                                                "Name": "Xo",
+                                                "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                                "Name": "GrowthPattern",
                                                 "ResourceName": null,
                                                 "Children": [
                                                   {
-                                                    "$type": "Models.Memo, Models",
-                                                    "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                                    "Name": "Param value set at establishment",
+                                                    "$type": "Models.Functions.XYPairs, Models",
+                                                    "X": [
+                                                      3.0,
+                                                      3.2,
+                                                      4.0
+                                                    ],
+                                                    "Y": [
+                                                      0.0,
+                                                      0.1,
+                                                      1.0
+                                                    ],
+                                                    "XVariableName": null,
+                                                    "Name": "XYPairs",
                                                     "ResourceName": null,
                                                     "Children": [],
                                                     "Enabled": true,
                                                     "ReadOnly": false
-                                                  }
-                                                ],
-                                                "Enabled": true,
-                                                "ReadOnly": false
-                                              },
-                                              {
-                                                "$type": "Models.Functions.Constant, Models",
-                                                "FixedValue": 80.75,
-                                                "Units": null,
-                                                "Name": "b",
-                                                "ResourceName": null,
-                                                "Children": [
+                                                  },
                                                   {
-                                                    "$type": "Models.Memo, Models",
-                                                    "Text": "\nSCRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent SCRUMcrop and SCRUMmanagement objects\n",
-                                                    "Name": "Param value set at establishment",
+                                                    "$type": "Models.Functions.VariableReference, Models",
+                                                    "VariableName": "[Deropapy].Phenology.Stage",
+                                                    "Name": "XValue",
                                                     "ResourceName": null,
                                                     "Children": [],
                                                     "Enabled": true,
@@ -19808,322 +19715,6 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "GAI",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "Crop",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "Location",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Deropapy.Leaf.Canopy.LAI",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Stage",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.EventNamesOnGraph, Models",
-                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                  "SimulationName": "SCRUMTestBase",
-                  "Name": "EventNamesOnGraph",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "GAITotal",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "Crop",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "Location",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Deropapy.Leaf.Canopy.LAITotal",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Stage",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.EventNamesOnGraph, Models",
-                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                  "SimulationName": "SCRUMTestBase",
-                  "Name": "EventNamesOnGraph",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": -0.009709981892325732,
-              "Maximum": 0.9797081711501611,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "CoverGreen",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "Crop",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "Location",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Deropapy.Leaf.Canopy.CoverGreen",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Stage",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.EventNamesOnGraph, Models",
-                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                  "SimulationName": "SCRUMTestBase",
-                  "Name": "EventNamesOnGraph",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": -0.009709981892325732,
-              "Maximum": 0.9797081711501611,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "CoverTotal",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "Crop",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": "Location",
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "Deropapy.Leaf.Canopy.CoverTotal",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Stage",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.EventNamesOnGraph, Models",
-                  "ColumnName": "SCRUM.Phenology.CurrentStageName",
-                  "SimulationName": "SCRUMTestBase",
-                  "Name": "EventNamesOnGraph",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
           "Name": "Tt",
           "ResourceName": null,
           "Children": [
@@ -20248,6 +19839,491 @@
                   "Name": "EventNamesOnGraph",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Canopy",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "GAI",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.LAI",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "Deropapy.Phenology.CurrentStageName",
+                      "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "GAITotal",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.LAITotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                      "SimulationName": "SCRUMTestBase",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "GAIDead",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.LAIDead",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                      "SimulationName": "SCRUMTestBase",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "CoverGreen",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.CoverGreen",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                      "SimulationName": "SCRUMTestBase",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "CoverTotal",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.CoverTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                      "SimulationName": "SCRUMTestBase",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "CoverDead",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "Crop",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": "Location",
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Canopy.CoverDead",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Stage",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.EventNamesOnGraph, Models",
+                      "ColumnName": "SCRUM.Phenology.CurrentStageName",
+                      "SimulationName": "SCRUMTestBase",
+                      "Name": "EventNamesOnGraph",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
