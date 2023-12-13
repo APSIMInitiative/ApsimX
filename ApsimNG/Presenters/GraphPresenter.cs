@@ -323,13 +323,24 @@
                 {
                     Color colour = GetColour(definition.Colour);
 
+                    //round points to nearest 1 decimal place
+                    object[] xValues = definition.X.Cast<object>().ToArray();
+                    for (int i = 0; i < xValues.Length; i++)
+                        if (xValues[i] is double)
+                            xValues[i] = MathUtilities.RoundSignificant((double)xValues[i], 1);
+
+                    object[] yValues = definition.Y.Cast<object>().ToArray();
+                    for (int i = 0; i < yValues.Length; i++)
+                        if (yValues[i] is double)
+                            yValues[i] = MathUtilities.RoundSignificant((double)yValues[i], 1);
+
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
                     {
                         graphView.DrawBar(
                                           definition.Title,
-                                          definition.X,
-                                          definition.Y,
+                                          xValues,
+                                          yValues,
                                           definition.XAxis,
                                           definition.YAxis,
                                           colour,
@@ -339,8 +350,8 @@
                     {
                         graphView.DrawLineAndMarkers(
                                                     definition.Title,
-                                                    definition.X,
-                                                    definition.Y,
+                                                    xValues,
+                                                    yValues,
                                                     definition.XFieldName,
                                                     definition.YFieldName,
                                                     definition.XError,
@@ -359,8 +370,8 @@
                     {
                         graphView.DrawRegion(
                                             definition.Title,
-                                            definition.X,
-                                            definition.Y,
+                                            xValues,
+                                            yValues,
                                             definition.X2,
                                             definition.Y2,
                                             definition.XAxis,
@@ -372,8 +383,8 @@
                     {
                         graphView.DrawArea(
                             definition.Title,
-                            definition.X,
-                            definition.Y,
+                            xValues,
+                            yValues,
                             definition.XAxis,
                             definition.YAxis,
                             colour,
@@ -383,8 +394,8 @@
                     {
                         graphView.DrawStackedArea(
                             definition.Title,
-                            definition.X.Cast<object>().ToArray(),
-                            definition.Y.Cast<double>().ToArray(),
+                            xValues.Cast<object>().ToArray(),
+                            yValues.Cast<double>().ToArray(),
                             definition.XAxis,
                             definition.YAxis,
                             colour,
@@ -393,8 +404,8 @@
                     else if (definition.Type == SeriesType.Box)
                     {
                         graphView.DrawBoxPLot(definition.Title,
-                            definition.X.Cast<object>().ToArray(),
-                            definition.Y.Cast<double>().ToArray(),
+                            xValues.Cast<object>().ToArray(),
+                            yValues.Cast<double>().ToArray(),
                             definition.XAxis,
                             definition.YAxis,
                             definition.Colour,
