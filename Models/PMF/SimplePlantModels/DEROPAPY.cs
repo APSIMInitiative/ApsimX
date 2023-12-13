@@ -75,7 +75,7 @@ namespace Models.PMF.SimplePlantModels
         private ISummary summary = null;
 
         [Link(Type = LinkType.Scoped)]
-        private Root root = null;
+        private RootNetwork root = null;
 
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
@@ -180,11 +180,14 @@ namespace Models.PMF.SimplePlantModels
             return dt;
         }
 
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartSimulation(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
         {
-            setCropCoefficients();
-            Establish();
+            if (!deropapy.IsAlive)
+            {
+                setCropCoefficients();
+                Establish();
+            }
         }
 
         private bool RootThyNeighbour = false;
