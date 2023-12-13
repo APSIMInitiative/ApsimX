@@ -494,13 +494,15 @@ ExperimentY2
             string newApsimxFilePath = Path.Combine(Path.GetTempPath(), newSimName);
             string newConfigFilePath = Path.Combine(Path.GetTempPath(), "configFile9.txt");
 
+            string newDalbyMetFilePath = Path.Combine(Path.GetTempPath(), "dalby.met");
+
             string newCommands = $@"save {newSimName}
 load {newSimName}
 add [Simulations] Simulation
 add [Simulation] Summary
 add [Simulation] Clock
 add [Simulation] Weather
-[Weather].FileName=dalby.met
+[Weather].FileName={newDalbyMetFilePath}
 [Clock].Start=1900/01/01
 [Clock].End=1900/01/02
 save {newSimName}
@@ -510,7 +512,6 @@ run";
             bool configFileExists = File.Exists(newConfigFilePath);
             Assert.True(configFileExists);
 
-            string newDalbyMetFilePath = Path.Combine(Path.GetTempPath(), "dalby.met");
 
             string dalbyMetFileText =
 @"[weather.met.weather]
