@@ -176,8 +176,9 @@ namespace Models.PMF.Struct
             {
                 //Calc Supply = R/oCd * LA5 * Phy5
                 var areaMethod = areaCalc as ICulmLeafArea;
-                double L5Area = areaMethod.CalculateIndividualLeafArea(5, culms.FinalLeafNo);
-                double L9Area = areaMethod.CalculateIndividualLeafArea(9, culms.FinalLeafNo);
+                var mainCulmNumber = 0;
+                double L5Area = areaMethod.CalculateIndividualLeafArea(5, culms.FinalLeafNo, mainCulmNumber);
+                double L9Area = areaMethod.CalculateIndividualLeafArea(9, culms.FinalLeafNo, mainCulmNumber);
                 double Phy5 = culms.getLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
 
                 //Calc Demand = LA9 - LA5
