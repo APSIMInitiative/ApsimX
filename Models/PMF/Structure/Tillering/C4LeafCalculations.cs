@@ -16,5 +16,19 @@
             double largestLeafPosition = (ax0s * finalLeafNo) + ax0i;
             return largestLeafPosition;
         }
-	}
+
+
+        /// <summary>
+        /// Calculate the area of the largest leaf. 
+        /// </summary>
+        public static double CalculateAreaOfLargestLeaf(
+            double amaxi,
+            double amaxs,
+            double finalLeafNo
+        )
+        {
+            double areaOfLargestLeaf = (amaxs * finalLeafNo) + amaxi;
+            return areaOfLargestLeaf;
+        }
+    }
 }

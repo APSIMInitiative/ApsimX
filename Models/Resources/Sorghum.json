@@ -5940,7 +5940,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.25,
+                  "FixedValue": 42.1,
                   "Units": null,
                   "Name": "aMaxSlope",
                   "ResourceName": null,
@@ -5950,7 +5950,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 92.45,
+                  "FixedValue": -137.4,
                   "Units": null,
                   "Name": "aMaxIntercept",
                   "ResourceName": null,
@@ -9107,14 +9107,10 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Lines": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.687",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 22.25",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 92.45"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Name": "Buster",
                   "ResourceName": null,
