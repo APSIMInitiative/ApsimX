@@ -684,7 +684,6 @@ save {apsimxFileName}
 
             Simulations simAfterCommands = FileFormat.ReadFromString<Simulations>(text, e => throw e, false).NewModel as Simulations;
             Factor modifiedFactor = simAfterCommands.FindInScope<Factor>();
-            Console.WriteLine($"modifiedFactor.Specification = {modifiedFactor.Specification}");
             Assert.Contains(modifiedFactor.Specification, new List<string>() { "[Fertilise at sowing].Script.Amount = 0 to 200 step 20" });
         }
     }
