@@ -165,8 +165,7 @@ namespace Models
                                                                Path.DirectorySeparatorChar +
                                                                filePathSplits[filePathSplits.Count - 2] +
                                                                "temp." +
-                                                               filePathSplits.Last<string>() +
-                                                               ".temp";
+                                                               filePathSplits.Last<string>();
                                         // Create the file if new, back it up and write over it if it isn't.
                                         CreateApsimxFile(temporarySimLoadPath);
                                         File.Copy(fullLoadPath, temporarySimLoadPath, true);
@@ -191,7 +190,7 @@ namespace Models
                                                                Path.DirectorySeparatorChar +
                                                                fileName +
                                                                "temp" +
-                                                               ".apsimx.temp";
+                                                               ".apsimx";
                                         // Create the file if new, back it up and write over it if it isn't.
                                         CreateApsimxFile(temporarySimLoadPath);
                                         File.Copy(file, temporarySimLoadPath, true);
@@ -270,8 +269,7 @@ namespace Models
                                                            Path.DirectorySeparatorChar +
                                                            filePathSplits[filePathSplits.Count - 2] +
                                                            "temp." +
-                                                           filePathSplits.Last<string>() +
-                                                           ".temp";
+                                                           filePathSplits.Last<string>();
                                     // Create the file if new, back it up and write over it if it isn't.
                                     CreateApsimxFile(temporarySimLoadPath);
                                     File.Copy(fullLoadPath, temporarySimLoadPath, true);
