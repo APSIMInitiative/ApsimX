@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Timers;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -18,8 +19,47 @@ namespace Models.PMF
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model
+    public class Organ : Model, IOrgan, IHasDamageableBiomass
     {
+        ///0. Redundant satisification of IOrgan
+        ///--------------------------------------------------------------------------------------------------
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(0, 0,0,0);
+        }
+
+        /// <summary>
+        /// Maintenance respiration.
+        /// </summary>
+        [JsonIgnore]
+        public double MaintenanceRespiration { get { return 0; } }
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                Biomass matLive = new Biomass();
+                matLive.StructuralN = Live.Nitrogen.Structural;
+                matLive.MetabolicN = Live.Nitrogen.Metabolic;
+                matLive.StorageN = Live.Nitrogen.Storage;
+                matLive.StructuralWt = Live.Weight.Structural;
+                matLive.MetabolicWt = Live.Weight.Metabolic;
+                matLive.StorageWt = Live.Weight.Storage;
+                Biomass matDead = new Biomass();
+                matDead.StructuralN = Dead.Nitrogen.Structural;
+                matDead.MetabolicN = Dead.Nitrogen.Metabolic;
+                matDead.StorageN = Dead.Nitrogen.Storage;
+                matDead.StructuralWt = Dead.Weight.Structural;
+                matDead.MetabolicWt = Dead.Weight.Metabolic;
+                matDead.StorageWt = Dead.Weight.Storage;
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", matLive, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", matDead, false);
+            }
+        }
+
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
 
