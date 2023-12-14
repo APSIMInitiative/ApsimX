@@ -1,30 +1,21 @@
-﻿namespace Utility
-{
-    using System;
-    using APSIM.Shared.Utilities;
-    using OxyPlot;
-    using OxyPlot.Series;
-    using UserInterface.EventArguments;
+﻿using System;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.VariantTypes;
+using OxyPlot;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
 
+namespace Utility
+{
     /// <summary>
-    /// A line series with a better tracker.
+    /// An area series with a better tracker.
     /// </summary>
-    public class LineSeriesWithTracker : LineSeries
+    public class AreaSeriesWithTracker : AreaSeries
     {
         /// <summary>
-        /// Invoked when the user hovers over a series point.
+        /// Type of the x variable
         /// </summary>
-        public event EventHandler<HoverPointArgs> OnHoverOverPoint;
-
-        /// <summary>
-        /// Name of the variable behind the X data.
-        /// </summary>
-        public string XFieldName { get; set; }
-
-        /// <summary>
-        /// Name of the variable behind the Y data.
-        /// </summary>
-        public string YFieldName { get; set; }
+        public string title { get; set; }
 
         /// <summary>
         /// Type of the x variable
@@ -46,31 +37,23 @@
         {
             TrackerHitResult hitResult = base.GetNearestPoint(point, interpolate);
 
-            if (hitResult != null && OnHoverOverPoint != null)
+            if (hitResult != null)
             {
-                HoverPointArgs e = new HoverPointArgs();
-                if (Title == null)
-                    e.SeriesName = ToolTip;
-                else
-                    e.SeriesName = Title;
-
-                e.X = hitResult.DataPoint.X;
-                e.Y = hitResult.DataPoint.Y;
-                OnHoverOverPoint.Invoke(this, e);
-
                 string xInput = "{2}";
                 string yInput = "{4}";
 
                 if (XType == typeof(double))
                     xInput = MathUtilities.RoundSignificant(hitResult.DataPoint.X, 2).ToString();
+                else if(XType == typeof(DateTime))
+                    xInput = DateTime.FromOADate(hitResult.DataPoint.X).ToString();
 
                 if (YType == typeof(double))
                     yInput = MathUtilities.RoundSignificant(hitResult.DataPoint.Y, 2).ToString();
+                else if (YType == typeof(DateTime))
+                    yInput = DateTime.FromOADate(hitResult.DataPoint.Y).ToString();
 
-                if (e.HoverText != null)
-                    hitResult.Series.TrackerFormatString = e.HoverText + "\n" + XFieldName + ": " + xInput + "\n" + YFieldName + ": " + yInput;
+                hitResult.Series.TrackerFormatString = this.Title + "\n" + this.XAxis.Title + ": " + xInput + "\n" + this.YAxis.Title + ": " + yInput;
             }
-
             return hitResult;
         }
     }

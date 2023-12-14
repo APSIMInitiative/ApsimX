@@ -496,6 +496,9 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         static public double RoundSignificant(double Value, int NumDecPlaces)
         {
+            if (Value == 0) 
+                return 0;
+
             Decimal v = (Decimal)Value;
             bool isNegative = false;
             if (Value < 0)

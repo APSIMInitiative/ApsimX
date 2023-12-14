@@ -2,6 +2,7 @@
 {
     using APSIM.Interop.Graphing.CustomSeries;
     using APSIM.Interop.Graphing.Extensions;
+    using APSIM.Shared.Documentation.Extensions;
     using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using EventArguments;
@@ -444,6 +445,16 @@
             {
                 series = new Utility.LineSeriesWithTracker();
                 series.OnHoverOverPoint += OnHoverOverPoint;
+                if (x.Count() > 0)
+                    series.XType = x.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.XType = null;
+
+                if (y.Count() > 0)
+                    series.YType = y.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.YType = null;
+
                 if (showOnLegend)
                 {
                     if (String.IsNullOrEmpty(title))
@@ -611,7 +622,17 @@
             Color colour,
             bool showOnLegend)
         {
-            AreaSeries series = new AreaSeries();
+            AreaSeriesWithTracker series = new AreaSeriesWithTracker();
+            if (x1.Count() > 0)
+                series.XType = x1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.XType = null;
+
+            if (y1.Count() > 0)
+                series.YType = y1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.YType = null;
+
             series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
