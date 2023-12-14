@@ -81,6 +81,13 @@ namespace Models.PMF.Struct
             }
         }
 
+        /// <summary>CalculatedTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
+        public double CalculatedTillerNumber
+        {
+            get => tillering.CalculatedTillerNumber;
+        }
+
         /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
         public double CurrentTillerNumber { get => tillering.CurrentTillerNumber; }

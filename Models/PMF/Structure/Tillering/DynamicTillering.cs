@@ -72,10 +72,12 @@ namespace Models.PMF.Struct
 
         /// <summary>Number of potential Fertile Tillers at harvest</summary>
         [JsonIgnore]
-        public double CalculatedTillerNumber { get; private set; }
+        public double CalculatedTillerNumber { get; set; }
+
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
+
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
         public double DltTillerNumber { get; set; }
@@ -100,8 +102,8 @@ namespace Models.PMF.Struct
         private int endThermalQuotientLeafNo = 5;
         private double plantsPerMetre;
         private double linearLAI;
-
-        private List<double> radiationAverages = new List<double>();
+        private double radiationValues = 0.0;
+        private double temperatureValues = 0.0;
 
         private bool beforeFlagLeaf()
         {
@@ -114,6 +116,7 @@ namespace Models.PMF.Struct
             if (floweringStage < 1) floweringStage = phenology.EndStagePhaseIndex("Flowering");
             return phenology.BeforePhase(floweringStage);
         }
+
         private bool beforeEndJuvenileStage()
         {
             if (endJuvenilePhase < 1) endJuvenilePhase = phenology.StartStagePhaseIndex("EndJuvenile");
@@ -146,7 +149,6 @@ namespace Models.PMF.Struct
             }
             var fractionToAdd = calcTillerAppearance(newLeafNo, existingLeafNo);
             AddTillerProportion(fractionToAdd);
-
 
             for (int i = 1; i < culms.Culms.Count; i++)
             {
@@ -183,18 +185,22 @@ namespace Models.PMF.Struct
 
                 //Calc Demand = LA9 - LA5
                 var demand = L9Area - L5Area;
-                var supply = radiationAverages.Average() * L5Area * Phy5;
+
+                double PTQ = radiationValues / temperatureValues;
+
+                var supply = PTQ * L5Area * Phy5;
 
                 SupplyDemandRatio = MathUtilities.Divide(supply, demand, 0);
 
-                return Math.Max(tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio, 0.0);
+                var calculatedTillerNumber = Math.Max(tillerSdIntercept.Value() + tillerSdSlope.Value() * SupplyDemandRatio, 0.0);
+                return calculatedTillerNumber;
             }
 
-            //need to calculate the average R/oCd per day during leaf 5 expansion
-            if (newLeafNo == startThermalQuotientLeafNo)
+            // Up to L5 FE store PTQ.
+            if (newLeafNo >= startThermalQuotientLeafNo && existingLeafNo < endThermalQuotientLeafNo)
             {
-                double avgradn = metData.Radn / phenology.thermalTime.Value();
-                radiationAverages.Add(avgradn);
+                radiationValues += metData.Radn;
+                temperatureValues += phenology.thermalTime.Value();
             }
             return 0.0;
         }
@@ -409,11 +415,13 @@ namespace Models.PMF.Struct
         {
             if (data.Plant == plant && data.TilleringMethod == 1)
             {
-                radiationAverages = new List<double>();
                 plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;
                 //plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
                 CurrentTillerNumber = 0.0;
                 CalculatedTillerNumber = 0.0;
+
+                radiationValues = 0.0;
+                temperatureValues = 0.0;
             }
         }
     }

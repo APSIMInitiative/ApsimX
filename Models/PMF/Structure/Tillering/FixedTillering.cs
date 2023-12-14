@@ -61,9 +61,14 @@ namespace Models.PMF.Struct
         /// <summary>Number of Fertile Tillers at Harvest</summary>
         [JsonIgnore]
         public double FertileTillerNumber { get; set; }
+
         /// <summary>Current Number of Tillers</summary>
         [JsonIgnore]
         public double CurrentTillerNumber { get; set; }
+
+		/// <summary>Current Number of Tillers</summary>
+		[JsonIgnore]
+		public double CalculatedTillerNumber { get; set; } = 0.0;
 
         private int floweringStage;
 		private int endJuvenilePhase;

@@ -1130,7 +1130,6 @@ endif
           <variable>day_of_year</variable>
           <variable>StageName as stage</variable>
           <variable>Stage as stage_no</variable>
-          <variable>tillers</variable>
           <variable>Biomass</variable>
           <variable>GreenWt</variable>
           <variable>Biomass units g/m^2 as BiomassWt</variable>
@@ -2596,18 +2595,6 @@ endif
   </simulation>
   <Graph name="XY">
     <Legend>
-      <CheckedTitles> tillers, Sorghum_Gatton_Tiller_x_Density_1 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillers, Sorghum_Gatton_Tiller_x_Density_2 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillers, Sorghum_Gatton_Tiller_x_Density_3 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillers, Sorghum_Gatton_Tiller_x_Density_4 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillersAdded, Sorghum_Gatton_Tiller_x_Density_1 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillersAdded, Sorghum_Gatton_Tiller_x_Density_2 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillersAdded, Sorghum_Gatton_Tiller_x_Density_3 outputfile_daily</CheckedTitles>
-      <CheckedTitles> tillersAdded, Sorghum_Gatton_Tiller_x_Density_4 outputfile_daily</CheckedTitles>
-      <CheckedTitles> calculatedTillers, Sorghum_Gatton_Tiller_x_Density_1 outputfile_daily</CheckedTitles>
-      <CheckedTitles> calculatedTillers, Sorghum_Gatton_Tiller_x_Density_2 outputfile_daily</CheckedTitles>
-      <CheckedTitles> calculatedTillers, Sorghum_Gatton_Tiller_x_Density_3 outputfile_daily</CheckedTitles>
-      <CheckedTitles> calculatedTillers, Sorghum_Gatton_Tiller_x_Density_4 outputfile_daily</CheckedTitles>
     </Legend>
     <Plot>
       <SeriesType>Solid line</SeriesType>
