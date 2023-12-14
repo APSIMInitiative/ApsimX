@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -35,7 +36,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model
+    public class BiomassArbitrator : Model, ITotalDMFixationSupply
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -77,6 +78,9 @@ namespace Models.PMF
         /// <summary>The variables for N</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientsDelta Nitrogen { get; private set; }
+
+        /// <summary> The amount of DM fixed by photosynthesis</summary>
+        public double TotalDMFixationSupply { get { return Carbon.TotalFixationSupply; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------

@@ -25,12 +25,14 @@ LAImax,m2/m2,Maximum achievable leaf are index (optimal management),5,8,6,3
 LAIWaterStressSens,0/1,Stress factor for LAI expansion when FW = 0.5  i.e this should be a value of zero or one,1,0,0,0
 ExtCoeff,fractional,Extinction coefficient for diffuse light across canopy,0.45,0.7,0.5,0.8
 ExtCoeffWaterStressSens,0/1,Stress factor of extinction coefficient when FW = 0.4 i.e should be between 0.2 and 1.0 depending on crop sensitivity,1,0.2,0.2,0.2
+RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),1.9,1.2,1,0.9
+RUETempThresholds,oC,Threshold temperatures for lower_minimum lower_optima upper_optima and upper_minimum,(8 25 35 40),(5 20 30 40),(3 18 25 35),(5 20 25 35)
+PhotosynthesisType,C3 or C4,Metabolic pathway used for photosynthesis,C4,C3,C3,C3
 PartitioningStages,stageCode,Phenology stage code to drive partitioning changes,(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5)
 DailyShareToShoot,fractional,Fractional allocation of total daily biomass assimilation to shoots (without produce),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)
 DailyShareFromShootToLeaf,fractional,Fractional allocation of shoot daily biomass into leaves (% of shoot allocation),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)
 DailyShareToProduce,fractional,Fractional allocation of total daily biomass assimilation to produce,(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)
 PhotosynthesisStages,stageCode,Phenology stage code to drive photosynthesis changes,(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2),(0.2  0.2  0.2  0.2  0.2  0.2)
-RUEtotal,g DM/MJ global rad,Radiation use efficiency for total plant biomass (global solar radiation),(1.9  1.9  1.9  1.9  1.9  1.9),(1.9  1.9  1.9  1.9  1.9  1.9),(1.9  1.9  1.9  1.9  1.9  1.9),(1.9  1.9  1.9  1.9  1.9  1.9)
 NDemandStages,stageCode,Phenology stage code to drive nitrogen demand changes,(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5),(0  1  2  3  4  5)
 Nconc_Max,% DM,Maximum percentage of N in shoot biomass,(2  2  2  2  2  2),(2  2  2  2  2  2),(2  2  2  2  2  2),(2  2  2  2  2  2)
 Nconc_Min,% DM,Minimum percentage of N in shoot biomass,(2  2  2  2  2  2),(2  2  2  2  2  2),(2  2  2  2  2  2),(2  2  2  2  2  2)

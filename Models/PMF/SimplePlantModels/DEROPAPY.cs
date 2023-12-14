@@ -304,6 +304,9 @@ namespace Models.PMF.SimplePlantModels
             thisDero["ExtCoeff"] += clean(Current["ExtCoeff"]);
             thisDero["LAIWaterStressSens"] += clean(Current["LAIWaterStressSens"]);
             thisDero["ExtCoeffWaterStressSens"] += clean(Current["ExtCoeffWaterStressSens"]);
+            thisDero["RUEtotal"] += clean(Current["RUEtotal"]);
+            thisDero["RUETempThresholds"] += clean(Current["RUETempThresholds"]);
+            thisDero["PhotosynthesisType"] += clean(Current["PhotosynthesisType"]);
 
             if (Current["CropType"] == "Annual")
             {
@@ -351,7 +354,10 @@ namespace Models.PMF.SimplePlantModels
             {"LAImax","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.Delta.Integral.LAIMax.FixedValue = " },
             {"ExtCoeff","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.PotentialExtinctionCoeff.FixedValue = " },
             {"LAIWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenAreaExpansion.Expansion.WaterStressFactor.XYPairs.Y[1] = " },
-            {"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " }
+            {"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " },
+            {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
+            {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
+            {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " }
         };
     }
 }

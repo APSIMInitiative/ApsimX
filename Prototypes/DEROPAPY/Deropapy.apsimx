@@ -69,59 +69,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.PlantPartitionFractions, Models",
-                  "ChildFunctions": null,
-                  "PartitionFractions": {
-                    "$type": "System.Collections.Generic.Dictionary`2[[System.String, System.Private.CoreLib],[System.Double, System.Private.CoreLib]], System.Private.CoreLib"
-                  },
-                  "Name": "PlantPartitionFractions",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "ProductFraction",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "LeafFraction",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "StemFraction",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "RootFraction",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.PlantNutrientsDelta, Models",
                   "Propertys": null,
                   "Name": "Carbon",
@@ -976,7 +923,8 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Deropapy].Leaf.TotalDMDemand",
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -984,7 +932,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -992,7 +942,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -1001,7 +953,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
@@ -1011,7 +963,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 100.0,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "ResourceName": null,
@@ -1091,40 +1043,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -1148,40 +1082,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.5,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -1199,7 +1115,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -1207,7 +1125,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -1215,7 +1135,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -2389,41 +2311,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
+                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                   "Name": "TotalDMDemand",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].DeltaLAI",
-                      "Name": "DeltaLAI",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SpecificArea",
-                      "Name": "SLA",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Growth in leaf area is used to calculate the leaf dry matter demand. The same was assumed in the original crop models in APSIM. Further model development can be taken once new experimental data for metabolic, structural and storage forms are provided.",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
-                      "Name": "Memo1",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "PartitionFraction",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2811,24 +2707,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Deropapy].Root.TotalDMDemand",
                           "Name": "Structural",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2837,6 +2718,26 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Storage",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
@@ -2874,12 +2775,29 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "Fixation",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Photosynthesis",
+                              "Name": "Fixation",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Cconc",
+                              "Name": "Cconc",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -2909,40 +2827,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -2966,40 +2866,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -3017,7 +2899,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -3025,7 +2909,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -3033,7 +2919,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -3641,25 +3529,15 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
-                  "Const": 1.0,
-                  "Power": 1.0,
+                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                   "Name": "TotalDMDemand",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Live.Wt",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].Live.Wt",
-                      "Name": "YValue",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "PartitionFraction",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -3877,24 +3755,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Deropapy].Stem.TotalDMDemand",
                           "Name": "Structural",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3903,6 +3766,26 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Storage",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
@@ -3922,7 +3805,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.9308948568377473,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "ResourceName": null,
@@ -3940,12 +3823,29 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "Fixation",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Photosynthesis",
+                              "Name": "Fixation",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Cconc",
+                              "Name": "Cconc",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -3975,40 +3875,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4032,40 +3914,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.22218642885474493,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4083,7 +3947,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -4091,7 +3957,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -4099,7 +3967,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -4469,35 +4339,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
-                  "Const": 0.1,
-                  "Power": 1.5,
-                  "Name": "TotalDMDemand",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Live.Wt",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].Live.Wt",
-                      "Name": "YValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "HarvestFractionLiveToRemove": 0.0,
                   "HarvestFractionDeadToRemove": 0.0,
@@ -4506,6 +4347,25 @@
                   "Name": "BiomassRemovalDefaults",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                  "Name": "TotalDMDemand",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.2,
+                      "Units": null,
+                      "Name": "PartitionFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4705,24 +4565,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Deropapy].Product.TotalDMDemand",
                           "Name": "Structural",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -4731,6 +4576,26 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Storage",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "ResourceName": null,
@@ -4750,7 +4615,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 2.9308948568377473,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "ResourceName": null,
@@ -4768,12 +4633,29 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "Fixation",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Photosynthesis",
+                              "Name": "Fixation",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Cconc",
+                              "Name": "Cconc",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -4803,40 +4685,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4860,40 +4724,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Metabolic",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
                               "Name": "Storage",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.22218642885474493,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -4911,7 +4757,9 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
                           "Name": "Structural",
                           "ResourceName": null,
                           "Children": [],
@@ -4919,7 +4767,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Metabolic",
                           "ResourceName": null,
                           "Children": [],
@@ -4927,7 +4777,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
                           "Name": "Storage",
                           "ResourceName": null,
                           "Children": [],
@@ -5297,35 +5149,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
-                  "Const": 0.1,
-                  "Power": 1.5,
-                  "Name": "TotalDMDemand",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Live.Wt",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].Live.Wt",
-                      "Name": "YValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "HarvestFractionLiveToRemove": 0.0,
                   "HarvestFractionDeadToRemove": 0.0,
@@ -5336,8 +5159,114 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                  "Name": "TotalDMDemand",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.4,
+                      "Units": null,
+                      "Name": "PartitionFraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Leaf].Live",
+                "[Leaf].Dead",
+                "[Product].Live",
+                "[Product].Dead",
+                "[Stem].Live",
+                "[Stem].Dead"
+              ],
+              "Name": "AboveGround",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Leaf].Dead",
+                "[Product].Dead",
+                "[Stem].Dead"
+              ],
+              "Name": "AboveGroundDead",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Root].Live",
+                "[Root].Dead"
+              ],
+              "Name": "BelowGround",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Leaf].Live",
+                "[Leaf].Dead",
+                "[Product].Live",
+                "[Product].Dead",
+                "[Stem].Live",
+                "[Stem].Dead",
+                "[Root].Live",
+                "[Root].Dead"
+              ],
+              "Name": "Total",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Leaf].Live",
+                "[Product].Live",
+                "[Stem].Live",
+                "[Root].Live"
+              ],
+              "Name": "TotalLive",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CompositeStates, Models",
+              "Propertys": [
+                "[Leaf].Dead",
+                "[Product].Dead",
+                "[Stem].Dead",
+                "[Root].Dead"
+              ],
+              "Name": "TotalDead",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -13600,7 +13529,13 @@
                     "[Deropapy].Leaf.Canopy.CoverGreen",
                     "[Deropapy].Leaf.Canopy.CoverTotal",
                     "[Deropapy].Leaf.Canopy.LAIDead",
-                    "[Deropapy].Leaf.Canopy.CoverDead"
+                    "[Deropapy].Leaf.Canopy.CoverDead",
+                    "[Deropapy].Leaf.Wt",
+                    "[Deropapy].Stem.Wt",
+                    "[Deropapy].Root.Wt",
+                    "[Deropapy].Product.Wt",
+                    "[Deropapy].Total.Wt",
+                    "[Deropapy].Leaf.Photosynthesis"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -19393,103 +19328,6 @@
               "Inverted": false,
               "CrossesAtZero": false,
               "LabelOnOneLine": false,
-              "Minimum": -16.987664320987403,
-              "Maximum": 1715.753096419753,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 5,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Biomass",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "SimulationName",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.Total.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "DM",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16744448,
-              "FactorToVaryColours": "SimulationName",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "TableName": "Report",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "SCRUM.TotalDMAtHarvest",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": false,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "MaxDM",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Cover ",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
               "Interval": null
@@ -19837,6 +19675,386 @@
                   "ColumnName": "Deropapy.Phenology.CurrentStageName",
                   "SimulationName": "TypeTestCropMaizeLocationVCS_Brightwater.met",
                   "Name": "EventNamesOnGraph",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Biomass",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Biomass",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Total.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Photosynthesis",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PS",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Leaf",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Leaf.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Stem",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Stem.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Product",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Product.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Cover ",
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Root",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16744448,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Deropapy.Root.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "DM",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
