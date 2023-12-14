@@ -13,9 +13,9 @@ namespace Utility
     public class AreaSeriesWithTracker : AreaSeries
     {
         /// <summary>
-        /// Type of the x variable
+        /// Name of the tooltip
         /// </summary>
-        public string title { get; set; }
+        public string TooltipTitle { get; set; }
 
         /// <summary>
         /// Type of the x variable
@@ -44,15 +44,27 @@ namespace Utility
 
                 if (XType == typeof(double))
                     xInput = MathUtilities.RoundSignificant(hitResult.DataPoint.X, 2).ToString();
-                else if(XType == typeof(DateTime))
-                    xInput = DateTime.FromOADate(hitResult.DataPoint.X).ToString();
+                else if (XType == typeof(DateTime))
+                {
+                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.X);
+                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                        xInput = d.ToString("dd/MM/yyyy");
+                    else
+                        xInput = d.ToString();
+                }
 
                 if (YType == typeof(double))
                     yInput = MathUtilities.RoundSignificant(hitResult.DataPoint.Y, 2).ToString();
                 else if (YType == typeof(DateTime))
-                    yInput = DateTime.FromOADate(hitResult.DataPoint.Y).ToString();
+                {
+                    DateTime d = DateTime.FromOADate(hitResult.DataPoint.Y);
+                    if (d.Hour == 0 && d.Minute == 0 && d.Second == 0)
+                        yInput = d.ToString("dd/MM/yyyy");
+                    else
+                        yInput = d.ToString();
+                }
 
-                hitResult.Series.TrackerFormatString = this.Title + "\n" + this.XAxis.Title + ": " + xInput + "\n" + this.YAxis.Title + ": " + yInput;
+                hitResult.Series.TrackerFormatString = TooltipTitle + "\n" + this.XAxis.Title + ": " + xInput + "\n" + this.YAxis.Title + ": " + yInput;
             }
             return hitResult;
         }

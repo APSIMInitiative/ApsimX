@@ -229,11 +229,6 @@
         /// </summary>
         public event EventHandler OnAnnotationClick;
 
-        /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
-
         /// <summary>Invoked when the user single clicks on the graph</summary>
         public event EventHandler SingleClick;
 
@@ -350,9 +345,6 @@
         /// </summary>
         public void Clear()
         {
-            foreach (OxyPlot.Series.Series series in this.plot1.Model.Series)
-                if (series is Utility.LineSeriesWithTracker)
-                    (series as Utility.LineSeriesWithTracker).OnHoverOverPoint -= OnHoverOverPoint;
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
@@ -444,7 +436,6 @@
             if (x != null && y != null)
             {
                 series = new Utility.LineSeriesWithTracker();
-                series.OnHoverOverPoint += OnHoverOverPoint;
                 if (x.Count() > 0)
                     series.XType = x.Cast<object>().ToArray()[0].GetType();
                 else
@@ -623,6 +614,7 @@
             bool showOnLegend)
         {
             AreaSeriesWithTracker series = new AreaSeriesWithTracker();
+            series.TooltipTitle = title;
             if (x1.Count() > 0)
                 series.XType = x1.Cast<object>().ToArray()[0].GetType();
             else
