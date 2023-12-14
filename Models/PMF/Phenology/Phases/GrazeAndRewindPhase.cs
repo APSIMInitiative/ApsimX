@@ -53,10 +53,8 @@ namespace Models.PMF.Phen
         public double FractionComplete { get; }
 
         /// <summary>Cutting Event</summary>
-        public event EventHandler<EventArgs> PhenologyCut;
+        public event EventHandler<EventArgs> PhenologyDefoliate;
 
-        /// <summary>Grazing Event</summary>
-        public event EventHandler<EventArgs> PhenologyGraze;
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -65,8 +63,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
-            PhenologyCut?.Invoke(this, new EventArgs());
-            PhenologyGraze?.Invoke(this, new EventArgs());
+            PhenologyDefoliate?.Invoke(this, new EventArgs());
             return true;
         }
 
