@@ -6,7 +6,7 @@
     {
       "name": "WSL-Ubuntu",
       "type": "wsl",
-      "wslDistribution": "Ubuntu-20.04"
+      "wslDistribution": "Ubuntu-22.04"
     }
     //{
     //  "name": "Docker dotnet/sdk",

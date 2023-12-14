@@ -275,9 +275,6 @@ ExperimentY2
             Simulations file2 = Utilities.GetRunnableSim();
             Simulations file3 = Utilities.GetRunnableSim();
 
-            // TODO: Save these files in a Path.GetTempPath() place.
-            // Then when its directory is used in RunInstructionOnApsimxFile it will be located correctly.
-
             Zone fieldNode = file.FindInScope<Zone>();
 
             // Get path string for the config file that changes the date.
