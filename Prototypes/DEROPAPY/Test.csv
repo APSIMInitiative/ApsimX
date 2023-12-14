@@ -1,5 +1,5 @@
 ParamName,ParamUnit,Description,Maize,Apple,RyeGrass,Clover
-CropType,string,type of crop,Annual,Tree,Pasture,Pasture
+CropType,string,type of crop used for organic matter residues types,Maize,Grapevine,pasture,whiteclover
 TT_Temp_X,oC,Average temperature for thermal time calculation,(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0),(0   18.0  26.0  34.0  44.0)
 TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0),(0   10.0  18.0  26.0   0.0)
 D_StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",200,200,0,0

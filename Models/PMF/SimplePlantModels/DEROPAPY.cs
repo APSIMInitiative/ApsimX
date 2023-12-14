@@ -279,6 +279,7 @@ namespace Models.PMF.SimplePlantModels
         {
             Dictionary<string, string> thisDero = new Dictionary<string, string>(deroParams);
 
+            thisDero["CropType"] += clean(Current["CropType"]);
             thisDero["TT_Temp_X"] += clean(Current["TT_Temp_X"]);
             thisDero["TT_Acc_Y"] += clean(Current["TT_Acc_Y"]);
             thisDero["D_StartGrowth_00"] += clean(Current["D_StartGrowth_00"]);
@@ -308,19 +309,6 @@ namespace Models.PMF.SimplePlantModels
             thisDero["RUETempThresholds"] += clean(Current["RUETempThresholds"]);
             thisDero["PhotosynthesisType"] += clean(Current["PhotosynthesisType"]);
 
-            if (Current["CropType"] == "Annual")
-            {
-            }
-            else if (Current["CropType"] == "Pasture")
-            {
-            }
-            else if (Current["CropType"] == "Tree")
-            {
-            }
-            else
-            { throw new Exception("CropType must be Annual, Pasture or Tree"); }
-
-
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
             Cultivar deroValues = new Cultivar(this.Name, commands);
@@ -330,6 +318,7 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         private Dictionary<string, string> deroParams = new Dictionary<string, string>()
         {
+            {"CropType","[DEROPAPY].PlantType = " },
             {"TT_Temp_X","[DEROPAPY].Phenology.ThermalTime.XYPairs.X = " },
             {"TT_Acc_Y","[DEROPAPY].Phenology.ThermalTime.XYPairs.Y = " },
             {"D_StartGrowth_00","[DEROPAPY].Phenology.Waiting.DOYtoProgress = " },
