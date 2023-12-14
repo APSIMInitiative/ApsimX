@@ -27,7 +27,7 @@ namespace Models.PMF
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double Harvest()
         {
-            return RemoveBiomass(0, 0,0,0);
+            return RemoveBiomass();
         }
 
         /// <summary>
@@ -41,20 +41,8 @@ namespace Models.PMF
         {
             get
             {
-                Biomass matLive = new Biomass();
-                matLive.StructuralN = Live.Nitrogen.Structural;
-                matLive.MetabolicN = Live.Nitrogen.Metabolic;
-                matLive.StorageN = Live.Nitrogen.Storage;
-                matLive.StructuralWt = Live.Weight.Structural;
-                matLive.MetabolicWt = Live.Weight.Metabolic;
-                matLive.StorageWt = Live.Weight.Storage;
-                Biomass matDead = new Biomass();
-                matDead.StructuralN = Dead.Nitrogen.Structural;
-                matDead.MetabolicN = Dead.Nitrogen.Metabolic;
-                matDead.StorageN = Dead.Nitrogen.Storage;
-                matDead.StructuralWt = Dead.Weight.Structural;
-                matDead.MetabolicWt = Dead.Weight.Metabolic;
-                matDead.StorageWt = Dead.Weight.Storage;
+                Biomass matLive = new Biomass(Live);
+                Biomass matDead = new Biomass(Dead);
                 yield return new DamageableBiomass($"{Parent.Name}.{Name}", matLive, true);
                 yield return new DamageableBiomass($"{Parent.Name}.{Name}", matDead, false);
             }
@@ -117,6 +105,7 @@ namespace Models.PMF
         private double startDeadN { get; set; }
         private double startLiveWt { get; set; }
         private double startDeadWt { get; set; }
+
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -270,9 +259,20 @@ namespace Models.PMF
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public virtual double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public virtual double RemoveBiomass(double liveToRemove = 1, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            return 0;
+            LiveRemoved = (Live * liveToRemove) + (Live * liveToResidue);
+            DeadRemoved = (Dead * deadToRemove) + (Dead * deadToResidue);
+            double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove),0);
+            double fracDeadToResidue = deadToResidue / (deadToResidue + deadToRemove);
+            Live = new OrganNutrientsState(Live - LiveRemoved, Cconc);
+            Dead = new OrganNutrientsState(Dead - DeadRemoved, Cconc);
+            if (fracDeadToResidue + fracLiveToResidue > 0)
+            {
+                Biomass toResidues = new Biomass(Live * fracLiveToResidue + Dead * fracDeadToResidue);
+                surfaceOrganicMatter.Add(toResidues.Wt * 10.0, toResidues.N * 10.0, 0.0, parentPlant.PlantType, Name);
+            }
+            return LiveRemoved.Wt + DeadRemoved.Wt;
         }
 
         /// <summary>Clears this instance.</summary>
@@ -427,8 +427,6 @@ namespace Models.PMF
                     new NutrientPoolsState(), new NutrientPoolsState(), new NutrientPoolsState(), Cconc);
                 Live = new OrganNutrientsState(Live - Respired, Cconc);
 
-                // Biomass removals
-                // Need to add
 
                 UpdateProperties();
 
