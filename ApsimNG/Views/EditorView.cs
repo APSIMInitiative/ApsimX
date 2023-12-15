@@ -104,6 +104,11 @@ namespace UserInterface.Views
         public event EventHandler VariableDragDataReceived;
 
         /// <summary>
+        /// Invoked when the editor is destoryed and passes back the text inside
+        /// </summary>
+        public event EventHandler<PropertyChangedEventArgs> DisposeEditor;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public string Text
@@ -422,6 +427,8 @@ namespace UserInterface.Views
         {
             try
             {
+                DisposeEditor.Invoke(this, new PropertyChangedEventArgs(Guid.Parse(this.mainWidget.Name), this.Text));
+
                 foreach (ICompletionProvider completion in textEditor.Completion.Providers)
                     textEditor.Completion.RemoveProvider(completion);
 

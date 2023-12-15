@@ -36,16 +36,6 @@ namespace UserInterface.Interfaces
         /// Invoked when the user adds a node to the chart
         /// </summary>
         event EventHandler<GraphObjectsArgs> DelArc;
-        /// <summary>
-        /// Editor for inputting rules.
-        /// </summary>
-        IEditorView RuleList { get; }
-
-        /// <summary>
-        /// Editor for inputting actions.
-        /// </summary>
-        /// <value></value>        
-        IEditorView ActionList { get; }
 
         /// <summary>
         /// 
@@ -65,7 +55,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Node Properties editor.
         /// </summary>
-        public IPropertyView NodePropertiesView { get; }
+        public IPropertyView ObjectPropertiesView { get; }
 
         /// <summary>
         /// Set the graph in the view.

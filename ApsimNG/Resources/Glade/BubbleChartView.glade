@@ -41,48 +41,9 @@
 					</object>
 				</child>
 				<child>
-					<object class="GtkHBox" id="arc_node_box">
+					<object class="GtkHBox" id="object_box">
 						<property name="visible">True</property>
 						<property name="can_focus">True</property>
-						<child>
-							<object class="GtkHBox" id="arc_box">
-								<property name="visible">True</property>
-								<property name="can_focus">True</property>
-								<child>
-									<object class="GtkVPaned" id="rules_actions_paned">
-										<property name="visible">True</property>
-										<property name="can_focus">True</property>
-										<child>
-											<object class="GtkVBox" id="rules_box">
-												<property name="visible">True</property>
-												<property name="can_focus">True</property>
-											</object>
-											<packing>
-												<property name="position">0</property>
-											</packing>
-										</child>
-										<child>
-											<object class="GtkVBox" id="actions_box">
-												<property name="visible">True</property>
-												<property name="can_focus">True</property>
-											</object>
-											<packing>
-												<property name="position">1</property>
-											</packing>
-										</child>
-									</object>
-								</child>
-							</object>
-							<packing>
-								<property name="spacing">2</property>
-							</packing>
-						</child>
-						<child>
-							<object class="GtkHBox" id="node_properties_box">
-								<property name="visible">True</property>
-								<property name="can_focus">True</property>
-							</object>
-						</child>
 					</object>
 				</child>
 			</object>

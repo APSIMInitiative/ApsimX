@@ -48,14 +48,9 @@ namespace UserInterface.Views
         private HPaned topPaned;
         private HBox chartBox = null;
         private HPaned settingsPaned = null;
-        private VPaned rulesActionsPaned = null;
         private HBox propertiesBox = null;
-        private HBox nodePropertiesBox = null;
-        private Frame nodePropertiesFrame = null;
-        private HBox arcBox = null;
-        private Frame arcFrame = null;
-        private VBox rulesBox = null;
-        private VBox actionsBox = null;
+        private Frame objectFrame = null;
+        private HBox objectBox = null;
         private Label instructionsLabel = null;
         private DirectedGraphView graphView;
 
@@ -74,12 +69,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Node Properties editor.
         /// </summary>
-        public IPropertyView NodePropertiesView { get; private set; }
-
-        /// <summary></summary>
-        public IEditorView RuleList { get; private set; } = null;
-        /// <summary></summary>
-        public IEditorView ActionList { get; private set; } = null;
+        public IPropertyView ObjectPropertiesView { get; private set; }
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
@@ -105,14 +95,8 @@ namespace UserInterface.Views
             settingsPaned = (Gtk.HPaned)builder.GetObject("settings_paned");
             settingsPaned.Position = (int)(widthOfWindow * 0.4);
 
-            rulesActionsPaned = (Gtk.VPaned)builder.GetObject("rules_actions_paned");
-            rulesActionsPaned.Position = (int)((bottomOfWindow - splitterPosition - topOfWindow) * 0.5);
-
-            arcBox = (Gtk.HBox)builder.GetObject("arc_box");
             propertiesBox = (Gtk.HBox)builder.GetObject("properties_box");
-            rulesBox = (Gtk.VBox)builder.GetObject("rules_box");
-            actionsBox = (Gtk.VBox)builder.GetObject("actions_box");
-            nodePropertiesBox = (Gtk.HBox)builder.GetObject("node_properties_box");
+            objectBox = (Gtk.HBox)builder.GetObject("object_box");
             HBox instructionsBox = (Gtk.HBox)builder.GetObject("instructions_box");
 
             graphView = new DirectedGraphView(this);
@@ -125,38 +109,11 @@ namespace UserInterface.Views
             propertyFrame.Add(((ViewBase)PropertiesView).MainWidget);
             propertiesBox.PackStart(propertyFrame, true, true, 2);
 
-            NodePropertiesView = new PropertyView(this);
-            nodePropertiesFrame = new Gtk.Frame("");
-            nodePropertiesFrame.LabelXalign = 0.01f;
-            nodePropertiesFrame.Label = " Node: ";
-            nodePropertiesFrame.Add(((ViewBase)NodePropertiesView).MainWidget);
-            nodePropertiesBox.PackStart(nodePropertiesFrame, true, true, 2);
-
-            //Rules Input
-            RuleList = new EditorView(owner);
-            RuleList.TextHasChangedByUser += OnRuleChanged;
-            Gtk.Label rulesHeader = new Gtk.Label("Rules:");
-            rulesHeader.Xalign = 0;
-            rulesHeader.Yalign = 0;
-            rulesBox.PackStart(rulesHeader, false, false, 0);
-            rulesBox.PackEnd((RuleList as ViewBase).MainWidget, true, true, 0);
-
-            //Actions Input
-            ActionList = new EditorView(owner);
-            ActionList.TextHasChangedByUser += OnActionChanged;
-            Gtk.Label actionsHeader = new Gtk.Label("Actions:");
-            actionsHeader.Xalign = 0;
-            actionsHeader.Yalign = 0;
-            actionsBox.PackStart(actionsHeader, false, false, 0);
-            actionsBox.PackEnd((ActionList as ViewBase).MainWidget, true, true, 0);
-
-            Widget child = arcBox.Children[0];
-            arcBox.Remove(child);
-            arcFrame = new Gtk.Frame(" Arc: ");
-            arcFrame.Add(child);
-            arcFrame.LabelXalign = 0.01f;
-            arcBox.PackStart(arcFrame, true, true, 2);
-            arcBox.Hide();
+            ObjectPropertiesView = new PropertyView(this);
+            objectFrame = new Gtk.Frame(" Properties: ");
+            objectFrame.LabelXalign = 0.01f;
+            objectFrame.Add(((ViewBase)ObjectPropertiesView).MainWidget);
+            objectBox.PackStart(objectFrame, true, true, 2);
 
             instructionsLabel = new Gtk.Label();
             instructionsLabel.Text = "<left-click>: select a node or arc.\n" +
@@ -244,8 +201,6 @@ namespace UserInterface.Views
 
             if (objectID == 0)
             {
-                arcBox.Hide();
-                nodePropertiesBox.Hide();
                 return;
             }
 
@@ -256,9 +211,8 @@ namespace UserInterface.Views
                 {
                     //The node property is held by the presenter, which also listens for this event and
                     //will update the properties being displayed.
-                    nodePropertiesFrame.Label = $" {node.Name} Properties ";
-                    arcBox.Hide();
-                    nodePropertiesBox.Show();
+                    objectFrame.Label = $" {node.Name} Properties ";
+                    objectBox.Show();
                     return;
                 }
             }
@@ -268,11 +222,10 @@ namespace UserInterface.Views
                 Arc arc = graphView.DirectedGraph.Arcs[i];
                 if (arc.ID == objectID)
                 {
-                    arcFrame.Label = $" {arc.SourceID} to {arc.DestinationID} ";
-                    RuleList.Text = String.Join('\n', rules[arc.ID].ToArray());
-                    ActionList.Text = String.Join('\n', actions[arc.ID].ToArray());
-                    nodePropertiesBox.Hide();
-                    arcBox.Show();
+                    //The node property is held by the presenter, which also listens for this event and
+                    //will update the properties being displayed.
+                    objectFrame.Label = $" {arc.SourceID} to {arc.DestinationID} Properties ";
+                    objectBox.Show();
                     return;
                 }
             }
@@ -357,9 +310,6 @@ namespace UserInterface.Views
             {
                 (PropertiesView as ViewBase).Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
-                
-                RuleList.TextHasChangedByUser -= OnRuleChanged;
-                ActionList.TextHasChangedByUser -= OnActionChanged;
 
                 graphView.OnGraphObjectSelected -= OnGraphObjectSelected;
                 graphView.OnGraphObjectMoved -= OnGraphObjectMoved;
@@ -370,48 +320,6 @@ namespace UserInterface.Views
                 ContextMenu.Mapped -= OnContextMenuRendered;
                 ContextMenu.Clear();
                 ContextMenu.Dispose();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed a rule.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        public void OnRuleChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObjects.Count == 1)
-                {
-                    rules[graphView.SelectedObjects[0].ID] = RuleList.Text.Split('\n').ToList();
-                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Called when the user has changed an action.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        public void OnActionChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (graphView.SelectedObjects.Count == 1)
-                {
-                    actions[graphView.SelectedObjects[0].ID] = ActionList.Text.Split('\n').ToList();
-                    GraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
-                }
             }
             catch (Exception err)
             {

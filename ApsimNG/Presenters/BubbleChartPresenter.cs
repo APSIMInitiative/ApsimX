@@ -49,8 +49,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private Model currentObject { get; set; }
 
-        private PropertyPresenter propertiesPresenter = new PropertyPresenter();
-        private PropertyPresenter objectPropertiesPresenter = new PropertyPresenter();
+        private PropertyPresenter propertiesPresenter;
+        private PropertyPresenter objectPropertiesPresenter;
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
@@ -71,15 +71,20 @@ namespace UserInterface.Presenters
             this.view.AddArcEnd += OnAddArc;
             this.view.DelArc += OnDelArc;
 
-            propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
-            
-            currentObject = new NodePropertyWrapper();
-            objectPropertiesPresenter.Attach(currentObject, this.view.NodePropertiesView, presenter);
+            this.propertiesPresenter = new PropertyPresenter();
+            this.propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
 
-            intellisense = new IntellisensePresenter(view as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
+            this.objectPropertiesPresenter = new PropertyPresenter();
+            this.objectPropertiesPresenter.Attach(this.currentObject, this.view.ObjectPropertiesView, this.presenter);
 
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.currentObject = null;
+
+            this.intellisense = new IntellisensePresenter(view as ViewBase);
+            this.intellisense.ItemSelected += OnIntellisenseItemSelected;
+
+            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+
 
             RefreshView();
 
@@ -91,13 +96,6 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
-            if (list.Count == 2)
-            {
-                list[0].ContextItemsNeeded -= OnNeedVariableNames;
-                list[1].ContextItemsNeeded -= OnNeedEventNames;
-            }
-
             view.GraphChanged -= OnViewChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
@@ -107,6 +105,7 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
             propertiesPresenter.Detach();
+            objectPropertiesPresenter.Detach();
         }
 
         /// <summary>
@@ -157,17 +156,10 @@ namespace UserInterface.Presenters
                         }
                     }
                     if (currentObject != null)
-                    {
-                        List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
-                        if (list.Count == 2)
-                        {
-                            list[0].ContextItemsNeeded -= OnNeedVariableNames;
-                            list[1].ContextItemsNeeded -= OnNeedEventNames;
-                        }
-
+                    {                        
                         objectPropertiesPresenter.RefreshView(currentObject);
-
-                        list = objectPropertiesPresenter.GetAllEditorViews();
+                        
+                        List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
                         if (list.Count == 2)
                         {
                             list[0].ContextItemsNeeded += OnNeedVariableNames;

@@ -289,10 +289,10 @@ namespace UserInterface.Views
                     codeEditor.Text = code;
                     Frame codeOutline = new Frame();
                     codeEditor.MainWidget.Name = property.ID.ToString();
+                    codeEditor.DisposeEditor += OnEntryFocusOut;
                     codeOutline.Add(codeEditor.MainWidget);
                     codeOutline.HeightRequest = 100;
                     component = codeOutline;
-                    codeEditor.LeaveEditor += OnEntryFocusOut;
                     originalEntryText[property.ID] = code;
                     this.codeEditors.Add(codeEditor);
                     break;
