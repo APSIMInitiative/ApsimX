@@ -1,16 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using UserInterface.Classes;
+using UserInterface.EventArguments;
+using global::UserInterface.Presenters;
+using Gtk;
+using UserInterface.Interfaces;
+using Utility;
+
 namespace UserInterface.Views
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Classes;
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using Utility;
-
     /// <summary>
     /// This view will display a list of properties to the user
     /// in a GtkTable, with each row containing a label and an
@@ -70,6 +71,11 @@ namespace UserInterface.Views
         /// </summary>
         private bool isDisposed;
 
+        /// <summary>
+        /// List of code editor views that have been created
+        /// </summary>
+        List<EditorView> codeEditors = new List<EditorView>();
+
         /// <summary>Constructor.</summary>
         public PropertyView() { }
 
@@ -99,6 +105,7 @@ namespace UserInterface.Views
             // property name column taking up half the screen.
 
             propertyTable = new Grid();
+            codeEditors = new List<EditorView>();
 
             box = new Frame();
             box.ShadowType = ShadowType.None;
@@ -274,6 +281,21 @@ namespace UserInterface.Views
                     component = outline;
                     editor.FocusOutEvent += OnEntryFocusOut;
                     break;
+                case PropertyType.Code:
+                    EditorView codeEditor = new EditorView(this);
+                    string code = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.CurrentCulture);
+                    if (code.Length > 0 && code[code.Length - 1] != '\n') //add a line if there is not a blank at the end
+                        code += '\n';
+                    codeEditor.Text = code;
+                    Frame codeOutline = new Frame();
+                    codeEditor.MainWidget.Name = property.ID.ToString();
+                    codeOutline.Add(codeEditor.MainWidget);
+                    codeOutline.HeightRequest = 100;
+                    component = codeOutline;
+                    codeEditor.LeaveEditor += OnEntryFocusOut;
+                    originalEntryText[property.ID] = code;
+                    this.codeEditors.Add(codeEditor);
+                    break;
                 case PropertyType.SingleLineText:
                     string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
                     Entry textInput = new Entry(entryValue ?? "");
@@ -430,7 +452,13 @@ namespace UserInterface.Views
         {
             try
             {
-                if (sender is Widget widget)
+                Widget widget = null;
+                if (sender is Widget)
+                    widget = sender as Widget;
+                else if (sender is ViewBase)
+                    widget = (sender as ViewBase).MainWidget;
+
+                if (widget != null)
                 {
                     Guid id = Guid.Parse(widget.Name);
                     string text;
@@ -438,6 +466,8 @@ namespace UserInterface.Views
                         text = entry.Text;
                     else if (widget is TextView editor)
                         text = editor.Buffer.Text;
+                    else if (sender is EditorView)
+                        text = (sender as EditorView).Text;
                     else
                         throw new Exception($"Unknown widget type {sender.GetType().Name}");
                     if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
@@ -636,6 +666,15 @@ namespace UserInterface.Views
             // to lose focus and fire off a changed event.
             mainWidget.CanFocus = true;
             mainWidget.GrabFocus();
+        }
+
+        /// <summary>
+        /// Returns a list of all code editor views that have been created.
+        /// Used by the presenter to connect up intellisense events.
+        /// </summary>
+        public List<EditorView> GetAllEditorViews()
+        {
+            return this.codeEditors;
         }
     }
 }

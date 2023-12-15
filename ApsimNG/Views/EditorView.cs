@@ -787,7 +787,8 @@ namespace UserInterface.Views
         {
             try
             {
-                ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
+                if ((o as Widget).Toplevel is Gtk.Window)
+                    ((o as Widget).Toplevel as Gtk.Window).RemoveAccelGroup(accel);
                 if (LeaveEditor != null)
                     LeaveEditor.Invoke(this, e);
             }

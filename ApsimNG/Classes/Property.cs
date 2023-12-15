@@ -25,7 +25,8 @@ namespace UserInterface.Classes
         Directory,
         //Directories,
         Font,
-        Numeric
+        Numeric,
+        Code
     }
 
     /// <summary>
@@ -238,6 +239,9 @@ namespace UserInterface.Classes
                         DisplayMethod = PropertyType.Colour;
                     else
                         DisplayMethod = PropertyType.SingleLineText;
+                    break;
+                case DisplayType.Code:
+                    DisplayMethod = PropertyType.Code;
                     break;
                 case DisplayType.FileName:
                     DisplayMethod = PropertyType.File;

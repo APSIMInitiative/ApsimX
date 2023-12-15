@@ -1,5 +1,4 @@
 using APSIM.Shared.Utilities;
-using Models;
 using Models.Core;
 using System;
 using System.Collections;
@@ -78,8 +77,15 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
+                view.PropertyChanged -= OnViewChanged;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+
+                this.view.SaveChanges();
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
+
+                view.PropertyChanged += OnViewChanged;
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
             }
         }
 
@@ -172,7 +178,16 @@ namespace UserInterface.Presenters
             (view as ViewBase).Dispose();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
-    
+
+        /// <summary>
+        /// Returns a list of all code editor views that have been created.
+        /// Used by the presenter to connect up intellisense events.
+        /// </summary>
+        public List<EditorView> GetAllEditorViews()
+        {
+            return this.view.GetAllEditorViews();
+        }
+
         /// <summary>
         /// Called when a model is changed. Refreshes the view.
         /// </summary>

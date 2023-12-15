@@ -47,10 +47,10 @@ namespace UserInterface.Presenters
         /// Warpper around the currently selected node in the rotation manager so it can be
         /// editted in the view.
         /// </summary>
-        private NodePropertyWrapper currentNode { get; set; }
+        private Model currentObject { get; set; }
 
         private PropertyPresenter propertiesPresenter = new PropertyPresenter();
-        private PropertyPresenter nodePropertiesPresenter = new PropertyPresenter();
+        private PropertyPresenter objectPropertiesPresenter = new PropertyPresenter();
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
@@ -71,13 +71,10 @@ namespace UserInterface.Presenters
             this.view.AddArcEnd += OnAddArc;
             this.view.DelArc += OnDelArc;
 
-            this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
-            this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
-
             propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
             
-            currentNode = new NodePropertyWrapper();
-            nodePropertiesPresenter.Attach(currentNode, this.view.NodePropertiesView, presenter);
+            currentObject = new NodePropertyWrapper();
+            objectPropertiesPresenter.Attach(currentObject, this.view.NodePropertiesView, presenter);
 
             intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -94,6 +91,13 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
+            if (list.Count == 2)
+            {
+                list[0].ContextItemsNeeded -= OnNeedVariableNames;
+                list[1].ContextItemsNeeded -= OnNeedEventNames;
+            }
+
             view.GraphChanged -= OnViewChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
@@ -102,8 +106,6 @@ namespace UserInterface.Presenters
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            view.RuleList.ContextItemsNeeded -= OnNeedVariableNames;
-            view.ActionList.ContextItemsNeeded -= OnNeedEventNames;
             propertiesPresenter.Detach();
         }
 
@@ -142,10 +144,34 @@ namespace UserInterface.Presenters
                     {
                         if (model.Nodes[i].Name == objectName)
                         {
-                            currentNode = new NodePropertyWrapper();
-                            currentNode.node = model.Nodes[i];
-                            nodePropertiesPresenter.RefreshView(currentNode);
-                            return;
+                            currentObject = new NodePropertyWrapper();
+                            (currentObject as NodePropertyWrapper).node = model.Nodes[i];
+                        }
+                    }
+                    for (int i = 0; i < model.Arcs.Count; i++)
+                    {
+                        if (model.Arcs[i].Name == objectName)
+                        {
+                            currentObject = new ArcPropertyWrapper();
+                            (currentObject as ArcPropertyWrapper).arc = model.Arcs[i];
+                        }
+                    }
+                    if (currentObject != null)
+                    {
+                        List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
+                        if (list.Count == 2)
+                        {
+                            list[0].ContextItemsNeeded -= OnNeedVariableNames;
+                            list[1].ContextItemsNeeded -= OnNeedEventNames;
+                        }
+
+                        objectPropertiesPresenter.RefreshView(currentObject);
+
+                        list = objectPropertiesPresenter.GetAllEditorViews();
+                        if (list.Count == 2)
+                        {
+                            list[0].ContextItemsNeeded += OnNeedVariableNames;
+                            list[1].ContextItemsNeeded += OnNeedEventNames;
                         }
                     }
                 }
@@ -330,24 +356,6 @@ namespace UserInterface.Presenters
             return currentLine;
         }
 
-        /// <summary>
-        /// The view is asking for items for the intellisense.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnIntellisenseNeeded(object sender, NeedContextItemsArgs args)
-        {
-            try
-            {
-                //fixme if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore.Reader))
-                intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
-        }
-
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             try
@@ -417,7 +425,7 @@ namespace UserInterface.Presenters
             }
 
             /// <summary>Property wrapper for name</summary>
-            [Description("Name")]
+            [Description("Colour")]
             [Display(Type = DisplayType.None)]
             public Color Colour
             {
@@ -435,6 +443,69 @@ namespace UserInterface.Presenters
                 }
             }
 
+        }
+
+        /// <summary>
+        /// A wrapper for the currently selected node in rotation manager so that
+        /// it can be used with a PropertyPresenter view.
+        /// 
+        /// Although this uses the model class, it should not be added as a model
+        /// within a simulation file, as by itself it does nothing.
+        /// </summary>
+        [Serializable]
+        public class ArcPropertyWrapper : Model
+        {
+            /// <summary>Currently selected node in the Rotation Manager</summary>
+            public Arc arc = null;
+
+            /// <summary>Property wrapper for name</summary>
+            [Description("Name")]
+            [Display(Type = DisplayType.None)]
+            public string ArcName
+            {
+                get
+                {
+                    if (arc != null)
+                        return arc.Name;
+                    else
+                        return string.Empty;
+                }
+                set
+                {
+                    if (arc != null)
+                        arc.Name = value;
+                }
+            }
+
+            /// <summary>Property wrapper for description</summary>
+            [Description("Description")]
+            [Display(Type = DisplayType.Code)]
+            public string Conditions
+            {
+                get
+                {
+                    return String.Join('\n', arc.Conditions.ToArray());
+                }
+                set
+                {
+                    arc.Conditions = value.Split('\n').ToList<string>();
+                }
+            }
+
+            /// <summary>Property wrapper for name</summary>
+            [Description("Actions")]
+            [Display(Type = DisplayType.Code)]
+            public string Actions
+            {
+                get
+                {
+                    return String.Join('\n', arc.Actions.ToArray());
+                }
+                set
+                {
+                    arc.Actions = value.Split('\n').ToList<string>();
+                }
+            }
         }
     }
 }
