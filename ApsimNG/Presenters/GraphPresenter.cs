@@ -63,7 +63,6 @@
             graphView.OnAxisClick += OnAxisClick;
             graphView.OnLegendClick += OnLegendClick;
             graphView.OnCaptionClick += OnCaptionClick;
-            graphView.OnHoverOverPoint += OnHoverOverPoint;
             graphView.OnAnnotationClick += OnAnnotationClick;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
@@ -89,7 +88,6 @@
             graphView.OnAxisClick -= OnAxisClick;
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
-            graphView.OnHoverOverPoint -= OnHoverOverPoint;
             graphView.OnAnnotationClick -= OnAnnotationClick;
         }
 
