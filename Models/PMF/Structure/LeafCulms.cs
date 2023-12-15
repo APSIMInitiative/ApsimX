@@ -81,6 +81,13 @@ namespace Models.PMF.Struct
             }
         }
 
+        /// <summary>CalculatedTillerNumber is determined by the tillering method chosen</summary>
+		[JsonIgnore]
+        public double CalculatedTillerNumber
+        {
+            get => tillering.CalculatedTillerNumber;
+        }
+
         /// <summary> CurrentTillerNumber is determined by the tillering method chosen</summary>
 		[JsonIgnore]
         public double CurrentTillerNumber { get => tillering.CurrentTillerNumber; }
@@ -144,8 +151,11 @@ namespace Models.PMF.Struct
         public void Initialize()
         {
             Culms.Clear();
-            Culms.Add(new Culm(0));
-            Culms[0].CurrentLeafNo = leafNoAtEmergence.Value();
+            Culms.Add(new Culm(0)
+            {
+                CurrentLeafNo = leafNoAtEmergence.Value(),
+                CulmNo = 0
+            });
 
             TTTargetFI = 0;
             FinalLeafNo = 0;
@@ -207,6 +217,5 @@ namespace Models.PMF.Struct
                 TilleringMethod = data.TilleringMethod;
             }
         }
-
     }
 }

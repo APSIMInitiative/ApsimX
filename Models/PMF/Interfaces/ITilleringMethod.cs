@@ -18,8 +18,11 @@ namespace Models.PMF.Interfaces
 
         /// <summary> Fertile tiller Number (at harvest) </summary>
         double FertileTillerNumber { get; set; }
+
         /// <summary>Current Number of Tillers</summary>
         double CurrentTillerNumber { get; set; }
 
+        /// <summary>Calculated Tiller Number</summary>
+        double CalculatedTillerNumber { get; set; }
     }
 }

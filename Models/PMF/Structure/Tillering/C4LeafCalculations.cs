@@ -10,11 +10,32 @@
         public static double CalculateLargestLeafPosition(
             double ax0i,
             double ax0s,
-            double finalLeafNo
+            double finalLeafNo,
+            int culmNo
         )
         {
             double largestLeafPosition = (ax0s * finalLeafNo) + ax0i;
-            return largestLeafPosition;
+            return largestLeafPosition - (culmNo == 0 ? 0 : culmNo + 1);
         }
-	}
+
+        /// <summary>
+        /// Calculate the area of the largest leaf. 
+        /// </summary>
+        public static double CalculateAreaOfLargestLeaf(
+            double amaxi,
+            double amaxs,
+            double finalLeafNo,
+            int culmNo
+        )
+        {
+            double relLeafSize;
+            if (culmNo == 0) relLeafSize = 0.0;
+            else if (culmNo == 1) relLeafSize = 0.23;
+            else if (culmNo < 5) relLeafSize = 0.13;
+            else relLeafSize = 0.39;
+
+            double areaOfLargestLeaf = (amaxs * finalLeafNo) + amaxi;
+            return areaOfLargestLeaf * (1 - relLeafSize);
+        }
+    }
 }

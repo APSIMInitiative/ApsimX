@@ -64,7 +64,7 @@ namespace Models.PMF.Struct
             //calculate the size of all leaves
             List<double> sizes = new List<double>();
             for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
-                sizes.Add(areaCalc.CalculateIndividualLeafArea(i, FinalLeafNo, VertAdjValue));
+                sizes.Add(areaCalc.CalculateIndividualLeafArea(i, FinalLeafNo, CulmNo));
 
             // allow for the offset effect for subsequent tillers
             //tillers wil have less leaves - but they are initially larger
@@ -96,6 +96,5 @@ namespace Models.PMF.Struct
             CulmNo = 0;
             LeafSizes = new List<double>();
         }
-
     }
 }

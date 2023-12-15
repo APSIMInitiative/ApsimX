@@ -181,6 +181,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Determined by the tillering method chosen.</summary>
+        [JsonIgnore]
+        [Description("Calculated Tiller Number")]
+        public double CalculatedTillerNumber
+        {
+            get => culms?.CalculatedTillerNumber ?? 0;
+        }
+
+        /// <summary>Determined by the tillering method chosen.</summary>
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
         [JsonIgnore]
         [Description("Current Tiller Number")]
