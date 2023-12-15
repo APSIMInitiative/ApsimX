@@ -217,6 +217,5 @@ namespace Models.PMF.Struct
                 TilleringMethod = data.TilleringMethod;
             }
         }
-
     }
 }

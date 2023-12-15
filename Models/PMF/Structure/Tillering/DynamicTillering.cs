@@ -97,30 +97,39 @@ namespace Models.PMF.Struct
         private int flagStage;
         private int floweringStage;
         private int endJuvenilePhase;
-        private int startThermalQuotientLeafNo = 3;
-        private int endThermalQuotientLeafNo = 5;
+        private int startOfGrainFillPhase;
+        private const int startThermalQuotientLeafNo = 3;
+        private const int endThermalQuotientLeafNo = 5;
         private double plantsPerMetre;
         private double linearLAI;
         private double radiationValues = 0.0;
         private double temperatureValues = 0.0;
         private readonly List<int> tillerOrder = new();
 
-        private bool BeforeFlagLeaf()
+        private bool BeforeFlagLeafStage()
         {
-            if (flagStage < 1) flagStage = phenology.EndStagePhaseIndex("FlagLeaf");
-            return phenology.BeforePhase(flagStage);
+            return BeforePhase("FlagLeaf", ref flagStage);
         }
 
-        private bool BeforeFlowering()
+        private bool BeforeFloweringStage()
         {
-            if (floweringStage < 1) floweringStage = phenology.EndStagePhaseIndex("Flowering");
-            return phenology.BeforePhase(floweringStage);
+            return BeforePhase("Flowering", ref floweringStage);
         }
 
         private bool BeforeEndJuvenileStage()
         {
-            if (endJuvenilePhase < 1) endJuvenilePhase = phenology.StartStagePhaseIndex("EndJuvenile");
-            return phenology.BeforePhase(endJuvenilePhase);
+            return BeforePhase("EndJuvenile", ref endJuvenilePhase);
+        }
+
+        private bool BeforeStartOfGrainFillStage()
+        {
+            return BeforePhase("StartGrainFill", ref startOfGrainFillPhase);
+        }
+
+        private bool BeforePhase(string phaseName, ref int phaseIndex)
+        {
+            if (phaseIndex < 1) phaseIndex = phenology.StartStagePhaseIndex(phaseName);
+            return phenology.BeforePhase(phaseIndex);
         }
 
         /// <summary> Calculate number of leaves</summary>
@@ -129,30 +138,41 @@ namespace Models.PMF.Struct
             if (culms.Culms?.Count == 0) return 0.0;
             if (!plant.IsEmerged) return 0.0;
 
-            var existingLeafNo = (int)Math.Floor(culms.Culms[0].CurrentLeafNo);
-            double dltLeafNoMainCulm = 0.0;
+            var mainCulm = culms.Culms[0];
+            
             if (BeforeEndJuvenileStage())
             {
-                //ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-                //FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+                // ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+                // FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
                 culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
             }
 
-            dltLeafNoMainCulm = CalcLeafAppearance(culms.Culms[0]);
-            culms.dltLeafNo = dltLeafNoMainCulm;
-            var newLeafNo = (int)Math.Floor(culms.Culms[0].CurrentLeafNo);
+            var existingLeafNo = (int)Math.Floor(mainCulm.CurrentLeafNo);
 
-            if (CalculatedTillerNumber <= 0.0)
+            var nLeaves = mainCulm.CurrentLeafNo;
+            var dltLeafNoMainCulm = 0.0;
+            culms.dltLeafNo = dltLeafNoMainCulm;
+
+            if (BeforeStartOfGrainFillStage())
+            {
+                // Calculate the leaf apperance on the main culm.
+                dltLeafNoMainCulm = CalcLeafAppearance(mainCulm);
+
+                // Now calculate the leaf apperance on all of the other culms.
+                for (int i = 1; i < culms.Culms.Count; i++)
+                {
+                    CalcLeafAppearance(culms.Culms[i]);
+                }
+            }
+
+            var newLeafNo = (int)Math.Floor(mainCulm.CurrentLeafNo);
+
+            if (nLeaves > startThermalQuotientLeafNo)
             {
                 CalcTillers(newLeafNo, existingLeafNo);
+                CalcTillerAppearance(newLeafNo, existingLeafNo);
             }
 
-            CalcTillerAppearance(newLeafNo, existingLeafNo);
-
-            for (int i = 1; i < culms.Culms.Count; i++)
-            {
-                CalcLeafAppearance(culms.Culms[i]);
-            }
             return dltLeafNoMainCulm;
         }
 
@@ -314,7 +334,7 @@ namespace Models.PMF.Struct
         /// <summary>Calculate the potential leaf area</summary>
         public double CalcPotentialLeafArea()
         {
-            if (BeforeFlowering())
+            if (BeforeFloweringStage())
             {
                 return areaCalc.Value();
             }
@@ -325,7 +345,7 @@ namespace Models.PMF.Struct
         public double CalcActualLeafArea(double dltStressedLAI)
         {
             //check current stage and current leaf number
-            if (BeforeEndJuvenileStage() || !BeforeFlagLeaf())
+            if (BeforeEndJuvenileStage() || !BeforeFlagLeafStage())
             {
                 culms.Culms.ForEach(c => c.TotalLAI = c.TotalLAI + c.DltStressedLAI);
                 return dltStressedLAI;

@@ -96,6 +96,5 @@ namespace Models.PMF.Struct
             CulmNo = 0;
             LeafSizes = new List<double>();
         }
-
     }
 }
