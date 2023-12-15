@@ -1,10 +1,13 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Models.Core;
+using Models.Functions;
+using System;
 using System.Collections.Generic;
 
 namespace Models.PMF.Struct
 {
     /// <summary>
-    /// 
+    /// Represents a culm (either the main stem or a tiller).
     /// </summary>
     [Serializable]
     public class Culm
@@ -47,6 +50,12 @@ namespace Models.PMF.Struct
         /// <summary>Calculated potential sizes for each leaf</summary>
         public List<double> LeafSizes { get; set; }
 
+        /// <summary>The area of the largest leaf on this culm.</summary>
+        public double AreaOfLargestLeaf { get; set; }
+
+        /// <summary>The position of the largest leaf on this culm.</summary>
+        public double PositionOfLargestLeaf { get; set; }
+
         // public Methods -------------------------------------------------------
 
         /// <summary>Constructor. </summary>
@@ -61,17 +70,14 @@ namespace Models.PMF.Struct
         public void UpdatePotentialLeafSizes(ICulmLeafArea areaCalc)
         {
             LeafSizes.Clear();
-            //calculate the size of all leaves
-            List<double> sizes = new List<double>();
-            for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
-                sizes.Add(areaCalc.CalculateIndividualLeafArea(i, FinalLeafNo, CulmNo));
 
-            // allow for the offset effect for subsequent tillers
-            //tillers wil have less leaves - but they are initially larger
-            //the effect is to shift the curve to the left
-            int offset = CulmNo;
-            for (int i = 0; i < Math.Ceiling(FinalLeafNo - (offset)); i++)
-                LeafSizes.Add(sizes[i + offset]);
+            AreaOfLargestLeaf = areaCalc.CalculateAreaOfLargestLeaf(FinalLeafNo, CulmNo);
+            PositionOfLargestLeaf = areaCalc.CalculateLargestLeafPosition(FinalLeafNo, CulmNo);
+
+            for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
+            {
+                LeafSizes.Add(areaCalc.CalculateIndividualLeafArea(i, this));
+            }
         }
 
         /// <summary>Leaf appearance is calculated in the tillering method</summary>
