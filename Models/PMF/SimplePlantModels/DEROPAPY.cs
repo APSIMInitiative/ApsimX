@@ -190,11 +190,9 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
-        private bool RootThyNeighbour = false;
-        private double MaxRD = 3000;
-        private double AgeAtSimulationStart = 1.0;
-        private double YearsToMaxDimension = 1.0;
-
+        //private bool RootThyNeighbour = false;
+        //private double AgeAtSimulationStart = 1.0;
+        
         /// <summary> Method that sets DEROPAPY running</summary>
         public void Establish()
         {
@@ -216,9 +214,9 @@ namespace Models.PMF.SimplePlantModels
                     break;
             }
 
-            //double rootDepth = Math.Min(MaxRD, soilDepthMax);
-            double rootDepth = 1500;
+            double rootDepth = Math.Min(Double.Parse(Current["MaxRootDepth"]), soilDepthMax);
 
+            bool RootThyNeighbour = bool.Parse(Current["RootTheNeighboursZone"]);
             if (RootThyNeighbour)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 string neighbour = "";
@@ -248,9 +246,9 @@ namespace Models.PMF.SimplePlantModels
                 }
             }
 
-
+            double AgeAtSimulationStart = Double.Parse(Current["AgeAtStartSimulation"]);
             string cropName = this.Name;
-            double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
+            double depth = Math.Min(Double.Parse(Current["MaxRootDepth"]) * AgeAtSimulationStart / Double.Parse(Current["AgeToMaxDimension"]), rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;
 
@@ -259,7 +257,7 @@ namespace Models.PMF.SimplePlantModels
             deropapy.Sow(cropName, population, depth, rowWidth);
             phenology.SetAge(AgeAtSimulationStart);
             summary.WriteMessage(this, "Some of the message above is not relevent as DEROPAPY has no notion of population, bud number or row spacing." +
-                " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
+                " Additional info that may be useful.  " + this.Name + " is established as " + AgeAtSimulationStart.ToString() + " Year old plant "
                 , MessageType.Information);
         }
 
@@ -308,6 +306,19 @@ namespace Models.PMF.SimplePlantModels
             thisDero["RUEtotal"] += clean(Current["RUEtotal"]);
             thisDero["RUETempThresholds"] += clean(Current["RUETempThresholds"]);
             thisDero["PhotosynthesisType"] += clean(Current["PhotosynthesisType"]);
+            thisDero["LeafPartitionFrac"] += clean(Current["LeafPartitionFrac"]);
+            thisDero["ProductPartitionFrac"] += clean(Current["ProductPartitionFrac"]);
+            thisDero["RootPartitionFrac"] += clean(Current["RootPartitionFrac"]);
+            thisDero["TrunkPartitionFrac"] += clean(Current["TrunkPartitionFrac"]);
+            thisDero["LeafMaxNConc"] += clean(Current["LeafMaxNConc"]);
+            thisDero["LeafMinNConc"] += clean(Current["LeafMinNConc"]);
+            thisDero["ProductMaxNConc"] += clean(Current["ProductMaxNConc"]);
+            thisDero["ProductMinNConc"] += clean(Current["ProductMinNConc"]);
+            thisDero["RootMaxNConc"] += clean(Current["RootMaxNConc"]);
+            thisDero["RootMinNConc"] += clean(Current["RootMinNConc"]);
+            thisDero["TrunkMaxNConc"] += clean(Current["TrunkMaxNConc"]);
+            thisDero["TrunkMinNConc"] += clean(Current["TrunkMinNConc"]);
+            thisDero["MaxRootDepth"] += clean(Current["MaxRootDepth"]);
 
             string[] commands = new string[deroParams.Count];
             thisDero.Values.CopyTo(commands, 0);
@@ -346,7 +357,20 @@ namespace Models.PMF.SimplePlantModels
             {"ExtCoeffWaterStressSens","[DEROPAPY].Leaf.Canopy.GreenExtinctionCoefficient.WaterStress.XYPairs.Y[1] = " },
             {"RUEtotal","[DEROPAPY].Leaf.Photosynthesis.RUE.FixedValue = " },
             {"RUETempThresholds","[DEROPAPY].Leaf.Photosynthesis.FT.XYPairs.X = " },
-            {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " }
+            {"PhotosynthesisType","[DEROPAPY].Leaf.Photosynthesis.FCO2.PhotosyntheticPathway = " },
+            {"LeafPartitionFrac","[DEROPAPY].Leaf.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"ProductPartitionFrac","[DEROPAPY].Product.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"RootPartitionFrac","[DEROPAPY].Root.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"TrunkPartitionFrac","[DEROPAPY].Trunk.TotalDMDemand.PartitionFraction.FixedValue = " },
+            {"LeafMaxNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
+            {"LeafMinNConc","[DEROPAPY].Leaf.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
+            {"ProductMaxNConc","[DEROPAPY].Product.Nitrogen.ConcFunctions.Maximum.XYPairs.Y[2] = " },
+            {"ProductMinNConc","[DEROPAPY].Product.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
+            {"RootMaxNConc","[DEROPAPY].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
+            {"RootMinNConc","[DEROPAPY].Root.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
+            {"TrunkMaxNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = " },
+            {"TrunkMinNConc","[DEROPAPY].Trunk.Nitrogen.ConcFunctions.Minimum.FixedValue = " },
+            {"MaxRootDepth","[DEROPAPY].Root.Network.MaximumRootDepth.FixedValue = " },
         };
     }
 }
