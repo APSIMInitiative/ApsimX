@@ -51,6 +51,7 @@ namespace Models.Management
         /// The stage to set phenology to on removal event
         /// </summary>
         [Description("Stage to set phenology to on removal.  Leave blank if phenology not changed")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StageToSet { get; set; }
 
         /// <summary>
@@ -210,9 +211,12 @@ namespace Models.Management
         }
 
         [EventSubscribe("PhenologyDefoliate")]
-        private void OnPhenologyDefoliate(object sender, EventArgs e)
+        private void OnPhenologyDefoliate(object sender, BiomassRemovalEventArgs e)
         {
-            Remove();
+            if (RemovalType == e.RemovalType)
+            {
+                Remove();
+            }
         }
 
         private void LinkCrop()
@@ -284,5 +288,15 @@ namespace Models.Management
             }
         }
 
+    }
+    /// <summary>
+    /// Arguments passed to defoliate event when stage is reset
+    /// </summary>
+    public class BiomassRemovalEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Type of biomass removal
+        /// </summary>
+        public BiomassRemovalType RemovalType { get; set; }
     }
 }

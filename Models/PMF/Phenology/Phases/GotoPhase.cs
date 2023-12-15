@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using Models.Core;
+using Models.Management;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -46,12 +47,28 @@ namespace Models.PMF.Phen
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
-        [Display(Type = DisplayType.CropStageName)]
+        [Display(Type = DisplayType.CropPhaseName)]
         public string PhaseNameToGoto { get; set; }
+
+        /// <summary>
+        /// The type of biomass removal event
+        /// </summary>
+        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        public BiomassRemovalType RemovalType
+        {
+            get { return _removalType; }
+            set { _removalType = value; }
+        }
+
+        [JsonIgnore]
+        private BiomassRemovalType _removalType { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
         [JsonIgnore]
         public double FractionComplete { get; }
+
+        /// <summary>Cutting Event</summary>
+        public event EventHandler<BiomassRemovalEventArgs> PhenologyDefoliate;
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -60,6 +77,9 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
             phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
+            BiomassRemovalEventArgs breg = new BiomassRemovalEventArgs();
+            breg.RemovalType = RemovalType;
+            PhenologyDefoliate?.Invoke(this, breg);
             return true;
         }
 

@@ -9,6 +9,8 @@ namespace Models.Management
     /// </summary>
     public enum BiomassRemovalType
     {
+        /// <summary>No biomass is removed</summary>
+        None,
         /// <summary>Biomass is cut</summary>
         Cutting,
         /// <summary>Biomass is grazed</summary>
