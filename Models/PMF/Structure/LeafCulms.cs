@@ -151,8 +151,11 @@ namespace Models.PMF.Struct
         public void Initialize()
         {
             Culms.Clear();
-            Culms.Add(new Culm(0));
-            Culms[0].CurrentLeafNo = leafNoAtEmergence.Value();
+            Culms.Add(new Culm(0)
+            {
+                CurrentLeafNo = leafNoAtEmergence.Value(),
+                CulmNo = 0
+            });
 
             TTTargetFI = 0;
             FinalLeafNo = 0;

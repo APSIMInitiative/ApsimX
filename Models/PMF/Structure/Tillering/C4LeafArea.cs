@@ -56,27 +56,27 @@ namespace Models.PMF
 
 		/// <summary>The intercept of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-        readonly IFunction aX0I = null;
+        IFunction aX0I = null;
 
         /// <summary>The slope of the regression, of position of the largest leaf against final leaf number(FLN)</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        readonly IFunction aX0S = null;
+        IFunction aX0S = null;
 
         /// <summary></summary>
         [Link(Type = LinkType.Child, ByName = true)]
-		readonly IFunction aMaxS = null;
+		IFunction aMaxS = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		readonly IFunction aMaxI = null;
+		IFunction aMaxI = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		readonly IFunction leafNoCorrection = null;
+		IFunction leafNoCorrection = null;
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
-		readonly IFunction largestLeafPlateau = null;
+		IFunction largestLeafPlateau = null;
         
 		private double sowingDensity;
 		
@@ -136,7 +136,7 @@ namespace Models.PMF
             //double a0 = -0.009, a1 = -0.2;
             //double b0 = 0.0006, b1 = -0.43;
 
-
+			// TODO - Find a suitable place for these values.
             var a0 = 0.00955;
             var a1 = 0.0608;
             var a2 = -0.1293;
@@ -166,7 +166,12 @@ namespace Models.PMF
             //a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
             //from a set of graphs in Tonge's paper
             //the effect is to decrease the size of the largest leaf by 10% for each subsequent tiller
-			double leafSize = largestLeafSize * Math.Exp(a * Math.Pow((leafNo - largestLeafPos), 2) + b * Math.Pow((leafNo - largestLeafPos), 3)) * 100;
+			double leafSize = 
+				largestLeafSize * 
+					Math.Exp(a * Math.Pow((leafNo - largestLeafPos), 2) + 
+					b * Math.Pow((leafNo - largestLeafPos), 3)) * 
+					100;
+			
 			return Math.Max(leafSize,0.0);
         }
 
