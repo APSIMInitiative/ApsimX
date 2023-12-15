@@ -110,12 +110,22 @@ namespace Models.PMF.Struct
         /// <summary>
         /// bellCurveParams[2]
         /// </summary>
-        public IFunction B0 { get; set; }
+        public IFunction A2 { get; set; }
 
         /// <summary>
         /// bellCurveParams[3]
         /// </summary>
+        public IFunction B0 { get; set; }
+
+        /// <summary>
+        /// bellCurveParams[4]
+        /// </summary>
         public IFunction B1 { get; set; }
+
+        /// <summary>
+        /// bellCurveParams[5]
+        /// </summary>
+        public IFunction B2 { get; set; }
 
         /// <summary>
         /// largestLeafParams[0]

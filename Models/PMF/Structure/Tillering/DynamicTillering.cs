@@ -121,6 +121,11 @@ namespace Models.PMF.Struct
             return BeforePhase("EndJuvenile", ref endJuvenilePhase);
         }
 
+        private bool AfterEndJuvenileStage()
+        {
+            return AfterPhase("EndJuvenile", ref endJuvenilePhase);
+        }
+
         private bool BeforeStartOfGrainFillStage()
         {
             return BeforePhase("StartGrainFill", ref startOfGrainFillPhase);
@@ -132,13 +137,17 @@ namespace Models.PMF.Struct
             return phenology.BeforePhase(phaseIndex);
         }
 
+        private bool AfterPhase(string phaseName, ref int phaseIndex)
+        {
+            if (phaseIndex < 1) phaseIndex = phenology.StartStagePhaseIndex(phaseName);
+            return phenology.BeyondPhase(phaseIndex);
+        }
+
         /// <summary> Calculate number of leaves</summary>
         public double CalcLeafNumber()
         {
             if (culms.Culms?.Count == 0) return 0.0;
             if (!plant.IsEmerged) return 0.0;
-
-            var mainCulm = culms.Culms[0];
             
             if (BeforeEndJuvenileStage())
             {
@@ -147,8 +156,8 @@ namespace Models.PMF.Struct
                 culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
             }
 
+            var mainCulm = culms.Culms[0];
             var existingLeafNo = (int)Math.Floor(mainCulm.CurrentLeafNo);
-
             var nLeaves = mainCulm.CurrentLeafNo;
             var dltLeafNoMainCulm = 0.0;
             culms.dltLeafNo = dltLeafNoMainCulm;
@@ -214,8 +223,10 @@ namespace Models.PMF.Struct
             // The final tiller number (Ftn) is calculated after the full appearance of LeafNo 5 - when leaf 6 emerges.
             // Calc Supply = R/oCd * LA5 * Phy5
             var areaMethod = areaCalc as ICulmLeafArea;
-            double L5Area = areaMethod.CalculateIndividualLeafArea(5, culms.FinalLeafNo, 0);
-            double L9Area = areaMethod.CalculateIndividualLeafArea(9, culms.FinalLeafNo, 0);
+            var mainCulm = culms.Culms[0];
+            double L5Area = areaMethod.CalculateIndividualLeafArea(5, mainCulm);
+            double L9Area = areaMethod.CalculateIndividualLeafArea(9, mainCulm);
+
             double Phy5 = culms.getLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
 
             // Calc Demand = LA9 - LA5
@@ -344,10 +355,20 @@ namespace Models.PMF.Struct
         /// <summary> calculate the actual leaf area</summary>
         public double CalcActualLeafArea(double dltStressedLAI)
         {
+            //var mainCulm = culms.Culms.FirstOrDefault();
+
+            //if (AfterEndJuvenileStage() && 
+            //    CalculatedTillerNumber > 0.0 &&
+            //    (mainCulm != null && mainCulm.CurrentLeafNo < X0Main )
+            //)
+            //{
+
+            //}
+
             //check current stage and current leaf number
             if (BeforeEndJuvenileStage() || !BeforeFlagLeafStage())
             {
-                culms.Culms.ForEach(c => c.TotalLAI = c.TotalLAI + c.DltStressedLAI);
+                culms.Culms.ForEach(c => c.TotalLAI += c.DltStressedLAI);
                 return dltStressedLAI;
             }
 
@@ -476,8 +497,7 @@ namespace Models.PMF.Struct
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == plant && data.TilleringMethod == 1)
-            {
-                //plantsPerMetre = data.RowSpacing / 1000.0 * data.SkipDensityScale;                
+            {             
                 plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
                 CurrentTillerNumber = 0.0;
                 CalculatedTillerNumber = 0.0;

@@ -190,7 +190,7 @@ namespace Models.PMF.Struct
         {
             double actualLAI = tillering.CalcActualLeafArea(dltStressedLAI);
 
-            Culms.ForEach(c => c.TotalLAI = c.TotalLAI + c.DltStressedLAI);
+            Culms.ForEach(c => c.TotalLAI += c.DltStressedLAI);
             return actualLAI;
         }
 

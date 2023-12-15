@@ -3587,6 +3587,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3598,6 +3607,15 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B1",
                           "Name": "B1",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3758,6 +3776,15 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A2",
+                          "Name": "A2",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B0",
                           "Name": "B0",
                           "ResourceName": null,
@@ -3769,6 +3796,15 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Parameters.B1",
                           "Name": "B1",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B2",
+                          "Name": "B2",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -5770,7 +5806,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.009,
+                  "FixedValue": 0.00955,
                   "Units": null,
                   "Name": "A0",
                   "ResourceName": null,
@@ -5790,7 +5826,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.2,
+                  "FixedValue": 0.0608,
                   "Units": null,
                   "Name": "A1",
                   "ResourceName": null,
@@ -5810,9 +5846,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0006,
+                  "FixedValue": -0.1293,
                   "Units": null,
-                  "Name": "B0",
+                  "Name": "A2",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -5830,14 +5866,54 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.43,
+                  "FixedValue": 0.00144,
+                  "Units": null,
+                  "Name": "B0",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[3]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0025,
                   "Units": null,
                   "Name": "B1",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[3]",
+                      "Text": "bellCurveParams[4]",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.11,
+                  "Units": null,
+                  "Name": "B2",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[5]",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
