@@ -133,6 +133,7 @@ namespace Models
                     string configFileDirectory = Directory.GetParent(configFileAbsolutePath).FullName;
                     List<string> commandsList = ParseConfigFileCommands(options);
                     DoCommands(options, files, configFileDirectory, commandsList);
+                    CleanUpTempFiles(configFileDirectory);
                 }
                 else
                 {
@@ -167,7 +168,6 @@ namespace Models
                         Console.WriteLine("ERRORS FOUND!!");
                     if (options.Verbose)
                         Console.WriteLine("Elapsed time was " + runner.ElapsedTime.TotalSeconds.ToString("F1") + " seconds");
-
                 }
             }
             catch (Exception err)
@@ -245,10 +245,6 @@ namespace Models
                         {
                             RunModifiedApsimxFile(options, file, tempSim, sim);
                             isSimToBeRun = false;
-                            //// An assumption is made here that once a simulation is run a temp file is no longer needed.
-                            //// Release database files and clean up.
-                            //runner.DisposeStorage();
-                            //CleanUpTempFiles(configFileDirectory);
                         }
                     }
                 }
@@ -289,11 +285,6 @@ namespace Models
                             // TODO: Needs to overwrite original and run it as this is expected behaviour.
                             RunModifiedApsimxFile(options, loadPath, tempSim, sim);
                             isSimToBeRun = false;
-
-                            //// An assumption is made here that once a simulation is run a temp file is no longer needed.
-                            //// Release database files and clean up. 
-                            //runner.DisposeStorage();
-                            //CleanUpTempFiles(configFileDirectory);
                         }
                     }
                     else if (!string.IsNullOrEmpty(savePath))
@@ -309,6 +300,13 @@ namespace Models
             }
         }
 
+        /// <summary>
+        /// Writes a temporary file into an existing file and runs the file.
+        /// </summary>
+        /// <param name="options">command line flags/switches.</param>
+        /// <param name="filePath">The apsimx file to be overwritten.</param>
+        /// <param name="tempSim">The apsimx file to overwrite original.</param>
+        /// <param name="sim"></param>
         private static void RunModifiedApsimxFile(Options options, string filePath, Simulations tempSim, Simulations sim)
         {
             File.Copy(tempSim.FileName, filePath, true);
@@ -321,6 +319,9 @@ namespace Models
                                     numberOfProcessors: options.NumProcessors,
                                     simulationNamePatternMatch: options.SimulationNameRegex);
             RunSimulations(runner, options);
+            //// An assumption is made here that once a simulation is run a temp file is no longer needed.
+            //// Release database files and clean up. 
+            runner.DisposeStorage();
         }
 
         /// <summary>
@@ -361,7 +362,7 @@ namespace Models
             if (filePathSplits.Count >= 2)
             {
                 tempSim = FileFormat.ReadFromFile<Simulations>(fullLoadPath, e => throw e, false).NewModel as Simulations;
-                tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx";
+                tempSim.FileName = Path.GetFileNameWithoutExtension(fullLoadPath) + "temp.apsimx.temp";
             }
             else
                 throw new Exception($"There was an error creating a new temporary file. The path causing issues was: {file}");
@@ -577,45 +578,36 @@ namespace Models
 
         }
 
-        /// <summary>
-        /// Creates a backup of a file.
-        /// </summary>
-        /// <param name="existingFilePath">An apsimx file path string</param>
-        private static void CreateApsimxFile(string existingFilePath)
-        {
-            if (File.Exists(existingFilePath))
-            {
-                string backupFilePath = existingFilePath + ".bak";
-                File.Copy(existingFilePath, backupFilePath, true);
-            }
-            else
-                File.Create(existingFilePath)?.Close();
-        }
 
         // TODO: clean up function needs further work. Currently has trouble removing files due to other processes using the \
         // files.
         private static void CleanUpTempFiles(string configFileDirectoryPath)
         {
+            // IMPORTANT: The order of these is important. Do not modify.
             string[] tempFileList = {
-                "*temp.apsimx.temp.bak",
-                "*temp.apsimx.dh-shm",
-                "*temp.apsimx.db-wal",
-                "*temp.apsimx.db",
-                @"*.temp"
+            "*temp.apsimx.temp.bak",
+            @"*.temp",
+            "*temp.apsimx.db-shm",
+            "*temp.apsimx.db-wal",
+            "*temp.apsimx.db",
             };
 
             bool isFileInUse = false;
             List<string> matchingTempFiles = new();
             foreach (string file in tempFileList)
                 foreach (string match in Directory.GetFiles(configFileDirectoryPath, file))
-                    matchingTempFiles.Add(match);
-            foreach (string matchingFile in matchingTempFiles)
+                    if (match != null)
+                        matchingTempFiles.Add(match);
+            if (matchingTempFiles.Count > 0)
             {
-                while (isFileInUse == true)
-                    isFileInUse = IsFileLocked(matchingFile);
-                File.Delete(matchingFile);
+                foreach (string matchingFile in matchingTempFiles)
+                {
+                    while (isFileInUse == true)
+                        isFileInUse = IsFileLocked(matchingFile);
+                    File.Delete(matchingFile);
+                    isFileInUse = true;
+                }
             }
-
         }
 
         /// <summary>
@@ -627,7 +619,8 @@ namespace Models
         {
             try
             {
-                using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                var fileInfo = new FileInfo(filePath);
+                using (FileStream stream = fileInfo.Open(FileMode.Open, FileAccess.Read, FileShare.None))
                 {
                     stream.Close();
                 }
