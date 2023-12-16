@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Utilities;
+using MathNet.Numerics.Statistics.Mcmc;
 using Models.Core;
 using Models.Functions;
+using Models.GrazPlan;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
@@ -101,6 +103,7 @@ namespace Models.PMF.Struct
         private const int startThermalQuotientLeafNo = 3;
         private const int endThermalQuotientLeafNo = 5;
         private double plantsPerMetre;
+        private double population;
         private double linearLAI;
         private double radiationValues = 0.0;
         private double temperatureValues = 0.0;
@@ -319,7 +322,7 @@ namespace Models.PMF.Struct
 
         private double CalcLinearLAI()
         {
-            var tpla = leaf.LAI + leaf.SenescedLai;
+            var tpla = (leaf.LAI + leaf.SenescedLai) / population * 10000; // Leaf area of one plant.
             linearLAI = plantsPerMetre * tpla / 10000.0;
             return linearLAI;
         }
@@ -497,7 +500,8 @@ namespace Models.PMF.Struct
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == plant && data.TilleringMethod == 1)
-            {             
+            {
+                population = data.Population;
                 plantsPerMetre = data.Population * data.RowSpacing / 1000.0 * data.SkipDensityScale;
                 CurrentTillerNumber = 0.0;
                 CalculatedTillerNumber = 0.0;
