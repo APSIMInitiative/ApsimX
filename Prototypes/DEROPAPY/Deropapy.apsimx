@@ -12935,8 +12935,8 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
-              "ExcelWorkSheetName": null,
+              "FileName": "20993_Lincoln_Had_RCPpast.met",
+              "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -12945,7 +12945,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "1998-07-01T00:00:00",
+              "Start": "2000-07-01T00:00:00",
               "End": "2001-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -26132,7 +26132,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Weather].FileName  = 10731_238_39.met",
+                  "Specification": "[Weather].FileName  = 20993_Lincoln_Had_RCPpast.met",
                   "Name": "Location",
                   "ResourceName": null,
                   "Children": [],
@@ -26156,8 +26156,8 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
-              "ExcelWorkSheetName": null,
+              "FileName": "20993_Lincoln_Had_RCPpast.met",
+              "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -26166,8 +26166,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "1998-07-01T00:00:00",
-              "End": "2001-06-30T00:00:00",
+              "Start": "1971-07-01T00:00:00",
+              "End": "1975-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
