@@ -1,26 +1,22 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using UserInterface.Interfaces;
+using Models.Core;
+using UserInterface.Views;
+using System.Linq;
+using UserInterface.EventArguments;
+using Utility;
+using Models.Core.ApsimFile;
+using Models.Core.Apsim710File;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models;
-    using Models.Core;
-    using Views;
-    using System.Linq;
-    using System.Diagnostics;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using EventArguments;
-    using Utility;
-    using Models.Core.ApsimFile;
-    using Models.Core.Apsim710File;
 
     /// <summary>
-    /// This presenter class provides the functionality behind a TabbedExplorerView 
+    /// This presenter class provides the functionality behind a TabbedExplorerView
     /// which is a tab control where each tabs represent an .apsimx file. Each tab
     /// then has an ExplorerPresenter and ExplorerView created when the tab is
     /// created.
@@ -87,11 +83,21 @@
             this.view.TabClosing += this.OnTabClosing;
             this.view.ShowDetailedError += this.ShowDetailedErrorMessage;
             this.view.Show();
-            if (Utility.Configuration.Settings.StatusPanelHeight > 0.5 * this.view.WindowSize.Height)
-                this.view.StatusPanelHeight = 20;
+
+            int height = this.view.PanelHeight;
+            double savedHeight = Utility.Configuration.Settings.StatusPanelHeight / 100.0;
+            if (savedHeight > 0.9 || savedHeight < 0.1)
+                this.view.StatusPanelPosition = (int)Math.Round(height * 0.7);
             else
-                this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
-            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
+                this.view.StatusPanelPosition = (int)Math.Round(height * savedHeight);
+
+            double width = this.view.WindowSize.Width;
+            int savedWidth = Utility.Configuration.Settings.SplitScreenPosition;
+            if (savedWidth > 0.9 || savedWidth < 0.1)
+                this.view.SplitScreenPosition = (int)Math.Round(width * 0.5);
+            else
+                this.view.SplitScreenPosition = (int)Math.Round(width * savedWidth);
+
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -236,9 +242,9 @@
         {
             view.HideProgressBar();
         }
-        
+
         /// <summary>
-        /// Displays several messages, with a separator between them. 
+        /// Displays several messages, with a separator between them.
         /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
@@ -294,7 +300,7 @@
         }
 
         /// <summary>
-        /// Displays several error messages in the status bar. Each error will have an associated 
+        /// Displays several error messages in the status bar. Each error will have an associated
         /// </summary>
         /// <param name="errors"></param>
         /// <param name="overwrite"></param>
@@ -501,8 +507,15 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    var converter = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
+                    Simulations simulations = converter.NewModel as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
+
+                    // Clear simulation messages.
+                    this.ShowMessage("", Simulation.MessageType.Information, true);
+
+                    if (converter.DidConvert)
+                        this.ShowMessage($"Simulation has been converted to the latest version: {simulations.Version}",Simulation.MessageType.Information,true);
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -549,30 +562,6 @@
             this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
-        /// <summary>
-        /// Event handler invoked when user clicks on 'Standard toolbox'.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        public void OnStandardToolboxClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Toolboxes.StandardToolbox.apsimx");
-                StreamReader streamReader = new StreamReader(s);
-                bool onLeftTabControl = true;
-                if (sender != null)
-                {
-                    onLeftTabControl = this.view.IsControlOnLeft(sender);
-                }
-
-                this.OpenApsimXFromMemoryInTab("Standard toolbox", streamReader.ReadToEnd(), onLeftTabControl);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
 
         /// <summary>
         /// Gets the inner-most exception of an exception.
@@ -603,10 +592,6 @@
                                           new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
-            startPage.AddButton(
-                                "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
-                                          this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
@@ -915,14 +900,14 @@
         }
 
         /// <summary>
-        /// Returns the ExplorerPresenter for the specified file name, 
+        /// Returns the ExplorerPresenter for the specified file name,
         /// or null if the file is not currently open.
         /// </summary>
         /// <param name="fileName">The file name being sought.</param>
         /// <param name="onLeftTabControl">If true, search the left screen, else search the right.</param>
         /// <returns>The explorer presenter.</returns>
         private ExplorerPresenter PresenterForFile(string fileName, bool onLeftTabControl)
-        {            
+        {
             List<ExplorerPresenter> presenters = onLeftTabControl ? this.Presenters1.OfType<ExplorerPresenter>().ToList() : this.presenters2.OfType<ExplorerPresenter>().ToList();
             foreach (ExplorerPresenter presenter in presenters)
             {
@@ -941,7 +926,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true).NewModel as Simulations;
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -970,7 +955,7 @@
                 ShowError(e);
                 return null;
             }
-            
+
             //ExplorerView explorerView = new ExplorerView(null);
             //ExplorerPresenter presenter = new ExplorerPresenter(this);
             if (onLeftTabControl)
@@ -989,14 +974,12 @@
             // restore the simulation tree width on the form
             if (newPresenter.GetType() == typeof(ExplorerPresenter))
             {
-                if (simulations.ExplorerWidth == 0)
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = 250;
-                }
+                int width = this.view.WindowSize.Width;
+                double savedWidth = Utility.Configuration.Settings.TreeSplitScreenPosition;
+                if ((savedWidth > 0.9) || (savedWidth < 0.1))
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * 0.9);
                 else
-                {
-                    ((ExplorerPresenter)newPresenter).TreeWidth = simulations.ExplorerWidth;
-                }
+                    ((ExplorerPresenter)newPresenter).TreeWidth = (int)Math.Round(width * savedWidth);
             }
             return newPresenter;
         }
@@ -1085,10 +1068,10 @@
             // But check to be sure a tab has actually been closed and, if not, remove it now
 
             if (view.PageCount(onLeft) == nPages)
-                view.RemoveTab(index + 1, onLeft);  
+                view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
-            // This is a good time to force garbage collection 
+            // This is a good time to force garbage collection
             GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
@@ -1333,14 +1316,20 @@
         /// <param name="e">Close arguments</param>
         private void OnClosing(object sender, AllowCloseArgs e)
         {
+            int treeWidth = 0;
+            if (this.GetCurrentExplorerPresenter() != null)
+                treeWidth = this.GetCurrentExplorerPresenter().TreeWidth;
+
             e.AllowClose = this.AllowClose();
             if (e.AllowClose)
             {
-                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
+                Utility.Configuration.Settings.SplitScreenPosition = (int)MathF.Round((float)this.view.SplitScreenPosition / (float)this.view.WindowSize.Width);
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
-                Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.StatusPanelHeight = (int)(((double)this.view.StatusPanelPosition / (double)this.view.PanelHeight) * 100);
+                if (treeWidth > 0)
+                    Utility.Configuration.Settings.TreeSplitScreenPosition = (int)MathF.Round(((float)treeWidth / (float)this.view.WindowSize.Width) * 100);
                 Utility.Configuration.Settings.Save();
             }
         }

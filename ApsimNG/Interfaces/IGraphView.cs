@@ -49,11 +49,6 @@
         event EventHandler OnCaptionClick;
 
         /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        event EventHandler<HoverPointArgs> OnHoverOverPoint;
-
-        /// <summary>
         /// Invoked when the user clicks on the annotation.
         /// </summary>
         event EventHandler OnAnnotationClick;
@@ -303,6 +298,7 @@
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
+        /// <param name="labelOnOneLine">Show Axis Label on one line</param>
         void FormatAxis(
             AxisPosition axisType, 
             string title,
@@ -310,7 +306,8 @@
             double minimum,
             double maximum,
             double interval,
-            bool crossAtZero);
+            bool crossAtZero,
+            bool labelOnOneLine);
 
         /// <summary>
         /// Format the legend.
@@ -338,7 +335,7 @@
         /// <param name="bitmap">Bitmap to write to</param>
         /// <param name="r">Desired bitmap size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
-        void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside);
+        void Export(out Gdk.Pixbuf bitmap, Rectangle r, bool legendOutside);
 
         /// <summary>
         /// Export the graph to the clipboard

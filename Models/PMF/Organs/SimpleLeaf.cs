@@ -1,16 +1,17 @@
-﻿namespace Models.PMF.Organs
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
+using Models.PMF.Library;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
+
+namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Library;
-    using System;
-    using System.Collections.Generic;
-    using Models.PMF.Phen;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
@@ -33,7 +34,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, IOrganDamage
+    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage, IHasDamageableBiomass
     {
         /// <summary>
         /// The met data
@@ -46,6 +47,10 @@
         /// </summary>
         [Link]
         private Plant plant = null;
+
+        /// <summary>Link to summary instance.</summary>
+        [Link]
+        private ISummary summary = null;
 
         /// <summary>
         /// The surface organic matter model.
@@ -75,7 +80,7 @@
         /// The height function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction tallness = null;
+        private IFunction heightFunction = null;
 
         /// <summary>
         /// The lai dead function.
@@ -178,14 +183,14 @@
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>
         /// The N demand function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>
         /// The initial biomass dry matter weight.
@@ -325,6 +330,10 @@
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
+
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
 
         /// <summary>
         /// Sets the light profile. Set by MICROCLIMATE.
@@ -711,6 +720,16 @@
         [JsonIgnore]
         public double WaterAllocation { get; set; }
 
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
         /// <summary>
         /// Clears this instance.
         /// </summary>
@@ -752,8 +771,8 @@
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = AvailableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = photosynthesis.Value();
         }
@@ -766,6 +785,8 @@
         {
             if (phaseChange.StageName == LeafInitialisationStage)
                 leafInitialised = true;
+            summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>
@@ -789,7 +810,7 @@
                 if (area != null)
                     LAI = area.Value();
 
-                Height = tallness.Value();
+                Height = heightFunction.Value();
                 if (baseHeight == null)
                     BaseHeight = 0;
                 else
@@ -808,12 +829,12 @@
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
-            if (MathUtilities.IsNegative(NSupply.Reallocation))
+            NSupply.ReAllocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
+            if (MathUtilities.IsNegative(NSupply.ReAllocation))
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            if (MathUtilities.IsNegative(NSupply.Retranslocation))
+            NSupply.ReTranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            if (MathUtilities.IsNegative(NSupply.ReTranslocation))
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Fixation = 0;
@@ -890,7 +911,7 @@
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (plant.IsAlive || plant.IsEnding)
+            if (plant.IsAlive)
                 ClearBiomassFlows();
         }
 
@@ -972,16 +993,25 @@
             Clear();
         }
 
-        /// <summary>
-        /// Removes biomass from organs when harvest, graze or cut events are called.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
         }
-        
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
+        }
+
         /// <summary>
         /// Calculates the water demand.
         /// </summary>
@@ -998,7 +1028,7 @@
         /// </summary>
         public double AvailableDMRetranslocation()
         {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
+            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.ReAllocation) * dmRetranslocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM retranslocation value computed for " + Name);
 
@@ -1166,7 +1196,7 @@
                 canopyTags.AddRange(cover.Document());
             }
             canopyTags.AddRange(extinctionCoefficient.Document());
-            canopyTags.AddRange(tallness.Document());
+            canopyTags.AddRange(heightFunction.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             var stomatalConductanceTags = new List<ITag>();
@@ -1200,7 +1230,7 @@
             else
             {
                 senescenceTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                senescenceTags.AddRange(detachmentRate.Document()); 
+                senescenceTags.AddRange(detachmentRate.Document());
             }
             yield return new Section("Senescence and Detachment", senescenceTags);
 

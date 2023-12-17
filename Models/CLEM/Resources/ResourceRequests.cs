@@ -1,8 +1,7 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -164,11 +163,6 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class ActivityPerformedEventArgs : EventArgs
     {
-        ///// <summary>
-        ///// Activity details
-        ///// </summary>
-        //public CLEMActivityBase Activity { get; set; }
-
         /// <summary>
         /// Name of activity
         /// </summary>
@@ -182,7 +176,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Status at time of reporting
         /// </summary>
-        public string StatusMessage { get; }
+        public string StatusMessage { get; set; }
 
         /// <summary>
         /// Activity unique Id

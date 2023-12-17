@@ -1,4 +1,6 @@
-﻿namespace Models.Soils.NutrientPatching
+﻿using Models.Surface;
+
+namespace Models.Soils.NutrientPatching
 {
     /// <summary>Different approaches to use for N partitioning between patches.</summary>
     public enum PartitionApproachEnum

@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class ManureActivityCollectAll : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
@@ -50,8 +50,8 @@ namespace Models.CLEM.Activities
 
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // locate a cut and carry limiter associarted with this event.
-            limiter = ActivityCarryLimiter.Locate(this); 
+            // locate a cut and carry limiter associated with this event.
+            limiter = ActivityCarryLimiter.Locate(this);
         }
 
         /// <inheritdoc/>
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
-                ManageActivityResourcesAndTasks();
+            ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>
@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
                         manureStore.Collect(msu.Name, propCollected, this);
                     }
                 }
-                limiter.AddWeightCarried(amountToDo - amountToSkip);
+                limiter?.AddWeightCarried(amountToDo - amountToSkip);
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }

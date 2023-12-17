@@ -1,10 +1,11 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// A generic system that can have children
@@ -45,7 +46,7 @@
         public List<IPlant> Plants { get { return FindAllChildren<IPlant>().ToList(); } }
 
         /// <summary>Return the index of this paddock</summary>
-        public int Index {  get { return Parent.Children.IndexOf(this); } }
+        public int Index { get { return Parent.Children.IndexOf(this); } }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -64,7 +65,7 @@
         /// <returns>The found object or null if not found</returns>
         public object Get(string namePath)
         {
-            return Locator().Get(namePath, this);
+            return Locator.Get(namePath);
         }
 
         /// <summary>Get the underlying variable object for the given path.</summary>
@@ -72,7 +73,7 @@
         /// <returns>The found object or null if not found</returns>
         public IVariable GetVariableObject(string namePath)
         {
-            return Locator().GetInternal(namePath, this);
+            return Locator.GetObject(namePath);
         }
 
         /// <summary>Sets the value of a variable. Will throw if variable doesn't exist.</summary>
@@ -80,7 +81,7 @@
         /// <param name="value">The value to set the property to</param>
         public void Set(string namePath, object value)
         {
-            Locator().Set(namePath, this, value);
+            Locator.Set(namePath, value);
         }
 
         /// <summary>

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Models.Functions;
-using System.IO;
-using Newtonsoft.Json;
 using APSIM.Shared.Documentation;
+using Models.Core;
+using Models.Management;
+using Newtonsoft.Json;
+using PdfSharpCore.Pdf.Content.Objects;
 
 namespace Models.PMF.Phen
 {
@@ -24,10 +24,6 @@ namespace Models.PMF.Phen
         [Link]
         private Phenology phenology = null;
 
-        [Link]
-        private Plant plant = null;
-
-
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
         /// <summary>The start</summary>
@@ -39,21 +35,39 @@ namespace Models.PMF.Phen
         {
             get
             {
-                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+                return phenology?.FindChild<IPhase>(PhaseNameToGoto)?.Start;
             }
         }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = true;
+
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
+        [Display(Type = DisplayType.CropStageName)]
         public string PhaseNameToGoto { get; set; }
+
+        /// <summary>
+        /// The type of biomass removal event
+        /// </summary>
+        [Description("Type of biomass removal.  This triggers events OnCutting, OnGrazing etc")]
+        public BiomassRemovalType RemovalType
+        {
+            get { return _removalType; }
+            set { _removalType = value; }
+        }
+
+        [JsonIgnore]
+        private BiomassRemovalType _removalType { get; set; }
 
         /// <summary>Gets the fraction complete.</summary>
         [JsonIgnore]
-        public double FractionComplete { get;}
+        public double FractionComplete { get; }
 
-        /// <summary>Thermal time target</summary>
-        [JsonIgnore]
-        public double Target { get; set; }
+        /// <summary>Cutting Event</summary>
+        public event EventHandler<BiomassRemovalEventArgs> PhenologyDefoliate;
+
 
         //6. Public methods
         //-----------------------------------------------------------------------------------------------------------------
@@ -61,13 +75,15 @@ namespace Models.PMF.Phen
         /// <summary>Should not be called in this class</summary>
         public bool DoTimeStep(ref double PropOfDayToUse)
         {
-            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto)+1);
-            plant.RemoveBiomass("Graze");
+            phenology.SetToStage((double)phenology.IndexFromPhaseName(PhaseNameToGoto) + 1);
+            BiomassRemovalEventArgs breg = new BiomassRemovalEventArgs();
+            breg.RemovalType = RemovalType;
+            PhenologyDefoliate?.Invoke(this, breg);
             return true;
         }
 
         /// <summary>Resets the phase.</summary>
-        public virtual void ResetPhase() {}
+        public virtual void ResetPhase() { }
 
         /// <summary>
         /// Document the model.

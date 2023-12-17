@@ -17,9 +17,9 @@ namespace Models.Functions
     [Description("Calculates relative temperature response")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class WangEngelTempFunction: Model, IFunction, IIndexedFunction
+    public class WangEngelTempFunction : Model, IFunction, IIndexedFunction
     {
-        
+
         /// <summary>Minimum Temperature.</summary>
         [Description("Minimum Temperature")]
         public double MinTemp { get; set; }
@@ -37,7 +37,7 @@ namespace Models.Functions
 
         [Link]
         protected IWeather MetData = null;
-        
+
         /// <summary>The maximum temperature weighting</summary>
         [Description("Maximum Temperature Weighting")]
         public double MaximumTemperatureWeighting { get; set; }
@@ -63,7 +63,7 @@ namespace Models.Functions
             double RelEff = 0.0;
             double RelEffRefTemp = 1.0;
             double p = 0.0;
-            
+
             if ((T > MinTemp) && (T < MaxTemp))
             {
                 p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));

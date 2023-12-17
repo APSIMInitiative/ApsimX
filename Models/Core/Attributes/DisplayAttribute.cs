@@ -1,8 +1,6 @@
-﻿
-
+﻿using System;
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// An enumeration for display types.
@@ -31,6 +29,16 @@ namespace Models.Core
         /// A cultivar name editor.
         /// </summary>
         CultivarName,
+
+        /// <summary>
+        /// A stage name selector.
+        /// </summary>
+        CropStageName,
+
+        /// <summary>
+        /// A phase name selector.
+        /// </summary>
+        CropPhaseName,
 
         /// <summary>
         /// A LifePhase name editor.
@@ -83,7 +91,23 @@ namespace Models.Core
         /// text editor. Each line of input is treated as an
         /// element in the array.
         /// </summary>
-        MultiLineText
+        MultiLineText,
+            
+        /// <summary>
+        /// This is a list of SCRUMcrop model parameterisations that 
+        /// may be established in a simulation.
+        /// </summary>
+        SCRUMcropName,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model establishment stages.
+        /// </summary>
+        ScrumEstablishStages,
+
+        /// <summary>
+        /// This is a list of SCRUMcrop model harvest stages.
+        /// </summary>
+        ScrumHarvestStages
     }
 
     /// <summary>
@@ -160,5 +184,13 @@ namespace Models.Core
         /// Otherwise the line number of Description attribute is used for ordering
         /// </summary>
         public int Order { get; set; }
+
+        /// <summary>
+        /// Specifies the name of a single sub-property of supported type to substitute for a class-based property in the display 
+        /// This allows a class-based property to be represented by managed by the user through one of its own properties in the GUI rather than providing all properties using the DisplayType.SubModel approach
+        /// </summary>
+        public string SubstituteSubPropertyName { get; set; }
+
+
     }
 }

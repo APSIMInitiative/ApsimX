@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/UnitsConverter.htm")]
 
-    public class ResourceUnitsConverter: CLEMModel
+    public class ResourceUnitsConverter : CLEMModel
     {
         /// <summary>
         /// Conversion factor
@@ -76,7 +76,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

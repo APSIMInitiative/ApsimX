@@ -246,7 +246,7 @@ namespace UnitTests.Core.ApsimFile
             Assert.AreEqual(constant["$type"].Value<string>(), "Models.Functions.Constant, Models");
             Assert.AreEqual(constant["FixedValue"].Value<string>(), "1");
         }
-        
+
         /// <summary>
         /// Ensures the Values() method works correctly
         /// </summary>
@@ -272,7 +272,7 @@ namespace UnitTests.Core.ApsimFile
         public void SetValuesTests()
         {
             var values = new string[] { "string1", "string2", "string3" };
-            
+
             JObject rootNode = new JObject();
             JsonUtilities.SetValues(rootNode, "A", values.ToList());
 

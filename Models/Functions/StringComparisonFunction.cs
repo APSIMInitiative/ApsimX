@@ -1,8 +1,7 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
-
 
 namespace Models.Functions
 {
@@ -30,14 +29,11 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FalseValue = null;
 
-        [Link]
-        private ILocator locator = null;
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            object s = locator.Get(PropertyName);
+            object s = Locator.Get(PropertyName);
 
             string PropertyString;
             if (s == null)

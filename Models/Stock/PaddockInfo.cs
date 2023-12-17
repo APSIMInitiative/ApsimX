@@ -1,11 +1,10 @@
-﻿namespace Models.GrazPlan
+﻿using System;
+using Models.Core;
+using Models.Soils;
+using Models.Surface;
+
+namespace Models.GrazPlan
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
-    using System;
 
     /// <summary>
     /// Paddock details

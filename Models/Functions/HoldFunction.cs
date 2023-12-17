@@ -1,7 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -21,6 +20,7 @@ namespace Models.Functions
 
         /// <summary>The set event</summary>
         [Description("Phenological stage at which value stops updating and is held constant")]
+        [Display(Type = DisplayType.CropStageName)]
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>
@@ -77,14 +77,7 @@ namespace Models.Functions
         /// <summary>Get value</summary>
         private void GetValue()
         {
-            try
-            {
-                _Value = ValueToHold.Value();
-            }
-            catch (Exception)
-            {
-
-            }
+            _Value = ValueToHold.Value();
         }
     }
 }

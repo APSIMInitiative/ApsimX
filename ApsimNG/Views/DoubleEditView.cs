@@ -1,34 +1,8 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using Gtk;
+
+namespace UserInterface.Views
 {
-    using System;
-    using Gtk;
-
-    /// <summary>An interface for a GTK.Entry control</summary>
-    public interface IDoubleEditView
-    {
-        /// <summary>Gets or sets the value displayed</summary>
-        double Value { get; set; }
-
-        /// <summary>Gets or sets a value indicating whether the control should be editable.</summary>
-        bool IsEditable { get; set; }
-
-        bool Visible { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value allowed
-        /// </summary>
-        double MaxValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value allowed
-        /// </summary>
-        double MinValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the number of decimal places to show
-        /// </summary>
-        int DecPlaces { get; set; }
-    }
 
     /// <summary>A drop down view.</summary>
     public class DoubleEditView : ViewBase, IDoubleEditView
@@ -207,5 +181,32 @@
                 ShowError(err);
             }
         }
+    }
+
+    /// <summary>An interface for a GTK.Entry control</summary>
+    public interface IDoubleEditView
+    {
+        /// <summary>Gets or sets the value displayed</summary>
+        double Value { get; set; }
+
+        /// <summary>Gets or sets a value indicating whether the control should be editable.</summary>
+        bool IsEditable { get; set; }
+
+        bool Visible { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum value allowed
+        /// </summary>
+        double MaxValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minimum value allowed
+        /// </summary>
+        double MinValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of decimal places to show
+        /// </summary>
+        int DecPlaces { get; set; }
     }
 }

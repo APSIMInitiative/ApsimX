@@ -4,13 +4,8 @@ using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
-using Models.CLEM;
 using Models.CLEM.Groupings;
-using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
-using System.IO;
 using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
@@ -90,7 +85,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.unit)

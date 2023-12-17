@@ -5,6 +5,6 @@ weight: 20
 ---
 
 * [Compile](/contribute/compile)
-* [Version Control with SourceTree](/contribute/sourcetree)
-* [Version Control via CLI](/contribute/cli)
+* [Modify the website](/contribute/modifywebsite/changewebsite)
 * [Move model into release](/contribute/movemodeltorelease)
+* [How to contribute](/contribute/howtocontribute)

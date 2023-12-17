@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using APSIM.Shared.Utilities;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -26,7 +24,7 @@ namespace Models.Functions
 
         /// <summary>The Clock</summary>
         [Link]
-        Clock clock = null;
+        IClock clock = null;
 
         /// <summary>The start date</summary>
         [Description("Date to start accumulation dd-mmm")]
@@ -49,7 +47,7 @@ namespace Models.Functions
             AccumulatedValue = 0;
         }
 
-      /// <summary>Called at the start of each day</summary>
+        /// <summary>Called at the start of each day</summary>
         /// <param name="sender">Plant.cs</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfDay")]
@@ -71,8 +69,8 @@ namespace Models.Functions
             }
 
             //Zero value if today is reset date
-         if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
-               AccumulatedValue = 0;
+            if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
+                AccumulatedValue = 0;
         }
 
 

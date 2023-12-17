@@ -18,7 +18,7 @@
     public interface ISolute
     {
         /// <summary>Name of solute.</summary>
-        string Name { get;  }
+        string Name { get; }
 
         /// <summary>Solute amount (kg/ha)</summary>
         double[] kgha { get; set; }

@@ -1,6 +1,7 @@
-﻿namespace Models.AgPasture
+﻿using Models.Core;
+
+namespace Models.AgPasture
 {
-    using Models.Core;
 
     /// <summary>An interface that defines a readonly AgPasture biomass.</summary>
     public interface IAGPBiomass

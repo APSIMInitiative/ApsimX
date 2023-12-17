@@ -45,7 +45,7 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">Graph to be exported.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        public Image Export(IGraph graph, double width, double height)
+        public SkiaSharp.SKImage Export(IGraph graph, double width, double height)
         {
             return Export(ToPlotModel(graph), width, height);
         }
@@ -56,7 +56,7 @@ namespace APSIM.Interop.Graphing
         /// <param name="plot">Plot model to be exported.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        public Image Export(IPlotModel plot, double width, double height)
+        public SkiaSharp.SKImage Export(IPlotModel plot, double width, double height)
         {
             using (Stream stream = new MemoryStream())
             {
@@ -66,8 +66,7 @@ namespace APSIM.Interop.Graphing
                 exporter.UseTextShaping = false;
                 exporter.Export(plot, stream);
                 stream.Seek(0, SeekOrigin.Begin);
-                return Image.FromStream(stream);
-
+                return SkiaSharp.SKImage.FromEncodedData(stream);  
             }
         }
 

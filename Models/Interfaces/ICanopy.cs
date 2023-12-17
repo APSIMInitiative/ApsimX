@@ -1,11 +1,15 @@
-﻿namespace Models.Interfaces
+﻿using System;
+using System.Collections.Generic;
+
+namespace Models.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>This interface describes MicroClimate / canopy comms.</summary>
     public interface ICanopy
     {
+        /// <summary>Albedo.</summary>
+        string CanopyType { get; }
+
         /// <summary>Albedo.</summary>
         double Albedo { get; }
 
@@ -43,7 +47,10 @@
         double WaterDemand { get; set; }
 
         /// <summary>Sets the light profile.</summary>
-        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; } 
+        CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; }
+
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        double fRadnAllZones { get; set; }
     }
 
     /// <summary>This interface describes a model that has a list of canopies.</summary>

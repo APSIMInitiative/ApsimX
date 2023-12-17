@@ -1,12 +1,10 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Phen;
-using APSIM.Shared.Utilities;
-using System.Linq;
 
 namespace Models.Functions
 {
@@ -25,6 +23,7 @@ namespace Models.Functions
 
         /// <summary>The stage to start calculating moving average</summary>
         [Description("The stage to start calculating moving average")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StageToStartMovingAverage { get; set; }
 
 
@@ -61,7 +60,7 @@ namespace Models.Functions
         {
             AccumulatedValues.Clear();
             Calculate = false;
-            
+
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -73,6 +72,7 @@ namespace Models.Functions
             //Put the first data member into the list on the day that moving average is to start being calculated
             if (phaseChange.StageName == StageToStartMovingAverage)
             {
+                AccumulatedValues.Clear();
                 AccumulatedValues.Add(ChildFunction.Value());
                 InitialisedToday = true;
                 Calculate = true;
@@ -109,7 +109,7 @@ namespace Models.Functions
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            if (FindAllChildren<IFunction>().Count() ==1)
+            if (FindAllChildren<IFunction>().Count() == 1)
                 yield return new Paragraph($"{Name} is calculated from a moving average of {ChildFunction.Name} over a series of {NumberOfDays} days.");
         }
     }

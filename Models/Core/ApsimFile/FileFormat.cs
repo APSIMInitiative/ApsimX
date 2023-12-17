@@ -1,17 +1,14 @@
-﻿namespace Models.Core.ApsimFile
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
+namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.IO;
-    using System.Reflection;
-    using System.Linq;
-    using Newtonsoft.Json;
-    using System.Xml;
-    using Newtonsoft.Json.Serialization;
-    using System.Collections.Generic;
-    using Models.Core.Interfaces;
-    using Newtonsoft.Json.Linq;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -46,11 +43,11 @@
             };
             string json;
             using (StringWriter s = new StringWriter())
-                using (var writer = new JsonTextWriter(s))
-                {
-                    serializer.Serialize(writer, model, model.GetType());
-                    json = s.ToString();
-                }
+            using (var writer = new JsonTextWriter(s))
+            {
+                serializer.Serialize(writer, model, model.GetType());
+                json = s.ToString();
+            }
             return json;
         }
 
@@ -58,7 +55,7 @@
         /// <param name="fileName">Name of the file.</param>
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
-        public static T ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
+        public static ConverterReturnType ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
         {
             try
             {
@@ -66,14 +63,15 @@
                     throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
                 string contents = File.ReadAllText(fileName);
-                T newModel = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+                var converter = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
+                var newModel = converter.NewModel;
 
-                // Set the filename
                 if (newModel is Simulations)
                     (newModel as Simulations).FileName = fileName;
                 foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
                     sim.FileName = fileName;
-                return newModel;
+                converter.NewModel = newModel;
+                return converter;
             }
             catch (Exception err)
             {
@@ -86,7 +84,7 @@
         /// <param name="errorHandler">Action to be taken when an error occurs.</param>
         /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
         /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
-        public static T ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
+        public static ConverterReturnType ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
@@ -122,7 +120,9 @@
             else
                 InitialiseModel(newModel, errorHandler);
 
-            return newModel;
+            converter.NewModel = newModel;
+
+            return converter;
         }
 
         /// <summary>
@@ -246,8 +246,8 @@
                     if (model is Manager)
                         return new Model[0];
 
-                    // Serialise all child if ResourceName is empty or the model is under Replacements.
-                    if (string.IsNullOrEmpty(model.ResourceName) || model.FindAncestor<Folder>("Replacements") != null)
+                    // Serialise all child if ResourceName is empty.
+                    if (string.IsNullOrEmpty(model.ResourceName))
                         return model.Children;
 
                     // Return a collection of child models that aren't from a resource.

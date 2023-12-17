@@ -1,14 +1,14 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using APSIM.Shared.Utilities;
+using Models;
+using UserInterface.EventArguments;
+using UserInterface.Interfaces;
+using UserInterface.Views;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// A presenter class for showing an operations model in an operations view.
     /// </summary>
@@ -75,12 +75,19 @@
             if (operations.Operation != null)
                 foreach (Operation operation in this.operations.Operation)
                 {
-                    // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                    string dateStr = null;
-                    if (!string.IsNullOrEmpty(operation.Date))
-                        dateStr = DateUtilities.validateDateString(operation.Date);
-                    string commentChar = operation.Enabled ? string.Empty : "// ";
-                    st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                    if (operation.Action != null)
+                    {
+                        // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
+                        string dateStr = null;
+                        if (!string.IsNullOrEmpty(operation.Date))
+                            dateStr = DateUtilities.ValidateDateString(operation.Date);
+                        string commentChar = operation.Enabled ? string.Empty : "// ";
+                        st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
+                    }
+                    else
+                    {
+                        st += operation.Line + Environment.NewLine;
+                    }
                 }
 
             this.view.Text = st;
@@ -95,31 +102,28 @@
         {
             try
             {
+                explorerPresenter.MainPresenter.ClearStatusPanel();
                 this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
                 List<Operation> operations = new List<Operation>();
                 foreach (string line in this.view.Lines)
                 {
-                    string currentLine = line;
-                    bool isComment = line.Trim().StartsWith("//");
-                    if (isComment)
+                    if (line.Length > 0)
                     {
-                        int index = line.IndexOf("//");
-                        if (index >= 0)
-                            currentLine = currentLine.Remove(index, 2).Trim();
-                    }
-
-                    int pos = currentLine.IndexOfAny(" \t".ToCharArray());
-                    if (pos != -1)
-                    {
-                        Operation operation = new Operation();
-                        string dateString = currentLine.Substring(0, pos);
-                        operation.Date = DateUtilities.validateDateString(dateString);
-                        if (operation.Date == null)
-                            explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse date string {dateString}", Models.Core.Simulation.MessageType.Warning);
-
-                        operation.Action = currentLine.Substring(pos + 1);
-                        operation.Enabled = !isComment;
-                        operations.Add(operation);
+                        string lineTrimmed = line;
+                        lineTrimmed = lineTrimmed.Replace("\n", string.Empty);
+                        lineTrimmed = lineTrimmed.Replace("\r", string.Empty);
+                        lineTrimmed = lineTrimmed.Trim();
+                        
+                        Operation operation = Operation.ParseOperationString(lineTrimmed);
+                        if (operation != null)
+                        {
+                            operations.Add(operation);
+                        }
+                        else
+                        {
+                            operations.Add(new Operation(false, null, null, lineTrimmed));
+                            explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse operation '{line}'", Models.Core.Simulation.MessageType.Warning);
+                        }
                     }
                 }
 

@@ -1,7 +1,7 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -18,7 +18,7 @@ namespace Models.Functions
     {
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
@@ -42,10 +42,12 @@ namespace Models.Functions
         /// -----------------------------------------------------------------------------------------------------------
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string StartStageName { get; set; }
 
         /// <summary>The end stage name</summary>
         [Description("Stage name to stop accumulation")]
+        [Display(Type = DisplayType.CropStageName)]
         public string EndStageName { get; set; }
 
         /// <summary>The end stage name</summary>
@@ -82,7 +84,7 @@ namespace Models.Functions
         {
             events.Subscribe(AccumulateEventName, OnCalcEvent);
         }
-        
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 
@@ -193,10 +191,10 @@ namespace Models.PMF
 
             for (int i = 0; i < suppliesForEachOrgan.Length; i++)
             {
-                ReallocationSupply[i] = suppliesForEachOrgan[i].Reallocation;
+                ReallocationSupply[i] = suppliesForEachOrgan[i].ReAllocation;
                 UptakeSupply[i] = suppliesForEachOrgan[i].Uptake;
                 FixationSupply[i] = suppliesForEachOrgan[i].Fixation;
-                RetranslocationSupply[i] = suppliesForEachOrgan[i].Retranslocation;
+                RetranslocationSupply[i] = suppliesForEachOrgan[i].ReTranslocation;
             }
         }
 
@@ -234,7 +232,7 @@ namespace Models.PMF
         }
 
 
-        
+
 
         /// <summary>Clear the arbitration type</summary>
         public void Clear()

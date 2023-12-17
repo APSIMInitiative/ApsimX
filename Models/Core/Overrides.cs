@@ -1,6 +1,4 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core.ApsimFile;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
 
 namespace Models.Core
 {
@@ -52,7 +52,9 @@ namespace Models.Core
             if (matchType == Override.MatchTypeEnum.Name)
             {
                 // Replacements uses this.
-                variables = model.FindAllInScope(path).Select(m => new VariableObject(m));
+                variables = model.FindAllInScope(path)
+                    .Where(m => m.Parent != null)
+                    .Select(m => new VariableObject(m));
             }
             else
             {
@@ -174,7 +176,7 @@ namespace Models.Core
         {
             var match = Regex.Match(path, @"(?<rawpath>.+)\[(?<startindex>\d+):?(?<endindex>\d+)?]$");
             if (match.Success)
-            {   
+            {
                 var fullArray = model.FindByPath(match.Groups["rawpath"].Value)?.Value as IList;
                 if (fullArray != null)
                 {
@@ -231,7 +233,7 @@ namespace Models.Core
         /// <param name="replacementPath">Path to the model in replacementFile which will be used to replace a model in topLevel.</param>
         private static IModel GetModelFromFile(Type typeToFind, string replacementFile, string replacementPath)
         {
-            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false);
+            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false).NewModel as IModel;
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))
@@ -314,7 +316,7 @@ namespace Models.Core
 
             /// <summary>Supported match types when finding something to override.</summary>
             public enum MatchTypeEnum
-            { 
+            {
                 /// <summary>Match on name only.</summary>
                 Name,
 

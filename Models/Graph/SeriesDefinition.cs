@@ -1,17 +1,17 @@
-﻿namespace Models
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models
 {
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Drawing;
-    using System.Linq;
-    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
@@ -120,7 +120,7 @@
                                 SeriesType type = SeriesType.Scatter,
                                 AxisPosition xAxis = AxisPosition.Bottom,
                                 AxisPosition yAxis = AxisPosition.Left)
-        { 
+        {
             this.Title = title;
             this.Colour = colour;
             this.Line = line;
@@ -317,8 +317,19 @@
                 }
 
                 filter = filter?.Replace('\"', '\'');
+                filter = RemoveMiddleWildcards(filter);
+
                 View = new DataView(data);
-                View.RowFilter = filter;
+                try
+                {
+                    View.RowFilter = filter;
+                }
+                catch (Exception ex)
+                {
+                    //this will still cause a pause when running in debug mode, that is due to how visual studio
+                    //works when an exception thrown by external code but is not handled by that external code.
+                    throw new Exception("Filter cannot be parsed: " + ex.Message);
+                }
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(Series.TableName, XFieldName);
@@ -333,7 +344,7 @@
                     Y2 = GetDataFromView(View, Y2FieldName);
                     XError = GetErrorDataFromView(View, XFieldName);
                     YError = GetErrorDataFromView(View, YFieldName);
-                    if (Series.Cumulative)   
+                    if (Series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
@@ -386,7 +397,13 @@
                 foreach (var descriptor in Descriptors)
                 {
                     if (fieldsThatExist.Contains(descriptor.Name))
-                        filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
+                    {
+                        if (string.IsNullOrEmpty(descriptor.Value))
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] IS NULL");
+                        else
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
+                    }
+                        
                 }
             }
             if (!string.IsNullOrEmpty(userFilter))
@@ -512,6 +529,48 @@
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;
+        }
+
+        /// <summary>Rewrites a filter that has a wildcard in the middle of a field
+        /// Wildcards in the middle are not supported by Row Filters, so it's broken into multiple filters</summary>
+        /// <param name="filter">The filter as a string</param>
+        /// <returns>The modified filter as a string</returns>
+        private string RemoveMiddleWildcards(string filter)
+        {
+            if (filter == null || filter == "")
+                return filter;
+
+            string newString = filter;
+            string likePattern = @"(.*\sLIKE\s['""])(.*?[^""'])([%*])([^""'][^%*]+)(.*)";
+            bool stillMatches = true;
+
+            //add a bit of protection to this loop so we can break it and return an error if it loops forever.
+            int maxTries = 10;
+            int loops = 0;
+            while (stillMatches && loops < maxTries)
+            {
+                loops += 1;
+                Match match = Regex.Match(newString, likePattern);
+                stillMatches = match.Success;
+                if (stillMatches)
+                {
+                    newString = "";
+                    newString += match.Groups[1];
+                    newString += match.Groups[2];
+                    newString += match.Groups[3];
+                    newString += "' AND ";
+                    newString += match.Groups[1];
+                    newString += match.Groups[3];
+                    newString += match.Groups[4];
+                    if (match.Groups.Count == 6)
+                        newString += match.Groups[5];
+                }
+            }
+
+            if (loops == maxTries)
+                throw new Exception($"Row Filter '{filter}' contains wildcard characters that cannot be parsed correctly.");
+
+            return newString;
         }
 
     }

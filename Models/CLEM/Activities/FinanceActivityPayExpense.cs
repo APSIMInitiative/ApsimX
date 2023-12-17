@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
@@ -77,6 +75,19 @@ namespace Models.CLEM.Activities
                 }
             };
             return resourcesNeeded;
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            if(ResourceRequestList.Any())
+            {
+                var finRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)).FirstOrDefault<ResourceRequest>();
+                if (finRequest != null)
+                {
+                    SetStatusSuccessOrPartial(finRequest.Provided != finRequest.Required);
+                }
+            }
         }
 
         #region descriptive summary

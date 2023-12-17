@@ -1,12 +1,13 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using APSIM.Shared.JobRunning;
+using Models.Storage;
+using static Models.Core.Overrides;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation
@@ -119,10 +120,13 @@
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
-            // Do nothing.
-            SimulationToRun.Cleanup();
+            SimulationToRun.Cleanup(cancelToken);
+            // If the user has aborted the run, let the DataStoreWriter knows that it
+            // needs to shut down as well.
+            if (cancelToken.IsCancellationRequested)
+                Storage?.Writer.Cancel();
         }
 
         /// <summary>Run the simulation.</summary>

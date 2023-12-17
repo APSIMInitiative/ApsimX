@@ -13,7 +13,9 @@
         Home,
         End,
         Return,
-        Delete
+        Delete,
+        Tab,
+        Period
     }
 
     public class SheetEventKey

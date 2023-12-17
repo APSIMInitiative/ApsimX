@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using Newtonsoft.Json;
-using System.IO;
-using Models.Soils;
-using Models.Functions;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
     /// This phase goes from a start stage to an end stage and assumes
-    /// germination will be reached on the day after sowing or the first day 
+    /// germination will be reached on the day after sowing or the first day
     /// thereafter when the extractable soil water at sowing depth is greater than zero."
     /// </summary>
     [Serializable]
@@ -39,7 +37,7 @@ namespace Models.PMF.Phen
         private Phenology phenology = null;
 
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
@@ -62,6 +60,10 @@ namespace Models.PMF.Phen
         [Description("End")]
         public string End { get; set; }
 
+        /// <summary>Is the phase emerged from the ground?</summary>
+        [Description("Is the phase emerged?")]
+        public bool IsEmerged { get; set; } = false;
+
         /// <summary>Fraction of phase that is complete (0-1).</summary>
         [JsonIgnore]
         public double FractionComplete { get { return 0.999; } }
@@ -83,7 +85,7 @@ namespace Models.PMF.Phen
 
             if (GerminationDate != null)
             {
-                if (DateUtilities.DatesEqual(GerminationDate, clock.Today))
+                if (DateUtilities.DayMonthIsEqual(GerminationDate, clock.Today))
                 {
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }

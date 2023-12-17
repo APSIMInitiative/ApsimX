@@ -1,11 +1,9 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Newtonsoft.Json;
-using System;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Models.PMF
 {
@@ -79,7 +77,7 @@ namespace Models.PMF
                 BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
                 // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
             }
-            
+
             // todo - what if root demand exceeds supply?
             double rootAllocation = BAT.SupplyDemandRatioN * BAT.StructuralDemand[rootIndex];
             rootAllocation = Math.Min(rootAllocation, NotAllocated);
@@ -118,7 +116,7 @@ namespace Models.PMF
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
             AllocateMetabolic(stemIndex, stemAlloc, BAT);
 
-            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated, 0.0001))
+            if (!MathUtilities.FloatsAreEqual(leafAlloc + rachisAlloc + stemAlloc, NotAllocated, 0.0001))
             {
                 //this is to check that nDemand is equal to old sorghum N demand calc
                 throw new Exception("Proportional allocation of Metabolic N doesn't balance");

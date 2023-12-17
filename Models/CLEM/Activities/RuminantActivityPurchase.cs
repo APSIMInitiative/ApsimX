@@ -1,11 +1,9 @@
 using Models.Core;
-using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
@@ -148,7 +146,7 @@ namespace Models.CLEM.Activities
                 numberToDo = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {

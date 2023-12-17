@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace Models.CLEM.Interfaces
 {
@@ -20,7 +17,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Indicates if the activity supports partial resources actions
         /// </summary>
-        public bool AllowsPartialResourcesAvailable { get;}
+        public bool AllowsPartialResourcesAvailable { get; }
 
         /// <summary>
         /// Current status of this activity component

@@ -1,7 +1,7 @@
+using System;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
-using System;
 using Newtonsoft.Json;
 
 namespace Models.PMF
@@ -202,6 +202,20 @@ namespace Models.PMF
             _StorageN = from.StorageN;
             _MetabolicN = from.MetabolicN;
         }
+
+        /// <summary>Initializes a new instance of the <see cref="Biomass"/> class from the OrganNutrientState passed in</summary>
+        /// <param name="ons">ons.</param>
+        public Biomass(OrganNutrientsState ons)
+        {
+            StructuralWt = ons.Weight.Structural;
+            MetabolicWt = ons.Weight.Metabolic;
+            StorageWt = ons.Weight.Storage;
+            StructuralN = ons.Nitrogen.Structural;
+            MetabolicN = ons.Nitrogen.Metabolic;
+            StorageN = ons.Nitrogen.Storage;
+        }
+
+
 
         /// <summary>Clears this instance.</summary>
         virtual public void Clear()

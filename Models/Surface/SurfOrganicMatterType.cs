@@ -1,7 +1,9 @@
-﻿namespace Models.Surface
+﻿using System;
+using Models.Core;
+using Models.Interfaces;
+
+namespace Models.Surface
 {
-    using Models.Interfaces;
-    using System;
 
     /// <summary>
     /// 
@@ -64,8 +66,11 @@
     /// <summary>
     /// Class that holds Icanopy interface members
     /// </summary>
-    public class ResidueCanopy: ICanopy
+    public class ResidueCanopy : ICanopy
     {
+        /// <summary>Canopy type identifier.</summary>
+        public string CanopyType { get; set; } = "Residue";
+
         /// <summary>Albedo.</summary>
         public double Albedo { get; set; }
 
@@ -101,6 +106,10 @@
 
         /// <summary>Sets the actual water demand.</summary>
         public double WaterDemand { get; set; }
+
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
 
         /// <summary>Sets the light profile.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }

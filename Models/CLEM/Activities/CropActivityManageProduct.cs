@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private Clock clock = null;
+        private IClock clock = null;
         [Link]
         private Simulation simulation = null;
         [Link]
@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
         public double PlantedMultiplier { get; set; }
 
         /// <summary>
-        /// Number of Trees per Hectare 
+        /// Number of Trees per Hectare
         /// </summary>
         [Description("Number of Trees (perHa) [0 if not a tree crop]")]
         [Required]
@@ -182,8 +182,10 @@ namespace Models.CLEM.Activities
                         measures: new List<string>() {
                             "fixed",
                             "per kg harvested",
-                            "per ha",
-                            "per ha harvested",
+                            "per land unit of crop",
+                            "per hectare of crop",
+                            "per land unit harvested",
+                            "per hectare harvested",
                         }
                         );
                 default:
@@ -218,7 +220,7 @@ namespace Models.CLEM.Activities
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
             parentManagementActivity = FindAncestor<CropActivityManageCrop>();
 
-            // Retrieve harvest data from the forage file for the entire run. 
+            // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
                                                                clock.StartDate, clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
@@ -276,7 +278,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStepDoRotations(object sender, EventArgs e)
         {
             // rotate harvest if needed
-            if (rotationReady) 
+            if (rotationReady)
             {
                 parentManagementActivity.RotateCrop();
             }
@@ -291,7 +293,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             harvests.current = null;
-            rotationReady = false;  
+            rotationReady = false;
             harvestOffset = (null, null, null, null);
             if (harvests.first == null)
             {
@@ -407,8 +409,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate ecological indicators. 
-        /// By summing the monthly stocking rates so when you do yearly ecological calculation 
+        /// Function to calculate ecological indicators.
+        /// By summing the monthly stocking rates so when you do yearly ecological calculation
         /// you can get average monthly stocking rate for the whole year.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -423,7 +425,7 @@ namespace Models.CLEM.Activities
             {
                 double area = (Parent as CropActivityManageCrop).Area * UnitsToHaConverter * 0.01;
 
-                // add this months stocking rate to running total 
+                // add this months stocking rate to running total
                 stockingRateSummed += PastureActivityManage.CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), StoreItemName, area);
 
                 //If it is time to do yearly calculation
@@ -463,24 +465,33 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
                         valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
-                    case "per ha":
+                    case "per kg harvested":
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                        break;
+                    case "per land unit of crop":
                         valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
-                    case "per ha harvested":
+                    case "per hectare of crop":
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area * UnitsToHaConverter;
+                        break;
+                    case "per land unit harvested":
                         if (amountToDo > 0)
                             valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         else
                             valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
-                    case "per kg harvested":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
+                    case "per hectare harvested":
+                        if (amountToDo > 0)
+                            valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area * UnitsToHaConverter;
+                        else
+                            valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -636,7 +647,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write($"\r\n<div class=\"activityentry\">Data is retrieved from {CLEMModel.DisplaySummaryValueSnippet(ModelNameFileCrop, "Resource not set", HTMLSummaryStyle.FileReader)}");
                 htmlWriter.Write($" using crop named {CLEMModel.DisplaySummaryValueSnippet(CropName)}");
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 

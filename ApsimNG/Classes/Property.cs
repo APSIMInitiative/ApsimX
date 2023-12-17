@@ -1,18 +1,18 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Extensions.Collections;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.LifeCycle;
+using Models.PMF;
+using Models.Storage;
+using Models.Surface;
 namespace UserInterface.Classes
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.Extensions.Collections;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.LifeCycle;
-    using Models.Storage;
-    using Models.Surface;
-
     public enum PropertyType
     {
         SingleLineText,
@@ -26,63 +26,6 @@ namespace UserInterface.Classes
         //Directories,
         Font,
         Numeric
-    }
-
-    /// <summary>
-    /// Represents all properties of an object, as they are to be displayed
-    /// in the UI for editing.
-    /// </summary>
-    public class PropertyGroup
-    {
-        /// <summary>
-        /// Name of the property group.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Properties belonging to the model.
-        /// </summary>
-        public IEnumerable<Property> Properties { get; private set; }
-
-        /// <summary>
-        /// Properties belonging to properties of the model marked with
-        /// DisplayType.SubModel.
-        /// </summary>
-        public IEnumerable<PropertyGroup> SubModelProperties { get; private set; }
-
-        /// <summary>
-        /// Constructs a property group.
-        /// </summary>
-        /// <param name="name">Name of the property group.</param>
-        /// <param name="properties">Properties belonging to the model.</param>
-        /// <param name="subProperties">Property properties.</param>
-        public PropertyGroup(string name, IEnumerable<Property> properties, IEnumerable<PropertyGroup> subProperties)
-        {
-            Name = name;
-            Properties = properties;
-            SubModelProperties = subProperties ?? new PropertyGroup[0];
-        }
-
-        /// <summary>
-        /// Returns the total number of properties in this property group and sub property groups.
-        /// </summary>
-        public int Count()
-        {
-            return Properties.Count() + SubModelProperties?.Sum(p => p.Count()) ?? 0;
-        }
-
-        public Property Find(Guid id)
-        {
-            return GetAllProperties().FirstOrDefault(p => p.ID == id);
-        }
-
-        public IEnumerable<Property> GetAllProperties()
-        {
-            foreach (Property property in Properties)
-                yield return property;
-            foreach (Property property in SubModelProperties.SelectMany(g => g.GetAllProperties()))
-                yield return property;
-        }
     }
 
     /// <summary>
@@ -288,7 +231,6 @@ namespace UserInterface.Classes
                                                .Where(m => metadata.PropertyType.IsAssignableFrom(m.GetType()))
                                                .Select(m => m.Name)
                                                .ToArray();
-
                     }
                     else if (metadata.PropertyType == typeof(bool))
                         DisplayMethod = PropertyType.Checkbox;
@@ -334,6 +276,14 @@ namespace UserInterface.Classes
                         plant = model.FindInScope<IPlant>();
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    else
+                        DropDownOptions = new string[] { };
+                    break;
+                case DisplayType.SCRUMcropName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Zone zoney = model.FindInScope<Zone>();
+                    if (zoney != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetSCRUMcropNames(zoney);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;
@@ -352,6 +302,18 @@ namespace UserInterface.Classes
                     Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                         DropDownOptions = PropertyPresenterHelpers.GetLifeCycleNames(zone);
+                    break;
+                case DisplayType.CropStageName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Plant planty = model.FindInScope<Plant>();
+                    if (planty != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCropStageNames(planty);
+                    break;
+                case DisplayType.CropPhaseName:
+                    DisplayMethod = PropertyType.DropDown;
+                    Plant plantyy = model.FindInScope<Plant>();
+                    if (plantyy != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCropPhaseNames(plantyy);
                     break;
                 case DisplayType.LifePhaseName:
                     DisplayMethod = PropertyType.DropDown;
@@ -397,6 +359,15 @@ namespace UserInterface.Classes
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
                     break;
+                case DisplayType.ScrumEstablishStages:
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[3] { "Seed", "Emergence", "Seedling" };
+                    break;
+                case DisplayType.ScrumHarvestStages: 
+                    DisplayMethod = PropertyType.DropDown;
+                    DropDownOptions = new string[6] { "Vegetative", "EarlyReproductive", "MidReproductive", "LateReproductive", "Maturity", "Ripe" };
+                    break;
+
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
                 default:

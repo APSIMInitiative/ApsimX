@@ -1,19 +1,15 @@
-﻿using System.IO;
-using System.Xml;
-using Models.Core;
+﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core.ApsimFile;
+using Models.Core.Interfaces;
+using Models.Core.Run;
+using Models.Storage;
 using Newtonsoft.Json;
 using System;
-using System.Reflection;
 using System.Collections.Generic;
-using Models.Factorial;
-using APSIM.Shared.Utilities;
+using System.IO;
 using System.Linq;
-using Models.Core.Interfaces;
-using Models.Storage;
-using Newtonsoft.Json.Serialization;
-using Models.Core.ApsimFile;
-using Models.Core.Run;
-using APSIM.Shared.Documentation;
+using System.Reflection;
 
 namespace Models.Core
 {
@@ -28,10 +24,6 @@ namespace Models.Core
     {
         [NonSerialized]
         private Links links;
-
-        /// <summary>Gets or sets the width of the explorer.</summary>
-        /// <value>The width of the explorer.</value>
-        public Int32 ExplorerWidth { get; set; }
 
         /// <summary>Gets or sets the version.</summary>
         [System.Xml.Serialization.XmlAttribute("Version")]
@@ -154,7 +146,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false).NewModel as Simulations;
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -173,6 +165,34 @@ namespace Models.Core
             File.Move(tempFileName, FileName);
             this.FileName = FileName;
             SetFileNameInAllSimulations();
+        }
+
+        /// <summary>Write the specified simulation set to the specified directory path.</summary>
+        /// <param name="currentFileName">FileName property of the simulation set.</param>
+        /// <param name="savePath">The location where the simulation should be saved.</param>
+        public void Write(string currentFileName, string savePath) // TODO: needs testing in conjunction with Main.cs --apply switch.
+        {
+            try
+            {
+                string tempFileName = Path.GetTempFileName();
+                File.WriteAllText(tempFileName, FileFormat.WriteToString(this));
+
+                // If we get this far without an exception then copy the tempfilename over our filename,
+                // creating a backup (.bak) in the process.
+                string bakFileName = currentFileName + ".bak";
+                File.Delete(bakFileName);
+                if (File.Exists(currentFileName))
+                    File.Move(currentFileName, bakFileName);
+                File.Move(tempFileName, currentFileName);
+                File.Move(currentFileName, savePath, true);
+                this.FileName = savePath;
+                SetFileNameInAllSimulations();
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An error occured trying to save a simulation to {savePath}. {e}");
+            }
+
         }
 
         /// <summary>Look through all models. For each simulation found set the filename.</summary>
@@ -199,7 +219,7 @@ namespace Models.Core
         {
             links = null;
         }
-        
+
         /// <summary>
         /// Gets the services objects.
         /// </summary>
@@ -243,7 +263,7 @@ namespace Models.Core
             foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
-            
+
             return fileNames;
         }
 
@@ -304,7 +324,7 @@ namespace Models.Core
                     Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
-                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
+                    AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren: true);
 
                     // Unresolve links.
                     Links.Unresolve(clonedSimulation, true);

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Models.Core;
 using Models.Interfaces;
 using Models.Soils;

@@ -1,12 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 namespace APSIM.Shared.Utilities
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Globalization;
-    using System.Linq;
-
     /// <summary>
     /// Various math utilities.
     /// </summary>
@@ -194,9 +192,12 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
-        public static double Divide(double value1, double value2, double errVal, double tol = tolerance)
+        public static double Divide(double value1, double value2, double errVal)
         {
-            return MathUtilities.FloatsAreEqual(value2, 0.0, tol) ? errVal : value1 / value2;
+            double returnValue = value1 / value2;
+            if (double.IsInfinity(returnValue) || double.IsNaN(returnValue))
+                return errVal;
+            return returnValue;
         }
 
         /// <summary>
@@ -220,13 +221,13 @@ namespace APSIM.Shared.Utilities
         /// Perform a stepwise addition of the values in value 1 with the values in value2.
         /// Returns an array of the same size as value 1 and value 2
         /// </summary>
-        public static double[] Add(double[] value1, double[] value2)
+        public static double[] Add(IReadOnlyList<double> value1, IReadOnlyList<double> value2)
         {
             double[] results = null;
-            if (value1.Length == value2.Length)
+            if (value1.Count == value2.Count)
             {
-                results = new double[value1.Length];
-                for (int iIndex = 0; iIndex < value1.Length; iIndex++)
+                results = new double[value1.Count];
+                for (int iIndex = 0; iIndex < value1.Count; iIndex++)
                 {
                     if (value1[iIndex] == MissingValue || value2[iIndex] == MissingValue)
                         results[iIndex] = MissingValue;
@@ -320,6 +321,8 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Average(IEnumerable Values)
         {
+            if (Values == null)
+                return 0;
             double Sum = 0.0;
             int Count = 0;
             foreach (object Value in Values)
@@ -481,6 +484,48 @@ namespace APSIM.Shared.Utilities
             double Multiplier = System.Math.Pow(10.0, NumDecPlaces);  // gives 1 or 10 or 100 for decplaces=0, 1, or 2 etc
             Value = System.Math.Truncate(Value * Multiplier + 0.5);
             return Value / Multiplier;
+        }
+
+        /// <summary>
+        /// Round the specified number to the specified number of decimal places.
+        /// This allows numbers less than 1 to be rounded to the nearest sig fig.
+        /// Uses Demical to maintain correctness.
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="NumDecPlaces"></param>
+        /// <returns></returns>
+        static public double RoundSignificant(double Value, int NumDecPlaces)
+        {
+            if (Value == 0) 
+                return 0;
+
+            Decimal v = (Decimal)Value;
+            bool isNegative = false;
+            if (Value < 0)
+            {
+                isNegative = true;
+                v = Math.Abs(v);
+            }
+
+            int count = 0;
+            while(v < 1)
+            {
+                v = v * 10;
+                count += 1;
+            }
+
+            v = Decimal.Round(v, NumDecPlaces);
+
+            while (count > 0)
+            {
+                v = v * (Decimal)0.1;
+                count -= 1;
+            }
+
+            if (isNegative)
+                return -(double)v;
+            else
+                return (double)v;
         }
 
         /// <summary>

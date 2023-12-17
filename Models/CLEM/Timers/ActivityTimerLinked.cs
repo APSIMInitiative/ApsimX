@@ -48,6 +48,9 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -61,7 +64,7 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                return linkedTimer?.ActivityDue??false;
+                return linkedTimer?.ActivityDue ?? false;
             }
         }
 
@@ -109,7 +112,7 @@ namespace Models.CLEM.Timers
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString:"No timer selected")}");
+                htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
@@ -149,8 +152,8 @@ namespace Models.CLEM.Timers
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-        
-            if(linkedTimer is null)
+
+            if (linkedTimer is null)
             {
                 string[] memberNames = new string[] { "Linked timer" };
                 string errorMsg = string.Empty;

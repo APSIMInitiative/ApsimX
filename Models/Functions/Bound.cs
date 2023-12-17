@@ -1,10 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -32,7 +30,7 @@ namespace Models.Functions
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
             foreach (IFunction child in ChildFunctions)
                 if (child != Lower && child != Upper)
-                    return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)),Lower.Value(arrayIndex));
+                    return Math.Max(Math.Min(Upper.Value(arrayIndex), child.Value(arrayIndex)), Lower.Value(arrayIndex));
             throw new Exception("Cannot find function value to apply in bound");
         }
         /// <summary>

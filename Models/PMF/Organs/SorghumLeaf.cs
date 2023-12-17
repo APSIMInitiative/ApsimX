@@ -1,17 +1,17 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
-using Models.PMF.Struct;
-using Newtonsoft.Json;
 using Models.PMF.Phen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Documentation;
+using Models.PMF.Struct;
 using Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Organs
 {
@@ -22,11 +22,11 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage, ICanopy
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage, ICanopy, IHasDamageableBiomass
     {
         /// <summary>The plant</summary>
         [Link]
-        private Plant plant = null; 
+        private Plant plant = null;
 
         [Link]
         private ISummary summary = null;
@@ -41,7 +41,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Phenology</summary>
         [Link]
-        public Phenology phenology = null; 
+        public Phenology phenology = null;
 
         /// <summary>The met data</summary>
         [Link]
@@ -106,12 +106,12 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private NutrientPoolFunctions dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private NutrientPoolFunctions nDemands = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction numberOfLeaves = null;
@@ -147,6 +147,16 @@ namespace Models.PMF.Organs
             Dead = new Biomass();
         }
 
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false);
+            }
+        }
+
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
@@ -155,12 +165,24 @@ namespace Models.PMF.Organs
         public int TilleringMethod { get; set; }
 
         /// <summary>Determined by the tillering method chosen.</summary>
-        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user at sowing.</summary>
+        [JsonIgnore]
         [Description("Fertile Tiller Number")]
-        public double FertileTillerNumber => culms.FertileTillerNumber;
+        public double FertileTillerNumber
+        {
+            get => culms.FertileTillerNumber;
+            set
+            {
+                //the preferred method for setting FertileTillerNumber is during the sowing event
+                //this is here to enable access by external processes immediately following sowing
+                //setting it after sowing will produce unexpected results
+                culms.FertileTillerNumber = value;
+            }
+        }
 
         /// <summary>Determined by the tillering method chosen.</summary>
         /// <summary>If TilleringMethod == FixedTillering then this value needs to be set by the user.</summary>
+        [JsonIgnore]
         [Description("Current Tiller Number")]
         public double CurrentTillerNumber => culms.CurrentTillerNumber;
 
@@ -256,6 +278,9 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>The fraction of total radiatin over all zones intercepted by this canopy</summary>
+        [Units("0-1")]
+        public double fRadnAllZones { get; set; }
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
@@ -303,7 +328,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cover total.</summary>
         [JsonIgnore]
         [Units("0-1")]
-        public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead); 
+        public double CoverTotal => 1.0 - (1 - CoverGreen) * (1 - CoverDead);
 
         /// <summary>Gets or sets the height.</summary>
         [Units("mm")]
@@ -445,7 +470,7 @@ namespace Models.PMF.Organs
         public double NFixationCost => 0; //called from arbitrator
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
-        public BiomassPoolType DMPotentialAllocation => potentialDMAllocation; 
+        public BiomassPoolType DMPotentialAllocation => potentialDMAllocation;
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
@@ -584,7 +609,7 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            if(UseMicroClimate) return WaterDemand;
+            if (UseMicroClimate) return WaterDemand;
 
             if (waterDemandFunction != null)
                 return waterDemandFunction.Value();
@@ -597,7 +622,7 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
             {
-                if(leafInitialised)
+                if (leafInitialised)
                 {
                     //areaActual in old model
                     // culms.AreaActual() will update this.DltLAI
@@ -607,12 +632,23 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            return biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Harvest the organ.</summary>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double Harvest()
+        {
+            return RemoveBiomass(biomassRemovalModel.HarvestFractionLiveToRemove, biomassRemovalModel.HarvestFractionDeadToRemove,
+                                 biomassRemovalModel.HarvestFractionLiveToResidue, biomassRemovalModel.HarvestFractionDeadToResidue);
         }
 
         /// <summary>Sets the dry matter allocation.</summary>
@@ -709,7 +745,7 @@ namespace Models.PMF.Organs
             double slnToday = calcSLN(laiToday, nGreenToday);
 
             double nProvided = 0.0;
-            
+
             if (phenology.Between("Germination", "Flowering"))
             {
                 var targetForDilution = requiredN / 3.0;
@@ -774,7 +810,7 @@ namespace Models.PMF.Organs
             double nProvided = Math.Min(newLeafN, requiredN);
 
             DltLAI = (newLeafN - nProvided) / NewLeafSLN;
-            return nProvided; 
+            return nProvided;
 
             // should we update the StructuralDemand?
             //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
@@ -899,7 +935,7 @@ namespace Models.PMF.Organs
             var leafWt = StartLive.Wt + potentialDMAllocation.Total;
             var leafWtAvail = leafWt - minPlantWt.Value() * SowingDensity;
 
-            double availableDM = Math.Max(0.0,  leafWtAvail);
+            double availableDM = Math.Max(0.0, leafWtAvail);
 
             // Don't retranslocate more DM than we have available.
             availableDM = Math.Min(availableDM, StartLive.Wt);
@@ -988,7 +1024,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
-                
+
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
                 LAI = InitialLAI * SowingDensity.ConvertSqM2SqMM();
@@ -997,6 +1033,8 @@ namespace Models.PMF.Organs
                 Live.StructuralN = LAI * SLN;
                 Live.StorageN = 0;
             }
+            summary.WriteMessage(this, phaseChange.StageName, MessageType.Diagnostic);
+            summary.WriteMessage(this, $"LAI = {LAI:f2} (m^2/m^2)", MessageType.Diagnostic);
         }
 
         /// <summary>Called when crop is being sown</summary>
@@ -1008,15 +1046,15 @@ namespace Models.PMF.Organs
             if (sowingData.Plant != plant) throw new Exception("Not the sowing event for this plant??");
 
             if (sowingData.SkipRow < 0 || sowingData.SkipRow > 2)
-            throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
+                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
 
             //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
             var outerSkips = sowingData.SkipRow > 0 ? 2 : 0;
             var nonSkipCover = Math.Min(sowingData.RowSpacing, CanopyWidth) * 2.0;
-            
+
             //outerSkipCovered is > 0 only if canopy width is wider than rowSpacing
             var outerSkipCovered = Math.Max(0, (CanopyWidth - sowingData.RowSpacing) / 2) * outerSkips;
-            
+
             var totalWidth = sowingData.RowSpacing * 2 + sowingData.RowSpacing * sowingData.SkipRow;
             var totalCover = nonSkipCover + outerSkipCovered;
 
@@ -1100,8 +1138,8 @@ namespace Models.PMF.Organs
         private void setDMSupply(object sender, EventArgs e)
         {
             //Reallocation usually comes form Storage - which sorghum doesn't utilise
-            DMSupply.Reallocation = 0.0; //availableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.ReAllocation = 0.0; //availableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = dMSupplyFixation.Value();
         }
@@ -1111,19 +1149,19 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             UpdateArea(); //must be calculated before potential N partitioning
-            
+
             var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = CalcLAI();
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
-            var dilutionN = dltTT.Value() * ( NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
+            var dilutionN = dltTT.Value() * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
 
-            NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
+            NSupply.ReTranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
             //NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
-            if (NSupply.Retranslocation < -biomassToleranceValue)
+            if (NSupply.ReTranslocation < -biomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Fixation = 0;

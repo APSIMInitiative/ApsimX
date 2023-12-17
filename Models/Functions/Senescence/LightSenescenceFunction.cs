@@ -1,15 +1,11 @@
- using System;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-using Models.Core;
-using System.Linq;
-using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
-using Models.PMF.Organs;
-using Models.PMF;
-using Models.Interfaces;
 using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.PMF;
+using Models.PMF.Organs;
 
 namespace Models.Functions
 {
@@ -101,7 +97,7 @@ namespace Models.Functions
             }
             return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
         }
-        
+
         /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
@@ -115,5 +111,4 @@ namespace Models.Functions
     }
 
 }
- 
- 
+

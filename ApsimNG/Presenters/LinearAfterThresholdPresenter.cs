@@ -95,8 +95,8 @@
 
             view.Graph.Clear();
             view.Graph.DrawLineAndMarkers("", x, y, null, null, null, null, AxisPosition.Bottom, AxisPosition.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThickness.Normal, MarkerSize.Normal, 1, true);
-            view.Graph.FormatAxis(AxisPosition.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false);
-            view.Graph.FormatAxis(AxisPosition.Left, "y", false, double.NaN, double.NaN, double.NaN, false);
+            view.Graph.FormatAxis(AxisPosition.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false, false);
+            view.Graph.FormatAxis(AxisPosition.Left, "y", false, double.NaN, double.NaN, double.NaN, false, false);
             view.Graph.FontSize = 10;
             view.Graph.Refresh();
         }

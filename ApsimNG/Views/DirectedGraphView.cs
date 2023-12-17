@@ -161,7 +161,7 @@
         }
 
         /// <summary>Export the view to the image</summary>
-        public System.Drawing.Image Export()
+        public Gdk.Pixbuf Export()
         {
 
             var window = new OffscreenWindow();
@@ -178,15 +178,7 @@
             window.ShowAll();
             while (GLib.MainContext.Iteration());
 
-            Gdk.Pixbuf screenshot = window.Pixbuf;
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            window.Dispose();
-            using (MemoryStream stream = new MemoryStream(buffer))
-            {
-                System.Drawing.Bitmap bitmap = new Bitmap(stream);
-                return bitmap;
-            }
-
+            return window.Pixbuf;
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>

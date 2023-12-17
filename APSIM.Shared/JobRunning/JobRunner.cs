@@ -1,12 +1,11 @@
-﻿namespace APSIM.Shared.JobRunning
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.Immutable;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace APSIM.Shared.JobRunning
+{
     /// <summary>
     /// The class encapsulates the ability to run multiple collections of IRunnable jobs.
     /// Multiple JobManager instances can be added, each managing a collection of jobs.
@@ -89,7 +88,7 @@
         public void Run(bool wait = false)
         {
             startTime = DateTime.Now;
-            cancelToken = new CancellationTokenSource();
+                cancelToken = new CancellationTokenSource();
             completed = false;
 
             if (numberOfProcessors == 1 && wait)
@@ -110,6 +109,8 @@
             if (numberJobsRunning > 0)
             {
                 cancelToken.Cancel();
+                foreach (var sim in SimsRunning)
+                    sim.Cleanup(cancelToken);
                 SpinWait.SpinUntil(() => numberJobsRunning == 0);
             }
         }
@@ -125,7 +126,7 @@
                     foreach (var (job, jobManager) in GetJobs())
                     {
                         if (cancelToken.IsCancellationRequested)
-                            return;
+                            break;
 
                         // Wait until we have a spare processor to run a job.
                         if (multiThreaded)
@@ -196,7 +197,8 @@
                 if (!(job is JobRunnerSleepJob))
                 {
                     // Signal to JobManager the job has finished.
-                    InvokeJobCompleted(job, jobManager, startTime, error);
+                    if (jobManager.NotifyWhenJobComplete)
+                        InvokeJobCompleted(job, jobManager, startTime, error);
 
                     lock (runningLock)
                     {
@@ -227,7 +229,7 @@
         /// Cleanup a job.
         /// </summary>
         /// <param name="job">The job to be cleaned up.</param>
-        protected virtual void Cleanup(IRunnable job) => job.Cleanup();
+        protected virtual void Cleanup(IRunnable job) => job.Cleanup(cancelToken);
 
         /// <summary>
         /// Invoke the job completed event.

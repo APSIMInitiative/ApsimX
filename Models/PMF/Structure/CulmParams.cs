@@ -1,7 +1,5 @@
-﻿using Models.Functions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using Models.Functions;
 
 namespace Models.PMF.Struct
 {

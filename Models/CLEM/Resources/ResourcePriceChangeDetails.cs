@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
     /// Event arguments for price change to bubble details
     /// </summary>
     [Serializable]
-    public class PriceChangeEventArgs: EventArgs
+    public class PriceChangeEventArgs : EventArgs
     {
         /// <summary>
         /// Price change details

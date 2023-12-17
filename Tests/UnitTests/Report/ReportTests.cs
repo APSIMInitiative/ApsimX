@@ -23,7 +23,7 @@
     {
         private Simulations simulations;
         private Simulation simulation;
-        private Clock clock;
+        private IClock clock;
         private Report report;
         private MockStorage storage;
         private Runner runner;
@@ -90,7 +90,7 @@
 
         /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
-        /// 
+        ///
         /// </summary>
         [Test]
         public void TestMultipleChildren()
@@ -149,8 +149,8 @@
         [Test]
         public void TestAllStatsBetweenVariableDates()
         {
-            report.VariableNames = new string[] 
-            { 
+            report.VariableNames = new string[]
+            {
                 "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as sum",
                 "mean of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as mean",
                 "min of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as min",
@@ -395,7 +395,6 @@
             };
             var storage = new MockStorage();
             Utilities.InjectLink(report, "simulation", sim);
-            Utilities.InjectLink(report, "locator", new MockLocator());
             Utilities.InjectLink(report, "storage", storage);
             Utilities.InjectLink(report, "clock", new MockClock());
 
@@ -415,7 +414,7 @@
         /// <summary>
         /// Reports DayOfYear as doy in multiple reports. Each
         /// report has a different reporting frequency:
-        /// 
+        ///
         /// [Fertiliser].Fertilised
         /// [Irrigation].Irrigated
         /// </summary>
@@ -423,7 +422,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false).NewModel as Simulations;
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -441,12 +440,12 @@
             List<string> fieldNames = new List<string>() { "doy" };
 
             DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
-            double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 364 };
             Assert.AreEqual(expected, values);
 
             data = storage.Reader.GetData("ReportOnIrrigation", fieldNames: fieldNames);
-            values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            values = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             // There is one less irrigation event, as the manager script doesn't irrigate.
             expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 };
             Assert.AreEqual(expected, values);
@@ -454,7 +453,7 @@
 
         /// <summary>
         /// Ensures that comments work in event names:
-        /// 
+        ///
         /// Clock.Today.StartOfWeek // works normally
         /// // should be ignored
         /// //Clock.Today.EndOfWeek // entire line should be ignored
@@ -474,7 +473,7 @@
                 "//[Clock].EndOfWeek // entire line should be ignored"
             };
 
-            Clock clock = file.FindInScope<Clock>();
+            IClock clock = file.FindInScope<Clock>();
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
@@ -486,7 +485,7 @@
             List<string> fieldNames = new List<string>() { "doy" };
             IDataStore storage = file.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
-            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy", CultureInfo.InvariantCulture);
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
             Assert.AreEqual(expected, actual);
         }
@@ -542,10 +541,10 @@
             Assert.IsFalse(columnNames.Contains("MockModel.Z(2)"));
             Assert.IsTrue(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsTrue(columnNames.Contains("MockModel.Z(4)"));
-            
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)"),
+
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(4)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(4)", CultureInfo.InvariantCulture),
                             new double[] { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 });
         }
 
@@ -577,9 +576,9 @@
             Assert.IsTrue(columnNames.Contains("MockModel.Z(2)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(4)"));
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(1)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(1)", CultureInfo.InvariantCulture),
                             new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture),
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
         }
 
@@ -612,10 +611,10 @@
             Assert.IsTrue(columnNames.Contains("MockModel.Z(3)"));
             Assert.IsFalse(columnNames.Contains("MockModel.Z(4)"));
 
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(2)", CultureInfo.InvariantCulture),
                             new double[] { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 });
 
-            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)"),
+            Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)", CultureInfo.InvariantCulture),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
         }
 
@@ -669,7 +668,7 @@ namespace Models
             List<string> fieldNames = new List<string>() { "x" };
             IDataStore storage = sims.FindInScope<IDataStore>();
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
-            string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
+            string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x", CultureInfo.InvariantCulture);
 
             // The enum values should have been cast to strings before being reported.
             string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();
@@ -688,17 +687,17 @@ namespace Models
             var model = new MockModelValuesChangeDaily
                 (aDailyValues: new double[] { 1, 1, 1, 2, 2, 2, 3, 3, 3,  3 },
                  bDailyValues: new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
-            { 
+            {
                  Name = "Mock"
             };
 
             simulation.Children.Add(model);
             Utilities.InitialiseModel(simulation);
 
-            report.VariableNames = new string[] 
-            { 
+            report.VariableNames = new string[]
+            {
                 "[Clock].Today",
-                "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
+                "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA"
             };
 
             List<Exception> errors = runner.Run();

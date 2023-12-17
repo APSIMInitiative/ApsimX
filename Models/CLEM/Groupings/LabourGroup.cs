@@ -3,10 +3,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -58,16 +55,16 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (Parent.GetType() == typeof(LabourGroup))            
+            if (Parent.GetType() == typeof(LabourGroup))
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            
+
             html += "\r\n<div class=\"filterborder clearfix\">";
 
-            if (FindAllChildren<Filter>().Count() < 1)            
+            if (FindAllChildren<Filter>().Count() < 1)
                 html += "<div class=\"filter\">Any labour</div>";
-            
+
             return html;
-        } 
+        }
         #endregion
     }
 }

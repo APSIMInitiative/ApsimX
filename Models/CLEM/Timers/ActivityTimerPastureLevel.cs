@@ -3,11 +3,11 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.Timers
 {
@@ -29,6 +29,11 @@ namespace Models.CLEM.Timers
         [Link]
         private ResourcesHolder resources = null;
 
+        [Link] IClock clock = null;
+
+        double amountAtFirstCheck;
+        DateTime checkDate = DateTime.Now;
+
         /// <summary>
         /// Paddock or pasture to graze
         /// </summary>
@@ -36,6 +41,9 @@ namespace Models.CLEM.Timers
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(GrazeFoodStore) } })]
         public string GrazeFoodStoreTypeName { get; set; }
+
+        ///<inheritdoc/>
+        public string StatusMessage { get; set; }
 
         /// <summary>
         /// paddock or pasture to graze
@@ -54,7 +62,7 @@ namespace Models.CLEM.Timers
         /// Maximum pasture level
         /// </summary>
         [Description("Maximum pasture level (kg/ha) <")]
-        [Required, GreaterThan("MinimumPastureLevel", ErrorMessage ="Maximum pasture level must be greater than minimum pasture level")]
+        [Required, GreaterThan("MinimumPastureLevel", ErrorMessage = "Maximum pasture level must be greater than minimum pasture level")]
         public double MaximumPastureLevel { get; set; }
 
         /// <summary>
@@ -85,7 +93,13 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                return (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel);
+                if (clock.Today != checkDate)
+                {
+                    amountAtFirstCheck = GrazeFoodStoreModel.KilogramsPerHa;
+                    checkDate = clock.Today;
+                }
+
+                return (amountAtFirstCheck >= MinimumPastureLevel && amountAtFirstCheck < MaximumPastureLevel);
             }
         }
 
@@ -125,7 +139,7 @@ namespace Models.CLEM.Timers
                 htmlWriter.Write(" kg per hectare</div>");
                 if (!this.Enabled & !FormatForParentControl)
                     htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
 
@@ -145,9 +159,9 @@ namespace Models.CLEM.Timers
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
-        } 
+        }
         #endregion
 
     }

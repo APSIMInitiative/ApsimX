@@ -67,12 +67,12 @@ namespace Utility
             btnReplaceAll.Clicked -= BtnReplaceAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
-            Utility.GtkUtil.DetachAllHandlers(window1);
+            Utility.GtkUtilities.DetachAllHandlers(window1);
         }
 
         public void Destroy()
         {
-            Utility.GtkUtil.DetachAllHandlers(window1);
+            Utility.GtkUtilities.DetachAllHandlers(window1);
             window1.Destroy();
             window1.Dispose();
         }
@@ -200,9 +200,9 @@ namespace Utility
             bool wrapped;
             bool result = false;
             if (searchForward)
-                result = context.Forward(iter, ref start, ref end, out wrapped);
+                result = context.Forward(iter, out start, out end, out wrapped);
             else
-                result = context.Backward(iter, ref start, ref end, out wrapped);
+                result = context.Backward(iter, out start, out end, out wrapped);
             if (!result && messageIfNotFound != null)
                 ShowMsg(messageIfNotFound);
             else
@@ -241,9 +241,9 @@ namespace Utility
             bool result = false;
             bool searchForward = true;
             if (searchForward)
-                result = context.Forward(iter, ref start, ref end, out wrapped);
+                result = context.Forward(iter, out start, out end, out wrapped);
             else
-                result = context.Backward(iter, ref start, ref end, out wrapped);
+                result = context.Backward(iter, out start, out end, out wrapped);
             if (result)
             {
                 editor.ScrollToIter(start, 0.0, false, 0.0, 0.0);

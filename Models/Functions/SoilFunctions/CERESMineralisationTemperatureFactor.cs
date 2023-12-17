@@ -1,22 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
-    /// <summary>Fraction of NH4 which nitrifies today</summary>
-    /// \pre All children have to contain a public function "Value"
-    /// \retval fraction of NH4 nitrified.
+    /// <summary>Temperature function for soil processes except denitrification. Originally taken from CERES.
+    /// Functional form is (ST-BaseST)^2/(OptSt-BaseSt)^2</summary> 
+
     [Serializable]
-    [Description("Mineralisation Temperature Factor from CERES-Maize")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     public class CERESMineralisationTemperatureFactor : Model, IFunction
     {
+        private double[] tf;
 
         [Link]
-        ISoilTemperature soiltemperature = null;
+        readonly ISoilTemperature soiltemperature = null;
 
-   
+        /// <summary>
+        /// Base soil temperature for the temperature function in Nutrient. Default = 0.0 C.
+        /// </summary>
+        [Description("Soil temperature function base temperature (oC)")]
+        public double MineralisationSTBase { get; set; } = 0.0;
+
+        /// <summary>
+        /// Base soil temperature for the temperature function in Nutrient. Default = 32.0 C.
+        /// </summary>
+        [Description("Soil temperature function optimum (oC)")]
+        public double MineralisationSTOpt { get; set; } = 32.0;
+
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -24,14 +37,25 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES mineralisation temperature factor Model");
 
-            double TF = 0;
-            double ST = soiltemperature.Value[arrayIndex];
+            return tf[arrayIndex];
+        }
 
-            if (ST > 0)
-                TF = (ST * ST) / (32 * 32);
-            if (TF > 1) TF = 1;
+        /// <summary>Invoked when soil temperature changes.</summary>
+        /// <value>The value.</value>
+        [EventSubscribe("SoilTemperatureChanged")]
+        private void OnSoilTemperatureChanged(object sender, EventArgs e)
+        {
+            double[] temperature = soiltemperature.Value;
 
-            return TF;
+            if (tf == null)
+                tf = new double[temperature.Length];
+
+            for (int i = 0; i < temperature.Length; i++)
+            {
+                if (temperature[i] > MineralisationSTBase)
+                    tf[i] = Math.Pow(temperature[i] - MineralisationSTBase, 2) / Math.Pow(MineralisationSTOpt - MineralisationSTBase, 2);
+                if (tf[i] > 1) tf[i] = 1;
+            }
         }
     }
 }

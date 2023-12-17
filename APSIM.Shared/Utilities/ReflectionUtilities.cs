@@ -491,6 +491,15 @@
             if (dataType.IsEnum)
                 return Enum.Parse(dataType, newValue, true);
 
+            // Bools as ints - special case
+            if (dataType == typeof(int))
+            {
+                if (newValue.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+                if (newValue.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            }
+
             // Convert.ChangeType() doesn't seem to work properly on nullable types.
             Type underlyingType = Nullable.GetUnderlyingType(dataType);
             if (underlyingType != null)
@@ -723,6 +732,17 @@
                         return reader.ReadToEnd();
 
             return null;
+        }
+
+        /// <summary>
+        /// Get a string from a resource file stored in the current assembly.
+        /// Returns the string as a string array where each line is an element of the array.
+        /// </summary>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string[] GetResourceAsStringArray(string resourceName)
+        {
+            string fullString = GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+            return fullString.Split('\n'); ;
         }
 
         /// <summary>

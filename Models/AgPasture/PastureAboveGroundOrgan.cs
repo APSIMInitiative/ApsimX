@@ -1,17 +1,22 @@
-﻿namespace Models.AgPasture
+﻿using System;
+using System.Linq;
+using Models.Core;
+using Models.PMF;
+using Models.PMF.Interfaces;
+using APSIM.Shared.Utilities;
+using System.Collections.Generic;
+using Models.PMF.Organs;
+
+namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility
+    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
+        [Link(Type = LinkType.Ancestor)]
+        PastureSpecies species = null;
+
         /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
         public GenericTissue[] Tissue;
@@ -58,6 +63,16 @@
         internal const double Epsilon = 0.000000001;
 
         //----------------------- States -----------------------
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true, LiveDigestibility);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false, DeadDigestibility);
+            }
+        }
 
         /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
         public bool IsAboveGround { get { return true; } }
@@ -135,11 +150,11 @@
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0, Epsilon); } }
+        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0); } }
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0, Epsilon); } }
+        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
@@ -156,15 +171,15 @@
 
         /// <summary>Average total N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0, Epsilon); } }
+        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0, Epsilon); } }
+        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0, Epsilon); } }
+        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
         public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
@@ -214,7 +229,7 @@
             { 
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
-                                            DMTotal, 0.0, Epsilon);
+                                            DMTotal, 0.0);
             }
         }
 
@@ -225,7 +240,7 @@
             get
             {
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
-                                            DMLive, 0.0, Epsilon);
+                                            DMLive, 0.0);
             }
         }
 
@@ -239,6 +254,7 @@
 
         /// <summary>Fraction of dry matter removed (0-1).</summary>
         private double removedFraction = 0.0;
+
 
         //----------------------- Public methods -----------------------
 
@@ -274,8 +290,12 @@
         }
 
         /// <summary>Remove biomass from organ.</summary>
-        /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
-        public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             // The fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
@@ -283,17 +303,23 @@
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
-                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+                Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
             }
 
             // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+            Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
 
             // Calculate the fraction of DM removed from this organ
-            removedFraction = MathUtilities.Divide(Tissue.Sum(tissue => tissue.DMRemoved), previousDM, 0.0, Epsilon);
+            double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
+            removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0);
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();
+
+            // Update LAI and herbage digestibility
+            species.EvaluateLAI();
+            species.EvaluateDigestibility();
+            return removedDM;
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>

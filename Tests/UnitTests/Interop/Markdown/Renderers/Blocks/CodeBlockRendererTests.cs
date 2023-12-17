@@ -170,7 +170,7 @@ namespace UnitTests.Interop.Markdown.Renderers.Blocks
             {
                 IndentCount = 4,
                 FencedChar = '`',
-                FencedCharCount = 3,
+                OpeningFencedCharCount = 3,
                 Lines = new StringLineGroup(contents)
             };
         }
