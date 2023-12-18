@@ -1,18 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
-    using APSIM.Shared.JobRunning;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Commands;
-    using global::UserInterface.Hotkeys;
-    using Models.Core;
-    using Models.Core.Run;
-    using Utility;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using global::UserInterface.Commands;
+using global::UserInterface.Hotkeys;
+using Models.Core;
+using Models.Core.Run;
+using Models;
+using Utility;
 
+namespace UserInterface.Presenters
+{
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
     /// </summary>
@@ -221,6 +222,8 @@
             Simulations topLevel = currentNode as Simulations;
             if (topLevel != null)
                 return topLevel;
+            if (currentNode is Playlist)
+                return currentNode;
             return currentNode.FindAncestor<Simulations>();
         }
     }

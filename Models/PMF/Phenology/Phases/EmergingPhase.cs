@@ -1,12 +1,10 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
-using Models.Core;
-using Newtonsoft.Json;
-using Models.Functions;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
-using System.IO;
-using System.Text;
+using Models.Core;
+using Models.Functions;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
@@ -94,12 +92,13 @@ namespace Models.PMF.Phen
             {
                 Target = (DateUtilities.GetDate(EmergenceDate, clock.Today) - plant.SowingDate).TotalDays;
                 ProgressThroughPhase += 1;
-                if (DateUtilities.DatesEqual(EmergenceDate, clock.Today))
+                if (DateUtilities.DayMonthIsEqual(EmergenceDate, clock.Today))
                 {
                     proceedToNextPhase = true;
                 }
             }
-            else {
+            else
+            {
                 ProgressThroughPhase += TTForTimeStep;
                 if (ProgressThroughPhase > Target)
                 {

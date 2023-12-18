@@ -1,15 +1,11 @@
-﻿
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Functions;
+using Models.Interfaces;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using Models.Functions;
-    using Surface;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Implements the curve number reduction caused by tillage.
@@ -19,6 +15,7 @@ namespace Models.WaterModel
     /// and erosion.Aust.J.Soil Res. 34: 91-102.
     /// </summary>
     [Serializable]
+    [ValidParent(typeof(WaterBalance))]
     public class CNReductionForTillage : Model, IFunction
     {
         // --- Links -------------------------------------------------------------------------

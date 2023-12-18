@@ -1,13 +1,14 @@
-﻿namespace Models.Factorial
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using static Models.Core.Overrides;
+
+namespace Models.Factorial
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using static Models.Core.Overrides;
 
     /// <summary>
     /// This class represents a series of paths and the same number of object values.
@@ -113,8 +114,9 @@
             // If there are any child models which aren't being used as
             // a factor value (e.g. as a model replacement), throw an exception.
             IEnumerable<IModel> extraModels = Children.Except(values.OfType<IModel>());
-            if (extraModels.Any())
-                throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
+            foreach (var model in extraModels)
+                if (!(model is Memo))
+                    throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
         }
 
         /// <summary>

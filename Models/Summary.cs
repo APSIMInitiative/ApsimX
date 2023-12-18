@@ -5,15 +5,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Storage;
 using Models.Logging;
-using APSIM.Shared.Documentation.Extensions;
-
+using Models.Storage;
 
 namespace Models
-{ 
+{
+
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
     /// It also provides an API for writing messages to the DataStore.
@@ -21,7 +21,7 @@ namespace Models
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
-    [ValidParent(ParentType=typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Simulation))]
     public class Summary : Model, ISummary
     {
         [NonSerialized]
@@ -201,7 +201,7 @@ namespace Models
         #region Static summary report generation
 
         /// <summary>
-        /// Write a single sumary file for all simulations.
+        /// Write a single summary file for all simulations.
         /// </summary>
         /// <param name="storage">The storage where the summary data is stored</param>
         /// <param name="fileName">The file name to write</param>
@@ -210,9 +210,13 @@ namespace Models
         {
             using (StreamWriter report = new StreamWriter(fileName))
             {
-                foreach (string simulationName in storage.Reader.SimulationNames)
+                //get list of simulations in alphabetical order
+                List<string> names = storage.Reader.SimulationNames;
+                names.Sort();
+
+                foreach (string simulationName in names)
                 {
-                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme, true, true, true, true);
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme: darkTheme, true, true, true, true);
                     report.WriteLine();
                     report.WriteLine();
                     report.WriteLine("############################################################################");
@@ -339,7 +343,7 @@ namespace Models
             // Get the initial conditions table.
             if (showInitialConditions)
             {
-                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName:"_InitialConditions");
+                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName: "_InitialConditions");
                 if (initialConditionsTable != null)
                 {
                     // Convert the '_InitialConditions' table in the DataStore to a series of

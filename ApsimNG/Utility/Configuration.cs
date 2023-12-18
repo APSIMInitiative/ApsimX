@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Linq;
-using System.IO;
-using System.Drawing;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using Models.Core;
 
 namespace Utility
@@ -35,20 +33,31 @@ namespace Utility
         public int FilesInHistory { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
-        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        /// <remarks>Percentage 0-100</remarks>
         public int SplitScreenPosition { get; set; }
+
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Percentage 0-100</remarks>
+        public int TreeSplitScreenPosition { get; set; }
 
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 
         /// <summary>The previous height of the status panel</summary>
-        public int StatusPanelHeight { get; set; }
+        /// <remarks>Percentage 0-100</remarks>
+        public double StatusPanelHeight { get; set; }
 
         /// <summary>
         /// The position of the splitter between the variables
         /// and frequency text editors in the report UI.
         /// </summary>
-        public int ReportSplitterPosition { get; set; }
+        public double ReportSplitterPosition { get; set; }
+
+        /// <summary>
+        /// The position of the splitter between the variables/event text editors
+        /// and the common report/event ListViews.
+        /// </summary>
+        public double ReportSplitterVerticalPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
@@ -57,7 +66,7 @@ namespace Utility
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
         [Input("Autosave on run")]
         [Tooltip("Should the file be automatically saved to disk before running simulations?")]
-        public bool AutoSave { get; set;} = true;
+        public bool AutoSave { get; set; } = true;
 
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
         [Input("Mute all sound effects")]
@@ -274,7 +283,14 @@ namespace Utility
         /// <summary>Finalizes an instance of the <see cref="Configuration"/> class.</summary>
         ~Configuration()
         {
-            Save();
+            try
+            {
+                Save();
+            }
+            catch
+            {
+                // An uncaught exception could crash APSIM from the GC thread.
+            }
         }
 
         /// <summary>Gets the configuration settings.</summary>
@@ -345,7 +361,7 @@ namespace Utility
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
         }
-    
+
         /// <summary>
         /// This will be called whenever the 'dark mode' option is toggled.
         /// It will change the default editor style to something.

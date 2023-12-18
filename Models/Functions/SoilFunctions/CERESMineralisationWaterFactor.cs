@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using Models.Core;
 using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Soils;
-using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -54,7 +52,7 @@ namespace Models.Functions
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         [EventSubscribe("WaterChanged")]
-        public void OnWaterChanged(object sender, EventArgs e)
+        private void OnWaterChanged(object sender, EventArgs e)
         {
             double[] SW = water.Volumetric;
             double[] LL15 = physical.LL15;

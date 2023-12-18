@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 2, 0, "Implements event based activity control")]
     [Version(1, 1, 1, "Improved custom filtering of task individuals")]
     [Version(1, 1, 0, "Allow all tasks to be controlled and cleaned up logic")]
-    [Version(1, 0, 10, "Allows control order individuals are identified for removal and keeping")]
+    [Version(1, 0, 10, "Allows control of the order individuals are identified for removal and keeping")]
     [Version(1, 0, 9, "Allows details of breeders and sires for purchase to be specified")]
     [Version(1, 0, 8, "Reworking of rules to better allow small herd management")]
     [Version(1, 0, 7, "Added ability to turn on/off marking max age breeders and sires and age/weight males for sale and allow this action in other activities")]
@@ -52,6 +52,7 @@ namespace Models.CLEM.Activities
         private RuminantType breedParams;
         private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
         private double mortalityRate = 0;
+        private IEnumerable<Ruminant> selectHerdAvailable = null;
 
         private int numberMaleSiresInHerd = 0;
         private int numberMaleSiresInPurchases = 0;
@@ -560,6 +561,11 @@ namespace Models.CLEM.Activities
             minBreeders = (this.MinimumBreedersKept > this.MaximumBreedersKept) ? this.MaximumBreedersKept : this.MinimumBreedersKept;
             maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
 
+            if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
+                SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
+            else
+                SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
+
             if (AdjustBreedingMalesAtStartup | AdjustBreedingFemalesAtStartup)
             {
                 HerdResource = Resources.FindResourceGroup<RuminantHerd>();
@@ -637,10 +643,6 @@ namespace Models.CLEM.Activities
                             if(breederm.Any())
                             {
                                 double totalm = breederm.Sum(a => a.Number);
-                                if (MathUtilities.IsLessThan(MaximumSiresKept, 1) & MathUtilities.IsPositive(MaximumSiresKept))
-                                    SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * MaximumSiresKept), CultureInfo.InvariantCulture);
-                                else
-                                    SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
 
                                 if (SiresKept > 0 && MathUtilities.IsPositive(totalm))
                                 {
@@ -676,12 +678,17 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
+            if (FindAllChildren<RuminantActivityGroup>().Any())
+            {
+                selectHerdAvailable = new List<Ruminant>();
+            }
+
             // get the mortality rate for the herd if available or assume zero
             mortalityRate = breedParams.MortalityBase;
 
             // check GrazeFoodStoreExists for breeders
             grazeStoreBreeders = "";
-            if(GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
+            if((ManageFemaleBreederNumbers & PerformFemaleStocking) && GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
             {
                 grazeStoreBreeders = GrazeFoodStoreNameBreeders.Split('.').Last();
                 foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -689,15 +696,15 @@ namespace Models.CLEM.Activities
 
             var ah = this.FindInScope<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
-            if (grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
+            if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && grazeStoreBreeders == "" && this.MaximumProportionBreedersPerPurchase > 0)
             {
                 if(ah.FindAllDescendants<PastureActivityManage>().Any())
                     Summary.WriteMessage(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", MessageType.Warning);
             }
-
+            
             // check GrazeFoodStoreExists for sires
             grazeStoreSires = "";
-            if (GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
+            if ((ManageMaleBreederNumbers & PerformMaleStocking) && GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
             {
                 grazeStoreSires = GrazeFoodStoreNameSires.Split('.').Last();
                 foodStoreSires = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -754,6 +761,13 @@ namespace Models.CLEM.Activities
             excessBreeders = 0;
             sufficientFoodBreeders = true;
             sufficientFoodSires = true;
+
+            // if this activity has determined where is a RuminantFilterGroup apply the rules to define individuals available this time-step
+            // this allows a filter to determine what individuals are available to manage e.g. incomplete muster.
+            if (selectHerdAvailable != null)
+            {
+                selectHerdAvailable = GetIndividuals<Ruminant>();
+            }
 
             // calculate numbers for current herd
             if (ManageFemaleBreederNumbers | ManageMaleBreederNumbers)
@@ -841,7 +855,7 @@ namespace Models.CLEM.Activities
             }
 
             // provide updated measure for companion models
-            foreach (var valueToSupply in valuesForCompanionModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = -99999;
                 switch (valueToSupply.Key.identifier)
@@ -1023,8 +1037,6 @@ namespace Models.CLEM.Activities
 
             }
 
-            //maleBreedersRequired = 0;
-            //femaleBreedersRequired = 0;
             this.Status = ActivityStatus.NotNeeded;
 
             // select old females for sale
@@ -1191,7 +1203,7 @@ namespace Models.CLEM.Activities
                                     var newindividuals = cohort.CreateIndividuals(null, selectedPurchaseDetails[i].SpecifyRuminantComponent.BreedParams);
                                     foreach (var ind in newindividuals)
                                     {
-                                        ind.Location = grazeStoreBreeders;
+                                        ind.Location = grazeStoreSires;
                                         ind.SaleFlag = HerdChangeReason.SirePurchase;
                                         ind.ID = 0;
                                         ind.PurchaseAge = ind.Age;
@@ -1273,11 +1285,8 @@ namespace Models.CLEM.Activities
                             AddStatusMessage("Excess breeders");
                             Status = ActivityStatus.Warning;
                         }
-                        else
-                            this.Status = ActivityStatus.Success;
 
                         // excess breeders were found so there is no need for any replacement breeders to be flagged
-
                         foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemaleReplacementBreeders"))
                             foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.ReplacementBreeder)).ToList())
                             {
@@ -1312,7 +1321,7 @@ namespace Models.CLEM.Activities
                                 foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age >= a.BreedParams.MinimumAge1stMating) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired).ToList())
                                 {
                                     female.Attributes.Remove("GrowOut");
-                                    if (!female.IsBreeder)
+                                    if (!female.IsBreeder && !female.IsSterilised)
                                         female.ReplacementBreeder = true;
                                     female.Location = grazeStoreBreeders;
                                     femaleBreedersRequired--;
@@ -1424,7 +1433,7 @@ namespace Models.CLEM.Activities
                                     foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired- numberOfReplacements).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut");
-                                        if (!female.IsBreeder)
+                                        if (female.IsPreBreeder)
                                             female.ReplacementBreeder = true;
                                         female.Location = grazeStoreBreeders;
                                         numberOfReplacements++;
@@ -1455,7 +1464,7 @@ namespace Models.CLEM.Activities
                                         // keep by removing any tag for sale.
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
-                                        if (!(female as RuminantFemale).IsBreeder)
+                                        if (!female.IsBreeder)
                                             female.ReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
@@ -1468,7 +1477,7 @@ namespace Models.CLEM.Activities
                                         female.Attributes.Remove("GrowOut");
                                         female.SaleFlag = HerdChangeReason.None;
                                         female.Location = grazeStoreBreeders;
-                                        if (!(female as RuminantFemale).IsBreeder)
+                                        if (!female.IsBreeder)
                                             female.ReplacementBreeder = true;
                                         numberOfReplacements++;
                                     }
@@ -1497,8 +1506,6 @@ namespace Models.CLEM.Activities
                             AddStatusMessage("Breeder shortfall");
                             Status = ActivityStatus.Partial;
                         }
-                        else
-                            this.Status = ActivityStatus.Success;
 
                         // identify shortfall in 
 
@@ -1635,12 +1642,12 @@ namespace Models.CLEM.Activities
 
             if (purchaseDetails.Count() == 0)
             {
-                if (ManageMaleBreederNumbers && PerformMaleStocking && MaximumSiresPerPurchase > 0)
+                if ((ManageMaleBreederNumbers & PerformMaleStocking) && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
                     results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames));
                 }
-                if (ManageFemaleBreederNumbers && PerformFemaleStocking && MaximumProportionBreedersPerPurchase > 0)
+                if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
                     results.Add(new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
@@ -1648,7 +1655,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if (ManageMaleBreederNumbers)
+                if (ManageMaleBreederNumbers && PerformMaleStocking)
                 {
                     if(ValidateSires() is ValidationResult sires)
                         results.Add(sires);
@@ -1657,14 +1664,14 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires) is null)
                         {
-                            string[] memberNames = new string[] { "Location is not valid" };
+                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                             results.Add(new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                         }
                     }
 
                 }
 
-                if (ManageFemaleBreederNumbers)
+                if (ManageFemaleBreederNumbers && PerformFemaleStocking)
                 {
                     if (ValidateBreeders() is ValidationResult breeders)
                         results.Add(breeders);
@@ -1673,15 +1680,14 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
-                            string[] memberNames = new string[] { "Location is not valid" };
+                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
                             results.Add(new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                         }
                     }
                 }
 
                 // unknown entries
-                var unknownPurchases = purchaseDetails
-                .Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
+                var unknownPurchases = purchaseDetails.Where(f => (f.ExampleRuminant is RuminantFemale) ? !(f.ExampleRuminant as RuminantFemale).IsBreeder : !(f.ExampleRuminant as RuminantMale).IsSire);
 
                 if (unknownPurchases.Any())
                     foreach (var item in unknownPurchases)
@@ -1698,7 +1704,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
-                        string[] memberNames = new string[] { "Location is not valid" };
+                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
                         results.Add(new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                     }
                 }
@@ -1710,7 +1716,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = FindInScope<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
-                        string[] memberNames = new string[] { "Location is not valid" };
+                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
                         results.Add(new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
                     }
                 }

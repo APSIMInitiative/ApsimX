@@ -1,10 +1,11 @@
-﻿namespace Models.WaterModel
+﻿using System;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
+using Newtonsoft.Json;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using System;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
     /// Lateral movement of water is calculated from a user specified lateral inflow ('InFlow'). 
@@ -37,9 +38,9 @@
         /// <summary> The field. </summary>
         [Link]
         private Zone field = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         /// <summary>The amount of incoming water (mm)</summary>

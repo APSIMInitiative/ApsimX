@@ -1,21 +1,21 @@
-﻿namespace Models.PostSimulationTools
+﻿using System;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
+namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Data;
-    using System.Diagnostics.CodeAnalysis;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using System.Linq;
-    using Models.Core.Run;
-    using System.Threading;
 
     /// <summary>
     /// A post processing model that creates a probability table.
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
     [ValidParent(typeof(SerialPostSimulationTool))]
     [Serializable]

@@ -1,13 +1,8 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
-using System.Reflection;
-
-using Models.Core;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace Models.Functions
 {
@@ -103,13 +98,18 @@ namespace Models.Functions
                     Array arr = sometypeofobject as Array;
                     symFilled.m_values = new double[arr.Length];
                     for (int i = 0; i < arr.Length; i++)
-                        symFilled.m_values[i] = Convert.ToDouble(arr.GetValue(i), 
-                                                                 System.Globalization.CultureInfo.InvariantCulture);
+                    {
+                        double val = Convert.ToDouble(arr.GetValue(i), System.Globalization.CultureInfo.InvariantCulture);
+                        if (Double.IsNaN(val))
+                            throw new Exception($"Variable[{i}]: {sym.m_name} in function: {RelativeTo.Name} is not defined or Not a Number");
+                        else
+                            symFilled.m_values[i] = val;
+                    }
                 }
                 else if (sometypeofobject is IFunction)
                     symFilled.m_value = (sometypeofobject as IFunction).Value(arrayIndex);
                 else
-                    symFilled.m_value = Convert.ToDouble(sometypeofobject, 
+                    symFilled.m_value = Convert.ToDouble(sometypeofobject,
                                                          System.Globalization.CultureInfo.InvariantCulture);
                 varFilled.Add(symFilled);
             }

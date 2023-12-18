@@ -1,24 +1,19 @@
-﻿namespace UserInterface.Presenters
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models;
-    using Models.Functions;
-    using Views;
-    using APSIM.Shared.Graphing;
-    using Series = Models.Series;
-	using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using Models.Core;
+using Models;
+using Models.Functions;
+using APSIM.Shared.Graphing;
+using Series = Models.Series;
+using UserInterface.Views;
+using Models.Utilities;
 
+namespace UserInterface.Presenters
+{
 	/// <summary>
 	/// The presenter class for populating an InitialWater view with an InitialWater model.
 	/// </summary>
-	public class XYPairsPresenter : GridPresenter, IPresenter
+	public class XYPairsPresenter : IPresenter
     {
         /// <summary>
         /// The XYPairs model.
@@ -29,6 +24,16 @@
         /// The initial XYPairs view;
         /// </summary>
         private XYPairsView xYPairsView;
+
+        /// <summary>
+        /// The Explorer Presenter
+        /// </summary>
+        private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The Grid Presenter
+        /// </summary>
+        private GridPresenter gridPresenter;
 
         /// <summary>
         /// A reference to the 'graphPresenter' responsible for our graph.
@@ -51,19 +56,16 @@
         /// <param name="model">The initial water model</param>
         /// <param name="view">The initial water view</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
-        public override void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.xYPairs = model as XYPairs;
             this.xYPairsView = view as XYPairsView;
             this.presenter = explorerPresenter as ExplorerPresenter;
-            base.Attach(model, xYPairsView.VariablesGrid, explorerPresenter);
-            // Create a list of profile (array) properties. PpoulateView wil create a table from them and 
-            // hand the table to the variables grid.
-            this.FindAllProperties(this.xYPairs);
 
-            this.xYPairsView.VariablesGrid.CanGrow = true;
-            this.PopulateView();
-
+            List<GridTable> tables = this.xYPairs.Tables;
+            gridPresenter = new GridPresenter();
+            gridPresenter.Attach(tables[0], this.xYPairsView.VariablesGrid.Grid1, this.presenter);
+            gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
@@ -77,43 +79,29 @@
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false, false);
             }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false, false);
             }
 
             xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);
+
+            this.gridPresenter.CellChanged += OnCellChanged;
+            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
         }
 
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
-        public override void Detach()
+        public void Detach()
         {
-            base.Detach();
-            this.DisconnectViewEvents();
+            this.gridPresenter.CellChanged -= OnCellChanged;
+            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
             this.xYPairs.Children.Remove(this.graph);
-        }
-
-        /// <summary>
-        /// Populate all controls on the view.
-        /// </summary>
-        private void PopulateView()
-        {
-            this.PopulateGrid();
-            
-            this.DisconnectViewEvents();
-            this.ConnectViewEvents();
-
-            // Refresh the graph.
-            if (this.graph != null)
-            {
-                this.graphPresenter.DrawGraph();
-            }
         }
 
         /// <summary>
@@ -175,285 +163,15 @@
             return xYPairs.Parent.Name;
         }
 
-        /// <summary>
-        /// Populate the grid with data and formatting.
-        /// </summary>
-        private void PopulateGrid()
+        /// <summary>Invoked when a grid cell has changed.</summary>
+        /// <param name="dataProvider">The provider that contains the data.</param>
+        /// <param name="colIndex">The index of the column of the cell that was changed.</param>
+        /// <param name="rowIndex">The index of the row of the cell that was changed.</param>
+        private void OnCellChanged(ISheetDataProvider dataProvider, int colIndex, int rowIndex)
         {
-            DataTable table = this.CreateTable();
-            this.xYPairsView.VariablesGrid.DataSource = table;
-            for (int i = 0; i < table.Columns.Count; i++)
-            {
-                this.xYPairsView.VariablesGrid.GetColumn(i).Width = 100;
-                this.xYPairsView.VariablesGrid.GetColumn(i).Width = 100;
-            }
-        }
-
-        /// <summary>
-        /// Setup the variables grid based on the properties in the model.
-        /// </summary>
-        /// <param name="model">The underlying model we are to use to find the properties</param>
-        private void FindAllProperties(Model model)
-        {
-            // Properties must be public with a getter and a setter. They must also
-            // be either double[] or string[] type.
-            foreach (PropertyInfo property in model.GetType().GetProperties())
-            {
-                bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                if (hasDescription && property.CanRead)
-                {
-                    if (property.PropertyType == typeof(double[]) ||
-                        property.PropertyType == typeof(string[]))
-                    {
-                        this.propertiesInGrid.Add(new VariableProperty(model, property));
-                    }
-                }
-            }
-        }        
-
-        /// <summary>
-        /// Setup the profile grid based on the properties in the model.
-        /// The column index of the cell that has changed.
-        /// </summary>
-        /// <returns>The filled data table. Never returns null.</returns>
-        private DataTable CreateTable()
-        {
-            DataTable table = new DataTable();
-
-            foreach (VariableProperty property in this.propertiesInGrid)
-            {
-                string columnName = property.Description;
-                if (property.UnitsLabel != null)
-                {
-                    columnName += "\r\n" + property.UnitsLabel;
-                }
-
-                Array values = property.Value as Array;
-
-                if (table.Columns.IndexOf(columnName) == -1)
-                {
-                    table.Columns.Add(columnName, property.DataType.GetElementType());
-                }
-                else
-                {
-                }
-
-                DataTableUtilities.AddColumnOfObjects(table, columnName, values);
-            }
-
-            return table;
-        }
-
-        /// <summary>
-        /// Connect all events from the view.
-        /// </summary>
-        private void ConnectViewEvents()
-        {
-            // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
-            // we can save the contents.
-            this.xYPairsView.VariablesGrid.CellsChanged += this.OnVariablesGridCellValueChanged;
-
-            // Trap the model changed event so that we can handle undo.
-            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
-
-            // this.initialWaterView.OnDepthWetSoilChanged += this.OnDepthWetSoilChanged;
-            // this.initialWaterView.OnFilledFromTopChanged += this.OnFilledFromTopChanged;
-            // this.initialWaterView.OnPAWChanged += this.OnPAWChanged;
-            // this.initialWaterView.OnPercentFullChanged += this.OnPercentFullChanged;
-            // this.initialWaterView.OnRelativeToChanged += this.OnRelativeToChanged;
-        }
-
-        /// <summary>
-        /// Disconnect all view events.
-        /// </summary>
-        private void DisconnectViewEvents()
-        {
-            this.xYPairsView.VariablesGrid.CellsChanged -= this.OnVariablesGridCellValueChanged;
-            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-        }
-
-        /// <summary>
-        /// User has changed the value of one or more cells in the profile grid.
-        /// </summary>
-        /// <param name="sender">The sender of the event</param>
-        /// <param name="e">The event arguments</param>
-        private void OnVariablesGridCellValueChanged(object sender, GridCellsChangedArgs e)
-        {
-            // Apply the changes to the grid.
-            ApplyChangesToGrid(e);
-
-            // Save the changed data back to the model.
-            this.SaveGrid();
-
-            // Refresh all calculated columns.
-            this.RefreshCalculatedColumns();
-
             // Refresh the graph.
             if (this.graph != null)
-            {
                 this.graphPresenter.DrawGraph();
-            }
-        }
-
-        /// <summary>
-        /// Updates the contents of the grid to reflect changes made by
-        /// the user.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        private void ApplyChangesToGrid(GridCellsChangedArgs e)
-        {
-            foreach (GridCellChangedArgs cell in e.ChangedCells)
-            {
-                // Each cell in the grid is a number (of type double).
-                object newValue = ReflectionUtilities.StringToObject(typeof(double), cell.NewValue);
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
-
-                // Ensure that the grid has an extra (empty) row at the bottom.
-                while (grid.RowCount <= cell.RowIndex + 1)
-                    grid.RowCount++;
-            }
-        }
-
-        /// <summary>
-        /// Save the grid back to the model.
-        /// </summary>
-        private void SaveGrid()
-        {
-            this.presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-            // Get the data source of the profile grid.
-            DataTable data = this.xYPairsView.VariablesGrid.DataSource;
-
-            // Maintain a list of all property changes that we need to make.
-            List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
-
-            // add missing data as 0 otherwise it will throw an exception
-            // could make this work as an entire row, but will stick to X & Y columns for now
-            /*
-            for (int Row = 0; Row != data.Rows.Count; Row++)
-            {
-                if (data.Rows[Row]["Y"].ToString() == "" && data.Rows[Row]["X"].ToString() != "")
-                    data.Rows[Row]["Y"] = "0";
-                if (data.Rows[Row]["X"].ToString() == "" && data.Rows[Row]["Y"].ToString() != "")
-                    data.Rows[Row]["X"] = "0";
-                if (data.Rows[Row]["Y"].ToString() == "" && data.Rows[Row]["X"].ToString() == "")
-                    break;
-            }
-            */
-            //// Loop through all non-readonly properties, get an array of values from the data table
-            //// for the property and then set the property value.
-            for (int i = 0; i < this.propertiesInGrid.Count; i++)
-            {
-                // If this property is NOT readonly then set its value.
-                if (!this.propertiesInGrid[i].IsReadOnly)
-                {
-                    // Get an array of values for this property.
-                    Array values;
-                    if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
-                    {
-                        values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
-                        if (!MathUtilities.ValuesInArray((double[])values))
-                        {
-                            values = null;
-                        }
-                        else
-                        {
-                            values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
-                        }
-                    }
-                    else
-                    {
-                        values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName, CultureInfo.CurrentCulture);
-                        values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
-                    }
-
-                    // Is the value any different to the former property value?
-                    bool changedValues;
-                    if (this.propertiesInGrid[i].DataType == typeof(double[]))
-                    {
-                        changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
-                    }
-                    else
-                    {
-                        changedValues = !MathUtilities.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
-                    }
-
-                    if (changedValues)
-                    {
-                        // Store the property change.
-                        Commands.ChangeProperty.Property property =
-                            new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
-                        properties.Add(property);
-                    }
-                }
-            }
-
-            // If there are property changes pending, then commit the changes in a block.
-            if (properties.Count > 0)
-            {
-                Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
-                this.presenter.CommandHistory.Add(command);
-            }
-
-            this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
-        }
-
-        /// <summary>
-        /// Refresh the values of all calculated columns in the profile grid.
-        /// </summary>
-        private void RefreshCalculatedColumns()
-        {
-            // Loop through all calculated properties, get an array of values from the property
-            // a give to profile grid.
-            for (int i = 0; i < this.propertiesInGrid.Count; i++)
-            {
-                if (this.propertiesInGrid[i].IsReadOnly && i > 0)
-                {
-                    VariableProperty property = this.propertiesInGrid[i];
-                    int col = i;
-                    int row = 0;
-                    foreach (object value in property.Value as IEnumerable<double>)
-                    {
-                        object valueForCell = value;
-                        bool missingValue = (double)value == MathUtilities.MissingValue || double.IsNaN((double)value);
-
-                        if (missingValue)
-                        {
-                            valueForCell = null;
-                        }
-
-                        IGridCell cell = this.xYPairsView.VariablesGrid.GetCell(col, row);
-                        cell.Value = valueForCell;
-
-                        row++;
-                    }
-
-                    // add a total to the column header if necessary.
-                    double total;
-                    try
-                    {
-                        total = property.Total;
-                    }
-                    catch (Exception err)
-                    {
-                        total = double.NaN;
-                        presenter.MainPresenter.ShowError(err);
-                    }
-                    if (!double.IsNaN(total))
-                    {
-                        string columnName = property.Description;
-                        if (property.UnitsLabel != null)
-                        {
-                            columnName += "\r\n" + property.UnitsLabel;
-                        }
-
-                        columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
-
-                        IGridColumn column = this.xYPairsView.VariablesGrid.GetColumn(col);
-                        column.HeaderText = columnName;
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -462,10 +180,9 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.xYPairs)
-            {
-                this.PopulateView();
-            }
+            // Refresh the graph.
+            if (this.graph != null)
+                this.graphPresenter.DrawGraph();
         }
     }
 }

@@ -7,8 +7,8 @@ https://developer.gnome.org/gtk3/stable/chap-css-properties.html
 */
 
 scrollbar, scrollbar button, scrollbar slider {
-	min-width: 20px;
-	min-height: 8px;
+	min-width: 24px;
+	min-height: 24px;
 }
 
 progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {

@@ -1,11 +1,13 @@
-﻿using Models.Core;
-using Models.Interfaces;
-using System;
-using APSIM.Shared.Utilities;
-using Newtonsoft.Json;
+﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
 using System.Linq;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Utilities;
+using Newtonsoft.Json;
+
 namespace Models.Soils
 {
 
@@ -18,10 +20,10 @@ namespace Models.Soils
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Solute : Model, ISolute, ITabularData
+    public class Solute : Model, ISolute, IGridModel
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical physical = null;
 
         /// <summary>Access the water model.</summary>
@@ -46,7 +48,7 @@ namespace Models.Soils
         public Solute() { }
 
         /// <summary>Default constructor.</summary>
-        public Solute(string soluteName, double[] value) 
+        public Solute(string soluteName, double[] value)
         {
             kgha = value;
             Name = soluteName;
@@ -136,12 +138,12 @@ namespace Models.Soils
         /// <summary>Invoked to perform solute daily processes</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("DoSolute")]
         private void OnDoSolute(object sender, EventArgs e)
         {
             if (D0 > 0)
             {
-                for (int i = 0; i < physical.Thickness.Length-1; i++)
+                for (int i = 0; i < physical.Thickness.Length - 1; i++)
                 {
                     // Calculate concentrations in SW solution
                     double c1 = kgha[i] / (Math.Pow(physical.Thickness[i] * 100000.0, 2) * water.Volumetric[i]);  // kg/mm3 water
@@ -158,7 +160,7 @@ namespace Models.Soils
                     double flux = avt * avsw * D0 * (c1 - c2) / dx * Math.Pow(100000.0, 2); // mm2 / ha
 
                     kgha[i] = kgha[i] - flux;
-                    kgha[i+1] = kgha[i+1] + flux;
+                    kgha[i + 1] = kgha[i + 1] + flux;
                 }
             }
         }
@@ -207,20 +209,27 @@ namespace Models.Soils
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
-            var columns = new List<TabularData.Column>()
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
-            };
-            if (swimPresent)
-            {
-                columns.Add(new TabularData.Column("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
-                columns.Add(new TabularData.Column("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                bool swimPresent = FindInScope<Swim3>() != null || Parent is Factorial.Factor;
+                var columns = new List<GridTableColumn>()
+                {
+                    new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
+                    new GridTableColumn("Initial values", new VariableProperty(this, GetType().GetProperty("InitialValues")))
+                };
+                if (swimPresent)
+                {
+                    columns.Add(new GridTableColumn("EXCO", new VariableProperty(this, GetType().GetProperty("Exco"))));
+                    columns.Add(new GridTableColumn("FIP", new VariableProperty(this, GetType().GetProperty("FIP"))));
+                }
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
             }
-            return new TabularData(Name, columns);
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>
@@ -228,13 +237,7 @@ namespace Models.Soils
         public void Standardise(double[] targetThickness)
         {
             // Define default ppm value to use below bottom layer of this solute if necessary.
-            double defaultValue;
-            if (Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 1.0;
-            else if (Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 0.2;
-            else
-                defaultValue = 0.0;
+            double defaultValue = 0;
 
             SetThickness(targetThickness, defaultValue);
 

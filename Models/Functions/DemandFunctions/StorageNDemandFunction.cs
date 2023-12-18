@@ -1,6 +1,6 @@
 ﻿using System;
-using APSIM.Shared.Documentation;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF.Interfaces;
 

@@ -1,33 +1,30 @@
 ﻿namespace UserInterface.Views
 {
+    using APSIM.Interop.Graphing.CustomSeries;
+    using APSIM.Interop.Graphing.Extensions;
+    using APSIM.Shared.Documentation.Extensions;
+    using APSIM.Shared.Graphing;
+    using APSIM.Shared.Utilities;
+    using EventArguments;
+    using Gtk;
+    using Interfaces;
+    using MathNet.Numerics.Statistics;
+    using OxyPlot;
+    using OxyPlot.Annotations;
+    using OxyPlot.Axes;
+    using OxyPlot.GtkSharp;
+    using OxyPlot.Series;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
-    using System.Reflection;
-    using Gtk;
-    using Interfaces;
-    using Models;
-    using OxyPlot;
-    using OxyPlot.Annotations;
-    using OxyPlot.Axes;
-    using OxyPlot.Series;
-    using OxyPlot.GtkSharp;
-    using EventArguments;
-    using APSIM.Shared.Utilities;
-    using System.Linq;
     using System.Globalization;
-    using MathNet.Numerics.Statistics;
-    using Extensions;
-    using APSIM.Shared.Graphing;
-    using APSIM.Interop.Graphing.Extensions;
-    using APSIM.Interop.Graphing.CustomSeries;
+    using System.IO;
+    using System.Linq;
     using Utility;
-
-    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
     using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
 
 
     /// <summary>
@@ -232,11 +229,6 @@
         /// </summary>
         public event EventHandler OnAnnotationClick;
 
-        /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
-
         /// <summary>Invoked when the user single clicks on the graph</summary>
         public event EventHandler SingleClick;
 
@@ -353,9 +345,6 @@
         /// </summary>
         public void Clear()
         {
-            foreach (OxyPlot.Series.Series series in this.plot1.Model.Series)
-                if (series is Utility.LineSeriesWithTracker)
-                    (series as Utility.LineSeriesWithTracker).OnHoverOverPoint -= OnHoverOverPoint;
             this.plot1.Model.Series.Clear();
             this.plot1.Model.Axes.Clear();
             this.plot1.Model.Annotations.Clear();
@@ -447,9 +436,23 @@
             if (x != null && y != null)
             {
                 series = new Utility.LineSeriesWithTracker();
-                series.OnHoverOverPoint += OnHoverOverPoint;
+                if (x.Count() > 0)
+                    series.XType = x.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.XType = null;
+
+                if (y.Count() > 0)
+                    series.YType = y.Cast<object>().ToArray()[0].GetType();
+                else
+                    series.YType = null;
+
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 else
                     series.ToolTip = title;
 
@@ -562,7 +565,12 @@
             {
                 var series = new ColumnXYSeries();
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.StrokeColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -605,14 +613,30 @@
             Color colour,
             bool showOnLegend)
         {
-            AreaSeries series = new AreaSeries();
+            AreaSeriesWithTracker series = new AreaSeriesWithTracker();
+            series.TooltipTitle = title;
+            if (x1.Count() > 0)
+                series.XType = x1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.XType = null;
+
+            if (y1.Count() > 0)
+                series.YType = y1.Cast<object>().ToArray()[0].GetType();
+            else
+                series.YType = null;
+
             series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
             if (showOnLegend)
-                series.Title = title;
+            {
+                if (String.IsNullOrEmpty(title))
+                    series.Title = "null";
+                else
+                    series.Title = title;
+            }
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -803,7 +827,13 @@
                 BoxPlotSeries series = new BoxPlotSeries();
                 series.Items = GetBoxPlotItems(x, y, xAxisType, yAxisType);
                 if (showOnLegend)
-                    series.Title = title;
+                {
+                    if (String.IsNullOrEmpty(title))
+                        series.Title = "null";
+                    else
+                        series.Title = title;
+                }
+                    
 
                 // Line style
                 if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
@@ -1057,6 +1087,7 @@
         /// <param name="maximum">Maximum axis scale</param>
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
+        /// <param name="labelOnOneLine">Show Axis Label on one line</param>
         public void FormatAxis(
             APSIM.Shared.Graphing.AxisPosition axisType,
             string title,
@@ -1064,7 +1095,8 @@
             double minimum,
             double maximum,
             double interval,
-            bool crossAtZero)
+            bool crossAtZero,
+            bool labelOnOneLine)
         {
             OxyPlot.Axes.Axis oxyAxis = this.GetAxis(axisType);
 
@@ -1084,6 +1116,12 @@
                 oxyAxis.AxislineStyle = LineStyle.Solid;
                 oxyAxis.AxisTitleDistance = 10;
                 oxyAxis.PositionAtZeroCrossing = crossAtZero;
+
+                if (labelOnOneLine)
+                {
+                    string newline = Environment.NewLine;
+                    oxyAxis.Title = oxyAxis.Title.Replace(newline, ", ");
+                }
 
                 if (inverted)
                 {

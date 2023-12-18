@@ -1,8 +1,8 @@
-﻿namespace Models.Storage
+﻿using System.Collections.Generic;
+using System.Data;
+
+namespace Models.Storage
 {
-    using APSIM.Shared.JobRunning;
-    using System.Collections.Generic;
-    using System.Data;
 
     /// <summary>
     /// Interface for reading and writing data to/from permanent storage.
@@ -61,8 +61,8 @@
         /// <summary>Delete a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to delete.</param>
         void DeleteCheckpoint(string name);
-        
-            /// <summary>Revert a checkpoint.</summary>
+
+        /// <summary>Revert a checkpoint.</summary>
         /// <param name="name">Name of checkpoint to revert to.</param>
         void RevertCheckpoint(string name);
 
@@ -74,7 +74,10 @@
         /// <summary>Wait for all records to be written.</summary>
         void WaitForIdle();
 
-        /// <summary>Stop all writing to database.</summary>
+        /// <summary>Immediately stop all writing to database.</summary>
+        void Cancel();
+
+        /// <summary>Finish writing to database.</summary>
         void Stop();
 
         /// <summary>
@@ -108,5 +111,12 @@
         /// <param name="names">A list of simulation names that are about to run.</param>
         /// <param name="wait">Wait for the clean operation to finish?</param>
         void Clean(IEnumerable<string> names, bool wait);
+
+        /// <summary>
+        /// Returns the number of entries in the command queue
+        /// </summary>
+        /// <returns></returns>
+
+        int CommandCount();
     }
 }

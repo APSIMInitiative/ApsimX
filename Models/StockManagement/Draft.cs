@@ -1,12 +1,13 @@
-﻿namespace Models.StockManagement
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.GrazPlan;
+using Models.PMF.Interfaces;
+
+namespace Models.StockManagement
 {
-    using Models.Core;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Models.GrazPlan;
-    using APSIM.Shared.Utilities;
-    using Models.PMF.Interfaces;
 
     /// <summary>
     /// An instance of this class creates a genotype cross and adds it to the list of
@@ -139,7 +140,7 @@
             // Get a list of fields that we want to consider for a draft.
             var fields = new List<FieldWithForage>();
             foreach (var zone in zones.Where(zone => PaddockNames.Contains(zone.Name)))
-                 fields.Add(new FieldWithForage(zone, stock));
+                fields.Add(new FieldWithForage(zone, stock));
 
             // Sort paddocks according to how much forage they have (highest first in list).
             var sortedFields = fields.OrderByDescending(f => f.AmountForage).ToList();
@@ -157,7 +158,7 @@
         {
             private Zone field;
             private IEnumerable<AnimalGroup> animalGroups;
-            private List<IOrganDamage> forageOrgans = new List<IOrganDamage>();
+            private IEnumerable<IOrganDamage> forageOrgans;
 
             /// <summary>Constructor</summary>
             /// <param name="zone">The zone object representing the field.</param>
@@ -166,10 +167,7 @@
             {
                 field = zone;
                 animalGroups = stockModel.StockModel.Animals;
-                foreach (IPlantDamage forage in zone.FindAllDescendants<IPlantDamage>())
-                    foreach (var organ in forage.Organs)
-                        if (organ.IsAboveGround)
-                            forageOrgans.Add(organ);
+                forageOrgans = zone.FindAllDescendants<IOrganDamage>().Where(organ => organ.IsAboveGround);
             }
 
             /// <summary>The amount for forage of all above ground organs (g/m2)</summary>

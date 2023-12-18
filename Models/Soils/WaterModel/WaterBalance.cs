@@ -1,15 +1,16 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Models.Utilities;
+using Newtonsoft.Json;
+
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Interfaces;
-    using Models.Core;
-    using Models.Soils.Nutrients;
-    using Soils;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// The SoilWater module is a cascading water balance model that owes much to its precursors in 
@@ -44,7 +45,7 @@ namespace Models.WaterModel
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [Serializable]
-    public class WaterBalance : Model, ISoilWater, ITabularData
+    public class WaterBalance : Model, ISoilWater, IGridModel
     {
         private Physical physical;
         private HyProps hyprops = new HyProps();
@@ -52,9 +53,9 @@ namespace Models.WaterModel
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
-        
+
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysical = null;
 
         [Link]
@@ -96,7 +97,7 @@ namespace Models.WaterModel
         [Link(ByName = true)]
         ISolute urea = null;
 
-        [Link(ByName = true, IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]  
         ISolute cl = null;
 
         /// <summary>Irrigation information.</summary>
@@ -225,17 +226,17 @@ namespace Models.WaterModel
 
         /// <summary>Amount of water in the soil (mm).</summary>
         [JsonIgnore]
-        public double[] Water 
-        { 
-            get { return waterMM; } 
-            set 
-            { 
+        public double[] Water
+        {
+            get { return waterMM; }
+            set
+            {
                 waterMM = value;
                 if (value == null)
                     waterVolumetric = null;
                 else
-                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
-            } 
+                    waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness);
+            }
         }
 
         /// <summary>Amount of water in the soil (mm/mm).</summary>
@@ -252,7 +253,41 @@ namespace Models.WaterModel
 
         /// <summary>Water potential of layer</summary>
         [Units("cm")]
-        public double[] PSI { get; private set; }
+        public double[] PSI
+        {
+            get
+            {
+                double[] psi = new double[soilPhysical.Thickness.Length];
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                {
+                    psi[i] = hyprops.Suction(i, SW[i], psi, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+                    if (soilPhysical.KS != null)
+                        K[i] = hyprops.SimpleK(i, psi[i], soilPhysical.SAT, soilPhysical.KS);
+                }
+                return psi;
+            }
+        }
+
+        /// <summary>Hydraulic Conductivity of layer</summary>
+        [Units("cm/h")]
+        public double[] K { get; private set; }
+
+        ///<summary>Pore Interaction Index for shape of the K(theta) curve for soil hydraulic conductivity</summary>
+        [JsonIgnore]
+        [Units("-")]
+        public double[] PoreInteractionIndex
+        {
+            get
+            {
+                return hyprops.PoreInteractionIndex;
+            }
+            set
+            {
+                hyprops.PoreInteractionIndex = value;
+                if (physical.KS != null)
+                    hyprops.SetupKCurve(physical.Thickness.Length, physical.LL15, physical.DUL, physical.SAT, physical.KS, 0.1, PSIDul);
+            }
+        }
 
         /// <summary>Runon (mm).</summary>
         [JsonIgnore]
@@ -393,9 +428,9 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
 
-        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachCl => 0.0; 
+        public double LeachCl { get { if (FlowCl == null) return 0; else return FlowCl.Last(); } }  
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
@@ -408,6 +443,11 @@ namespace Models.WaterModel
         /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double[] FlowUrea { get; private set; }
+
+        /// <summary>Amount of Cl leaching as Cl from each soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double[] FlowCl { get; private set; }
+
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         [JsonIgnore]
@@ -528,11 +568,20 @@ namespace Models.WaterModel
             double[] no3Values = no3.kgha;
             double[] ureaValues = urea.kgha;
 
-            // Calcualte solute movement down with water.
+            // Calculate solute movement down with water.
             double[] no3Down = CalculateSoluteMovementDown(no3Values, Water, Flux, SoluteFluxEfficiency);
             MoveDown(no3Values, no3Down);
             double[] ureaDown = CalculateSoluteMovementDown(ureaValues, Water, Flux, SoluteFluxEfficiency);
             MoveDown(ureaValues, ureaDown);
+
+            double[] clValues = null;
+            double[] clDown = null;
+            if (cl != null)
+            {
+                clValues = cl.kgha;
+                clDown = CalculateSoluteMovementDown(clValues, Water, Flux, SoluteFluxEfficiency);
+                MoveDown(clValues, clDown);
+            }
 
             // Calculate evaporation and remove from top layer.
             double es = evaporationModel.Calculate();
@@ -562,14 +611,21 @@ namespace Models.WaterModel
             no3.SetKgHa(SoluteSetterType.Soil, no3Values);
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
 
+
+            if (cl != null)
+            {
+                double[] clUp = CalculateNetSoluteMovement(clValues, Water, Flow, SoluteFlowEfficiency);
+                MoveUp(clValues, clUp);
+                FlowCl = MathUtilities.Subtract(clDown, clUp);
+                cl.SetKgHa(SoluteSetterType.Soil, clValues);
+            }
+
+
             // Now that we've finished moving water, calculate volumetric water
             waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
 
             // Update the variable in the water model.
             water.Volumetric = waterVolumetric;
-
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-                PSI[i] = hyprops.Suction(i, SW[i], PSI, PSIDul, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -821,8 +877,8 @@ namespace Models.WaterModel
 
             int n = soilPhysical.Thickness.Length;
             hyprops.ResizePropfileArrays(n);
-            hyprops.SetupThetaCurve(PSIDul, n-1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
-            PSI = new double[n];
+            hyprops.SetupThetaCurve(PSIDul, n - 1, soilPhysical.LL15, soilPhysical.DUL, soilPhysical.SAT);
+            K = new double[n];
         }
 
         ///<summary>Perform tillage</summary>
@@ -841,7 +897,7 @@ namespace Models.WaterModel
             runoffModel.TillageCnRed = reduction;
             runoffModel.CumWaterSinceTillage = 0.0;
 
-            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
+            var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}",
                                      reduction, Data.cn_rain);
             summary.WriteMessage(this, line, MessageType.Diagnostic);
         }
@@ -853,14 +909,21 @@ namespace Models.WaterModel
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new TabularData(Name, new TabularData.Column[]
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))),
-                new TabularData.Column("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))),
-                new TabularData.Column("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT")))
-            });
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+                columns.Add(new GridTableColumn("SWCON", new VariableProperty(this, GetType().GetProperty("SWCON"))));
+                columns.Add(new GridTableColumn("KLAT", new VariableProperty(this, GetType().GetProperty("KLAT"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
+            }
         }
 
         /// <summary>Gets the model ready for running in a simulation.</summary>

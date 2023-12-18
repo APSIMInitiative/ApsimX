@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Models.Core.Interfaces
+﻿namespace Models.Core.Interfaces
 {
     /// <summary>
     /// An interface for the APSIM simulation engine

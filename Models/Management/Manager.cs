@@ -1,15 +1,15 @@
-﻿namespace Models
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+
+namespace Models
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.ApsimFile;
-    using Models.Core.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Reflection;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The manager model
@@ -32,7 +32,7 @@
         private ScriptCompiler scriptCompiler = null;
 
         /// <summary>The code to compile.</summary>
-        private string cSharpCode = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.BlankManager.cs");
+        private string[] cSharpCode = ReflectionUtilities.GetResourceAsStringArray("Models.Resources.Scripts.BlankManager.cs");
 
         /// <summary>Is the model after creation.</summary>
         private bool afterCreation = false;
@@ -67,8 +67,8 @@
             return true;
         }
 
-        /// <summary>Gets or sets the code to compile.</summary>
-        public string Code
+        /// <summary>The array of code lines that gets stored in file</summary>
+        public string[] CodeArray
         {
             get
             {
@@ -77,6 +77,28 @@
             set
             {
                 cSharpCode = value;
+            }
+        }
+
+        /// <summary>Gets or sets the code to compile.</summary>
+        [JsonIgnore]
+        public string Code
+        {
+            get
+            {
+                string output = "";
+                for (int i = 0; i < cSharpCode.Length; i++)
+                {
+                    string line = cSharpCode[i].Replace("\r", ""); //remove \r from scripts for platform consistency
+                    output += line;
+                    if (i < cSharpCode.Length-1)
+                        output += "\n";
+                }
+                return output;
+            }
+            set
+            {
+                cSharpCode = value.Split('\n');
                 RebuildScriptModel();
             }
         }
@@ -90,7 +112,7 @@
         /// way to store both the caret position and scrolling information.
         /// </summary>
         [JsonIgnore]
-        public Rectangle Location { get; set; }  = new Rectangle(1, 1, 0, 0);
+        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
 
         /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
@@ -190,7 +212,7 @@
                             if (property != null)
                             {
                                 object value;
-                                if ( (typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")) )
+                                if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = this.FindInScope(parameter.Value);

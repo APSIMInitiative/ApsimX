@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Interfaces;
-using Models.PMF.Organs;
-using System.Xml.Serialization;
 using System.Linq;
+using System.Xml.Serialization;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Documentation;
+using Models.PMF.Organs;
 
 namespace Models.Functions.SupplyFunctions
 {
@@ -91,6 +91,10 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction GrossAssimilateModel = null;
+
+        /// <summary>Plant organs</summary>
+        [Link]
+        private readonly IOrgan[] organs = null;
 
         //------------------------------------------------------------------------------------------------
 
@@ -225,9 +229,9 @@ namespace Models.Functions.SupplyFunctions
                     double grossAssim = 0;
                     double respiration = 0;
 
-                    foreach (IOrgan o in Plant.Organs)
+                    foreach (IOrgan o in organs)
                         respiration += o.MaintenanceRespiration;
-                    foreach (IArbitration o in Plant.Organs)
+                    foreach (IArbitration o in organs)
                         grossAssim += o.DMSupply.Fixation;
 
                     double netAssim = Math.Max(0, grossAssim - respiration);

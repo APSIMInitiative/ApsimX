@@ -270,45 +270,6 @@ namespace Models.CLEM.Resources
             return null;
         }
 
-        #region validation
-
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure at least one conception model is associated
-            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
-            if (conceptionModelCount > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
-            }
-
-            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
-            }
-            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
-            {
-                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
-
-                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
-                {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
-                }
-            }
-            return results;
-        }
-
-        #endregion
-
         #region transactions
 
         /// <summary>
@@ -547,6 +508,36 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
+        /// Relative body condition to score rate
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Rel. Body Cond. to Score rate")]
+        [Required, GreaterThanValue(0)]
+        public double RelBCToScoreRate { get; set; } = 0.15;
+        /// <summary>
+        /// Body condition score range
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Body Condition Score range (min, mid, max)")]
+        [Required, ArrayItemCount(3)]
+        public double[] BCScoreRange { get; set; } = { 0, 3, 5 };
+        /// <summary>
+        /// Body condition score to determine additional mortality
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Body Condition Score for additional mortality")]
+        [Required]
+        [System.ComponentModel.DefaultValue(0)]
+        public double BodyConditionScoreForMortality { get; set; } = 0;
+        /// <summary>
+        /// Low body condition score to mortality rate
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Mortality rate for low Body Condition Score")]
+        [Required]
+        [System.ComponentModel.DefaultValue(0.5)]
+        public double BodyConditionScoreMortalityRate { get; set; } = 0.5;
+        /// <summary>
         /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
@@ -667,13 +658,31 @@ namespace Models.CLEM.Resources
         [Description("Proportional discount to intake due to milk intake")]
         [Required, Proportion]
         public double ProportionalDiscountDueToMilk { get; set; }
+
         /// <summary>
-        /// Proportion of max body weight needed for survival
+        /// Style of calculating condition-based mortality
         /// </summary>
         [Category("Advanced", "Survival")]
-        [Description("Proportion of max body weight needed for survival")]
-        [Required, Proportion]
-        public double ProportionOfMaxWeightToSurvive { get; set; }
+        [Description("Style of calculating additional condition-based mortality")]
+        [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
+        [Required]
+        public ConditionBasedCalculationStyle ConditionBasedMortalityStyle { get; set; }
+        /// <summary>
+        /// Cut-off for condition-based mortality
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Cut-off for condition-based mortality")]
+        [Required]
+        public double ConditionBasedMortalityCutOff { get; set; }
+        /// <summary>
+        /// Probability of dying if less than condition-based mortality cut-off
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Probability of death below condition-based cut-off")]
+        [System.ComponentModel.DefaultValue(1)]
+        [Required, GreaterThanValue(0)]
+        public double ConditionBasedMortalityProbability { get; set; }
+
         /// <summary>
         /// Lactating Potential intake modifier Coefficient A
         /// </summary>
@@ -897,6 +906,15 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
 
+        /// <summary>
+        /// Proportion of wet mother's with no offspring accepting orphan
+        /// </summary>
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion suitable fmeales accpeting orphan")]
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Required, Proportion]
+        public double ProportionAcceptingSurrogate { get; set; } = 0;
+
         #endregion
 
         #region other
@@ -920,6 +938,45 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             return html;
+        }
+
+        #endregion
+
+        #region validation
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure at least one conception model is associated
+            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
+            }
+
+            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
+            }
+            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
+            {
+                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
+
+                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+                {
+                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
+                }
+            }
+            return results;
         }
 
         #endregion

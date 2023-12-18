@@ -1,16 +1,19 @@
-﻿namespace Models.Core.Run
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using APSIM.Shared.JobRunning;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
+using Models.Core.ApsimFile;
+using Models.PostSimulationTools;
+using Models.Storage;
+
+namespace Models.Core.Run
 {
-    using APSIM.Shared.JobRunning;
-    using Models.Core.ApsimFile;
-    using Models.PostSimulationTools;
-    using Models.Storage;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using System.Threading;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Encapsulates a collection of jobs that are to be run. A job can be a simulation run or 
@@ -68,6 +71,19 @@
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
+            if (relativeTo is Playlist) //check if node was a playlist
+            {
+                if ((relativeTo as Playlist).Text.Length > 0)
+                {
+                    this.simulationNamesToRun = (relativeTo as Playlist).GetListOfSimulations();
+                    if (this.simulationNamesToRun == null || this.simulationNamesToRun.Count() == 0)
+                        throw new Exception("Playlist was used but no simulations or experiments match the contents of the list.");
+                }
+                //need to set the relative back to simulations so the runner can find all the simulations 
+                //when it comes time to run.
+                this.relativeTo = relativeTo.FindAncestor<Simulations>();
+            }
+            
             if (simulationNamePatternMatch != null)
                 patternMatch = new Regex(simulationNamePatternMatch);
 
@@ -106,7 +122,22 @@
         /// I'm not sure that this really belongs here, but since this class
         /// handles the running of post-simulation tools, it kind of has to be here.
         /// </remarks>
-        public string Status { get; private set; }
+        public string Status {
+            get
+            { 
+                if (_status.StartsWith("Waiting for datastore"))
+                {
+                    return _status + " - " + storage.Writer.CommandCount().ToString() + " operations remaining";
+                }
+                return _status; 
+            }
+            private set 
+            { 
+                _status = value; 
+            }
+        }
+
+        private string _status;
 
         /// <summary>
         /// List all simulation names beneath a given model.
@@ -258,9 +289,9 @@
                         foreach (IRunnable job in jobs)
                             Add(job);
                     }
-                    
+
                     if (numJobsToRun == 0)
-                       Add(new EmptyJob());
+                        Add(new EmptyJob());
                 }
             }
             catch (Exception readException)
@@ -378,7 +409,7 @@
                 DateTime startTime = DateTime.Now;
 
                 links.Resolve(test as IModel, true);
-                
+
                 // If we run into problems, we will want to include the name of the test in the 
                 // exception's message. However, tests may be manager scripts, which always have
                 // a name of 'Script'. Therefore, if the test's parent is a Manager, we use the

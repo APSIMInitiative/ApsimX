@@ -1,11 +1,14 @@
-﻿namespace Models.Soils
+﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils.Nutrients;
+using Models.Utilities;
+using Newtonsoft.Json;
+
+namespace Models.Soils
 {
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils.Nutrients;
-    using System;
-    using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
@@ -15,12 +18,12 @@
     [ValidParent(ParentType = typeof(Soil))]
     [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    public class OutputLayers : Model, ITabularData
+    public class OutputLayers : Model, IGridModel
     {
         /// <summary>Access the soil physical properties.</summary>
-        [Link] 
+        [Link]
         private IPhysical soilPhysicalProperties = null;
-        
+
         /// <summary>Access the soil water model.</summary>
         [Link]
         private ISoilWater waterBalanceModel = null;
@@ -276,7 +279,7 @@
                 for (int layer = 0; layer < waterBalanceModel.Thickness.Length; ++layer)
                 {
                     modelOC[layer] = (nutrientBalanceModel.Humic.C[layer] + nutrientBalanceModel.Microbial.C[layer])
-                                   / (soilPhysicalProperties.BD[layer]*waterBalanceModel.Thickness[layer]) / 100.0;
+                                   / (soilPhysicalProperties.BD[layer] * waterBalanceModel.Thickness[layer]) / 100.0;
                 }
 
                 return SoilUtilities.MapConcentration(modelOC, waterBalanceModel.Thickness, Thickness, double.NaN);
@@ -284,12 +287,19 @@
         }
 
         /// <summary>Tabular data. Called by GUI.</summary>
-        public TabularData GetTabularData()
+        [JsonIgnore]
+        public List<GridTable> Tables
         {
-            return new TabularData(Name, new TabularData.Column[]
+            get
             {
-                new TabularData.Column("Depth", new VariableProperty(this, GetType().GetProperty("Depth")))
-            });
+                List<GridTableColumn> columns = new List<GridTableColumn>();
+                columns.Add(new GridTableColumn("Depth", new VariableProperty(this, GetType().GetProperty("Depth"))));
+
+                List<GridTable> tables = new List<GridTable>();
+                tables.Add(new GridTable(Name, columns, this));
+
+                return tables;
+            }
         }
     }
 }

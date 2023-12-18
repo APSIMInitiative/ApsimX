@@ -7,6 +7,8 @@ using Models.Interfaces;
 using Models.Soils.Nutrients;
 using Models.Soils.Arbitrator;
 using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
+using System.Collections.Generic;
 
 namespace Models.AgPasture
 {
@@ -145,13 +147,13 @@ namespace Models.AgPasture
         internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0, Epsilon); } }
+        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0, Epsilon); } }
+        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0, Epsilon); } }
+        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
@@ -316,27 +318,31 @@ namespace Models.AgPasture
             CalculateRootZoneBottomLayer();
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
-            var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0, Epsilon));
+            var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
             Live.SetBiomass(rootBiomassWt, rootBiomassN);
             var blankArray = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), 0.0);
             Dead.SetBiomass(blankArray, blankArray); // assumes there's no dead material
         }
 
-        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">The fractions of biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        /// <summary>Remove biomass from organ.</summary>
+        /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
+        /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
+        /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
             // Remove live tissue
-            Live.RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
+            Live.RemoveBiomass(liveToRemove, liveToResidue);
 
             // Remove dead tissue
-            Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
+            Dead.RemoveBiomass(deadToRemove, deadToResidue);
 
-            if (biomassRemoveType != "Harvest" || biomassRemoveType != "Cut")
-            {
-                IsKLModiferDueToDamageActive = true;
-            }
+            // Update LAI and herbage digestibility
+            species.EvaluateLAI();
+            species.EvaluateDigestibility();
+
+            return Live.DMRemoved + Dead.DMRemoved;
         }
 
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>

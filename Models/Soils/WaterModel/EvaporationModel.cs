@@ -1,13 +1,14 @@
-﻿namespace Models.WaterModel
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Models.Soils;
+using Newtonsoft.Json;
+
+namespace Models.WaterModel
 {
-    using APSIM.Shared.Utilities;
-    using Core;
-    using Interfaces;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using Models.Soils;
 
     /// <summary>
     ///Soil evaporation is assumed to take place in two stages: the constant and the falling rate stages.
@@ -53,9 +54,6 @@
         private IClock clock = null;
 
         [Link]
-        private IWeather weather = null;
-
-        [Link]
         private List<ICanopy> canopies = null;
 
         [Link]
@@ -73,6 +71,9 @@
 
         /// <summary>Is simulation in summer?</summary>
         private bool isInSummer;
+
+        /// <summary>The value of U yesterday. Used to detect a change in U.</summary>
+        private double UYesterday;
 
         /// <summary>Date for start of summer.</summary>
         private DateTime summerStartDate;
@@ -126,13 +127,15 @@
             double cona = waterBalance.WinterCona;
             summerStartDate = DateUtilities.GetDate(waterBalance.SummerDate, 1900).AddDays(1); // AddDays(1) - to reproduce behaviour of DateUtilities.WithinDate
             winterStartDate = DateUtilities.GetDate(waterBalance.WinterDate, 1900);
-            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, clock.Today, waterBalance.SummerDate);
+            var today = clock.Today == DateTime.MinValue ? clock.StartDate : clock.Today;
+            isInSummer = !DateUtilities.WithinDates(waterBalance.WinterDate, today, waterBalance.SummerDate);
 
             if (IsSummer)
             {
                 u = waterBalance.SummerU;
                 cona = waterBalance.SummerCona;
             }
+            UYesterday = u;
 
             //! set up evaporation stage
             var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]),
@@ -170,56 +173,12 @@
             //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
             CalcEs();
+            UYesterday = U;
             return Es;
         }
 
         /// <summary>Return true if simulation is in summer.</summary>
         private bool IsSummer => isInSummer;
-
-        /// <summary>Calculate the Eo (atmospheric potential)</summary>
-        private void CalcEo()
-        {
-            const double max_albedo = 0.23;
-
-            double coverGreenSum = canopies.Sum(c => c.CoverGreen);
-            double albedo = max_albedo - (max_albedo - waterBalance.Salb) * (1.0 - coverGreenSum);
-
-            // weighted mean temperature for the day (oC)
-            double wt_ave_temp = (0.60 * weather.MaxT) + (0.40 * weather.MinT);
-
-            // equilibrium evaporation rate (mm)
-            double eeq = weather.Radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
-
-            // find potential evapotranspiration (eo) from equilibrium evap rate
-            Eo = eeq * soilwat2_eeq_fac();
-        }
-
-        /// <summary>Calculate the Equilibrium Evaporation Rate</summary>
-        private double soilwat2_eeq_fac()
-        {
-            const double maxCriticalTemperature = 35.0;
-            const double minCriticalTemperature = 5.0;
-            if (weather.MaxT > maxCriticalTemperature)
-            {
-                //! at very high max temps eo/eeq increases
-                //! beyond its normal value of 1.1
-                return ((weather.MaxT - maxCriticalTemperature) * 0.05 + 1.1);
-            }
-            else
-            {
-                if (weather.MaxT < minCriticalTemperature)
-                {
-                    //! at very low max temperatures eo/eeq
-                    //! decreases below its normal value of 1.1
-                    //! note that there is a discontinuity at tmax = 5
-                    //! it would be better at tmax = 6.1, or change the
-                    //! .18 to .188 or change the 20 to 21.1
-                    return (0.01 * Math.Exp(0.18 * (weather.MaxT + 20.0)));
-                }
-            }
-
-            return 1.1;
-        }
 
         /// <summary>Calculate potential soil evap after modification for crop cover and residue weight.</summary>
         public void CalcEoReducedDueToShading()
@@ -305,6 +264,14 @@
             // Calculate actual soil water evaporation
             double esoil1;     // actual soil evap in stage 1
             double esoil2;     // actual soil evap in stage 2
+
+            // If U has changed (due to summer / winter turn over) and infiltration is zero then reset sumes1 to U to stop 
+            // artificially entering stage 1 evap. GitHub Issue #8112
+            if (UYesterday != U)
+            {
+                sumes1 = U;
+                sumes2 = CONA * Math.Pow(t, 0.5);
+            }
 
             // if infiltration, reset sumes1
             // reset sumes2 if infil exceeds sumes1

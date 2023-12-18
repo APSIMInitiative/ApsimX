@@ -1,15 +1,15 @@
-﻿namespace Models.Core
-{
-    using Models.Factorial;
-    using Models;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
-    using System;
-    using APSIM.Shared.Documentation;
+﻿    using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
+    using APSIM.Shared.Documentation;
+    using Models.Factorial;
+    using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.DCAPST;
+
+namespace Models.Core
+{
 
     /// <summary>
     /// A folder model
@@ -27,6 +27,7 @@
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
+    [ValidParent(ParentType = typeof(IPlant))]
     [ValidParent(ParentType = typeof(DCaPSTModelNG))]
     public class Folder : Model
     {

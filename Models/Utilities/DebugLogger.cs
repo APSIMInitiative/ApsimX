@@ -1,10 +1,10 @@
-﻿
+﻿using System;
+using System.IO;
+using APSIM.Shared.Utilities;
+using Models.Core;
+
 namespace Models.Utilities
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using System;
-    using System.IO;
 
     /// <summary>
     /// A class used when trying to compare two models. It allows the caller to write objects

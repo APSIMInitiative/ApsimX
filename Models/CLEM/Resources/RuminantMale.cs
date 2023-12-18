@@ -48,28 +48,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <inheritdoc/>
+        [FilterByProperty]
+        public override bool IsSterilised { get { return IsCastrated; } }
+
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
         [FilterByProperty]
-        public bool IsCastrated
-        {
-            get
-            {
-                return Attributes.Exists("Castrated");
-            }
-        }
+        public bool IsCastrated { get { return Attributes.Exists("Castrated"); }}
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public override bool IsAbleToBreed
-        {
-            get
-            {
-                return this.IsSire | this.IsWildBreeder;
-            }
-        }
+        public override bool IsAbleToBreed {  get { return this.IsSire | this.IsWildBreeder; } }
 
         /// <summary>
         /// Constructor

@@ -1,21 +1,20 @@
-using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Soils;
-using Models.Soils.Nutrients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Soils;
 
 namespace Models
 {
     /// <summary>This model is responsible for applying fertiliser.</summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]
-    public class Fertiliser :  Model
+    public class Fertiliser : Model
     {
         /// <summary>The soil</summary>
         [Link] private IPhysical soilPhysical = null;
-        
+
         /// <summary>The summary</summary>
         [Link] private ISummary Summary = null;
 
@@ -39,7 +38,7 @@ namespace Models
         public double NitrogenApplied { get; private set; } = 0;
 
         /// <summary>Types of fertiliser.</summary>
-        public enum Types 
+        public enum Types
         {
             /// <summary>The calcite ca</summary>
             CalciteCA,
@@ -72,7 +71,7 @@ namespace Models
             /// <summary>The banded p</summary>
             BandedP,
             /// <summary>The broadcast p</summary>
-            BroadcastP 
+            BroadcastP
         };
 
         /// <summary>Apply fertiliser.</summary>
@@ -147,7 +146,7 @@ namespace Models
                 if (doOutput)
                 {
                     var cumThickness = SoilUtilities.ToCumThickness(soilPhysical.Thickness);
-                    Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", amount, type, cumThickness[layer], layer + 1), MessageType.Diagnostic);
+                    Summary.WriteMessage(this, $"{amount:F1} kg/ha of {type} added at depth {cumThickness[layer]:F0} layer {layer + 1}", MessageType.Diagnostic);
                 }
             }
         }

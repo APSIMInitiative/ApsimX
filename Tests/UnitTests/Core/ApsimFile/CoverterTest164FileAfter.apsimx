@@ -1,0 +1,46 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 164,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using System;",
+            "using Models.Core;",
+            "using Models.Interfaces;",
+            "using Models.PMF;",
+            "using APSIM.Shared.Utilities;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable]",
+            "    public class Script : Model",
+            "    {",
+            "    //CODE",
+            "    }",
+            "}"
+          ],
+          "Parameters": [],
+          "Name": "Manager",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

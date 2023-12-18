@@ -1,15 +1,13 @@
-﻿namespace Models.Climate
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Interfaces;
+using Newtonsoft.Json;
+
+namespace Models.Climate
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Newtonsoft.Json;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Allow random resampling of whole years of weather data from a met file.
@@ -137,6 +135,11 @@
         [Units("hPa")]
         [JsonIgnore]
         public double VPD { get; set; }
+
+        /// <summary>Daily Pan evaporation.</summary>
+        [Units("mm")]
+        [JsonIgnore]
+        public double PanEvap { get; set; }
 
         /// <summary>Rainfall (mm).</summary>
         [Units("mm")]

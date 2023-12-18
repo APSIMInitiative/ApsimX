@@ -1,14 +1,16 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.EMMA;
+using Models.Core.ApsimFile;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace Models.Core
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core.ApsimFile;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
 
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
@@ -52,26 +54,48 @@
 
                 bool isUnderReplacements = model.FindAncestor<Folder>("Replacements") != null;
 
-                // Add missing children from the model in resource
+                // Get children that need to be added from the resource model
                 IEnumerable<IModel> childrenToAdd = modelFromResource.Children.Where(mc =>
                 {
                     return !model.Children.Any(c => c.GetType() == mc.GetType() &&
                                                     string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
                 });
 
-                // Make all children that area about to be added from resource hidden and readonly.
-                bool isHidden = !isUnderReplacements;
+                // Make all children that are about to be added from resource hidden and readonly.
+                bool isHidden = true;
                 foreach (Model descendant in childrenToAdd)
-                {
                     descendant.IsHidden = isHidden;
-                    descendant.ReadOnly = isHidden;
-                }
 
                 model.Children.InsertRange(0, childrenToAdd);
 
                 CopyPropertiesFrom(modelFromResource, model);
                 model.ParentAllDescendants();
             }
+        }
+
+        /// <summary>
+        /// Get a collection of child models that are from a resource.
+        /// </summary>
+        /// <param name="parentModel">The parent model to look for children.</param>
+        /// <returns></returns>
+        public IEnumerable<IModel> GetChildModelsThatAreFromResource(IModel parentModel)
+        {
+            IEnumerable<IModel> childrenFromResource = null;
+
+            if (!string.IsNullOrEmpty(parentModel.ResourceName))
+            {
+                IModel modelFromResource = GetModel(parentModel.ResourceName);
+                if (modelFromResource != null)
+                {
+                    childrenFromResource = parentModel.Children.Where(mc =>
+                    {
+                        return modelFromResource.Children.Any(c => c.GetType() == mc.GetType() &&
+                                                              string.Equals(c.Name, mc.Name, StringComparison.InvariantCultureIgnoreCase));
+                    });
+                }
+            }
+
+            return childrenFromResource;
         }
 
         /// <summary>Replace a model or all its child models that have ResourceName 
@@ -82,10 +106,10 @@
             if (!string.IsNullOrEmpty(model.ResourceName))
                 ReplaceModel(model, model.Enabled);
             else
-            { 
-               foreach (var child in model.FindAllDescendants()
-                                        .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
-                                        .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
+            {
+                foreach (var child in model.FindAllDescendants()
+                                         .Where(m => !string.IsNullOrEmpty(m.ResourceName))   // non-empty resourcename
+                                         .ToArray()) // ToArray is necessary to stop 'Collection was modified' exception
                 {
                     ReplaceModel(child, model.Enabled);
                 }
@@ -269,7 +293,7 @@
                 string[] propertiesNotToCopy = { "$type", "Name", "Parent", "Children", "IncludeInDocumentation", "ResourceName", "Enabled", "ReadOnly" };
 
                 List<PropertyInfo> properties = new List<PropertyInfo>();
-                
+
                 var children = JObject.Parse(resourceJson)["Children"] as JArray;
                 if (children == null)
                     throw new Exception($"Invalid resource {model.Name}");

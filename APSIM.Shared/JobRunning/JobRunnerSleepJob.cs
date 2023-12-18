@@ -1,7 +1,7 @@
-﻿namespace APSIM.Shared.JobRunning
-{
-    using System.Threading;
+﻿using System.Threading;
 
+namespace APSIM.Shared.JobRunning
+{
     /// <summary>A simple runnable sleep job.</summary>
     public class JobRunnerSleepJob : IRunnable
     {
@@ -30,7 +30,7 @@
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
-        public void Cleanup()
+        public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
             // Do nothing.
         }

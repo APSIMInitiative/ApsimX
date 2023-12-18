@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Models.DCAPST.Canopy;
-
 using Models.DCAPST.Interfaces;
 
 namespace Models.DCAPST
@@ -27,7 +26,7 @@ namespace Models.DCAPST
         /// The environmental temperature
         /// </summary>
         private ITemperature Temperature { get; set; }
-        
+
         /// <summary>
         /// The canopy undergoing photosynthesis
         /// </summary>
@@ -72,22 +71,22 @@ namespace Models.DCAPST
         /// Potential total daily biomass
         /// </summary>
         public double PotentialBiomass { get; private set; }
-        
+
         /// <summary>
         /// Actual total daily biomass 
         /// </summary>
         public double ActualBiomass { get; private set; }
-        
+
         /// <summary>
         /// Daily water demand
         /// </summary>
         public double WaterDemanded { get; private set; }
-        
+
         /// <summary>
         /// Daily water supplied
         /// </summary>
         public double WaterSupplied { get; private set; }
-        
+
         /// <summary>
         /// Daily intercepted radiation
         /// </summary>
@@ -112,9 +111,9 @@ namespace Models.DCAPST
         /// <param name="canopy"></param>
         /// <param name="trans"></param>
         public DCAPSTModel(
-            ISolarGeometry solar, 
-            ISolarRadiation radiation, 
-            ITemperature temperature, 
+            ISolarGeometry solar,
+            ISolarRadiation radiation,
+            ITemperature temperature,
             IPathwayParameters pathway,
             ICanopyAttributes canopy,
             Transpiration trans
@@ -141,7 +140,7 @@ namespace Models.DCAPST
         {
             var steps = (end - start) / timestep;
             if (steps % 1 == 0) steps++;
-            
+
             Intervals = Enumerable.Range(0, (int)Math.Ceiling(steps))
                 .Select(i => new IntervalValues() { Time = start + i * timestep })
                 .ToArray();
@@ -173,7 +172,7 @@ namespace Models.DCAPST
                 {
                     // Reduce to the flat biological limit
                     waterDemands = waterDemands.Select(w => Math.Min(w, Biolimit)).ToList();
-                }               
+                }
 
                 potential = CalculateLimited(waterDemands);
             }
@@ -195,7 +194,7 @@ namespace Models.DCAPST
             PotentialBiomass = potential * hrs_to_seconds / mmolToMol * molWtCO2 * B / (1 + RootShootRatio);
             WaterDemanded = totalDemand;
             WaterSupplied = (soilWater < totalDemand) ? limitedSupply.Sum() : waterDemands.Sum();
-        }        
+        }
 
         /// <summary>
         /// Calculates the ratio of A to A + B
@@ -234,10 +233,10 @@ namespace Models.DCAPST
         {
             Temperature.UpdateAirTemperature(I.Time);
             Radiation.UpdateRadiationValues(I.Time);
-            var sunAngle = Solar.SunAngle(I.Time);            
+            var sunAngle = Solar.SunAngle(I.Time);
             Canopy.DoSolarAdjustment(sunAngle);
 
-            if (IsSensible()) 
+            if (IsSensible())
                 return true;
             else
             {
@@ -278,7 +277,7 @@ namespace Models.DCAPST
         {
             foreach (var I in Intervals)
             {
-                if (!TryInitiliase(I)) continue;                
+                if (!TryInitiliase(I)) continue;
 
                 InterceptedRadiation += Radiation.Total * Canopy.GetInterceptedRadiation() * 3600;
 
@@ -303,7 +302,7 @@ namespace Models.DCAPST
                 var interval = Intervals[i];
 
                 if (!TryInitiliase(interval)) continue;
-                
+
                 double total = sunlitDemand[i] + shadedDemand[i];
                 transpiration.MaxRate = total;
                 DoTimestepUpdate(interval, sunlitDemand[i] / total, shadedDemand[i] / total);
@@ -323,7 +322,7 @@ namespace Models.DCAPST
             for (int i = 0; i < Intervals.Length; i++)
             {
                 var interval = Intervals[i];
-                
+
                 if (!TryInitiliase(interval)) continue;
 
                 transpiration.MaxRate = waterSupply[i];
@@ -343,13 +342,13 @@ namespace Models.DCAPST
 
             var totalHeat = Canopy.CalcBoundaryHeatConductance();
             var sunlitHeat = Canopy.CalcSunlitBoundaryHeatConductance();
-            
-            var shadedHeat =  (totalHeat == sunlitHeat) ? double.Epsilon : totalHeat - sunlitHeat;
+
+            var shadedHeat = (totalHeat == sunlitHeat) ? double.Epsilon : totalHeat - sunlitHeat;
 
             interval.AirTemperature = Temperature.AirTemperature;
 
             PerformPhotosynthesis(Canopy.Sunlit, sunlitHeat, sunFraction);
-            interval.Sunlit = Canopy.Sunlit.GetAreaValues();            
+            interval.Sunlit = Canopy.Sunlit.GetAreaValues();
 
             PerformPhotosynthesis(Canopy.Shaded, shadedHeat, shadeFraction);
             interval.Shaded = Canopy.Shaded.GetAreaValues();
@@ -380,10 +379,10 @@ namespace Models.DCAPST
         {
             double initialDemand = demand.Sum();
 
-            if (initialDemand < soilWaterAvail) return demand;            
-            
-            if (soilWaterAvail < 0.0001) return demand.Select(d => 0.0);            
-            
+            if (initialDemand < soilWaterAvail) return demand;
+
+            if (soilWaterAvail < 0.0001) return demand.Select(d => 0.0);
+
             double maxDemandRate = demand.Max();
             double minDemandRate = 0;
             double averageDemandRate = 0;

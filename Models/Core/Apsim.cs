@@ -1,15 +1,13 @@
-﻿namespace Models.Core
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using APSIM.Shared.Utilities;
+using Models.Factorial;
+
+namespace Models.Core
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using APSIM.Shared.Utilities;
-    using Functions;
-    using Factorial;
 
     /// <summary>
     /// The API for models to discover other models, get and set variables in
@@ -87,15 +85,16 @@
             if (childType == typeof(Simulations))
                 return false;
 
-            if (parent.GetType() == typeof(Folder) ||
-                parent.GetType() == typeof(Factor) ||
-                parent.GetType() == typeof(CompositeFactor))
+            //get list of parents for the base model class
+            List<Type> modelTypes = new List<Type>();
+            foreach (ValidParentAttribute modelParent in ReflectionUtilities.GetAttributes(typeof(Model), typeof(ValidParentAttribute), true))
+                modelTypes.Add(modelParent.ParentType);
+
+            //check if the parent is one of the parents for all models
+            if (modelTypes.Contains(parent))
                 return true;
 
-            // Functions are currently allowable anywhere
-            if (childType.GetInterface("IFunction") != null)
-                return true;
-
+            bool hasParentType = false;
             // Is allowable if one of the valid parents of this type (t) matches the parent type.
             foreach (ValidParentAttribute validParent in ReflectionUtilities.GetAttributes(childType, typeof(ValidParentAttribute), true))
             {
@@ -106,8 +105,17 @@
 
                     if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;
+
+                    //check if parent is one of the parents provided by Model
+                    if (!modelTypes.Contains(validParent.ParentType))
+                        hasParentType = true;
                 }
             }
+
+            // If a type is an IFunction and doesn't have any non-default valid parents, show it everywhere
+            if (!hasParentType && childType.GetInterface("IFunction") != null)
+                return true;
+
             return false;
         }
 
@@ -174,7 +182,7 @@
 
             // Remove models that cannot be added to parent.
             allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.ModelType));
-            
+
             //allowableModels.Sort(new ReflectionUtilities.TypeComparer());
             return allowableModels;
         }
@@ -183,21 +191,21 @@
         public class ModelDescription : IComparable<ModelDescription>
         {
             /// <summary>Name of resource.</summary>
-            public string ResourceString {get; set; }
+            public string ResourceString { get; set; }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t) 
-            { 
+            public ModelDescription(Type t)
+            {
                 ModelType = t;
                 ModelName = ModelType.Name;
             }
 
             /// <summary>Constructor.</summary>
-            public ModelDescription(Type t, string name, string resourceName) 
-            { 
+            public ModelDescription(Type t, string name, string resourceName)
+            {
                 ModelType = t;
                 ModelName = name;
-                ResourceString = resourceName; 
+                ResourceString = resourceName;
             }
 
             /// <summary>Type of model.</summary>

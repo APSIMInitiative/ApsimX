@@ -1,6 +1,8 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
+using Models.GrazPlan;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -18,21 +20,28 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
     public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
     {
-
         /// <summary>
-        /// Condition cutoff for conception
+        /// Style of calculating condition-based conception
         /// </summary>
-        [Description("Condition index (wt/normalised wt for age) below which no conception")]
-        [Required, GreaterThanValue(0)]
-        public double ConditionCutOff { get; set; }
-
+        [Description("Style of calculating condition-based conception")]
+        [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
+        [Required]
+        public ConditionBasedCalculationStyle ConditionBasedConceptionStyle { get; set; }
         /// <summary>
-        /// Maximum probability of conceiving given condition satisfied
+        /// Cut-off for condition-based conception
         /// </summary>
-        [Description("Maximum probability of conceiving")]
+        [Category("Advanced", "Survival")]
+        [Description("Cut-off for condition-based conception")]
+        [Required, GreaterThanEqualValue(0)]
+        public double ConditionBasedConceptionCutOff { get; set; }
+        /// <summary>
+        /// Probability of dying if less than condition-based mortality cut-off
+        /// </summary>
+        [Category("Advanced", "Survival")]
+        [Description("Probability of conception when above cut-off")]
+        [System.ComponentModel.DefaultValue(1)]
         [Required, Proportion, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        public double MaximumConceptionProbability { get; set; }
+        public double ConditionBasedConceptionProbability { get; set; }
 
         /// <summary>
         /// constructor
@@ -46,10 +55,23 @@ namespace Models.CLEM.Resources
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
-        /// <returns></returns>
+        /// <returns>Conception rate (0-1)</returns>
+        /// <remarks>A negative value for Condition index will use the Body Condition Score approach</remarks>
         public double ConceptionRate(RuminantFemale female)
         {
-            return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
+            switch(ConditionBasedConceptionStyle)
+            {
+                case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+                    return (female.Weight >= female.HighWeight * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                case ConditionBasedCalculationStyle.RelativeCondition:
+                    return (female.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                case ConditionBasedCalculationStyle.BodyConditionScore:
+                    return (female.BodyConditionScore >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                case ConditionBasedCalculationStyle.None:
+                    return 1;
+                default:
+                    throw new NotImplementedException($"No conception estimate available for style {ConditionBasedConceptionStyle}");
+            }
         }
 
         #region descriptive summary 
@@ -60,11 +82,30 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\r\nNo breeding females will concieve if this ratio is below ");
-                if (ConditionCutOff == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">No set</span>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>");
+                htmlWriter.Write("Females ");
+                switch (ConditionBasedConceptionStyle)
+                {
+                    case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
+                        htmlWriter.Write("with a ratio of live weight to highest weight achieved greater than or equal to ");
+                        break;
+                    case ConditionBasedCalculationStyle.RelativeCondition:
+                        htmlWriter.Write("with a relative condition (live weight over normalised weight) greater than or equal to ");
+                        break;
+                    case ConditionBasedCalculationStyle.BodyConditionScore:
+                        htmlWriter.Write("with a Body Condition Score greater than or equal to ");
+                        break;
+                    case ConditionBasedCalculationStyle.None:
+                        htmlWriter.Write("");
+                        break;
+                    default:
+                        htmlWriter.Write("with <span class=\"errorlink\">Undefined style selected</span> ");
+                        break;
+                }
+                if(ConditionBasedConceptionStyle != ConditionBasedCalculationStyle.None)
+                {
+                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionCutOff, warnZero: true)}");
+                }
+                htmlWriter.Write($" will have a {CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionProbability, warnZero: true)} probability of conceiving.");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }

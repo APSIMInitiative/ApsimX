@@ -1,8 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using System;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
-using System;
-
 
 namespace Models.PMF
 {
@@ -42,7 +41,7 @@ namespace Models.PMF
             ////First time round allocate with priority factors applied so higher priority sinks get more allocation
             for (int i = 0; i < Organs.Length; i++)
             {
-                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); 
+                double StructuralRequirement = Math.Max(0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]);
                 double MetabolicRequirement = Math.Max(0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
                 double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + StorageRequirement) > 0.0)
@@ -68,9 +67,15 @@ namespace Models.PMF
                 double StorageRequirement = Math.Max(0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]);
                 if ((StructuralRequirement + MetabolicRequirement + StorageRequirement) > 0.0)
                 {
-                    double StructuralAllocation = Math.Min(StructuralRequirement, FirstPassNotallocated * MathUtilities.Divide(StructuralRequirement, RemainingDemand, 0));
-                    double MetabolicAllocation = Math.Min(MetabolicRequirement, FirstPassNotallocated * MathUtilities.Divide(MetabolicRequirement, RemainingDemand, 0));
-                    double StorageAllocation = Math.Min(StorageRequirement, FirstPassNotallocated * MathUtilities.Divide(StorageRequirement, RemainingDemand, 0));
+                    double StructuralAllocation = 0;
+                    double MetabolicAllocation = 0;
+                    double StorageAllocation = 0;
+                    if (!MathUtilities.FloatsAreEqual(RemainingDemand, 0.0, 0.000001))
+                    {
+                        StructuralAllocation = Math.Min(StructuralRequirement, FirstPassNotallocated * MathUtilities.Divide(StructuralRequirement, RemainingDemand, 0));
+                        MetabolicAllocation = Math.Min(MetabolicRequirement, FirstPassNotallocated * MathUtilities.Divide(MetabolicRequirement, RemainingDemand, 0));
+                        StorageAllocation = Math.Min(StorageRequirement, FirstPassNotallocated * MathUtilities.Divide(StorageRequirement, RemainingDemand, 0));
+                    }
 
                     BAT.StructuralAllocation[i] += StructuralAllocation;
                     BAT.MetabolicAllocation[i] += MetabolicAllocation;
