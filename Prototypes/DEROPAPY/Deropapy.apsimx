@@ -1620,7 +1620,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Carbon.Photosynthesis.FCO2",
+                          "VariableName": "[Leaf].Photosynthesis.FCO2",
                           "Name": "PhotosynthesisCO2Modifier",
                           "ResourceName": null,
                           "Children": [],
@@ -12911,7 +12911,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Weather].FileName  = VCS_Brightwater.met, VCS_Cromwell.met,VCS_Jervoistown.met",
+                  "Specification": "[Weather].FileName  = 20993_Lincoln_Had_RCPpast.met, 10731_South_Had_RCPpast.met",
                   "Name": "Location",
                   "ResourceName": null,
                   "Children": [],
@@ -12929,14 +12929,14 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "Descriptors": null,
-          "Name": "DEROtest",
+          "Name": "Rotation",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
-              "ExcelWorkSheetName": null,
+              "FileName": "20993_Lincoln_Had_RCPpast.met",
+              "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -12945,7 +12945,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "1998-07-01T00:00:00",
+              "Start": "2000-07-01T00:00:00",
               "End": "2001-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -12976,9 +12976,192 @@
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
-              "Name": "Zone",
+              "Name": "Block",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
+                  "Name": "ManagerFolder",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "CodeArray": [
+                        "using Models.Soils;",
+                        "using Models.Core;",
+                        "using System;",
+                        "",
+                        "namespace Models",
+                        "{",
+                        "    [Serializable]",
+                        "    public class Script : Model",
+                        "    {",
+                        "        //> Links to other Apsim models",
+                        "        [Link] Clock Clock;",
+                        "        [Link] ISummary mySummary;",
+                        "",
+                        "        //> User inputs from properties tab",
+                        "        [Separator(\"Tags used to defined simulation factors\")]",
+                        "        [Description(\"Agent number: \")]",
+                        "        public string AGENT_NO { get; set; }",
+                        "        [Description(\"Latitude: \")]",
+                        "        public string Lat { get; set; }",
+                        "        [Description(\"Longitude: \")]",
+                        "        public string Lon { get; set; }",
+                        "        [Description(\"SoilStamp: \")]",
+                        "        public string SoilStamp { get; set; }",
+                        "        [Description(\"GCM: \")]",
+                        "        public string GCM { get; set; }",
+                        "        [Description(\"RCP: \")]",
+                        "        public string RCP { get; set; }",
+                        "        [Description(\"Time slice: \")]",
+                        "        public string TS { get; set; }",
+                        "",
+                        "        //> Internal variables",
+                        "        private string someVar;",
+                        "        ",
+                        "        [EventSubscribe(\"DoManagementCalculations\")]",
+                        "        private void OnDoManagementCalculations(object sender, EventArgs e)",
+                        "        {",
+                        "            // Sort out time slice classification",
+                        "            if ((Clock.Today.Date.Year <= 2005))",
+                        "            {",
+                        "                TS = \"Baseline\";",
+                        "            }",
+                        "            else",
+                        "            {",
+                        "                TS = \"Future\";",
+                        "            }",
+                        "        }",
+                        "    }",
+                        "}"
+                      ],
+                      "Parameters": [
+                        {
+                          "Key": "AGENT_NO",
+                          "Value": "999"
+                        },
+                        {
+                          "Key": "Lat",
+                          "Value": "999"
+                        },
+                        {
+                          "Key": "Lon",
+                          "Value": "999"
+                        },
+                        {
+                          "Key": "SoilStamp",
+                          "Value": "SiltLoam"
+                        },
+                        {
+                          "Key": "GCM",
+                          "Value": "ERA"
+                        },
+                        {
+                          "Key": "RCP",
+                          "Value": "ERA"
+                        },
+                        {
+                          "Key": "TS",
+                          "Value": "BaseLine"
+                        }
+                      ],
+                      "Name": "FactorLabels",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today as ReportDate",
+                    "[Clock].Today.Year as Year",
+                    "",
+                    "[FactorLabels].Script.AGENT_NO as AGENT_NO",
+                    "[FactorLabels].Script.Lat as Lat",
+                    "[FactorLabels].Script.Lon as Lon",
+                    "[FactorLabels].Script.GCM as GCM",
+                    "[FactorLabels].Script.RCP as RCP",
+                    "[FactorLabels].Script.TS as TimeSlice",
+                    "[FactorLabels].Script.SoilStamp as SoilStamp",
+                    "",
+                    "",
+                    "[Clock].Today",
+                    "[Deropapy].Phenology.Stage",
+                    "[Deropapy].Phenology.CurrentStageName",
+                    "[Deropapy].Phenology.CurrentPhaseName",
+                    "[Deropapy].Phenology.AccumulatedEmergedTT",
+                    "[DeroPapy].Phenology.Emerged",
+                    "[Deropapy].Height",
+                    "[Deropapy].Width",
+                    "[Deropapy].CoverGreen",
+                    "[Deropapy].Leaf.Canopy.LAI",
+                    "[Deropapy].Leaf.Canopy.LAITotal",
+                    "[Deropapy].Leaf.Canopy.CoverGreen",
+                    "[Deropapy].Leaf.Canopy.CoverTotal",
+                    "[Deropapy].Leaf.Canopy.LAIDead",
+                    "[Deropapy].Leaf.Canopy.CoverDead",
+                    "[Deropapy].Leaf.Wt",
+                    "[Deropapy].Trunk.Wt",
+                    "[Deropapy].Root.Wt",
+                    "[Deropapy].Product.Wt",
+                    "[Deropapy].Total.Wt",
+                    "[Deropapy].Leaf.Photosynthesis",
+                    "[Deropapy].Root.Network.Depth"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfYear"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Output",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Deropapy].Phenology.Stage",
+                    "[Deropapy].Phenology.CurrentStageName",
+                    "[Deropapy].Phenology.CurrentPhaseName",
+                    "[Deropapy].Phenology.AccumulatedEmergedTT",
+                    "[DeroPapy].Phenology.Emerged",
+                    "[Deropapy].Height",
+                    "[Deropapy].Width",
+                    "[Deropapy].CoverGreen",
+                    "[Deropapy].Leaf.Canopy.LAI",
+                    "[Deropapy].Leaf.Canopy.LAITotal",
+                    "[Deropapy].Leaf.Canopy.CoverGreen",
+                    "[Deropapy].Leaf.Canopy.CoverTotal",
+                    "[Deropapy].Leaf.Canopy.LAIDead",
+                    "[Deropapy].Leaf.Canopy.CoverDead",
+                    "[Deropapy].Leaf.Wt",
+                    "[Deropapy].Trunk.Wt",
+                    "[Deropapy].Root.Wt",
+                    "[Deropapy].Product.Wt",
+                    "[Deropapy].Total.Wt",
+                    "[Deropapy].Leaf.Photosynthesis",
+                    "[Deropapy].Root.Network.Depth"
+                  ],
+                  "EventNames": [
+                    "[Clock].DoReport"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Report",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 0,
@@ -13503,42 +13686,6 @@
                   "CoeffientFile": "Test.csv",
                   "CropName": "Maize",
                   "Name": "ThisDero",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[Deropapy].Phenology.Stage",
-                    "[Deropapy].Phenology.CurrentStageName",
-                    "[Deropapy].Phenology.CurrentPhaseName",
-                    "[Deropapy].Phenology.AccumulatedEmergedTT",
-                    "[DeroPapy].Phenology.Emerged",
-                    "[Deropapy].Height",
-                    "[Deropapy].Width",
-                    "[Deropapy].CoverGreen",
-                    "[Deropapy].Leaf.Canopy.LAI",
-                    "[Deropapy].Leaf.Canopy.LAITotal",
-                    "[Deropapy].Leaf.Canopy.CoverGreen",
-                    "[Deropapy].Leaf.Canopy.CoverTotal",
-                    "[Deropapy].Leaf.Canopy.LAIDead",
-                    "[Deropapy].Leaf.Canopy.CoverDead",
-                    "[Deropapy].Leaf.Wt",
-                    "[Deropapy].Trunk.Wt",
-                    "[Deropapy].Root.Wt",
-                    "[Deropapy].Product.Wt",
-                    "[Deropapy].Total.Wt",
-                    "[Deropapy].Leaf.Photosynthesis",
-                    "[Deropapy].Root.Network.Depth"
-                  ],
-                  "EventNames": [
-                    "[Clock].DoReport"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "Report",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -20782,7 +20929,7 @@
                                 "Children": [
                                   {
                                     "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Leaf].Carbon.Photosynthesis.FCO2",
+                                    "VariableName": "[Leaf].Photosynthesis.FCO2",
                                     "Name": "PhotosynthesisCO2Modifier",
                                     "ResourceName": null,
                                     "Children": [],
@@ -26132,7 +26279,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Weather].FileName  = 10731_238_39.met",
+                  "Specification": "[Weather].FileName  = 20993_Lincoln_Had_RCPpast.met",
                   "Name": "Location",
                   "ResourceName": null,
                   "Children": [],
@@ -26156,8 +26303,8 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
-              "ExcelWorkSheetName": null,
+              "FileName": "20993_Lincoln_Had_RCPpast.met",
+              "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
               "Children": [],
@@ -26166,8 +26313,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "1998-07-01T00:00:00",
-              "End": "2001-06-30T00:00:00",
+              "Start": "1971-07-01T00:00:00",
+              "End": "1975-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
