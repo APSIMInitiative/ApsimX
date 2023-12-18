@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/12/18 15:14:06</lastsaved>
+  <lastsaved>2023/12/19 10:12:06</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -48,7 +48,7 @@
               </element>
               <element>
                 <field name="event" kind="string">
-                  <val>IrrigAndFertControl.do_management</val>
+                  <val>IrrigAndFert.do_management</val>
                 </field>
                 <field name="order" kind="integer4">
                   <val>2000</val>
@@ -270,13 +270,29 @@
                   <val>5000</val>
                 </field>
               </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>Fertilise.do_management</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>1000</val>
+                </field>
+              </element>
+              <element>
+                <field name="event" kind="string">
+                  <val>Irrigate.do_management</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>1000</val>
+                </field>
+              </element>
             </init>
           </initsection>
       ]]>
     </initdata>
   </component>
 
-  <component name="IrrigAndFertControl" active="T" class="Manager">
+  <component name="IrrigAndFert" active="T" class="Manager">
     <executable name="manager.dll" version="1.1"/>
     <initdata>
       <![CDATA[
@@ -292,16 +308,21 @@
               <val>on start</val>
               <val>{</val>
               <val>   set prefix = Config.cwd</val>
-              <val>   reset daily_results.filename      = prefix &amp; 'ryegrass_daily_irr.txt'</val>
-              <val>   reset daily_results_mass.filename = prefix &amp; 'ryegrass_daily_mass_irr.txt'</val>
-              <val>   reset monthly_results.filename    = prefix &amp; 'ryegrass_monthly_irr.txt'</val>
+              <val>   reset daily_results.filename      = prefix &amp; 'ryegrass_daily_' &amp; Irrigate.IrrigID &amp; '_' &amp; Fertilise.FertID &amp; '.txt'</val>
+              <val>   reset daily_results_mass.filename = prefix &amp; 'ryegrass_daily_mass_' &amp; Irrigate.IrrigID &amp; '_' &amp; Fertilise.FertID &amp; '.txt'</val>
+              <val>   reset monthly_results.filename    = prefix &amp; 'ryegrass_monthly_' &amp; Irrigate.IrrigID &amp; '_' &amp; Fertilise.FertID &amp; '.txt'</val>
               <val>}</val>
-              <val></val>
-              <val>define const real IRR_AMOUNT[1] = [50.0]       ! amount to irrigate</val>
               <val></val>
               <val>each 18 Nov</val>
               <val>{</val>
-              <val>   farm.pasture01.water.irrigated amount=IRR_AMOUNT</val>
+              <val>   if Irrigate.IrrigAmount[0] &gt; 0</val>
+              <val>      farm.pasture01.water.irrigated amount=Irrigate.IrrigAmount</val>
+              <val>}</val>
+              <val></val>
+              <val>each 1 Sep</val>
+              <val>{</val>
+              <val>   if Fertilise.FertAmount &gt; 0</val>
+              <val>      farm.pasture01.nitrogen.fertilize no3_n=Fertilise.FertAmount, nh4_n=0.0, urea_n=0.0</val>
               <val>}</val>
             </init>
             <init name="logfile" kind="string">
@@ -404,7 +425,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -976,7 +997,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1310,7 +1331,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1392,7 +1413,7 @@
               <val>silo</val>
             </init>
             <init name="filename" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
             </init>
             <init name="locality" kind="string">
               <val></val>
@@ -1426,7 +1447,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="dbname" kind="string">
-              <val>C:\Users\RIC394\AppData\Local\Temp\dbFolderLabel.db</val>
+              <val>C:\Users\her123\AppData\Local\Temp\dbFolderLabel.db</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -2014,7 +2035,7 @@
               <val>Pasture_component_test</val>
             </init>
             <init name="fwsnam" kind="string">
-              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
+              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
             </init>
             <init name="runid" kind="integer4">
               <val>1</val>
@@ -2038,7 +2059,7 @@
               <val>masterkey</val>
             </init>
             <init name="sdml_gen_time" kind="string">
-              <val>2023-12-18 15:14:06.949</val>
+              <val></val>
             </init>
           </initsection>
       ]]>
@@ -2064,7 +2085,7 @@
       ]]>
     </initdata>
     <system name="pasture01" active="T" class="Paddock">
-      <executable name="PADDOCK.dll" version="1.3"/>
+      <executable name="paddock.dll" version="1.3"/>
       <initdata>
         <![CDATA[
             <initsection>
@@ -2336,7 +2357,7 @@
                   <val></val>
                 </init>
                 <init name="forage_params" kind="string">
-                  <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
+                  <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
                 </init>
                 <init name="kno3" kind="single" unit="kg/mg/d">
                   <val>0</val>
@@ -2372,7 +2393,7 @@
       </system>
 
       <component name="ryegrass" active="T" class="Pasture">
-        <executable name="PASTURE.dll" version="1.5"/>
+        <executable name="pasture.dll" version="1.5"/>
         <initdata>
           <![CDATA[
               <initsection>
@@ -2604,6 +2625,60 @@
     </initdata>
   </component>
 
+  <component name="Fertilise" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define real FertAmount = 0.0</val>
+              <val>define text FertID = 'Fert0'</val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Irrigate" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define IrrigAmount = [0.0]</val>
+              <val>define text IrrigID = 'Irrig0'   ! for naming output text files</val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
 
   <notes>
     <line></line>
@@ -2663,7 +2738,7 @@
       <author>CSIRO Plant Industry</author>
     </module>
     <module>
-      <file>PADDOCK.dll</file>
+      <file>paddock.dll</file>
       <version>1.3</version>
       <class>Paddock</class>
       <author>CSIRO Plant Industry</author>
@@ -2696,7 +2771,7 @@
       <contextfile>SurfaceOM.xml</contextfile>
     </module>
     <module>
-      <file>PASTURE.dll</file>
+      <file>pasture.dll</file>
       <version>1.5</version>
       <class>Pasture</class>
       <author>CSIRO Plant Industry</author>
@@ -2704,7 +2779,7 @@
   </binaries>
 
 <scenarios>
-  <component name="IrrigationAndFertilising" replaces="IrrigAndFertControl" active="T" class="Manager">
+  <component name="Fert0" replaces="Fertilise" active="T" class="Manager">
     <executable name="manager.dll" version="1.1"/>
     <initdata>
       <![CDATA[
@@ -2749,23 +2824,194 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="rules" kind="string" array="T">
+              <val>define real FertAmount = 0.0</val>
+              <val>define text FertID = 'Fert0'  ! for naming output text files</val>
+            </init>
+            <init name="logfile" kind="string">
               <val></val>
-              <val>define text prefix</val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
               <val></val>
-              <val>on start</val>
-              <val>{</val>
-              <val>   set prefix = Config.cwd</val>
-              <val>   reset daily_results.filename      = prefix &amp; 'ryegrass_daily_irr.txt'</val>
-              <val>   reset daily_results_mass.filename = prefix &amp; 'ryegrass_daily_mass_irr.txt'</val>
-              <val>   reset monthly_results.filename    = prefix &amp; 'ryegrass_monthly_irr.txt'</val>
-              <val>}</val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Irrig0" replaces="Irrigate" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="subscribed_events" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>do_management</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>true</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>save_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>restore_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define IrrigAmount = [0.0]</val>
+              <val>define text IrrigID = 'Irrig0'   ! for naming output text files</val>
+            </init>
+            <init name="logfile" kind="string">
               <val></val>
-              <val>define const real IRR_AMOUNT[1] = [50.0]       ! amount to irrigate</val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
               <val></val>
-              <val>each 18 Nov</val>
-              <val>{</val>
-              <val>   farm.pasture01.water.irrigated amount=IRR_AMOUNT</val>
-              <val>}</val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Fert50" replaces="Fertilise" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="subscribed_events" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>do_management</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>true</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>save_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>restore_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define real FertAmount = 50.0</val>
+              <val>define text FertID = 'Fert50' ! for naming output text files</val>
+            </init>
+            <init name="logfile" kind="string">
+              <val></val>
+            </init>
+            <init name="log_set" kind="boolean">
+              <val>false</val>
+            </init>
+            <init name="text" kind="string">
+              <val></val>
+            </init>
+          </initsection>
+      ]]>
+    </initdata>
+  </component>
+
+  <component name="Irrig50" replaces="Irrigate" active="T" class="Manager">
+    <executable name="manager.dll" version="1.1"/>
+    <initdata>
+      <![CDATA[
+          <initsection>
+            <init name="published_events" array="T">
+            </init>
+            <init name="subscribed_events" array="T">
+              <element>
+                <field name="name" kind="string">
+                  <val>do_management</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>true</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>2000</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>save_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+              <element>
+                <field name="name" kind="string">
+                  <val>restore_checkpoint</val>
+                </field>
+                <field name="include" kind="boolean">
+                  <val>false</val>
+                </field>
+                <field name="order" kind="integer4">
+                  <val>0</val>
+                </field>
+              </element>
+            </init>
+            <init name="driver_connections" array="T">
+            </init>
+            <init name="rules" kind="string" array="T">
+              <val>define IrrigAmount = [50.0]</val>
+              <val>define text IrrigID = 'Irrig0'   ! for naming output text files</val>
             </init>
             <init name="logfile" kind="string">
               <val></val>
@@ -2799,7 +3045,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231218150836634.html</val>
+  <val>output_231219100735207.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>
@@ -3198,10 +3444,10 @@
     <val></val>
    </field>
    <field name="transform" kind="string">
-    <val>simple</val>
+    <val>ltaverage</val>
    </field>
    <field name="interval" kind="string">
-    <val>days</val>
+    <val>months</val>
    </field>
    <field name="interval_count" kind="integer4">
     <val>1</val>
@@ -3236,7 +3482,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>minm</val>
      </field>
      <field name="units" kind="string">
       <val>m^2/m^2</val>
@@ -3282,7 +3528,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>minm</val>
      </field>
      <field name="units" kind="string">
       <val>m^2/m^2</val>
@@ -3328,7 +3574,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3374,7 +3620,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3420,7 +3666,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3466,7 +3712,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3512,7 +3758,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3558,7 +3804,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>maxm</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha</val>
@@ -3604,7 +3850,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>sum</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha/d</val>
@@ -3650,7 +3896,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>sum</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha/d</val>
@@ -3696,7 +3942,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>sum</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha/d</val>
@@ -3742,7 +3988,7 @@
       <val>clBlack</val>
      </field>
      <field name="aggreg" kind="string">
-      <val>none</val>
+      <val>sum</val>
      </field>
      <field name="units" kind="string">
       <val>kg/ha/d</val>
@@ -3764,7 +4010,7 @@
     </element>
    </field>
    <field name="date_format" kind="string">
-    <val>d-m-yyyy</val>
+    <val>MMM</val>
    </field>
    <field name="pctiles" kind="double" array="T">
    </field>
@@ -5042,7 +5288,7 @@
 </report>
   <session>
     <trace on="False">
-      <file>C:\Users\RIC394\AppData\Local\Temp\trace.log</file>
+      <file>C:\Users\her123\AppData\Local\Temp\trace.log</file>
       <start>0</start>
       <end>0</end>
       <names>True</names>
@@ -5051,7 +5297,7 @@
       <msgdetail>True</msgdetail>
     </trace>
     <errors on="True">
-      <file>C:\Users\RIC394\AppData\Local\Temp\error_temora.log</file>
+      <file>C:\Users\her123\AppData\Local\Temp\error_temora.log</file>
     </errors>
     <layout modelswidth="314"/>
   </session>
