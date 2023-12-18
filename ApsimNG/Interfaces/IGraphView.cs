@@ -49,11 +49,6 @@
         event EventHandler OnCaptionClick;
 
         /// <summary>
-        /// Invoked when the user hovers over a series point.
-        /// </summary>
-        event EventHandler<HoverPointArgs> OnHoverOverPoint;
-
-        /// <summary>
         /// Invoked when the user clicks on the annotation.
         /// </summary>
         event EventHandler OnAnnotationClick;
