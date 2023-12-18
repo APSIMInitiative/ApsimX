@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 169,
+  "Version": 170,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1929,7 +1929,8 @@
             "        [NonSerialized] private Events myEvents;",
             "        ",
             "        // This is set during the management phase to the current paddock being managed.        ",
-            "        public string currentPaddock = \"\";",
+            "        public string _currentPaddock ;       ",
+            "        public string currentPaddock {get => _currentPaddock; set => _currentPaddock = value; }",
             "        ",
             "        // Keep these around as they're tedious to find ",
             "        private Dictionary<string, Accumulator> accumulatedRain;",
@@ -2158,7 +2159,7 @@
               "Name": "summer fallow",
               "Location": "454, 271",
               "Colour": "143, 89, 2",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2166,8 +2167,8 @@
               "Description": null,
               "Name": "Wheat",
               "Location": "256, 50",
-              "Colour": "255, 0, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Red",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2176,7 +2177,7 @@
               "Name": "Maize",
               "Location": "265, 426",
               "Colour": "96, 96, 217",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2184,8 +2185,8 @@
               "Description": null,
               "Name": "initial",
               "Location": "78, 276",
-              "Colour": "0, 255, 0",
-              "OutlineColour": "0, 0, 0",
+              "Colour": "Lime",
+              "OutlineColour": "Black",
               "Transparent": false
             },
             {
@@ -2194,7 +2195,7 @@
               "Name": "Early Wheat",
               "Location": "256, 193",
               "Colour": "173, 127, 168",
-              "OutlineColour": "0, 0, 0",
+              "OutlineColour": "Black",
               "Transparent": false
             }
           ],
@@ -2210,7 +2211,7 @@
               "SourceName": "Wheat",
               "DestinationName": "summer fallow",
               "Location": "496, 67",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 1"
             },
             {
@@ -2225,7 +2226,7 @@
               "SourceName": "summer fallow",
               "DestinationName": "Maize",
               "Location": "448, 409",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 2"
             },
             {
@@ -2239,7 +2240,7 @@
               "SourceName": "Maize",
               "DestinationName": "initial",
               "Location": "55, 405",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 3"
             },
             {
@@ -2254,7 +2255,7 @@
               "SourceName": "initial",
               "DestinationName": "Wheat",
               "Location": "81, 59",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 4"
             },
             {
@@ -2269,7 +2270,7 @@
               "SourceName": "initial",
               "DestinationName": "Early Wheat",
               "Location": "134, 172",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 5"
             },
             {
@@ -2283,7 +2284,7 @@
               "SourceName": "Early Wheat",
               "DestinationName": "summer fallow",
               "Location": "385, 176",
-              "Colour": "255, 255, 0",
+              "Colour": "Yellow",
               "Name": "Arc 6"
             }
           ],
@@ -2292,7 +2293,17 @@
           "Verbose": false,
           "Name": "RotationManager",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Management.RotationRugplot, Models",
+              "CurrentPaddockString": "[Manager].Script.currentPaddock",
+              "Name": "RotationRugplot",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },

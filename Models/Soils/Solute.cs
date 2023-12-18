@@ -237,13 +237,7 @@ namespace Models.Soils
         public void Standardise(double[] targetThickness)
         {
             // Define default ppm value to use below bottom layer of this solute if necessary.
-            double defaultValue;
-            if (Name.Equals("NO3", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 1.0;
-            else if (Name.Equals("NH4", StringComparison.InvariantCultureIgnoreCase))
-                defaultValue = 0.2;
-            else
-                defaultValue = 0.0;
+            double defaultValue = 0;
 
             SetThickness(targetThickness, defaultValue);
 

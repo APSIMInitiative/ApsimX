@@ -1,30 +1,21 @@
-﻿namespace Utility
-{
-    using System;
-    using APSIM.Shared.Utilities;
-    using OxyPlot;
-    using OxyPlot.Series;
-    using UserInterface.EventArguments;
+﻿using System;
+using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.VariantTypes;
+using OxyPlot;
+using OxyPlot.Series;
+using UserInterface.EventArguments;
 
+namespace Utility
+{
     /// <summary>
-    /// A line series with a better tracker.
+    /// An area series with a better tracker.
     /// </summary>
-    public class LineSeriesWithTracker : LineSeries
+    public class AreaSeriesWithTracker : AreaSeries
     {
         /// <summary>
         /// Name of the tooltip
         /// </summary>
         public string TooltipTitle { get; set; }
-
-        /// <summary>
-        /// Name of the variable behind the X data.
-        /// </summary>
-        public string XFieldName { get; set; }
-
-        /// <summary>
-        /// Name of the variable behind the Y data.
-        /// </summary>
-        public string YFieldName { get; set; }
 
         /// <summary>
         /// Type of the x variable
@@ -73,9 +64,8 @@
                         yInput = d.ToString();
                 }
 
-                hitResult.Series.TrackerFormatString = TooltipTitle + "\n" + XFieldName + ": " + xInput + "\n" + YFieldName + ": " + yInput;
+                hitResult.Series.TrackerFormatString = TooltipTitle + "\n" + this.XAxis.Title + ": " + xInput + "\n" + this.YAxis.Title + ": " + yInput;
             }
-
             return hitResult;
         }
     }
