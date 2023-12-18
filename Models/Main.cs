@@ -180,17 +180,20 @@ namespace Models
                                 // You should never make changes to the original unless specified in save command.
                                 else
                                 {
-                                    int indexOfLastDir = file.LastIndexOf(Path.DirectorySeparatorChar);
-                                    int differenceOfLastDirAndLastPeriod = file.LastIndexOf('.') - indexOfLastDir;
-                                    string fileName = file.Substring(indexOfLastDir + 1, differenceOfLastDirAndLastPeriod - 1);
-                                    temporarySimLoadPath = configFileDirectory +
-                                                           Path.DirectorySeparatorChar +
-                                                           fileName +
-                                                           "temp" +
-                                                           ".apsimx";
-                                    // Create the file if new, back it up and write over it if it isn't.
-                                    CreateApsimxFile(temporarySimLoadPath);
-                                    File.Copy(file, temporarySimLoadPath, true);
+                                    if (string.IsNullOrEmpty(temporarySimLoadPath))
+                                    {
+                                        int indexOfLastDir = file.LastIndexOf(Path.DirectorySeparatorChar);
+                                        int differenceOfLastDirAndLastPeriod = file.LastIndexOf('.') - indexOfLastDir;
+                                        string fileName = file.Substring(indexOfLastDir + 1, differenceOfLastDirAndLastPeriod - 1);
+                                        temporarySimLoadPath = configFileDirectory +
+                                                               Path.DirectorySeparatorChar +
+                                                               fileName +
+                                                               "temp" +
+                                                               ".apsimx";
+                                        // Create the file if new, back it up and write over it if it isn't.
+                                        CreateApsimxFile(temporarySimLoadPath);
+                                        File.Copy(file, temporarySimLoadPath, true);
+                                    }
                                 }
 
                                 // Required as RunConfigCommands() requires list, not just a string.

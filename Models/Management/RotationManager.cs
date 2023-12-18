@@ -41,6 +41,10 @@ namespace Models.Management
         /// <summary>For logging</summary>
         [Link] private Summary summary = null;
 
+        /// <summary>detailed logging component</summary>
+        [Link(Type = LinkType.Child, IsOptional = true)]
+        public RotationRugplot detailedLogger = null;
+
         /// <summary>
         /// Events service. Used to publish events when transitioning
         /// between stages/nodes.
@@ -132,6 +136,18 @@ namespace Models.Management
                 summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            DoLogState();
+        }
+
         /// <summary>
         /// Called once per day during the simulation.
         /// </summary>
@@ -165,7 +181,9 @@ namespace Models.Management
                         {
                             throw new AggregateException($"Error while evaluating transition from {arc.SourceName} to {arc.DestinationName} - rule '{testCondition}': " + ex.Message );
                         }
-                        score *= Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        double result = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+                        detailedLogger?.DoRuleEvaluation(arc.DestinationName, testCondition, result);
+                        score *= result;
                     }
 
                     if (Verbose)
@@ -192,6 +210,7 @@ namespace Models.Management
                 }
                 if (bestScore > 0.0)
                 {
+                    detailedLogger?.DoTransition(bestArc.DestinationName);
                     TransitionTo(bestArc);
                     more = true;
                     MadeAChange = true;
@@ -212,7 +231,13 @@ namespace Models.Management
             TopLevel = oldState;
             return(MadeAChange);
         }
-
+        /// <summary>
+        /// Log the state of the system (usually beginning/end of simulation)
+        /// </summary>
+        public void DoLogState() 
+        {
+            detailedLogger?.DoTransition(CurrentState);
+        }
         /// <summary>
         /// Transition along an arc to another stage/node.
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using Models.Interfaces;
+﻿using Models.Core;
+using Models.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -30,6 +31,7 @@ namespace UserInterface.Presenters
             gridPresenter = new GridPresenter();
             gridPresenter.Attach((model as IGridModel).Tables[0], view.Grid, parentPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
+            gridPresenter.AddIntellisense(model as Model);
             gridPresenter.CellChanged += OnCellChanged;
         }
 
