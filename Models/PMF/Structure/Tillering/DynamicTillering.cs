@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Shared.Utilities;
-using MathNet.Numerics.Statistics.Mcmc;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using Models.GrazPlan;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Models.Utilities;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF.Struct
 {
@@ -108,6 +106,8 @@ namespace Models.PMF.Struct
         private double radiationValues = 0.0;
         private double temperatureValues = 0.0;
         private readonly List<int> tillerOrder = new();
+
+        private double GetDeltaDmGreen() { return leaf.potentialDMAllocation.Structural; }
 
         private bool BeforeFlagLeafStage()
         {
@@ -358,69 +358,136 @@ namespace Models.PMF.Struct
         /// <summary> calculate the actual leaf area</summary>
         public double CalcActualLeafArea(double dltStressedLAI)
         {
-            //var mainCulm = culms.Culms.FirstOrDefault();
+            var mainCulm = culms.Culms.FirstOrDefault();
 
-            //if (AfterEndJuvenileStage() && 
-            //    CalculatedTillerNumber > 0.0 &&
-            //    (mainCulm != null && mainCulm.CurrentLeafNo < X0Main )
-            //)
-            //{
-
-            //}
-
-            //check current stage and current leaf number
-            if (BeforeEndJuvenileStage() || !BeforeFlagLeafStage())
+            if (mainCulm != null &&
+                AfterEndJuvenileStage() &&
+                CalculatedTillerNumber > 0.0 &&
+                mainCulm.CurrentLeafNo < mainCulm.PositionOfLargestLeaf
+            )
             {
-                culms.Culms.ForEach(c => c.TotalLAI += c.DltStressedLAI);
-                return dltStressedLAI;
+                CalculateTillerCessation(dltStressedLAI);
             }
 
-            double laiReductionForSLA = CalcLeafReductionForCarbonLimitation(dltStressedLAI);
-            var currentSLA = CalcCurrentSLA(dltStressedLAI - laiReductionForSLA);
+            // recalculate todays LAI
+            var dltStressedLAI2 = 0.0;
+            foreach (var culm in culms.Culms)
+                dltStressedLAI2 += culm.DltLAI;
 
-            var tillerLaiToReduce = CalcCeaseTillerSignal(dltStressedLAI - laiReductionForSLA);
+            double laiSlaReductionFraction = CalcCarbonLimitation(dltStressedLAI2);
+            double leaf = mainCulm.CurrentLeafNo;
+            var dltLAI = Math.Max(dltStressedLAI2 * laiSlaReductionFraction, 0.0);
 
-            bool moreToAdd = (CurrentTillerNumber < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
-            double nLeaves = culms.Culms.First().CurrentLeafNo;
-
-            if (nLeaves > 7 && !moreToAdd && tillerLaiToReduce > 0.0)
+            // Apply to each culm
+            if (laiSlaReductionFraction < 1.0)
             {
-                //double maxTillerLoss = 0.3;             // externalise as parameter
-                double accProportion = 0.0;
-                double tillerLaiLeftToReduce = tillerLaiToReduce;
-
-                for (int i = culms.Culms.Count() - 1; i >= 1; i--)
-                {
-                    var culm = culms.Culms[i];
-                    if (accProportion < MaxDailyTillerReduction.Value() && tillerLaiLeftToReduce > 0)
-                    {
-                        double tillerArea = culm.TotalLAI + culm.DltStressedLAI;
-                        double tillerProportion = culm.Proportion;
-                        if (tillerProportion > 0.0 && tillerArea > 0.0)
-                        {
-                            //use the amount of LAI past the target as an indicator of how much of the tiller
-                            //to remove which will affect tomorrow's growth - up to the maxTillerLoss
-                            double propn = Math.Max(0.0, Math.Min(MaxDailyTillerReduction.Value() - accProportion, tillerLaiLeftToReduce / tillerArea));
-                            accProportion += propn;
-                            tillerLaiLeftToReduce -= propn * tillerArea;
-                            double remainingProportion = Math.Max(0.0, culm.Proportion - propn);
-                            culm.Proportion = remainingProportion; //can't increase the proportion
-
-                            //if leaf is over sla hard limit, remove as much of the new growth from this tiller first rather than proportionally across all
-                            double amountToRemove = Math.Min(laiReductionForSLA, culm.DltStressedLAI);
-                            culm.DltStressedLAI = culm.DltStressedLAI - amountToRemove;
-                            laiReductionForSLA -= amountToRemove;
-                        }
-                    }
-                }
+                ReduceAllTillersProportionately(laiSlaReductionFraction);
             }
 
-            ReduceAllTillersProportionately(laiReductionForSLA);
             culms.Culms.ForEach(c => c.TotalLAI += c.DltStressedLAI);
 
-            return dltStressedLAI - laiReductionForSLA;
+            //var calculatedLeafArea = dltStressedLAI2 - laiSlaReductionFraction;
+            //return calculatedLeafArea;
+            return dltLAI;
         }
 
+        //double CalcSLA()
+        //{
+        //    double dmGreen = leaf.Live.Wt;
+        //    double dltDmGreen = GetDeltaDmGreen();
+
+        //    if (dmGreen + dltDmGreen <= 0.0) return 0.0;
+
+        //    // (cm^2/g)
+        //    return (lai + dltLAI) / (dmGreen + dltDmGreen) * 10000;
+        //}
+
+        private void CalculateTillerCessation(double dltStressedLAI)
+        {
+            bool moreToAdd = (CurrentTillerNumber < CalculatedTillerNumber) && (linearLAI < maxLAIForTillerAddition.Value());
+            var tillerLaiToReduce = CalcCeaseTillerSignal(dltStressedLAI);
+            double nLeaves = culms.Culms[0].CurrentLeafNo;
+
+            if (nLeaves < 8 || moreToAdd || tillerLaiToReduce < 0.00001) return;
+
+            double maxTillerLoss = MaxDailyTillerReduction.Value();
+            double accProportion = 0.0;
+            double tillerLaiLeftToReduce = tillerLaiToReduce;
+
+            for (var culmIndex = culms.Culms.Count - 1; culmIndex >= 1; culmIndex--)
+            {
+                if (accProportion < maxTillerLoss && tillerLaiLeftToReduce > 0)
+                {
+                    var culm = culms.Culms[culmIndex];
+
+                    double tillerLAI = culm.TotalLAI;
+                    double tillerProportion = culm.Proportion;
+
+                    if (tillerProportion > 0.0 && tillerLAI > 0.0)
+                    {
+                        // Use the amount of LAI past the target as an indicator of how much of the tiller
+                        // to remove which will affect tomorrow's growth - up to the maxTillerLoss
+                        double propn = Math.Max(
+                            0.0, 
+                            Math.Min(maxTillerLoss - accProportion, tillerLaiLeftToReduce / tillerLAI)
+                        );
+
+                        accProportion += propn;
+                        tillerLaiLeftToReduce -= propn * tillerLAI;
+                        double remainingProportion = Math.Max(0.0, culm.Proportion - propn);
+                        // Can't increase the proportion
+                        culm.Proportion = remainingProportion;
+
+                        culm.DltLAI -= propn * tillerLAI;
+                    }
+                }
+
+                if (!(tillerLaiLeftToReduce > 0) || accProportion >= maxTillerLoss) break;
+            }
+        }
+
+        private double CalcCeaseTillerSignal(double dltStressedLAI)
+        {
+            var mainCulm = culms.Culms.FirstOrDefault();
+
+            // Calculate sla target that is below the actual SLA - so as the leaves gets thinner it signals to the tillers to cease growing further
+            // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
+            double nLeaves = mainCulm.CurrentLeafNo;
+            var maxSLA = 429.72 - 18.158 * (nLeaves);
+            // sla bound vary 30 - 40%
+            maxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);
+            maxSLA = Math.Min(400, maxSLA);
+            maxSLA = Math.Max(150, maxSLA);
+
+            double dmGreen = leaf.Live.Wt;
+            double dltDmGreen = GetDeltaDmGreen();
+
+            // Calc how much LAI we need to remove to get back to the SLA target line.
+            // This is done by reducing the proportion of tiller area.
+            var maxLaiTarget = maxSLA * (dmGreen + dltDmGreen) / 10000;
+            return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
+        }
+
+        private double CalcCarbonLimitation(double dltStressedLAI)
+        {
+            double dltDmGreen = GetDeltaDmGreen();
+            if (dltDmGreen <= 0.001) return 1.0;
+
+            var mainCulm = culms.Culms[0];
+
+            // Changing to Reeves + 10%
+            double nLeaves = mainCulm.CurrentLeafNo;
+            double maxSLA;
+            maxSLA = 429.72 - 18.158 * (nLeaves);            
+            maxSLA = Math.Min(400, maxSLA);
+            maxSLA = Math.Max(150, maxSLA);
+            var dltLaiPossible = dltDmGreen * maxSLA / 10000.0;
+
+            double fraction = Math.Min(dltStressedLAI > 0 ? (dltLaiPossible / dltStressedLAI) : 1.0, 1.0);
+            return fraction;
+        }
+
+        // THIS IS THE OLD ONE.
         private double CalcLeafReductionForCarbonLimitation(double dltStressedLAI)
         {
             double dltDmGreen = leaf.potentialDMAllocation.Structural;
@@ -437,33 +504,33 @@ namespace Models.PMF.Struct
         public double CalcCurrentSLA(double stressedLAI)
         {
             double dmGreen = leaf.Live.Wt;
-            double dltDmGreen = leaf.potentialDMAllocation.Structural;
+            double dltDmGreen = GetDeltaDmGreen();
 
             if (dmGreen + dltDmGreen <= 0.0) return 0.0;
 
             return (leaf.LAI + stressedLAI) / (dmGreen + dltDmGreen) * 10000; // (cm^2/g)
         }
 
-        private double CalcCeaseTillerSignal(double dltStressedLAI)
-        {
-            // calculate sla target that is below the actual SLA - so as the leaves gets thinner it signals to the tillers to cease growing further
-            // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
-            var mainCulm = culms.Culms.First();
-            double maxSLA = 429.72 - 18.158 * (mainCulm.CurrentLeafNo + mainCulm.dltLeafNo);
-            maxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);     // sla bound vary 30 - 40%
-            maxSLA = Math.Min(400, maxSLA);
-            maxSLA = Math.Max(150, maxSLA);
+        //private double CalcCeaseTillerSignal(double dltStressedLAI)
+        //{
+        //    // calculate sla target that is below the actual SLA - so as the leaves gets thinner it signals to the tillers to cease growing further
+        //    // max SLA (thinnest leaf) possible using Reeves (1960's Kansas) SLA = 429.72 - 18.158 * LeafNo
+        //    var mainCulm = culms.Culms.First();
+        //    double maxSLA = 429.72 - 18.158 * (mainCulm.CurrentLeafNo + mainCulm.dltLeafNo);
+        //    maxSLA *= ((100 - tillerSlaBound.Value()) / 100.0);     // sla bound vary 30 - 40%
+        //    maxSLA = Math.Min(400, maxSLA);
+        //    maxSLA = Math.Max(150, maxSLA);
 
-            //calc how much LAI we need to remove to get back to the SLA target line
-            //this value will be limited by the proportion of tiller area in maxTillerLoss 
-            //dltStressedLai can be greater than the actual SLA limitation would allow
-            //provides a stronger signal
-            double dmGreen = leaf.Live.Wt;
-            double dltDmGreen = leaf.potentialDMAllocation.Structural;
+        //    //calc how much LAI we need to remove to get back to the SLA target line
+        //    //this value will be limited by the proportion of tiller area in maxTillerLoss 
+        //    //dltStressedLai can be greater than the actual SLA limitation would allow
+        //    //provides a stronger signal
+        //    double dmGreen = leaf.Live.Wt;
+        //    double dltDmGreen = GetDeltaDmGreen();
 
-            var maxLaiTarget = maxSLA * (dmGreen + dltDmGreen) / 10000;
-            return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
-        }
+        //    var maxLaiTarget = maxSLA * (dmGreen + dltDmGreen) / 10000;
+        //    return Math.Max(leaf.LAI + dltStressedLAI - maxLaiTarget, 0);
+        //}
 
         void ReduceAllTillersProportionately(double laiReduction)
         {
