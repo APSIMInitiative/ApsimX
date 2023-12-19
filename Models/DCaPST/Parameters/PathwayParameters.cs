@@ -1,6 +1,6 @@
-using System;
 using Models.Core;
 using Models.DCAPST.Interfaces;
+using System;
 
 namespace Models.DCAPST
 {
@@ -20,28 +20,28 @@ namespace Models.DCAPST
         /// </summary>
         [Description("Fraction of cyclic electron flow")]
         [Units("")]
-        public double FractionOfCyclicElectronFlow => 0.25 * ExtraATPCost;
+        public double FractionOfCyclicElectronFlow { get; set; }
 
         /// <summary>
         /// Ratio of respiration to SLN
         /// </summary>
         [Description("Ratio of SLN to respiration")]
         [Units("")]
-        public double RespirationSLNRatio { get; set; }        
+        public double RespirationSLNRatio { get; set; }
 
         /// <summary>
         /// Ratio of Rubisco activity to SLN
         /// </summary>
         [Description("Ratio of SLN to max Rubisco activity")]
         [Units("")]
-        public double MaxRubiscoActivitySLNRatio { get; set; }        
+        public double MaxRubiscoActivitySLNRatio { get; set; }
 
         /// <summary>
         /// Ratio of electron transport to SLN
         /// </summary>
         [Description("Ratio of SLN to max electron transport")]
         [Units("")]
-        public double MaxElectronTransportSLNRatio { get; set; }        
+        public double MaxElectronTransportSLNRatio { get; set; }
 
         /// <summary>
         /// Ratio of PEPc Activity to SLN
@@ -60,14 +60,14 @@ namespace Models.DCAPST
         /// <summary>
         /// Mesophyll electron transport fraction
         /// </summary>
-        public double MesophyllElectronTransportFraction => ExtraATPCost / (3.0 + ExtraATPCost);
+        public double MesophyllElectronTransportFraction { get; set; }
 
-        /// <summary>
+		/// <summary>
         /// ATP production electron transport factor
         /// </summary>
         [Description("ATP production electron transport factor")]
         [Units("")]
-        public double ATPProductionElectronTransportFactor => (3.0 - FractionOfCyclicElectronFlow) / (4.0 * (1.0 - FractionOfCyclicElectronFlow));
+        public double ATPProductionElectronTransportFactor { get; set; }
 
         /// <summary>
         /// Extra ATP cost
@@ -145,7 +145,7 @@ namespace Models.DCAPST
         /// </summary>
         [Description("Mesophyll CO2 conductance temperature response")]
         [Display(Type = DisplayType.SubModel)]
-        public LeafTemperatureParameters MesophyllCO2ConductanceParams { get; set; }
+        public TemperatureResponseValues MesophyllCO2ConductanceParams { get; set; }
 
         /// <summary>
         /// Spectral correction factor
@@ -160,7 +160,7 @@ namespace Models.DCAPST
         [Description("Photosystem II activity fraction")]
         [Units("")]
         public double PS2ActivityFraction { get; set; }
-        
+
         /// <inheritdoc/>
         [Description("PEP regeneration")]
         [Units("")]
@@ -169,26 +169,6 @@ namespace Models.DCAPST
         /// <inheritdoc/>
         [Description("Bundle sheath conductance")]
         [Units("")]
-        public double BundleSheathConductance { get; set; }       
-    }
-
-    /// <summary>
-    /// Describes a temperature response.
-    /// </summary>
-    [Serializable]
-    public class TemperatureResponseValues
-    {
-        /// <summary>
-        /// The value of the temperature response factor for a given parameter
-        /// </summary>
-        [Description("The value of the temperature response factor for a given parameter")]
-        public double Factor { get; set; }
-
-        /// <summary>
-        /// The value of the temperature response factor at 25 degrees
-        /// </summary>
-        [Description("The value of the temperature response factor at 25 degrees")]
-        [Units("")]
-        public double At25 { get; set; }
+        public double BundleSheathConductance { get; set; }
     }
 }

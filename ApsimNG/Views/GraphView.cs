@@ -1850,8 +1850,17 @@
             }
         }
 
-        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
-        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Maximum = value;
+        }
+
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType)
+        {
+            var axis = GetAxis(axisType);
+            if (axis != null) axis.Minimum = value;
+        }
 
         /// <summary>
         /// Gets the maximum scale of the specified axis.

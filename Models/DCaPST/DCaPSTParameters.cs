@@ -28,5 +28,5 @@ namespace Models.DCAPST
         [Description("Pathway Parameters")]
         [Display(Type = DisplayType.SubModel)]
         public PathwayParameters Pathway { get; set; } = new PathwayParameters();
-    }
+}
 }
