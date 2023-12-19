@@ -5842,14 +5842,19 @@
                     "[Deropapy].AboveGround.Wt",
                     "[Deropapy].Product.Wt",
                     "[Deropapy].Total.Wt",
-                    "[ISoilWater].Eo",
-                    "[ISoilWater].LeachNO3",
                     "[ISoilWater].LeachNH4",
-                    "Sum of ([Weather].Rain) from [Output].DayAfterLastOutput to [Clock].Today as RainfallPerCrop"
+                    "[ISoilWater].LeachNO3",
+                    "[Deropapy].WaterUptake",
+                    "[ISoilWater].Es",
+                    "Sum of ([ISoilWater].Es) from [Output].DayAfterLastOutput to [Clock].Today as Es_Cum",
+                    "Sum of ([ISoilWater].LeachNH4) from [Output].DayAfterLastOutput to [Clock].Today as LeachNH4_Cum",
+                    "Sum of ([ISoilWater].LeachNO3) from [Output].DayAfterLastOutput to [Clock].Today as LeachNO3_Cum",
+                    "Sum of ([Weather].Rain) from [Output].DayAfterLastOutput to [Clock].Today as Rainfall_Cum",
+                    "Sum of ([Weather].Radn) from [Output].DayAfterLastOutput to [Clock].Today as Radiation_Cum",
+                    "Sum of ([Weather].MeanT) from [Output].DayAfterLastOutput to [Clock].Today as Temperature_Cum"
                   ],
                   "EventNames": [
-                    "[Clock].StartOfYear",
-                    "[Deropapy].PlantSowing"
+                    "[Clock].StartOfYear"
                   ],
                   "GroupByVariableName": null,
                   "Name": "Output",
@@ -5882,7 +5887,9 @@
                     "[Deropapy].Product.Wt",
                     "[Deropapy].Total.Wt",
                     "[Deropapy].Leaf.Photosynthesis",
-                    "[Deropapy].Root.Network.Depth"
+                    "[Deropapy].Root.Network.Depth",
+                    "Sum of ([ISoilWater].LeachNO3) from [Output].DayAfterLastOutput to [Clock].Today as LeachNO3_Cum",
+                    "Sum of ([ISoilWater].Es) from [Output].DayAfterLastOutput to [Clock].Today as Es_Cum"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -18069,6 +18076,103 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": "",
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "LabelOnOneLine": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "TestCum",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": "Crop",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Location",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "LeachNO3_Cum",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Stage",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": "Crop",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Location",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Es_Cum",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Stage1",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
