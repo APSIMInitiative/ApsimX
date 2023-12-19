@@ -1,32 +1,94 @@
-<folder version="37" creator="Apsim 7.10-r4220" name="Validation">
+<folder version="37" creator="Apsim 7.10-r0" name="Validation">
   <folder name="shared">
     <variables name="My Variables">
-      <variable>dd/mm/yyyy as date</variable>
-      <variable>stage</variable>
-      <variable>DaysAfterSowing</variable>
+      <variable>today format dd/mm/yyyy as Date</variable>
+      <variable>daysAfterSowing as Das</variable>
       <variable>day_of_year</variable>
-      <variable>MaxT</variable>
-      <variable>MinT</variable>
-      <variable>Radn</variable>
-      <variable>LAI</variable>
-      <variable>SLN</variable>
-      <variable>swdef_photo</variable>
-      <variable>BIOtotalDAY</variable>
-      <variable>BIOshootDAYPot</variable>
-      <variable>BIOshootDAY</variable>
-      <variable>RootShoot</variable>
-      <variable>EcanDemand</variable>
-      <variable>EcanSupply</variable>
-      <variable>RUE</variable>
-      <variable>TE</variable>
-      <variable>RadIntDcapst</variable>
+      <variable>StageName as stage</variable>
+      <variable>Stage as stage_no</variable>
+      <variable>tillers</variable>
       <variable>Biomass</variable>
-      <variable>Yield</variable>
+      <variable>GreenWt</variable>
+      <variable>Biomass units g/m^2 as BiomassWt</variable>
+      <variable>RootGreenWt</variable>
+      <variable>LeafGreenWt</variable>
+      <variable>StemGreenWt</variable>
+      <variable>RachisGreenWt</variable>
+      <variable>GrainGreenWt</variable>
+      <variable>biomass_n</variable>
+      <variable>GreenN</variable>
+      <variable>RootGreenN</variable>
+      <variable>LeafGreenN</variable>
+      <variable>StemGreenN</variable>
+      <variable>RachisGreenN</variable>
+      <variable>GrainGreenN</variable>
+      <variable>GrainGreenNConc</variable>
+      <variable>GrainNo</variable>
+      <variable>GrainSize</variable>
+      <variable>HI</variable>
+      <variable>LeafNo</variable>
+      <variable>LAI</variable>
+      <variable>SLAI</variable>
+      <variable>MaxLAI as LaiAnth</variable>
+      <variable>ESW</variable>
+      <variable>no3() as NO3</variable>
+      <variable>SLN</variable>
+      <variable>WaterSD</variable>
+      <variable>sw()</variable>
+      <variable>TPLA</variable>
+      <variable>SPLA</variable>
+      <variable>dlt_dm_green</variable>
+      <variable>sw_supply</variable>
+      <variable>radn_int</variable>
+      <variable>DeltaGreenWt</variable>
+      <variable>DeltaLAI</variable>
+      <variable>DeltaGreenN</variable>
+      <variable>DeltaLeafGreenN</variable>
+      <variable>DeltaSLAI</variable>
+      <variable>DeltaTT</variable>
+      <variable>SenescedWt</variable>
+      <variable>SenescedN</variable>
+      <variable>RootSenescedN</variable>
+      <variable>RootSenescedWt</variable>
+      <variable>LeafSenescedWt</variable>
+      <variable>LeafSenescedN</variable>
+      <variable>RLV</variable>
+      <variable>RootDepth</variable>
+      <variable>RootProportion</variable>
+      <variable>sum(sw_uptake)</variable>
+      <variable>n_total_uptake</variable>
+      <variable>n_supply_soil</variable>
+      <variable>n_cum_uptake</variable>
+      <variable>sw_demand</variable>
+      <variable>sw_deficit</variable>
+      <variable>root_depth</variable>
+      <variable>no3</variable>
+      <variable>sw</variable>
+      <variable>sw_uptake</variable>
+      <variable>n_sd_ratio</variable>
+      <variable>no3_demand</variable>
+      <variable>esw</variable>
+      <variable>swdef_pheno</variable>
+      <variable>swdef_photo</variable>
+      <variable>swdef_expan</variable>
+      <variable>nfact_pheno</variable>
+      <variable>nfact_expan</variable>
+      <variable>sw_dep</variable>
+      <variable>n_diffusion_uptake</variable>
+      <variable>n_massflow_uptake</variable>
+      <variable>cover_green</variable>
+      <variable>cover_tot</variable>
+      <variable>DeltaTTFM</variable>
+      <variable>st</variable>
+      <variable>GrainTempFactor</variable>
       <constants>
         <constant name="precision">8</constant>
+        <constant name="format">csv</constant>
       </constants>
     </variables>
-    <events name="My Variables Events" />
+    <events name="My Variables Events">
+      <event>daily</event>
+    </events>
     <manager2 name="DCaPS_C4_short">
       <ui />
       <text>// This version agreed with my spreasheet model "20200919 DCaPSTx - validation"
@@ -505,11 +567,16 @@ public class Script
       <filename output="yes">.out</filename>
       <title>
       </title>
-      <events name="My Variables Events" />
+      <events name="My Variables Events">
+        <event>daily</event>
+      </events>
       <variables name="My Variables">
         <variable>today format dd/mm/yyyy as Date</variable>
-        <variable>DaysAfterSowing as Das</variable>
-        <variable>Stage</variable>
+        <variable>daysAfterSowing as Das</variable>
+        <variable>day_of_year</variable>
+        <variable>StageName as stage</variable>
+        <variable>Stage as stage_no</variable>
+        <variable>tillers</variable>
         <variable>Biomass</variable>
         <variable>GreenWt</variable>
         <variable>Biomass units g/m^2 as BiomassWt</variable>
@@ -518,6 +585,8 @@ public class Script
         <variable>StemGreenWt</variable>
         <variable>RachisGreenWt</variable>
         <variable>GrainGreenWt</variable>
+        <variable>biomass_n</variable>
+        <variable>GreenN</variable>
         <variable>RootGreenN</variable>
         <variable>LeafGreenN</variable>
         <variable>StemGreenN</variable>
@@ -530,14 +599,62 @@ public class Script
         <variable>LeafNo</variable>
         <variable>LAI</variable>
         <variable>SLAI</variable>
+        <variable>MaxLAI as LaiAnth</variable>
         <variable>ESW</variable>
         <variable>no3() as NO3</variable>
         <variable>SLN</variable>
         <variable>WaterSD</variable>
-        <variable>sw</variable>
+        <variable>sw()</variable>
         <variable>TPLA</variable>
         <variable>SPLA</variable>
-        <variable>biomass_n as BiomassN</variable>
+        <variable>dlt_dm_green</variable>
+        <variable>sw_supply</variable>
+        <variable>radn_int</variable>
+        <variable>DeltaGreenWt</variable>
+        <variable>DeltaLAI</variable>
+        <variable>DeltaGreenN</variable>
+        <variable>DeltaLeafGreenN</variable>
+        <variable>DeltaSLAI</variable>
+        <variable>DeltaTT</variable>
+        <variable>SenescedWt</variable>
+        <variable>SenescedN</variable>
+        <variable>RootSenescedN</variable>
+        <variable>RootSenescedWt</variable>
+        <variable>LeafSenescedWt</variable>
+        <variable>LeafSenescedN</variable>
+        <variable>RLV</variable>
+        <variable>RootDepth</variable>
+        <variable>RootProportion</variable>
+        <variable>sum(sw_uptake)</variable>
+        <variable>n_total_uptake</variable>
+        <variable>n_supply_soil</variable>
+        <variable>n_cum_uptake</variable>
+        <variable>sw_demand</variable>
+        <variable>sw_deficit</variable>
+        <variable>root_depth</variable>
+        <variable>no3</variable>
+        <variable>sw</variable>
+        <variable>sw_uptake</variable>
+        <variable>n_sd_ratio</variable>
+        <variable>no3_demand</variable>
+        <variable>esw</variable>
+        <variable>swdef_pheno</variable>
+        <variable>swdef_photo</variable>
+        <variable>swdef_expan</variable>
+        <variable>nfact_pheno</variable>
+        <variable>nfact_expan</variable>
+        <variable>sw_dep</variable>
+        <variable>n_diffusion_uptake</variable>
+        <variable>n_massflow_uptake</variable>
+        <variable>cover_green</variable>
+        <variable>cover_tot</variable>
+        <variable>DeltaTTFM</variable>
+        <variable>st</variable>
+        <variable>GrainTempFactor</variable>
+        <constants>
+          <constant name="precision">8</constant>
+          <constant name="format">csv</constant>
+        </constants>
       </variables>
     </outputfile>
     <outputfile name="outputfile ext">
@@ -38307,7 +38424,7 @@ public class Script
         </outputfile>
       </area>
     </simulation>
-    <simulation name="Sorghum_LE13_Buster+I+N_daily_test">
+    <simulation name="Sorghum_LE13_Buster+I+N_daily_test" enabled="no">
       <clock>
         <start_date name="start_date" description="Select the start date of the simulation" type="date">28/11/1995</start_date>
         <end_date name="end_date" description="Select the end date of the simulation" type="date">1/05/1996</end_date>
