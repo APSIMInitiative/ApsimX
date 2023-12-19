@@ -5839,15 +5839,17 @@
                     "",
                     "",
                     "[Clock].Today",
+                    "[Deropapy].AboveGround.Wt",
                     "[Deropapy].Product.Wt",
                     "[Deropapy].Total.Wt",
-                    "[ISoilWater].Eos",
                     "[ISoilWater].Eo",
                     "[ISoilWater].LeachNO3",
-                    "[ISoilWater].LeachNH4"
+                    "[ISoilWater].LeachNH4",
+                    "Sum of ([Weather].Rain) from [Output].DayAfterLastOutput to [Clock].Today as RainfallPerCrop"
                   ],
                   "EventNames": [
-                    "[Clock].EndOfYear"
+                    "[Clock].StartOfYear",
+                    "[Deropapy].PlantSowing"
                   ],
                   "GroupByVariableName": null,
                   "Name": "Output",
