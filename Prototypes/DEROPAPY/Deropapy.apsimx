@@ -5691,7 +5691,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2000-07-01T00:00:00",
-              "End": "2001-06-30T00:00:00",
+              "End": "2005-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -5839,30 +5839,17 @@
                     "",
                     "",
                     "[Clock].Today",
-                    "[Deropapy].Phenology.Stage",
-                    "[Deropapy].Phenology.CurrentStageName",
-                    "[Deropapy].Phenology.CurrentPhaseName",
-                    "[Deropapy].Phenology.AccumulatedEmergedTT",
-                    "[DeroPapy].Phenology.Emerged",
-                    "[Deropapy].Height",
-                    "[Deropapy].Width",
-                    "[Deropapy].CoverGreen",
-                    "[Deropapy].Leaf.Canopy.LAI",
-                    "[Deropapy].Leaf.Canopy.LAITotal",
-                    "[Deropapy].Leaf.Canopy.CoverGreen",
-                    "[Deropapy].Leaf.Canopy.CoverTotal",
-                    "[Deropapy].Leaf.Canopy.LAIDead",
-                    "[Deropapy].Leaf.Canopy.CoverDead",
-                    "[Deropapy].Leaf.Wt",
-                    "[Deropapy].Trunk.Wt",
-                    "[Deropapy].Root.Wt",
+                    "[Deropapy].AboveGround.Wt",
                     "[Deropapy].Product.Wt",
                     "[Deropapy].Total.Wt",
-                    "[Deropapy].Leaf.Photosynthesis",
-                    "[Deropapy].Root.Network.Depth"
+                    "[ISoilWater].Eo",
+                    "[ISoilWater].LeachNO3",
+                    "[ISoilWater].LeachNH4",
+                    "Sum of ([Weather].Rain) from [Output].DayAfterLastOutput to [Clock].Today as RainfallPerCrop"
                   ],
                   "EventNames": [
-                    "[Clock].EndOfYear"
+                    "[Clock].StartOfYear",
+                    "[Deropapy].PlantSowing"
                   ],
                   "GroupByVariableName": null,
                   "Name": "Output",
@@ -8035,7 +8022,7 @@
                                 "Children": [
                                   {
                                     "$type": "Models.Functions.VariableReference, Models",
-                                    "VariableName": "[Leaf].Carbon.Photosynthesis.FCO2",
+                                    "VariableName": "[Leaf].Photosynthesis.FCO2",
                                     "Name": "PhotosynthesisCO2Modifier",
                                     "ResourceName": null,
                                     "Children": [],
@@ -19059,7 +19046,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2070-07-01T00:00:00",
-              "End": "2080-06-30T00:00:00",
+              "End": "2075-06-30T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -32374,7 +32361,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "2000-07-21T00:00:00",
-          "End": "2011-07-01T00:00:00",
+          "End": "2005-07-01T00:00:00",
           "Name": "Clock",
           "ResourceName": null,
           "Children": [],
