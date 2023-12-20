@@ -348,6 +348,7 @@ namespace Models.PMF.Struct
         /// <summary>Calculate the potential leaf area</summary>
         public double CalcPotentialLeafArea()
         {
+            culms.Culms.ForEach(c => c.DltLAI = 0);
             if (BeforeFloweringStage())
             {
                 return areaCalc.Value();
@@ -444,6 +445,9 @@ namespace Models.PMF.Struct
 
                 if (!(tillerLaiLeftToReduce > 0) || accProportion >= maxTillerLoss) break;
             }
+            CurrentTillerNumber = 0;
+            culms.Culms.ForEach(c => CurrentTillerNumber += c.Proportion); CurrentTillerNumber-=1;
+
         }
 
         private double CalcCeaseTillerSignal(double dltStressedLAI)

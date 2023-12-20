@@ -6136,7 +6136,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
+                  "FixedValue": 10.0,
                   "Units": "%",
                   "Name": "tillerSlaBound",
                   "ResourceName": null,
