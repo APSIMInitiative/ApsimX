@@ -5662,6 +5662,15 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[AutomaticIrrigation].Script.allowIrrigation = TRUE, FALSE",
+                  "Name": "Irrigation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -6001,11 +6010,11 @@
                         },
                         {
                           "Key": "seasonStart",
-                          "Value": "1-sep"
+                          "Value": "1-jan"
                         },
                         {
                           "Key": "seasonEnd",
-                          "Value": "30-mar"
+                          "Value": "31-dec"
                         },
                         {
                           "Key": "seasonsAllocation",
@@ -19402,7 +19411,7 @@
                   "LineThickness": 0,
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Irrigation.IrrigationApplied",
+                  "YFieldName": "Irrigation_Cum",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
