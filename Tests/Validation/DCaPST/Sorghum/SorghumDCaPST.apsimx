@@ -29,7 +29,7 @@
                     {
                       "$type": "Models.PostSimulationTools.ExcelInput, Models",
                       "FileNames": [
-                        "obs\\Observed.xlsx"
+                        "..\\..\\Sorghum\\obs\\Observed.xlsx"
                       ],
                       "SheetNames": [
                         "Observed"
@@ -43,7 +43,7 @@
                     {
                       "$type": "Models.PostSimulationTools.ExcelInput, Models",
                       "FileNames": [
-                        "obs\\DailyObserved.xlsx"
+                        "..\\..\\Sorghum\\obs\\DailyObserved.xlsx"
                       ],
                       "SheetNames": [
                         "DailyObserved"
@@ -126,7 +126,7 @@
             {
               "$type": "Models.PostSimulationTools.Input, Models",
               "FileNames": [
-                "old\\combined_fixed.csv"
+                "..\\..\\Sorghum\\old\\combined_fixed.csv"
               ],
               "Name": "OldApsimFixed",
               "ResourceName": null,
@@ -147,7 +147,7 @@
             {
               "$type": "Models.PostSimulationTools.Input, Models",
               "FileNames": [
-                "classic_dcaps\\ApsimClassic_dcaps\\combined_simulations.csv"
+                "classic_dcaps\\combined_simulations.csv"
               ],
               "Name": "ClassicDCaPST",
               "ResourceName": null,
@@ -168,7 +168,7 @@
             {
               "$type": "Models.PostSimulationTools.Input, Models",
               "FileNames": [
-                "old\\combined_dynamic.csv"
+                "..\\..\\Sorghum\\old\\combined_dynamic.csv"
               ],
               "Name": "OldApsimDynamic",
               "ResourceName": null,
