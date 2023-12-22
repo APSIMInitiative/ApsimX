@@ -9,7 +9,7 @@ using Models.Storage;
 using Models.Functions;
 
 // TODO
-// logging - create a table in the datastore with line item detail
+// herbicides, weeds, machinery
 // annual overheads & capital repayments
 // table of annual paddock activity
 namespace Models.Management
