@@ -15,17 +15,17 @@
     /// </summary>
     public class Graph
     {
-        public static Models.Graph.Graph CreateGraphFromResource(string resourceName)
+        public static Models.Graph CreateGraphFromResource(string resourceName)
         {
-            string graphXmL = ApsimNG.Properties.Resources.ResourceManager.GetString(resourceName);
+            string graphXmL = ReflectionUtilities.GetResourceAsString(resourceName);
 
             if (graphXmL != null)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(graphXmL);
-
-                Models.Graph.Graph graph = XmlUtilities.Deserialise(doc.DocumentElement, typeof(Models.Graph.Graph)) as Models.Graph.Graph;
-                Apsim.ParentAllChildren(graph);
+                List<Exception> errors = null;
+                Models.Graph graph = Models.Core.ApsimFile.FileFormat.ReadFromString<Models.Graph>(graphXmL, e => throw e, false).NewModel as Models.Graph;
+                if (errors != null && errors.Any())
+                    throw errors.First();
+                graph.ParentAllDescendants();
                 return graph;
             }
             return null;

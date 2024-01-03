@@ -1,19 +1,13 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Xml.Serialization;
+﻿using System;
 using Models.Core;
-
+using Newtonsoft.Json;
 
 /// <summary>
 /// Sugar constants
 /// </summary>
 [Serializable]
 public class CropConstants
-    {
+{
 
     /// <summary>
     /// The max_table
@@ -1219,211 +1213,211 @@ public class CropConstants
     /// <value>
     /// The num_plant_rld.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_plant_rld
-        {
-        get { return y_rel_root_rate.Length;}
-        }
+    {
+        get { return y_rel_root_rate.Length; }
+    }
     /// <summary>
     /// Gets the num_sla_lfno.
     /// </summary>
     /// <value>
     /// The num_sla_lfno.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sla_lfno
-        {
+    {
         get { return sla_lfno.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_stem_wt.
     /// </summary>
     /// <value>
     /// The num_stem_wt.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_stem_wt
-        {
+    {
         get { return y_height.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_fasw_emerg.
     /// </summary>
     /// <value>
     /// The num_fasw_emerg.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_fasw_emerg
-        {
+    {
         get { return rel_emerg_rate.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_node_no_app.
     /// </summary>
     /// <value>
     /// The num_node_no_app.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_node_no_app
-        {
+    {
         get { return y_node_app_rate.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_node_no_leaf.
     /// </summary>
     /// <value>
     /// The num_node_no_leaf.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_node_no_leaf
-        {
+    {
         get { return y_node_app_rate.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_frost_temp.
     /// </summary>
     /// <value>
     /// The num_frost_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_frost_temp
-        {
+    {
         get { return frost_temp.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_ n_conc_stage.
     /// </summary>
     /// <value>
     /// The num_ n_conc_stage.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_N_conc_stage   //! no of values in stage table
-        {
+    {
         get { return y_n_conc_min_cabbage.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_ave_temp.
     /// </summary>
     /// <value>
     /// The num_ave_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_ave_temp       //! size_of of critical temperature table
-        {
+    {
         get { return x_ave_temp.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_ave_temp_stalk.
     /// </summary>
     /// <value>
     /// The num_ave_temp_stalk.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_ave_temp_stalk //! size_of of critical temperature table
-        {
+    {
         get { return x_ave_temp_stalk.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_temp.
     /// </summary>
     /// <value>
     /// The num_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_temp           //! size_of of table
-        {
+    {
         get { return y_tt.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_sw_demand_ratio.
     /// </summary>
     /// <value>
     /// The num_sw_demand_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_demand_ratio
-        {
+    {
         get { return y_swdef_leaf.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_demand_ratio_stalk.
     /// </summary>
     /// <value>
     /// The num_demand_ratio_stalk.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_demand_ratio_stalk
-        {
+    {
         get { return y_swdef_stalk.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_sw_avail_ratio.
     /// </summary>
     /// <value>
     /// The num_sw_avail_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_avail_ratio
-        {
+    {
         get { return y_swdef_pheno.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_sw_ratio.
     /// </summary>
     /// <value>
     /// The num_sw_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_ratio
-        {
+    {
         get { return y_sw_fac_root.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_oxdef_photo.
     /// </summary>
     /// <value>
     /// The num_oxdef_photo.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_oxdef_photo
-        {
+    {
         get { return oxdef_photo.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_afps.
     /// </summary>
     /// <value>
     /// The num_afps.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_afps
-        {
+    {
         get { return y_afps_fac.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_cane_dmf.
     /// </summary>
     /// <value>
     /// The num_cane_dmf.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_cane_dmf
-        {
+    {
         get { return cane_dmf_tt.Length; }
-        }
+    }
     /// <summary>
     /// Gets the num_stress_lodge.
     /// </summary>
     /// <value>
     /// The num_stress_lodge.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_stress_lodge
-        {
+    {
         get { return death_fr_lodge.Length; }
-        }
-
-
-
     }
+
+
+
+}
 

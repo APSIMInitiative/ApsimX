@@ -1,13 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IVariable.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Models.Core
 {
-    using PMF.Functions;
-    using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// This class encapsulates a list of IVariables that are evaluated when
@@ -25,7 +21,7 @@ namespace Models.Core
         /// <summary>
         /// The list of variables to be evaluated
         /// </summary>
-        private List<IVariable> variables;
+        public List<IVariable> Variables { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableComposite" /> class.
@@ -35,7 +31,7 @@ namespace Models.Core
         public VariableComposite(string name, List<IVariable> variables)
         {
             this.name = name;
-            this.variables = variables;
+            this.Variables = variables;
         }
 
         /// <summary>
@@ -62,7 +58,7 @@ namespace Models.Core
             get
             {
                 object relativeTo = null;
-                foreach (IVariable variable in this.variables)
+                foreach (IVariable variable in this.Variables)
                 {
                     if (relativeTo != null)
                     {
@@ -83,22 +79,22 @@ namespace Models.Core
             {
                 object relativeTo = null;
                 int i;
-                for (i = 0; i < this.variables.Count-1; i++)
+                for (i = 0; i < this.Variables.Count - 1; i++)
                 {
                     if (relativeTo != null)
                     {
-                        variables[i].Object = relativeTo;
+                        Variables[i].Object = relativeTo;
                     }
 
-                    relativeTo = variables[i].Value;
+                    relativeTo = Variables[i].Value;
                     if (relativeTo == null)
                     {
                         return;
                     }
                 }
 
-                variables[i].Object = relativeTo;
-                variables[i].Value = value;
+                Variables[i].Object = relativeTo;
+                Variables[i].Value = value;
             }
         }
 
@@ -131,10 +127,10 @@ namespace Models.Core
         {
             get
             {
-                if (this.variables.Count == 0)
+                if (this.Variables.Count == 0)
                     return string.Empty;
 
-                return variables[variables.Count - 1].Units;
+                return Variables[Variables.Count - 1].Units;
             }
 
             set
@@ -150,10 +146,10 @@ namespace Models.Core
         {
             get
             {
-                if (this.variables.Count == 0)
+                if (this.Variables.Count == 0)
                     return string.Empty;
 
-                return variables[variables.Count - 1].UnitsLabel;
+                return Variables[Variables.Count - 1].UnitsLabel;
             }
         }
 
@@ -169,7 +165,13 @@ namespace Models.Core
         {
             get
             {
-                return Object.GetType();
+                if (Object != null)
+                    return Object.GetType();
+
+                if (Variables != null && Variables.Count > 0)
+                    return Variables.Last().DataType;
+
+                throw new Exception("Variable is null");
             }
         }
 
@@ -188,5 +190,36 @@ namespace Models.Core
         /// Returns true if the variable is writable
         /// </summary>
         public override bool Writable { get { return true; } }
+
+        /// <summary>
+        /// Return an attribute
+        /// </summary>
+        /// <param name="attributeType">Type of attribute to find</param>
+        /// <returns>The attribute or null if not found</returns>
+        public override Attribute GetAttribute(Type attributeType) { return null; }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary
+        {
+            get
+            {
+                if (Variables.Last() is VariableProperty)
+                    return (Variables.Last() as VariableProperty).Summary;
+                else
+                    return null;
+            }
+        }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks
+        {
+            get
+            {
+                if (Variables.Last() is VariableProperty)
+                    return (Variables.Last() as VariableProperty).Remarks;
+                else
+                    return null;
+            }
+        }
     }
-} 
+}

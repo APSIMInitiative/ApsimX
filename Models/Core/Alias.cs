@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Models.PMF;
+
+using static Models.Core.AutoDocumentation;
 
 namespace Models.Core
 {
@@ -13,6 +13,16 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Cultivar))]
     public class Alias : Model
     {
-
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            tags.Add(new Heading(Name, headingLevel + 1));
+            tags.Add(new Paragraph($"An alias for {Parent?.Name}", indent));
+        }
     }
 }

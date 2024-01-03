@@ -1,15 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Reader.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using APSIM.Shared.Utilities;
+
 namespace Models.Core.ApsimFile
 {
-    using APSIM.Shared.Utilities;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml;
 
     /// <summary>
     /// This class is a reader for a .apsimx file format into something that the XmlSerializer can read.
@@ -75,7 +71,7 @@ namespace Models.Core.ApsimFile
         /// <summary>Constructor.</summary>
         /// <param name="node">Node to parse</param>
         public Reader(XmlNode node)
-        { 
+        {
             reader = new ReadWithLookAhead(new XmlNodeReader(node));
             validModelTypes = ModelTypes.GetModelTypes();
             currentState = States.Initial;
@@ -114,7 +110,7 @@ namespace Models.Core.ApsimFile
                             if (element != null)
                             {
                                 //prefix = "xsi";
-//                                namespaceURI = "http://www.w3.org/2001/XMLSchema-instance";
+                                //                                namespaceURI = "http://www.w3.org/2001/XMLSchema-instance";
 
                                 element.Name = "ModelWrapper";
                                 element.attributes = new List<KeyValuePair<string, string>>();
@@ -147,8 +143,8 @@ namespace Models.Core.ApsimFile
                             }
                             else if (element.NodeType == XmlNodeType.EndElement)
                             {
-                               // 2. an end element associated with closing a model node e.g. </ Clock >
-                               modelTypesFound.Pop();
+                                // 2. an end element associated with closing a model node e.g. </ Clock >
+                                modelTypesFound.Pop();
                                 if (openElements.Peek() == "Model")
                                 {
                                     elements.Add(new CustomElement() { Name = "Model", NodeType = XmlNodeType.EndElement });
@@ -165,7 +161,7 @@ namespace Models.Core.ApsimFile
                                 // 3. a new model e.g. <Clock>, OR
                                 CustomElement childElement = new CustomElement();
                                 childElement.Name = "Child";
-                                childElement.NodeType = XmlNodeType.Element; 
+                                childElement.NodeType = XmlNodeType.Element;
                                 childElement.attributes = new List<KeyValuePair<string, string>>();
                                 childElement.attributes.Add(new KeyValuePair<string, string>("xsi:type", "ModelWrapper"));
                                 elements.Add(childElement);

@@ -1,16 +1,13 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MapPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using Models;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Map with a 
@@ -33,6 +30,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private PropertyPresenter propertyPresenter;
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -42,8 +41,11 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as MapView;
+            this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
+
+            propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, this.view.PropertiesView, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -58,9 +60,13 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            propertyPresenter.Detach();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            this.view.StoreSettings();
-            this.view.ViewChanged -= this.OnViewChanged;
+            if (view != null)
+            {
+                this.view.StoreSettings();
+                this.view.ViewChanged -= this.OnViewChanged;
+            }
         }
 
         /// <summary>Export the map to PDF</summary>
@@ -68,11 +74,11 @@ namespace UserInterface.Presenters
         /// <returns>The filename string</returns>
         public string ExportToPNG(string folder)
         {
-            string path = Apsim.FullPath(this.map).Replace(".Simulations.", string.Empty);
+            string path = this.map.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
 
-            Image rawImage = this.view.Export();
-            rawImage.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+            Gdk.Pixbuf rawImage = this.view.Export();
+            rawImage.Save(fileName, "png");
 
             return fileName;
         }
@@ -82,8 +88,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private void PopulateView()
         {
-            List<string> files = new List<string>();
-            this.view.ShowMap(this.map.GetCoordinates(files), files, this.map.Zoom, this.map.Center);
+            List<string> names = new List<string>();
+            this.view.ShowMap(this.map.GetCoordinates(names), names, this.map.Zoom, this.map.Center);
         }
 
         /// <summary>
@@ -99,7 +105,17 @@ namespace UserInterface.Presenters
             // Store the property values.
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Zoom", this.view.Zoom));
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Center", this.view.Center));
+
+            // This ViewChanged event occurs when the user drags/scrolls or otherwise
+            // modifies the map, in which case the view is responsible for applying these
+            // changes to the map shown in the UI. We need to now apply these changes to
+            // the model, but we don't want to tell the view to redraw itself afterward,
+            // so we need to disconnect our OnModelChanged callback from the ModelChanged
+            // event. Note that if the view is changed via the properties UI, we *do* want
+            // to trap the ModelChanged event and tell the view to redraw itself.
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(properties));
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // properties.Add()
             // this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(map, "Zoom", this.view.Zoom));
@@ -113,8 +129,14 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnPositionChanged(object sender, System.EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(map, "Center", this.view.Center));
-            // this.map.Center = this.view.Center;
+            try
+            {
+                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(map, "Center", this.view.Center));
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -123,7 +145,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.map)
+            if (view != null && (changedModel == this.map || changedModel == this.map.Center))
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

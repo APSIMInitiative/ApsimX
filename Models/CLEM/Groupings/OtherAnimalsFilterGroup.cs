@@ -1,10 +1,8 @@
-﻿using Models.Core;
-using Models.CLEM.Resources;
+﻿using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
@@ -13,14 +11,12 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual other animals
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
-    public class OtherAnimalsFilterGroup: CLEMModel
+    [Description("Selects specific individuals from the other animals")]
+    [Version(1, 0, 1, "")]
+    public class OtherAnimalsFilterGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Daily amount to supply selected individuals each month
         /// </summary>
@@ -47,19 +43,5 @@ namespace Models.CLEM.Groupings
         /// The Other animal type this group points to
         /// </summary>
         public OtherAnimalsType SelectedOtherAnimalsType;
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if(SelectedOtherAnimalsType == null)
-            {
-                throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
-            }
-        }
-
     }
 }

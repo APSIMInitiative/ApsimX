@@ -1,0 +1,26 @@
+﻿{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 32,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.GrazPlan.Stock, Models",
+      "Name": "Stock",
+      "IncludeInDocumentation": true,
+      "RandSeed": 0,
+      "GenoTypes": null,
+      "Sheep": null,
+      "Cattle": null,
+      "PaddockList": [
+        {
+          "forages": null,
+          "name": null,
+          "area": 1,
+          "slope": 0
+        }
+      ],
+      "EnterpriseList": null,
+      "GrazingPeriods": null
+    }
+  ]
+}

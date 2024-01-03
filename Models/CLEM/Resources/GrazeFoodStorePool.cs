@@ -1,10 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -14,6 +12,12 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class GrazeFoodStorePool : IFeedType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// Dry Matter (%)
         /// </summary>
@@ -38,21 +42,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount { get { return amount; } }
         private double amount = 0;
 
         /// <summary>
         /// Age of pool in months
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public int Age { get; set; }
-
-        /// <summary>
-        /// Current pool grazing limit based on ruminant eating pool
-        /// </summary>
-        [XmlIgnore]
-        public double Limit { get; set; }
 
         /// <summary>
         /// Amount to set at start (kg)
@@ -75,6 +73,37 @@ namespace Models.CLEM.Resources
         public double Growth { get; set; }
 
         /// <summary>
+        /// Name of component
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// pricing
+        /// </summary>
+        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
+        {
+            return null;
+        }
+
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the amount of the last gain in this resource 
+        /// </summary>
+        [JsonIgnore]
+        public double LastGain { get; set; }
+
+        /// <summary>
         /// Reset timestep stores
         /// </summary>
         public void Reset()
@@ -85,13 +114,24 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public void Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
+        #region transactions
+
+        /// <summary>
         /// Add to Resource method.
         /// This style is not supported in GrazeFoodStoreType
         /// </summary>
-        /// <param name="ResourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public void Add(object ResourceAmount, string ActivityName, string Reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -107,36 +147,37 @@ namespace Models.CLEM.Resources
             if (pool.Amount > 0)
             {
                 // adjust DMD and N% based on incoming if needed
-                if (DMD != pool.DMD | Nitrogen != pool.Nitrogen)
+                if (DMD != pool.DMD || Nitrogen != pool.Nitrogen)
                 {
                     //TODO: run calculation passed others.
                     DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);
                     Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
+                Growth += pool.Growth;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="RemoveAmount"></param>
-        /// <param name="ActivityName"></param>
-        /// <param name="Reason"></param>
-        public double Remove(double RemoveAmount, string ActivityName, string Reason)
+        /// <param name="removeAmount"></param>
+        /// <param name="activity"></param>
+        /// <param name="reason"></param>
+        public double Remove(double removeAmount, CLEMModel activity, string reason)
         {
-            RemoveAmount = Math.Min(this.amount, RemoveAmount);
-            this.Consumed += RemoveAmount;
-            this.amount = this.amount - RemoveAmount;
+            removeAmount = Math.Min(this.amount, removeAmount);
+            this.Consumed += removeAmount;
+            this.amount -= removeAmount;
 
-            return RemoveAmount;
+            return removeAmount;
         }
 
         /// <summary>
         /// Remove from finance type store
         /// </summary>
-        /// <param name="Request">Resource request class with details.</param>
-        public void Remove(ResourceRequest Request)
+        /// <param name="request">Resource request class with details.</param>
+        public void Remove(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
@@ -144,33 +185,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="RemoveRequest"></param>
-        public void Remove(object RemoveRequest)
+        /// <param name="newAmount"></param>
+        public void Set(double newAmount)
         {
-//            RuminantFeedRequest removeRequest = RemoveRequest as RuminantFeedRequest;
-            // limit by available
-//            removeRequest.Amount = Math.Min(removeRequest.Amount, amount);
-            // add to intake and update %N and %DMD values
-//            removeRequest.Requestor.AddIntake(removeRequest);
-            // Remove from resource
-//            Remove(removeRequest.Amount, removeRequest.FeedActivity.Name, removeRequest.Requestor.BreedParams.Name);
+            this.amount = Math.Max(0, newAmount);
         }
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="NewAmount"></param>
-        public void Set(double NewAmount)
-        {
-            this.amount = NewAmount;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Initialise()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

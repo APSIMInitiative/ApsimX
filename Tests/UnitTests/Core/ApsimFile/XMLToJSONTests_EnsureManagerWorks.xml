@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Manager>
+    <Name>SowingFertiliser</Name>
+    <Script>
+      <Amount>160</Amount>
+      <CropName>wheat</CropName>
+    </Script>
+    <Code>
+      <![CDATA[using System;]]>
+    </Code>
+  </Manager>
+</Simulations>

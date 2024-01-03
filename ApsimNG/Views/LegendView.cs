@@ -1,46 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gtk;
 
 namespace UserInterface.Views
 {
     public delegate void PositionChangedDelegate(string NewText);
 
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface ILegendView
-    {
-        event PositionChangedDelegate OnPositionChanged;
-        void Populate(string title, string[] values);
-
-        void SetSeriesNames(string[] seriesNames);
-        void SetDisabledSeriesNames(string[] seriesNames);
-        string[] GetDisabledSeriesNames();
-        event EventHandler DisabledSeriesChanged;
-        
-    }
 
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// A view which allows the user to customise a graph legend.
     /// </summary>
     public class LegendView : ViewBase, ILegendView
     {
-        private string OriginalText;
-
-        public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
+        public event EventHandler LegendInsideGraphChanged;
 
-        private ComboBox combobox1 = null;
         private HBox hbox1 = null;
-        private TreeView listview = null;
-
-        private ListStore comboModel = new ListStore(typeof(string));
-        private CellRendererText comboRender = new CellRendererText();
+        private Gtk.TreeView listview = null;
 
         private ListStore listModel = new ListStore(typeof(Boolean), typeof(string));
         private CellRendererText listRender = new CellRendererText();
         private CellRendererToggle listToggle = new CellRendererToggle();
+
+        private CheckButton chkLegendInsideGraph;
+
+        public IDropDownView OrientationDropDown { get; private set; }
+        public IDropDownView PositionDropDown { get; private set; }
 
         /// <summary>
         /// Construtor
@@ -49,14 +35,16 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            combobox1 = (ComboBox)builder.GetObject("combobox1");
-            listview = (TreeView)builder.GetObject("listview");
-            _mainWidget = hbox1;
-            combobox1.Model = comboModel;
-            combobox1.PackStart(comboRender, false);
-            combobox1.AddAttribute(comboRender, "text", 0);
-            combobox1.Changed += OnPositionComboChanged;
-            combobox1.Focused += OnTitleTextBoxEnter; 
+            ComboBox combobox1 = (ComboBox)builder.GetObject("combobox1");
+            ComboBox orientationCombo = (ComboBox)builder.GetObject("combobox2");
+            listview = (Gtk.TreeView)builder.GetObject("listview");
+            mainWidget = hbox1;
+
+            OrientationDropDown = new DropDownView(this, orientationCombo);
+            PositionDropDown = new DropDownView(this, combobox1);
+
+            chkLegendInsideGraph = (CheckButton)builder.GetObject("chkLegendInsideGraph");
+            chkLegendInsideGraph.Toggled += OnToggleLegendInsideGraph;
 
             listview.Model = listModel;
             TreeViewColumn column = new TreeViewColumn();
@@ -69,78 +57,46 @@ namespace UserInterface.Views
             listview.AppendColumn(column);
             listToggle.Activatable = true;
             listToggle.Toggled += OnItemChecked;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
+        }
+
+        private void OnToggleLegendInsideGraph(object sender, EventArgs e)
+        {
+            try
+            {
+                LegendInsideGraphChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnPositionComboChanged;
-            combobox1.Focused -= OnTitleTextBoxEnter;
-            listToggle.Toggled -= OnItemChecked;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            listModel.Dispose();
-            listRender.Destroy();
-            listToggle.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
-        }
-
-        private bool settingCombo = false;
-        /// <summary>
-        /// Populate the view with the specified title.
-        /// </summary>
-        public void Populate(string title, string[] values)
-        {
-            settingCombo = true;
-            comboModel.Clear();
-            foreach (string text in values)
-                comboModel.AppendValues(text);
-            TreeIter iter;
-            if (comboModel.GetIterFirst(out iter))
+            try
             {
-                string entry = (string)comboModel.GetValue(iter, 0);
-                while (!entry.Equals(title, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
-                    entry = (string)comboModel.GetValue(iter, 0);
-                if (entry == title)
-                    combobox1.SetActiveIter(iter);
-                else // Could not find a matching entry
-                    combobox1.Active = 0;
+                chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
+                listToggle.Toggled -= OnItemChecked;
+                listModel.Dispose();
+                listRender.Dispose();
+                listToggle.Dispose();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            OriginalText = title;
-            settingCombo = false;
-        }
-
-        /// <summary>
-        /// When the user 'enters' the position combo box, save the current text value for later.
-        /// </summary>
-        private void OnTitleTextBoxEnter(object sender, FocusedArgs e)
-        {
-            TreeIter iter;
-            if (combobox1.GetActiveIter(out iter))
-                OriginalText = (string)combobox1.Model.GetValue(iter, 0);
-            else
-                OriginalText = null;
-        }
-
-        /// <summary>
-        /// When the user changes the combo box check to see if the text has changed. 
-        /// If so then invoke the 'OnPositionChanged' event so that the presenter can pick it up.
-        /// </summary>
-        private void OnPositionComboChanged(object sender, EventArgs e)
-        {
-            if (settingCombo) return;
-            TreeIter iter;
-            string curText = null;
-            if (combobox1.GetActiveIter(out iter))
-                curText = (string)combobox1.Model.GetValue(iter, 0);
-            if (OriginalText == null)
-                OriginalText = curText;
-            if (curText != OriginalText && OnPositionChanged != null)
+            catch (Exception err)
             {
-                OriginalText = curText;
-                OnPositionChanged.Invoke(curText);
+                ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Returns whether or not the check button to show the legend inside the graph is checked.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get => chkLegendInsideGraph.Active;
+            set => chkLegendInsideGraph.Active = value;
         }
 
         /// <summary>Sets the series names.</summary>
@@ -169,23 +125,6 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Returns the index of an item.</summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        public TreeIter IndexOf(string text)
-        {
-            TreeIter iter;
-            if (listModel.GetIterFirst(out iter))
-            {
-                do
-                {
-                    if (text == (string)listModel.GetValue(iter, 1))
-                        return iter;
-                } while (listModel.IterNext(ref iter));
-            }
-            return TreeIter.Zero;
-        }
-
         /// <summary>Gets the disabled series names.</summary>
         /// <returns></returns>
         public string[] GetDisabledSeriesNames()
@@ -199,19 +138,42 @@ namespace UserInterface.Views
 
         /// <summary>Called when user checks an item.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
-            TreeIter iter;
-
-            if (listModel.GetIter(out iter, new TreePath(e.Path)))
+            try
             {
-                bool old = (bool)listModel.GetValue(iter, 0);
-                listModel.SetValue(iter, 0, !old);
+                TreeIter iter;
+
+                if (listModel.GetIter(out iter, new TreePath(e.Path)))
+                {
+                    bool old = (bool)listModel.GetValue(iter, 0);
+                    listModel.SetValue(iter, 0, !old);
+                }
+                if (DisabledSeriesChanged != null)
+                    DisabledSeriesChanged.Invoke(this, new EventArgs());
             }
-            if (DisabledSeriesChanged != null)
-                DisabledSeriesChanged.Invoke(this, new EventArgs());
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-        
+    }
+
+    /// <summary>
+    /// Describes an interface for a legend view.
+    /// </summary>
+    interface ILegendView
+    {
+        bool LegendInsideGraph { get; set; }
+        IDropDownView OrientationDropDown { get; }
+        IDropDownView PositionDropDown { get; }
+
+        void SetSeriesNames(string[] seriesNames);
+        void SetDisabledSeriesNames(string[] seriesNames);
+        string[] GetDisabledSeriesNames();
+
+        event EventHandler DisabledSeriesChanged;
+        event EventHandler LegendInsideGraphChanged;
     }
 }

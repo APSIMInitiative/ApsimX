@@ -1,15 +1,19 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GenericPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using Models.Core;
     using Views;
+    using Interfaces;
+    using Markdig;
+    using Markdig.Renderers;
+    using Markdig.Syntax;
+    using Markdig.Parsers;
+    using Utility;
 
     /// <summary>
     /// Presenter of unspecified type
@@ -24,7 +28,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -40,7 +44,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
+            this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
 
             // Just how much documentation do we want to generate?
@@ -49,28 +53,24 @@ namespace UserInterface.Presenters
             // It's slightly simpler to generate Markdown for this, but it
             // would be pretty easy to build this directly as HTML
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-            AutoDocumentation.DocumentModel(this.model, tags, 1, 0, false);
+            AutoDocumentation.DocumentModel(this.model, tags, 1, 0, false, force: true);
 
             StringBuilder contents = new StringBuilder();
             foreach (AutoDocumentation.ITag tag in tags)
             {
-                if (tag is AutoDocumentation.Heading)
+                if (tag is AutoDocumentation.Heading heading)
                 {
-                    contents.Append("\r\n### ");
-                    contents.Append((tag as AutoDocumentation.Heading).text);
+                    contents.AppendLine();
+                    contents.Append($"### {heading.text}");
                 }
-                else if (tag is AutoDocumentation.Paragraph)
+                else if (tag is AutoDocumentation.Paragraph paragraph)
                 {
-                    contents.Append("\r\n");
-                    contents.Append((tag as AutoDocumentation.Paragraph).text);
+                    contents.AppendLine();
+                    contents.Append(paragraph.text);
                 }
             }
 
-            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-            markDown.ExtraMode = true;
-
-            string html = markDown.Transform(contents.ToString());
-            this.genericView.SetContents(html, false, false);
+            this.genericView.Text = contents.ToString();
         }
 
         /// <summary>

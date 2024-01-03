@@ -1,27 +1,28 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TimeSeriesStats.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+
 namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
 
     /// <summary>
-    /// # [Name]
     /// A post processing model that produces time series stats.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
     public class TimeSeriesStats : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
@@ -29,14 +30,9 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.TableName)]
         public string TableName { get; set; }
 
-        /// <summary>
-        /// The main run method called to fill tables in the specified DataStore.
-        /// </summary>
-        /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorageReader dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
-            dataStore.DeleteDataInTable(this.Name);
-
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
             statsData.Columns.Add("VariableName", typeof(string));
@@ -50,7 +46,7 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
 
-            DataTable simulationData = dataStore.GetData(this.TableName);
+            DataTable simulationData = dataStore.Reader.GetData(this.TableName);
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);
@@ -69,7 +65,7 @@ namespace Models.PostSimulationTools
                                 observedColumn.DataType == typeof(double))
                             {
                                 // Calculate stats for each simulation and store them in a rows in our stats table.
-                                string[] simulationNames = dataStore.SimulationNames;
+                                var simulationNames = dataStore.Reader.SimulationNames;
                                 foreach (string simulationName in simulationNames)
                                 {
                                     string seriesName = simulationName;
@@ -88,7 +84,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 statsData.TableName = this.Name;
-                dataStore.WriteTable(statsData);
+                dataStore.Writer.WriteTable(statsData);
             }
         }
 
@@ -110,9 +106,9 @@ namespace Models.PostSimulationTools
                 if (!Convert.IsDBNull(view[row][observedColumnName]) &&
                     !Convert.IsDBNull(view[row][predictedColumnName]))
                 {
-                    observedData.Add(Convert.ToDouble(view[row][observedColumnName], 
+                    observedData.Add(Convert.ToDouble(view[row][observedColumnName],
                                                       System.Globalization.CultureInfo.InvariantCulture));
-                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName], 
+                    predictedData.Add(Convert.ToDouble(view[row][predictedColumnName],
                                                        System.Globalization.CultureInfo.InvariantCulture));
                 }
             }

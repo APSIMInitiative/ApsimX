@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="32">
+  <Name>Simulations</Name>
+  <Memo>
+    <Name>TitlePage</Name>
+f    <MemoText>
+      <![CDATA[# The APSIM Wheat Model]]>
+    </MemoText>
+  </Memo>
+</Simulations>

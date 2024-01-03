@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.IO;
 using System.Data;
-using System.Xml.Serialization;
+using System.IO;
+using System.Linq;
 using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Interfaces;
 using Models.Storage;
+using Models.Utilities;
+using Newtonsoft.Json;
 
 namespace Models.PostSimulationTools
 {
 
-
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a file (in apsim format) and stores into the DataStore. 
     /// If the file has a column name of 'SimulationName' then this model will only input data for those rows
     /// where the data in column 'SimulationName' matches the name of the simulation under which
@@ -25,66 +25,106 @@ namespace Models.PostSimulationTools
     [Serializable]
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
-    [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
+    [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles, IGridModel
     {
+        /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
         /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
-        public string FileName { get; set; }
+        public string[] FileNames { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("EXCEL file name")]
-        public string FullFileName
+        public string[] FullFileNames
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                return null;
+                if (FileNames == null)
+                    return null;
+
+                if (storage == null)
+                    return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, FindAncestor<Simulations>().FileName)).ToArray();
+                return FileNames.Select(f => PathUtilities.GetAbsolutePath(f, storage.FileName)).ToArray();
             }
 
             set
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                Simulations simulations = FindAncestor<Simulations>();
+                this.FileNames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the table of values.
+        /// </summary>
+        [JsonIgnore]
+        public List<GridTable> Tables
+        {
+            get
+            {
+                return new List<GridTable>() { new GridTable(Name, new List<GridTableColumn>(), this) };
+            }
+        }
+
+        /// <summary>
+        /// Combines the live and dead forages into a single row for display and renames columns
+        /// </summary>
+        public DataTable ConvertModelToDisplay(DataTable dt)
+        {
+            return GetTable();
+        }
+
+        /// <summary>
+        /// Breaks the lines into the live and dead parts and changes headers to match class
+        /// </summary>
+        public DataTable ConvertDisplayToModel(DataTable dt)
+        {
+            //since Input is not an input in the GUI, we don't want to actualy change the model.
+            return new DataTable();
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FileName };
+            return FileNames;
+        }
+
+        /// <summary>Remove all paths from referenced filenames.</summary>
+        public void RemovePathsFromReferencedFileNames()
+        {
+            for (int i = 0; i < FileNames.Length; i++)
+                FileNames[i] = Path.GetFileName(FileNames[i]);
         }
 
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IStorageReader dataStore)
+        public void Run()
         {
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
+            foreach (string fileName in FullFileNames)
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
 
-                dataStore.DeleteDataInTable(Name);
-                DataTable data = GetTable();
+                DataTable data = GetTable(fileName);
                 if (data != null)
                 {
-                    data.TableName = this.Name;
-                    dataStore.WriteTable(data);
+                    data.TableName = Name;
+                    storage.Writer.WriteTable(data);
                 }
             }
         }
-
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// </summary>
-        public string ErrorMessage = string.Empty;
 
         /// <summary>
         /// Return a datatable for this input file. Returns null if no data.
@@ -92,41 +132,37 @@ namespace Models.PostSimulationTools
         /// <returns></returns>
         public DataTable GetTable()
         {
-            DataTable returnDataTable = null;
-            string fullFileName = FullFileName;
-            if (fullFileName != null)
-            {
-                if (File.Exists(fullFileName))
-                {
-                    ApsimTextFile textFile = new ApsimTextFile();
-                    try
-                    {
-                        textFile.Open(fullFileName);
-                    }
-                    catch (Exception err)
-                    {
-                        ErrorMessage = err.Message;
-                        return null;
-                    }
-                    DataTable table = textFile.ToTable();
-                    textFile.Close();
+            if (FullFileNames.Length > 0)
+                if (!String.IsNullOrEmpty(FullFileNames[0])) 
+                    return GetTable(FullFileNames[0]);
+            return null;
+        }
 
-                    if (returnDataTable == null)
-                        returnDataTable = table;
-                    else
-                        returnDataTable.Merge(table);
+        /// <summary>
+        /// Return a datatable for this input file. Returns null if no data.
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetTable(string fileName)
+        {
+            ApsimTextFile textFile = new ApsimTextFile();
+            try
+            {
+                if (File.Exists(fileName))
+                {
+                    textFile.Open(fileName);
+                    return textFile.ToTable();
                 }
                 else
-                {
-                    ErrorMessage = "The specified file does not exist.";
-                }
+                    throw new Exception($"The specified file '{fileName}' does not exist.");
             }
-            else
+            catch (Exception err)
             {
-                ErrorMessage = "Please select a file to use.";
+                throw new Exception($"Error in input file {Name} while reading file {fileName}", err);
             }
-
-            return returnDataTable;
-        }       
+            finally
+            {
+                textFile?.Close();
+            }
+        }
     }
 }

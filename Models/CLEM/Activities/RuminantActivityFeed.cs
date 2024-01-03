@@ -1,58 +1,65 @@
 ﻿using Models.Core;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using Models.Core.Attributes;
+using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant feed activity</summary>
     /// <summary>This activity provides food to specified ruminants based on a feeding style</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <version>1.1</version>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
-    public class RuminantActivityFeed : CLEMRuminantActivityBase
+    [Description("Feed ruminants by a feeding style.")]
+    [Version(1, 1, 0, "Implements event based activity control")]
+    [Version(1, 0, 4, "Added smart feeding switch to stop feeding when animals are satisfied and avoid overfeed wastage")]
+    [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
+    [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
+    [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
+    public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
-        [Link]
-        Clock Clock = null;
+        private int numberToDo;
+        private int numberToSkip;
+        private double amountToDo;
+        private double amountToSkip;
+        private double wasted;
+        private double excessFed;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
+        private double feedEstimated = 0;
+        private double feedToSatisfy = 0;
+        private double feedToOverSatisfy = 0;
+        private readonly bool usingPotentialIntakeMultiplier = false;
+        private double overfeedProportion = 1;
 
         /// <summary>
-        /// Name of Feed to use
+        /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
+        /// eg. AnimalFoodStore.RiceStraw
         /// </summary>
-        [Description("Feed type name in Animal Food Store")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Feed Type required")]
+        [Description("Feed to use")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore) } })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type required")]
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Proportion wastage through trampling (feed trough = 0)
+        /// Proportion wasted (e.g. trampling, 0 = feed trough present)
         /// </summary>
-        [Description("Proportion wastage through trampling (feed trough = 0)")]
+        [Description("Proportion wasted (e.g. trampling, 0 = feed trough present)")]
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
-
-        private IResourceType FoodSource { get; set; }
-
-        /// <summary>
-        /// Labour grouping for breeding
-        /// </summary>
-        [XmlIgnore]
-        public List<object> LabourFilterList { get; set; }
-
-        /// <summary>
-        /// Feed type
-        /// </summary>
-        [XmlIgnore]
-        public IFeedType FeedType { get; set; }
 
         /// <summary>
         /// Feeding style to use
@@ -63,9 +70,23 @@ namespace Models.CLEM.Activities
         public RuminantFeedActivityTypes FeedStyle { get; set; }
 
         /// <summary>
-        /// Labour settings
+        /// Stop feeding when animals are satisfied
         /// </summary>
-        private List<LabourFilterGroupSpecified> labour { get; set; }
+        [Description("Stop feeding when satisfied")]
+        [Required]
+        public bool StopFeedingWhenSatisfied { get; set; }
+
+        /// <summary>
+        /// Feed type
+        /// </summary>
+        [JsonIgnore]
+        public IFeedType FeedType { get; set; }
+
+        /// <summary>
+        /// The list of individuals remaining to be fed in the current timestep
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<Ruminant> IndividualsToBeFed { get; set; }
 
         /// <summary>
         /// Constructor
@@ -73,6 +94,35 @@ namespace Models.CLEM.Activities
         public RuminantActivityFeed()
         {
             this.SetDefaults();
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "RuminantFeedGroup":
+                case "RuminantFeedGroupMonthly":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>(),
+                        measures: new List<string>() { "Feed provided" }
+                        );
+                case "ActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForCompanionModels(
+                        identifiers: new List<string>() {
+                            "Number fed",
+                            "Feed provided"
+                        },
+                        measures: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per kg feed"
+                        }
+                        );
+                default:
+                    return new LabelsForCompanionModels();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -83,221 +133,316 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, typeof(AnimalFoodStore), FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            FoodSource = FeedType;
-
-            // get labour specifications
-            labour = Apsim.Children(this, typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList(); //  this.Children.Where(a => a.GetType() == typeof(LabourFilterGroupSpecified)).Cast<LabourFilterGroupSpecified>().ToList();
-            if (labour == null) labour = new List<LabourFilterGroupSpecified>();
+            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        /// <inheritdoc/>
+        public override void PrepareForTimestep()
         {
-            ResourceRequestList = null;
-            List<Ruminant> herd = CurrentHerd(false);
-            int head = 0;
-            double AE = 0;
-            foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
-            {
-                var subherd = herd.Filter(child).ToList();
-                head += subherd.Count();
-                AE += subherd.Sum(a => a.AdultEquivalent);
-            }
+            numberToDo = 0;
+            numberToSkip = 0;
+            amountToDo = 0;
+            amountToSkip = 0;
+            wasted = 0;
+            excessFed = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantFeedGroup>(), herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
+            IndividualsToBeFed = uniqueIndividuals;
 
-            // for each labour item specified
-            foreach (var item in labour)
+            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+
+            feedEstimated = 0;
+            feedToSatisfy = 0;
+            feedToOverSatisfy = 0;
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            Status = ActivityStatus.NotNeeded;
+            feedEstimated = filterGroups.OfType<RuminantFeedGroup>().Sum(a => a.CurrentResourceRequest.Required);
+
+            foreach (var valueToSupply in valuesForCompanionModels)
             {
-                double daysNeeded = 0;
-                switch (item.UnitType)
+                int number = numberToDo;
+
+                switch (valueToSupply.Key.type)
                 {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = item.LabourPerUnit;
+                    case "RuminantFeedGroup":
+                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                         break;
-                    case LabourUnitType.perHead:
-                        daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        daysNeeded = Math.Ceiling(AE / item.UnitSize) * item.LabourPerUnit;
+                    case "LabourRequirement":
+                    case "ActivityFee":
+                        switch (valueToSupply.Key.identifier)
+                        {
+                            case "Number fed":
+                                switch (valueToSupply.Key.unit)
+                                {
+                                    case "fixed":
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                                        break;
+                                    case "per head":
+                                        valuesForCompanionModels[valueToSupply.Key] = number;
+                                        break;
+                                    default:
+                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                                }
+                                break;
+                            case "Feed provided":
+                                switch (valueToSupply.Key.unit)
+                                {
+                                    case "fixed":
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
+                                        break;
+                                    case "per kg fed":
+                                        amountToDo = feedEstimated;
+                                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
+                                        break;
+                                    default:
+                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                                }
+                                break;
+                            default:
+                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
+                        }
                         break;
                     default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                }
-                if (daysNeeded > 0)
-                {
-                    if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = daysNeeded,
-                        ResourceType = typeof(Labour),
-                        ResourceTypeName = "",
-                        ActivityModel = this,
-                        FilterDetails = new List<object>() { item }
-                    }
-                    );
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
-
-            herd = CurrentHerd(false);
-
-            // feed
-            double feedRequired = 0;
-            // get zero limited month from clock
-            int month = Clock.Today.Month - 1;
-
-            // get list from filters
-            foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
-            {
-                foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
-                {
-                    switch (FeedStyle)
-                    {
-                        case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                            feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
-                            break;
-                        case RuminantFeedActivityTypes.ProportionOfWeight:
-                            feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4;
-                            break;
-                        case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                            feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake;
-                            break;
-                        case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                            feedRequired += (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-            if (ResourceRequestList == null) ResourceRequestList = new List<ResourceRequest>();
-
-            ResourceRequestList.Add(new ResourceRequest()
-            {
-                AllowTransmutation = true,
-                Required = feedRequired,
-                ResourceType = typeof(AnimalFoodStore),
-                ResourceTypeName = this.FeedTypeName,
-                ActivityModel = this
-            }
-            );
-
-            return ResourceRequestList;
+            return null;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForTimestep()
         {
-            List<Ruminant> herd = CurrentHerd(false);
-            if (herd != null && herd.Count > 0)
+            overfeedProportion = 0;
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                // calculate labour limit
-                double labourLimit = 1;
-                double labourNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-                double labourProvided = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-                if(labourNeeded>0)
+                // find shortfall by identifiers as these may have different influence on outcome
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number fed").FirstOrDefault();
+                if (numberShort != null)
                 {
-                    labourLimit = labourProvided / labourNeeded;
+                    string warn = $"Resource shortfalls reduced the number of animals fed in [a={NameWithParent}] based on specified [ShortfallAffectsActivity] set to true for identifier [Number fed].{Environment.NewLine}The individuals fed will be restricted, but the model does not currenty adjust the amount of feed handled to match the reduced number of individuals";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+
+                    numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
                 }
 
-                // calculate feed limit
-                double feedLimit = 0.0;
-                double wastage = 1.0 - this.ProportionTramplingWastage;
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Feed provided").FirstOrDefault();
+                if (amountShort != null)
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - amountShort.Available / amountShort.Required));
 
-                ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
-                FoodResourcePacket details = new FoodResourcePacket();
-                if (feedRequest != null)
+                if(numberToDo == numberToSkip)
                 {
-                    details = feedRequest.AdditionalDetails as FoodResourcePacket;
-                    feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
+                    amountToDo = 0;
+                }
+                this.Status = ActivityStatus.Partial;
+
+                // number and kg based shortfalls of labour and finance etc will affect lower feeding groups
+                int numberNotAllowed = numberToSkip;
+
+                foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Reverse())
+                {
+                    int numberPresent = iChild.CurrentIndividualsToFeed.Count;
+                    if (numberNotAllowed > 0)
+                    {
+                        // reduce individuals in group
+                        int numberToRemove = Math.Min(numberPresent, numberNotAllowed);
+                        numberPresent -= numberToRemove;    
+                        numberNotAllowed -= numberToRemove;
+
+                        // calculate feed not needed for removed individuals
+                        double previouslyRequired = iChild.CurrentResourceRequest.Required;
+
+                        iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
+                        iChild.UpdateCurrentFeedDemand(this);
+
+                        // remove from amountToSkip 
+                        amountToSkip -= previouslyRequired;
+                        Status = ActivityStatus.Partial;
+                    }
+                    if(MathUtilities.IsPositive(amountToSkip))
+                    {
+                        // still need to reduce amount shortfalls from $ or labour
+                        double amountToRemove = Math.Min(amountToSkip, iChild.CurrentResourceRequest.Available);
+                        iChild.CurrentResourceRequest.Available -= amountToRemove;
+                        amountToSkip -= amountToRemove;
+                        Status = ActivityStatus.Partial;
+                    }
+
+                    if (MathUtilities.IsPositive(ProportionTramplingWastage))
+                    {
+                        double wastedByGroup = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) * ProportionTramplingWastage;
+                        wasted += wastedByGroup;
+                        iChild.CurrentResourceRequest.Available -= wastedByGroup;
+                        iChild.CurrentResourceRequest.Required -= wastedByGroup;
+                    }
+                    // calculate excess fed
+                    double excess = 0;
+                    if (MathUtilities.IsGreaterThanOrEqual(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToOverSatisfy))
+                    {
+                        excess = Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToOverSatisfy;
+                        excessFed += excess;
+                        if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy))
+                            overfeedProportion = 1;
+
+                        iChild.CurrentResourceRequest.Available -= excess;
+                        iChild.CurrentResourceRequest.Required -= excess;
+                    }
+                    else if (MathUtilities.IsGreaterThan(feedToOverSatisfy, feedToSatisfy) && MathUtilities.IsGreaterThan(Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required), feedToSatisfy))
+                        overfeedProportion = (Math.Min(iChild.CurrentResourceRequest.Available, iChild.CurrentResourceRequest.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
                 }
 
-                // feed animals
-                int month = Clock.Today.Month - 1;
-                SetStatusSuccess();
-
-                // get list from filters
-                foreach (RuminantFeedGroup child in Apsim.Children(this, typeof(RuminantFeedGroup)))
+                // adjust for, and report, wastage
+                if (MathUtilities.IsPositive(wasted))
                 {
-                    foreach (Ruminant ind in herd.Filter(child as RuminantFeedGroup))
+                    ResourceRequest wastedRequest = new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = wasted,
+                        Available = wasted,
+                        Resource = FeedType,
+                        ResourceType = typeof(AnimalFoodStore),
+                        ResourceTypeName = FeedTypeName,
+                        ActivityModel = this,
+                        Category = $"{TransactionCategory}.Wastage",
+                        RelatesToResource = this.PredictedHerdNameToDisplay,
+                    };
+                    ResourceRequestList.Insert(0, wastedRequest);
+                }
+
+                // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
+                if (MathUtilities.IsPositive(excessFed))
+                {
+                    ResourceRequest excessRequest = new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = excessFed,
+                        Available = excessFed,
+                        Resource = FeedType,
+                        ResourceType = typeof(AnimalFoodStore),
+                        ResourceTypeName = FeedTypeName,
+                        ActivityModel = this,
+                        Category = $"{TransactionCategory}.Overfed wastage",
+                        RelatesToResource = this.PredictedHerdNameToDisplay
+                    };
+                    ResourceRequestList.Insert(0, excessRequest);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForTimestep(double argument = 0)
+        {
+            int numberFed = 0;
+            foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>())
+            {
+                if (iChild.CurrentResourceRequest != null)
+                {
+                    numberFed += iChild.CurrentIndividualsToFeed.Count;
+                    double feedLimit = Math.Min(1.0, iChild.CurrentResourceRequest.Provided / iChild.CurrentResourceRequest.Required);
+
+                    double totalWeight = 0;
+                    if(FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount || FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+                    {  
+                        totalWeight = iChild.CurrentIndividualsToFeed.Sum(a => a.Weight);
+                    }
+
+                    FoodResourcePacket details = iChild.CurrentResourceRequest.AdditionalDetails as FoodResourcePacket;
+
+                    foreach (Ruminant ind in iChild.CurrentIndividualsToFeed)
                     {
                         switch (FeedStyle)
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                                details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * 30.4;
-                                details.Amount *= feedLimit * labourLimit * wastage;
-                                ind.AddIntake(details);
+                            case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                                details.Amount = ((ind.PotentialIntake * (usingPotentialIntakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake);
+                                details.Amount *= feedLimit;
+                                details.Amount *= ind.Weight/totalWeight;
+                                break;
+                            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                                details.Amount = iChild.CurrentValue * 30.4;
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
-                                details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * ind.Weight * 30.4; // * ind.Number;
-                                details.Amount *= feedLimit * labourLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount = iChild.CurrentValue * ind.Weight * 30.4;
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * ind.PotentialIntake; // * ind.Number;
-                                details.Amount *= feedLimit * labourLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount = iChild.CurrentValue * ind.PotentialIntake;
+                                details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = (child as RuminantFeedGroup).MonthlyValues[month] * (ind.PotentialIntake - ind.Intake); // * ind.Number;
-                                details.Amount *= feedLimit * labourLimit * wastage;
-                                ind.AddIntake(details);
+                                details.Amount = iChild.CurrentValue * (ind.PotentialIntake - ind.Intake);
+                                details.Amount *= feedLimit;
                                 break;
                             default:
-                                break;
+                                throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                         }
+                        // check amount meets intake limits
+                        if (usingPotentialIntakeMultiplier)
+                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake))
+                                details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
+                        ind.AddIntake(details);
                     }
                 }
             }
-
+            if (numberToDo > 0)
+                SetStatusSuccessOrPartial(numberFed != numberToDo);
         }
 
+        #region validation
         /// <summary>
-        /// Method to determine resources required for initialisation of this activity
+        /// Validate model
         /// </summary>
+        /// <param name="validationContext"></param>
         /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return null;
+            var results = new List<ValidationResult>();
+
+            if (filterGroups != null && filterGroups.Where(a => a.GetType() != typeof(RuminantFeedGroup) && a.GetType() != typeof(RuminantFeedGroupMonthly)).Any())
+            {
+                string warn = $"[a=RuminantActivityFeed] [{NameWithParent}] only accepts Resource groups of the type [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly].{Environment.NewLine}All other groups will be ignored.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                filterGroups = filterGroups.Where(a => a.GetType() == typeof(RuminantFeedGroup) || a.GetType() == typeof(RuminantFeedGroupMonthly));
+            }
+
+            // check that all children with proportion of feed available do not exceed 1
+            if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+            {
+                double propOfFeed = FindAllChildren<RuminantFeedGroup>().Sum(a => a.Value);
+                if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
+                {
+                    string[] memberNames = new string[] { "Total proportion exceeds 1" };
+                    results.Add(new ValidationResult($"The sum of Proportions of total feed available excceds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", memberNames));
+                }
+            }
+            return results;
         }
+        #endregion
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
+        #region descriptive summary
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            if (ResourceShortfallOccurred != null)
-                ResourceShortfallOccurred(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            if (ActivityPerformed != null)
-                ActivityPerformed(this, e);
-        }
-
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write("</div>");
+                if (ProportionTramplingWastage > 0)
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
-
 }

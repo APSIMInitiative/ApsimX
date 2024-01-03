@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UserInterface.Interfaces;
 using Gtk;
+using UserInterface.Presenters;
 
 // This is the view used by the WeatherFile component
 namespace UserInterface.Views
@@ -21,79 +22,7 @@ namespace UserInterface.Views
     /// <param name="sheetName"></param>
     public delegate void ExcelSheetDelegate(string fileName, string sheetName);
 
-    /// <summary>
-    /// An interface for a weather data view
-    /// </summary>
-    interface IMetDataView
-    {
-        /// <summary>Occurs when browse button is clicked</summary>
-        event BrowseDelegate BrowseClicked;
-
-        /// <summary>Occurs when the start year numericUpDown is clicked</summary>
-        event GraphRefreshDelegate GraphRefreshClicked;
-
-        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
-        event ExcelSheetDelegate ExcelSheetChangeClicked;
-
-        /// <summary>Gets or sets the filename.</summary>
-        string Filename { get; set; }
-
-        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
-        string ExcelWorkSheetName { get; set; }
-
-        /// <summary>Sets the summarylabel.</summary>
-        string Summarylabel { set; }
-
-        /// <summary>Gets the graph.</summary>
-        IGraphView GraphSummary { get; }
-
-        /// <summary>Gets the Rainfall graph.</summary>
-        IGraphView GraphRainfall { get; }
-
-        /// <summary>Gets the Monthly Rainfall graph.</summary>
-        IGraphView GraphMonthlyRainfall { get; }
-
-        /// <summary>Gets the Temperature graph.</summary>
-        IGraphView GraphTemperature { get; }
-
-        /// <summary>Gets the Radiation graph.</summary>
-        IGraphView GraphRadiation { get; }
-
-        /// <summary>sets the Graph Year</summary>
-        int GraphStartYearValue { get; set; }
-
-        /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
-        int GraphStartYearMinValue { get; set; }
-
-        /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
-        int GraphStartYearMaxValue { get; set; }
-
-        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
-        /// <param name="show"></param>
-        void ShowExcelSheets(bool show);
-
-        /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
-        int GraphShowYearsValue { get; set; }
-
-        /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
-        int GraphShowYearsMaxValue { set; }
-
-        /// <summary>Populates the data grid</summary>
-        /// <param name="Data">The data</param>
-        void PopulateData(DataTable Data);
-
-        /// <summary>
-        /// Populates the DropDown of Excel WorksheetNames 
-        /// </summary>
-        /// <param name="sheetNames"></param>
-        void PopulateDropDownData(List<string> sheetNames);
-
-        /// <summary>
-        /// Indicates the index of the currently active tab
-        /// </summary>
-        int TabIndex { get; set; }
-    }
-
+    
     /// <summary>
     /// A view for displaying weather data.
     /// </summary>
@@ -105,7 +34,7 @@ namespace UserInterface.Views
         private GraphView graphViewTemperature;
         private GraphView graphViewRadiation;
 
-        private GridView gridViewData;
+        public ContainerView container { get; set; }
 
         /// <summary>Occurs when browse button is clicked</summary>
         public event BrowseDelegate BrowseClicked;
@@ -114,6 +43,7 @@ namespace UserInterface.Views
         public event GraphRefreshDelegate GraphRefreshClicked;
 
         public event ExcelSheetDelegate ExcelSheetChangeClicked;
+        public event BrowseDelegate ConstantsFileSelected;
 
         private Label labelFileName = null;
         private VBox vbox1 = null;
@@ -137,6 +67,9 @@ namespace UserInterface.Views
         private HBox hbox2 = null;
         private Alignment alignment10 = null;
         private DropDownView worksheetCombo;
+        private Button constantsFileSelector;
+        private Container constantsFileSelectorContainer;
+        private Label labelConstantsFileName;
 
         /// <summary>Initializes a new instance of the <see cref="TabbedMetDataView"/> class.</summary>
         public TabbedMetDataView(ViewBase owner) : base(owner)
@@ -163,20 +96,26 @@ namespace UserInterface.Views
             vpaned1 = (VPaned)builder.GetObject("vpaned1");
             hbox2 = (HBox)builder.GetObject("hbox2");
             alignment10 = (Alignment)builder.GetObject("alignment10");
-            _mainWidget = vbox1;
+            constantsFileSelector = (Button)builder.GetObject("button2");
+            constantsFileSelector.Clicked += OnChooseConstantsFile;
+            constantsFileSelectorContainer = (Container)builder.GetObject("hbox3");
+            labelConstantsFileName = (Label)builder.GetObject("labelFileName1");
+            mainWidget = vbox1;
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
             graphViewRainfall = new GraphView(this);
-            vboxRainChart.PackEnd(graphViewRainfall.MainWidget);
+            vboxRainChart.PackEnd(graphViewRainfall.MainWidget, true, true, 0);
             graphViewMonthlyRainfall = new GraphView(this);
-            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget);
+            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget, true, true, 0);
             graphViewTemperature = new GraphView(this);
-            vboxTemp.PackEnd(graphViewTemperature.MainWidget);
+            vboxTemp.PackEnd(graphViewTemperature.MainWidget, true, true, 0);
             graphViewRadiation = new GraphView(this);
-            vboxRadn.PackEnd(graphViewRadiation.MainWidget);
-            gridViewData = new GridView(this);
-            gridViewData.ReadOnly = true;
-            alignData.Add(gridViewData.MainWidget);
+            vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
+
+            container = new ContainerView(owner);
+            alignData.Add(container.MainWidget);
+            
+
             button1.Clicked += OnButton1Click;
             spinStartYear.ValueChanged += OnGraphStartYearValueChanged;
             spinNYears.ValueChanged += OnGraphShowYearsValueChanged;
@@ -187,20 +126,27 @@ namespace UserInterface.Views
             GraphShowYearsValue = 1;
             worksheetCombo = new DropDownView(this);
             alignment10.Add(worksheetCombo.MainWidget);
-            worksheetCombo.IsVisible = true;
+            worksheetCombo.Visible = true;
             worksheetCombo.Changed += WorksheetCombo_Changed;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            button1.Clicked -= OnButton1Click;
-            spinStartYear.ValueChanged -= OnGraphStartYearValueChanged;
-            spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
-            notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
-            worksheetCombo.Changed -= WorksheetCombo_Changed;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            try
+            {
+                button1.Clicked -= OnButton1Click;
+                spinStartYear.ValueChanged -= OnGraphStartYearValueChanged;
+                spinNYears.ValueChanged -= OnGraphShowYearsValueChanged;
+                notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
+                worksheetCombo.Changed -= WorksheetCombo_Changed;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Gets or sets the filename.</summary>
@@ -209,6 +155,14 @@ namespace UserInterface.Views
         {
             get { return labelFileName.Text; }
             set { labelFileName.Text = value; }
+        }
+
+        /// <summary>Gets or sets the filename.</summary>
+        /// <value>The filename.</value>
+        public string ConstantsFileName
+        {
+            get { return labelConstantsFileName.Text; }
+            set { labelConstantsFileName.Text = value; }
         }
 
         public string ExcelWorkSheetName
@@ -329,14 +283,6 @@ namespace UserInterface.Views
             hbox2.Visible = show;
         }
 
-        /// <summary>Populates the data.</summary>
-        /// <param name="Data">The data.</param>
-        public void PopulateData(DataTable data)
-        {
-            //fill the grid with data
-            gridViewData.DataSource = data;
-        }
-
         /// <summary>
         /// Populates the DropDown of Excel WorksheetNames 
         /// </summary>
@@ -346,20 +292,48 @@ namespace UserInterface.Views
             worksheetCombo.Values = sheetNames.ToArray();
         }
 
+        private void OnChooseConstantsFile(object sender, EventArgs e)
+        {
+            try
+            {
+                string fileName = AskUserForFileName("Choose a constants file to open", Utility.FileDialog.FileActionType.Open, "Plain text file (*.txt)|*.txt");
+                if (!String.IsNullOrEmpty(fileName))
+                {
+                    ConstantsFileName = fileName;
+                    if (ConstantsFileSelected != null)
+                    {
+                        ConstantsFileSelected.Invoke(fileName);
+                        notebook1.CurrentPage = 0;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>Handles the Click event of the button1 control.</summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnButton1Click(object sender, EventArgs e)
         {
-            string fileName = AskUserForFileName("Choose a weather file to open", "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx", FileChooserAction.Open, labelFileName.Text);
-            if (!String.IsNullOrEmpty(fileName))
+            try
             {
-                Filename = fileName;
-                if (BrowseClicked != null)
+                string fileName = AskUserForFileName("Choose a weather file to open", Utility.FileDialog.FileActionType.Open, "APSIM Weather file (*.met)|*.met|Excel file(*.xlsx)|*.xlsx|CSV file(*.csv)|*.csv", labelFileName.Text);
+                if (!String.IsNullOrEmpty(fileName))
                 {
-                    BrowseClicked.Invoke(Filename);    //reload the grid with data
-                    notebook1.CurrentPage = 0;
+                    Filename = fileName;
+                    if (BrowseClicked != null)
+                    {
+                        BrowseClicked.Invoke(Filename);    //reload the grid with data
+                        notebook1.CurrentPage = 0;
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -368,8 +342,15 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnGraphStartYearValueChanged(object sender, EventArgs e)
         {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            try
+            {
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Handles the change event for the GraphShowYears NumericUpDown </summary>
@@ -377,8 +358,15 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnGraphShowYearsValueChanged(object sender, EventArgs e)
         {
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            try
+            {
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -389,54 +377,69 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl1_SelectedIndexChanged(object sender, SwitchPageArgs e)
         {
-            bool moved = false;
-            switch (e.PageNum)
+            try
             {
-                case 2:
-                    if (hboxOptions.Parent != alignRainChart)
-                    {
-                        hboxOptions.Reparent(alignRainChart);
-                        moved = true;
-                    }
-                    break;
-                case 3:
-                    if (hboxOptions.Parent != alignRainMonthly)
-                    {
-                        hboxOptions.Reparent(alignRainMonthly);
-                        moved = true;
-                    }
-                    break;
-                case 4:
-                    if (hboxOptions.Parent != alignTemp)
-                    {
-                        hboxOptions.Reparent(alignTemp);
-                        moved = true;
-                    }
-                    break;
-                case 5:
-                    if (hboxOptions.Parent != alignRadn)
-                    {
-                        hboxOptions.Reparent(alignRadn);
-                        moved = true;
-                    }
-                    break;
-                default: break;
-            }
+                bool moved = false;
+                switch (e.PageNum)
+                {
+                    case 2:
+                        if (hboxOptions.Parent != alignRainChart)
+                        {
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
 
-            if (moved)
-            {
-                // On Windows, at least, these controls don't move correctly with the reparented HBox.
-                // They think they're parented correctly, but are drawn at 0,0 of the main window.
-                // We can hack around this by reparenting them somewhere else, then moving them back.
-                Widget pa = spinStartYear.Parent;
-                spinStartYear.Reparent(MainWidget);
-                spinStartYear.Reparent(pa);
-                pa = spinNYears.Parent;
-                spinNYears.Reparent(MainWidget);
-                spinNYears.Reparent(pa);
+                            alignRainChart.Add(hboxOptions);
+                            moved = true;
+                        }
+                        break;
+                    case 3:
+                        if (hboxOptions.Parent != alignRainMonthly)
+                        {
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignRainMonthly.Add(hboxOptions);
+                            moved = true;
+                        }
+                        break;
+                    case 4:
+                        if (hboxOptions.Parent != alignTemp)
+                        {
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignTemp.Add(hboxOptions);
+                            moved = true;
+                        }
+                        break;
+                    case 5:
+                        if (hboxOptions.Parent != alignRadn)
+                        {
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignRadn.Add(hboxOptions);
+                            moved = true;
+                        }
+                        break;
+                    default: break;
+                }
+
+                if (moved)
+                {
+                    // The SpinButton controls lose their font information when they are reparented. We restore it here.
+                    Container pa = spinStartYear.Parent as Container;
+                    Pango.FontDescription font = pa.PangoContext.FontDescription;
+                    spinStartYear.PangoContext.FontDescription = font; 
+                    spinNYears.PangoContext.FontDescription = font;
+                }
+                if (GraphRefreshClicked != null)
+                    GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
             }
-            if (GraphRefreshClicked != null)
-                GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -446,9 +449,105 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void WorksheetCombo_Changed(object sender, EventArgs e)
         {
-            if (ExcelSheetChangeClicked != null)
-               ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
-            notebook1.CurrentPage = 0;
+            try
+            {
+                if (ExcelSheetChangeClicked != null)
+                    ExcelSheetChangeClicked.Invoke(Filename, worksheetCombo.SelectedValue);
+                notebook1.CurrentPage = 0;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
+
+        public void ShowConstantsFile(bool show)
+        {
+            if (show)
+                constantsFileSelectorContainer.ShowAll();
+            else
+                constantsFileSelectorContainer.Hide();
+        }
+    }
+    /// <summary>
+    /// An interface for a weather data view
+    /// </summary>
+    interface IMetDataView
+    {
+        /// <summary>Container for grid</summary>
+        ContainerView container { get; }
+
+        /// <summary>Occurs when browse button is clicked</summary>
+        event BrowseDelegate BrowseClicked;
+
+        /// <summary>Occurs when a constants file is selected.</summary>
+        event BrowseDelegate ConstantsFileSelected;
+
+        /// <summary>Occurs when the start year numericUpDown is clicked</summary>
+        event GraphRefreshDelegate GraphRefreshClicked;
+
+        /// <summary>A delegate used when the sheetname dropdown value change is actived</summary>
+        event ExcelSheetDelegate ExcelSheetChangeClicked;
+
+        /// <summary>Gets or sets the filename.</summary>
+        string Filename { get; set; }
+
+        /// <summary>Gets or sets the filename.</summary>
+        string ConstantsFileName { get; set; }
+
+        /// <summary>Gets or sets the Excel Sheet name, where applicable</summary>
+        string ExcelWorkSheetName { get; set; }
+
+        /// <summary>Sets the summarylabel.</summary>
+        string Summarylabel { set; }
+
+        /// <summary>Gets the graph.</summary>
+        IGraphView GraphSummary { get; }
+
+        /// <summary>Gets the Rainfall graph.</summary>
+        IGraphView GraphRainfall { get; }
+
+        /// <summary>Gets the Monthly Rainfall graph.</summary>
+        IGraphView GraphMonthlyRainfall { get; }
+
+        /// <summary>Gets the Temperature graph.</summary>
+        IGraphView GraphTemperature { get; }
+
+        /// <summary>Gets the Radiation graph.</summary>
+        IGraphView GraphRadiation { get; }
+
+        /// <summary>sets the Graph Year</summary>
+        int GraphStartYearValue { get; set; }
+
+        /// <summary>set the minimum value for the 'Start Year' NumericUpDown control </summary>
+        int GraphStartYearMinValue { get; set; }
+
+        /// <summary>set the maximum value for the graph 'Start Year' NumericUpDown control  </summary>
+        int GraphStartYearMaxValue { get; set; }
+
+        /// <summary>Show or hide the combobox listing the names of Excel worksheets </summary>
+        /// <param name="show"></param>
+        void ShowExcelSheets(bool show);
+
+        /// <summary>Show or hide the constants file selector.</summary>
+        /// <param name="show">If true, the selector will be shown, otherwise it will be hidden.</param>
+        void ShowConstantsFile(bool show);
+
+        /// <summary>sets/gets the value of 'Show Years' NumericUpDown control </summary>
+        int GraphShowYearsValue { get; set; }
+
+        /// <summary>set the maximum value for the 'Show Years' NumericUpDown control  </summary>
+        int GraphShowYearsMaxValue { set; }
+
+        /// <summary>
+        /// Populates the DropDown of Excel WorksheetNames 
+        /// </summary>
+        /// <param name="sheetNames"></param>
+        void PopulateDropDownData(List<string> sheetNames);
+
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        int TabIndex { get; set; }
     }
 }

@@ -1,18 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DescriptionAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+using System.Runtime.CompilerServices;
+
 namespace Models.Core
 {
-    using System;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
     public class DescriptionAttribute : System.Attribute
     {
         /// <summary>
@@ -25,7 +21,7 @@ namespace Models.Core
         /// </summary>
         /// <param name="description">Description text</param>
         /// <param name="lineNum">Line number of declaration - inserted by compiler magically. Useful for sorting</param>
-        public DescriptionAttribute(string description, [CallerLineNumber]int lineNum = 0)
+        public DescriptionAttribute(string description, [CallerLineNumber] int lineNum = 0)
         {
             this.description = description;
             LineNumber = lineNum;
@@ -44,5 +40,5 @@ namespace Models.Core
         /// Line number of declaration
         /// </summary>
         public int LineNumber { get; private set; }
-    } 
+    }
 }

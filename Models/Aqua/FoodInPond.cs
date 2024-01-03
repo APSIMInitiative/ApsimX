@@ -1,26 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
-using System.Runtime.Serialization;
-using Models;
+using System.Collections.Generic;
 using Models.Core;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
-
 
 namespace Models.Aqua
     {
 
     ///<summary>
-    /// Aquaculture Food in the Pond. 
+    /// Aquaculture Food in the Pond.
     /// Stores the different feeds that are in the pond.
-    ///</summary> 
+    ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class FoodInPond : Model
         {
@@ -31,7 +24,7 @@ namespace Models.Aqua
 
         ///// <summary>The clock</summary>
         //[Link]
-        //private Clock Clock = null;
+        //private IClock Clock = null;
 
 
         ///// <summary>The summary</summary>
@@ -51,7 +44,7 @@ namespace Models.Aqua
         /// <summary>
         ///  Data Structure that stores the different feeds that are in the pond.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Food Food { get { return food; } }
 
 
@@ -221,7 +214,7 @@ namespace Models.Aqua
         /// </summary>
         /// <param name="Name">Name of the Feed (case insensitive)</param>
         /// <returns>
-        /// The Feed with the specified Name. 
+        /// The Feed with the specified Name.
         /// If not found returns null.
         /// </returns>
         public Feed GetFeed(string Name)
@@ -285,9 +278,9 @@ namespace Models.Aqua
         /// Total Dry Matter in the food (kg)
         /// </summary>
         /// <value>
-        /// Summation of every type of feed in the food. 
+        /// Summation of every type of feed in the food.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg")]
         public double TotalDM
             {
@@ -311,7 +304,7 @@ namespace Models.Aqua
         /// <value>
         ///  Summation of every type of feed in the food.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg")]
         public double TotalN
             {
@@ -335,9 +328,9 @@ namespace Models.Aqua
         /// Total Digestible Energy in the food (MJ)
         /// </summary>
         /// <value>
-        ///  Summation of every type of feed in the food. 
+        ///  Summation of every type of feed in the food.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("MJ")]
         public double TotalDE
             {
@@ -371,7 +364,7 @@ namespace Models.Aqua
         /// <summary>
         /// Gets the Number of feeds in the pond
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("")]
         public int NumFeeds
         { get { return feeds.Count; } }
@@ -381,12 +374,12 @@ namespace Models.Aqua
 
         /// <summary>
         /// Names for each feed type in the pond
-        /// (This is for output only. You can not change these values) 
+        /// (This is for output only. You can not change these values)
         /// </summary>
         /// <value>
         /// returns an Array where each element is the name for a different feed in the pond.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("")]
         public string[] FeedNames
             {
@@ -413,7 +406,7 @@ namespace Models.Aqua
         /// <value>
         /// returns an Array where each element is a dry matter for a different feed in the pond.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg")]
         public double[] FeedDMs
             {
@@ -440,7 +433,7 @@ namespace Models.Aqua
         /// <value>
         /// returns an Array where each element is the nitrogen content for a different feed in the pond.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg")]
         public double[] FeedNs
             {
@@ -467,7 +460,7 @@ namespace Models.Aqua
         /// <value>
         /// returns an Array where each element is the digestible energy content for a different feed in the pond.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("MJ")]
         public double[] FeedDEs
             {
@@ -519,7 +512,7 @@ namespace Models.Aqua
         /// <summary>
         /// Name of this Feed
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FeedName;
 
 
@@ -527,7 +520,7 @@ namespace Models.Aqua
         /// Mass of this Feed (on a Dry Matter basis) in the pond
         /// (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DryMatter;
 
 
@@ -535,7 +528,7 @@ namespace Models.Aqua
         /// Nitrogen in all of this feeds Dry Matter.
         /// (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Nitrogen;
 
 
@@ -543,7 +536,7 @@ namespace Models.Aqua
         /// Digestible Energy in all of this feeds Dry Matter.
         /// (MJ)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DigestibleEnergy;
 
 
@@ -551,7 +544,7 @@ namespace Models.Aqua
         /// Nitrogen Per Kilogram of Dry Matter.
         /// (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double NperKgOfDM { get { return MathUtilities.Divide(Nitrogen, DryMatter, 0.0); } }
 
 
@@ -559,7 +552,7 @@ namespace Models.Aqua
         /// Digestible Energy Per Kilogram of Dry Matter.
         /// (MJ)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DEperKgOfDM { get { return MathUtilities.Divide(DigestibleEnergy, DryMatter, 0.0); } }
 
 

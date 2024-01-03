@@ -1,11 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DescriptionAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
 
     /// <summary>
     /// Attribute to hold a short description string for a property
@@ -37,5 +33,5 @@ namespace Models.Core
         {
             return this.description;
         }
-    } 
+    }
 }

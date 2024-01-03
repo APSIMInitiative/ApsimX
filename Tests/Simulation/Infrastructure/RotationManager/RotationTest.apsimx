@@ -1,0 +1,276 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 159,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "A (not very useful by itself) test of the rotation manager's features.\n\n- Many arcs from one node\n- Many arcs to one node\n- Loopback arcs\n- Boolean conditions\n- Integer conditions (returning -1, 1, 2)",
+      "Name": "Memo",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "rotation",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1910-01-01T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "SummaryFile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Management.RotationManager, Models",
+          "Nodes": [
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A",
+              "Location": "417, 206",
+              "Colour": "Red",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "initial",
+              "Location": "70, 200",
+              "Colour": "Lime",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A1",
+              "Location": "702, 95",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A2",
+              "Location": "698, 264",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "A3",
+              "Location": "689, 443",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            },
+            {
+              "$type": "Models.Management.StateNode, Models",
+              "Description": null,
+              "Name": "B",
+              "Location": "938, 364",
+              "Colour": "Beige",
+              "OutlineColour": "Black",
+              "Transparent": false
+            }
+          ],
+          "Arcs": [
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoToA"
+              ],
+              "Actions": [
+                ""
+              ],
+              "SourceName": "initial",
+              "DestinationName": "A",
+              "Location": "266, 205",
+              "Colour": "Yellow",
+              "Name": "Arc 4"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoToA1"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A1",
+              "Location": "534, 161",
+              "Colour": "Yellow",
+              "Name": "Arc 1"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromAToA2"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A2",
+              "Location": "549, 252",
+              "Colour": "Yellow",
+              "Name": "Arc 2"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromAToA3"
+              ],
+              "Actions": [],
+              "SourceName": "A",
+              "DestinationName": "A3",
+              "Location": "565, 346",
+              "Colour": "Yellow",
+              "Name": "Arc 3"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.A1CanLoopback"
+              ],
+              "Actions": [
+                "[RotationScript].Script.A1Loopback()"
+              ],
+              "SourceName": "A1",
+              "DestinationName": "A1",
+              "Location": "844, 97",
+              "Colour": "Yellow",
+              "Name": "Arc 5"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA1ToA2"
+              ],
+              "Actions": [],
+              "SourceName": "A1",
+              "DestinationName": "A2",
+              "Location": "703, 176",
+              "Colour": "Yellow",
+              "Name": "Arc 6"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA2ToB"
+              ],
+              "Actions": [],
+              "SourceName": "A2",
+              "DestinationName": "B",
+              "Location": "804, 308",
+              "Colour": "Yellow",
+              "Name": "Arc 7"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromA3ToB"
+              ],
+              "Actions": [],
+              "SourceName": "A3",
+              "DestinationName": "B",
+              "Location": "834, 408",
+              "Colour": "Yellow",
+              "Name": "Arc 8"
+            },
+            {
+              "$type": "Models.Management.RuleAction, Models",
+              "Conditions": [
+                "[RotationScript].Script.CanGoFromBToA"
+              ],
+              "Actions": [],
+              "SourceName": "B",
+              "DestinationName": "A",
+              "Location": "682, 661",
+              "Colour": "Yellow",
+              "Name": "Arc 9"
+            }
+          ],
+          "InitialState": "initial",
+          "Verbose": false,
+          "Name": "RotationManager",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].Today.DayOfYear as doy",
+            "[RotationManager].CurrentState as state"
+          ],
+          "EventNames": [
+            "[RotationManager].Transition"
+          ],
+          "GroupByVariableName": null,
+          "Name": "TransitionReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock clock;\r\n        private int a1LoopbackCounter;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void StartOfSim(object sender, EventArgs args)\r\n        {\r\n            a1LoopbackCounter = 0;\r\n        }\r\n\r\n        // Can go to A only on even-numbered days.\r\n        public bool CanGoToA\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.DayOfYear % 2 == 0;\r\n            }\r\n        }\r\n\r\n        // Can go to A1 only in even years.\r\n        public bool CanGoToA1\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Year % 2 == 0;\r\n            }\r\n        }\r\n\r\n        // A1 can always loopback.\r\n        public bool A1CanLoopback\r\n        {\r\n            get\r\n            {\r\n                return true;\r\n            }\r\n        }\r\n\r\n        // Count the number of times we've looped back inside A1\r\n        public void A1Loopback()\r\n        {\r\n            a1LoopbackCounter++;\r\n        }\r\n\r\n        // Can go from A1 to A2 only after looping back 5 times.\r\n        public int CanGoFromA1ToA2\r\n        {\r\n            get\r\n            {\r\n                if (a1LoopbackCounter < 5)\r\n                    return 0;\r\n                if (a1LoopbackCounter == 5)\r\n                    return 1;\r\n                return 2;\r\n            }\r\n        }\r\n\r\n        // Can go to A2 with normal priority if year >= 1901.\r\n        // Can go to A2 with high priority if year == 1901.\r\n        public int CanGoFromAToA2\r\n        {\r\n            get\r\n            {\r\n                if (clock.Today.Year == 1901)\r\n                    return 2;\r\n                if (clock.Today.Year > 1901)\r\n                    return 1;\r\n                return 0;\r\n            }\r\n        }\r\n\r\n        // Can never go to A3 before 1905.\r\n        // Can go to A3 with normal priority in even years.\r\n        // Gan go to A3 with high priority in odd years.\r\n        public int CanGoFromAToA3\r\n        {\r\n            get\r\n            {\r\n                if (clock.Today.Year < 1905)\r\n                    return -1;\r\n                if (clock.Today.Year % 2 == 0)\r\n                    return 1;\r\n                return 2;\r\n            }\r\n        }\r\n\r\n        // Can go from A2 to B in December only.\r\n        public bool CanGoFromA2ToB\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Month == 12;\r\n            }\r\n        }\r\n\r\n        // Can go from A3 to B in July.\r\n        public bool CanGoFromA3ToB\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.Month == 7;\r\n            }\r\n        }\r\n\r\n        // Can go from B to A only on January 1.\r\n        public bool CanGoFromBToA\r\n        {\r\n            get\r\n            {\r\n                return clock.Today.DayOfYear == 1;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [],
+          "Name": "RotationScript",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.Storage;\r\nusing Models.Core;\r\nusing System;\nusing System.Globalization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            IStorageReader storage = this.FindInScope<IDataStore>().Reader;\r\n            DataTable data = storage.GetData(\"TransitionReport\", \"Current\", new string[] { \"rotation\" }, new[] { \"doy\", \"state\" });\r\n            int[] dates = DataTableUtilities.GetColumnAsIntegers(data, \"doy\");\r\n            string[] states = DataTableUtilities.GetColumnAsStrings(data, \"state\", CultureInfo.InvariantCulture);\r\n\r\n            if (dates.Length != expectedDates.Length)\r\n                throw new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedDates.Length, dates.Length));\r\n            for (int i = 0; i < dates.Length; i++)\r\n                if (dates[i] != expectedDates[i])\r\n                    throw new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedDates[i], dates[i]));\r\n            for (int i = 0; i < states.Length; i++)\r\n                if (states[i] != expectedStates[i])\r\n                    throw new Exception(string.Format(\"Incorrect date. Expected: {0} but was {1}\", expectedStates[i], states[i]));\r\n            if (states.Length != expectedStates.Length)\r\n                throw new Exception(string.Format(\"Incorrect number of dates. Expected: {0} but was: {1}\", expectedStates.Length, states.Length));\r\n        }\r\n\r\n        private static readonly int[] expectedDates = new int[]\r\n        {\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            2,\r\n            335,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            1,\r\n            336,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1,\r\n            335,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1,\r\n            336,\r\n            1,\r\n            1,\r\n            182,\r\n            1,\r\n            1,\r\n            1\r\n        };\r\n\r\n        private static readonly string[] expectedStates = new string[]\r\n        {\r\n            \"initial\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\",\r\n            \"A2\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A3\",\r\n            \"B\",\r\n            \"A\",\r\n            \"A1\"\r\n        };\r\n    }\r\n}\r\n",
+          "Parameters": [],
+          "Name": "ResultsValidator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

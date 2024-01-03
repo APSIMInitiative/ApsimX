@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SummaryAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿using System;
+
 namespace Models.Core
 {
-    using System;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// When applied to a field, the infrastructure will locate an object in scope of the 

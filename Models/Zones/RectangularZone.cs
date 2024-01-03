@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using Models.Core;
 using Models.Agroforestry;
+using Models.Core;
+using Newtonsoft.Json;
 
 namespace Models.Zones
 {
     /// <summary>A rectangular zone.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(AgroforestrySystem))]
-    [ValidParent(ParentType = typeof(StripCropZone))]
     public class RectangularZone : Zone
     {
         /// <summary>Length of the zone.</summary>
@@ -44,7 +40,7 @@ namespace Models.Zones
         /// <summary>
         /// Return the area of the zone.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public override double Area
         {
             get

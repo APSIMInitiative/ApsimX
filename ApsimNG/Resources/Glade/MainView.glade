@@ -18,6 +18,7 @@
             <property name="can_focus">True</property>
             <child>
               <object class="GtkNotebook" id="notebook1">
+                <property name="name">left-tab-control</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="enable_popup">True</property>
@@ -97,37 +98,61 @@
           </object>
           <packing>
             <property name="resize">True</property>
-            <property name="shrink">True</property>
+            <property name="shrink">False</property>
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkVBox" id="vbox3">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkProgressBar" id="progressBar">
+              <object class="GtkHBox" id="hbox2">
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="no_show_all">True</property>
+                <child>
+                  <object class="GtkProgressBar" id="progressBar">
+                    <property name="can_focus">False</property>
+                    <property name="no_show_all">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="stopButton">
+                    <property name="label" translatable="yes">Stop</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="no_show_all">True</property>
+                    <property name="has_tooltip">True</property>
+                    <property name="image_position">top</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lblStatus">
+                    <property name="can_focus">False</property>
+                    <property name="no_show_all">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xpad">5</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="stopButton">
-                <property name="label" translatable="yes">Stop</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="no_show_all">True</property>
-                <property name="has_tooltip">True</property>
-                <property name="image_position">top</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -148,7 +173,7 @@
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
