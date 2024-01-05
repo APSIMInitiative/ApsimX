@@ -133,7 +133,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Daily outputs from the old apsim test set using dynamic tillering.",
+                  "Text": "Daily outputs from the old apsim test set using fixed tillering.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
