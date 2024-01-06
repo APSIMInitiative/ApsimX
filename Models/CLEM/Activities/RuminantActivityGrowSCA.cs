@@ -7,14 +7,15 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant growth activity (SCA version)</summary>
-    /// <summary>This class represents the CLEM activity responsible for determining potential intake, tracking the quality of all food eaten, and providing energy for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
+    /// <summary>This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
     /// <remarks>This activity controls mortality and tracks body condition, while the Breed activity is responsible for conception and births.</remarks>
-    /// <version>2.0</version>
-    /// <updates>Version 2.0 is consistent with SCA Feeding Standards of Domesticated Ruminants and is a major update to CLEM from the IAT/NABSA animal production, requiring changes to a number of other components and providing new parameters.</updates>
+    /// <version>1.0</version>
+    /// <updates>Version 1.0 is consistent with SCA Feeding Standards of Domesticated Ruminants and is a major update to CLEM from the IAT/NABSA animal production, requiring changes to a number of other components and providing new parameters.</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -28,14 +29,13 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private readonly CLEMEvents events = null;
-
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
         private RuminantHerd ruminantHerd;
-        [JsonIgnore]
-        private readonly FoodResourcePacket milkPacket;
         private double kl = 0;
         private double MP2 = 0;
+        [JsonIgnore]
+        private readonly FoodResourcePacket milkPacket;
 
         /// <summary>
         /// Methane store for emissions.
@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, 999) { ID = ind.MotherID }, events.Clock.Today, ind));
+                ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.BreedParams.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
             }
         }
 
@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
         /// <param name="ind">Indivudal ruminant for calculation.</param>
         private void CalculateEnergy(Ruminant ind)
         {
-            double intakeDaily = ind.Intake.Feed.Actual / 30.4;
+            double intakeDaily = ind.Intake.Feed.Actual / events.Interval;
             kl = 0;
             MP2 = 0;
 
@@ -252,10 +252,10 @@ namespace Models.CLEM.Activities
             // We can move these calculations to the RuminantIntake and calculate as they arrive or 
 
             // Sme 1 for females and castrates
-            double sme = 1;
+            double sexEffectME = 1;
             // Sme 1.15 for all non-castrated males.
             if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
-                sme = 1.15;
+                sexEffectME = 1.15;
 
             double conceptusProtein = 0;
             double conceptusFat = 0;
@@ -270,7 +270,7 @@ namespace Models.CLEM.Activities
                 // TODO: rename params.EMainIntercept ->  HPVisceraFL  HeatProduction FeedLevel
                 // TODO: rename params.EMainCoefficient ->  FHPScalar
 
-                CalculateMaintenanceEnergy(ind, km, sme);
+                CalculateMaintenanceEnergy(ind, km, sexEffectME);
 
                 if (ind is RuminantFemale indFemale)
                 {
@@ -302,14 +302,14 @@ namespace Models.CLEM.Activities
                 // CLEM has a rule for how much these individuals can eat which is defined in PotentialIntake()
 
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable * 30.4);
+                ind.Intake.Milk.Actual = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable * events.Interval);
                 // remove consumed milk from mother.
                 ind.Mother?.TakeMilk(ind.Intake.Milk.Actual, MilkUseReason.Suckling);
-                double milkIntakeDaily = ind.Intake.Milk.Actual / 30.4;
+                double milkIntakeDaily = ind.Intake.Milk.Actual / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
-                //double kgl = 1; overwirte kg in statement below so it can be used in common code outside weaned loop
+                //double kgl = 1; overwrite kg in statement below so it can be used in common code outside weaned loop
 
                 // ToDo: everything in following should be using milkIntakeDaily not MilkIntake for timestep right?
 
@@ -325,10 +325,10 @@ namespace Models.CLEM.Activities
                 // ToDo: ensure MilkIntakeMaximum is daily and add units to summary description
 
                 milkPacket.MetabolisableEnergyContent = ind.BreedParams.EnergyContentMilk;
-                milkPacket.Amount = Math.Min(ind.BreedParams.MilkIntakeMaximum, milkIntakeDaily)*30.4;
+                milkPacket.Amount = Math.Min(ind.BreedParams.MilkIntakeMaximum, milkIntakeDaily)*events.Interval;
                 ind.Intake.AddFeed(milkPacket);
 
-                CalculateMaintenanceEnergy(ind, kml, sme);
+                CalculateMaintenanceEnergy(ind, kml, sexEffectME);
             }
             double feedingLevel = ind.EnergyFromIntake / ind.Energy.ForMaintenance;
 
@@ -459,23 +459,25 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">The individual ruminant.</param>
         /// <param name="km"></param>
-        /// <param name="sme"></param>
-        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sme)
+        /// <param name="sexEffect"></param>
+        private static void CalculateMaintenanceEnergy(Ruminant ind, double km, double sexEffect)
         {
             // Calculate maintenance energy then determine the protein requirement of rumen bacteria
             // Adjust intake proportionally and recalulate maintenance energy with adjusted intake energy
             int recalculate = 0;
+
+            // Note: Energy.ToMove and Energy.ToGraze are calulated in Grazing Activity.
+            // ToDo: Are these really adjusted? Does this mena they didn't get the energy required to move and graze? 
+            ind.Energy.ToMove /= km;
+            ind.Energy.ToGraze /= km;
+
             (double reduction, double RDPReq) cp_out;
             do
             {
-                // SCA assumes Age is double and in years    MainCoeff 0.26     EmainExp 0.03 (age in years)    the eqn changes to age in days
-                // ToDo: Delete EMaintExponent as fixed at -0.03
-
-                if (!ind.Weaned)
-                    // ToDo: this maint doesn't include the intake energy or is that kml?
-                    ind.Energy.ForMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * ind.AgeInYears);
-                else
-                    ind.Energy.ForMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.FHPScalar * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-0.03 * Math.Min(ind.AgeInYears, 6)) + (ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake);
+                // todo: check ind.BreedParams.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
+                ind.Energy.ForBasalMetabolism = ((ind.BreedParams.FHPScalar * sexEffect * Math.Pow(ind.Weight, 0.75)) * Math.Max(Math.Exp(-ind.BreedParams.CM3 * ind.AgeInDays), ind.BreedParams.CM4) * (1 + ind.BreedParams.CM5 * ind.Intake.ProportionMilk)) / km;
+                ind.Energy.ForHPViscera = ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake;
+                ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
 
                 double adjustedFeedingLevel = -1;
                 if(MathUtilities.GreaterThan(ind.Energy.FromIntake,0,2) & MathUtilities.GreaterThan(ind.Energy.ForMaintenance, 0,2 ))

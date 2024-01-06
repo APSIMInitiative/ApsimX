@@ -35,6 +35,31 @@ namespace Models.CLEM.Resources
         public double ForMaintenance { get; set; }
 
         /// <summary>
+        /// Energy used for basal metabolism
+        /// </summary>
+        public double ForBasalMetabolism { get; set; }
+
+        /// <summary>
+        /// Energy used for HP Viscera
+        /// </summary>
+        public double ForHPViscera { get; set; }
+
+        /// <summary>
+        /// Energy used to move while grazing
+        /// </summary>
+        public double ToMove { get; set; }
+
+        /// <summary>
+        /// Energy used to graze while grazing
+        /// </summary>
+        public double ToGraze { get; set; }
+
+        /// <summary>
+        /// Total Energy used for grazing
+        /// </summary>
+        public double ForGrazing { get { return ToMove + ToGraze; } }
+
+        /// <summary>
         /// Energy used for fetal development
         /// </summary>
         public double ForFetus { get; set; }
@@ -80,10 +105,14 @@ namespace Models.CLEM.Resources
         public void Reset()
         {
             ForMaintenance = 0;
+            ForBasalMetabolism = 0;
+            ForHPViscera = 0;
             ForFetus = 0;
             ForLactation = 0;
             ForGain = 0;
             ForWool = 0;
+            ToMove = 0;
+            ToGraze = 0;
         }
 
     }

@@ -66,6 +66,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Provides the proportion of milk in the diet.
+        /// </summary>
+        public double ProportionMilk
+        {
+            get
+            {
+                if (Milk.Actual + Feed.Actual <= 0)
+                    return 0;
+                return Milk.Actual / (Milk.Actual + Feed.Actual);
+            }
+        }
+
+        /// <summary>
         /// Get the details of a food resource store identified by feed type .
         /// </summary>
         /// <param name="feedType">Feed type of the required store.</param>

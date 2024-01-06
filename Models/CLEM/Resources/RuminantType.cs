@@ -49,6 +49,13 @@ namespace Models.CLEM.Resources
         [Description("Heat production viscera feed level")]
         public double HPVisceraFL { get; set; }
 
+        // TODO: provide summary
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("SRW Slow growth factor [CN3]")]
+        public double SRWSlowGrowthFactor { get; set; }
+
         /// <summary>
         /// First intercept of equation to determine energy fat mass (MJ day-1)
         /// </summary>
@@ -354,6 +361,26 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("")]
         public double CG7 { get; set; }
+
+        /// <summary>
+        /// Maintenance exponent for age [CM3]
+        /// </summary>
+        [Description("Maintenance exponent for age [CM3]")]
+        public double CM3 { get; set; }
+
+        /// <summary>
+        /// Age effect min [CM4]
+        /// </summary>
+        [Description("Age effect min [CM4]")]
+        public double CM4 { get; set; }
+
+        /// <summary>
+        /// Milk scalar [CM5]
+        /// </summary>
+        [Description("Milk scalar [CM5]")]
+        public double CM5 { get; set; }
+
+
 
         #endregion
 
@@ -908,10 +935,10 @@ namespace Models.CLEM.Resources
         /// Standard Reference Weight at birth
         /// </summary>
         [Category("Advanced", "Breeding")]
-        [Units("proportion of female SRW")]
-        [Description("Birth mass as proportion of female SRW")]
-        [Required, GreaterThanValue(0)]
-        public double BirthScalar { get; set; }
+        [Units("Proportion of female SRW")]
+        [Description("Birth mass as proportion of female SRW (singlet,twins,triplets..)")]
+        [Required, GreaterThanValue(0), Proportion]
+        public double[] BirthScalar { get; set; }
         /// <summary>
         /// Age growth rate coefficient
         /// </summary>
@@ -1396,6 +1423,12 @@ namespace Models.CLEM.Resources
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
                     results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
                 }
+            }
+
+            if(BirthScalar.Length < MultipleBirthRate.Length-1)
+            {
+                string[] memberNames = new string[] { "RuminantType.BirthScalar" };
+                results.Add(new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}]. Birth rate scalars represent the size at birth relative to female SRW for singlet, twins, triplets etc and depend on the value provided for [MultipleBirthRate]", memberNames));
             }
             return results;
         }
