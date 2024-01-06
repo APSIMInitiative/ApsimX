@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -59,7 +60,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Math.Min(1 - ((1 - (BreedParams.BirthScalar)) * Math.Exp(-(BreedParams.CN1 * AgeInDays) / Math.Pow(StandardReferenceWeight, BreedParams.CN2))), (HighWeight / StandardReferenceWeight));
+                return Math.Min(1 - ((1 - BirthScalar) * Math.Exp(-(BreedParams.CN1 * AgeInDays) / Math.Pow(StandardReferenceWeight, BreedParams.CN2))), (HighWeight / StandardReferenceWeight));
             }
         }
 
@@ -560,13 +561,32 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The birth scalar for this individual. Value from breed params birth scalars based on whether from a multiple birth
+        /// </summary>
+        public double BirthScalar { get; set; }
+
+        /// <summary>
         /// Calculate normalised weight from age of individual (in days)
         /// </summary>
         /// <param name="age">Age in days</param>
         /// <returns>Normalised weight (kg)</returns>
         public double CalculateNormalisedWeight(int age)
         {
-            return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+            // Original CLEM assumes 
+            // * single births
+            // * normalised weight always equals normalised max of new equations.
+            // return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+
+            // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
+            double normMax = StandardReferenceWeight - ((1 - BirthScalar) * BreedParams.SRWFemale) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar));
+
+            // CP15Y is determined at birth based on the number of siblings from the values provided in the params 
+            // Table6 of SCA
+
+            if (PreviousWeight < normMax)
+                return BreedParams.SRWSlowGrowthFactor * normMax + (1 - BreedParams.SRWSlowGrowthFactor) * PreviousWeight;
+            else
+                return normMax;
         }
 
         /// <summary>
@@ -890,15 +910,17 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="setParams">The breed parameters for the individual</param>
         /// <param name="setAge">The age (days) of the individual</param>
+        /// <param name="birthScalar">The brith scalar for individual taking into account multiple births</param>
         /// <param name="setWeight">The weight of the individual at creation</param>
         /// <param name="date">The date of creation</param>
-        public Ruminant(RuminantType setParams, int setAge , double setWeight, DateTime date)
+        public Ruminant(RuminantType setParams, int setAge, double birthScalar, double setWeight, DateTime date)
         {
             BreedParams = setParams;
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1*setAge);
             DateEnteredSimulation = date;
+            BirthScalar = birthScalar;
 
             Weight = (setWeight <= 0) ? NormalisedAnimalWeight : setWeight;
             PreviousWeight = Weight; 
@@ -921,12 +943,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factory for creating ruminants based on provided values
         /// </summary>
-        public static Ruminant Create(Sex sex, RuminantType parameters, DateTime date, int age, double weight = 0)
+        public static Ruminant Create(Sex sex, RuminantType parameters, DateTime date, int age, double birthScalar, double weight = 0)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(parameters, date, age, weight);
+                return new RuminantMale(parameters, date, age, birthScalar, weight);
             else
-                return new RuminantFemale(parameters, date, age, weight);
+                return new RuminantFemale(parameters, date, age, birthScalar, weight);
         }
 
         /// <summary>

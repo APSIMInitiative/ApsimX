@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural", events.Clock.Today);
 
                     // report wean. If mother has died create temp female with the mother's ID for reporting only
-                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, 999) { ID = ind.MotherID }, events.Clock.Today, ind);
+                    conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.BreedParams.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind);
                     ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
                 }
             }
@@ -504,7 +504,7 @@ namespace Models.CLEM.Activities
                         double standardReferenceWeight = ind.StandardReferenceWeight;
                         // Potential birth weight
                         // Reference: Freer
-                        double potentialBirthWeight = ind.BreedParams.BirthScalar * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
+                        double potentialBirthWeight = femaleind.CurrentBirthScalar * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
                         double fetusAge = femaleind.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays;
 
                         //TODO: Check fetus age correct

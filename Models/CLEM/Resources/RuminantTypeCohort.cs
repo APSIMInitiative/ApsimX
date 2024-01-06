@@ -173,7 +173,10 @@ namespace Models.CLEM.Resources
                         weight = Weight + WeightSD * randStdNormal;
                     }
 
-                    Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, weight);
+                    // estimate birth scalar based on probability of multiple births.
+                    double birthScalar = double.NaN;
+
+                    Ruminant ruminant = Ruminant.Create(Sex, parent, date, Age, birthScalar, weight);
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
@@ -279,7 +282,7 @@ namespace Models.CLEM.Resources
 
                 if (rumType != null)
                 {
-                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age);
+                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.BirthScalar[0]);
                     normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                 }
 
@@ -376,7 +379,7 @@ namespace Models.CLEM.Resources
                     RuminantType rumtype = FindAncestor<RuminantType>();
                     if (rumtype != null)
                     {
-                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age);
+                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.BirthScalar[0]);
 
                         string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                         if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)

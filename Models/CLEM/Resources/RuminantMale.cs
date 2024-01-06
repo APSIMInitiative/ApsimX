@@ -87,8 +87,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale(RuminantType setParams, DateTime date, int setAge, double setWeight)
-            : base(setParams, setAge, setWeight, date)
+        public RuminantMale(RuminantType setParams, DateTime date, int setAge, double birthScalar, double setWeight)
+            : base(setParams, setAge, birthScalar, setWeight, date)
         {
         }
 

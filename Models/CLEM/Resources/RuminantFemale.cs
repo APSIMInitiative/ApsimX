@@ -120,7 +120,11 @@ namespace Models.CLEM.Resources
         /// </summary>
         [FilterByProperty]
         public int NumberOfBirths { get; set; }
-
+        /// <summary>
+        /// Number of fetuses conceived in last conception
+        /// </summary>
+        [FilterByProperty]
+        public int NumberOfFetuses { get; set; }
         /// <summary>
         /// Number of offspring for the female
         /// </summary>
@@ -173,7 +177,9 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return (1 - 0.33 + 0.33 * RelativeSize) * BreedParams.BirthScalar * StandardReferenceWeight;
+                if(NumberOfFetuses > 0)
+                    return (1 - 0.33 + 0.33 * RelativeSize) * CurrentBirthScalar * StandardReferenceWeight;
+                return 0;
             }
         }
 
@@ -208,6 +214,7 @@ namespace Models.CLEM.Resources
                 }
                 birthCount = 1;
             }
+            NumberOfFetuses = birthCount;
             return birthCount;
         }
 
@@ -289,6 +296,20 @@ namespace Models.CLEM.Resources
             get
             {
                 return (CarryingCount > 0);
+            }
+        }
+
+        /// <summary>
+        /// Current birth scalar based on number of fetus carried
+        /// </summary>
+        [FilterByProperty]
+        public double CurrentBirthScalar
+        {
+            get
+            {
+                if(NumberOfFetuses > 0)
+                    return BreedParams.BirthScalar[NumberOfFetuses-1];
+                return 0;
             }
         }
 
@@ -466,8 +487,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(RuminantType setParams, DateTime date, int setAge, double setWeight)
-            : base(setParams, setAge, setWeight, date)
+        public RuminantFemale(RuminantType setParams, DateTime date, int setAge, double birthScalar, double setWeight)
+            : base(setParams, setAge, birthScalar, setWeight, date)
         {
             SucklingOffspringList = new List<Ruminant>();
         }

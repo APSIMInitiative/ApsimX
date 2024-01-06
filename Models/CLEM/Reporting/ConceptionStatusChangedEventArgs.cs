@@ -76,7 +76,6 @@ namespace Models.CLEM.Reporting
                 case ConceptionStatus.Birth:
                     if(calculateFromAge)
                         ConceptionDate = date.AddDays(-1 * Convert.ToInt32(Female.TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays, CultureInfo.InvariantCulture));
-//                        ConceptionDate = date.AddMonths(-1 * Convert.ToInt32(Female.Age - Female.AgeAtLastConception, CultureInfo.InvariantCulture));
                     else ConceptionDate = date;
 
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
@@ -86,7 +85,6 @@ namespace Models.CLEM.Reporting
                         throw new ArgumentException("Code logic error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
 
                     ConceptionDate = date.AddDays(-1 * Convert.ToInt32(offspringAge + Female.BreedParams.GestationLength.InDays, CultureInfo.InvariantCulture));
-                    //ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
                     break;
                 case ConceptionStatus.Unsuccessful:
                 case ConceptionStatus.NotMated:

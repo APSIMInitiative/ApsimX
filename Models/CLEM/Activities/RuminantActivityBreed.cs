@@ -454,9 +454,12 @@ namespace Models.CLEM.Activities
                         bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale;
                         Sex sex = isMale ? Sex.Male : Sex.Female;
 
-                        double weight = female.BreedParams.BirthScalar * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+                        // Set individual birth scalar and us that in next calculations.
 
-                        Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, events.TimeStepStart, 0, weight);
+                        //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
+                        double weight = female.BreedParams.BirthScalar[female.NumberOfFetuses] * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+
+                        Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, events.TimeStepStart, 0, female.CurrentBirthScalar, weight);
                         newSucklingRuminant.HerdName = female.HerdName;
                         newSucklingRuminant.Breed = female.BreedParams.Breed;
                         newSucklingRuminant.ID = HerdResource.NextUniqueID;
