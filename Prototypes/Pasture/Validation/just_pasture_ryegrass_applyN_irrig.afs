@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <fwsimulation name="Pasture_component_test">
   <fwsversion>1.1</fwsversion>
-  <lastsaved>2023/12/19 10:12:06</lastsaved>
+  <lastsaved>2023/12/19 10:12:48</lastsaved>
   <component name="time_server" active="T" class="Time Server">
     <executable name="timesvr.dll" version="1.1"/>
     <initdata>
@@ -425,7 +425,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
+              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -997,7 +997,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
+              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_daily_mass.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1331,7 +1331,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="filename" kind="string">
-              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
+              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\ryegrass_monthly.txt</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -1413,7 +1413,7 @@
               <val>silo</val>
             </init>
             <init name="filename" kind="string">
-              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
+              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\cbr_70014.met</val>
             </init>
             <init name="locality" kind="string">
               <val></val>
@@ -1447,7 +1447,7 @@
             <init name="driver_connections" array="T">
             </init>
             <init name="dbname" kind="string">
-              <val>C:\Users\her123\AppData\Local\Temp\dbFolderLabel.db</val>
+              <val>C:\Users\RIC394\AppData\Local\Temp\dbFolderLabel.db</val>
             </init>
             <init name="interval" kind="integer4">
               <val>1</val>
@@ -2035,7 +2035,7 @@
               <val>Pasture_component_test</val>
             </init>
             <init name="fwsnam" kind="string">
-              <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
+              <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\just_pasture_ryegrass_applyN_irrig.afs</val>
             </init>
             <init name="runid" kind="integer4">
               <val>1</val>
@@ -2059,7 +2059,7 @@
               <val>masterkey</val>
             </init>
             <init name="sdml_gen_time" kind="string">
-              <val></val>
+              <val>2023-12-19 10:12:48.586</val>
             </init>
           </initsection>
       ]]>
@@ -2085,7 +2085,7 @@
       ]]>
     </initdata>
     <system name="pasture01" active="T" class="Paddock">
-      <executable name="paddock.dll" version="1.3"/>
+      <executable name="PADDOCK.dll" version="1.3"/>
       <initdata>
         <![CDATA[
             <initsection>
@@ -2357,7 +2357,7 @@
                   <val></val>
                 </init>
                 <init name="forage_params" kind="string">
-                  <val>D:\Projects\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
+                  <val>C:\Users\RIC394\source\repos\ApsimX\Prototypes\Pasture\Validation\Library Crop Quality.prm</val>
                 </init>
                 <init name="kno3" kind="single" unit="kg/mg/d">
                   <val>0</val>
@@ -2393,7 +2393,7 @@
       </system>
 
       <component name="ryegrass" active="T" class="Pasture">
-        <executable name="pasture.dll" version="1.5"/>
+        <executable name="PASTURE.dll" version="1.5"/>
         <initdata>
           <![CDATA[
               <initsection>
@@ -2738,7 +2738,7 @@
       <author>CSIRO Plant Industry</author>
     </module>
     <module>
-      <file>paddock.dll</file>
+      <file>PADDOCK.dll</file>
       <version>1.3</version>
       <class>Paddock</class>
       <author>CSIRO Plant Industry</author>
@@ -2771,7 +2771,7 @@
       <contextfile>SurfaceOM.xml</contextfile>
     </module>
     <module>
-      <file>pasture.dll</file>
+      <file>PASTURE.dll</file>
       <version>1.5</version>
       <class>Pasture</class>
       <author>CSIRO Plant Industry</author>
@@ -3011,7 +3011,7 @@
             </init>
             <init name="rules" kind="string" array="T">
               <val>define IrrigAmount = [50.0]</val>
-              <val>define text IrrigID = 'Irrig0'   ! for naming output text files</val>
+              <val>define text IrrigID = 'Irrig50'   ! for naming output text files</val>
             </init>
             <init name="logfile" kind="string">
               <val></val>
@@ -3045,7 +3045,7 @@
   <val>0</val>
  </init>
  <init name="filename" kind="string">
-  <val>output_231219100735207.html</val>
+  <val>output_231219100942464.html</val>
  </init>
  <init name="title" kind="string">
   <val>New Report</val>
@@ -5288,7 +5288,7 @@
 </report>
   <session>
     <trace on="False">
-      <file>C:\Users\her123\AppData\Local\Temp\trace.log</file>
+      <file>C:\Users\RIC394\AppData\Local\Temp\trace.log</file>
       <start>0</start>
       <end>0</end>
       <names>True</names>
@@ -5297,7 +5297,7 @@
       <msgdetail>True</msgdetail>
     </trace>
     <errors on="True">
-      <file>C:\Users\her123\AppData\Local\Temp\error_temora.log</file>
+      <file>C:\Users\RIC394\AppData\Local\Temp\error_temora.log</file>
     </errors>
     <layout modelswidth="314"/>
   </session>
