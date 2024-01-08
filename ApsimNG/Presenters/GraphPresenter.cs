@@ -7,15 +7,15 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using APSIM.Shared.Documentation.Extensions;
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Interfaces;
-    using Models.Core;
     using Models;
+    using Models.Core;
     using Models.Storage;
     using Views;
-    using APSIM.Shared.Graphing;
-    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// A presenter for a graph.
@@ -27,7 +27,7 @@
         /// </summary>
         [Link]
         private IDataStore storage = null;
-        
+
         /// <summary>The graph view</summary>
         private IGraphView graphView;
 
@@ -122,6 +122,7 @@
         /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph(IEnumerable<SeriesDefinition> definitions)
         {
+            explorerPresenter.MainPresenter.ShowMessage("", Simulation.MessageType.Information);
             graphView.Clear();
             if (storage == null)
                 storage = graph.FindInScope<IDataStore>();
@@ -226,7 +227,7 @@
                 if (pointsOutsideAxis > 0 && pointsInsideAxis == 0)
                 {
                     explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values.", Simulation.MessageType.Warning, false);
-                } 
+                }
                 else if (pointsOutsideAxis > 0)
                 {
                     explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
@@ -476,7 +477,7 @@
                         y = textAnnotation.y;
                     }
 
-                    graphView.DrawText( textAnnotation.text,
+                    graphView.DrawText(textAnnotation.text,
                                         x,
                                         y,
                                         leftAlign,
@@ -489,11 +490,11 @@
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
                     graphView.DrawLine(
-                                        lineAnnotation.x1, 
+                                        lineAnnotation.x1,
                                         lineAnnotation.y1,
-                                        lineAnnotation.x2, 
+                                        lineAnnotation.x2,
                                         lineAnnotation.y2,
-                                        lineAnnotation.type, 
+                                        lineAnnotation.type,
                                         lineAnnotation.thickness,
                                         GetColour(lineAnnotation.colour),
                                         lineAnnotation.InFrontOfSeries,
@@ -506,7 +507,7 @@
 
         private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
         {
-                   }
+        }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
@@ -563,7 +564,7 @@
 
             graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero, axis.LabelOnOneLine);
         }
-        
+
         /// <summary>The graph model has changed.</summary>
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
