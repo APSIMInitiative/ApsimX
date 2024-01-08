@@ -180,15 +180,15 @@ namespace Models.CLEM.Resources
 
                     if (getUniqueID)
                         ruminant.ID = ruminantHerd.NextUniqueID;
-                    ruminant.Breed = parent.Breed;
+                    ruminant.Breed = parent.Parameters.General.Breed;
                     ruminant.HerdName = parent.Name;
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
                     {
-                        if (Age >= ((parent.NaturalWeaningAge.InDays == 0) ? parent.GestationLength.InDays : parent.NaturalWeaningAge.InDays))
+                        if (Age >= ((parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? parent.Parameters.General.GestationLength.InDays : parent.Parameters.General.NaturalWeaningAge.InDays))
                         {
-                            string limitstring = (parent.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge.InDays}]";
+                            string limitstring = (parent.Parameters.General.NaturalWeaningAge.InDays == 0) ? $"gestation length [{parent.Parameters.General.GestationLength}]" : $"natural weaning age [{parent.Parameters.General.NaturalWeaningAge.InDays}]";
                             string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
@@ -282,7 +282,7 @@ namespace Models.CLEM.Resources
 
                 if (rumType != null)
                 {
-                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.BirthScalar[0]);
+                    newInd = Ruminant.Create(Sex, rumType, new(2000, 1, 1), Age, rumType.Parameters.General.BirthScalar[0]);
                     normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                 }
 
@@ -379,7 +379,7 @@ namespace Models.CLEM.Resources
                     RuminantType rumtype = FindAncestor<RuminantType>();
                     if (rumtype != null)
                     {
-                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.BirthScalar[0]);
+                        var newInd = Ruminant.Create(Sex, rumtype, new(2000, 1, 1), Age, rumtype.Parameters.General.BirthScalar[0]);
 
                         string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                         if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)

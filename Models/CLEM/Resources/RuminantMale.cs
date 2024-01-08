@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)
+                    if (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)
                     {
                         ReplacementBreeder = false;
                         return true;
@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                    if (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)
+                    if (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)
                         return true;
                 return false;
             }

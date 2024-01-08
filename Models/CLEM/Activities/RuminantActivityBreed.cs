@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
                 // get all timesteps over gestation length that are allowed based on controlled mating timing.
                 // randomly assign pregnancies to this list
                 List<DateTime> timeList = new ();
-                DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().BreedParams.GestationLength.InDays);
+                DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
                 while(dateTime < events.Clock.Today)
                 {
                     DateTime checkDate = events.GetTimeStepRangeContainingDate(dateTime).start;
@@ -142,9 +142,9 @@ namespace Models.CLEM.Activities
                     foreach (RuminantFemale female in location.OfType<RuminantFemale>())
                     {
                         // find any suitable times and randomly pick one
-                        var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.BreedParams.MinimumAge1stMating.InDays).ToList();
+                        var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.Breeding.MinimumAge1stMating.InDays).ToList();
                         DateTime conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.BreedParams.MinimumAge1stMating.InDays).ToList();
+                        List<RuminantMale> maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.Breeding.MinimumAge1stMating.InDays).ToList();
 
                         // pick a male to mate
                         if (useControlledMating)
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
                                 {
                                     for (int k = 0; k < female.CarryingCount; k++)
                                     {
-                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.BreedParams.PrenatalMortality / female.BreedParams.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))
+                                        if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), female.Parameters.Breeding.PrenatalMortality / female.Parameters.General.GestationLength.InDays / ((events.TimeStep == TimeStepTypes.Monthly) ? 30.4 : events.Interval) + 1))
                                         {
                                             female.OneOffspringDies(checkMortality);
                                             if (female.NumberOfOffspring == 0)
@@ -433,7 +433,7 @@ namespace Models.CLEM.Activities
                 {
                     preglost=true;
                     var rnd = RandomNumberGenerator.Generator.NextDouble();
-                    if (MathUtilities.IsLessThan(rnd, female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength.InDays + 1)))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
+                    if (MathUtilities.IsLessThan(rnd, female.Parameters.Breeding.PrenatalMortality / (female.Parameters.General.GestationLength.InDays + 1)))  // ToDo: CLOCK adjust prenatal mortality to per time step..... divide timestep by interval..
                     {
                         female.OneOffspringDies(events.Clock.Today);
                         if (female.NumberOfOffspring == 0)
@@ -451,17 +451,17 @@ namespace Models.CLEM.Activities
                     int numberOfNewborn = female.CarryingCount;
                     for (int i = 0; i < numberOfNewborn; i++)
                     {
-                        bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale;
+                        bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.Parameters.Breeding.ProportionOffspringMale;
                         Sex sex = isMale ? Sex.Male : Sex.Female;
 
                         // Set individual birth scalar and us that in next calculations.
 
                         //ToDo: Check this is correct for birthrate -- I think it should be -0.33 + (0.33 * xxxx)
-                        double weight = female.BreedParams.BirthScalar[female.NumberOfFetuses] * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
+                        double weight = female.Parameters.General.BirthScalar[female.NumberOfFetuses] * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
 
                         Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, events.TimeStepStart, 0, female.CurrentBirthScalar, weight);
                         newSucklingRuminant.HerdName = female.HerdName;
-                        newSucklingRuminant.Breed = female.BreedParams.Breed;
+                        newSucklingRuminant.Breed = female.Parameters.General.Breed;
                         newSucklingRuminant.ID = HerdResource.NextUniqueID;
                         newSucklingRuminant.Location = female.Location;
                         newSucklingRuminant.Mother = female;
@@ -549,7 +549,7 @@ namespace Models.CLEM.Activities
                                 maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
 
                             int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();
-                            numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30), CultureInfo.InvariantCulture);
+                            numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().Parameters.Breeding.MaximumMaleMatingsPerDay * 30), CultureInfo.InvariantCulture);
                         }
                     }
 
@@ -739,12 +739,12 @@ namespace Models.CLEM.Activities
             if (!female.IsPregnant)
             {
                 status = ConceptionStatus.NotReady;
-                if (female.AgeInDays >= female.BreedParams.MinimumAge1stMating.InDays && female.NumberOfBirths == 0)
+                if (female.AgeInDays >= female.Parameters.Breeding.MinimumAge1stMating.InDays && female.NumberOfBirths == 0)
                     isConceptionReady = true;
                 else
                 {
                     // add one to age to ensure that conception is due this timestep
-                    if (MathUtilities.IsGreaterThan(female.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays, female.BreedParams.MinimumDaysBirthToConception))
+                    if (MathUtilities.IsGreaterThan(female.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays, female.Parameters.Breeding.MinimumDaysBirthToConception))
                     {
                         // only based upon period since birth
                         isConceptionReady = true;

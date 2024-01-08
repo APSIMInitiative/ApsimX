@@ -54,39 +54,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
-        /// </summary>
-        public double RelativeSizeForWeightGainPurposes
-        {
-            get
-            {
-                return Math.Min(1 - ((1 - BirthScalar) * Math.Exp(-(BreedParams.CN1 * AgeInDays) / Math.Pow(StandardReferenceWeight, BreedParams.CN2))), (HighWeight / StandardReferenceWeight));
-            }
-        }
-
-        /// <summary>
-        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
-        /// </summary>
-        public double SizeFactor1ForGain
-        {
-            get
-            {
-                return 1 / (1 + Math.Exp(-BreedParams.CG4 * (RelativeSizeForWeightGainPurposes - BreedParams.CG5)));
-            }
-        }
-
-        /// <summary>
-        /// Relative size for weight gain purposes. Z' (Zprime) Eqn 
-        /// </summary>
-        public double SizeFactor2ForGain
-        {
-            get
-            {
-                return Math.Max(0, Math.Min(((RelativeSizeForWeightGainPurposes - BreedParams.CG6) / (BreedParams.CG7 - BreedParams.CG6)), 1));
-            }
-        }
-
-        /// <summary>
         /// The protein mass of the individual
         /// </summary>
         public double ProteinMass { get { return proteinMass; } }
@@ -185,9 +152,14 @@ namespace Models.CLEM.Resources
         #region General properties
 
         /// <summary>
-        /// Reference to the Breed Parameters.
+        /// Reference to the RuminantType.
         /// </summary>
         public RuminantType BreedParams;
+
+        /// <summary>
+        /// Reference to the Breed Parameters.
+        /// </summary>
+        public RuminantParameters Parameters;
 
         /// <summary>
         /// Breed of individual
@@ -284,7 +256,6 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
-        [FilterByProperty]
         public double Number { get; set; }
 
         /// <summary>
@@ -519,7 +490,7 @@ namespace Models.CLEM.Resources
                 PreviousWeight = weight;
                 weight = value;
 
-                adultEquivalent = Math.Pow(this.Weight, 0.75) / Math.Pow(this.BreedParams.BaseAnimalEquivalent, 0.75);
+                adultEquivalent = Math.Pow(this.Weight, 0.75) / Math.Pow(this.Parameters.General.BaseAnimalEquivalent, 0.75);
 
                 // if highweight has not been defined set to initial weight
                 if (HighWeight == 0)
@@ -541,9 +512,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Sex == Sex.Male && (this as RuminantMale).IsCastrated == false)
-                    return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
+                    return Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier;
                 else
-                    return BreedParams.SRWFemale;
+                    return Parameters.General.SRWFemale;
             }
         }
 
@@ -578,13 +549,15 @@ namespace Models.CLEM.Resources
             // return StandardReferenceWeight - ((1 - BreedParams.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
 
             // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
-            double normMax = StandardReferenceWeight - ((1 - BirthScalar) * BreedParams.SRWFemale) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * age) / Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar));
+            double normMax = StandardReferenceWeight - ((1 - BirthScalar) * Parameters.General.SRWFemale) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient_CN1 * age) / Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar_CN2));
 
             // CP15Y is determined at birth based on the number of siblings from the values provided in the params 
             // Table6 of SCA
 
+            // ToDo: ensure this is appropriate for intervals greater than 1 day as cummulative effect should be considered.
+            // ToDo: check that this needs to use Previous weight and not weight before modified
             if (PreviousWeight < normMax)
-                return BreedParams.SRWSlowGrowthFactor * normMax + (1 - BreedParams.SRWSlowGrowthFactor) * PreviousWeight;
+                return Parameters.General.SlowGrowthFactor_CN3 * normMax + (1 - Parameters.General.SlowGrowthFactor_CN3) * PreviousWeight;
             else
                 return normMax;
         }
@@ -673,11 +646,10 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double bcscore = BreedParams.BCScoreRange[1] + (RelativeCondition - 1) / BreedParams.RelBCToScoreRate;
-                return Math.Max(BreedParams.BCScoreRange[0], Math.Min(bcscore, BreedParams.BCScoreRange[2]));
+                double bcscore = Parameters.General.BCScoreRange[1] + (RelativeCondition - 1) / Parameters.General.RelBCToScoreRate;
+                return Math.Max(Parameters.General.BCScoreRange[0], Math.Min(bcscore, Parameters.General.BCScoreRange[2]));
             }
         }
-
 
         #endregion
 
@@ -768,11 +740,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                //TODO: is it right to add kg and L in calculation?
-                if (Intake.Feed.Expected + Intake.Milk.Expected > 0)
-                    return (Intake.Feed.Actual + Intake.Milk.Actual) / (Intake.Feed.Expected + Intake.Milk.Expected);
-                else
-                    return 0;
+                return Intake.ProportionOfPotentialIntakeObtained;
             }
         }
 
@@ -863,7 +831,7 @@ namespace Models.CLEM.Resources
             }
             if (report)
             {
-                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+                RuminantReportItemEventArgs args = new()
                 {
                     RumObj = this,
                     Category = reason
@@ -879,7 +847,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return MathUtilities.FloatsAreEqual(BreedParams.NaturalWeaningAge.InDays, 0) ? BreedParams.GestationLength.InDays : BreedParams.NaturalWeaningAge.InDays;
+                return MathUtilities.FloatsAreEqual(Parameters.General.NaturalWeaningAge.InDays, 0) ? Parameters.General.GestationLength.InDays : Parameters.General.NaturalWeaningAge.InDays;
             }
         }
 
@@ -916,6 +884,7 @@ namespace Models.CLEM.Resources
         public Ruminant(RuminantType setParams, int setAge, double birthScalar, double setWeight, DateTime date)
         {
             BreedParams = setParams;
+            Parameters = setParams.Parameters;
 
             AgeInDays = setAge;
             DateOfBirth = date.AddDays(-1*setAge);

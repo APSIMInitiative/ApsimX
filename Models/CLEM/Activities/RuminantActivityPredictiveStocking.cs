@@ -180,7 +180,7 @@ namespace Models.CLEM.Activities
                     // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.
                     double detachrate = pasture.DetachRate + ((pasture.CarryoverDetachRate - pasture.DetachRate) * 0.66);
                     // Assume a consumption rate of 2% of body weight.
-                    double feedRequiredAE = paddockIndividuals.FirstOrDefault().BreedParams.BaseAnimalEquivalent * 0.02 * events.Interval; //  2% of AE animal per day
+                    double feedRequiredAE = paddockIndividuals.FirstOrDefault().Parameters.General.BaseAnimalEquivalent * 0.02 * events.Interval; //  2% of AE animal per day
                     for (int i = 0; i < monthsToAssess; i++)
                     {
                         // only include detachemnt if current biomass is positive, not already overeaten

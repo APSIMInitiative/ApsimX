@@ -371,7 +371,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.Intake.Feed.Expected * (usingPotentialIntakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Feed.Actual);
+                                details.Amount = ((ind.Intake.Feed.Expected * (usingPotentialIntakeMultiplier ? ind.Parameters.Feeding.OverfeedPotentialIntakeModifier : 1)) - ind.Intake.Feed.Actual);
                                 details.Amount *= feedLimit;
                                 details.Amount *= ind.Weight/totalWeight;
                                 break;
@@ -396,8 +396,8 @@ namespace Models.CLEM.Activities
                         }
                         // check amount meets intake limits
                         if (usingPotentialIntakeMultiplier)
-                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Feed.Expected + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual))
-                                details.Amount = (ind.Intake.Feed.Expected + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual;
+                            if (MathUtilities.IsGreaterThan(details.Amount, (ind.Intake.Feed.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual))
+                                details.Amount = (ind.Intake.Feed.Expected + (Math.Max(0, ind.Parameters.Feeding.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.Intake.Feed.Expected)) - ind.Intake.Feed.Actual;
                         ind.Intake.AddFeed(details);
                     }
                 }

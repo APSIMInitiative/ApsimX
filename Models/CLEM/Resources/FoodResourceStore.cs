@@ -42,7 +42,7 @@ namespace Models.CLEM.Resources
             Details.FatContent = ((Details.FatContent * Details.Amount) + (packet.FatContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.NitrogenContent = ((Details.NitrogenContent * Details.Amount) + (packet.NitrogenContent * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.ADIP = ((Details.ADIP * Details.Amount) + (packet.ADIP * packet.Amount)) / (Details.Amount + packet.Amount);
+            Details.AcidDetergentInsoluableProtein = ((Details.AcidDetergentInsoluableProtein * Details.Amount) + (packet.AcidDetergentInsoluableProtein * packet.Amount)) / (Details.Amount + packet.Amount);
             Details.RumenDegradableProteinContent = ((Details.RumenDegradableProteinContent * Details.Amount) + (packet.RumenDegradableProteinContent * packet.Amount)) / (Details.Amount + packet.Amount);
 
             Details.Amount += packet.Amount;
@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
                 return Details.TypeOfFeed switch
                 {
                     FeedType.Forage => Math.Max(0.05, Math.Min(5.5 * Details.CrudeProteinContent - 0.178, 0.85)),
-                    FeedType.Concentrate => 0.9 * (1 - ((Details.ADIP / Details.UndegradableCrudeProteinContent))),
+                    FeedType.Concentrate => 0.9 * (1 - ((Details.AcidDetergentInsoluableProtein / Details.UndegradableCrudeProteinContent))),
                     _ => 0,
                 };
             }

@@ -215,7 +215,7 @@ namespace Models.CLEM.Activities
                 // try use the only herd in the model
                 else if (ruminantTypeChildren.Count() == 1)
                 {
-                    PredictedHerdBreed = ruminantTypeChildren.FirstOrDefault().Breed;
+                    PredictedHerdBreed = ruminantTypeChildren.FirstOrDefault().Parameters.General.Breed;
                     PredictedHerdName = ruminantTypeChildren.FirstOrDefault().Name;
                 }
                 else

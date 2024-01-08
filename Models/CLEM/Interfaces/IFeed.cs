@@ -21,7 +21,7 @@ namespace Models.CLEM.Interfaces
         double GrossEnergyContent { get; set; }
 
         /// <summary>
-        /// Metabolisable energy content (MJ/kg DM). User provided value. Use MEContent of FoodResourcePacket  
+        /// Metabolisable energy content (MJ/kg DM). User provided value. Use MEContent of FoodResourcePacket in model 
         /// </summary>
         double MetabolisableEnergyContent { get; set; }
 
@@ -53,7 +53,7 @@ namespace Models.CLEM.Interfaces
         /// Acid detergent insoluable protein
         /// </summary>
         [Description("Acid detergent insoluable protein")]
-        public double ADIP { get; set; }
+        public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <summary>
         /// Factor used to convert the Nitrogen percentage and DM to crude protein

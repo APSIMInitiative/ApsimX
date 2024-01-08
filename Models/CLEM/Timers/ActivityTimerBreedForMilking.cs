@@ -92,7 +92,7 @@ namespace Models.CLEM.Timers
             int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
 
-            pregnancyDuration = Convert.ToInt32(breedParams.GestationLength, CultureInfo.InvariantCulture);
+            pregnancyDuration = Convert.ToInt32(breedParams.Parameters.General.GestationLength, CultureInfo.InvariantCulture);
 
             // determine min time between conceptions with full milk production minus cut short and resting
             minConceiveInterval = Math.Max(0, pregnancyDuration + shortenLactationMonths + RestMonths);

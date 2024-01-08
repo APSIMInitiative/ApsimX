@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Interfaces;
+using Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Models.CLEM.Resources
     /// Manages tracking of Ruminant intake quality and quantity.
     /// </summary>
     [Serializable]
-    public  class RuminantIntake
+    public class RuminantIntake
     {
         private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new();
         private double dpls = 0;
@@ -75,6 +76,20 @@ namespace Models.CLEM.Resources
                 if (Milk.Actual + Feed.Actual <= 0)
                     return 0;
                 return Milk.Actual / (Milk.Actual + Feed.Actual);
+            }
+        }
+
+        /// <summary>
+        /// Determines the proportion of the potential intake actually achieved.
+        /// </summary>
+        public double ProportionOfPotentialIntakeObtained
+        {
+            get
+            {
+                //TODO: is it right to add kg and L in calculation?
+                if (Feed.Expected + Milk.Expected <= 0)
+                    return 0;
+                return (Feed.Actual + Milk.Actual) / (Feed.Expected + Milk.Expected);
             }
         }
 
@@ -227,24 +242,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Method to calculate the digestible protein leaving the stomach based on RDP required.
         /// </summary>
-        /// <param name="rdpRequired">The Rumen Digestible Protein requirement</param>
+        /// <param name="rdpRequired">The Rumen Digestible Protein (RDP) requirement</param>
+        /// <param name="milkProteinDigestibility">The milk protein digestibility of the breed</param>
         /// <returns></returns>
-        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired)
+        public void CalculateDigestibleProteinLeavingStomach(double rdpRequired, double milkProteinDigestibility)
         {
             RDPRequired = rdpRequired;
             dpls = 0;
             foreach (var item in feedTypeStoreDict)
             {
-                if(item.Key != FeedType.Milk)
+                if(item.Key == FeedType.Milk)
                 {
-                    dpls += 0.92 * item.Value.CrudeProtein;
+                    dpls += milkProteinDigestibility * item.Value.CrudeProtein; // CA5 = 0.92
                 }
                 else
                 {
                     dpls += item.Value.DUDP * item.Value.UndegradableCrudeProtein;
                 }
             }
-            dpls += (0.6 * RDPRequired);
+            dpls += (0.6 * RDPRequired); // ToDo: add 0.6 as property
         }
 
         /// <summary>

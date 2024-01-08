@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
             {
                 ind.Wean(true, "Natural", events.Clock.Today);
                 // report wean. If mother has died create temp female with the mother's ID for reporting only
-                ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.BreedParams.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
+                ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, events.Clock.Today, -1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, events.Clock.Today, ind));
             }
         }
 
@@ -132,7 +132,7 @@ namespace Models.CLEM.Activities
             if (!ind.Weaned)
             {
                 // potential milk intake/animal/day
-                ind.Intake.Milk.Expected = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
+                ind.Intake.Milk.Expected = ind.Parameters.GrowSCA.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
 
                 // get estimated milk available
                 // this will be updated to the corrected milk available in the calculate energy section when this method is called again.
@@ -324,8 +324,8 @@ namespace Models.CLEM.Activities
 
                 // ToDo: ensure MilkIntakeMaximum is daily and add units to summary description
 
-                milkPacket.MetabolisableEnergyContent = ind.BreedParams.EnergyContentMilk;
-                milkPacket.Amount = Math.Min(ind.BreedParams.MilkIntakeMaximum, milkIntakeDaily)*events.Interval;
+                milkPacket.MetabolisableEnergyContent = ind.BreedParams.Parameters.GrowSCA.EnergyContentMilk_CL6;
+                milkPacket.Amount = Math.Min(ind.Parameters.GrowSCA.MilkIntakeMaximum, milkIntakeDaily)*events.Interval;
                 ind.Intake.AddFeed(milkPacket);
 
                 CalculateMaintenanceEnergy(ind, kml, sexEffectME);
@@ -341,7 +341,7 @@ namespace Models.CLEM.Activities
 
             // protein use for maintenance
             var milkStore = ind.Intake.GetStore(FeedType.Milk);
-            double EndogenousUrinaryProtein = ind.BreedParams.BreedEUPFactor1 * Math.Log(ind.Weight) - ind.BreedParams.BreedEUPFactor2;
+            double EndogenousUrinaryProtein = ind.Parameters.GrowSCA.BreedEUPFactor1_CM12 * Math.Log(ind.Weight) - ind.Parameters.GrowSCA.BreedEUPFactor2_CM13;
             double EndogenousFecalProtein = 0.0152 * ind.Intake.SolidIntake + (5.26 * (10 ^ -4)) * milkStore?.ME??0;
             double DermalProtein = (1.1 * (10 ^ -4)) * Math.Pow(ind.Weight,0.75);
             // digestible protein leaving stomach from milk
@@ -358,14 +358,19 @@ namespace Models.CLEM.Activities
             double netEnergyAvailableForGain = 0;
             double proteinGain1 = 0;
 
+            // ToDo: Do these use SRW of Female or does it include the 1.2x factor for males?
+            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - ind.BirthScalar) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.HighWeight / ind.StandardReferenceWeight));
+            double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.GrowSCA.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.GainMidpoint_CG5)));
+            double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.GrowSCA.ConditionNoEffect_CG6) / (ind.Parameters.GrowSCA.ConditionMaxEffect_CG7 - ind.Parameters.GrowSCA.ConditionNoEffect_CG6)), 1));
+
             while (recalculate)
             {
                 proteinGain1 = kDPLS * (ind.Intake.DPLS - ((proteinForMaintenance + conceptusProtein + milkProtein) / kDPLS));
 
                 // mj/kg gain
-                double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 - ind.SizeFactor1ForGain * (ind.BreedParams.GrowthEnergyIntercept2 - (ind.BreedParams.GrowthEnergySlope1 * (feedingLevel - 1))) + ind.SizeFactor2ForGain * (ind.BreedParams.GrowthEnergySlope2 * (ind.RelativeCondition - 1));
+                double energyEmptyBodyGain = ind.Parameters.GrowSCA.GrowthEnergyIntercept1_CG8 - sizeFactor1ForGain * (ind.Parameters.GrowSCA.GrowthEnergyIntercept2_CG9 - (ind.Parameters.GrowSCA.GrowthEnergySlope1_CG10 * (feedingLevel - 1))) + sizeFactor2ForGain * (ind.Parameters.GrowSCA.GrowthEnergySlope2_CG11 * (ind.RelativeCondition - 1));
                 // units = kg protein/kg gain
-                proteinContentOfGain = ind.BreedParams.ProteinGainIntercept1 + ind.SizeFactor1ForGain * (ind.BreedParams.ProteinGainIntercept2 - ind.BreedParams.ProteinGainSlope1 * (feedingLevel - 1)) + ind.SizeFactor2ForGain * ind.BreedParams.ProteinGainSlope2 * (ind.RelativeCondition - 1);
+                proteinContentOfGain = ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 + sizeFactor1ForGain * (ind.Parameters.GrowSCA.ProteinGainIntercept2_CG13 - ind.Parameters.GrowSCA.ProteinGainSlope1_CG14 * (feedingLevel - 1)) + sizeFactor2ForGain * ind.Parameters.GrowSCA.ProteinGainSlope2_CG15 * (ind.RelativeCondition - 1);
                 // units MJ tissue gain/kg ebg
                 double proteinGainMJ = 23.8 * proteinContentOfGain;
                 double fatGainMJ = energyEmptyBodyGain - proteinGainMJ;
@@ -383,7 +388,7 @@ namespace Models.CLEM.Activities
                     // recalculate MP to replace the MP2 and recalculate milk production and Energy for lactation
                     double MP = (1 + Math.Min(0, (ProteinNet1 / milkProtein))) * MP2;
 
-                    milkProtein = ind.BreedParams.ProteinContentMilk * MP / ind.BreedParams.EnergyContentMilk;
+                    milkProtein = ind.Parameters.GrowSCA.ProteinContentMilk_CL15 * MP / ind.Parameters.GrowSCA.EnergyContentMilk_CL6;
 
                     RuminantFemale checkFemale = ind as RuminantFemale;
                     checkFemale.MilkCurrentlyAvailable = MP * events.Interval;
@@ -393,20 +398,20 @@ namespace Models.CLEM.Activities
                     recalculate = (MP != MP2);
 
                     // adjusted NEG1/ 
-                    double NEG2 = ind.Energy.ForGain + ind.BreedParams.CL5 * (MP2 - MP);
-                    double PG2 = proteinGain1 + (MP2 - MP) * (ind.BreedParams.CL5 / ind.BreedParams.CL6);
+                    double NEG2 = ind.Energy.ForGain + ind.Parameters.GrowSCA.MetabolisabilityOfMilk_CL5 * (MP2 - MP);
+                    double PG2 = proteinGain1 + (MP2 - MP) * (ind.Parameters.GrowSCA.MetabolisabilityOfMilk_CL5 / ind.Parameters.GrowSCA.EnergyContentMilk_CL6);
                     double ProteinNet2 = PG2 - proteinContentOfGain * (NEG2 / energyEmptyBodyGain);
-                    netEnergyAvailableForGain = NEG2 + ind.BreedParams.CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
+                    netEnergyAvailableForGain = NEG2 + ind.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * ((Math.Min(0, ProteinNet2) / proteinContentOfGain));
                     emptyBodyGain = ind.Energy.ForGain / energyEmptyBodyGain;
                 }
                 else
                 {
-                    netEnergyAvailableForGain = ind.Energy.ForGain + ind.BreedParams.CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
+                    netEnergyAvailableForGain = ind.Energy.ForGain + ind.BreedParams.Parameters.GrowSCA.ProteinGainIntercept1_CG12 * energyEmptyBodyGain * (Math.Min(0, proteinGain1) / proteinContentOfGain);
                     emptyBodyGain = netEnergyAvailableForGain / energyEmptyBodyGain;
                 }
             }
 
-            double energyPredictedBodyMassChange = ind.BreedParams.EBW2LW * emptyBodyGain;
+            double energyPredictedBodyMassChange = ind.Parameters.GrowSCA.EBW2LW * emptyBodyGain;
             
             // update weight based on the time-step
             ind.Weight = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange * events.Interval);
@@ -423,10 +428,10 @@ namespace Models.CLEM.Activities
 
             // N balance = 
             // ToDo: not currently used
-            double Nbal =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.BreedParams.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.BreedParams.Prt2NTissue);
+            double Nbal =  ind.Intake.CrudeProtein/6.25 - (milkProtein / ind.Parameters.GrowSCA.Prt2NMilk) - ((conceptusProtein + kgProteinChange) / ind.Parameters.GrowSCA.Prt2NTissue);
 
             // Total fecal protein
-            double TFP = ind.Intake.IndigestibleUDP + ind.BreedParams.CA7 * ind.BreedParams.CA8 * ind.Intake.RDPRequired + (1 - ind.BreedParams.CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
+            double TFP = ind.Intake.IndigestibleUDP + ind.Parameters.GrowSCA.RENAME_XXXX_CA7 * ind.Parameters.GrowSCA.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowSCA.MilkProteinDigestability_CA5) * milkStore?.CrudeProtein??0 + EndogenousFecalProtein;
 
             // Total urinary protein
             double TUP = ind.Intake.CrudeProtein - (conceptusProtein + milkProtein + kgProteinChange) - TFP - DermalProtein;
@@ -447,7 +452,7 @@ namespace Models.CLEM.Activities
 
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             // per day at this point.
-            ind.Output.Methane = ind.BreedParams.MethaneProductionCoefficient * intakeDaily;
+            ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily;
 
             // manure
             ind.Output.Manure = ind.Intake.Feed.Actual * (100 - ind.Intake.DMD) / 100;
@@ -475,8 +480,8 @@ namespace Models.CLEM.Activities
             do
             {
                 // todo: check ind.BreedParams.EMaintExponent as in the params is actually CM3 maintenanceExponentForAge
-                ind.Energy.ForBasalMetabolism = ((ind.BreedParams.FHPScalar * sexEffect * Math.Pow(ind.Weight, 0.75)) * Math.Max(Math.Exp(-ind.BreedParams.CM3 * ind.AgeInDays), ind.BreedParams.CM4) * (1 + ind.BreedParams.CM5 * ind.Intake.ProportionMilk)) / km;
-                ind.Energy.ForHPViscera = ind.BreedParams.HPVisceraFL * ind.EnergyFromIntake;
+                ind.Energy.ForBasalMetabolism = ((ind.Parameters.GrowSCA.FHPScalar_CM2 * sexEffect * Math.Pow(ind.Weight, 0.75)) * Math.Max(Math.Exp(-ind.Parameters.GrowSCA.MainExponentForAge_CM3 * ind.AgeInDays), ind.Parameters.GrowSCA.AgeEffectMin_CM4) * (1 + ind.Parameters.GrowSCA.MilkScalar_CM5 * ind.Intake.ProportionMilk)) / km;
+                ind.Energy.ForHPViscera = ind.Parameters.GrowSCA.HPVisceraFL_CM1 * ind.EnergyFromIntake;
                 ind.Energy.ForMaintenance = ind.Energy.ForBasalMetabolism + ind.Energy.ForGrazing + ind.Energy.ForHPViscera;
 
                 double adjustedFeedingLevel = -1;
@@ -494,7 +499,7 @@ namespace Models.CLEM.Activities
             }
             while (recalculate < 2);
 
-            ind.Intake.CalculateDigestibleProteinLeavingStomach(cp_out.RDPReq);
+            ind.Intake.CalculateDigestibleProteinLeavingStomach(cp_out.RDPReq, ind.Parameters.GrowSCA.MilkProteinDigestability_CA5);
         }
 
         private static (double reduction, double RDPReq) CalculateCrudeProtein(Ruminant ind, double feedingLevel)
@@ -509,12 +514,12 @@ namespace Models.CLEM.Activities
             {
                 if (forage != null)
                 {
-                    ind.Intake.ReduceDegradableProtein(FeedType.Forage, (1 - (ind.BreedParams.RumenDegradabilityIntercept - ind.BreedParams.RumenDegradabilitySlope * forage.Details?.DryMatterDigestibility ?? 0) * feedingLevel));
+                    ind.Intake.ReduceDegradableProtein(FeedType.Forage, (1 - (ind.Parameters.GrowSCA.RumenDegradabilityIntercept_CRD1 - ind.Parameters.GrowSCA.RumenDegradabilitySlope_CRD2 * forage.Details?.DryMatterDigestibility ?? 0) * feedingLevel));
                     MEI += forage?.Details.MEContent ?? 0;
                 }
                 if (concentrate != null)
                 {
-                    ind.Intake.ReduceDegradableProtein(FeedType.Concentrate, (1 - ind.BreedParams.RumenDegradabilityConcentrateSlope * feedingLevel)); // Eq.(50)
+                    ind.Intake.ReduceDegradableProtein(FeedType.Concentrate, (1 - ind.Parameters.GrowSCA.RumenDegradabilityConcentrateSlope_CRD3 * feedingLevel)); // Eq.(50)
                     // fermentable Supplement MEI
                     MEI += (13.3 * concentrate?.Details?.DryMatterDigestibility ?? 0 + 1.32) * concentrate?.Details.Amount ?? 0; //Eq.(32) - (Ether extract set to zero)
                 }
@@ -531,12 +536,12 @@ namespace Models.CLEM.Activities
             // ignored GrassGro timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly timestep
             // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
 
-            double RDPReq = (ind.BreedParams.RumenDegradableProteinIntercept + ind.BreedParams.RumenDegradableProteinSlope * (1 - Math.Exp(-ind.BreedParams.RumenDegradableProteinExponent *
+            double RDPReq = (ind.Parameters.GrowSCA.RumenDegradableProteinIntercept_CRD4 + ind.Parameters.GrowSCA.RumenDegradableProteinSlope_CRD5 * (1 - Math.Exp(-ind.Parameters.GrowSCA.RumenDegradableProteinExponent_CRD6 *
                 (feedingLevel + 1)))) * MEI;
 
             if(RDPReq > ind.Intake.RDP)
             {
-                return ((ind.Intake.RDP / RDPReq) * ind.BreedParams.RumenDegradableProteinShortfallScalar, RDPReq);
+                return ((ind.Intake.RDP / RDPReq) * ind.Parameters.GrowSCA.RumenDegradableProteinShortfallScalar, RDPReq);
             }
             return (1, RDPReq);
         }
@@ -579,30 +584,30 @@ namespace Models.CLEM.Activities
                 // update old parameters in breed params to new approach based on energy and not L milk.
                 // TODO: new intercept = 0.4 and coefficient = 0.02
                 // TODO: update peak yield.
-                kl = ind.BreedParams.ELactationEfficiencyCoefficient * ind.Intake.ME + ind.BreedParams.ELactationEfficiencyIntercept;
+                kl = ind.Parameters.GrowSCA.ELactationEfficiencyCoefficient_CK6 * ind.Intake.ME + ind.Parameters.GrowSCA.ELactationEfficiencyIntercept_CK5;
                 double milkTime = ind.DaysLactating(events.Interval / 2.0); // assumes mid month
 
                 // determine milk production curve to use
-                double milkCurve = ind.BreedParams.MilkCurveSuckling;
+                double milkCurve = ind.Parameters.GrowSCA.MilkCurveSuckling_CL3;
                 // if milking is taking place use the non-suckling curve for duration of lactation
                 // otherwise use the suckling curve where there is a larger drop off in milk production
                 if (ind.SucklingOffspringList.Any() == false)
-                    milkCurve = ind.BreedParams.MilkCurveNonSuckling;
+                    milkCurve = ind.Parameters.GrowSCA.MilkCurveNonSuckling_CL4;
 
                 // calculate milk production (eqns 66 thru 76)
 
                 // DR (Eq. 74) => ind.ProportionMilkProductionAchieved, calculated after lactation energy determined in energy method.
 
-                double LR = ind.BreedParams.PotentialYieldReduction * ind.ProportionMilkProductionAchieved + (1 - ind.BreedParams.PotentialYieldReduction) * ind.MilkLag; // Eq.(73) 
+                double LR = ind.Parameters.GrowSCA.PotentialYieldReduction_CL17 * ind.ProportionMilkProductionAchieved + (1 - ind.Parameters.GrowSCA.PotentialYieldReduction_CL17) * ind.MilkLag; // Eq.(73) 
                 double nutritionAfterPeakLactationFactor = 0;
-                if (milkTime > 0.7 * ind.BreedParams.MilkPeakDay)
-                    nutritionAfterPeakLactationFactor = ind.NutritionAfterPeakLactationFactor - ind.BreedParams.PotentialYieldReduction2 * (LR - ind.ProportionMilkProductionAchieved);  // Eq.(72) 
+                if (milkTime > 0.7 * ind.Parameters.GrowSCA.MilkPeakDay_CL2)
+                    nutritionAfterPeakLactationFactor = ind.NutritionAfterPeakLactationFactor - ind.Parameters.GrowSCA.PotentialYieldReduction2_CL18 * (LR - ind.ProportionMilkProductionAchieved);  // Eq.(72) 
                 else
                     nutritionAfterPeakLactationFactor = 1;
 
-                double Mm = (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay;
+                double Mm = (milkTime + ind.Parameters.GrowSCA.MilkOffsetDay_CL1) / ind.Parameters.GrowSCA.MilkPeakDay_CL2;
 
-                double milkProductionMax = ind.BreedParams.PeakYieldScalar * Math.Pow(ind.StandardReferenceWeight, 0.75) * ind.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
+                double milkProductionMax = ind.Parameters.GrowSCA.PeakYieldScalar_CL0[ind.NumberOfFetuses-1] * Math.Pow(ind.StandardReferenceWeight, 0.75) * ind.RelativeSize * ind.RelativeConditionAtParturition * nutritionAfterPeakLactationFactor *
                     Math.Pow(Mm, milkCurve) * Math.Exp(milkCurve * (1 - Mm));
 
                 if(updateValues)
@@ -623,16 +628,16 @@ namespace Models.CLEM.Activities
                 // MilkConsumptionLimit2 = 0.58/0.41
                 // MilkConsumptionLimit3 = 0.036/0.071
 
-                double ad = Math.Max(milkTime, ratioMilkProductionME / (2 * ind.BreedParams.PotentialYieldLactationEffect2));
+                double ad = Math.Max(milkTime, ratioMilkProductionME / (2 * ind.Parameters.GrowSCA.PotentialYieldLactationEffect2_CL22));
 
-                double MP1 = (ind.BreedParams.LactationEnergyDeficit * milkProductionMax) / (1 + Math.Exp(-(-ind.BreedParams.PotentialLactationYieldParameter + ind.BreedParams.PotentialYieldMEIEffect *
-                    ratioMilkProductionME + ind.BreedParams.PotentialYieldLactationEffect * ad * (ratioMilkProductionME - ind.BreedParams.PotentialYieldLactationEffect2 * ad) - ind.BreedParams.PotentialYieldConditionEffect
-                    * ind.RelativeCondition * (ratioMilkProductionME - ind.BreedParams.PotentialYieldConditionEffect2 * ind.RelativeCondition))));
+                double MP1 = (ind.Parameters.GrowSCA.LactationEnergyDeficit_CL7 * milkProductionMax) / (1 + Math.Exp(-(-ind.Parameters.GrowSCA.PotentialLactationYieldParameter_CL19 + ind.Parameters.GrowSCA.PotentialYieldMEIEffect_CL20 *
+                    ratioMilkProductionME + ind.Parameters.GrowSCA.PotentialYieldLactationEffect_CL21 * ad * (ratioMilkProductionME - ind.Parameters.GrowSCA.PotentialYieldLactationEffect2_CL22 * ad) - ind.Parameters.GrowSCA.PotentialYieldConditionEffect_CL23
+                    * ind.RelativeCondition * (ratioMilkProductionME - ind.Parameters.GrowSCA.PotentialYieldConditionEffect2_CL24 * ind.RelativeCondition))));
 
-                MP2 = Math.Min(MP1, ind.SucklingOffspringList.Count * ind.BreedParams.EnergyContentMilk * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight), 0.75) * (ind.BreedParams.MilkConsumptionLimit1 + ind.BreedParams.MilkConsumptionLimit2 * Math.Exp(-ind.BreedParams.MilkConsumptionLimit3 * milkTime)));
+                MP2 = Math.Min(MP1, ind.SucklingOffspringList.Count * ind.Parameters.GrowSCA.EnergyContentMilk_CL6 * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight), 0.75) * (ind.Parameters.GrowSCA.MilkConsumptionLimit1_CL12 + ind.Parameters.GrowSCA.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowSCA.MilkConsumptionLimit3_CL14 * milkTime)));
 
                 // 0.032
-                ind.Milk.Protein = ind.BreedParams.ProteinContentMilk * MP2 / ind.BreedParams.EnergyContentMilk;
+                ind.Milk.Protein = ind.Parameters.GrowSCA.ProteinContentMilk_CL15 * MP2 / ind.Parameters.GrowSCA.EnergyContentMilk_CL6;
 
                 ind.Milk.Available = MP2 * events.Interval;
                 ind.MilkProducedThisTimeStep = ind.MilkCurrentlyAvailable;
@@ -660,20 +665,20 @@ namespace Models.CLEM.Activities
             }
 
             // Todo: this is not used and was commented out at the end of conceptus Weight
-            double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.BreedParams.FetalNormWeightParameter * (1 - Math.Exp(ind.BreedParams.FetalNormWeightParameter2 * (1 - ind.ProportionOfPregnancy))));
+            double normalWeightFetus = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowSCA.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy))));
 
             //ToDo: Fix fetus weight parameter
-            double conceptusWeight = ind.NumberOfOffspring * (ind.BreedParams.ConceptusWeightRatio * ind.ScaledBirthWeight * Math.Exp(ind.BreedParams.ConceptusWeightParameter * (1 - Math.Exp(ind.BreedParams.ConceptusWeightParameter2 * (1 - ind.ProportionOfPregnancy))))      );// + (fetusWeight - normalWeightFetus));
+            double conceptusWeight = ind.NumberOfOffspring * (ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusWeightParameter2_CP7 * (1 - ind.ProportionOfPregnancy))))      );// + (fetusWeight - normalWeightFetus));
             double relativeConditionFoet = double.NaN;
 
             // MJ per day
-            double conceptusME = (ind.BreedParams.ConceptusEnergyContent * (ind.NumberOfOffspring * ind.BreedParams.ConceptusWeightRatio * ind.ScaledBirthWeight) * relativeConditionFoet *
-                (ind.BreedParams.ConceptusEnergyParameter * ind.BreedParams.ConceptusEnergyParameter2 / (ind.BreedParams.GestationLength.InDays)) * 
-                Math.Exp(ind.BreedParams.ConceptusEnergyParameter2 * (1 - ind.DaysPregnant / ind.BreedParams.GestationLength.InDays) + ind.BreedParams.ConceptusEnergyParameter * (1 - Math.Exp(ind.BreedParams.ConceptusEnergyParameter2 * (1 - ind.ProportionOfPregnancy))))) / 0.13;
+            double conceptusME = (ind.Parameters.GrowSCA.ConceptusEnergyContent_CP8 * (ind.NumberOfOffspring * ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFoet *
+                (ind.Parameters.GrowSCA.ConceptusEnergyParameter_CP9 * ind.Parameters.GrowSCA.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) * 
+                Math.Exp(ind.Parameters.GrowSCA.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.GrowSCA.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusEnergyParameter2_CP10 * (1 - ind.ProportionOfPregnancy))))) / 0.13;
 
             // kg protein per day
-            double conceptusProteinReq = ind.BreedParams.ConceptusProteinContent * (ind.NumberOfOffspring * ind.BreedParams.ConceptusWeightRatio * ind.ScaledBirthWeight) * relativeConditionFoet * 
-                (ind.BreedParams.ConceptusProteinParameter * ind.BreedParams.ConceptusProteinParameter2 / (ind.BreedParams.GestationLength.InDays)) * Math.Exp(ind.BreedParams.ConceptusProteinParameter2 * (1 - ind.ProportionOfPregnancy) + ind.BreedParams.ConceptusProteinParameter * (1 - Math.Exp(ind.BreedParams.ConceptusProteinParameter2 * (1 - ind.ProportionOfPregnancy))));
+            double conceptusProteinReq = ind.Parameters.GrowSCA.ConceptusProteinContent_CP11 * (ind.NumberOfOffspring * ind.Parameters.GrowSCA.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFoet * 
+                (ind.Parameters.GrowSCA.ConceptusProteinParameter_CP12 * ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy) + ind.Parameters.GrowSCA.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowSCA.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy))));
 
             conceptusProtein = conceptusProteinReq * conceptusWeight;
             conceptusFat = (conceptusME - (conceptusProtein * 23.6)) / 39.3;
@@ -744,16 +749,16 @@ namespace Models.CLEM.Activities
             // weight based mortality
             if (herd.Any())
             {
-                switch (herd.FirstOrDefault().BreedParams.ConditionBasedMortalityStyle)
+                switch (herd.FirstOrDefault().Parameters.General.ConditionBasedMortalityStyle)
                 {
                     case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight, a.HighWeight * a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.Weight, a.HighWeight * a.Parameters.General.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.Parameters.General.ConditionBasedMortalityProbability)).ToList();
                         break;
                     case ConditionBasedCalculationStyle.RelativeCondition:
-                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.RelativeCondition, a.Parameters.General.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.Parameters.General.ConditionBasedMortalityProbability)).ToList();
                         break;
                     case ConditionBasedCalculationStyle.BodyConditionScore:
-                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, a.BreedParams.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.BreedParams.BodyConditionScoreMortalityRate)).ToList();
+                        died = herd.Where(a => MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, a.Parameters.General.ConditionBasedMortalityCutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), a.Parameters.General.ConditionBasedMortalityProbability)).ToList();
                         break;
                     case ConditionBasedCalculationStyle.None:
                         break;
@@ -779,18 +784,18 @@ namespace Models.CLEM.Activities
                 if (!ind.Weaned)
                 {
                     mortalityRate = 0;
-                    if(ind.Mother == null || MathUtilities.IsLessThan(ind.Mother.Weight, ind.BreedParams.CriticalCowWeight * ind.StandardReferenceWeight))
+                    if(ind.Mother == null) // FRMO GROW! Ignore.. We'll get a better way of doing this from fat/protein reserves || MathUtilities.IsLessThan(ind.Mother.Weight, ind.Parameters.GrowSCA.CriticalCowWeight * ind.StandardReferenceWeight))
                         // if no mother assigned or mother's weight is < CriticalCowWeight * SFR
-                        mortalityRate = ind.BreedParams.JuvenileMortalityMaximum;
+                        mortalityRate = ind.Parameters.GrowSCA.JuvenileMortalityMaximum;
                     else
                         // if mother's weight >= criticalCowWeight * SFR
-                        mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
+                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowSCA.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.Parameters.GrowSCA.JuvenileMortalityExponent));
 
-                    mortalityRate += ind.BreedParams.MortalityBase;
-                    mortalityRate = Math.Min(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
+                    mortalityRate += ind.Parameters.General.MortalityBase;
+                    mortalityRate = Math.Min(mortalityRate, ind.Parameters.GrowSCA.JuvenileMortalityMaximum);
                 }
                 else
-                    mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
+                    mortalityRate = 1 - (1 - ind.Parameters.General.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.GrowSCA.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.Parameters.GrowSCA.MortalityIntercept)), ind.Parameters.GrowSCA.MortalityExponent)));
 
                 // convert mortality from annual (calculated) to monthly (applied).
                 if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), mortalityRate/((double)AgeSpecifier.DaysPerYear/events.Interval)))

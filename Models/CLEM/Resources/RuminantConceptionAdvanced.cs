@@ -86,7 +86,7 @@ namespace Models.CLEM.Resources
                         break;
                     default:
                         // females who have had more than two births (twins should count as one birth)
-                        if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
+                        if (female.WeightAtConception > female.Parameters.Breeding.CriticalCowWeight * female.StandardReferenceWeight)
                             rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[3]));
                         break;
                 }

@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                                 ind.Location = grazeStore;
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, clock.Today, - 1, ind.BreedParams.BirthScalar[0], 999) { ID = ind.MotherID }, clock.Today, ind);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, clock.Today, - 1, ind.Parameters.General.BirthScalar[0], 999) { ID = ind.MotherID }, clock.Today, ind);
                         ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;

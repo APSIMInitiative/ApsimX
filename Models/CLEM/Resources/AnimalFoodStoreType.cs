@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         [Description("Acid detergent insoluable protein")]
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double ADIP { get; set; }
+        public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
         [Description("Nitrogen to Crude protein factor")]

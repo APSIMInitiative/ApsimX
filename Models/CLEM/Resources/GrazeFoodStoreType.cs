@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
-        public double ADIP { get; set; }
+        public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
         [Required, Percentage, GreaterThanEqualValue(0)]
@@ -794,7 +794,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // if forage still limiting and second take allowed (enforce strict limits is false)
-                if (amountRequired > 0 & !thisBreed.RuminantTypeModel.StrictFeedingLimits)
+                if (amountRequired > 0 & !thisBreed.RuminantTypeModel.Parameters.Grazing.StrictFeedingLimits)
                 {
                     // allow second take for the limited pools
                     double forage = thisBreed.PoolFeedLimits.Sum(a => a.Pool.Amount);

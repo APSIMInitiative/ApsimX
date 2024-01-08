@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         public double RumenDegradableProteinContent { get; set; }
 
         /// <inheritdoc/>
-        public double ADIP { get; set; }
+        public double AcidDetergentInsoluableProtein { get; set; }
 
         /// <inheritdoc/>
         public double NitrogenToCrudeProteinFactor { get; set; } = 6.25;

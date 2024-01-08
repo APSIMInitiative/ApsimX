@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (IsBreeder && !IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= BreedParams.MinimumDaysBirthToConception);
+                return (IsBreeder && !IsPregnant && TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays >= Parameters.Breeding.MinimumDaysBirthToConception);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
                 // AL updated 28/10/2020. Removed ( && Age < BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
                 //return (Weaned && Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
-                return (Weaned && ((HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= BreedParams.MinimumAge1stMating.InDays)) == false);
+                return (Weaned && ((HighWeight >= Parameters.Breeding.MinimumSize1stMating * StandardReferenceWeight) & (AgeInDays >= Parameters.Breeding.MinimumAge1stMating.InDays)) == false);
             }
         }
 
@@ -201,11 +201,11 @@ namespace Models.CLEM.Resources
         public int CalulateNumberOfOffspringThisPregnancy()
         {
             int birthCount = 1;
-            if (BreedParams.MultipleBirthRate != null)
+            if (Parameters.Breeding.MultipleBirthRate != null)
             {
                 double rnd = RandomNumberGenerator.Generator.NextDouble();
                 double birthProb = 0;
-                foreach (double i in BreedParams.MultipleBirthRate)
+                foreach (double i in Parameters.Breeding.MultipleBirthRate)
                 {
                     birthCount++;
                     birthProb += i;
@@ -242,7 +242,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays >= BreedParams.GestationLength.InDays;
+                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays >= Parameters.General.GestationLength.InDays;
                 else
                     return false;
             }
@@ -256,7 +256,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays/BreedParams.GestationLength.InDays;
+                    return TimeSince(RuminantTimeSpanTypes.Conceived).TotalDays/ Parameters.General.GestationLength.InDays;
                 else
                     return 0;
             }
@@ -308,7 +308,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if(NumberOfFetuses > 0)
-                    return BreedParams.BirthScalar[NumberOfFetuses-1];
+                    return Parameters.General.BirthScalar[NumberOfFetuses-1];
                 return 0;
             }
         }
@@ -335,7 +335,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).TotalDays == BreedParams.GestationLength.InDays;
+                return TimeSince(RuminantTimeSpanTypes.Conceived, DateOfLastBirth).TotalDays == Parameters.General.GestationLength.InDays;
             }
         }
 
@@ -403,7 +403,7 @@ namespace Models.CLEM.Resources
             if(SucklingOffspringList.Any() || MilkingPerformed)
             {
                 double milkdays = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays + halfIntervalOffset;
-                if (milkdays <= BreedParams.MilkingDays)
+                if (milkdays <= Parameters.Breeding.MilkingDays)
                 {
                     return milkdays;
                 }

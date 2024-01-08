@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Reporting;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Models.CLEM.Activities
 {
@@ -237,7 +238,7 @@ namespace Models.CLEM.Activities
                         PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                     }
 
-                    PotentialIntakePastureBiomassLimiter = 1 - Math.Exp(-herd.FirstOrDefault().BreedParams.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000);
+                    PotentialIntakePastureBiomassLimiter = 1 - Math.Exp(-herd.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000);
 
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
@@ -324,7 +325,7 @@ namespace Models.CLEM.Activities
                 {
                     double eaten;
                     if (ind.Weaned)
-                        eaten = Math.Min(Math.Max(0,ind.Intake.Feed.Required), ind.Intake.Feed.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
+                        eaten = Math.Min(Math.Max(0,ind.Intake.Feed.Required), ind.Intake.Feed.Expected * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8));
                     else
                         eaten = Math.Max(0, ind.Intake.Feed.Required); ;
 
@@ -397,7 +398,7 @@ namespace Models.CLEM.Activities
             // All values are now proportions.
             // Convert to percentage before calculation
 
-            double greenlimit = (RuminantTypeModel.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.GreenDietCoefficient * ((propgreen * 100) - (RuminantTypeModel.GreenDietZero * 100))));
+            double greenlimit = (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((propgreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))));
             greenlimit = Math.Max(0.0, greenlimit);
             if (MathUtilities.IsGreaterThan(propgreen, 0.9))
                 greenlimit = 100;
