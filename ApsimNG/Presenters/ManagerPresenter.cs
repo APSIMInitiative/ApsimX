@@ -97,6 +97,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            manager.ActiveTabIndex = managerView.TabIndex;
+
             propertyPresenter.Detach();
             BuildScript();  // compiles and saves the script
 
@@ -164,8 +166,6 @@ namespace UserInterface.Presenters
 
             try
             {
-                manager.ActiveTabIndex = managerView.TabIndex;
-
                 string code = managerView.Editor.Text;
 
                 // set the code property manually first so that compile error can be trapped via
