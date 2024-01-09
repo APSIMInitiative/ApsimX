@@ -387,11 +387,7 @@ namespace UserInterface.Views
                 expandedRows.Add(path.ToString());
             }));
 
-            treeview1.CursorChanged -= OnAfterSelect;
-
             treemodel.Clear();
-
-            treeview1.CursorChanged += OnAfterSelect;
 
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions, false);
@@ -402,8 +398,9 @@ namespace UserInterface.Views
             {
                 expandedRows.ForEach(row => treeview1.ExpandRow(new TreePath(row), false));
             }
-            catch
+            catch (Exception err)
             {
+                ShowError(err);
             }
 
             if (ContextMenu != null)
@@ -643,7 +640,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (SelectedNodeChanged != null)
+                if (SelectedNodeChanged != null && treeview1 != null)
                 {
                     treeview1.CursorChanged -= OnAfterSelect;
                     NodeSelectedArgs selectionChangedData = new NodeSelectedArgs();
@@ -858,7 +855,6 @@ namespace UserInterface.Views
                 {
                     textRender.StopEditing(true);
                     isEdittingNodeLabel = false;
-                    treeview1.CursorChanged += OnAfterSelect;
                     nodePathBeforeRename = "";
                 }
 
@@ -1026,7 +1022,6 @@ namespace UserInterface.Views
                 if (isEdittingNodeLabel == false)
                 {
                     isEdittingNodeLabel = true;
-                    treeview1.CursorChanged -= OnAfterSelect;
                     nodePathBeforeRename = SelectedNode;
                 }
             }
@@ -1059,7 +1054,6 @@ namespace UserInterface.Views
                         if (!args.CancelEdit)
                             previouslySelectedNodePath = args.NodePath;
                     }
-                    treeview1.CursorChanged += OnAfterSelect;
                 }
             }
             catch (Exception err)
