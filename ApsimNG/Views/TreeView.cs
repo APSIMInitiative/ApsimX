@@ -851,13 +851,7 @@ namespace UserInterface.Views
         {
             try
             {
-                if (textRender.Editable)// If the node to be dragged is open for editing (renaming), close it now.
-                {
-                    textRender.StopEditing(true);
-                    isEdittingNodeLabel = false;
-                    nodePathBeforeRename = "";
-                }
-
+                EndRenaming();
                 if (dragSourceHandle.IsAllocated)
                 {
                     dragSourceHandle.Free();
@@ -1019,11 +1013,8 @@ namespace UserInterface.Views
         {
             try
             {
-                if (isEdittingNodeLabel == false)
-                {
-                    isEdittingNodeLabel = true;
-                    nodePathBeforeRename = SelectedNode;
-                }
+                isEdittingNodeLabel = true;
+                nodePathBeforeRename = SelectedNode;
             }
             catch (Exception err)
             {
@@ -1040,7 +1031,6 @@ namespace UserInterface.Views
             {
                 if (isEdittingNodeLabel == true)
                 {
-                    isEdittingNodeLabel = false;
                     textRender.Editable = false;
                     // TreeView.ContextMenuStrip = this.PopupMenu;
                     if (Renamed != null && !string.IsNullOrEmpty(e.NewText))
@@ -1060,6 +1050,8 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+
+            isEdittingNodeLabel = false;
         }
 
         /// <summary>
@@ -1102,6 +1094,16 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        private void EndRenaming()
+        {
+            if (isEdittingNodeLabel)
+            {
+                textRender.StopEditing(true);
+                isEdittingNodeLabel = false;
+                nodePathBeforeRename = "";
             }
         }
 
