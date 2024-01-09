@@ -1,4 +1,5 @@
-﻿using Gtk;
+﻿using ApsimNG.Utility;
+using Gtk;
 using System;
 using UserInterface.Interfaces;
 
@@ -59,6 +60,22 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
+        /// <summary>
+        /// Indicates the index of the currently active tab
+        /// </summary>
+        public ManagerCursorLocation CursorLocation
+        {
+            get {
+                ManagerCursorLocation pos = scriptEditor.Location;
+                pos.TabIndex = this.TabIndex;
+                return pos;
+            }
+            set {
+                this.TabIndex = value.TabIndex;
+                scriptEditor.Location = value; 
+            }
+        }
+
         public IPropertyView PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
     }
@@ -82,5 +99,10 @@ namespace UserInterface.Views
         /// Indicates the index of the currently active tab
         /// </summary>
         int TabIndex { get; set; }
+
+        /// <summary>
+        /// Indicates the position of the cursor
+        /// </summary>
+        ManagerCursorLocation CursorLocation { get; set; }
     }
 }

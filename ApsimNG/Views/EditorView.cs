@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ApsimNG.Utility;
 using Gtk;
 using GtkSource;
 using UserInterface.EventArguments;
@@ -67,16 +68,6 @@ namespace UserInterface.Views
         /// Menu accelerator group
         /// </summary>
         private AccelGroup accel = new AccelGroup();
-
-        /// <summary>
-        /// Horizontal scroll position
-        /// </summary>
-        private int horizScrollPos = -1;
-
-        /// <summary>
-        /// Vertical scroll position
-        /// </summary>
-        private int vertScrollPos = -1;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
@@ -232,31 +223,29 @@ namespace UserInterface.Views
 
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
-        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
-        /// way to store these values.
-        /// 
-        /// X is column, Y is line number, width is horizontal scroll position, height is vertical scroll position.
         /// </summary>
-        public System.Drawing.Rectangle Location
+        public ManagerCursorLocation Location
         {
             get
             {
-                int scrollX = Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture);
-                int scrollY = Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture);
-
-                // x is column, y is line number.
-                return new System.Drawing.Rectangle(CurrentColumnNumber, CurrentLineNumber, scrollX, scrollY);
+                ManagerCursorLocation location = new ManagerCursorLocation();
+                location.TabIndex = 0;
+                location.Column = CurrentColumnNumber;
+                location.Line = CurrentLineNumber - 1;
+                location.ScrollH = scroller.Hadjustment;
+                location.ScrollV = scroller.Vadjustment;
+                return location;
             }
 
             set
             {
-                // tbi
-                //textEditor.Caret.Location = new DocumentLocation(value.Y, value.X);
-                horizScrollPos = value.Width;
-                vertScrollPos = value.Height;
+                textEditor.GrabFocus();
+
+                scroller.Hadjustment = value.ScrollH;
+                scroller.Vadjustment = value.ScrollV;
 
                 // x is column, y is line number.
-                TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Y, value.X);
+                TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Line, value.Column);
                 textEditor.Buffer.PlaceCursor(iter);
             }
         }

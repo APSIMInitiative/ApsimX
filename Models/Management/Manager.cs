@@ -107,14 +107,6 @@ namespace Models
         public List<KeyValuePair<string, string>> Parameters { get; set; }
 
         /// <summary>
-        /// Stores column and line of caret, and scrolling position when editing in GUI
-        /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
-        /// way to store both the caret position and scrolling information.
-        /// </summary>
-        [JsonIgnore]
-        public Rectangle Location { get; set; } = new Rectangle(1, 1, 0, 0);
-
-        /// <summary>
         /// Stores whether we are currently on the tab displaying the script.
         /// Meaningful only within the GUI
         /// </summary>

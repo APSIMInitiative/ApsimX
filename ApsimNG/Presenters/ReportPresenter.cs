@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Extensions;
 using ApsimNG.Classes;
+using ApsimNG.Utility;
 using Gtk;
 using Markdig.Helpers;
 using Models;
@@ -439,9 +440,15 @@ namespace UserInterface.Presenters
                 string modifiedText = string.Join(Environment.NewLine, textLinesList);
                 view.EventList.Text = modifiedText;
                 if (plantVariableLines.Count > 0)
+                {
                     // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                    view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber + (plantVariableLines.Count - 1), X = StoredDragObject.Code.Length }; // TODO: Highlighted line needs to be correctly set.
-                else view.EventList.Location = new System.Drawing.Rectangle { Y = view.EventList.CurrentLineNumber, X = StoredDragObject.Code.Length }; StoredDragObject = null;
+                    view.EventList.Location = new ManagerCursorLocation(StoredDragObject.Code.Length, view.EventList.CurrentLineNumber + (plantVariableLines.Count - 1)); // TODO: Highlighted line needs to be correctly set.
+                }
+                else
+                {
+                    view.EventList.Location = new ManagerCursorLocation(StoredDragObject.Code.Length, view.EventList.CurrentLineNumber);
+                    StoredDragObject = null;
+                }
             }
         }
 
@@ -845,8 +852,9 @@ namespace UserInterface.Presenters
             // Makes the selected line the newly added variable's line.
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
-            else view.VariableList.Location = new System.Drawing.Rectangle { Y = currentReportVariablesLineNumber, X = variableCode.Length };
+                view.VariableList.Location = new ManagerCursorLocation( variableCode.Length, currentReportVariablesLineNumber + (plantVariableLines.Count - 1));
+            else 
+                view.VariableList.Location = new ManagerCursorLocation ( variableCode.Length, currentReportVariablesLineNumber);
         }
 
 
@@ -880,8 +888,9 @@ namespace UserInterface.Presenters
             view.EventList.Text = modifiedText;
             if (plantVariableLines.Count > 0)
                 // Makes the last line the one that is selected when multiples are added, such as when plant variable lines are added.
-                view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1), X = variableCode.Length };
-            else view.EventList.Location = new System.Drawing.Rectangle { Y = currentReportFrequencyVariablesLineNumber, X = variableCode.Length };
+                view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber + (plantVariableLines.Count - 1) );
+            else 
+                view.EventList.Location = new ManagerCursorLocation (variableCode.Length, currentReportFrequencyVariablesLineNumber);
         }
 
         /// <summary>

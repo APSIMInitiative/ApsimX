@@ -1,4 +1,5 @@
 ﻿using System;
+using ApsimNG.Utility;
 using Gtk;
 using UserInterface.EventArguments;
 
@@ -86,7 +87,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Gets or sets the current location of the caret (column and line)
         /// </summary>
-        System.Drawing.Rectangle Location { get; set; }
+        ManagerCursorLocation Location { get; set; }
 
         /// <summary>
         /// Add a separator line to the context menu
