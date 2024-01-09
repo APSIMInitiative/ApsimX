@@ -9,7 +9,7 @@ using Models.Storage;
 using Models.Functions;
 
 // TODO
-// herbicides, weeds, machinery
+// machinery
 // annual overheads & capital repayments
 // table of annual paddock activity
 namespace Models.Management
