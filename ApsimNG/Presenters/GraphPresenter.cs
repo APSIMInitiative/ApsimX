@@ -122,7 +122,7 @@
         /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph(IEnumerable<SeriesDefinition> definitions)
         {
-            explorerPresenter.MainPresenter.ShowMessage("", Simulation.MessageType.Information);
+            explorerPresenter.MainPresenter.ClearStatusPanel();
             graphView.Clear();
             if (storage == null)
                 storage = graph.FindInScope<IDataStore>();
