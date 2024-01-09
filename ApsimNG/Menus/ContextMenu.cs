@@ -3,28 +3,26 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using UserInterface.Commands;
-using Models;
-using Models.Core;
-using Models.Factorial;
-using Models.Soils;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using APSIM.Interop.Documentation;
+using APSIM.Server.Sensibility;
 using APSIM.Shared.Utilities;
-using Models.Storage;
-using Utility;
+using Gtk;
+using Models;
+using Models.Climate;
+using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using System.Reflection;
-using System.Linq;
-using System.Text;
+using Models.Factorial;
 using Models.Functions;
-using Models.Climate;
-using APSIM.Interop.Documentation;
-using System.Threading.Tasks;
-using System.Threading;
-using APSIM.Server.Sensibility;
-using ApsimNG.Properties;
-using Gtk;
-using Models.CLEM.Interfaces;
+using Models.Soils;
+using Models.Storage;
+using UserInterface.Commands;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -942,7 +940,7 @@ namespace UserInterface.Presenters
                 {
                     modelToDocument = currentN.Clone();
                     explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
-                }               
+                }
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
@@ -970,7 +968,7 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-            finally 
+            finally
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
@@ -1110,6 +1108,32 @@ namespace UserInterface.Presenters
                     outputNames += simName + ", ";
                 explorerPresenter.MainPresenter.ShowMessage($"Could not add {outputNames} to Playlist called '{playlistName}'", Simulation.MessageType.Warning);
             }
+        }
+
+        /// <summary>
+        /// Reset axes of a graph.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Reset Graph Axes",
+                     AppliesTo = new Type[] { typeof(Models.Graph) })]
+        public void ResetGraphAxes(object sender, EventArgs e)
+        {
+            Models.Graph selectedGraph = this.explorerPresenter.CurrentNode as Models.Graph;
+            if (selectedGraph.Axis.Count() > 0)
+            {
+                foreach (var axis in selectedGraph.Axis)
+                {
+                    axis.Maximum = null;
+                    axis.Minimum = null;
+                }
+                // Refreshes the view with new resets.
+                this.explorerPresenter.HideRightHandPanel();
+                this.explorerPresenter.ShowRightHandPanel();
+                this.explorerPresenter.MainPresenter.ShowMessage($"{selectedGraph.Name}: axis minimum and maximum reset.", Simulation.MessageType.Information);
+            }
+
+
         }
 
     }
