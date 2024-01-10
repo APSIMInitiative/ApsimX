@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.Interfaces;
 using Models.Soils;
 using Newtonsoft.Json;
@@ -39,6 +40,12 @@ namespace Models.PMF.Phen
         [Link]
         private IClock clock = null;
 
+        [Link(IsOptional = true)]
+        private ISoilTemperature soilTemperature = null;
+
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        private IFunction temperature = null;
+
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -74,6 +81,13 @@ namespace Models.PMF.Phen
         [JsonIgnore]
         public string GerminationDate { get; set; }
 
+        /// <summary>
+        /// Date for germination to occur.  null by default so model is used
+        /// </summary>
+        [JsonIgnore]
+        [Units("oC")]
+        public double GerminationTemperature { get { return temperature == null ? -999 : temperature.Value(); } }
+
         // 4. Public method
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -82,6 +96,7 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
+            double sowLayerTemperature = soilTemperature != null ? soilTemperature.Value[SowLayer] : 999;
 
             if (GerminationDate != null)
             {
@@ -91,7 +106,7 @@ namespace Models.PMF.Phen
                 }
             }
 
-            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer])
+            else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer] && sowLayerTemperature >= GerminationTemperature)
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);
             }
