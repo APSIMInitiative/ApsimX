@@ -1,13 +1,13 @@
-﻿using UserInterface.EventArguments;
-using Models.Core;
-using Models.Factorial;
-using Models.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using UserInterface.Views;
 using APSIM.Shared.Documentation.Extensions;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using UserInterface.EventArguments;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -148,7 +148,7 @@ namespace UserInterface.Presenters
         {
             //base.Detach();
             // Keep the column and row filters
-            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters); 
+            explorerPresenter.KeepFilter(temporaryColumnFilters, temporaryRowFilters);
             temporaryRowFilters = rowFilterEditBox.Text;
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;

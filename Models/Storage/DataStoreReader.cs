@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
-using SkiaSharp;
-using static Models.Core.ScriptCompiler;
 
 namespace Models.Storage
 {
@@ -241,10 +239,6 @@ namespace Models.Storage
 
             // Get orderby fields
             var orderByFields = new List<string>();
-            if (fieldNamesInTable.Contains("SimulationID"))
-                orderByFields.Insert(0, "SimulationID");
-            if (fieldNamesInTable.Contains("Clock.Today"))
-                orderByFields.Insert(0, "Clock.Today");
             if (orderByFieldNames != null)
                 orderByFields.AddRange(orderByFieldNames);
 
