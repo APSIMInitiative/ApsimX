@@ -5,13 +5,12 @@ using System.Drawing;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using Models.Interfaces;
-using Models.Management;
 using UserInterface.Views;
 using UserInterface.Interfaces;
 using APSIM.Shared.Graphing;
 using Models.Core;
 using ApsimNG.EventArguments.DirectedGraph;
-using APSIM.Interop.Visualisation;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace UserInterface.Presenters
 {
@@ -38,10 +37,11 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Used by the intellisense to keep track of which editor the user is currently using.
-        /// Without this, it's difficult to know which editor (variables or events) to
-        /// insert an intellisense item into.
+        /// Will be Conditions or Actions
         /// </summary>
-        private IEditorView currentEditor;
+        private string currentEditor;
+        private EditorView conditionsEditor;
+        private EditorView actionsEditor;
 
         /// <summary>
         /// Warpper around the currently selected node in the rotation manager so it can be
@@ -76,6 +76,7 @@ namespace UserInterface.Presenters
 
             this.objectPropertiesPresenter = new PropertyPresenter();
             this.objectPropertiesPresenter.Attach(this.currentObject, this.view.ObjectPropertiesView, this.presenter);
+            this.objectPropertiesPresenter.ViewRefreshed += OnPropertyRefresh;
 
             this.currentObject = null;
 
@@ -106,6 +107,11 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
             propertiesPresenter.Detach();
             objectPropertiesPresenter.Detach();
+
+            if (conditionsEditor != null)
+                conditionsEditor.ContextItemsNeeded -= OnNeedVariableNames;
+            if (actionsEditor != null)
+                actionsEditor.ContextItemsNeeded -= OnNeedEventNames;
         }
 
         /// <summary>
@@ -158,18 +164,35 @@ namespace UserInterface.Presenters
                     if (currentObject != null)
                     {                        
                         objectPropertiesPresenter.RefreshView(currentObject);
-                        
-                        List<EditorView> list = objectPropertiesPresenter.GetAllEditorViews();
-                        if (list.Count == 2)
-                        {
-                            list[0].ContextItemsNeeded += OnNeedVariableNames;
-                            list[1].ContextItemsNeeded += OnNeedEventNames;
-                        }
                     }
                 }
             }
             //else do nothing
             return;
+        }
+
+        private void OnPropertyRefresh(object sender, EventArgs args)
+        {
+            if (conditionsEditor != null)
+            {
+                conditionsEditor.ContextItemsNeeded -= OnNeedVariableNames;
+                conditionsEditor = null;
+            }
+                
+            if (actionsEditor != null)
+            {
+                actionsEditor.ContextItemsNeeded -= OnNeedVariableNames;
+                actionsEditor = null;
+            }
+
+            List<EditorView> list = this.objectPropertiesPresenter.GetAllEditorViews();
+            if (list.Count == 2)
+            {
+                conditionsEditor = list[0];
+                conditionsEditor.ContextItemsNeeded += OnNeedVariableNames;
+                actionsEditor = list[1];
+                actionsEditor.ContextItemsNeeded += OnNeedEventNames;
+            }
         }
 
         /// <summary>
@@ -311,12 +334,19 @@ namespace UserInterface.Presenters
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
-                currentEditor = sender as IEditorView;
-                if (!e.ControlShiftSpace &&
-                     (rules ?
-                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, true, false, false, false, e.ControlSpace) :
-                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, false, true, false, true, e.ControlSpace)))
-                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+                currentEditor = (sender as EditorView).MainWidget.Name.Split(':')[1];
+
+                if (!e.ControlShiftSpace)
+                {
+                    bool gridCompletions = false;
+                    if (rules)
+                        gridCompletions = intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, true, false, false, false, e.ControlSpace);
+                    else
+                        gridCompletions = intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, false, true, false, true, e.ControlSpace);
+
+                    if (gridCompletions)
+                        intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+                }               
             }
             catch (Exception err)
             {
@@ -352,12 +382,18 @@ namespace UserInterface.Presenters
         {
             try
             {
+                EditorView view = null;
+                if (currentEditor.CompareTo("Conditions") == 0)
+                    view = conditionsEditor;
+                else if (currentEditor.CompareTo("Actions") == 0)
+                    view = actionsEditor;
+
                 if (string.IsNullOrEmpty(args.ItemSelected))
                     return;
                 else if (string.IsNullOrEmpty(args.TriggerWord))
-                    currentEditor.InsertAtCaret(args.ItemSelected);
+                    view.InsertAtCaret(args.ItemSelected);
                 else
-                    currentEditor.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                    view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
             }
             catch (Exception err)
             {
@@ -470,7 +506,7 @@ namespace UserInterface.Presenters
             }
 
             /// <summary>Property wrapper for description</summary>
-            [Description("Description")]
+            [Description("Conditions")]
             [Display(Type = DisplayType.Code)]
             public string Conditions
             {

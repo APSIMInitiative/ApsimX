@@ -84,7 +84,7 @@ namespace UserInterface.Views
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
 
         /// <summary>
-        /// Invoked when the user changes the text in the editor.
+        /// Invoked when the user changes the text in the editor, sender is buffer object
         /// </summary>
         public event EventHandler TextHasChangedByUser;
 
@@ -651,14 +651,6 @@ namespace UserInterface.Views
             if (!provider.LoadFromData(css))
                 throw new Exception($"Unable to load font {font}");
             textEditor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
-        }
-
-        /// <summary>
-        /// Display a list of completion options to the user.
-        /// </summary>
-        public void ShowCompletionItems(List<NeedContextItemsArgs.ContextItem> completionOptions)
-        {
-
         }
 
         // Get reference to EditorView's GTK SourceView widget.

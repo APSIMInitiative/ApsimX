@@ -5,10 +5,10 @@ using System.Linq;
 using APSIM.Shared.Utilities;
 using UserInterface.Classes;
 using UserInterface.EventArguments;
-using global::UserInterface.Presenters;
 using Gtk;
 using UserInterface.Interfaces;
 using Utility;
+using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -74,7 +74,7 @@ namespace UserInterface.Views
         /// <summary>
         /// List of code editor views that have been created
         /// </summary>
-        List<EditorView> codeEditors = new List<EditorView>();
+        private List<EditorView> codeEditors = new List<EditorView>();
 
         /// <summary>Constructor.</summary>
         public PropertyView() { }
@@ -295,6 +295,7 @@ namespace UserInterface.Views
                     component = codeOutline;
                     originalEntryText[property.ID] = code;
                     this.codeEditors.Add(codeEditor);
+                    codeEditor.LeaveEditor += OnEditorChange;
                     break;
                 case PropertyType.SingleLineText:
                     string entryValue = ReflectionUtilities.ObjectToString(property.Value, CultureInfo.InvariantCulture);
@@ -466,8 +467,6 @@ namespace UserInterface.Views
                         text = entry.Text;
                     else if (widget is TextView editor)
                         text = editor.Buffer.Text;
-                    else if (sender is EditorView)
-                        text = (sender as EditorView).Text;
                     else
                         throw new Exception($"Unknown widget type {sender.GetType().Name}");
                     if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
@@ -476,6 +475,33 @@ namespace UserInterface.Views
                         originalEntryText[id] = text;
                         PropertyChanged?.Invoke(this, args);
                     }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a code editor changes texts
+        /// Fires a chagned event if the editor's text has been modified.
+        /// </summary>
+        /// <param name="sender">The entry which has been modified.</param>
+        /// <param name="e">Event data.</param>
+        [GLib.ConnectBefore]
+        private void OnEditorChange(object sender, EventArgs e)
+        {
+            try
+            {
+                Guid id = new Guid((sender as EditorView).MainWidget.Name.Split(':')[0]);
+                string text = (sender as EditorView).Text;
+
+                if (originalEntryText.ContainsKey(id) && !string.Equals(originalEntryText[id], text, StringComparison.CurrentCulture))
+                {
+                    var args = new PropertyChangedEventArgs(id, text);
+                    originalEntryText[id] = text;
+                    PropertyChanged?.Invoke(this, args);
                 }
             }
             catch (Exception err)
@@ -675,6 +701,14 @@ namespace UserInterface.Views
         public List<EditorView> GetAllEditorViews()
         {
             return this.codeEditors;
+        }
+
+        /// <summary>
+        /// Clear code editors
+        /// </summary>
+        public void DeleteEditorViews()
+        {
+            codeEditors = new List<EditorView>();
         }
     }
 }

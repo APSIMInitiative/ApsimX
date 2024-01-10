@@ -44,6 +44,11 @@ namespace UserInterface.Presenters
         private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
 
         /// <summary>
+        /// Called when the view is refreshed
+        /// </summary>
+        public event EventHandler ViewRefreshed;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -81,11 +86,17 @@ namespace UserInterface.Presenters
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
 
                 this.view.SaveChanges();
+
+                if (GetAllEditorViews().Count > 0)
+                    this.view.DeleteEditorViews();
+
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
 
                 view.PropertyChanged += OnViewChanged;
                 presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+                ViewRefreshed?.Invoke(this, new EventArgs());
             }
         }
 

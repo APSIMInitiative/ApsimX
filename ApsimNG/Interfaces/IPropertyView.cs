@@ -32,5 +32,10 @@ namespace UserInterface.Interfaces
         /// Used by the presenter to connect up intellisense events.
         /// </summary>
         public List<EditorView> GetAllEditorViews();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DeleteEditorViews();
     }
 }
