@@ -119,6 +119,11 @@ namespace Models
                     foreach (string file in files)
                         ListReferencedFileNames(file);
                 }
+                else if (options.ListReferencedFileNamesUnmodified)
+                {
+                    foreach (string file in files)
+                        ListReferencedFileNames(file, false);
+                }
                 else if (options.MergeDBFiles)
                 {
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
@@ -435,11 +440,11 @@ namespace Models
 
         }
 
-        private static void ListReferencedFileNames(string fileName)
+        private static void ListReferencedFileNames(string fileName, bool isAbsolute = true)
         {
             Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false).NewModel as Simulations;
 
-            foreach (var referencedFileName in file.FindAllReferencedFiles())
+            foreach (var referencedFileName in file.FindAllReferencedFiles(isAbsolute))
                 Console.WriteLine(referencedFileName);
         }
 
