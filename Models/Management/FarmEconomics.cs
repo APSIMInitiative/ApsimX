@@ -46,6 +46,8 @@ namespace Models.Management
            /// <summary> </summary>
            public string Category { get; set; }
            /// <summary> </summary>
+           public string Paddock { get; set; }
+           /// <summary> </summary>
            public string Name { get; set; }
            /// <summary> </summary>
            public double Rate { get; set; }
@@ -73,6 +75,9 @@ namespace Models.Management
            /// <summary> </summary>
            public string Category { get; set; }
            /// <summary> </summary>
+           public string Paddock { get; set; }
+
+           /// <summary> </summary>
            public string Name { get; set; }
            /// <summary> </summary>
            public double Yield  { get; set; }
@@ -91,9 +96,6 @@ namespace Models.Management
         /// <summary> Bank account</summary>
         public double Balance {get ; set ;}
 
-        /// <summary> Initial bank balance </summary>
-        [Description("Variable with name of current paddock")]
-        public string currentPaddockName {get ; set ;}
 
         /// <summary> </summary>
         [EventSubscribe("StartOfSimulation")]
@@ -129,9 +131,9 @@ namespace Models.Management
         {
         }
         
-        /// <summary> </summary>
-        [EventSubscribe("DoIncome")]
-        public void OnIncome(object sender, PaddockIncomeArgs e)
+        /// <summary> Paddock (area based rate, eg kg/ha)</summary>
+        [EventSubscribe("DoPaddockIncome")]
+        public void DoPaddockIncome(object sender, PaddockIncomeArgs e)
         {
            var f = this.FindChild<CostPriceInfo>(e.Name);
            double price = f?.Price ?? 0.0;
@@ -139,13 +141,21 @@ namespace Models.Management
             
            Summary.WriteMessage(this, $"{e.Description} Income = ${amount}", MessageType.Information); 
            Balance += amount;
-           logIt(Clock.Today, simulation.Get(currentPaddockName).ToString(), amount, 0, e.Category, e.Description); 
+           logIt(Clock.Today, e.Paddock, amount, 0, e.Category, e.Description); 
+        }
+        /// <summary> Whole farm </summary>
+        [EventSubscribe("DoFarmIncome")]
+        public void DoFarmIncome(object sender, FarmIncomeArgs e)
+        {
+           Summary.WriteMessage(this, $"{e.Description} Income = ${e.Amount}", MessageType.Information); 
+           Balance += e.Amount;
+           logIt(Clock.Today, "", e.Amount, 0, e.Category, e.Description); 
         }
         /// <summary> </summary>
-        [EventSubscribe("DoExpenditure")]
-        public void DoExpenditure(object sender, PaddockExpenditureArgs e)
+        [EventSubscribe("DoPaddockExpenditure")]
+        public void DoPaddockExpenditure(object sender, PaddockExpenditureArgs e)
         {
-           double cost = 0;
+           double cost = 1;
            var f = this.FindChild<CostPriceInfo>(e.Name);
            if (f != null) 
               cost = f.VariableCost;
@@ -158,7 +168,14 @@ namespace Models.Management
            double amount = cost * e.Rate * e.Area;
 
            Balance -= amount;
-           logIt(Clock.Today, simulation.Get(currentPaddockName).ToString(), 0, amount, e.Category, e.Description); 
+           logIt(Clock.Today, e.Paddock, 0, amount, e.Category, e.Description); 
+        }
+        /// <summary> </summary>
+        [EventSubscribe("DoFarmExpenditure")]
+        public void DoFarmExpenditure(object sender, FarmExpenditureArgs e)
+        {
+           Balance -= e.Cost;
+           logIt(Clock.Today, "", 0, e.Cost, e.Category, e.Description); 
         }
 
         [Link]

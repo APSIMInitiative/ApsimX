@@ -60,7 +60,7 @@
         },
         {
           "$type": "Models.Core.Zone, Models",
-          "Area": 1.0,
+          "Area": 100.0,
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
@@ -807,7 +807,7 @@
         },
         {
           "$type": "Models.Core.Zone, Models",
-          "Area": 1.0,
+          "Area": 100.0,
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
@@ -1556,7 +1556,6 @@
           "$type": "Models.Management.FarmEconomics, Models",
           "InitialBalance": 0.0,
           "Balance": 0.0,
-          "currentPaddockName": "[Manager].Script.currentPaddock",
           "Name": "FarmEconomics",
           "ResourceName": null,
           "Children": [
@@ -1604,29 +1603,44 @@
         },
         {
           "$type": "Models.Management.FarmMachinery, Models",
+          "FuelCost": 1.85,
           "TractorNames": [
             "220kW FWA",
-            "220kW FWA"
+            "220kW FWA",
+            "SprayRig",
+            "SprayRig"
           ],
           "ImplementNames": [
+            "Planter",
+            "Sprayer",
             "Planter",
             "Sprayer"
           ],
           "WorkRates": [
             42.0,
-            84.0
+            0.0,
+            0.0,
+            50.0
           ],
           "FuelConsRates": [
             15.0,
-            5.0
+            0.0,
+            0.0,
+            10.0
           ],
+          "FuelConsumption": 0.0,
           "Name": "FarmMachinery",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Management.FarmMachineryItem, Models",
               "MachineryType": 0,
-              "xyz": null,
+              "MaxHours": 12.0,
+              "NewPrice": 0.0,
+              "TradeInValue": 0.0,
+              "LifeOfEquipment": 0.0,
+              "OilTyreCost": 0.0,
+              "RepairsMaintenance": 0.0,
               "Name": "220kW FWA",
               "ResourceName": null,
               "Children": [],
@@ -1636,7 +1650,12 @@
             {
               "$type": "Models.Management.FarmMachineryItem, Models",
               "MachineryType": 1,
-              "xyz": "42",
+              "MaxHours": 12.0,
+              "NewPrice": 0.0,
+              "TradeInValue": 0.0,
+              "LifeOfEquipment": 0.0,
+              "OilTyreCost": 0.0,
+              "RepairsMaintenance": 0.0,
               "Name": "Planter",
               "ResourceName": null,
               "Children": [],
@@ -1645,8 +1664,28 @@
             },
             {
               "$type": "Models.Management.FarmMachineryItem, Models",
+              "MachineryType": 0,
+              "MaxHours": 8.0,
+              "NewPrice": 0.0,
+              "TradeInValue": 0.0,
+              "LifeOfEquipment": 0.0,
+              "OilTyreCost": 0.0,
+              "RepairsMaintenance": 0.0,
+              "Name": "SprayRig",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Management.FarmMachineryItem, Models",
               "MachineryType": 1,
-              "xyz": "420",
+              "MaxHours": 8.0,
+              "NewPrice": 0.0,
+              "TradeInValue": 0.0,
+              "LifeOfEquipment": 0.0,
+              "OilTyreCost": 0.0,
+              "RepairsMaintenance": 0.0,
               "Name": "Sprayer",
               "ResourceName": null,
               "Children": [],
@@ -1695,17 +1734,17 @@
             "                                      StartDate = \"1-apr\", EndDate = \"1-may\", RainDays = 7, MinRain = 30, MinESW = 80, MustSow = true,  ",
             "                                      CultivarName = \"hartog\", Population = 50, SowingDepth = 30, RowSpacing = 250,",
             "                                      fertType = \"Urea\", fertAmount = 120,",
-            "                                      maxArea = 0.5 }},",
+            "                                      maxArea = 0.8 }},",
             "           {\"Wheat\", new cropDefault {RealName = \"Wheat\", ",
             "                                      StartDate = \"1-may\", EndDate = \"10-jun\", RainDays = 7, MinRain = 10, MinESW = 50, MustSow = true,  ",
             "                                      CultivarName = \"hartog\", Population = 50, SowingDepth = 30, RowSpacing = 250,",
             "                                      fertType = \"Urea\", fertAmount = 120,",
-            "                                      maxArea = 0.5 }},",
+            "                                      maxArea = 0.8 }},",
             "           {\"Maize\", new cropDefault {RealName = \"Maize\", ",
             "                                      StartDate = \"1-nov\", EndDate = \"30-dec\", RainDays = 7, MinRain = 20, MinESW = 80, MustSow = true,",
             "                                      CultivarName = \"sc501\", Population =  6, SowingDepth = 50, RowSpacing = 1000,",
             "                                      fertType = \"Urea\", fertAmount = 200,",
-            "                                      maxArea = 0.5 }}",
+            "                                      maxArea = 0.8 }}",
             "        };",
             "        ",
             "        private class cropDefault {",
@@ -1790,6 +1829,7 @@
             "                RotationManager.CurrentState = currentState[paddock];",
             "                RotationManager.DoLogState(); ",
             "                currentPaddock = \"\";",
+            "                RotationManager.CurrentState = \"\";",
             "            }",
             "            afterInit = true;",
             "        }",
@@ -1874,20 +1914,22 @@
             "            Summary.WriteMessage(this, this.FullPath + \" -  sowing \" + Crop.FullPath, MessageType.Diagnostic);",
             "            Crop.Sow(population: cropDefaults[crop].Population, cultivar: cropDefaults[crop].CultivarName, ",
             "                     depth: cropDefaults[crop].SowingDepth, rowSpacing: cropDefaults[crop].RowSpacing);",
-            "            myEvents.Publish(\"DoExpenditure\",  new object[] { this, ",
+            "            myEvents.Publish(\"DoPaddockExpenditure\",  new object[] { this, ",
             "                  new FarmEconomics.PaddockExpenditureArgs{",
             "                      Description = $\"{crop} Sowing\",",
-            "                      Category = \"Sowing\", ",
+            "                      Category = \"In-crop\", ",
+            "                      Paddock = currentPaddock,",
             "                      Name = Crop.Name,",
             "                      Rate = 1,",
             "                      Area = myPaddockZones [ currentPaddock ].Area}});",
             "                      ",
             "            Fertiliser fert = myPaddock.FindInScope(\"Fertiliser\") as Fertiliser;",
             "            fert.Apply(cropDefaults[crop].fertAmount, fertByName(cropDefaults[crop].fertType)); ",
-            "            myEvents.Publish(\"DoExpenditure\",  new object[] { this, ",
+            "            myEvents.Publish(\"DoPaddockExpenditure\",  new object[] { this, ",
             "                  new FarmEconomics.PaddockExpenditureArgs{",
             "                      Description = $\"{crop} fertiliser\",",
-            "                      Category = \"Sowing\", ",
+            "                      Category = \"In-crop\", ",
+            "                      Paddock = currentPaddock,",
             "                      Name = cropDefaults[crop].fertType,",
             "                      Rate = cropDefaults[crop].fertAmount,",
             "                      Area = myPaddockZones [ currentPaddock ].Area}}); ",
@@ -1896,8 +1938,8 @@
             "                  new FarmMachinery.FarmMachineryOperateArgs{",
             "                      Tractor = \"220kW FWA\",",
             "                      Implement = \"Planter\",",
-            "                      Paddock = currentPaddock,",
-            "                      Area = myPaddockZones [ currentPaddock ].Area}}); ",
+            "                      Category = \"In-crop\",",
+            "                      Paddock = currentPaddock}}); ",
             " ",
             "            killWeeds(currentPaddock);",
             "        }",
@@ -1909,10 +1951,11 @@
             "            Plant Crop = myPaddock.FindInScope(cropDefaults[crop].RealName) as Plant;",
             "",
             "            Summary.WriteMessage(this, this.FullPath + \" -  harvesting \" + Crop.FullPath, MessageType.Diagnostic);",
-            "            myEvents.Publish(\"DoIncome\",  new object[] { this, ",
+            "            myEvents.Publish(\"DoPaddockIncome\",  new object[] { this, ",
             "                  new FarmEconomics.PaddockIncomeArgs{",
             "                       Description = $\"{crop} aka {Crop.Name} Harvest\",",
-            "                       Category = \"Harvesting\", ",
+            "                       Category = \"In-crop\", ",
+            "                       Paddock = currentPaddock,",
             "                       Name = Crop.Name,",
             "                       //  wet yield @ 14% moisture ",
             "                       Yield = 1.14 * GetValuebyName(myPaddock.Get(\"[\" + Crop.Name + \"].Grain.Total.Wt\")) * 10 / 1000,  // g/m2 -> t/ha",
@@ -2024,13 +2067,20 @@
             "               //eval apsimSendMessage economics operate [mash [concat [gatherArgs spray herbicide] \\",
             "               //       area $config($paddock,area)  paddock $paddock  costtype fallow_cost]]",
             "               ",
-            "                         myEvents.Publish(\"DoExpenditure\",  new object[] { this, ",
+            "                         myEvents.Publish(\"DoPaddockExpenditure\",  new object[] { this, ",
             "                             new FarmEconomics.PaddockExpenditureArgs {",
-            "                                 Description = $\"Spray weeds\",",
+            "                                 Description = \"Roundup - weed control\",",
             "                                 Category = \"Fallow\", ",
-            "                                 Name = \"Roundup\",",
+            "                                Paddock = paddock,",
+            "                                Name = \"Roundup\",",
             "                                 Rate = 1.6,",
             "                                 Area = myPaddockZones [ paddock ].Area}}); ",
+            "                         myEvents.Publish(\"Operate\",  new object[] { this, ",
+            "                             new FarmMachinery.FarmMachineryOperateArgs{",
+            "                                Tractor = \"SprayRig\",",
+            "                                Category = \"Fallow\", ",
+            "                                Implement = \"Sprayer\",",
+            "                                Paddock = paddock}}); ",
             "                         Summary.WriteMessage(this, $\"Weeds mature in {paddock} - sprayed out.\", MessageType.Diagnostic);",
             "                         weedsGerminated[paddock] = false;",
             "                         weedsTT[paddock] = 0;",
@@ -2573,7 +2623,8 @@
               "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowMaize",
-                "[Manager].Script.daysSinceLastHarvest_gt_180"
+                "[Manager].Script.daysSinceLastHarvest_gt_180",
+                "[FarmMachinery].MachineryAvailable(\"220kW FWA\", \"Planter\")"
               ],
               "Actions": [
                 "[Manager].Script.SowCrop(\"Maize\");"
@@ -2602,7 +2653,8 @@
               "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowWheat",
-                "[Manager].Script.AreaPlantedOk(\"Wheat\")"
+                "[Manager].Script.AreaPlantedOk(\"Wheat\")",
+                "[FarmMachinery].MachineryAvailable(\"220kW FWA\", \"Planter\")"
               ],
               "Actions": [
                 "[Manager].Script.SowCrop(\"Wheat\");"
@@ -2617,7 +2669,8 @@
               "$type": "Models.Management.RuleAction, Models",
               "Conditions": [
                 "[Manager].Script.CanSowEarlyWheat",
-                "[Manager].Script.AreaPlantedOk(\"Early Wheat\")"
+                "[Manager].Script.AreaPlantedOk(\"Early Wheat\")",
+                "[FarmMachinery].MachineryAvailable(\"220kW FWA\", \"Planter\")"
               ],
               "Actions": [
                 "[Manager].Script.SowCrop(\"Early Wheat\");"
@@ -2670,7 +2723,8 @@
             "[Manager].Script.currentPaddock as Paddock",
             "[Manager].Script.currentState as currentState",
             "[FarmEconomics].Balance as Balance",
-            "[PhaseAccumulations].Script.TRainfall as Rain"
+            "[PhaseAccumulations].Script.TRainfall as Rain",
+            "//Sum of [FarmMachinery].FuelConsumption from [TransitionReport].DateOfLastOutput to [Clock].Today as FuelConsumption "
           ],
           "EventNames": [
             "[RotationManager].Transition"
