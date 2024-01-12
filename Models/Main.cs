@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -77,6 +78,13 @@ namespace Models
         /// <param name="errors">Parse errors.</param>
         private static void HandleParseError(IEnumerable<Error> errors)
         {
+            // To help with Jenkins only errors.
+            foreach (var error in errors)
+            {
+                Console.WriteLine("Console error output: " + error.ToString());
+                Trace.WriteLine("Trace error output: " + error.ToString());
+            }
+
             if (!(errors.IsHelp() || errors.IsVersion()))
                 exitCode = 1;
         }

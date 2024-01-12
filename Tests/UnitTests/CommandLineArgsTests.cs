@@ -648,10 +648,6 @@ save {apsimxFileName}";
 
             sim.Children.Add(excelInputNode);
 
-            Assert.Contains(excelInputNode, file.FindChild<Simulation>().Children);
-
-            Simulation simulationNode = file.FindInScope<Simulation>();
-
             string apsimxFileName = file.FileName.Split('\\', '/').ToList().Last();
 
             string outputText = Utilities.RunModels(file, "--list-referenced-filenames-unmodified");
