@@ -727,6 +727,41 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Style to report emissions from herd
+    /// </summary>
+    public enum RuminantEmissionsGroupingStyle
+    {
+        /// <summary>
+        /// Report as individuals
+        /// </summary>
+        ByIndividual,
+        /// <summary>
+        /// Grouped by pricing groups
+        /// </summary>
+        ByPriceGroup,
+        /// <summary>
+        /// Grouped by class
+        /// </summary>
+        ByClass,
+        /// <summary>
+        /// Grouped by class and sex
+        /// </summary>
+        BySexAndClass,
+        /// <summary>
+        /// Grouped by herd
+        /// </summary>
+        ByHerd,
+        /// <summary>
+        /// Grouped by breed
+        /// </summary>
+        ByBreed,
+        /// <summary>
+        /// Combine all individuals
+        /// </summary>
+        Combined
+    }
+
+    /// <summary>
     /// General classes of ruminants
     /// </summary>
     public enum RuminantClass
@@ -1039,6 +1074,29 @@ namespace Models.CLEM
         /// Time since last breeder birth
         /// </summary>
         GaveBirth
+    }
+
+    /// <summary>
+    /// Types of greenhouse gases generated
+    /// </summary>
+    public enum GreenhouseGasTypes
+    {
+        /// <summary>
+        /// No type
+        /// </summary>
+        None,
+        /// <summary>
+        /// Carbon dioxide
+        /// </summary>
+        CO2,
+        /// <summary>
+        /// Methane
+        /// </summary>
+        CH4,
+        /// <summary>
+        /// Nitrous oxide
+        /// </summary>
+        N2O
     }
 
     /// <summary>

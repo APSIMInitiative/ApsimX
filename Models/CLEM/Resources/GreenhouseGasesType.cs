@@ -31,6 +31,13 @@ namespace Models.CLEM.Resources
         public string Units { get { return "kg"; } }
 
         /// <summary>
+        /// Auto collect emissions
+        /// </summary>
+        [Description("Auto collect")]
+        [Required]
+        public GreenhouseGasTypes AutoCollectType { get; set; }
+
+        /// <summary>
         /// Starting amount
         /// </summary>
         [Description("Starting amount")]

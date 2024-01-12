@@ -14,6 +14,10 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant growth activity (SCA version)</summary>
     /// <summary>This class represents the CLEM activity responsible for determining potential intake, determining the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
     /// <remarks>This activity controls mortality and tracks body condition, while the Breed activity is responsible for conception and births.</remarks>
+    /// <authors>Science and methodology, James Dougherty, CSIRO</authors>
+    /// <authors>Code and implementation Adam Liedloff, CSIRO</authors>
+    /// <authors>Quality control, Thomas Keogh, CSIRO</authors>
+    /// <acknowledgements>This animal prodution is based upon the equations developed for SCA, Feedng Standards and implemented in GRAZPLAN (Moore, CSIRO) and APSFARM ()</acknowledgements>
     /// <version>1.0</version>
     /// <updates>Version 1.0 is consistent with SCA Feeding Standards of Domesticated Ruminants and is a major update to CLEM from the IAT/NABSA animal production, requiring changes to a number of other components and providing new parameters.</updates>
     [Serializable]
@@ -29,7 +33,7 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private readonly CLEMEvents events = null;
-        private GreenhouseGasesType methaneEmissions;
+        //private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
         private RuminantHerd ruminantHerd;
         private double kl = 0;
@@ -37,13 +41,13 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         private readonly FoodResourcePacket milkPacket;
 
-        /// <summary>
-        /// Methane store for emissions.
-        /// </summary>
-        [Description("Greenhouse gas store for methane emissions")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Metane if present", typeof(GreenhouseGases) } })]
-        [System.ComponentModel.DefaultValue("Use store named Methane if present")]
-        public string MethaneStoreName { get; set; }
+        ///// <summary>
+        ///// Methane store for emissions.
+        ///// </summary>
+        //[Description("Greenhouse gas store for methane emissions")]
+        //[Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Metane if present", typeof(GreenhouseGases) } })]
+        //[System.ComponentModel.DefaultValue("Use store named Methane if present")]
+        //public string MethaneStoreName { get; set; }
 
         /// <summary>
         /// Perform Activity with partial resources available.
@@ -78,10 +82,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-            else
-                methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            //if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+            //    methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            //else
+            //    methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
             ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
         }
@@ -114,10 +118,11 @@ namespace Models.CLEM.Activities
                 foreach (var ind in groupInd)
                 {
                     CalculatePotentialIntake(ind);
-                    // Perform after potential intake calculation as it needs MEContent from previous month for Lactation energy.
+                    // Perform after potential intake calculation as it needs MEContent from previous month for Lactation energy calculation.
                     // After this these tallies can be reset ready for following intake and updating. 
                     ind.Intake.Reset();
                     ind.Energy.Reset();
+                    ind.Output.Reset();
                 }
             }
         }
@@ -139,6 +144,7 @@ namespace Models.CLEM.Activities
                 double actualMilk = Math.Min(ind.Intake.Milk.Expected, ind.MothersMilkProductionAvailable);
 
                 // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
+                // Todo: implement rumen development to predict ability to eat fodder/pasture.
                 if (MathUtilities.IsLessThan(actualMilk, ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion))
                     ind.Intake.Feed.Expected = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - actualMilk * ind.BreedParams.ProportionalDiscountDueToMilk);
             }
@@ -195,22 +201,23 @@ namespace Models.CLEM.Activities
             ind.Intake.Feed.Expected *= events.Interval;
         }
 
-        /// <summary>Function to calculate growth of herd for the timestep</summary>
+        /// <summary>Function to calculate growth of herd for the time-step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            this.Status = ActivityStatus.NotNeeded;
+            Status = ActivityStatus.NotNeeded;
 
             foreach (var breed in ruminantHerd.Herd.GroupBy(a => a.BreedParams.Name))
             {
                 int unfed = 0;
                 int unfedcalves = 0;
                 double totalMethane = 0;
+                // work on herd sorted descending age to ensure mothers are processed before sucklings.
                 foreach (Ruminant ind in breed.OrderByDescending(a => a.AgeInDays))
                 {
-                    this.Status = ActivityStatus.Success;
+                    Status = ActivityStatus.Success;
                     if (ind.Weaned && ind.Intake.Feed.Actual == 0)
                         unfed++;
                     else if(!ind.Weaned && MathUtilities.IsLessThanOrEqual(ind.Intake.Milk.Actual + ind.Intake.Feed.Actual, 0))
@@ -227,8 +234,8 @@ namespace Models.CLEM.Activities
 
                 ReportUnfedIndividualsWarning(breed, unfed, unfedcalves);
 
-                // g per day -> total kg
-                methaneEmissions?.Add(totalMethane * events.Interval / 1000, this, breed.Key, TransactionCategory);
+                //// g -> total kg. per timestep calculated for each individual in CalculateEnergy()  
+                //methaneEmissions?.Add(totalMethane / 1000, this, breed.Key, TransactionCategory);
             }
         }
 
@@ -452,7 +459,7 @@ namespace Models.CLEM.Activities
 
             // Charmley et al 2016 can be substituted by intercept = 0 and coefficient = 20.7
             // per day at this point.
-            ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily;
+            //ind.Output.Methane = ind.Parameters.General.MethaneProductionCoefficient * intakeDaily * events.Interval;
 
             // manure
             ind.Output.Manure = ind.Intake.Feed.Actual * (100 - ind.Intake.DMD) / 100;
@@ -688,7 +695,7 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources.
-        /// This is called at the end of CLEMAnimalWeightGain so after intake determines and before deaths and sales.
+        /// This is called at the end of CLEMAnimalWeightGain so after intake determined and before deaths and sales.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -853,22 +860,5 @@ namespace Models.CLEM.Activities
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new();
-            htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
-            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");
-            else
-                htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        } 
-        #endregion
-
     }
 }

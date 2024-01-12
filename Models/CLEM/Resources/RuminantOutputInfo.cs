@@ -31,5 +31,16 @@ namespace Models.CLEM.Resources
         /// Manure
         /// </summary>
         public double Manure { get; set; }
+
+        /// <summary>
+        /// Reset all stores
+        /// </summary>
+        public void Reset()
+        {
+            Methane = 0;
+            NitrogenUrine = 0;
+            NitrogenFaecal = 0;
+            Manure = 0;
+        }
     }
 }
