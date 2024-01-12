@@ -75,6 +75,9 @@ namespace Models.Management
         /// <summary>Harvesting Event</summary>
         public event EventHandler<EventArgs> Harvesting;
 
+        /// <summary>Harvesting Event</summary>
+        public event EventHandler<EventArgs> EndCrop;
+
         [Link]
         private Clock Clock = null;
 
@@ -182,6 +185,8 @@ namespace Models.Management
                 Pruning?.Invoke(this, new EventArgs());
             if (RemovalType.ToString() == BiomassRemovalType.Harvesting.ToString())
                 Harvesting?.Invoke(this, new EventArgs());
+            if (RemovalType.ToString() == BiomassRemovalType.EndCrop.ToString())
+                EndCrop?.Invoke(this, new EventArgs());
 
             double stage;
             Double.TryParse(StageToSet, out stage);

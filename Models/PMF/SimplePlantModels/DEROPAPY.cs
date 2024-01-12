@@ -309,6 +309,7 @@ namespace Models.PMF.SimplePlantModels
             thisDero["Tt_Reproductive_02"] += clean(Current["Tt_Reproductive_02"]);
             thisDero["Tt_Senescent_03"] += clean(Current["Tt_Senescent_03"]);
             thisDero["Tt_Mature_04"] += clean(Current["Tt_Mature_04"]);
+            thisDero["EndOrHarvest"] += clean(Current["EndOrHarvest"]);
             thisDero["Chill_Temp_X"] += clean(Current["Chill_Temp_X"]);
             thisDero["Chill_Acc_Y"] += clean(Current["Chill_Acc_Y"]);
             thisDero["AC_Dormant_05"] += clean(Current["AC_Dormant_05"]);
@@ -360,7 +361,8 @@ namespace Models.PMF.SimplePlantModels
             {"Pp_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.X = " },
             {"Tt_Reproductive_02","[DEROPAPY].Phenology.Reproductive.Target.XYPairs.Y = " },
             {"Tt_Senescent_03","[DEROPAPY].Phenology.Senescent.Target.FixedValue = " },
-            {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },   
+            {"Tt_Mature_04","[DEROPAPY].Phenology.Mature.Target.FixedValue = " },
+            {"EndOrHarvest"," [DEROPAPY].Phenology.EndOrHarvest.PhaseNameToGoto = " },
             {"Chill_Temp_X","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.X = " },
             {"Chill_Acc_Y","[DEROPAPY].Phenology.Chill.DailyChill.XYPairs.Y = "},
             {"AC_Dormant_05","[DEROPAPY].Phenology.Dormant.Target.XYPairs.X = " },

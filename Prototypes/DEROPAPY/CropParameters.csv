@@ -5,11 +5,12 @@ TT_Acc_Y,oCd,Thermal time accumulation at average temperature,(0   10.0  18.0  2
 D_StartGrowth_00,DAWS,"""Earliest"" day after winter solstice when sowing/end-dorm is resumed every year",72,102,0,0,74,74,74,102,102,102,102
 T_StartGrowth_00,oC,"""14 day running average temperature required to start growth""",13,10,0,0,14,14,14,10,10,10,10
 Tt_Vegetative_01,oCd,Thermal-time accumulation from startGrowth to FullCanopy,750,450,300,300,600,600,600,450,450,450,450
-DefoliateOrDevelop,binary,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive
+DefoliateOrDevelop,string,If plant defoliated at the end of the vegetative phase,Reproductive,Reproductive,Graze,Graze,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive,Reproductive
 Pp_Reproductive_02,oCd ,Photoperiod during the reproductive period, (12.5 24.0),(8.0 16.0),(8.0 16.0),(8.0 16.0), (8.0 16.0), (8.0 16.0), (8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0),(8.0 16.0)
 Tt_Reproductive_02,oCd,Thermal-time accumulation from FullCanopy to StartSenescence,(700 700),(200 1000),(0 0), (0 0),(300 300),(300 300),(300 300),(200 1000),(200 1000),(200 1000),(200 1000)
 Tt_Senescent_03,oCd,Thermal-time accumulation from StartSenescence to Maturity,0,200,0,0,300,300,300,200,200,200,200
 Tt_Mature_04,oCd,Thermal-time accumulation from Maturity to dormancy,0,50,0,0,50,50,50,50,50,50,50
+EndOrHarvest,string,If plant is harvested and pruned or dies completely at end of growth phase,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,EndCrop,EndCrop,EndCrop,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune,HarvestAndPrune
 Chill_Temp_X,oC,Chill thresholds,(0 0 0 0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0),(-5.0 0.0 8.0 12.0)
 Chill_Acc_Y,oCd,Chill rate,(0 0 0 0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0),(0.0 1.0 1.0 0.0)
 AC_Dormant_05,oCd,chill stuff,(0 0),(0.0 200),(0.0 30),(0.0 30),(0.0 30),(0.0 30),(0.0 30),(0.0 200),(0.0 200),(0.0 200),(0.0 200)

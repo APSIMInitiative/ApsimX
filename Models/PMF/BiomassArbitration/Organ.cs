@@ -264,7 +264,7 @@ namespace Models.PMF
             LiveRemoved = (Live * liveToRemove) + (Live * liveToResidue);
             DeadRemoved = (Dead * deadToRemove) + (Dead * deadToResidue);
             double fracLiveToResidue = MathUtilities.Divide(liveToResidue, (liveToResidue + liveToRemove),0);
-            double fracDeadToResidue = deadToResidue / (deadToResidue + deadToRemove);
+            double fracDeadToResidue = MathUtilities.Divide(deadToResidue, (deadToResidue + deadToRemove),0);
             Live = new OrganNutrientsState(Live - LiveRemoved, Cconc);
             Dead = new OrganNutrientsState(Dead - DeadRemoved, Cconc);
             if (fracDeadToResidue + fracLiveToResidue > 0)
