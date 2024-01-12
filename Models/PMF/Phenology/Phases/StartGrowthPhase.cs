@@ -18,19 +18,13 @@ namespace Models.PMF.Phen
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
-
-        [Link]
-        private IClock clock = null;
-
         /// <summary>The thermal time</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction MovingAverageTemp = null;
 
-        //2. Private and protected fields
-        //-----------------------------------------------------------------------------------------------------------------
+        [Link]
+        private Weather weather = null;
 
-        private bool First = true;
-        
         //5. Public properties
         //-----------------------------------------------------------------------------------------------------------------
 
@@ -60,9 +54,10 @@ namespace Models.PMF.Phen
         {
             get
             {
-                double daysFrac = Math.Min(1.0, (double)clock.Today.DayOfYear  / (double)DOYtoProgress);
+                double TOYfrac = (double)weather.DaysSinceWinterSolstice < 160 ? 1.0 : 0.0;
+                double daysFrac = Math.Min(1.0, (double)weather.DaysSinceWinterSolstice / (double)DOYtoProgress);
                 double tempFrac = Math.Min(1.0, (MovingAverageTemp.Value()/TemptoProgress));
-                return Math.Min(daysFrac, tempFrac);
+                return Math.Min(Math.Min(TOYfrac, daysFrac), tempFrac);
             }
         }
 
@@ -73,12 +68,8 @@ namespace Models.PMF.Phen
         public bool DoTimeStep(ref double propOfDayToUse)
         {
             bool proceedToNextPhase = false;
-            if (First)
-            {
-                First = false;
-            }
-
-            if ((clock.Today.DayOfYear >= DOYtoProgress)  && (MovingAverageTemp.Value() >= TemptoProgress))
+               // in the first half of the growth year   && Past the ealiest date to start growth              && Warm enough               
+            if ((weather.DaysSinceWinterSolstice <= 160) && (weather.DaysSinceWinterSolstice >= DOYtoProgress) && (MovingAverageTemp.Value() >= TemptoProgress))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
@@ -89,12 +80,11 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
-            First = true;
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e) { }
     }
 }
 

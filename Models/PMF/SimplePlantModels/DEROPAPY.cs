@@ -53,6 +53,20 @@ namespace Models.PMF.SimplePlantModels
         ///<summary></summary> 
         [JsonIgnore] public string[] Clover { get; set; }
         ///<summary></summary> 
+        [JsonIgnore] public string[] Wheat { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Hemp { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] OSR { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Grapevine { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Macadamia{ get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Lemons { get; set; }
+        ///<summary></summary> 
+        [JsonIgnore] public string[] Avocado { get; set; }
+        ///<summary></summary> 
         [JsonIgnore] public string[] Description { get; set; }
         ///<summary></summary> 
         [JsonIgnore] public Dictionary<string, string> Current { get; set; }
@@ -104,6 +118,13 @@ namespace Models.PMF.SimplePlantModels
             Apple = repack(CropCoeffs, 4);
             RyeGrass = repack(CropCoeffs, 5);
             Clover = repack(CropCoeffs, 6);
+            Wheat = repack(CropCoeffs, 7);
+            Hemp = repack(CropCoeffs, 8);
+            OSR = repack(CropCoeffs, 9);
+            Grapevine = repack(CropCoeffs, 10);
+            Macadamia = repack(CropCoeffs, 11);
+            Lemons = repack(CropCoeffs, 12);
+            Avocado = repack(CropCoeffs, 13);
             Current = getCurrentParams(CropCoeffs, CropName);
         }
 
